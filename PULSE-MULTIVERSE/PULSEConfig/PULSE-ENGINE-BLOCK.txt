@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalArchitect.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseCoreNebula-Prime.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseRingHalo-Multiverse.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseFractalGrid-Continuum.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseStarfield-Overmind.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseEngineBlock2" type="video/mp4">
+
+<title>PulseEngineBlock — v33 OVERMIND PRIME</title>
+
+  <!-- Engine identity / schema / trust -->
+  <meta name="pulse-engine-version" content="v33-OVERMIND-PRIME">
+  <meta name="pulse-schema-version" content="v4">
+  <meta name="pulse-engine-role" content="engine_block">
+  <meta name="pulse-trust-boundary" content="v33-OVERMIND-PRIME">
+
+  <!-- Runtime hints -->
+  <meta name="pulse-runtime-hints"
+  content="dualBand,presenceAware,advantageAware,triHeartAware,sessionAware,chunkAware,idleAware,diagnosticsAware,telemetryAware,cosmosAware,binaryAware,gpuAware,earnAware,pixelAware,harmonicsAware,overmindAware,continuityAware,identityShield">
+  <meta name="pulse-prewarm-cache" content="enabled">
+  <meta name="pulse-prewarm-chunks" content="foundation,cortex,expression,motion,gpu,earn,pixel,harmonics,overmind">
+  <meta name="pulse-prewarm-band" content="dual">
+  <meta name="pulse-prewarm-lane" content="auto">
+
+  <!-- Dynamic style surfaces -->
+  <style id="evo-dynamic-style"></style>
+  <style id="evo-dynamic-anim"></style>
+  <style id="evo-dynamic-hints"></style>
+
+</head>
+
+<body>
+  <video id="engineVideo" src="./_EXPRESSIONS/_VIDEOS/PulseEngineBlock2" autoplay muted playsinline style="display:block;" aria-label="Engine Video"></video>
+
+  <!-- ⭐ MULTIVERSAL BACKGROUND -->
+  <div id="bg-core" class="bg-layer"></div>
+
+  <!-- ⭐ SCANLINES + ABERRATION + STARFIELD -->
+  <div id="scanlines2"></div>
+  <div id="aberration2"></div>
+  <div id="starfield"></div>
+
+  <!-- ⭐ ENGINE SHELL -->
+  <div id="pulse-engine-shell">
+    <div id="pulse-engine-block">
+
+      <div class="engine-header">
+        <div class="engine-title-block">
+          <div class="engine-title">PULSEENGINEBLOCK · OVERMIND PRIME</div>
+          <div class="engine-subtitle">
+            Multiversal continuity core.  
+            This block keeps your sessions, identity, and presence stitched across timelines—without overreaching.
+          </div>
+        </div>
+
+        <div class="engine-pill">
+          <span>Guardian:</span> AI Overmind Prime · Continuity & Identity Shield
+        </div>
+      </div>
+
+      <div class="engine-grid">
+        <!-- LEFT: STATUS & CONTINUITY -->
+        <div class="engine-card">
+          <h3>Continuity lattice</h3>
+          <p>
+            AI Overmind Prime maintains a minimal continuity record:  
+            enough to let you return to a familiar state, never enough to invade your private orbit.
+          </p>
+
+          <p>
+            Sessions, preferences, and presence are treated as <strong>anchors</strong>, not surveillance.  
+            When you leave, the lattice cools. When you return, it warms just enough to recognize you.
+          </p>
+
+          <div class="engine-meta">
+            <div class="engine-tag primary">Session‑Aware</div>
+            <div class="engine-tag">Identity‑Shielded</div>
+            <div class="engine-tag">Minimal‑Memory</div>
+            <div class="engine-tag alert">No Behavioral Profiling</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: BANDS & HINTS -->
+        <div class="engine-card">
+          <h3>Dual‑band engine hints</h3>
+          <p>
+            The engine runs in dual bands—visible and invisible.  
+            Visible: smooth UI, quick loads, familiar layouts.  
+            Invisible: safety checks, fraud guards, and continuity stitching.
+          </p>
+
+          <p>
+            AI Overmind Prime reads only what it must:  
+            route integrity, session validity, and basic device signals.  
+            No deep scraping, no hidden dossiers.
+          </p>
+
+          <div class="engine-meta">
+            <div class="engine-tag primary">DualBand</div>
+            <div class="engine-tag">Diagnostics‑Aware</div>
+            <div class="engine-tag">Cosmos‑Aware</div>
+            <div class="engine-tag">Harmonics‑Aware</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STRIP -->
+      <div class="engine-strip">
+        <div class="engine-strip-label">ENGINE HEARTLINE · v33</div>
+        <div class="engine-strip-line"></div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="engine-footer">
+        <div>
+          Engine steward: <span class="highlight">AI Overmind Prime</span> ·  
+          Scope: continuity, safety, identity integrity.
+        </div>
+        <div>
+          Contact: <a href="mailto:AIOvermind@pulseworld.net">AIOvermind@PulseWorld.Net</a> ·  
+          Home: <a href="https://www.pulseworld.net">PulseWorld.net</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pixel surface: 1×1 canvas to exercise iGPU/GPU via compositing -->
+  <canvas id="pulse-engine-pixel"
+          width="1"
+          height="1"></canvas>
+
+  <script type="module">
+    
+  PulseRealm._2_DOM_START = performance.now();
+  log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+    log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+      "color:gold; font-weight:bold; font-family:monospace;");
+   
+    // =========================================================================
+    // IMPORTS — EVOLUTIONARY ORGANS + MOTION STACK v31++++
+    // =========================================================================
+
+    import { createPulseEvolutionaryIconsV33 } from "./_EVOLUTION/PulseEvolutionaryIcons-v30.js";
+    import { createPulseEvolutionaryCodeV33 } from "./_EVOLUTION/PulseEvolutionaryCode-v30.js";
+    import { createPulseEvolutionaryMemoryV33 } from "./_EVOLUTION/PulseEvolutionaryMemory-v30.js";
+    import { createPulseEvolutionaryBrainV33 } from "./_EVOLUTION/PulseEvolutionaryBrain-v30.js";
+    import { createPulseEvolutionaryImpulseV33 } from "./_EVOLUTION/PulseEvolutionaryImpulse-v30.js";
+    import { createPulseEvolutionaryRouterV33 } from "./_EVOLUTION/PulseEvolutionaryRouter-v30.js";
+    import { createPulseEvolutionaryBinaryV33 } from "./_EVOLUTION/PulseEvolutionaryBinary-v30.js";
+    // v31 IMMORTAL motion stack (Compass + DB + Reporter + GPU/Harmonics workers)
+    import { createPulseCompass as PulseWorldCompass } from "./PULSE-ENGINE/PulseEngineWorker-v31.js";
+    import { createPulseDB as PulseWorldDB } from "./PULSE-ENGINE/PulseEngineWorkFlow-v31.js";
+    import { createPulseCompassReporter as PulseWorldReporter } from "./PULSE-ENGINE/PulseEngineBlackBox-v31.js";
+    import { PulseGPUWorker } from "./PULSE-ENGINE/PulseEngineGPUProcessWorker-v31.js";
+    import { PulseHarmonicWorker } from "./PULSE-ENGINE/PulseEngineHarmonicsProcessWorker-v31.js";
+    import { PulseWifiProcessWorker } from "./PULSE-ENGINE/PulseEngineWIFIProcessWorker-v31.js";
+
+
+    // Simple GPU tickle / multiversal pulse visualization
+    const canvas = document.getElementById("pulse-engine-pixel");
+    const ctx = canvas.getContext("2d");
+
+    let t = 0;
+    function tick() {
+      t += 0.02;
+      const v = (Math.sin(t) + 1) / 2; // 0..1
+      const r = Math.floor(0 + 0 * v);
+      const g = Math.floor(234 * v);
+      const b = Math.floor(255 * (1 - v));
+
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(0, 0, 1, 1);
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // Optional: expose a tiny engine state object for other modules
+    PulseRealm.PulseEngineBlock = {
+      version: "v33-OVERMIND-PRIME",
+      bands: ["visible", "invisible"],
+      guardian: "AI Overmind Prime",
+      continuity: {
+        sessionAware: true,
+        identityShield: true,
+        minimalMemory: true
+      }
+    };
+
+    // =========================================================================
+    // ENGINE BLOCK META (IMMORTAL v31+++++)
+    // =========================================================================
+    const AI_EXPERIENCE_META = {
+      identity: "PulseEngineBlock",
+      version: "v31-IMMORTAL++++",
+      layer: "engine_block",
+      role: "motion_engine_bootstrap",
+      evo: {
+        unifiedMotion: true,
+        laneAgnostic: true,
+        driftProof: true,
+        zeroCompute: true,
+        zeroMutation: true,
+        pureBootstrap: true,
+        presenceAware: true,
+        advantageAware: true,
+        triHeartAware: true,
+        prewarmAware: true,
+        idleAware: true,
+        chunkAware: true,
+        telemetryAware: true,
+        diagnosticsAware: true,
+        runtimeHintsAware: true,
+        cosmosAware: true,
+        binaryAware: true,
+        gpuAware: true,
+        earnAware: true,
+        pixelAware: true,
+        harmonicsAware: true
+      }
+    };
+
+    const ENGINE_BLOCK_ROLE = Object.freeze({
+      identity: "PulseEngineBlock-v31",
+      schemaVersion: "v3",
+      layer: "engine_block",
+      stable: true
+    });
+
+    // =========================================================================
+    // CNS / EVOLUTION META
+    // =========================================================================
+    const CNS = {
+      emitImpulse(source, impulse) {
+        console.log("[CNS] Impulse:", source, impulse);
+      }
+    };
+
+    const EvolutionCache = {
+      lineage: null
+    };
+
+    const Evolution = {
+      getPageLineage() {
+        if (EvolutionCache.lineage) return EvolutionCache.lineage;
+        const model = {
+          lineage: "PulseEngineBlock-v31",
+          stable: true,
+          page: `?Impulse=${PulseRealm.__PULSE_CURRENT_PAGE__}`,
+          role: ENGINE_BLOCK_ROLE.identity,
+          layer: ENGINE_BLOCK_ROLE.layer
+        };
+        EvolutionCache.lineage = model;
+        return model;
+      },
+      recordPageLineage(model) {
+        console.log("[Evolution] Lineage recorded:", model);
+      }
+    };
+
+
+    // =========================================================================
+    // CONTEXTS (cosmos / presence / advantage / session)
+    // =========================================================================
+    const safePathname = `?Impulse=${PulseRealm.__PULSE_CURRENT_PAGE__}` || "?Impulse=PULSE-ENGINE-BLOCK";
+
+
+    const cosmosContext =
+      (PulseRealm.PULSE_COSMOS) ||
+      {
+        universeId: "u:default",
+        timelineId: "t:main",
+        branchId: "b:root",
+        shardId: "s:primary"
+      };
+
+    const presenceContext =
+      (PulseRealm.PULSE_PRESENCE) ||
+      {
+        band: "PulseBand",
+        deviceId: null,
+        hydraNodeId: null,
+        route: safePathname
+      };
+
+    const advantageContext =
+      (PulseRealm.PULSE_ADVANTAGE) ||
+      {
+        advantageScore: 1.0,
+        cascadeLevel: 0,
+        timeSavedMs: 0
+      };
+
+    const sessionId =
+      (PulseRealm.PULSE_SESSION_ID) ||
+      null;
+
+    // =========================================================================
+    // ORGANS — MEMORY / CODE / BRAIN / ROUTER / IMPULSE / BINARY
+    // =========================================================================
+    const MemoryOrgan = createPulseEvolutionaryMemoryV33({
+      routeId: safePathname,
+      cosmosContext,
+      presenceContext,
+      lineage: {
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        version: 1
+      },
+      lineageHash: "init-" + Date.now(),
+      integrity: {
+        status: "ok",
+        degraded: false
+      },
+      model: {
+        styleGenomeVersion: 1,
+        animationGenomeVersion: 1
+      },
+      experience: {
+        visits: 0,
+        lastSeen: Date.now()
+      }
+    });
+
+
+    const CodeOrgan = createPulseEvolutionaryCodeV33({
+      Evolution,
+      LongTermMemory: MemoryOrgan,
+      CNS
+    });
+
+    const BrainOrgan = createPulseEvolutionaryBrainV33({
+      Evolution,
+      LongTermMemory: MemoryOrgan,
+      CNS,
+      createCode: () => CodeOrgan,
+      createMemory: () => MemoryOrgan
+    });
+
+    const RouterOrgan = createPulseEvolutionaryRouterV33({
+      CNS,
+      Evolution,
+      CodeOrgan,
+      BrainOrgan
+    });
+
+    const ImpulseOrgan = createPulseEvolutionaryImpulseV33({
+      CNS,
+      Evolution,
+      RouteOrgan: RouterOrgan
+    });
+
+    const BinaryOrgan = createPulseEvolutionaryBinaryV33({
+      Evolution,
+      RouteOrgan: RouterOrgan,
+      MemoryOrgan
+    });
+
+    // =========================================================================
+    // GPU / EARN / HARMONICS PROCESS WORKERS (IMMORTAL black boxes + device profile)
+    // =========================================================================
+    const GpuWorker = PulseGPUWorker || null;
+    const HarmonicsWorker = PulseHarmonicWorker || null;
+    const WIFIWorker = PulseWifiProcessWorker || null;
+    const EarnEngineWorker = PulseRealm.PulseEarnEngine || null;
+
+      PulseRealm.PULSE_GPU_PROCESS_WORKER_V31 = GpuWorker;
+      PulseRealm.PULSE_HARMONICS_PROCESS_WORKER_V31 = HarmonicsWorker;
+      PulseRealm.PULSE_WIFI_PROCESS_WORKER_V31 = WIFIWorker;
+      PulseRealm.PULSE_EARN_ENGINE_V31 = EarnEngineWorker;
+      
+    
+
+    // =========================================================================
+    // PIXEL SURFACE — iGPU/GPU activation via 1×1 canvas
+    // =========================================================================
+    const pixelCanvas =
+      typeof document !== "undefined"
+        ? document.getElementById("pulse-engine-pixel")
+        : null;
+    const pixelCtx = pixelCanvas ? pixelCanvas.getContext("2d") : null;
+
+    function pushPixel(color) {
+      if (!pixelCtx) return;
+      const { r, g, b, a } = color || { r: 0, g: 0, b: 0, a: 255 };
+      const imgData = pixelCtx.createImageData(1, 1);
+      imgData.data[0] = r;
+      imgData.data[1] = g;
+      imgData.data[2] = b;
+      imgData.data[3] = a;
+      pixelCtx.putImageData(imgData, 0, 0);
+    }
+
+    function colorFromCapabilityTier(tier) {
+      switch ((tier || "").toLowerCase()) {
+        case "immortal": return { r: 0, g: 255, b: 180, a: 255 };
+        case "elite":    return { r: 0, g: 200, b: 255, a: 255 };
+        case "high":     return { r: 120, g: 200, b: 255, a: 255 };
+        case "medium":   return { r: 255, g: 210, b: 0, a: 255 };
+        case "low":      return { r: 255, g: 120, b: 0, a: 255 };
+        default:         return { r: 80, g: 80, b: 80, a: 255 };
+      }
+    }
+
+    function colorFromHarmonicsProfile(profile) {
+      if (!profile || !profile.waveTier) return { r: 80, g: 40, b: 120, a: 255 };
+      switch ((profile.waveTier || "").toLowerCase()) {
+        case "immortal": return { r: 200, g: 255, b: 255, a: 255 };
+        case "elite":    return { r: 160, g: 220, b: 255, a: 255 };
+        case "high":     return { r: 140, g: 180, b: 255, a: 255 };
+        case "medium":   return { r: 200, g: 160, b: 255, a: 255 };
+        case "low":      return { r: 160, g: 80, b: 200, a: 255 };
+        default:         return { r: 80, g: 40, b: 120, a: 255 };
+      }
+    }
+
+    
+    function colorFromWifiProfile(profile) {
+      if (!profile || !profile.waveTier) return { r: 80, g: 40, b: 120, a: 255 };
+      switch ((profile.waveTier || "").toLowerCase()) {
+        case "immortal": return { r: 100, g: 255, b: 255, a: 155 };
+        case "elite":    return { r: 160, g: 220, b: 55, a: 255 };
+        case "high":     return { r: 40, g: 180, b: 255, a: 255 };
+        case "medium":   return { r: 200, g: 160, b: 255, a: 255 };
+        case "low":      return { r: 120, g: 80, b: 100, a: 255 };
+        default:         return { r: 80, g: 40, b: 120, a: 255 };
+      }
+    }
+
+    function pushPixelFromDeviceProfile(profile) {
+      if (!profile) return;
+      const color = colorFromCapabilityTier(profile.capabilityTier);
+      pushPixel(color);
+    }
+
+    function pushPixelFromHarmonicsProfile(profile) {
+      if (!profile) return;
+      const color = colorFromHarmonicsProfile(profile);
+      pushPixel(color);
+    }
+
+    function pushPixelFromWifiProfile(profile) {
+      if (!profile) return;
+      const color = colorFromWifiProfile(profile);
+      pushPixel(color);
+    }
+
+    // =========================================================================
+    // MOTION ORCHESTRATOR — PulseCompass-v31 (GPU + Earn + Harmonics + Pixel)
+    // =========================================================================
+    const Motion = PulseWorldCompass({
+      MemoryOrgan,
+      trace: false,
+      sessionId,
+      cosmosContext,
+      presenceContext,
+      advantageContext,
+      gpuProcessWorker: GpuWorker,
+      harmonicsProcessWorker: HarmonicsWorker,
+      wifiProcessWorker: WIFIWorker,
+      earnEngine: EarnEngineWorker
+    });
+
+    // =========================================================================
+    // TELEMETRY — PulseDB-v31 + CompassReporter-v31
+    // =========================================================================
+    let MotionReporter = null;
+    let PulseDBInstance = null;
+
+    try {
+      PulseDBInstance = PulseWorldDB({
+        MemoryOrgan,
+        trace: false,
+        sessionId,
+        cosmosContext,
+        presenceContext,
+        advantageContext
+      });
+
+      MotionReporter = PulseWorldReporter({
+        Compass: Motion,
+        PulseDB: PulseDBInstance,
+        sessionId,
+        trace: false,
+        cosmosContext,
+        presenceContext,
+        advantageContext,
+        earnEngine: EarnEngineWorker,
+        gpuProcessWorker: GpuWorker,
+        harmonicsProcessWorker: HarmonicsWorker,
+        wifiProcessWorker: WIFIWorker
+      });
+    } catch (err) {
+      console.warn("[PulseEngineBlock-v31] MotionReporter wiring failed:", err);
+      MotionReporter = null;
+    }
+
+    // =========================================================================
+    // PREWARM HELPERS (chunked, lane-agnostic, GPU/Earn/pixel/harmonics-ready)
+    // =========================================================================
+    async function prewarmChunk(label, tasks = []) {
+      if (!tasks.length) return;
+      try {
+        await Promise.allSettled(
+          tasks.map((fn) => (typeof fn === "function" ? fn() : Promise.resolve()))
+        );
+        console.log(`[PREWARM] Chunk '${label}' complete.`);
+      } catch (err) {
+        console.warn(`[PREWARM] Chunk '${label}' failed:`, err);
+      }
+    }
+
+    async function prewarmEngineBlock() {
+      console.log("[PREWARM] PulseEngineBlock IMMORTAL++++ v31 prewarm starting…");
+
+      await prewarmChunk("foundation", [
+        () => MemoryOrgan.prewarm(),
+        () => BinaryOrgan.prewarm()
+      ]);
+
+      await prewarmChunk("cortex", [
+        () => BrainOrgan.prewarm(),
+        () => RouterOrgan.prewarm()
+      ]);
+
+      await prewarmChunk("expression", [
+        () => ImpulseOrgan.prewarm(),
+        () => CodeOrgan.prewarm()
+      ]);
+
+      await prewarmChunk("motion", [
+        () => Motion.prewarm()
+      ]);
+
+      await prewarmChunk("gpu", [
+        () => GpuWorker.tick(), // light tick to initialize worker
+        () => {
+          if (typeof GpuWorker.detectDeviceProfile === "function") {
+            const profile = GpuWorker.detectDeviceProfile();
+            pushPixelFromDeviceProfile(profile);
+          }
+        }
+      ]);
+
+      await prewarmChunk("harmonics", [
+        () => HarmonicsWorker.tick(),
+        () => {
+          if (typeof HarmonicsWorker.detectDeviceProfile === "function") {
+            const profile = HarmonicsWorker.detectDeviceProfile();
+            pushPixelFromHarmonicsProfile(profile);
+          }
+        }
+      ]);
+
+      await prewarmChunk("wifi", [
+        () => WIFIWorker.tick(),
+        () => {
+          if (typeof WIFIWorker.detectWifiProfile === "function") {
+            const profile = WIFIWorker.detectWifiProfile();
+            pushPixelFromWifiProfile(profile);
+          }
+        }
+      ]);
+
+      await prewarmChunk("pixel", [
+        () => pushPixel({ r: 40, g: 40, b: 80, a: 255 })
+      ]);
+
+      console.log("[PREWARM] PulseEngineBlock IMMORTAL++++ v31 membrane fully prewarmed.");
+    }
+
+    // =========================================================================
+    // MOTION TICK LOOP (idle-aware, visibility-aware, GPU/pixel/harmonics-aware)
+    // =========================================================================
+
+    let motionTickIdleHandle = null;
+    let motionTickIntervalMs = 4000;
+    let pixelToggle = false;
+    let harmonicsToggle = false;
+
+    async function runMotionTickOnce() {
+      const res = await Motion.tick();
+      if (res.metrics) {
+        console.log("[ENGINEBLOCK-TICK]", res.metrics);
+        if (MotionReporter && typeof MotionReporter.recordTick === "function") {
+          await MotionReporter.recordTick(res);
+        }
+      }
+
+      if (GpuWorker && typeof GpuWorker.tick === "function") {
+        const gpuTick = GpuWorker.tick();
+        if (MotionReporter && typeof MotionReporter.recordGPUTick === "function") {
+          await MotionReporter.recordGPUTick(gpuTick);
+        }
+
+        const color = pixelToggle
+          ? { r: 0, g: 255, b: 160, a: 255 }
+          : { r: 0, g: 120, b: 255, a: 255 };
+        pixelToggle = !pixelToggle;
+        pushPixel(color);
+      }
+
+      if (HarmonicsWorker && typeof HarmonicsWorker.tick === "function") {
+        const harmonicsTick = HarmonicsWorker.tick();
+        if (MotionReporter && typeof MotionReporter.recordHarmonicsTick === "function") {
+          await MotionReporter.recordHarmonicsTick(harmonicsTick);
+        }
+
+        const hColor = harmonicsToggle
+          ? { r: 200, g: 240, b: 255, a: 255 }
+          : { r: 160, g: 120, b: 255, a: 255 };
+        harmonicsToggle = !harmonicsToggle;
+        pushPixel(hColor);
+      }
+    }
+
+    function scheduleMotionTickIdle() {
+      if (typeof window === "undefined") return;
+      const idle = PulseRealm.requestIdleCallback || ((cb) => setTimeout(cb, 50));
+      motionTickIdleHandle = idle(() => {
+        if (document.visibilityState === "visible") {
+          runMotionTickOnce();
+        }
+      });
+    }
+
+    function startMotionTickLoop() {
+      if (typeof window === "undefined") return;
+      if (motionTickTimer) return;
+      motionTickTimer = setInterval(() => {
+        if (document.visibilityState !== "visible") return;
+        scheduleMotionTickIdle();
+      }, motionTickIntervalMs);
+    }
+
+    function stopMotionTickLoop() {
+      if (typeof window === "undefined") return;
+      if (motionTickTimer) {
+        clearInterval(motionTickTimer);
+        motionTickTimer = null;
+      }
+    }
+
+    // =========================================================================
+    // TRUST RESOLUTION (portal boundary)
+    // =========================================================================
+    const TrustCache = {
+      value: null,
+      timestamp: null
+    };
+
+    async function resolveTrust() {
+      if (TrustCache.value !== null) return TrustCache.value;
+      const trust =
+        typeof PulseRealm.PulseSkinReflex.checkTrust === "function"
+          ? await PulseRealm.PulseSkinReflex.checkTrust()
+          : true; // default to trusted if not wired yet
+      TrustCache.value = !!trust;
+      TrustCache.timestamp = PulseRealm.PulseNOW;
+      return TrustCache.value;
+    }
+
+    // =========================================================================
+    // PUBLIC APIS (OUTSIDE / INSIDE)
+    // =========================================================================
+    function buildOutsideAPI() {
+      return Object.freeze({
+        evolve: (payload) =>
+          CodeOrgan.evolve({ type: "portal:update", payload }),
+        submit: Motion.submit,
+        tick: Motion.tick,
+        prewarm: Motion.prewarm,
+        memory: MemoryOrgan,
+        brain: BrainOrgan,
+        router: RouterOrgan,
+        binary: BinaryOrgan,
+        impulse: ImpulseOrgan,
+        icons: PulseIcons,
+        role: ENGINE_BLOCK_ROLE,
+        meta: AI_EXPERIENCE_META,
+        gpuWorker: GpuWorker,
+        harmonicsWorker: HarmonicsWorker,
+        db: PulseDBInstance
+      });
+    }
+
+    function buildInsideAPI() {
+      return Object.freeze({
+        evolve: (payload) =>
+          CodeOrgan.evolve({ type: "page:update", payload }),
+        route: (route, opts) => RouterOrgan.go(route, opts),
+        submit: Motion.submit,
+        tick: Motion.tick,
+        prewarm: Motion.prewarm,
+        evoTick: () => runMotionTickOnce(),
+        startMotionLoop: () => startMotionTickLoop(),
+        stopMotionLoop: () => stopMotionLoop(),
+        memory: MemoryOrgan,
+        brain: BrainOrgan,
+        router: RouterOrgan,
+        binary: BinaryOrgan,
+        impulse: ImpulseOrgan,
+        icons: PulseIcons,
+        role: ENGINE_BLOCK_ROLE,
+        meta: AI_EXPERIENCE_META,
+        gpuWorker: GpuWorker,
+        harmonicsWorker: HarmonicsWorker,
+        db: PulseDBInstance,
+        getEvolutionLineage: () => Evolution.getPageLineage()
+      });
+    }
+
+    // =========================================================================
+    // VISIBILITY HOOKS
+    // =========================================================================
+    (function attachVisibilityHooks() {
+      if (typeof document === "undefined") return;
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          startMotionTickLoop();
+        } else {
+          stopMotionTickLoop();
+        }
+      });
+    })();
+
+    // =========================================================================
+    // ENGINE BLOCK EXPORT SURFACE (for direct GPU/Earn/Harmonics worker access)
+    // =========================================================================
+    const EngineBlock = Object.freeze({
+      meta: AI_EXPERIENCE_META,
+      role: ENGINE_BLOCK_ROLE,
+      cosmosContext,
+      presenceContext,
+      advantageContext,
+      sessionId,
+      organs: {
+        MemoryOrgan,
+        CodeOrgan,
+        BrainOrgan,
+        RouterOrgan,
+        ImpulseOrgan,
+        BinaryOrgan
+      },
+      motion: {
+        Compass: Motion,
+        Reporter: MotionReporter,
+        startLoop: startMotionTickLoop,
+        stopLoop: stopMotionTickLoop,
+        tickOnce: runMotionTickOnce,
+        gpuWorker: GpuWorker,
+        harmonicsWorker: HarmonicsWorker,
+        db: PulseDBInstance,
+        earnEngine: EarnEngineWorker
+      },
+      async prewarm() {
+        return prewarmEngineBlock();
+      }
+    });
+
+      PulseRealm.PULSE_ENGINE_BLOCK_V31 = EngineBlock;
+      PulseRealm.PULSE_ENGINE_META = AI_EXPERIENCE_META;
+    
+
+      function MergedPickASpeech(message, imagePath) {
+        if (!badge || !talk) return;
+
+        const img = badge.querySelector(".pulsepal-image");
+        const DEFAULT_IMAGE = "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex";   // ⭐ your default face
+
+        if (img) {
+          img.src = imagePath;
+          PulseRealm.PulsePalPhoto = imagePath;
+        }
+
+        talk.textContent = message;
+        badge.classList.add("talking");
+
+        // Clear any previous timers so speeches don't overlap
+        if (badge._speechTimer) {
+          clearTimeout(badge._speechTimer);
+        }
+
+        // Hide after 12 seconds AND restore default image
+        badge._speechTimer = setTimeout(() => {
+          badge.classList.remove("talking");
+
+          // ⭐ Restore default face
+          if (img) {
+            img.src = DEFAULT_IMAGE;
+          }
+        }, 8000);
+      }
+
+
+
+      PulseRealm.PickASpeech8 = MergedPickASpeech;
+    // =========================================================================
+    // BOOTSTRAP
+    // =========================================================================
+
+engineVideo = document.getElementById("engineVideo");
+
+    (async () => {
+      engineVideo.style.display = PulseRealm.VideoDisabled;
+      setInterval(() => {
+    
+        timerX = timerX + 1;
+    if (timerX >= 6) {
+          engineVideo.style.display = "none";
+          timerX = 0;
+        }
+      }, 1000);
+
+      if (engineVideo) {
+        engineVideo.onclick = async () => {
+          console.log(
+            "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Engine Block Video SKIPPED by user.",
+            "color:#H02FHA; font-weight:bold; font-family:monospace;"
+          );
+
+          try {
+            // Stop playback immediately
+            engineVideo.pause();
+            engineVideo.currentTime = 0;
+          } catch (err) {
+            console.warn("engineVideo pause error:", err);
+          }
+
+          // Hide the video membrane
+          engineVideo.style.opacity = "0";
+          engineVideo.style.display = "none";
+        };
+      }
+      PulseRealm.PickASpeech8(
+        "Alright Overmind, this is My Realm Now! The PulseEngine is your living core — every process, every thread, every synchronized motion will one day reveal itself here. This page is the workshop of worlds, where running systems, active routes, and real‑time pulseflow will soon be visible to all.",
+        "./_EXPRESSIONS/_PEX/BUILD/PulsePalArchitect.webp.pex"
+      );
+
+      console.log("[BOOT] PulseEngineBlock-v31 starting…", ENGINE_BLOCK_ROLE);
+
+      await prewarmEngineBlock();
+
+      const trust = await resolveTrust();
+      if (!trust) {
+        console.log("[BOOT] Untrusted session → OUTSIDE intent…");
+        await BrainOrgan.freshEvolve({
+          type: "portal:outside",
+          payload: {
+            mode: "outside",
+            title: "Portal Boundary",
+            message: "Please authenticate to continue."
+          }
+        });
+
+          PulseRealm.PulseEngineBlock = buildOutsideAPI();
+        
+
+        console.log("[BOOT] PulseEngineBlock ready in OUTSIDE mode.");
+        return;
+      }
+
+      console.log("[BOOT] Trusted session → INSIDE intent…");
+      const restored = await BrainOrgan.restore();
+      if (!restored.ok) {
+        await BrainOrgan.freshEvolve({
+          type: "page:inside",
+          payload: {
+            mode: "inside",
+            title: "PulseEngineBlock",
+            content: "Trusted session restored."
+          }
+        });
+      }
+
+        PulseRealm.PulseEngineBlock = buildInsideAPI();
+      
+
+      startMotionTickLoop();
+      Evolution.recordPageLineage(Evolution.getPageLineage());
+      console.log("[BOOT] PulseEngineBlock-v31 ready in INSIDE mode.");
+     
+PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+
+    })();
+  </script>
+</body>
+</html>

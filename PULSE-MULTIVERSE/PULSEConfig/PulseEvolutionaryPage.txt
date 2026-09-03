@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+  <title>Pulse EvolutionaryTrustedPage — v16-Evo-IMMORTAL</title>
+  <!-- 0. TOUCH — MUST LOAD FIRST -->
+
+<link rel="stylesheet" href="../__COMPONENTS_EVOLUTION/PulseEvolutionaryStyles.css" />
+<link rel="stylesheet" href="../__COMPONENTS_EVOLUTION/PulseEvolutionaryAnimations.css" />
+
+  <!-- ✔ ONLY DYNAMIC CSS -->
+  <style id="evo-dynamic-style"></style>
+</head>
+
+
+<body>
+  <div id="evo-wrapper"></div>
+
+  <!-- 2. SURFACE — BUILDS UI, USER, ROUTES, ETC -->
+  <script type="module" src="../_CREATION_BARRIER/PULSE-WORLD-EVO.js"></script>
+  <!-- 2. EVO PAGE LOGIC — SAFE TO RUN AFTER PORTAL -->
+  <script type="module">
+    // ============================================================================
+    // EVO PAGE — NOW RUNNING INSIDE A FULL MEMBRANE
+    // ============================================================================
+
+    import { PulseIcons } from "../__COMPONENTS_EVOLUTION/PulseEvolutionaryIcons-v30.js";
+
+    import { createPulseEvolutionaryCode } from "../_EVOLUTION/PulseEvolutionaryCode-v30.js";
+    import { createPulseEvolutionaryMemory } from "../_EVOLUTION/PulseEvolutionaryMemory-v30.js";
+    import { createPulseEvolutionaryBrain } from "../_EVOLUTION/PulseEvolutionaryBrain-v30.js";
+    import { createPulseEvolutionaryImpulse } from "../_EVOLUTION/PulseEvolutionaryImpulse-v30.js";
+    import { createPulseEvolutionaryRouter } from "../_EVOLUTION/PulseEvolutionaryRouter-v30.js";
+    import { createPulseEvolutionaryBinary } from "../_EVOLUTION/PulseEvolutionaryBinary-v30.js";
+
+    function mark(label, extra) {
+      console.log("[EVO-PAGE]", label, extra || "");
+    }
+
+    mark("Membrane ready — running EvoPage logic");
+
+    // Mock CNS (replace with real CNS when wired)
+    const CNS = {
+      emitImpulse(source, impulse) {
+        console.log("[CNS] Impulse:", source, impulse);
+      }
+    };
+
+    // ============================================================================
+    // EVOLUTION CONTEXT / LINEAGE
+    // ============================================================================
+    const Evolution = {
+      getPageLineage() {
+        return {
+          lineage: "v16-evo-immortal",
+          stable: true,
+          page: `/${PulseRealm.__PULSE_CURRENT_PAGE__}` || "/PulseWorldReality"
+        };
+      },
+      recordPageLineage(model) {
+        console.log("[Evolution] Lineage recorded:", model);
+      }
+    };
+
+
+    // ============================================================================
+    // ACTNOW — PURE REFLEX (KEEP USER IN PLACE AFTER SWAP)
+    // ============================================================================
+    function capturePageState() {
+      return {
+        scrollX: PulseRealm.scrollX,
+        scrollY: PulseRealm.scrollY,
+        anchor:
+          document.activeElement &&
+          (document.activeElement.id ||
+            document.activeElement.name ||
+            null)
+      };
+    }
+
+    function actNowRestore(state) {
+      if (!state) return;
+      try {
+        if (typeof PulseRealm.scrollTo === "function") {
+          PulseRealm.scrollTo(state.scrollX || 0, state.scrollY || 0);
+        }
+        if (state.anchor) {
+          const el =
+            document.getElementById(state.anchor) ||
+            document.getElementsByName(state.anchor)[0];
+          if (el && typeof el.focus === "function") {
+            el.focus();
+          }
+        }
+      } catch {
+        // ACTNOW must never break page
+      }
+    }
+
+    // ============================================================================
+    // INTENT / ROUTE ALIGNMENT — DRIFT-PROOF SHAPES
+    // ============================================================================
+    function alignEvolutionIntent(intent) {
+      if (!intent || typeof intent !== "object") return intent;
+
+      const base = {
+        type: intent.type || "page:update",
+        payload: intent.payload || {},
+        __band: intent.payload.__band || "symbolic",
+        __dnaTag: intent.payload.__dnaTag || null
+      };
+
+      return base;
+    }
+
+    function alignRouteIntent(route, opts) {
+      const normalized = {
+        route: route || "/",
+        opts: opts || {}
+      };
+
+      normalized.opts.__band =
+        typeof normalized.opts.__band === "string"
+          ? normalized.opts.__band
+          : "symbolic";
+
+      return normalized;
+    }
+
+    // ============================================================================
+    // INSTANTIATE UI ORGANS — v16-EVO-IMMORTAL wiring order
+    // ============================================================================
+    const routeId =`/${PulseRealm.__PULSE_CURRENT_PAGE__}` || "PulseEvolutionaryPage";
+
+
+    // 1) Long‑term memory (route‑aware)
+    const MemoryOrgan = createPulseEvolutionaryMemory({
+      routeId
+    });
+
+    // 2) Code organ (needs Evolution + Memory + CNS)
+    const CodeOrgan = createPulseEvolutionaryCode({
+      Evolution,
+      LongTermMemory: MemoryOrgan,
+      CNS
+    });
+
+    // 3) Brain organ (coordinates Code + Memory + CNS)
+    const BrainOrgan = createPulseEvolutionaryBrain({
+      Evolution,
+      LongTermMemory: MemoryOrgan,
+      CNS,
+      createCode: () => CodeOrgan,
+      createMemory: () => MemoryOrgan
+    });
+
+    // 4) Router organ (needs CNS + Evolution + Code + Brain)
+    const RouterOrgan = createPulseEvolutionaryRouter({
+      CNS,
+      Evolution,
+      CodeOrgan,
+      BrainOrgan
+    });
+
+    // 5) Impulse organ (route‑aware, lineage‑aware)
+    const ImpulseOrgan = createPulseEvolutionaryImpulse({
+      CNS,
+      Evolution,
+      RouteOrgan: RouterOrgan
+    });
+
+    // 6) Binary organ (route‑aware, lineage‑aware, encode/decode only)
+    const BinaryOrgan = createPulseEvolutionaryBinary({
+      Evolution,
+      RouteOrgan: RouterOrgan,
+      MemoryOrgan
+    });
+
+    // ============================================================================
+    // PREWARM — POWER + UNDERSTANDING + EVO MEMBRANE
+    // ============================================================================
+    async function prewarmEvolutionaryMembrane() {
+      try {
+        // 1) Power prewarm (route + assets)
+        try {
+          if (PulsePowerAPI.pulsePowerTouch) {
+            PulsePowerAPI.pulsePowerTouch({
+              pageId: routeId,
+              route: routeId,
+              assets: {
+                images: [],
+                fonts: [],
+                scripts: [],
+                styles: []
+              },
+              doc: document
+            });
+          }
+        } catch (err) {
+          console.warn("[PREWARM] PulsePower prewarm failed:", err);
+        }
+
+        // 2) Understanding prewarm (routes/pages)
+        try {
+          if (typeof prewarmUnderstandingLayer === "function") {
+            await prewarmUnderstandingLayer({
+              pages: [routeId],
+              routes: [routeId],
+              assets: []
+            });
+          }
+        } catch (err) {
+          console.warn("[PREWARM] Understanding prewarm failed:", err);
+        }
+
+        // 3) Memory prewarm (route‑aware)
+        if (typeof MemoryOrgan.prewarm === "function") {
+          await MemoryOrgan.prewarm();
+        }
+
+        // 4) Binary prewarm (encode/decode paths)
+        if (typeof BinaryOrgan.prewarm === "function") {
+          await BinaryOrgan.prewarm();
+        }
+
+        // 5) Brain prewarm (restore + minimal evolve)
+        if (typeof BrainOrgan.prewarm === "function") {
+          await BrainOrgan.prewarm();
+        }
+
+        console.log("[PREWARM] Evolutionary membrane prewarmed.");
+      } catch (err) {
+        console.warn("[PREWARM] Evolutionary membrane prewarm failed:", err);
+      }
+    }
+
+    // ============================================================================
+    // BOOT SEQUENCE — EvolutionaryTrustedPage (TRUSTED / UNTRUSTED INTENTS)
+    // ============================================================================
+    (async () => {
+      console.log("[BOOT] PulseEvolutionaryPage starting…");
+
+      await prewarmEvolutionaryMembrane();
+
+      const PulseSkinReflex = PulseRealm.PulseSkinReflex || {};
+      const trust =
+        typeof PulseSkinReflex.checkTrust === "function"
+          ? await PulseSkinReflex.checkTrust()
+          : true; // default to trusted if not wired yet
+
+      if (!trust) {
+        console.log("[BOOT] Untrusted session → loading OUTSIDE intent…");
+
+        await BrainOrgan.freshEvolve({
+          type: "portal:outside",
+          payload: {
+            mode: "outside",
+            title: "Portal Boundary",
+            message: "Please authenticate to continue."
+          }
+        });
+
+        // OUTSIDE mode: minimal interface, no internal routing
+        PulseRealm.PulseEvolutionaryPage = {
+          evolve: async (payload) => {
+            const pre = capturePageState();
+
+            const aligned = alignEvolutionIntent({
+              type: "portal:update",
+              payload
+            });
+
+            const result = await CodeOrgan.evolve(aligned);
+
+            actNowRestore(pre);
+            return result;
+          },
+
+          // NEW: Error listener for UI Error envelopes
+          onError: (envelope) => {
+            try {
+              console.warn("[OUTSIDE:Error]", envelope);
+
+              // Optional: forward to logger
+              PulseRealm.PulseLogger.error(envelope);
+
+              // Optional: forward to SkinReflex
+              PulseRealm.PulseSkinReflex.onError(envelope);
+
+              // Optional: forward to Admin Panel
+              PulseRealm.PulseWorldAdminPanel.onError(envelope);
+
+              // Optional: emit a signal for outside-mode observers
+              PulseRealm.PulseSignals.emit("outside.error", {
+                envelope,
+                mode: "outside",
+                route: envelope.packet.route,
+                severity: envelope.severity
+              });
+            } catch (err) {
+              console.warn("[OUTSIDE:onError failed]", err);
+            }
+          },
+
+          memory: MemoryOrgan,
+          brain: BrainOrgan,
+          router: RouterOrgan,
+          binary: BinaryOrgan,
+          impulse: ImpulseOrgan,
+          icons: PulseIcons
+        };
+
+        console.log("[BOOT] EvolutionaryTrustedPage ready in OUTSIDE mode.");
+        return;
+
+      }
+
+      console.log("[BOOT] Trusted session → loading INSIDE intent…");
+
+      const restored = await BrainOrgan.restore();
+
+      if (!restored.ok) {
+        await BrainOrgan.freshEvolve({
+          type: "page:inside",
+          payload: {
+            mode: "inside",
+            title: "PulseWorldOS",
+            content: "Trusted session restored."
+          }
+        });
+      }
+
+      // INSIDE mode: full internal interface
+      PulseRealm.PulseEvolutionaryPage = {
+        evolve: async (payload) => {
+          const pre = capturePageState();
+
+          const aligned = alignEvolutionIntent({
+            type: "page:update",
+            payload
+          });
+
+          const result = await CodeOrgan.evolve(aligned);
+
+          actNowRestore(pre);
+          return result;
+        },
+
+        route: async (route, opts) => {
+          const pre = capturePageState();
+
+          const aligned = alignRouteIntent(route, opts);
+          const result = await RouterOrgan.go(aligned.route, aligned.opts);
+
+          actNowRestore(pre);
+          return result;
+        },
+
+        // NEW: Full internal error handler (INSIDE mode)
+        onError: (envelope) => {
+          try {
+            console.warn("[INSIDE:Error]", envelope);
+
+            // RouterOrgan (internal navigation graph)
+            try {
+              RouterOrgan.onError(envelope);
+            } catch {}
+
+            // Cortex (experience + memory)
+            try {
+              PulseCortex.onError(envelope);
+            } catch {}
+
+            // MemoryOrgan (snapshot + recall)
+            try {
+              PulseMemoryOrgan.onError(envelope);
+            } catch {}
+
+            // BinaryOrgan (shadow state)
+            try {
+              PulseBinaryOrgan.onError(envelope);
+            } catch {}
+
+            // EvolutionaryPage (self-awareness)
+            try {
+              PulseEvolutionaryPage.onErrorInternal(envelope);
+            } catch {}
+
+            // SkinReflex (UI reflex layer)
+            try {
+              PulseSkinReflex.onError(envelope);
+            } catch {}
+
+            // Overmind / Crown
+            try {
+              PulseOvermindPrime.onError(envelope);
+            } catch {}
+
+            // Admin diagnostics
+            try {
+              AdminDiagnosticsOrgan.onError(envelope);
+            } catch {}
+
+            // Admin Panel
+            try {
+              PulseWorldAdminPanel.onError(envelope);
+            } catch {}
+
+            // SDN (Understanding)
+            try {
+              PulseRealm.PulseSDN.emitImpulse("ErrorSpine", {
+                modeKind: "dual",
+                executionContext: {
+                  sceneType: "error",
+                  workloadClass: "ui-error",
+                  dispatchSignature: "PulseUIErrors.v30",
+                  shapeSignature: "error-spine",
+                  extensionId: "PulseUIErrors"
+                },
+                errorEnvelope: envelope
+              });
+            } catch {}
+
+            // Signals (INSIDE mode gets full routing signals)
+            try {
+              PulseRealm.PulseSignals.emit("inside.error", {
+                envelope,
+                route: envelope.packet.route,
+                severity: envelope.severity,
+                surface: envelope.packet.surface,
+                band: envelope.packet.band,
+                sessionId: envelope.packet.sessionId
+              });
+            } catch {}
+
+            // CoreMemory mirror
+            try {
+              getCore().setRouteSnapshot("ui_errors_last_inside", envelope);
+            } catch {}
+
+          } catch (err) {
+            console.warn("[INSIDE:onError failed]", err);
+          }
+        },
+
+        // Encode/decode only — no frontend chunking
+        encode: (payload) => BinaryOrgan.encode(payload),
+        decode: (compressed) => BinaryOrgan.decode(compressed),
+
+        memory: MemoryOrgan,
+        brain: BrainOrgan,
+        router: RouterOrgan,
+        binary: BinaryOrgan,
+        impulse: ImpulseOrgan,
+        icons: PulseIcons
+      };
+
+      console.log("[BOOT] EvolutionaryTrustedPage ready in INSIDE mode.");
+
+    })();
+  </script>
+</body>
+</html>

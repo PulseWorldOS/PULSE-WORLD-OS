@@ -1,0 +1,48 @@
+{
+  "name": "pulse-world-os",
+  "type": "module",
+  "engines": {
+    "node": "22"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "busboy": "^1.6.0",
+    "dotenv": "^17.4.1",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^9.0.3",
+    "puppeteer": "^25.9.0",
+    "redis": "^5.11.0",
+    "sharp": "^0.35.3",
+    "stripe": "^12.18.0",
+    "twilio": "^5.12.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.9.0",
+    "globals": "^17.4.0"
+  },
+  "version": "1.0.0",
+  "description": "⭐ THE PULSENET INVESTOR PITCH (FULL DETAIL + STATS + ISP DISRUPTION)\r Safe. Powerful. Irreversible. Uncopyable.",
+  "scripts": {
+    "start": "node PULSE-MULTIVERSE/PulseWorldDevice.js",
+    "build:multiverse": "node PULSE-MULTIVERSE/esbuild.config.mjs",
+    "build:world": "node PULSE-MULTIVERSE/esbuild.config.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pex": "node PULSE-MULTIVERSE/_EXPRESSIONS/_PEX/PULSE-EXPRESSION-EXTENSION.js",
+    "pex-one": "node PULSE-MULTIVERSE/_EXPRESSIONS/_PEX/PULSE-EXPRESSION-EXTENSION.js --single"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "main": "pulseosworld.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pulse-World/PULSE-WORLD-OS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pulse-World/PULSE-WORLD-OS/issues"
+  },
+  "homepage": "https://github.com/Pulse-World/PULSE-WORLD-OS#readme"
+}

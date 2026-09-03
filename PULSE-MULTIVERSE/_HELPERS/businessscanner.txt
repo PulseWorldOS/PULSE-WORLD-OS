@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pending Business Loader</title>
+  <style>
+    body { background:#111; color:#eee; font-family:Arial; padding:20px; }
+    #log { background:#000; padding:10px; height:500px; overflow-y:scroll; border:1px solid #333; }
+    select, button { padding:8px; margin:5px; }
+  </style>
+</head>
+<body>
+  <h2>Pending Business Loader (Serper → PendingBusinesses)</h2>
+
+  <!-- CATEGORY DROPDOWN -->
+  <select id="category">
+
+    <option value="movies San Pedro Belize">Micro Experience Stoops / Stoop Concerts</option>
+<option value="theater San Pedro Belize">Pop-up Ceviche Stands</option>
+<option value="theatre San Pedro Belize">Hammock Napping Spots</option>
+<option value="entertainment San Pedro Belize">Sunrise Yoga on Dock</option>
+<option value="busy San Pedro Belize">Chef Pop-up / Sold-out Specials</option>
+
+<option value="builder San Pedro Belize">Real-time Availability Windows</option>
+<option value="window San Pedro Belize">Open For Next 30 Minutes</option>
+<option value="doors San Pedro Belize">Accepting Walk-ins Now</option>
+
+<option value="people-as-assets surfboard waxer San Pedro Belize">People as Assets — Surfboard Waxer</option>
+<option value="people-as-assets last-minute boat captain San Pedro Belize">People as Assets — Last-minute Boat Captain</option>
+<option value="people-as-assets local-translator San Pedro Belize">People as Assets — Local Translator</option>
+<option value="people-as-assets guitar-teacher-now San Pedro Belize">People as Assets — Guitar Teacher Now</option>
+
+<option value="sensory-profile quiet-work-spots San Pedro Belize">Sensory Profile — Quiet Work Spots</option>
+<option value="sensory-profile low-noise-cafes San Pedro Belize">Sensory Profile — Low Noise Cafes</option>
+<option value="sensory-profile well-lit-venues San Pedro Belize">Sensory Profile — Well Lit Venues</option>
+<option value="sensory-profile scent-free-spaces San Pedro Belize">Sensory Profile — Scent Free Spaces</option>
+
+<option value="home-based weekly-special kitchens San Pedro Belize">Home-Based Weekly Special Kitchens</option>
+<option value="home-based backyard-workshops San Pedro Belize">Home-Based Backyard Workshops</option>
+<option value="home-based private-garden-tours San Pedro Belize">Home-Based Private Garden Tours</option>
+<option value="home-based cottage-producers San Pedro Belize">Home-Based Cottage Producers</option>
+
+<option value="community-resource potable-water-refill San Pedro Belize">Community Resource — Water Refill Stations</option>
+<option value="community-resource public-restroom-status San Pedro Belize">Community Resource — Public Restroom Status</option>
+<option value="community-resource dock-occupancy San Pedro Belize">Community Resource — Dock Occupancy</option>
+<option value="community-resource ice-availability San Pedro Belize">Community Resource — Ice Availability</option>
+
+<option value="hidden-secret-menu-items San Pedro Belize">Hidden / Secret Menu Items</option>
+<option value="limited-run sauces San Pedro Belize">Limited-Run Sauces & Small Batches</option>
+<option value="home-bakery pickup San Pedro Belize">Home Bakery Pickup</option>
+<option value="micro-farm produce San Pedro Belize">Micro-Farm Produce / Local Producers</option>
+
+<option value="skill-swap listings San Pedro Belize">Skill-Swap Listings</option>
+<option value="language-exchange meetups San Pedro Belize">Language Exchange Meetups</option>
+<option value="one-off micro-classes San Pedro Belize">One-off Micro Classes / Lessons</option>
+<option value="pop-up language table San Pedro Belize">Pop-up Language Table</option>
+
+<option value="hidden-snorkel-spot San Pedro Belize">Hidden Snorkel Spots</option>
+<option value="bioluminescence viewing San Pedro Belize">Bioluminescence Viewing Spots</option>
+<option value="tidepool access points San Pedro Belize">Tidepool Access Points</option>
+<option value="stargazing spots San Pedro Belize">Stargazing Spots</option>
+
+<option value="dockside-hammocks San Pedro Belize">Dockside Hammocks</option>
+<option value="private-mooring-spots San Pedro Belize">Private Mooring Spots</option>
+<option value="overnight-boat-anchorage San Pedro Belize">Overnight Boat Anchorage</option>
+<option value="overnight-van-parking San Pedro Belize">Overnight Van Parking / Camper Spots</option>
+
+<option value="boat-parts repair San Pedro Belize">Boat Parts Repair</option>
+<option value="outboard-engine repair San Pedro Belize">Outboard Engine Repair</option>
+<option value="dive-gear repair San Pedro Belize">Dive Gear Repair</option>
+<option value="fishing-gear repair San Pedro Belize">Fishing Gear Repair</option>
+
+<option value="community-fridge donation drop-off San Pedro Belize">Community Fridge / Donation Drop-off</option>
+<option value="public-tool-shed San Pedro Belize">Public Tool Shed / Tool Library</option>
+<option value="bike-pump station San Pedro Belize">Bike Pump Station</option>
+<option value="portable-charger rental San Pedro Belize">Portable Charger Rental / Phone Charging Stations</option>
+
+<option value="cash-only spots San Pedro Belize">Cash-only Spots</option>
+<option value="card-only spots San Pedro Belize">Card-only Spots</option>
+<option value="tip-jar-friendly businesses San Pedro Belize">Tip Jar Friendly Businesses</option>
+<option value="no-ac spots San Pedro Belize">No-AC / Open-Air Spots</option>
+
+<option value="unlisted-artisans San Pedro Belize">Unlisted Artisans / Makers</option>
+<option value="secret-shopping pop-up stalls San Pedro Belize">Secret Shopping / Pop-up Stalls</option>
+<option value="micro-market events San Pedro Belize">Micro-Market Events</option>
+<option value="one-off food-stands San Pedro Belize">One-off Food Stands</option>
+
+<option value="lost-and-found pickup San Pedro Belize">Lost-and-Found Pickup Spots</option>
+<option value="donation-collection points San Pedro Belize">Donation Collection Points</option>
+<option value="volunteer-shifts community San Pedro Belize">Volunteer Shifts / Community Help</option>
+<option value="neighborhood-watch posts San Pedro Belize">Neighborhood Watch / Community Posts</option>
+
+  </select>
+
+  <button id="run">Run Sweep</button>
+  <button id="stop" style="background:#c00;color:#fff">STOP</button>
+
+  <div id="log"></div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    
+
+    const logEl = document.getElementById("log");
+    const btnRun = document.getElementById("run");
+    const btnStop = document.getElementById("stop");
+
+    let STOP_REQUESTED = false;
+
+    btnStop.onclick = () => {
+      STOP_REQUESTED = true;
+      log("🛑 STOP REQUESTED — finishing current batch...", "warn");
+    };
+
+    function log(msg, type = "info") {
+      const c =
+        type === "error" ? "#ff4444" :
+        type === "warn"  ? "#ffbb33" :
+                           "#00ff66";
+      logEl.innerHTML += `<div style="color:${c}">${msg}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    const SERPER_KEY = "e37be7342ffd6445f1f3785aa4b46bd116ff2a41";
+
+    // ---------------- SERPER CATEGORY FETCH ----------------
+    async function fetchCategory(query) {
+      const url = "https://google.serper.dev/maps";
+
+      log(`🌐 Fetching Serper results for: ${query}`);
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "X-API-KEY": SERPER_KEY,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ q: query })
+        });
+
+        if (!res.ok) {
+          log(`❌ Serper HTTP ${res.status}`, "error");
+          return null;
+        }
+
+        const json = await res.json();
+        return json.places || [];
+
+      } catch (err) {
+        log(`❌ Serper error: ${err.message}`, "error");
+        return null;
+      }
+    }
+
+    // ---------------- MAIN SWEEP ----------------
+    async function runSweep() {
+      STOP_REQUESTED = false;
+      btnRun.disabled = true;
+
+      const select = document.getElementById("category");
+      const selectedOption = select.options[select.selectedIndex];
+      const query = selectedOption.value;
+
+      // NEW: detect last-resort mode
+      const isLastResort = selectedOption.dataset.lastresort === "true";
+
+      log(`\n🚀 Starting sweep for: ${query}`);
+      if (isLastResort) log("⚠️ Last-Resort Mode Enabled — results may be low-quality or weird", "warn");
+
+      const places = await fetchCategory(query);
+      if (!places || places.length === 0) {
+        log("⚠️ No results returned from Serper.", "warn");
+        btnRun.disabled = false;
+        return;
+      }
+
+      log(`📦 Serper returned ${places.length} places.`);
+
+      for (const place of places) {
+        if (STOP_REQUESTED) break;
+
+        const placeId = place.placeId;
+        if (!placeId) {
+          log("⚠️ Skipping item with no placeId", "warn");
+          continue;
+        }
+
+        log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+        log(`📍 Checking: ${place.title} (${placeId})`);
+
+        // Check Businesses by placeId field (NOT doc ID)
+        const match = await db.collection("Businesses")
+          .where("placeId", "==", placeId)
+          .get();
+
+        if (!match.empty) {
+          log("   ✔ Already in Businesses (matched by placeId) — skipping");
+          continue;
+        }
+
+        // Check PendingBusinesses
+        const pendingDoc = await db.collection("PendingBusinesses").doc(placeId).get();
+        if (pendingDoc.exists) {
+          log("   ✔ Already in PendingBusinesses — skipping");
+          continue;
+        }
+
+        // Build PendingBusiness object
+        const pending = {
+          placeId,
+          title: place.title || null,
+          address: place.address || null,
+          lat: place.lat || null,
+          lng: place.lng || null,
+
+          phoneNumber: place.phoneNumber || null,
+          website: place.website || null,
+          menu: place.menu || null,
+
+          rating: place.rating ?? null,
+          ratingCount: place.ratingCount ?? null,
+          priceLevel: place.priceLevel ?? null,
+
+          types: place.types || [],
+          category: place.category || null,
+
+          openingHours: place.openingHours || null,
+          hoursText: place.hours || null,
+          open_state: place.open_state || null,
+          openNow: place.openNow ?? null,
+
+          thumbnailUrl: place.thumbnailUrl || null,
+          googleUrl: place.link || null,
+          reviewsLink: place.reviewsLink || null,
+
+          cid: place.cid || null,
+          fid: place.fid || null,
+
+          raw: place,
+
+          // NEW FLAG
+          isLastResort: isLastResort
+        };
+
+        log("   💾 Saving to PendingBusinesses...");
+        await db.collection("PendingBusinesses").doc(placeId).set(pending);
+
+        log("   ✅ Added to PendingBusinesses");
+      }
+
+      log("\n🎉 Sweep complete.");
+      btnRun.disabled = false;
+    }
+
+    btnRun.addEventListener("click", runSweep);
+  </script>
+</body>

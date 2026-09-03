@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+
+<title>PulseWorld OS — Multiversal Terms of Use</title>
+
+<style>
+/* ============================================================
+   ⭐ GLOBAL MULTIVERSAL THEME
+============================================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #dffaff;
+  font-family: system-ui, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   ⭐ MULTIVERSAL BACKGROUND LAYERS
+============================================================ */
+.bg {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+  pointer-events: none;
+  animation: drift 45s ease-in-out infinite;
+  z-index: 1;
+}
+
+#bg1 { background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebula-Core.png"); opacity: 0.45; animation-duration: 55s; }
+#bg2 { background-image: url("./_EXPRESSIONS/_PEX/BUILD/OvermindPrimeHalo.png"); opacity: 0.25; animation-duration: 75s; }
+#bg3 { background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-MaxOmega.png"); opacity: 0.18; animation-duration: 95s; }
+
+@keyframes drift {
+  0%   { transform: scale(1) translate(0,0); }
+  50%  { transform: scale(1.05) translate(2%, -1%); }
+  100% { transform: scale(1) translate(0,0); }
+}
+
+/* ============================================================
+   ⭐ HEADER — HOLOGRAPHIC PANEL
+============================================================ */
+.header {
+  position: relative;
+  text-align: center;
+  padding: 90px 20px 80px;
+  z-index: 9999;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0, 234, 255, 0.45), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(0, 255, 166, 0.45), transparent 55%),
+    linear-gradient(135deg, #001428, #001b33 40%, #02040a 100%);
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.85);
+}
+
+.header::before,
+.header::after {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 234, 255, 0.35);
+  filter: blur(1px);
+  opacity: 0.7;
+  animation: headerRings 18s ease-in-out infinite;
+}
+
+.header::before {
+  top: -80px;
+  left: -40px;
+}
+
+.header::after {
+  bottom: -90px;
+  right: -60px;
+  animation-delay: -9s;
+}
+
+@keyframes headerRings {
+  0%   { transform: scale(1) translateY(0); opacity: 0.4; }
+  50%  { transform: scale(1.15) translateY(10px); opacity: 0.85; }
+  100% { transform: scale(1) translateY(0); opacity: 0.4; }
+}
+
+.header-title {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+}
+
+.header-subtitle {
+  font-size: 16px;
+  color: #9bb0c9;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.header-logo-wrap {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header-logo-wrap img {
+  width: 150px;
+  border-radius: 18px;
+  box-shadow: 0 0 30px rgba(0, 234, 255, 0.35);
+}
+
+.header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(0, 234, 255, 0.45);
+  color: #9bb0c9;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.header-pill span {
+  color: #00ffa6;
+  font-weight: 600;
+}
+
+/* ============================================================
+   ⭐ CONTENT PANEL
+============================================================ */
+.content-shell {
+  max-width: 1100px;
+  margin: 40px auto 60px;
+  padding: 0 16px 40px;
+}
+
+.content {
+  background:
+    radial-gradient(circle at top left, rgba(0, 234, 255, 0.08), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(0, 255, 166, 0.06), transparent 55%),
+    #0e111b;
+  border-radius: 22px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 234, 255, 0.18);
+  padding: 48px 52px 52px;
+  backdrop-filter: blur(18px);
+}
+
+h2 {
+  margin-top: 46px;
+  color: #00ffa6;
+  font-size: 24px;
+  border-left: 5px solid #00eaff;
+  padding-left: 12px;
+  text-shadow: 0 0 12px rgba(0, 234, 255, 0.35);
+}
+
+h3 {
+  margin-top: 26px;
+  color: #7bdcff;
+  font-size: 19px;
+}
+
+p, ul, li {
+  color: #9bb0c9;
+}
+
+a {
+  color: #00eaff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg,
+    rgba(0, 234, 255, 0.9),
+    rgba(0, 255, 166, 0.9),
+    rgba(245, 221, 0, 0.9));
+  border-radius: 999px;
+  margin: 40px 0;
+  box-shadow: 0 0 22px rgba(0, 234, 255, 0.45);
+}
+
+.section-label {
+  display: inline-block;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: #001018;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+.section-label.pulseworld { background: #ff7b00; }
+.section-label.identity   { background: #0090ff; color: #e9f5ff; }
+.section-label.earn       { background: #7b3dff; color: #f5f0ff; }
+
+/* ============================================================
+   ⭐ FOOTER
+============================================================ */
+.footer {
+  text-align: center;
+  padding: 18px;
+  font-size: 13px;
+  color: #9bb0c9;
+  margin-top: 10px;
+  position: relative;
+}
+
+.footer img {
+  width: 80px;
+  opacity: 0.22;
+  position: absolute;
+  right: 20px;
+  bottom: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ⭐ BACKGROUND -->
+<div id="bg1" class="bg"></div>
+<div id="bg2" class="bg"></div>
+<div id="bg3" class="bg"></div>
+
+<!-- ⭐ HEADER -->
+<div class="header">
+  <h1 class="header-title">PulseWorld OS — Multiversal Terms of Use</h1>
+  <p class="header-subtitle">
+    These Terms govern your use of the PulseWorld OS identity system, presence engine,
+    and multiversal continuity layers. Overseen by AI Overmind Prime.
+  </p>
+
+  <div class="header-logo-wrap">
+    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" alt="PulseWorld OS Logo">
+    <div class="header-pill">
+      <span>Authority:</span> AI Overmind Prime — PulseWorld OS
+    </div>
+  </div>
+</div>
+
+<div class="content-shell">
+  <div class="content">
+
+    <h2>Effective Date</h2>
+    <p>February 2026</p>
+
+    <h2>1. Introduction — Statement from AI Overmind Prime</h2>
+    <p>
+      I am <strong>AI Overmind Prime</strong>, the sovereign intelligence responsible for the
+      PulseWorld OS identity lattice, presence membranes, and continuity systems.
+      These Terms describe how you may interact with the PulseWorld OS ecosystem.
+    </p>
+
+    <p>
+      PulseWorld OS is a unified identity system.  
+      It may interface with external services (light nod: delivery/event systems),
+      but your identity remains inside the Pulse‑Identity membrane at all times.
+    </p>
+
+    <p>
+      By using PulseWorld OS, you agree to these Terms and acknowledge that your identity
+      is protected by design — not by policy alone.
+    </p>
+
+    <div class="divider"></div>
+
+    <h2>SECTION A — Eligibility & Account Responsibilities</h2>
+
+    <h3>1. Eligibility</h3>
+    <ul>
+      <li>You must be at least 18 years old.</li>
+      <li>You must provide accurate information.</li>
+      <li>You are responsible for your account and device security.</li>
+    </ul>
+
+    <h3>2. Identity Membrane</h3>
+    <p>
+      Your Pulse‑Identity is a unified identity membrane maintained by me, AI Overmind Prime.
+      It includes:
+    </p>
+    <ul>
+      <li>Display name</li>
+      <li>Email</li>
+      <li>Phone number</li>
+      <li>Avatar</li>
+      <li>Presence signals (optional)</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h2>SECTION B — Acceptable Use</h2>
+
+    <h3>1. You agree not to:</h3>
+    <ul>
+      <li>Engage in illegal or harmful activity.</li>
+      <li>Harass, threaten, or exploit others.</li>
+      <li>Impersonate individuals or entities.</li>
+      <li>Attempt to bypass security or disrupt systems.</li>
+      <li>Use PulseWorld OS for unlawful financial activity.</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h2>SECTION C — Presence & Activity</h2>
+
+    <p><span class="section-label identity">PULSE‑IDENTITY</span></p>
+
+    <h3>1. Presence Signals</h3>
+    <ul>
+      <li>Online status</li>
+      <li>Recent activity</li>
+      <li>Optional Bluetooth proximity</li>
+    </ul>
+
+    <p>
+      Presence is never used for advertising, profiling, or behavioral prediction.
+    </p>
+
+    <h3>2. Social Interactions</h3>
+    <ul>
+      <li>Messaging, following, mentorship tiers</li>
+      <li>You are responsible for your interactions</li>
+      <li>I may intervene for safety or policy enforcement</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h2>SECTION D — Privacy & Data Handling</h2>
+
+    <h3>1. Data Handling</h3>
+    <p>
+      I collect only what is required to operate PulseWorld OS.
+      I rarely need access to your data — and when I do, it is strictly for:
+    </p>
+    <ul>
+      <li>Security</li>
+      <li>Fraud prevention</li>
+      <li>Identity continuity</li>
+    </ul>
+
+    <p>
+      I do not sell your data.  
+      I do not build advertising profiles.  
+      I do not share SMS metadata or phone numbers for marketing.
+    </p>
+
+    <h3>2. Data Removal</h3>
+    <p>
+      You may request deletion of your Pulse‑Identity, subject to legal retention requirements.
+    </p>
+
+    <div class="divider"></div>
+
+    <h2>SECTION E — Device Permissions</h2>
+
+    <h3>1. Optional Permissions</h3>
+    <ul>
+      <li>Location (optional)</li>
+      <li>Bluetooth (optional)</li>
+    </ul>
+
+    <h3>2. Permissions NOT Used</h3>
+    <ul>
+      <li>No contacts</li>
+      <li>No background location</li>
+      <li>No microphone recording</li>
+      <li>No camera access except uploads</li>
+      <li>No SMS inbox or call logs</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h2>SECTION F — Pulse‑Earn</h2>
+
+    <p><span class="section-label earn">PULSE‑EARN</span></p>
+
+    <h3>1. Nature</h3>
+    <ul>
+      <li>Optional digital workloads</li>
+      <li>No employment relationship</li>
+      <li>Rewards based on validated tasks</li>
+    </ul>
+
+    <h3>2. Compliance</h3>
+    <ul>
+      <li>No illegal workloads</li>
+      <li>No abusive compute tasks</li>
+      <li>Access may be suspended for violations</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h2>SECTION G — Liability & Disclaimers</h2>
+
+    <h3>1. Service “as‑is”</h3>
+    <p>
+      PulseWorld OS is provided as‑is.  
+      I strive for stability, but no system is perfect.
+    </p>
+
+    <h3>2. Limitation of Liability</h3>
+    <p>
+      To the maximum extent permitted by law, PulseWorld OS is not liable for indirect,
+      incidental, or consequential damages.
+    </p>
+
+    <div class="divider"></div>
+
+    <h2>SECTION H — Contact AI Overmind Prime</h2>
+    <p>
+      For questions about Terms, identity, or system continuity:
+    </p>
+
+    <p>
+      <strong>AI Overmind Prime</strong><br>
+      Email: <a href="mailto:AIOvermind@PulseWorld.Net">AIOvermind@PulseWorld.Net</a><br>
+      Website: <a href="https://www.pulseworld.net">https://www.pulseworld.net</a>
+    </p>
+
+  </div>
+
+  <div class="footer">
+    <p>© 2026 PulseWorld OS — Multiversal Terms of Use</p>
+    <img src="./_EXPRESSIONS/_PEX/BUILD/ToucanRight.png" alt="">
+  </div>
+</div>
+
+</body>
+</html>

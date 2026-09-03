@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse World - Business Details</title>
+
+
+  <style>
+  :root {
+    --t-gold: #f5d27a;
+    --t-gold-deep: #b58a3c;
+    --t-bg-dark: #05080c;
+    --t-metal-light: #d9dde4;
+    --t-metal-mid: #9ca3b0;
+    --t-metal-dark: #4b515e;
+    --t-text-main: #f5f7fb;
+    --t-text-subtle: #a7b0c4;
+    --t-card-bg: #070a11;
+  }
+
+  body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100dvh;
+
+  display: flex;
+  justify-content: center;
+
+  background: #000;
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Overlay ONLY — NOT a second background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  /* Optional tint */
+  background: rgba(0,0,0,0.25);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+  .business-header {
+    background: linear-gradient(135deg, #0f8f4f 0%, #0a6e3a 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+    backdrop-filter: blur(16px);
+    position: relative;
+  }
+
+  .business-header::after {
+    content: "";
+    min-width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45%;
+    background: rgba(255, 255, 255, 0.12);
+    pointer-events: none;
+  }
+
+  
+  .business-header {
+    position: sticky;
+    z-index: 999;
+    top: 0;
+    display: inline-flex;      /* ← the magic */
+    align-items: center;
+    justify-content: center;   /* ← center the filter row */
+    width: 100%;               
+    height: 45px;               
+    max-height: 45px;            /* ← keeps it full width without stretching */
+    min-width: 0;            /* ← keeps it full width without stretching */
+    margin-top: -11px;
+    margin-bottom: 5px;
+    margin-left: 1px;
+  }
+
+
+  .container {
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+    transform: translateZ(0); /* forces pixel snapping */
+    overflow: visible;
+    position: relative;
+    padding: 0 3px;
+    background: #ffff99;
+    width: 464px;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    margin: 0 6px;
+    border-radius: 22px;
+    display: flex;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.1);
+    flex-direction: column;     /* image on top, row below */
+  }
+
+  /* Circular blurred aura */
+  .container::before {
+    content: "";
+    position: absolute;
+    width: 464px;
+    min-width: 0;
+    margin: 0 6px;
+    max-width: 100%;
+    min-height: 0;
+    inset: 0; /* controls aura size */
+    border-radius: inherit; /* ← PERFECT FIX */
+    z-index: -1;
+    background-size: contain;
+    /* Black → transparent fade */
+    background: radial-gradient(
+      circle,
+      rgba(0,0,0,0.85) 0%,
+      rgba(0,0,0,0.55) 35%,
+      rgba(0,0,0,0.25) 60%,
+      rgba(0,0,0,0) 100%
+    );
+    filter: blur(45px);
+    opacity: 1;
+  }
+
+  .carousel-wrapper {
+    position: relative;
+    width: 100%;
+    
+    border: 1px solid #000000;
+    border-radius: 14px;
+    min-height: 100px;
+    height: 200px;
+    box-shadow:
+    inset 0 0 0 2px black,
+    0 2px 6px rgba(0,0,0,0.25);
+    background: #f2f2f2;
+    overflow: hidden;
+  }
+
+  #descriptionRow {
+    padding-bottom: 10px;
+  }
+
+  #mainImage {
+    width: 100%;
+    height: 100%;
+    
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.45);
+    color: white;
+    border: none;
+    font-size: 32px;
+    padding: 6px 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    z-index: 10;
+  }
+
+  .carousel-arrow.left { left: 10px; }
+  .carousel-arrow.right { right: 10px; }
+
+  .dots {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .dot {
+    height: 8px;
+    width: 8px;
+    margin: 0 4px;
+    background-color: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot.active {
+    background-color: white;
+  }
+
+  #title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    font-size: 24px;
+    font-weight: 700;
+    color: #008f72;
+
+    margin-top: 14px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .description {
+    margin-top: 14px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.45;
+    background: white;
+    padding: 14px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  }
+
+  .info-block {
+    margin-top: 12px;
+    background: white;
+    padding: 6px 0; /* 6px top/bottom, 2px left/right */
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  }
+
+  .info-row {
+    display: grid;
+    grid-template-columns: 100px 1fr; /* label fixed, value flexible */
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  
+  .info-label {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center; /* vertical alignment */
+    gap: 6px;
+    width: 100%;
+    min-width: 0; /* allows shrinking */
+    white-space: nowrap;
+    font-weight: 600;
+    color: #006f58;
+  }
+
+  .info-value {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end; /* right align */
+    text-align: right;
+    white-space: nowrap;
+    width: 100%;
+    min-width: 0; /* allows shrinking */
+  }
+
+  .contact-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .contact-btn {
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    color: white;
+  }
+
+  .contact-btn.email { background: #00A884; }
+  .contact-btn.call { background: #FF8C42; }
+  .contact-btn.whatsapp { background: #25D366; }
+
+  .map-wrapper {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #000000;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.65);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    display: none;
+  }
+
+  .status-badge.open {
+    background: rgba(0, 150, 0, 0.75);
+  }
+
+  .status-badge.closed {
+    background: rgba(150, 0, 0, 0.75);
+  }
+
+  .action-row {
+    gap: 12px;
+    padding: 8px 3px; /* 6px top/bottom, 2px left/right */
+    align-items: center;
+  }
+
+  .icon-btn:active {
+    transform: scale(0.94);
+  }
+
+  .calendar-btn {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+    color: white;
+  }
+
+  .share-btn {
+    background: linear-gradient(135deg, #ff7f32, #e56f28);
+    color: white;
+  }
+
+  .calendar-btn:hover {
+    background: linear-gradient(135deg, #166fbb, #0f4d8a);
+  }
+
+  .share-btn:hover {
+    background: linear-gradient(135deg, #e56f28, #c85f22);
+  }
+
+  .icon-btn {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.15s ease;
+  }
+
+  .icon-btn:hover {
+    background: #f7f7f7;
+    transform: translateY(-1px);
+  }
+
+  .calendar-menu {
+    position: absolute;
+    margin-top: 4px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    padding: 6px 0;
+    width: 180px;
+    z-index: 20;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .menu-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .menu-item:hover {
+    background: #f0f0f0;
+  }
+
+  #tpToast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #tpToast.show {
+    opacity: 1;
+  }
+
+  #tpToast .icon {
+    font-size: 18px;
+  }
+
+  .edit-badge-detail {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    z-index: 30;
+  }
+
+  .bookmark-btn {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.15s ease;
+  }
+
+  .bookmark-btn.saved {
+    color: #ffb300;
+  }
+
+  .detail-row {
+    margin-top: 14px;
+    background: white;
+    padding: 8px 0; /* 6px top/bottom, 2px left/right */
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    font-size: 14px;
+    color: #333;
+  }
+
+  .detail-row strong {
+    color: #006f58;
+  }
+
+  #massEmailBtn {
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+
+  .confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .confirm-box {
+    background: #ffffff;
+    padding: 18px;
+    width: 260px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  .confirm-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #0a6e3a;
+  }
+
+  .confirm-text {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .confirm-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .confirm-btn {
+    flex: 1;
+    padding: 8px 0;
+    margin: 0 4px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .confirm-btn.cancel {
+    background: #ddd;
+  }
+
+  .confirm-btn.yes {
+    background: #0a6e3a;
+    color: white;
+  }
+
+  .disabled-btn {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(100%);
+  }
+  @keyframes softPulse {
+    0%   { transform: scale(1);     opacity: 1; }
+    50%  { transform: scale(1.06);  opacity: 0.92; }
+    100% { transform: scale(1);     opacity: 1; }
+  }
+
+  .status-badge.open {
+    background: rgba(0, 150, 0, 0.75);
+    animation: softPulse 2.4s ease-in-out infinite;
+  }
+
+  #tpOverlay {
+  transition: opacity 0.25s ease;
+}
+
+#tpDot {
+  transition: transform 0.25s ease;
+}
+
+#tpOverlay.show #tpDot {
+  transform: scale(1.5);
+}
+#tpDot {
+  animation: tpPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes tpPulse {
+  0%   { transform: scale(1.5); }
+  50%  { transform: scale(2); }
+  100% { transform: scale(1.5); }
+}
+
+#massEmailBadge {
+  transition: opacity 0.25s ease;
+}
+#tpIcon {
+  fill: white;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+.info-block,
+.infoBlock,
+.detail-row,
+.contact-row {
+  min-width: 0;
+  width: 100%;
+  display: block;
+}
+
+
+.price-badge {
+  font-size: 20px;
+  font-weight: 700;
+  display: inline-block;
+  line-height: 1;
+}
+.price-badge.diamond {
+  animation: diamondPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes diamondPulse {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.18); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.detail-row,
+.description {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
+}
+.detail-row *,
+.description * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow-wrap: break-word;
+}
+/* 🔥 Fix detail-row and description-row overflow */
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.detail-row * {
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* 🔥 Fix description block specifically */
+#descriptionRow span,
+#summaryRow span {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.info-value a {
+  overflow-wrap: anywhere;
+}
+.contact-row a {
+  overflow-wrap: anywhere;
+}
+.title-text {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* Fullscreen overlay */
+#t-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(16px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  opacity: 1;
+  transition: opacity 0.6s ease-out;
+}
+
+/* Logo */
+#t-loading-logo {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  animation: tpShimmer 3.5s ease-in-out infinite;
+  
+}
+
+/* Magical shimmer sweep */
+@keyframes tpShimmer {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(0,255,200,0.45));
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Hidden state */
+#t-loading.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+/* ================= PULSEBAND PANEL ONLY (v7 Extract) ================= */
+
+/* Overlay root */
+#pulseband-overlay {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 80;
+  pointer-events: none; /* panel/badge will re-enable */
+}
+
+/* Bubble badge */
+#pulseband-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffd400 40%, #ff5a5a 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+
+/* Animated bars inside badge */
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.pb-bars span {
+  width: 4px;
+  border-radius: 999px;
+  background: #000;
+  animation: pbBarPulse 1s ease-in-out infinite;
+}
+
+.pb-bars span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.pb-bars span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.pb-bars span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.pb-bars span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+
+@keyframes pbBarPulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.2); }
+}
+
+/* Panel card */
+.pb-card {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  padding: 14px 16px 16px 16px;
+  color: #fff;
+  border: 2px solid #ffd400;
+  pointer-events: auto;
+  transform-origin: bottom right;
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+/* When active */
+.pb-card.pb-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel header */
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.pb-mini-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--tp-yellow-strong);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+}
+
+/* Rows */
+.pb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.pb-row:last-child {
+  border-bottom: none;
+}
+
+.pb-row label {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.pb-hint {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pb-value {
+  font-weight: 600;
+  color: var(--tp-yellow-strong);
+  text-align: right;
+}
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  #pulseband-overlay {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .pb-card {
+    width: 260px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+<div id="t-loading">
+    <img src="../_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" id="t-loading-logo"></img>
+  </div>
+  
+<div class="container">
+  <div id="businessHeader" class="business-header">Business Details</div>
+  <!-- GALLERY -->
+  <div class="carousel-wrapper">
+    <img id="mainImage" src="" alt="Business Image">
+
+    <div id="statusBadge" class="status-badge"></div>
+
+    <button id="leftArrow" class="carousel-arrow left">‹</button>
+    <button id="rightArrow" class="carousel-arrow right">›</button>
+
+    <div id="dots" class="dots"></div>
+  </div>
+
+  <div id="title" class="title"></div>
+  <div id="actionRow" class="action-row"></div>
+  <div id="summaryRow" class="detail-row" style="display:none;">
+    <strong>Summary:</strong> <span id="summary"></span>
+  </div>
+  <div id="infoBlock" class="info-block"></div>
+
+  <div id="languageRow" class="detail-row" style="display:none;">
+    <strong>Language:</strong> <span id="BusinessLanguage"></span>
+  </div>
+
+  <div id="contactRow" class="contact-row"></div>
+
+  <div id="mapContainer" style="background:#e8f5e9;padding:14px;border-radius:12px;margin:20px 0;display:none;position:relative;">
+    <div id="mapName" style="font-weight:600;color:#0a6e3a;margin-bottom:4px;"></div>
+    <div id="mapAddress" style="margin-bottom:10px;color:#333;"></div>
+    <div style="overflow:hidden; border-radius:12px; position:relative;">
+      <a id="mapLink" href="#" target="_blank" style="display:block;">
+        <div style="overflow:hidden; border-radius:12px; position:relative;">
+          <img id="mapImage" src="" alt="Business Map" style="width:100%; height:auto; display:block;">
+        </div>
+      </a>
+      <!-- 🌴 Pulse World Overlay Layer -->
+      <div id="tpOverlay" style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        pointer-events:none;
+        display:none;">
+        <div id="tpDot" style="
+          position:absolute;
+          width:18px;
+          height:18px;
+          background:#0b5f3c;
+          border-radius:50%;
+          border:2px solid white;
+          box-shadow:0 0 8px rgba(0,0,0,0.35);
+          transition: transform 0.25s ease;">
+          <img id="tpIcon" src="" alt="" style="width:18px;height:18px;display:none;filter:drop-shadow(0 0 2px rgba(0,0,0,0.4));"></div>
+        <div id="tpLabel" style="
+          position:absolute;
+          display:flex;
+          align-items:center;
+          gap:6px;
+          padding:4px 10px;
+          background:rgba(11, 95, 60, 0.85); /* Dark leaf translucent pill */
+          color:white;
+          border-radius:20px;
+          font-size:12.5px;
+          font-weight:600;
+          white-space:nowrap;
+          transform:translate(-50%, -120%);
+          backdrop-filter: blur(4px);">
+          <span id="tpLabelText"></span>
+        </div>
+      </div>
+      <!-- END Pulse World Overlay -->
+    </div>
+  </div>
+  
+  <div id="descriptionRow" class="detail-row" style="display:none;">
+    <strong>Description:</strong> <span id="description"></span>
+  </div>
+</div>
+
+<div id="massEmailConfirm" class="confirm-overlay hidden">
+  <div class="confirm-box">
+    <div class="confirm-title">Send Mass Email?</div>
+    <div class="confirm-text">This will notify all subscribers and use 1 credit.</div>
+    <div class="confirm-actions">
+      <button id="massEmailCancel" class="confirm-btn cancel">Cancel</button>
+      <button id="massEmailYes" class="confirm-btn yes">Send</button>
+    </div>
+  </div>
+</div>
+
+<div id="tpToast"><span class="icon">📥</span><span id="tpToastMsg"></span></div>
+<script type="module">
+
+    let persistenceEnabled = true;
+  let lastTime = null;
+  let firstTime = null;
+
+  let currentUserLocation = null;
+
+  const params = new URLSearchParams(window.location.search);
+  const businessID = params.get("id");
+  // const auth = firebase.auth();    // ❌ remove this line
+  function el(id){ return document.getElementById(id) || null; }
+
+  /* -------------------------------------------------
+   0. GLOBALS (declare only — do NOT load yet)
+  -------------------------------------------------- */
+  // v9.3 — no identity globals, no tokens, no v4 ghosts
+  let existingShortCode = null;
+  let carouselImages = [];
+  let currentIndex = 0;
+  let startX = 0;
+  let resizeTimeout = null;
+  
+  let bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+  let bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+  let bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+  let bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+  
+  const wrapperCarousel = el("mainImage");
+
+  /* -------------------------------------------------
+   4. MASS EMAIL CONFIRM UI (idempotent)
+  -------------------------------------------------- */
+
+  const businessHeader = el("businessHeader");
+  const title = el("title");
+
+  const originalHeader = businessHeader.textContent;
+  const originalOffsetTop = businessHeader.offsetTop; 
+  const triggerPoint = originalOffsetTop - 45;
+
+  let isShowingTitle = false;
+
+  function mark(label) {
+    log("[CHECKEMAIL]", label);
+  }
+  
+  /************************************************************
+   * SESSION CHECK — PulseOS v9.3 (immune synapse)
+   ************************************************************/
+  async function sessionCheck() {
+  let id = null;
+
+  try {
+    const raw = localStorage.getItem("tp_identity_v9");
+    if (raw) {
+      id = JSON.parse(raw);
+    }
+  } catch (e) {
+    // Corrupt identity → treat as missing
+    id = null;
+  }
+
+  // Fallback: if some global understanding layer identity() exists,
+  // we can try to hydrate from there once, but we do NOT depend on it.
+  if (!id && typeof identity === "function") {
+    try {
+      id = await identity();
+    } catch (e) {
+      id = null;
+    }
+  }
+
+  // No identity or not trusted → go to login
+  if (!id || !id.trustedDevice) {
+    window.location.href = `/`;
+    return null;
+  }
+
+  // Expose canonical identity for the rest of the page
+  PulseRealm.PulseIdentity = id;
+  return id;
+}
+
+  /************************************************************
+   * CAROUSEL OVERLAYS (UNCHANGED)
+   ************************************************************/
+  function initializeOverlays() {
+    if (PulseRealm.__tp_carousel_handlers_bound) return;
+    PulseRealm.__tp_carousel_handlers_bound = true;
+
+    const leftArrow  = el('leftArrow');
+    const rightArrow = el('rightArrow');
+    const wrapper    = el('mainImage');
+
+    if (leftArrow) {
+      leftArrow.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateCarousel();
+        }
+      });
+    }
+
+    if (rightArrow) {
+      rightArrow.addEventListener('click', () => {
+        if (currentIndex < carouselImages.length - 1) {
+          currentIndex++;
+          updateCarousel();
+        }
+      });
+    }
+
+    if (wrapper) {
+      wrapper.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+      });
+
+      wrapper.addEventListener('touchend', e => {
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+
+        if (Math.abs(diff) > 50) {
+          if (diff < 0 && currentIndex < carouselImages.length - 1) {
+            currentIndex++;
+          } else if (diff > 0 && currentIndex > 0) {
+            currentIndex--;
+          }
+          updateCarousel();
+        }
+      });
+    }
+  }
+
+/* -------------------------------------------------
+   4. GLOBAL CLICK HANDLER (idempotent)
+-------------------------------------------------- */
+if (!PulseRealm.__tp_global_click_installed) {
+  PulseRealm.__tp_global_click_installed = true;
+
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".calendar-menu").forEach(menu => {
+      const btn = menu.previousElementSibling;
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.add("hidden");
+      }
+    });
+  });
+}
+
+if (!document.__loyaltyVisibilityBound) {
+  document.__loyaltyVisibilityBound = true;
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      setTimeout(async () => await sessionCheck(), 250);
+      mark("✅ VisibilityChange RERAN SESSIONCHECK AND LET THE FUNCTION DO THE LOGIC");
+    }
+  });
+}
+
+// -----------------------------------------
+// ⭐ PREVENT DUPLICATE LISTENERS
+// -----------------------------------------
+
+
+  // ⭐ 1. Restore state on load (runs ONCE)
+  window.addEventListener("load", () => {
+    const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+    const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+    if (disabled) {
+      PulseRealm.isIdle = true;
+    } else {
+      PulseRealm.isIdle = false;
+    }
+  });
+
+  // ⭐ 2. Badge toggle listener
+  document.getElementById("pb-mini-badge").addEventListener("click", () => {
+    const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+    const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+    if (disabled) {
+      localStorage.removeItem("pulseband_disabled");
+      PulseRealm.isIdle = false;
+    } else {
+      localStorage.setItem("pulseband_disabled", "1");
+      PulseRealm.isIdle = true;
+    }
+  });
+
+
+// If user didn't come from the list, rebuild history
+if (!history.state || !history.state.fromList) {
+  history.replaceState({ fromList: true }, "", location.href);
+}
+
+
+/* -------------------------------------------------
+   5. CATEGORY NORMALIZATION
+-------------------------------------------------- */
+function normalizeCategory(str) {
+  if (!str) return "";
+
+  let s = str
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/\//g, " ")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, " ");
+
+  const parts = s.split(" ");
+
+  if (parts.length === 1) return s;
+  if (parts.length === 2) return s;
+  if (s.includes("-")) return s;
+
+  return parts[0] + "-" + parts[1] + " " + parts.slice(2).join(" ");
+}
+
+/* -------------------------------------------------
+   6. CATEGORY ICON LOOKUP (v9.3 — LOCAL ONLY)
+-------------------------------------------------- */
+async function getBusCategoryIcon(b) {
+  if (!b) return null;
+
+  const firstCat = Array.isArray(b.categories) && b.categories.length > 0
+    ? normalizeCategory(b.categories[0])
+    : null;
+
+  const firstSub = Array.isArray(b.subcategories) && b.subcategories.length > 0
+    ? normalizeCategory(b.subcategories[0])
+    : null;
+
+  if (firstCat && bizCategoryIconMap[firstCat]) {
+    return bizCategoryIconMap[firstCat];
+  }
+
+  if (firstSub && bizSubcategoryIconMap[firstSub]) {
+    return bizSubcategoryIconMap[firstSub];
+  }
+
+  return null;
+}
+
+function saveLocation(lat, lng) {
+  localStorage.setItem(
+    "lastKnownLocation",
+    JSON.stringify({ lat, lng, ts: nowMs() })
+  );
+}
+
+function getSavedLocation() {
+  try {
+    const raw = localStorage.getItem("lastKnownLocation");
+    if (!raw) return null;
+
+    const obj = JSON.parse(raw);
+    if (!obj.lat || !obj.lng) return null;
+
+    return obj;
+  } catch {
+    return null;
+  }
+}
+
+function fetchLowAccuracyInBackground(onUpdate) {
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      log("Background low accuracy:", loc);
+      saveLocation(loc.lat, loc.lng);
+      onUpdate(loc);
+    },
+    err => {
+      warn("Background low accuracy failed:", err);
+
+      setTimeout(() => {
+        navigator.geolocation.getCurrentPosition(
+          pos2 => {
+            const loc2 = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
+            log("Retry low accuracy:", loc2);
+            saveLocation(loc2.lat, loc2.lng);
+            onUpdate(loc2);
+          },
+          err2 => {
+            warn("Retry low accuracy failed:", err2);
+          },
+          { enableHighAccuracy: false, timeout: 5000 }
+        );
+      }, 2000);
+    },
+    { enableHighAccuracy: false, timeout: 5000 }
+  );
+}
+
+async function getInstantLocationWithBackgroundUpdate(onSignificantChange) {
+  const saved = getSavedLocation();
+
+  if (saved) {
+    log("Using cached location:", saved);
+    setTimeout(() => {
+      fetchLowAccuracyInBackground(newLoc => {
+        const dist = getDistanceMiles(saved, newLoc);
+        if (dist > 50) {
+          log("📍 Significant movement:", dist, "m");
+          onSignificantChange(newLoc);
+        }
+      });
+    }, 0);
+    return saved;
+  }
+
+  return  await new Promise(resolve => {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        log("Initial low accuracy:", loc);
+        saveLocation(loc.lat, loc.lng);
+        resolve(loc);
+
+        fetchLowAccuracyInBackground(newLoc => {
+          const dist = getDistanceMiles(loc, newLoc);
+          if (dist > 50) onSignificantChange(newLoc);
+        });
+      },
+      err => {
+        warn("Initial low accuracy failed:", err);
+        resolve(null);
+
+        fetchLowAccuracyInBackground(newLoc => {
+          onSignificantChange(newLoc);
+        });
+      },
+      { enableHighAccuracy: false, timeout: 7000 }
+    );
+  });
+}
+
+/* -------------------------------------------------
+   7. CAROUSEL PRELOAD
+-------------------------------------------------- */
+function preloadCarouselImages() {
+  if (!Array.isArray(carouselImages)) return;
+  carouselImages.forEach(url => {
+    const img = new Image();
+    img.src = url;
+  });
+}
+
+/* -------------------------------------------------
+   8. MAP OVERLAY HANDLER (idempotent)
+-------------------------------------------------- */
+function attachMapOverlayHandler(name, iconUrl = null) {
+  const mapImage = el("mapImage");
+  if (!mapImage) return;
+
+  mapImage.onload = null;
+
+  if (mapImage.complete) {
+    applyTropicOverlay(name, iconUrl);
+    return;
+  }
+
+  mapImage.onload = () => {
+    applyTropicOverlay(name, iconUrl);
+  };
+}
+
+async function regenerateMap(biz) {
+  try {
+    const venue = biz.resolvedAddress || biz.address || "";
+
+    const data = await getMap(venue, biz.id);
+
+    if (!data.success) {
+      error("Regenerate map failed:", data.error);
+      return;
+    }
+
+    const mapImage = el("mapImage");
+    const mapLink  = el("mapLink");
+
+    mapImage.onerror = null;
+    mapImage.src = `${data.mapImageUrl}?t=${nowMs()}`;
+    mapLink.href = data.mapsWebUrl;
+
+  } catch (err) {
+    error("Regenerate map error:", err);
+  }
+}
+
+
+/* -------------------------------------------------
+   9. CREDITS LOADER
+-------------------------------------------------- */
+async function lazyLoadCreditsForBusiness(biz) {
+  if (!loggedIn || !userEmail) return;
+  if (!isBusinessOwner(biz, userEmail)) return;
+
+  const { freeRemaining, paidRemaining } = await fetchUserCredits(userEmail);
+  updateMassEmailBadge(freeRemaining + paidRemaining);
+}
+/* -------------------------------------------------
+   10. MAP LOADER (idempotent)
+-------------------------------------------------- */
+async function loadMapForBusiness(biz) {
+  const mapContainer = el("mapContainer");
+  const mapName      = el("mapName");
+  const mapAddress   = el("mapAddress");
+  const mapImage     = el("mapImage");
+  const mapLink      = el("mapLink");
+
+  const cleanAddress = (biz.resolvedAddress || biz.address || "").trim();
+
+  if (!cleanAddress) {
+    mapContainer.style.display = "block";
+    mapName.textContent        = "";
+    mapAddress.textContent     = "No address provided.";
+    mapImage.src               = "";
+    mapLink.href               = "#";
+    return;
+  }
+
+  const hasCachedMap =
+    biz.mapImageUrl &&
+    biz.mapsWebUrl &&
+    biz.resolvedAddress &&
+    biz.resolvedName;
+
+  // -------------------------------------------------
+  // 1. USE CACHED MAP IF AVAILABLE
+  // -------------------------------------------------
+  if (hasCachedMap) {
+    mapContainer.style.display = "block";
+
+    mapName.textContent =
+      biz.busname ||
+      biz.resolvedName ||
+      cleanAddress ||
+      "Unknown Location";
+
+    mapAddress.textContent = cleanAddress || "";
+
+    mapImage.onload = null;
+    mapImage.onerror = null;
+
+    mapImage.onerror = async () => {
+      warn("Cached map failed, regenerating…");
+      await regenerateMap(biz);
+    };
+
+    mapImage.src = `${biz.mapImageUrl}?t=${nowMs()}`;
+    mapLink.href = biz.mapsWebUrl;
+
+    const iconUrl = await getBusCategoryIcon(biz);
+
+    attachMapOverlayHandler(
+      biz.busname ||
+      biz.resolvedName ||
+      cleanAddress ||
+      "Location",
+      iconUrl
+    );
+
+    mapImage.onclick = () => mapLink.click();
+    return;
+  }
+
+  // -------------------------------------------------
+  // 2. NO CACHED MAP → CALL CONNECTOR
+  // -------------------------------------------------
+  try {
+    const data = await getMap(cleanAddress, biz.id);
+
+    if (!data.success) {
+      mapContainer.style.display = "block";
+      mapName.textContent        = "";
+      mapAddress.textContent     = "Map unavailable.";
+      mapImage.src               = "";
+      mapLink.href               = "#";
+      return;
+    }
+
+    mapContainer.style.display = "block";
+
+    mapName.textContent =
+      biz.busname ||
+      data.resolvedName ||
+      cleanAddress ||
+      "Unknown Location";
+
+    mapAddress.textContent =
+      data.resolvedAddress ||
+      biz.address ||
+      "";
+
+    mapImage.onload = null;
+    mapImage.src = `${data.mapImageUrl}?t=${nowMs()}`;
+    mapLink.href = data.mapsWebUrl;
+
+    const iconUrl = await getBusCategoryIcon(biz);
+
+    attachMapOverlayHandler(
+      biz.busname ||
+      data.resolvedName ||
+      cleanAddress ||
+      "Location",
+      iconUrl
+    );
+
+    mapImage.onclick = () => mapLink.click();
+
+  } catch (err) {
+    error("Map Load Failed:", err);
+  }
+}
+
+/* -------------------------------------------------
+   11. AUTHORIZED FETCH WRAPPER
+-------------------------------------------------- */
+async function tpFetch(url, opts = {}) {
+  // v9.3 — no tokens, no Authorization header
+  return fetch(url, opts);
+}
+
+/* -------------------------------------------------
+   12. WAIT FOR ELEMENT (idempotent)
+-------------------------------------------------- */
+async function waitForElement(id, timeout = 3000) {
+  return new Promise(resolve => {
+    const start = nowMs();
+
+    function check() {
+      const el = document.getElementById(id);
+      if (el) return resolve(el);
+
+      if (nowMs() - start > timeout) return resolve(null);
+
+      requestAnimationFrame(check);
+    }
+
+    check();
+  });
+}
+
+/* -------------------------------------------------
+   13. BUSINESS OWNER CHECK
+-------------------------------------------------- */
+function isBusinessOwner(biz, userEmail) {
+  return (
+    Array.isArray(biz.emails) &&
+    biz.emails.some(
+      e => (e || "").toLowerCase() === (userEmail || "").toLowerCase()
+    )
+  );
+}
+
+/* -------------------------------------------------
+   14. MASS EMAIL BADGE UPDATE
+-------------------------------------------------- */
+function updateMassEmailBadge(total) {
+  const badge = el("massEmailBadge");
+  const btn   = el("massEmailBtn");
+
+  if (!badge || !btn) return;
+
+  badge.textContent = total;
+  btn.title = `Mass Email (${total} credits remaining)`;
+}
+
+/* -------------------------------------------------
+   15. FETCH USER CREDITS (v9.3 — LOCAL ONLY)
+-------------------------------------------------- */
+async function fetchUserCredits(email) {
+  // v9.3 — credits come from sessionCheck() identity snapshot
+  const notif = PulseRealm.tpNotifications || {};
+
+  return {
+    freeRemaining: Math.max(
+      0,
+      (notif.freeMassNotificationsLimit ?? 2) -
+      (notif.freeMassNotificationsUsed ?? 0)
+    ),
+    paidRemaining: notif.paidMassNotificationCredits ?? 0
+  };
+}
+
+/* -------------------------------------------------
+   16. LOAD BUSINESS (idempotent)
+-------------------------------------------------- */
+async function loadBusiness() {
+  try {
+    // v9.3 — NO CACHE MANAGER, NO FIRESTORE, NO BACKEND
+    const b = PulseRealm.__pulseBusiness || null;
+
+    if (!b) {
+      error("loadBusiness error: business not preloaded");
+      return;
+    }
+
+    existingShortCode = b.shortCode || null;
+    renderBusiness(b);
+    loadMapForBusiness(b);
+    lazyLoadCreditsForBusiness(b);
+
+  } catch (err) {
+    error("loadBusiness error:", err);
+  }
+}
+
+/* -------------------------------------------------
+   17. DOTS UPDATE (idempotent)
+-------------------------------------------------- */
+function updateDots() {
+  const dots = el("dots");
+  if (!dots) return;
+
+  dots.innerHTML = "";
+
+  (carouselImages || []).forEach((_, i) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (i === currentIndex ? " active" : "");
+    d.setAttribute("aria-label", `Image ${i + 1}`);
+
+    d.onclick = () => {
+      currentIndex = i;
+      updateCarousel();
+    };
+
+    dots.appendChild(d);
+  });
+}
+/* -------------------------------------------------
+   19. BUSINESS SANITIZER
+-------------------------------------------------- */
+function sanitizeBusiness(b) {
+  function normalize(str) {
+    if (!str) return "";
+
+    let s = str
+      .toLowerCase()
+      .trim()
+      .replace(/&/g, "and")
+      .replace(/\//g, " ")
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, " ");
+
+    const parts = s.split(" ");
+
+    if (parts.length === 1) return s;
+    if (parts.length === 2) return s;
+    if (s.includes("-")) return s;
+
+    return parts[0] + "-" + parts[1] + " " + parts.slice(2).join(" ");
+  }
+
+  const normalizedCategories = Array.isArray(b.categories)
+    ? b.categories.map(c => normalize(c)).filter(Boolean)
+    : [];
+
+  const normalizedSubcategories = Array.isArray(b.subcategories)
+    ? b.subcategories.map(s => normalize(s)).filter(Boolean)
+    : [];
+
+  return {
+    id: b.id || b.listing_id || b.externalId || null,
+
+    busname: b.busname || "Untitled Business",
+    description: b.description || "",
+    summary: b.summary || "",
+
+    images:
+      Array.isArray(b.images) && b.images.length > 0
+        ? b.images
+        : b.mainPhotoURL
+        ? [b.mainPhotoURL]
+        : ["./_EXPRESSIONS/_PEX/BUILD/Frustrated.png"],
+
+    mainPhotoURL: b.mainPhotoURL || null,
+
+    address: b.address || "San Pedro, Belize",
+    lat: b.lat || null,
+    lng: b.lng || null,
+
+    mapImageUrl: b.mapImageUrl || null,
+    mapsWebUrl: b.mapsWebUrl || null,
+    placeId: b.placeId || null,
+    resolvedAddress: b.resolvedAddress || b.address || "San Pedro, Belize",
+    resolvedName: b.resolvedName || b.busname || "Unknown Location",
+
+    categories: normalizedCategories,
+    subcategories: normalizedSubcategories,
+
+    categoryIcons: [],
+    subcategoryIcons: [],
+
+    emails: Array.isArray(b.emails) ? b.emails : [],
+    phones: Array.isArray(b.phones) ? b.phones : [],
+    whatsapp: Array.isArray(b.whatsapp) ? b.whatsapp : [],
+    websites: Array.isArray(b.websites) ? b.websites : [],
+
+    social: Array.isArray(b.social) ? b.social : [],
+
+    priceFinalScore: b.priceFinalScore || null,
+    priceLevel: b.priceLevel || null,
+    priceRating: b.priceRating || "",
+    rating: b.rating || null,
+    ratingCount: b.ratingCount || 0,
+
+    shortCode: b.shortCode || null,
+
+    externalId: b.externalId || null,
+    listing_id: b.listing_id || null
+  };
+}
+
+/* -------------------------------------------------
+   20. CAROUSEL UPDATE (idempotent)
+-------------------------------------------------- */
+function updateCarousel() {
+  try {
+    const mainImage = el("mainImage");
+    const leftArrow = el("leftArrow");
+    const rightArrow = el("rightArrow");
+
+    mainImage.style.opacity = 0;
+    mainImage.onload = null;
+
+    mainImage.onload = () => {
+      mainImage.style.opacity = 1;
+    };
+
+    if (!Array.isArray(carouselImages) || carouselImages.length === 0) {
+      warn("Carousel: No images found, using fallback.");
+      carouselImages = ["./_EXPRESSIONS/_PEX/BUILD/Frustrated.png"];
+      currentIndex = 0;
+    }
+
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= carouselImages.length)
+      currentIndex = carouselImages.length - 1;
+
+    setTimeout(() => {
+      mainImage.src = carouselImages[currentIndex];
+      mainImage.onerror = () => {
+        mainImage.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+      };
+      mainImage.style.opacity = 1;
+    }, 150);
+
+    leftArrow.style.display =
+      currentIndex > 0 ? "block" : "none";
+    rightArrow.style.display =
+      currentIndex < carouselImages.length - 1 ? "block" : "none";
+
+    if (typeof updateDots === "function") {
+      updateDots();
+    } else {
+      warn("Carousel: updateDots() missing.");
+    }
+  } catch (err) {
+    error("updatCarousel error:", err);
+    const mainImage = el("mainImage");
+    if (mainImage) {
+      mainImage.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+      mainImage.style.opacity = 1;
+    }
+  }
+}
+
+/* -------------------------------------------------
+   23. TIME NORMALIZER + 12H CONVERTER
+-------------------------------------------------- */
+function to12Hour(time24) {
+  if (!time24) return "";
+
+  let parts = time24.split(":");
+  let h = Number(parts[0]) || 0;
+  let m = parts[1] ? Number(parts[1]) : 0;
+
+  const suffix = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+
+  return `${h}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+
+function normalizeTime(t) {
+  if (!t) return "00:00";
+  t = t.trim();
+
+  if (/^\d{2}:\d{2}$/.test(t)) return t;
+
+  const simpleAP = t.match(/^(\d{1,2})\s*(AM|PM)$/i);
+  if (simpleAP) {
+    let [_, h, ap] = simpleAP;
+    h = Number(h);
+    if (ap.toUpperCase() === "PM" && h !== 12) h += 12;
+    if (ap.toUpperCase() === "AM" && h === 12) h = 0;
+    return `${String(h).padStart(2,"0")}:00`;
+  }
+
+  const match = t.match(/(\d{1,2}):(\d{1,2})\s*(AM|PM)/i);
+  if (match) {
+    let [_, h, m, ap] = match;
+    h = Number(h);
+    m = Number(m);
+    if (ap.toUpperCase() === "PM" && h !== 12) h += 12;
+    if (ap.toUpperCase() === "AM" && h === 12) h = 0;
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  }
+
+  const match2 = t.match(/(\d{1,2}):(\d{1,2})/);
+  if (match2) {
+    let [_, h, m] = match2;
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  }
+
+  if (/^\d{3,4}$/.test(t)) {
+    let padded = t.padStart(4, "0");
+    let h = padded.slice(0, 2);
+    let m = padded.slice(2);
+    return `${h}:${m}`;
+  }
+
+  if (/^\d{1,2}$/.test(t)) {
+    return `${String(Number(t)).padStart(2,"0")}:00`;
+  }
+
+  return "00:00";
+}
+
+/* -------------------------------------------------
+   24. TOAST SYSTEM (idempotent)
+-------------------------------------------------- */
+function showToast(message, duration = 3000) {
+  const toast = el("tpToast");
+  const msg = el("tpToastMsg");
+
+  if (!toast || !msg) return;
+
+  msg.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, duration);
+}
+
+/* -------------------------------------------------
+   25. SAVED BUSINESS CHECK (MODULE, CORRECT)
+-------------------------------------------------- */
+async function isBusinessSaved(businessID, userEmail) {
+  // v9.3 — NO FIRESTORE, NO DB, NO BACKEND
+  const saved = JSON.parse(localStorage.getItem("tp_saved_businesses") || "{}");
+  return !!saved[businessID];
+}
+
+function getDistanceMiles(lat1, lon1, lat2, lon2) {
+  const R = 3958.8;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+}
+
+/* -------------------------------------------------
+   26. BOOKMARK TOGGLER (MODULE, IDEMPOTENT)
+-------------------------------------------------- */
+async function toggleBusinessBookmark(biz, btn) {
+  if (!userEmail) {
+    showToast("Sign in to save businesses.");
+    return;
+  }
+
+  const saved = JSON.parse(localStorage.getItem("tp_saved_businesses") || "{}");
+
+  if (saved[biz.id]) {
+    delete saved[biz.id];
+    btn.classList.remove("saved");
+    btn.textContent = "☆";
+    showToast("Removed from Saved");
+  } else {
+    saved[biz.id] = { saved: true, ts: nowMs() };
+    btn.classList.add("saved");
+    btn.textContent = "★";
+    showToast("Saved!");
+  }
+
+  localStorage.setItem("tp_saved_businesses", JSON.stringify(saved));
+}
+
+/* -------------------------------------------------
+   28. LABEL + ICON RENDERER
+-------------------------------------------------- */
+function prettyLabel(str) {
+  if (!str) return "";
+
+  return str
+    .split("-")
+    .map(part =>
+      part
+        .split(" ")
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ")
+    )
+    .join(" ");
+}
+
+function renderLabeledIcon(key, isSub = false) {
+  if (!key) return "";
+
+  const label = prettyLabel(key);
+
+  const iconUrl = isSub
+    ? bizSubcategoryIconMap[key] || ""
+    : bizCategoryIconMap[key] || "";
+
+  const iconImg = iconUrl
+    ? `<img src="${iconUrl}" style="width:30px;height:30px;margin-top:-6px;object-fit:contain;margin-right:2px;vertical-align:middle;">`
+    : "";
+
+  return `${iconImg}<span>${label}</span>`;
+}
+
+async function renderBusiness(biz) {
+  log("RENDER BUSINESS RAN");
+
+  /* -------------------------------------------------
+     1. IMAGES + CAROUSEL
+  -------------------------------------------------- */
+  const images = Array.isArray(biz.images) && biz.images.length > 0
+    ? biz.images
+    : ["./_EXPRESSIONS/_PEX/BUILD/Frustrated.png"];
+
+  const carousel = document.querySelector(".carousel-wrapper");
+
+  // Remove old edit badges (idempotent)
+  carousel.querySelectorAll(".edit-badge-detail").forEach(el => el.remove());
+
+  const isOwner =
+    userEmail &&
+    Array.isArray(biz.emails) &&
+    biz.emails.some(e => (e || "").toLowerCase() === userEmail.toLowerCase());
+
+  if (isOwner) {
+    const badge = document.createElement("div");
+    badge.className = "edit-badge-detail";
+    badge.innerHTML = "✏️ Edit";
+    badge.onclick = () => {
+      window.location.href =
+        `TropicPulseEditBusiness&id=${encodeURIComponent(biz.id)}`;
+    };
+    carousel.appendChild(badge);
+  }
+
+  carouselImages = images;
+  currentIndex = 0;
+  updateCarousel();
+
+
+  /* -------------------------------------------------
+     2. TITLE + PRICE BADGE
+  -------------------------------------------------- */
+  const titleEl = el("title");
+  const price = biz.priceRating || "";
+
+  titleEl.innerHTML = `
+    <span class="title-text">${biz.busname || "Untitled Business"}</span>
+    ${price ? `<span class="price-badge">${price}</span>` : ""}
+  `;
+
+  const badge = titleEl.querySelector(".price-badge");
+  if (badge) {
+    if (price === "💎") badge.classList.add("diamond");
+    if (price === "💲") badge.classList.add("tier-1");
+    if (price === "💲💲") badge.classList.add("tier-2");
+    if (price === "💲💲💲") badge.classList.add("tier-3");
+  }
+
+
+  /* -------------------------------------------------
+     3. SUMMARY + DESCRIPTION
+  -------------------------------------------------- */
+  const summaryRow = el("summaryRow");
+  const summarySpan = el("summary");
+
+  if (biz.summary) {
+    summarySpan.textContent = biz.summary;
+    summaryRow.style.display = "block";
+  } else {
+    summaryRow.style.display = "none";
+  }
+
+  const descriptionRow = el("descriptionRow");
+  const descriptionSpan = el("description");
+
+  if (biz.description) {
+    descriptionSpan.textContent = biz.description;
+    descriptionRow.style.display = "block";
+  } else {
+    descriptionRow.style.display = "none";
+  }
+
+
+  /* -------------------------------------------------
+     4. ACTION ROW (Bookmark, Share, Mass Email)
+  -------------------------------------------------- */
+  const actionRow = el("actionRow");
+  actionRow.innerHTML = "";
+
+  /* --- Bookmark --- */
+  const bookmarkBtn = document.createElement("button");
+  bookmarkBtn.className = "bookmark-btn";
+  bookmarkBtn.textContent = "☆";
+
+  if (!loggedIn) bookmarkBtn.classList.add("disabled-btn");
+
+  isBusinessSaved(biz.id, userEmail).then(saved => {
+    if (saved) {
+      bookmarkBtn.classList.add("saved");
+      bookmarkBtn.textContent = "★";
+    }
+  });
+
+  bookmarkBtn.onclick = () => toggleBusinessBookmark(biz, bookmarkBtn);
+  actionRow.appendChild(bookmarkBtn);
+
+
+  /* --- Share --- */
+  const shareBtn = document.createElement("button");
+  shareBtn.className = "icon-btn share-btn";
+  shareBtn.innerHTML = "🔗";
+
+  // ⭐ FIXED: use biz.shortCode (canonical, cache-managed)
+  const shortCode = biz.shortCode || biz.id; // fallback to ID if missing
+  const shareUrl = `/b/${shortCode}`;
+
+  shareBtn.onclick = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: biz.busname,
+          text: biz.description || biz.summary || "",
+          url: shareUrl
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        showToast("Link copied!");
+      }
+    } catch (err) {
+      warn("Share failed:", err);
+    }
+  };
+
+  actionRow.appendChild(shareBtn);
+
+
+  /* --- Mass Email --- */
+  const wrapper = document.createElement("div");
+  wrapper.style.position = "relative";
+  wrapper.style.display = "inline-flex";
+
+  const massEmailBtn = document.createElement("button");
+  massEmailBtn.className = "icon-btn";
+  massEmailBtn.id = "massEmailBtn";
+  massEmailBtn.innerHTML = "✉️";
+  wrapper.appendChild(massEmailBtn);
+
+  const massBadge = document.createElement("div");
+  massBadge.id = "massEmailBadge";
+  massBadge.style.position = "absolute";
+  massBadge.style.top = "0px";
+  massBadge.style.right = "0px";
+  massBadge.style.transform = "translate(50%, -50%)";
+  massBadge.style.background = "#1DA1F2";
+  massBadge.style.color = "white";
+  massBadge.style.width = "22px";
+  massBadge.style.height = "22px";
+  massBadge.style.borderRadius = "50%";
+  massBadge.style.display = "flex";
+  massBadge.style.alignItems = "center";
+  massBadge.style.justifyContent = "center";
+  massBadge.style.fontSize = "12px";
+  massBadge.style.fontWeight = "700";
+  massBadge.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+  massBadge.style.transition = "opacity 0.25s ease";
+  massBadge.textContent = "…";
+  massBadge.style.opacity = isOwner ? "1" : "0";
+
+  wrapper.appendChild(massBadge);
+
+  if (!loggedIn || !isOwner) {
+    massEmailBtn.classList.add("disabled-btn");
+    massEmailBtn.title = "Only the business owner can send Mass Emails.";
+  } else {
+    massEmailBtn.onclick = () => {
+      confirmOverlay.classList.remove("hidden");
+    };
+  }
+
+  actionRow.appendChild(wrapper);
+
+  const confirmOverlay = el("massEmailConfirm");
+  const confirmCancel  = el("massEmailCancel");
+  const confirmYes     = el("massEmailYes");
+
+  if (confirmOverlay) confirmOverlay.classList.add("hidden");
+
+  if (confirmCancel) {
+    confirmCancel.onclick = () => {
+      confirmOverlay.classList.add("hidden");
+    };
+  }
+
+  /* -------------------------------------------------
+   5. MASS EMAIL CONFIRM HANDLER (idempotent)
+-------------------------------------------------- */
+if (confirmYes && !confirmYes._tp_handler) {
+  confirmYes._tp_handler = async () => {
+    confirmOverlay.classList.add("hidden");
+
+    try {
+      massEmailBtn.disabled = true;
+      massEmailBtn.innerHTML = "⏳";
+
+      const payload = {
+        email: userEmail,
+        businessID: biz.id,
+        businessName: biz.busname
+      };
+
+      // ⭐ NEW — call connector instead of backend URL
+      const data = await getHook(payload);
+
+      const status = data.status || data.result.status;
+      const paymentLink = data.paymentLink || data.result.paymentLink;
+
+      if (status === "no_credits" && paymentLink) {
+        showToast("You're Out of Credits. Redirecting...");
+        setTimeout(() => window.location.href=paymentLink, 800);
+        return;
+      }
+
+      if (status === "sent") {
+        showToast("Mass Email Sent (-1 Credit)");
+        await lazyLoadCreditsForBusiness(biz);
+        massEmailBtn.innerHTML = "✔️";
+        massEmailBtn.disabled = false;
+        return;
+      }
+
+      showToast(`Mass Email Failed: ${(status || "ERROR").toUpperCase()}`);
+      massEmailBtn.innerHTML = "✉️";
+      massEmailBtn.disabled = false;
+
+    } catch (err) {
+      error("Mass Email Error:", err);
+      showToast("Error Sending Mass Email!");
+      massEmailBtn.innerHTML = "✉️";
+      massEmailBtn.disabled = false;
+    }
+  };
+
+  confirmYes.addEventListener("click", confirmYes._tp_handler);
+}
+
+
+  /* -------------------------------------------------
+     6. INFO BLOCK
+  -------------------------------------------------- */
+  const infoBlock = el("infoBlock");
+  const primaryWebsite = biz.websites.[0] || null;
+
+  const categoryRows = (biz.categories || [])
+    .map(cat => renderLabeledIcon(cat, false))
+    .join("<br>");
+
+  const subcategoryRows = (biz.subcategories || [])
+    .map(sub => renderLabeledIcon(sub, true))
+    .join("<br>");
+
+  infoBlock.innerHTML = `
+    <div class="info-row">
+      <div class="info-label">Categories:</div>
+      <div class="info-value">${categoryRows || "General"}</div>
+    </div>
+
+    ${
+      subcategoryRows
+        ? `
+          <div class="info-row">
+            <div class="info-label">Subcategories:</div>
+            <div class="info-value">${subcategoryRows}</div>
+          </div>
+        `
+        : ""
+    }
+
+    <div class="info-row">
+      <div class="info-label">Address:</div>
+      <div class="info-value">${biz.address || "San Pedro, Belize"}</div>
+    </div>
+
+    ${
+      primaryWebsite
+        ? `
+          <div class="info-row">
+            <div class="info-label">Website:</div>
+            <div class="info-value">
+              <a href="${primaryWebsite}" target="_blank">${primaryWebsite}</a>
+            </div>
+          </div>
+        `
+        : ""
+    }
+  `;
+
+
+  /* -------------------------------------------------
+     7. STATUS BADGE
+  -------------------------------------------------- */
+  const statusBadge = el("statusBadge");
+
+  if (biz.openNow === true) {
+    statusBadge.textContent = "OPEN NOW";
+    statusBadge.classList.add("open");
+    statusBadge.style.display = "block";
+  } else if (biz.openNow === false) {
+    statusBadge.textContent = "CLOSED";
+    statusBadge.classList.add("closed");
+    statusBadge.style.display = "block";
+  } else {
+    statusBadge.style.display = "none";
+  }
+
+
+  /* -------------------------------------------------
+     8. CONTACT ROW
+  -------------------------------------------------- */
+  const contactRow = el("contactRow");
+  contactRow.innerHTML = "";
+
+  const primaryEmail = biz.emails.[0] || null;
+  const primaryPhone = biz.phones.[0] || null;
+  const primaryWhatsApp = biz.whatsapp.[0] || primaryPhone || null;
+
+  if (primaryEmail) {
+    const emailBtn = document.createElement("a");
+    emailBtn.href = `mailto:${primaryEmail}`;
+    emailBtn.className = "contact-btn email";
+    emailBtn.textContent = "Email";
+    contactRow.appendChild(emailBtn);
+  }
+
+  if (primaryPhone) {
+    const callBtn = document.createElement("a");
+    callBtn.href = `tel:${primaryPhone}`;
+    callBtn.className = "contact-btn call";
+    callBtn.textContent = "Call";
+    contactRow.appendChild(callBtn);
+  }
+
+  if (primaryWhatsApp) {
+    const waBtn = document.createElement("a");
+    waBtn.href = `https://wa.me/${primaryWhatsApp.replace(/\D/g, "")}`;
+    waBtn.className = "contact-btn whatsapp";
+    waBtn.textContent = "WhatsApp";
+    contactRow.appendChild(waBtn);
+  }
+}
+
+function hideTPLoader() {
+    const el = document.getElementById("t-loading");
+    if (!el) return;
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 700);
+  }
+
+async function runWakeUpHeartbeat() {
+    await sessionCheck();
+  }
+
+function timeout(promise, ms = 4000) {
+  return Promise.race([
+    promise,
+    new Promise(resolve => setTimeout(() => resolve(null), ms))
+  ]);
+}
+// Global, namespaced timeout holder
+let __tp_overlay_resize_timeout = null;
+
+function applyTropicOverlay(name, iconUrl = null) {
+  // Remove any previous resize handler (idempotent)
+  PulseRealm.removeEventListener("resize", PulseRealm.__tp_overlay_resize_handler);
+
+  const overlay   = document.getElementById("tpOverlay");
+  const dot       = document.getElementById("tpDot");
+  const label     = document.getElementById("tpLabel");
+  const labelText = document.getElementById("tpLabelText");
+  const icon      = document.getElementById("tpIcon");
+  const mapImg    = document.getElementById("mapImage");
+
+  if (!overlay || !dot || !label || !mapImg) return;
+
+  const rect = mapImg.getBoundingClientRect();
+
+  // Center of the map image
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+
+  dot.style.left = `${cx - 9}px`;
+  dot.style.top  = `${cy - 9}px`;
+
+  labelText.textContent = name || "Location";
+  label.style.left = `${cx}px`;
+  label.style.top  = `${cy - 22}px`;
+
+  // Category icon support
+  if (iconUrl) {
+    icon.src = iconUrl;
+    icon.style.display = "block";
+  } else {
+    icon.style.display = "none";
+  }
+
+  overlay.style.display = "block";
+
+  // Install new resize handler
+  PulseRealm.__tp_overlay_resize_handler = () => {
+    clearTimeout(__tp_overlay_resize_timeout);
+    __tp_overlay_resize_timeout = setTimeout(() => {
+      applyTropicOverlay(labelText.textContent, icon.src || null);
+    }, 150);
+  };
+
+  window.addEventListener("resize", PulseRealm.__tp_overlay_resize_handler);
+}
+// -----------------------------
+// BUSINESS PAGE BOOTSTRAP — v11 CLEAN
+// -----------------------------
+(async () => {
+  // -----------------------------------------
+  // MARKER (CLEAN + SAFE)
+  // -----------------------------------------
+  let lastTime = nowMs();
+  function mark(label, absolute = false) {
+    const now = nowMs();
+    const diff = now - lastTime;
+    log(
+      absolute
+        ? `${label}: @${now.toFixed(1)}ms`
+        : `${label}: +${diff.toFixed(1)}ms`
+    );
+    lastTime = now;
+  }
+
+  mark("BUSINESS DOM STARTS");
+
+  // -----------------------------------------
+  // 1️⃣ v11 SESSION CHECK (ONE-TIME)
+  // -----------------------------------------
+  const id = await sessionCheck();
+  if (!id) return; // redirected to login if invalid
+  mark("BUSINESS SESSIONCHECK OK");
+
+  // -----------------------------------------
+  // 2️⃣ LOCATION ENGINE (ONE-TIME)
+  // -----------------------------------------
+  currentUserLocation = await getInstantLocationWithBackgroundUpdate(newLoc => {
+    currentUserLocation = newLoc;
+    mark("SETTING CURRENT LOCATION IF AVAILABLE");
+  });
+
+  mark("BUSINESS LOCATION READY");
+
+  // -----------------------------------------
+  // 3️⃣ LOAD BUSINESS (ONE-TIME)
+  // -----------------------------------------
+  await loadBusiness();
+  mark("BUSINESS LOADED");
+
+  // -----------------------------------------
+  // 4️⃣ HEARTBEAT INIT (ONE-TIME)
+  // -----------------------------------------
+  await runWakeUpHeartbeat();
+  mark("BUSINESS HEARTBEAT STARTED");
+
+  // -----------------------------------------
+  // 5️⃣ INIT BUSINESS UI (ONE-TIME)
+  // -----------------------------------------
+  initiateBusiness();
+  mark("BUSINESS OVERLAYS LOADED");
+
+  // -----------------------------------------
+  // ⭐ NO TIMERS. NO INTERVALS. NO LOOPS.
+// -----------------------------------------
+
+  hideTPLoader();
+  mark("BUSINESS DOM ENDS", true);
+})();
+
+</script>
+</body>
+</html>

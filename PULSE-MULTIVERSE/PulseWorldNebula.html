@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="/" crossorigin>
+<link rel="preconnect" href="/404" crossorigin>
+<link rel="preload" fetchpriority="highest" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaBG.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaMid.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaFront.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaSoft.webp.pex" type="image/webp"/>
+<link rel="modulepreload" href="./PULSE-MULTIVERSAL-TOUCH.js">
+<link rel="modulepreload" href="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js">
+<link rel="modulepreload" href="./_PROOF/PULSE-PROOF.js">
+<link rel="modulepreload" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js">
+<link rel="modulepreload" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<title>PulseWorld • Quiet Nebula</title>
+<script type="module" src="./PULSE-MULTIVERSAL-TOUCH.js"></script>
+<script type="module" src="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js"></script>
+<script type="module" src="./_PROOF/PULSE-PROOF.js"></script>
+
+<style>
+  :root {
+    --bg-dark: #050814;
+    --bg-mid: #0b1022;
+    --bg-light: #1b2340;
+    --accent: #7fd4ff;
+    --accent-soft: #c6f1ff;
+    --text-main: #f5f7ff;
+    --text-soft: #c3c7e6;
+    --text-muted: #8b90b5;
+    --button-bg: #7fd4ff;
+    --button-bg-hover: #a3e2ff;
+    --button-text: #04101a;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #1b2340 0, #050814 55%, #02030a 100%);
+    color: var(--text-main);
+     min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .pw-shell {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .pw-card {
+    position: relative;
+    max-width: 720px;
+    width: 100%;
+    padding: 32px 28px 28px;
+    border-radius: 24px;
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.04),
+        rgba(127, 212, 255, 0.04)
+      ),
+      radial-gradient(circle at top left, rgba(127, 212, 255, 0.18), transparent 55%),
+      radial-gradient(circle at bottom right, rgba(198, 241, 255, 0.12), transparent 60%),
+      rgba(5, 8, 20, 0.9);
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.75),
+      0 0 0 1px rgba(127, 212, 255, 0.12);
+    overflow: hidden;
+  }
+
+  /* UNIVERSAL CLOUDS */
+  .pw-clouds {
+    position: absolute;
+    inset: -40%;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(127, 212, 255, 0.18), transparent 55%),
+      radial-gradient(circle at 80% 10%, rgba(198, 241, 255, 0.16), transparent 55%),
+      radial-gradient(circle at 20% 80%, rgba(127, 212, 255, 0.12), transparent 55%),
+      radial-gradient(circle at 85% 75%, rgba(198, 241, 255, 0.1), transparent 55%);
+    opacity: 0.55;
+    filter: blur(18px);
+    animation: pw-cloud-drift 40s linear infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes pw-cloud-drift {
+    0% { transform: translate3d(-10px, 10px, 0) scale(1.02); }
+    50% { transform: translate3d(10px, -6px, 0) scale(1.04); }
+    100% { transform: translate3d(-6px, 4px, 0) scale(1.01); }
+  }
+
+  /* 4 DYNAMIC IMAGE LAYERS */
+  .pw-img-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+    filter: blur(6px) brightness(1.15);
+    animation: pw-img-drift 38s ease-in-out infinite alternate;
+  }
+
+  .pw-img-back {
+    background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaBG.webp.pex');
+    opacity: 0.22;
+    filter: blur(14px) brightness(1.05);
+    animation-duration: 55s;
+  }
+
+  .pw-img-mid {
+    background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaMid.webp.pex');
+    opacity: 0.32;
+    filter: blur(10px) brightness(1.12);
+    animation-duration: 42s;
+  }
+
+  .pw-img-front {
+    background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaFront.webp.pex');
+    opacity: 0.45;
+    filter: blur(6px) brightness(1.18);
+    animation-duration: 30s;
+  }
+
+  .pw-img-stars {
+    background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebulaSoft.webp.pex');
+    opacity: 0.28;
+    filter: blur(2px) brightness(1.25);
+    animation: pw-stars-twinkle 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes pw-img-drift {
+    0% { transform: translate3d(-12px, 8px, 0) scale(1.03); }
+    50% { transform: translate3d(10px, -6px, 0) scale(1.05); }
+    100% { transform: translate3d(-6px, 4px, 0) scale(1.02); }
+  }
+
+  @keyframes pw-stars-twinkle {
+    0% { opacity: 0.18; transform: scale(1); }
+    50% { opacity: 0.32; transform: scale(1.015); }
+    100% { opacity: 0.24; transform: scale(1.005); }
+  }
+
+  .pw-card-inner {
+    position: relative;
+    z-index: 5;
+  }
+
+  .pw-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(4, 12, 32, 0.8);
+    border: 1px solid rgba(127, 212, 255, 0.35);
+    color: var(--accent-soft);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .pw-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: radial-gradient(circle, #7fd4ff 0, #2aa0d8 55%, #04101a 100%);
+    box-shadow: 0 0 12px rgba(127, 212, 255, 0.9);
+  }
+
+  .pw-hero-title {
+    font-size: 26px;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  .pw-hero-sub {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-soft);
+    margin-bottom: 24px;
+  }
+
+  .pw-section {
+    margin-top: 18px;
+  }
+
+  .pw-section h2 {
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 6px;
+  }
+
+  .pw-section p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-soft);
+  }
+
+  .pw-section p + p {
+    margin-top: 8px;
+  }
+
+  .pw-actions {
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* NEW SECONDARY BUTTON (ONLY ACTION) */
+  .pw-button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(127, 212, 255, 0.35);
+    cursor: pointer;
+    background: rgba(10, 20, 40, 0.6);
+    color: var(--accent-soft);
+    font-size: 14px;
+    font-weight: 500;
+    backdrop-filter: blur(6px);
+    box-shadow:
+      0 6px 20px rgba(127, 212, 255, 0.15),
+      0 0 0 1px rgba(4, 16, 26, 0.6);
+    transition:
+      transform 0.12s ease-out,
+      box-shadow 0.12s ease-out,
+      background 0.12s ease-out;
+  }
+
+  .pw-button-secondary:hover {
+    background: rgba(20, 40, 70, 0.75);
+    transform: translateY(-1px);
+    box-shadow:
+      0 10px 28px rgba(127, 212, 255, 0.25),
+      0 0 0 1px rgba(4, 16, 26, 0.8);
+  }
+
+  .pw-button-secondary:active {
+    transform: translateY(0);
+    box-shadow:
+      0 6px 18px rgba(127, 212, 255, 0.18),
+      0 0 0 1px rgba(4, 16, 26, 0.8);
+  }
+
+  .pw-button-note {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .pw-footer {
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+</style>
+
+<body>
+  <div class="pw-shell">
+    <main class="pw-card" aria-labelledby="pw-title">
+
+      <div class="pw-clouds"></div>
+
+      <div class="pw-img-layer pw-img-back"></div>
+      <div class="pw-img-layer pw-img-mid"></div>
+      <div class="pw-img-layer pw-img-front"></div>
+      <div class="pw-img-layer pw-img-stars"></div>
+
+      <div class="pw-card-inner">
+        <div class="pw-pill">
+          <span class="pw-pill-dot"></span>
+          <span>Quiet layer of PulseWorld</span>
+        </div>
+
+        <h1 id="pw-title" class="pw-hero-title">
+          You’ve reached a quiet layer of PulseWorld.
+        </h1>
+
+        <p class="pw-hero-sub">
+          Something felt a little unusual in the timeline, so we brought you somewhere safe.
+          You’re still with us. Nothing is lost.
+        </p>
+
+        <section class="pw-section">
+          <h2>You are safe. You are secure.</h2>
+          <p>Your presence here still matters. Your choices, your progress, your path in this world are not gone—they’re just resting for a moment.</p>
+          <p>When something doesn’t feel right in our systems, we don’t throw you out. We bring you here, to a softer layer, while we steady everything around you.</p>
+        </section>
+
+        <section class="pw-section">
+          <h2>We’re still working for you.</h2>
+          <p>Across many versions of us, in many worlds and many times, teams with the same name and the same mission are already looking into what happened.</p>
+          <p>We noticed an anomaly. We caught it. And we chose to protect <strong>you</strong> first. You are not lost. You are not forgotten. You are being held here on purpose.</p>
+        </section>
+
+        <section class="pw-section">
+          <h2>This isn’t an end. It’s a pause.</h2>
+          <p>PulseWorld is built to move fast—but never at the cost of you. This moment is a soft landing, not a dead end.</p>
+          <p>Take a breath. When you’re ready, we’ll guide you back into motion and reconnect you with a stable part of the world.</p>
+        </section>
+
+        <div class="pw-actions">
+          <button class="pw-button-secondary" type="button"
+            onclick="window.location.href='mailto:AIOvermind@pulseworld.net?subject=PulseWorld%20Anomaly%20Report&body=Hey%20PulseWorld%20Team,%0A%0AI%20hit%20a%20soft-layer%20anomaly.%20Feel%20free%20to%20use%20this%20report%20to%20speed%20up%20your%20diagnostics.%0A%0A-%20User'">
+            Send Anomaly Report
+          </button>
+
+          <div class="pw-button-note">
+            Optional: If you want to add this moment to our support queue for faster review,
+            you can send a quick anomaly report.
+          </div>
+        </div>
+
+        <div class="pw-footer">
+          We’re still here. We’re still working. We won’t leave you behind.
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

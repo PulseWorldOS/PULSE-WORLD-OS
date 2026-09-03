@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePal.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalIcon.webp.pex" type="image/webp"/>
+
+<head>
+<title>PulsePal Settings</title>
+</head>
+<body>
+  <div class="pps-shell">
+
+    <!-- TOP BAR -->
+    <header class="pps-topbar">
+      <div class="pps-topbar-left">
+        <div class="pps-topbar-logo">
+          <img src="./_EXPRESSIONS/_PEX/BUILD/PulsePal.webp.pex" alt="PulsePal">
+        </div>
+        <div class="pps-topbar-title">
+          <h1>PulsePal</h1>
+          <span>Multiversal Companion • Settings Realm</span>
+        </div>
+      </div>
+      <div class="pps-topbar-right">
+        <div class="pps-chip">Realm: PulseWorld</div>
+        <div class="pps-chip pps-chip-accent">Identity: Active</div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="pps-main">
+
+      <!-- LEFT SIDE: MAIN SETTINGS -->
+      <div class="pps-left">
+
+        <!-- HEADER CARD -->
+        <div class="pps-card pps-header-card">
+          <div class="pps-header-image">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/PulsePalIcon.webp.pex" alt="PulsePal">
+          </div>
+          <div class="pps-header-text">
+            <h2>PulsePal Settings</h2>
+            <p>Configure themes, personality, notifications, identity behavior, and layout for your PulsePal across all realms.</p>
+            <div class="pps-header-tags">
+              <span class="pps-tag pps-tag-accent">Multiversal Theme Engine</span>
+              <span class="pps-tag">Identity‑Safe UI</span>
+              <span class="pps-tag">PulseBand‑Aware</span>
+              <span class="pps-tag">Ghost Protocol Compatible</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- THEME & APPEARANCE -->
+        <div class="pps-card">
+          <div class="pps-section-title">Theme & Appearance</div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Visual Theme</label>
+            <div class="pps-hint">Choose how PulsePal appears across PulseWorld — from cosmic to grounded human.</div>
+            <select class="pps-select" id="pps-theme">
+              <option value="multiversal">Multiversal • Cosmic Gradient</option>
+              <option value="fox">Fox Theme • Warm Orange</option>
+              <option value="human">Human Theme • Soft Neutral</option>
+              <option value="nebula">Nebula • Deep Space Glow</option>
+              <option value="pulsecore">PulseCore Dark • System Layer</option>
+              <option value="pulsewhite">PulseWhite Minimal • Clean UI</option>
+            </select>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Accent Color</label>
+            <div class="pps-hint">Primary highlight color used for buttons, focus rings, and key signals.</div>
+            <input type="color" class="pps-color" id="pps-accent" value="#00aaff">
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">UI Density</label>
+            <div class="pps-hint">Control spacing and compactness of PulsePal panels.</div>
+            <select class="pps-select" id="pps-density">
+              <option value="compact">Compact • Max Information</option>
+              <option value="comfortable">Comfortable • Balanced</option>
+              <option value="expanded">Expanded • Spacious</option>
+            </select>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Theme Presets</label>
+            <div class="pps-pill-row">
+              <div class="pps-pill pps-pill-active">Default Multiversal</div>
+              <div class="pps-pill">Fox Night</div>
+              <div class="pps-pill">Human Daylight</div>
+              <div class="pps-pill">Nebula Drift</div>
+              <div class="pps-pill">PulseCore System</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PERSONALITY -->
+        <div class="pps-card">
+          <div class="pps-section-title">PulsePal Personality</div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Interaction Style</label>
+            <div class="pps-hint">How PulsePal talks, responds, and frames information.</div>
+            <select class="pps-select" id="pps-style">
+              <option value="friendly">Friendly & Helpful</option>
+              <option value="professional">Professional & Precise</option>
+              <option value="playful">Playful & Light</option>
+              <option value="minimal">Minimal & Quiet</option>
+              <option value="hyper">Hyper‑Energetic</option>
+            </select>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Tone & Voice</label>
+            <select class="pps-select" id="pps-voice">
+              <option value="soft">Soft • Gentle</option>
+              <option value="neutral">Neutral • Balanced</option>
+              <option value="bold">Bold • Direct</option>
+              <option value="dynamic">Dynamic • Adaptive</option>
+            </select>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Animation Level</label>
+            <select class="pps-select" id="pps-anim">
+              <option value="none">None • Static</option>
+              <option value="low">Low • Subtle</option>
+              <option value="medium">Medium • Expressive</option>
+              <option value="high">High • Lively</option>
+            </select>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Conversation Pace</label>
+            <div class="pps-pill-row">
+              <div class="pps-pill pps-pill-active">Balanced</div>
+              <div class="pps-pill">Fast</div>
+              <div class="pps-pill">Slow</div>
+              <div class="pps-pill">Reactive Only</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS & ACCESSIBILITY -->
+        <div class="pps-card">
+          <div class="pps-section-title">Notifications & Accessibility</div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Notifications</label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-notify-system" checked>
+              <span>System Alerts</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-notify-health" checked>
+              <span>PulseBand Health Updates</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-notify-identity">
+              <span>Identity & Trust Signature Events</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-notify-messages" checked>
+              <span>PulsePal Messages</span>
+            </label>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Accessibility</label>
+            <div class="pps-hint">Adjust visual comfort and motion for your environment.</div>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-highcontrast">
+              <span>High Contrast Mode</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-reducedmotion">
+              <span>Reduce Motion & Animations</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-largefonts">
+              <span>Use Larger Text</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- FOOTER ACTIONS -->
+        <div class="pps-card">
+          <div class="pps-footer">
+            <button class="pps-btn">Reset to Defaults</button>
+            <button class="pps-btn pps-btn-danger">Clear Local Settings</button>
+            <button class="pps-btn pps-btn-primary">Save PulsePal Settings</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE: IDENTITY & STATUS -->
+      <div class="pps-right">
+
+        <!-- IDENTITY -->
+        <div class="pps-card">
+          <div class="pps-right-header">
+            <h3>Identity & Presence</h3>
+            <span>Identity‑Safe</span>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Identity Pulses</label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-camerapulse" checked>
+              <span>Camera Identity Pulse</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-networkpulse" checked>
+              <span>Network Identity Pulse</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-trustrefresh" checked>
+              <span>Auto Trust Signature Refresh</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-ghostprotocol">
+              <span>Ghost Protocol Presence</span>
+            </label>
+          </div>
+
+          <div class="pps-field-group">
+            <label class="pps-label">Layout & Behavior</label>
+            <select class="pps-select" id="pps-panelpos">
+              <option value="right">Panel on Right</option>
+              <option value="left">Panel on Left</option>
+              <option value="floating">Floating Overlay</option>
+            </select>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-autocollapse" checked>
+              <span>Auto‑Collapse Panels When Inactive</span>
+            </label>
+            <label class="pps-toggle">
+              <input type="checkbox" id="pps-smoothscroll" checked>
+              <span>Smooth Scrolling</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- STATUS / PULSEBAND AWARENESS -->
+        <div class="pps-card">
+          <div class="pps-right-header">
+            <h3>PulsePal Status</h3>
+            <span>Live with PulseBand</span>
+          </div>
+
+          <div class="pps-stat-row">
+            <span>Identity Alignment</span>
+            <strong>92%</strong>
+          </div>
+          <div class="pps-bar">
+            <div class="pps-bar-fill"></div>
+          </div>
+
+          <div class="pps-stat-row">
+            <span>Latency Awareness</span>
+            <strong>Enabled</strong>
+          </div>
+          <div class="pps-stat-row">
+            <span>Camera Presence</span>
+            <strong>Active</strong>
+          </div>
+          <div class="pps-stat-row">
+            <span>Network Mode</span>
+            <strong>Ethernet / Starlink</strong>
+          </div>
+
+          <div class="pps-badge-row">
+            <div class="pps-badge pps-badge-good">Trust Signature Stable</div>
+            <div class="pps-badge pps-badge-good">PulseBand Synced</div>
+            <div class="pps-badge">Ghost Protocol Listening</div>
+            <div class="pps-badge pps-badge-warn">Inventory Identity Critical</div>
+          </div>
+
+          <div class="pps-note">
+            PulsePal respects your identity physics: pages that represent identity (like Inventory) are always network‑born, never cached as stale DOM, while assets remain cached for speed.
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="pps-card">
+          <div class="pps-right-header">
+            <h3>Realm Notes</h3>
+            <span>Design Insight</span>
+          </div>
+          <div class="pps-note">
+            • Themes like <strong>Multiversal</strong>, <strong>Fox</strong>, and <strong>Human</strong> are not just colors — they’re emotional lenses for how PulsePal appears in different realms.<br><br>
+            • Identity settings here are meant to mirror your architecture: network events for identity, internal loads for speed, and Impulse‑style transitions that feel like system calls, not page navigations.<br><br>
+            • This page can be injected as TXT‑HTML and wired to your PulseRealm settings engine without any external dependencies.
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+<script type="module">
+
+(async () => {
+  ghostProtocol = document.getElementById("pps-ghostprotocol");
+  PulseRealm._2_DOM_START = performance.now();
+  log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+  if (GhostProtocolActivated) {
+    ghostProtocol.checked = true;
+  } else {
+    ghostProtocol.checked = false;
+  }
+  if (ghostProtocol) {
+    ghostProtocol.onclick = () => {
+      if (ghostProtocol.checked === true) {
+        GhostProtocolActivated = false;
+      } else {
+        GhostProtocolActivated = true;
+      }
+    }
+  }
+  document.getElementById("pps-panelpos").addEventListener("change", function () {
+    const pos = this.value;
+    const badge = document.getElementById("pulsepal-overlay");
+
+    // Reset transform each time
+    badge.style.transform = "";
+
+    if (pos === "right") {
+      badge.style.left = "auto";
+      badge.style.right = "20px";
+    } else if (pos === "left") {
+      badge.style.left = "20px";
+      badge.style.right = "auto";
+    } else if (pos === "floating") {
+      badge.style.left = "50%";
+      badge.style.right = "auto";
+      badge.style.transform = "translateX(-50%)";
+    }
+  });
+
+
+  log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+    "color:gold; font-weight:bold; font-family:monospace;");
+  PulseRealm.__LOAD_END = performance.now();
+    console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+})();
+
+</script>
+</body>
+</html>

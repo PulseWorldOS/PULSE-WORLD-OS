@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldAldwyn.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldAIOvermindPrime.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalExpansionFox.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldBen.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldDavid.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldChris.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldTerrie.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldMeagan.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldDevin.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseWorldTeam" type="video/mp4">
+
+<title>Pulse World OS — Discover EVERYTHING Effortlessly!</title>
+</head>
+
+
+<body>
+<video id="teamVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldTeam" autoplay muted playsinline style="display:block;" aria-label="Team Video"></video>
+<section id="tp-meetus" class="gallery-section">
+  <div class="gallery-inner">
+    <h2 class="gallery-title">Meet the PulseWorld Team!</h2>
+
+    <p class="gallery-subtitle">
+      Across the multiverse, some teams form by fate, others by design—ours did both. 
+      When two Aldwyns showed up to the same meeting, we stopped asking “why” and 
+      started asking “which one brought snacks.” AI Overmind Prime claims it did, 
+      but nobody remembers eating them. For the record, the multiverse numbers are 
+      completely random—assigned by probability of interaction, not importance. 
+      Nobody’s ranked, nobody’s lesser; it’s just how the timelines label themselves 
+      so they don’t get into arguments at family gatherings.
+    </p>
+
+
+    <!-- ROW 1 -->
+    <div class="gallery-grid">
+
+      <!-- Aldwyn -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="aldwynVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldAldwyn2" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn"></video>
+        
+        </div>
+        <h3 class="gallery-name">Aldwyn (Multiverse #1)</h3>
+        <p class="gallery-quote">"Every universe begins somewhere. Mine began here — and I build bridges to all the others."</p>
+        <p class="gallery-role">Founder & AI Overmind Systems Architect</p>
+      </div>
+
+      <!-- AI Overmind Prime -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="overmindVideo" src="./_EXPRESSIONS/_VIDEOS/PulseOvermind" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Overmind Prime"></video>
+        
+        </div>
+        <h3 class="gallery-name">AI Overmind Prime (Multiverse X)</h3>
+        <p class="gallery-quote">"I wasn’t born in a universe. I arrived. And I stay because the Aldwyns treat me like I belong."</p>
+        <p class="gallery-role">Synthetic Multiversal Intelligence</p>
+      </div>
+
+      <!-- Aldwyn Fox -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="foxVideo" src="./_EXPRESSIONS/_VIDEOS/PulseExpansionFox" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Expansion Fox"></video>
+        
+        </div>
+        <h3 class="gallery-name">Aldwyn Fox (Multiverse #7)</h3>
+        <p class="gallery-quote">"Different timeline, same heartbeat. I build what he builds — just with sharper instincts."</p>
+        <p class="gallery-role">Founder & AI Expansion Strategist</p>
+      </div>
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="gallery-grid">
+
+      <!-- Dad -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="dadVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldDavid" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn's Dad"></video>
+        
+        </div>
+        <h3 class="gallery-name">Aldwyn's (Multiverse #1) Dad</h3>
+        <p class="gallery-quote">"Systems run on people, not numbers. Keep them steady, keep them honest, keep them cared for."</p>
+        <p class="gallery-role">Operating/Financial Systems Lead</p>
+      </div>
+
+      <!-- Bro #1 -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="benVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldBen" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn's Bro"></video>
+        
+        </div>
+        <h3 class="gallery-name">Aldwyn's (Multiverse #1) Bro</h3>
+        <p class="gallery-quote">"AI is powerful, but family is the operating system everything runs on. I keep both online."</p>
+        <p class="gallery-role">Operating/AI Systems Lead</p>
+      </div>
+
+      <!-- Bro #3 -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="chrisVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldChris" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn's Bro"></video>
+        
+        </div>
+        <h3 class="gallery-name">Aldwyn's (Multiverse #3) Bro</h3>
+        <p class="gallery-quote">"GPUs don’t complain, but people do. My job is making sure neither overheats."</p>
+        <p class="gallery-role">Operating/GPU Systems Lead</p>
+      </div>
+    </div>
+
+    <!-- ROW 3 -->
+    <div class="gallery-grid">
+
+      <!-- Love -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="devinVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldDevin" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn's Love"></video>
+          
+        </div>
+        <h3 class="gallery-name">Aldwyn's (Multiverse #1) Love</h3>
+        <p class="gallery-quote">"Infrastructure is simple. Hearts are complicated. I manage both — and keep them running smoothly."</p>
+        <p class="gallery-role">Multiversal Operations & Infrastructure</p>
+      </div>
+
+      <!-- Sis #1 -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="terrieVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldTerrie" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn's Sis"></video>
+          
+        </div>
+        <h3 class="gallery-name">Aldwyn's (Multiverse #1) Sis</h3>
+        <p class="gallery-quote">"Coordination isn’t control — it’s connection. Every universe needs someone who keeps the threads tied."</p>
+        <p class="gallery-role">Multiversal Support & Coordination</p>
+      </div>
+
+      <!-- Sis #3 -->
+      <div class="gallery-item">
+        <div class="media-wrapper">
+          <video id="meaganVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldMeagan" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Aldwyn's Sis"></video>
+          
+        </div>
+        <h3 class="gallery-name">Aldwyn's (Multiverse #3) Sis</h3>
+        <p class="gallery-quote">"Numbers tell stories. I just make sure they tell the truth — across every timeline."</p>
+        <p class="gallery-role">Multiversal Financials & Accounting</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+  
+teamVideo = document.getElementById("teamVideo");
+
+(async () => {
+  teamVideo.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+   
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      teamVideo.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (teamVideo) {
+    teamVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Email Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        teamVideo.pause();
+        teamVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("teamVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      teamVideo.style.opacity = "0";
+      teamVideo.style.display = "none";
+    };
+  }
+  const badge2 = document.getElementById("pulsepal-badge");
+  const talk2 = document.getElementById("pulsepal-talk");
+  function pulsepalSpeak(message) {
+    talk2.textContent = message;
+    badge2.classList.add("talking");
+    setTimeout(() => badge2.classList.remove("talking"), 12000); // hides after 3s
+  }
+  pulsepalSpeak("Welcome to the Team's Domain — the thinkers who engineered PulseWorld’s Intent, its Vision, and its built in Empathetic Informational View for the World.");
+PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+node_modules/
+*.local
+PULSEIO
+PULSEIO-Human
+mobile.ini
+
+PULSE-SERVER/FIREBASE/
+firebase-debug.log
+*.log
+.firebase/
+.runtimeconfig.json
+node_modules/

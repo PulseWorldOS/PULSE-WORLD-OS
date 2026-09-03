@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PulseBrowser OS — Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      background: #000;
+      color: #00FF9C;
+
+      background: url("PulseWorldBarrier-MaxOmega-Mobile2.png") center top / contain no-repeat;
+
+      font-family: monospace;
+      padding: 10px;
+      width: 350px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      margin-top: 25px;
+      padding: 20px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      border: 1px solid #222;
+    }
+
+    .toggle {
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toggle label {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .redirect {
+      margin-top: 40px;
+      padding: 14px 30px;
+      background: #00aaff;
+      color: black;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border: none;
+    }
+
+    .redirect:hover {
+      background: #33bbff;
+    }
+
+    .divider {
+      height: 1px;
+      background: #333;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>PulseBrowser OS — Settings</h1>
+  <p style="opacity:0.7; margin-bottom:20px;">
+    Local OS settings (extension‑first). Full world settings available at PulseWorld.net.
+  </p>
+
+  <!-- CORE SUBSYSTEMS -->
+  <div class="section">
+    <h2>Core Subsystems</h2>
+    <div class="toggle"><label>Interceptor</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Accelerator</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Navigator</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Router</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Content Runtime</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Dev Overlay</label><input type="checkbox" /></div>
+    <div class="toggle"><label>PulseGPU</label><input type="checkbox" /></div>
+    <div class="toggle"><label>PulseDecode</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- TRACKER BLOCKING -->
+  <div class="section">
+    <h2>Tracker Blocking</h2>
+    <div class="toggle"><label>Block Trackers</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Block Analytics</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Block Ads</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Block Fingerprinting</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Block Crypto Miners</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- ACCELERATION -->
+  <div class="section">
+    <h2>Acceleration Modes</h2>
+    <div class="toggle"><label>Preconnect</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Prefetch</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Preload</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Warm Path</label><input type="checkbox" /></div>
+    <div class="toggle"><label>GPU Warm</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Decode Warm</label><input type="checkbox" /></div>
+    <div class="toggle"><label>DNS Warm</label><input type="checkbox" /></div>
+    <div class="toggle"><label>TLS Warm</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="section">
+    <h2>Navigation Modes</h2>
+    <div class="toggle"><label>Warm Siblings</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Warm Assets</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Warm Global Sites</label><input type="checkbox" /></div>
+    <div class="toggle"><label>PulseWorld Priority</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- ROUTER -->
+  <div class="section">
+    <h2>Router Modes</h2>
+    <div class="toggle"><label>Prioritize CDN</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Prioritize Assets</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Prioritize Home Universe</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Latency Scan</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Realm Scan</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Fallback Scan</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- PORTAL SYSTEM -->
+  <div class="section">
+    <h2>Portal System (404 Warp Gate)</h2>
+    <div class="toggle"><label>Enable Boot Video</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Enable Full Viewport Portal</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Enable Index Copy</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Latency Warp</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Fallback Warp</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- FALLBACK SYSTEM -->
+  <div class="section">
+    <h2>Fallback System (404 OS)</h2>
+    <div class="toggle"><label>Enable 404 OS</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Console Clone</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Realm Ping</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Auto Warp</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Error Capture</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- WORLD ENGINE -->
+  <div class="section">
+    <h2>World Engine (Optional)</h2>
+    <div class="toggle"><label>Mentor System</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Earn Mode</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Identity Tether</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Mesh Physics</label><input type="checkbox" /></div>
+    <div class="toggle"><label>Uplift Logic</label><input type="checkbox" /></div>
+  </div>
+
+  <!-- REDIRECT BUTTON -->
+  <button class="redirect" id="openWorld">Open Full Settings in PulseWorld</button>
+
+  <script>
+    document.getElementById("openWorld").onclick = () => {
+      window.location.href = "https://www.pulseworld.net/settings";
+    };
+
+    // Auto‑redirect after 2 seconds
+    setTimeout(() => {
+      window.location.href = "https://www.pulseworld.net/settings";
+    }, 2000);
+  </script>
+
+</body>
+</html>

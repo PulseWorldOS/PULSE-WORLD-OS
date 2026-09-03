@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+<title>Pulse World OS — Setup Complete</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  height: 100%;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+
+/* BACKGROUND */
+#bg {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center,
+    rgba(0,255,255,0.18),
+    rgba(0,0,0,0.9) 70%);
+  opacity: 0;
+  animation: bgFade 0.8s ease-out forwards;
+}
+
+@keyframes bgFade {
+  to { opacity: 1; }
+}
+
+/* LOGO */
+#logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  transform: translate(-50%, -50%) scale(0.7);
+  opacity: 0;
+  animation: logoPop 0.9s ease-out forwards;
+}
+
+@keyframes logoPop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  70%  { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* TEXT */
+#text {
+  position: absolute;
+  bottom: 12%;
+  width: 100%;
+  text-align: center;
+  color: #00eaff;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation: textFade 1s ease-out forwards 0.3s;
+}
+
+@keyframes textFade {
+  to { opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="bg"></div>
+
+<img id="logo" src="../_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" alt="PulseWorld OS">
+
+<div id="text">Setup Complete — Entering Pulse World OS…</div>
+
+<script type="module">
+/*
+  Backend replaces %%FIREBASE_TOKEN%% with the real Firebase custom token.
+*/
+const token = "%%FIREBASE_TOKEN%%";
+
+function normalizeDest(d) {
+  if (!d) return null;
+  d = d.split("?")[0];
+  d = d.replace(/^\//, "");
+  d = d.replace(/\.html$/i, "");
+  return d + ".txt";
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const returnTo = params.get("returnTo");
+
+  if (!token) {
+    window.location.href = "/error.html";
+    return;
+  }
+
+  // ⭐ v9 TOKEN + DEVICE
+  localStorage.setItem("pw_token_v9", token);
+  localStorage.setItem("pw_device_v9", "1");
+
+  try {
+    // Verify token + fetch identity
+    const response = await fetch("https://verifytoken-ilx3agka5q-uc.a.run.app", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
+    });
+
+    const data = await response.json();
+
+    if (!data.success || !data.identity) {
+      window.location.href = "/error.html";
+      return;
+    }
+
+    // ⭐ v9 IDENTITY
+    localStorage.setItem("pw_identity_v9", JSON.stringify(data.identity));
+
+    // Preload avatar
+    if (data.identity.photoURL) {
+      const img = new Image();
+      img.src = data.identity.photoURL;
+    }
+
+    // ⭐ Convert returnTo → OS route
+    let destRoute = normalizeDest(returnTo);
+
+    // ⭐ Save last route
+    if (destRoute) {
+      localStorage.setItem("pw_last_route", destRoute);
+    }
+
+    // ⭐ Redirect to OS
+    setTimeout(() => {
+      if (destRoute) {
+        window.location.href = `?impulse=${encodeURIComponent(destRoute)}`;
+      } else {
+        window.location.href = "/";
+      }
+    }, 900);
+
+  } catch (err) {
+    window.location.href = "/error.html";
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Schema Audit</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #eee; }
+    .bad { color: red; }
+    .ok { color: green; }
+  </style>
+</head>
+<body>
+
+<h1>User Schema Audit</h1>
+
+<button onclick="runScan()">Scan Users</button>
+<button onclick="fixAll()">Fix All Users</button>
+
+<div id="results"></div>
+
+<script>
+async function runScan() {
+  const res = await fetch("https://scanusersforschemaissues-ilx3agka5q-uc.a.run.app");
+  const data = await res.json();
+
+  let html = "<table><tr><th>UID</th><th>Missing Fields</th><th>Status</th></tr>";
+
+  data.users.forEach(u => {
+    const missing = u.missing.length
+      ? `<span class='bad'>${u.missing.join("<br>")}</span>`
+      : `<span class='ok'>None</span>`;
+
+    const status = u.missing.length
+      ? `<span class='bad'>Needs Fix</span>`
+      : `<span class='ok'>OK</span>`;
+
+    html += `<tr>
+      <td>${u.uid}</td>
+      <td>${missing}</td>
+      <td>${status}</td>
+    </tr>`;
+  });
+
+  html += "</table>";
+  document.getElementById("results").innerHTML = html;
+}
+
+async function fixAll() {
+  const res = await fetch("https://fixuserstonewschema-ilx3agka5q-uc.a.run.app");
+  const data = await res.json();
+  alert(data.message);
+}
+</script>
+
+</body>
+</html>

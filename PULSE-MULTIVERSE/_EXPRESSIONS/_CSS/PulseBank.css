@@ -1,0 +1,413 @@
+
+
+ /* BACKGROUND */
+.bankBackground {
+  width: 100%;
+  min-height: 100dvh;
+  background: url("../../_EXPRESSIONS/_PEX/BUILD/PulseWorldBank-2.webp.pex") center/cover no-repeat fixed;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 0;
+  box-sizing: border-box;
+}
+
+/* PAGE SHELL */
+.bankPageShell {
+  width: 100%;
+  max-width: var(--tp-max-width);
+  padding: 32px;
+  box-sizing: border-box;
+  backdrop-filter: blur(16px);
+  background: radial-gradient(circle at top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95));
+  border-radius: 24px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.9),
+    0 0 28px rgba(0, 0, 0, 0.8),
+    0 0 80px rgba(0, 255, 200, 0.25);
+  color: var(--pw-text);
+}
+
+/* HEADER */
+.bankHeaderRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.pulse-bank-bubble {
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #1b1f2a 0%, #090b10 45%, #000000 100%);
+  box-shadow:
+    0 35px 65px rgba(0, 0, 0, 0.75),
+    0 18px 40px rgba(0, 0, 0, 0.65),
+    0 0 55px rgba(0, 255, 200, 0.35),
+    0 0 0 2px rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 35px rgba(0, 255, 200, 0.45));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.pulse-bank-bubble:hover {
+  transform: translateY(-6px) scale(1.03);
+  filter: drop-shadow(0 0 55px rgba(0, 255, 200, 0.75));
+}
+
+.pulse-bank-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #00a884;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.30),
+    0 12px 28px rgba(0, 0, 0, 0.32),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  background: #ffffff;
+}
+
+.bankTitle {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bankSubtitle {
+  font-size: 14px;
+  color: var(--pw-subtle);
+}
+
+.secureSessionBadge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--pw-gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.secureSessionDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(circle at center, var(--pw-gold), #c89a3a);
+  box-shadow: 0 0 8px rgba(245, 210, 122, 0.7);
+}
+
+/* GRID */
+.bankDashboard {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  margin-bottom: 32px;
+}
+
+.bankSideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 240px;
+}
+
+/* PANELS */
+.bankPanel {
+  background: var(--pw-panel-bg);
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid var(--pw-panel-border);
+  box-shadow:
+    0 0 22px rgba(0, 0, 0, 0.8),
+    0 0 26px var(--pw-panel-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.bankPanel::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at top left,
+    rgba(0, 255, 200, 0.18),
+    transparent 55%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.bankPanelTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--pw-gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bankPanelItem {
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--pw-text);
+  display: flex;
+  justify-content: space-between;
+  opacity: 0.9;
+}
+
+.bankPanelItem span:first-child {
+  color: var(--pw-subtle);
+}
+
+.bankPanelHighlight {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 6px 0 10px;
+  color: var(--pw-teal);
+  text-align: right;
+}
+
+.bankPanelDivider {
+  margin: 10px 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* CENTER COLUMN */
+.bankCenter {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 12px 0;
+}
+
+/* CORE IMAGE + OVERLAY */
+.bankCore {
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: url("../../_EXPRESSIONS/_PEX/BUILD/PulseWorldBank-1.webp.pex") center/cover no-repeat;
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(0, 0, 0, 0.7),
+    0 0 0 2px rgba(255, 255, 255, 0.08),
+    0 0 65px rgba(0, 255, 200, 0.55);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bankCoreOverlay {
+  width: 88%;
+  padding: 12px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.92));
+  box-shadow:
+    0 0 18px rgba(0, 0, 0, 0.85),
+    0 0 22px rgba(0, 255, 200, 0.25);
+}
+
+.bankCoreTitle {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--pw-gold);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.bankCoreSubtitle {
+  font-size: 11px;
+  color: var(--pw-subtle);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.bankCoreRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.bankCoreMetric {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(5, 7, 14, 0.9);
+  border: 1px solid rgba(0, 255, 200, 0.25);
+}
+
+.bankCoreMetricLabel {
+  font-size: 10px;
+  color: var(--pw-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bankCoreMetricValue {
+  font-size: 13px;
+  color: var(--pw-teal);
+  margin-top: 2px;
+}
+
+/* Deposits panel sits directly under the core image */
+.bankDepositsPanel {
+  width: 100%;
+  max-width: 360px;
+  margin-top: 12px;
+}
+
+/* Deposits controls */
+.bankDepositsControls {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* HISTORY AREA */
+.bankHistoryArea {
+  min-height: 90px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 10px;
+  background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+  font-size: 12px;
+}
+
+/* CONSOLES */
+.bankConsoleStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+  margin-bottom: 18px;
+}
+
+.bankConsolePanel {
+  border-radius: 18px;
+  padding: 14px;
+  background: var(--pw-console-bg);
+  box-shadow:
+    0 0 24px rgba(0, 0, 0, 0.85),
+    0 0 12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(0, 255, 200, 0.25);
+}
+
+.bankConsoleTitle {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--pw-gold);
+}
+
+.consoleBubbleArea {
+  flex: 1;
+  min-height: 90px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 10px;
+  background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+  font-size: 12px;
+}
+
+/* BUTTONS */
+.bankConsoleSend {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #f5d27a, #c89a3a);
+  color: #050608;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    0 0 12px rgba(245, 210, 122, 0.65),
+    0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.bankFullBtn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.bankMiniBtn {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+/* MAIN CONSOLE */
+#bankLogArea {
+  flex: 1;
+  min-height: 160px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 12px;
+  background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+  font-size: 13px;
+}
+
+.bankConsoleInputRowMain {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+#bankConsoleInput {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(5, 7, 12, 0.95);
+  color: var(--pw-text);
+  font-size: 14px;
+  outline: none;
+}
+
+#bankConsoleSend {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #f5d27a, #c89a3a);
+  color: #050608;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    0 0 12px rgba(245, 210, 122, 0.65),
+    0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .bankDashboard {
+    grid-template-columns: 1fr;
+  }
+  .bankCenter {
+    order: -1;
+  }
+}

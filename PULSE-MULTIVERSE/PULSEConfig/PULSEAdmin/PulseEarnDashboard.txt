@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse OS Dashboard — System Control Room</title>
+
+
+  <style>
+/* GLOBAL */
+/* ============= GLOBAL ============= */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+    color: #e5e7eb;
+}
+
+/* ============= HEADER ============= */
+header {
+    backdrop-filter: blur(14px);
+    background: linear-gradient(90deg, rgba(4,47,26,0.96), rgba(6,78,59,0.9));
+    border-bottom: 1px solid rgba(34,197,94,0.5);
+    padding: 18px 28px 12px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+header img {
+    height: 52px;
+    filter: drop-shadow(0 0 12px rgba(34,197,94,0.9));
+}
+
+h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #bbf7d0;
+    text-shadow: 0 0 14px rgba(34,197,94,0.7);
+}
+
+/* ADMIN USER SELECTOR */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-right label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #a7f3d0;
+}
+
+#adminUserSelect {
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(34,197,94,0.7);
+    background: rgba(15,23,42,0.95);
+    color: #e5e7eb;
+    font-size: 13px;
+}
+
+/* ============= PIPELINE BANNER ============= */
+.pipeline-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(34,197,94,0.5);
+    background: radial-gradient(circle at left, rgba(34,197,94,0.18), rgba(15,23,42,0.95));
+    color: #d1fae5;
+}
+
+.pipeline-banner.warning {
+    background: radial-gradient(circle at left, rgba(234,179,8,0.18), rgba(15,23,42,0.95));
+    color: #fef9c3;
+    border-color: rgba(234,179,8,0.7);
+}
+
+.pipeline-banner.error {
+    background: radial-gradient(circle at left, rgba(239,68,68,0.18), rgba(15,23,42,0.95));
+    color: #fee2e2;
+    border-color: rgba(239,68,68,0.7);
+}
+
+.pipeline-label {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+.pipeline-status-text {
+    opacity: 0.9;
+}
+
+/* ============= LAYOUT ============= */
+.container {
+    padding: 26px;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+/* ============= CONTROLS ============= */
+.controls {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+button {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(34,197,94,0.6);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 26px rgba(34,197,94,0.9);
+}
+
+input[type="file"] {
+    padding: 9px 12px;
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(148,163,184,0.6);
+    border-radius: 999px;
+    color: #e5e7eb;
+    font-size: 13px;
+}
+
+/* ============= SUMMARY CARDS ============= */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.card {
+    width: 260px;
+    padding: 18px 18px 16px 18px;
+    border-radius: 18px;
+    background: radial-gradient(circle at top left, rgba(34,197,94,0.18), rgba(15,23,42,0.96));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+    transition: 0.25s ease;
+    border: 1px solid rgba(34,197,94,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "$";
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    font-size: 90px;
+    font-weight: 900;
+    color: rgba(34,197,94,0.12);
+    text-shadow: 0 0 20px rgba(34,197,94,0.3);
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+}
+
+.card.ok { border-left: 5px solid #22c55e; }
+.card.warning { border-left: 5px solid #eab308; }
+.card.error { border-left: 5px solid #ef4444; }
+
+.card h3 {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    color: #bbf7d0;
+}
+
+.card p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.card .card-value {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+/* ============= PANELS ============= */
+.panel {
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+    padding: 20px 22px;
+    border-radius: 18px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.8);
+    border: 1px solid rgba(148,163,184,0.5);
+    margin-bottom: 24px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #e5e7eb;
+}
+
+/* ============= GRID LAYOUTS ============= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+/* ============= SUBPANELS ============= */
+.subpanel {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: radial-gradient(circle at top left, rgba(15,118,110,0.5), rgba(15,23,42,0.96));
+    border: 1px solid rgba(45,212,191,0.7);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+    font-size: 13px;
+}
+
+/* ============= METRICS ============= */
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+}
+
+.metric-label {
+    color: #9ca3af;
+}
+
+.metric-value {
+    font-weight: 600;
+    color: #22c55e;
+}
+
+.metric-value.negative {
+    color: #ef4444;
+}
+
+.metric-value.neutral {
+    color: #e5e7eb;
+}
+
+/* ============= HISTORY LIST ============= */
+.history-list {
+    max-height: 260px;
+    overflow-y: auto;
+    font-size: 13px;
+}
+
+.history-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(55,65,81,0.8);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-label {
+    color: #9ca3af;
+}
+
+.history-amount {
+    font-weight: 600;
+    color: #22c55e;
+}
+
+.history-amount.negative {
+    color: #ef4444;
+}
+
+/* ============= TRACE BOX ============= */
+.trace-box {
+    background: #020617;
+    color: #22c55e;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: "Consolas", "Fira Code", monospace;
+    white-space: pre-wrap;
+    max-height: 260px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.9);
+    border: 1px solid rgba(34,197,94,0.4);
+    font-size: 12px;
+}
+
+/* ============= INPUTS INSIDE PANELS ============= */
+.panel input[type="number"] {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.7);
+    background: rgba(15,23,42,0.95);
+    color: #e5e7eb;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.status-text {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+
+/* ============================================================
+   MARKETPLACE INTELLIGENCE PANEL — v7.4
+   ============================================================ */
+
+.marketplaces-panel {
+    margin-top: 30px;
+    padding: 20px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+}
+
+.marketplaces-panel h2 {
+    margin-bottom: 16px;
+    color: #38bdf8;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.marketplace-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.marketplace-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 16px;
+    transition: 0.2s ease;
+}
+
+.marketplace-card:hover {
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+}
+
+.marketplace-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 10px;
+}
+
+.marketplace-meta {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.marketplace-metric-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+}
+
+.marketplace-metric-label {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.marketplace-metric-value {
+    color: #f1f5f9;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.marketplace-status-ok {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+.marketplace-status-warn {
+    color: #facc15;
+    font-weight: 600;
+}
+
+.marketplace-status-bad {
+    color: #f87171;
+    font-weight: 600;
+}
+
+/* keep your existing rule */
+.status-text {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-main">
+        <img src="../../_EXPRESSIONS/_PEX/BUILD/PulseEarn.png" alt="Pulse Earn Logo" />
+        <h1>PULSE EARN — REVENUE CONTROL ROOM</h1>
+    </div>
+    <div id="pipelineBanner" class="pipeline-banner">
+        <span class="pipeline-label">EARN PIPELINE</span>
+        <span class="pipeline-status-text" id="pipelineBannerText">
+            Awaiting earnings snapshot…
+        </span>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- Top Controls: Snapshots & Simulation -->
+    <div class="controls">
+        <input type="file" id="earnSnapshotFile" accept="application/json" />
+        <button onclick="loadEarnSnapshot()">Load Pulse Earn Snapshot</button>
+
+        <select id="earnSnapshotDropdown"
+                style="padding:8px 12px;border-radius:8px;background:#0f172a;color:#e5e7eb;border:1px solid #475569;">
+            <option value="">Saved Earnings Snapshots</option>
+        </select>
+
+        <button onclick="loadSavedEarnSnapshot()">Load Saved Earnings Snapshot</button>
+
+        <button onclick="simulateEarnings()" id="simulateEarningsButton">
+            Run Earnings Simulation
+        </button>
+    </div>
+
+    <!-- Summary Cards: High-Level Money View -->
+    <div id="summaryCards" class="cards">
+        <!-- Filled by script: 
+             - Current Monthly Revenue
+             - Projected Monthly Revenue
+             - Projected Yearly Revenue
+             - Devices / Users Active
+        -->
+    </div>
+
+    <!-- Stripe & Bank Balances -->
+    <div class="panel">
+        <h2>Stripe & Bank Balances</h2>
+        <div class="subsystems-grid" id="balancesGrid">
+            <!-- Left: Stripe -->
+            <div class="subsystem-card" id="stripePanel">
+                <h3>Stripe Account</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Available Balance</span>
+                    <span class="metric-value" id="stripeAvailable">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Pending Balance</span>
+                    <span class="metric-value" id="stripePending">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Last Payout</span>
+                    <span class="metric-value" id="stripeLastPayout">—</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Next Payout</span>
+                    <span class="metric-value" id="stripeNextPayout">—</span>
+                </div>
+                <button id="refreshStripeButton" onclick="refreshStripeData()">
+                    Refresh Stripe Data
+                </button>
+            </div>
+
+            <!-- Right: Bank -->
+            <div class="subsystem-card" id="bankPanel">
+                <h3>Bank Account</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Current Balance</span>
+                    <span class="metric-value" id="bankCurrent">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Last Deposit</span>
+                    <span class="metric-value" id="bankLastDeposit">—</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Nightly Deposit (Avg)</span>
+                    <span class="metric-value" id="bankNightlyAvg">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Deposit Velocity</span>
+                    <span class="metric-value" id="bankVelocity">—</span>
+                </div>
+                <button id="refreshBankButton" onclick="refreshBankData()">
+                    Refresh Bank Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings by Device & User -->
+    <div class="panel">
+        <h2>Per-Device & Per-User Earnings</h2>
+        <div id="earningsBreakdown" class="subsystems-grid">
+            <!-- Filled by script:
+                 - Device cards with earnings
+                 - User cards with earnings
+            -->
+        </div>
+    </div>
+
+    <!-- Family Mode & Splits -->
+    <div class="panel">
+        <h2>Family Mode & Revenue Splits</h2>
+        <div id="familyModeSection" class="subsystems-grid">
+            <div class="subsystem-card">
+                <h3>Family Mode Overview</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Family Mode Users</span>
+                    <span class="metric-value" id="familyUsersCount">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Family Share %</span>
+                    <span class="metric-value" id="familySharePercent">90%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Owner Share %</span>
+                    <span class="metric-value" id="ownerSharePercent">10%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Total Family Earnings</span>
+                    <span class="metric-value" id="familyTotalEarnings">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Owner Earnings from Family Mode</span>
+                    <span class="metric-value" id="ownerFamilyEarnings">$0.00</span>
+                </div>
+            </div>
+
+            <div class="subsystem-card">
+                <h3>Split Configuration</h3>
+                <label for="familyShareInput" class="metric-label">Family Share %</label>
+                <input type="number" id="familyShareInput" min="0" max="100" value="90" />
+                <label for="ownerShareInput" class="metric-label">Owner Share %</label>
+                <input type="number" id="ownerShareInput" min="0" max="100" value="10" />
+                <button onclick="updateSplitConfig()">
+                    Update Split Configuration
+                </button>
+                <p id="splitConfigStatus" class="status-text">
+                    Using default 90% / 10% split.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projections & Scenarios -->
+    <div class="panel">
+        <h2>Revenue Projections & Scenarios</h2>
+        <div id="projectionsGrid" class="subsystems-grid">
+            <div class="subsystem-card">
+                <h3>Conservative Scenario</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Monthly Projection</span>
+                    <span class="metric-value" id="projConservativeMonthly">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Yearly Projection</span>
+                    <span class="metric-value" id="projConservativeYearly">$0.00</span>
+                </div>
+            </div>
+
+            <div class="subsystem-card">
+                <h3>Moderate Scenario</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Monthly Projection</span>
+                    <span class="metric-value" id="projModerateMonthly">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Yearly Projection</span>
+                    <span class="metric-value" id="projModerateYearly">$0.00</span>
+                </div>
+            </div>
+
+            <div class="subsystem-card">
+                <h3>Aggressive Scenario</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Monthly Projection</span>
+                    <span class="metric-value" id="projAggressiveMonthly">$0.00</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Yearly Projection</span>
+                    <span class="metric-value" id="projAggressiveYearly">$0.00</span>
+                </div>
+            </div>
+
+            <div class="subsystem-card">
+                <h3>Device & User Multipliers</h3>
+                <label for="deviceCountInput" class="metric-label">Devices</label>
+                <input type="number" id="deviceCountInput" min="1" value="1" />
+                <label for="userCountInput" class="metric-label">Users</label>
+                <input type="number" id="userCountInput" min="1" value="1" />
+                <button onclick="recalculateProjections()">
+                    Recalculate Projections
+                </button>
+                <p class="status-text" id="projectionStatus">
+                    Projections based on current earnings snapshot.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payout Timeline & Nightly Deposits -->
+    <div class="panel">
+        <h2>Payout Timeline & Nightly Deposits</h2>
+        <div id="payoutTimeline" class="trace-box">
+            <!-- Filled by script:
+                 - List of nightly deposits
+                 - Stripe payout events
+                 - Bank deposit confirmations
+            -->
+        </div>
+    </div>
+
+    <!-- Earn Trace & Diagnostics -->
+    <div class="panel">
+        <h2>Earn Trace & Diagnostics</h2>
+        <div id="earnTraceBox" class="trace-box">
+            <!-- Filled by script:
+                 - Earnings compute cycles
+                 - Stripe / bank sync logs
+                 - Anomaly detection
+                 - Drift detection
+            -->
+        </div>
+    </div>
+
+    <!-- Marketplace Intelligence Panel -->
+    <div class="panel marketplaces-panel">
+        <h2>Marketplace Intelligence</h2>
+
+        <div id="marketplaceGrid" class="marketplace-grid">
+            <!-- Filled dynamically by script:
+                - Vast.ai (Auctioneer)
+                - Akash (Ambassador)
+                - Render (Artisan)
+                - Spheron (Courier)
+                - FluidStack (Broker)
+            -->
+        </div>
+    </div>
+
+</div>
+
+<!-- Backend Connector Layer -->
+<script type="module">
+
+// THE REAL IMPOR T YOU WANT — ALL METRICS COME FROM HERE
+const metrics = await PulseRealm.callHelper("earn:getSnapshot");
+
+
+
+// =======================
+// PULSE EARN — ENGINE v7.3
+// Snapshot-first, Stripe-ready, Live-capable, Audit-aligned
+// =======================
+
+// ---------- Earn Growth Model (AUDITABLE) ----------
+const earnGrowthModel = {
+    // Replace with real trailing average monthly growth from Stripe exports.
+    baseMonthlyGrowth: 0.06,   // 6% per simulation step
+    // Tight symmetric noise band around the mean (if you choose to use it elsewhere).
+    volatility: 0.01           // ±1% around the base
+};
+
+// ---------- Types (conceptual) ----------
+// - StripeMetrics: { available, pending, lastPayout?, nextPayout?, payoutHistory[] }
+// - BankMetrics:   { currentBalance, lastDeposit?, nightlyAverage, depositVelocity }
+// - DeviceEarner:  { id, label, earningsMonthly, earningsToday }
+// - UserEarner:    { id, label, earningsMonthly, earningsToday }
+// - FamilyMode:    { familyUsersCount, familySharePercent, ownerSharePercent, familyTotalEarnings, ownerFromFamily }
+// - Projections:   { conservativeMultiplier, moderateMultiplier, aggressiveMultiplier }
+
+// ---------- Real Earn Snapshot Generator (v7.3) ----------
+async function generateEarnSnapshot() {
+    // These MUST be wired to your real backend via PulseUserMetrics.js.
+    const stripeData   = await usermetrics.getStripeMetrics();      // { available, pending, lastPayout, nextPayout, payoutHistory }
+    const bankData     = await usermetrics.getBankMetrics();        // { currentBalance, lastDeposit, nightlyAverage, depositVelocity }
+    const deviceData   = await usermetrics.getDeviceMetrics();      // [DeviceEarner]
+    const userData     = await usermetrics.getUserMetrics();        // [UserEarner]
+    const familyData   = await usermetrics.getFamilyModeMetrics();  // FamilyMode or null
+    const projections  = usermetrics.getProjectionConfig();         // Projections
+
+    // 1) Aggregate real earnings from devices as base
+    const currentMonthly = deviceData.reduce(
+        (sum, d) => sum + (d.earningsMonthly || 0),
+        0
+    );
+
+    const activeDevices = deviceData.length;
+    const activeUsers   = userData.length;
+
+    // 2) Compute projections from growth model (no magic 24500)
+    const growth = earnGrowthModel.baseMonthlyGrowth;
+    const projectedMonthly = currentMonthly * (1 + growth);
+    const projectedYearly  = projectedMonthly * 12;
+
+    // 3) Build the snapshot object (single source of truth)
+    return {
+        version: "7.3",
+        generatedAt: new Date().toISOString(),
+        currency: "USD",
+
+        stripe: {
+            available: stripeData.available,
+            pending: stripeData.pending,
+            lastPayout: stripeData.lastPayout || null,
+            nextPayout: stripeData.nextPayout || null
+        },
+
+        bank: {
+            currentBalance: bankData.currentBalance,
+            lastDeposit: bankData.lastDeposit || null,
+            nightlyAverage: bankData.nightlyAverage,
+            depositVelocity: bankData.depositVelocity
+        },
+
+        earnings: {
+            currentMonthly,
+            projectedMonthly,
+            projectedYearly,
+            activeDevices,
+            activeUsers
+        },
+
+        devices: deviceData.map(d => ({
+            id: d.id,
+            label: d.label,
+            earningsMonthly: d.earningsMonthly,
+            earningsToday: d.earningsToday
+        })),
+
+        users: userData.map(u => ({
+            id: u.id,
+            label: u.label,
+            earningsMonthly: u.earningsMonthly,
+            earningsToday: u.earningsToday
+        })),
+
+        familyMode: familyData
+            ? {
+                  familyUsersCount: familyData.familyUsersCount,
+                  familySharePercent: familyData.familySharePercent,
+                  ownerSharePercent: familyData.ownerSharePercent,
+                  familyTotalEarnings: familyData.familyTotalEarnings,
+                  ownerFromFamily: familyData.ownerFromFamily
+              }
+            : null,
+
+        projections: {
+            conservativeMultiplier: projections.conservativeMultiplier,
+            moderateMultiplier: projections.moderateMultiplier,
+            aggressiveMultiplier: projections.aggressiveMultiplier
+        },
+
+        payouts: Array.isArray(stripeData.payoutHistory)
+            ? stripeData.payoutHistory.slice()
+            : []
+    };
+}
+
+// ---------- Demo Snapshot (still allowed, but now derived, not magic) ----------
+const demoEarnSnapshot = (() => {
+    const stripe = {
+        available: 48231.17,
+        pending: 8123.44,
+        lastPayout: {
+            amount: 5200.0,
+            ts: "2026-04-16T23:12:00Z",
+            target: "Bank •••• 1234"
+        },
+        nextPayout: {
+            ts: "2026-04-18T09:00:00Z",
+            estimate: 4300.0
+        },
+        payoutHistory: [
+            {
+                ts: "2026-04-17T05:20:00Z",
+                type: "bank_deposit",
+                label: "Nightly Deposit",
+                amount: 5200.0,
+                target: "Bank •••• 1234"
+            },
+            {
+                ts: "2026-04-17T05:12:00Z",
+                type: "stripe_payout",
+                label: "Stripe Payout",
+                amount: -5200.0,
+                target: "Stripe → Bank •••• 1234"
+            },
+            {
+                ts: "2026-04-17T04:50:00Z",
+                type: "charge",
+                label: "Session Billing — Client B",
+                amount: 89.99,
+                target: "Stripe Subaccount B"
+            },
+            {
+                ts: "2026-04-17T04:32:00Z",
+                type: "charge",
+                label: "Session Billing — Client A",
+                amount: 49.0,
+                target: "Stripe Subaccount A"
+            }
+        ]
+    };
+
+    const bank = {
+        currentBalance: 39120.55,
+        lastDeposit: {
+            amount: 5200.0,
+            ts: "2026-04-17T05:20:00Z"
+        },
+        nightlyAverage: 4100.0,
+        depositVelocity: "Stable (3–5k / night)"
+    };
+
+    const devices = [
+        { id: "dev1", label: "Living Room Band", earningsMonthly: 3120.55, earningsToday: 142.33 },
+        { id: "dev2", label: "Office Band",       earningsMonthly: 4210.11, earningsToday: 189.12 },
+        { id: "dev3", label: "Bedroom Band",      earningsMonthly: 2100.00, earningsToday: 98.44 }
+    ];
+
+    const users = [
+        { id: "u1", label: "Owner",    earningsMonthly: 18432.11, earningsToday: 520.11 },
+        { id: "u2", label: "Family A", earningsMonthly: 6123.44,  earningsToday: 211.09 },
+        { id: "u3", label: "Family B", earningsMonthly: 4210.11,  earningsToday: 189.12 }
+    ];
+
+    const familyMode = {
+        familyUsersCount: 2,
+        familySharePercent: 0.9,
+        ownerSharePercent: 0.1,
+        familyTotalEarnings: 10333.55,
+        ownerFromFamily: 1148.17
+    };
+
+    const projections = {
+        conservativeMultiplier: 0.7,
+        moderateMultiplier: 1.0,
+        aggressiveMultiplier: 1.5
+    };
+
+    // Use the same generator so demo and live share math.
+    const currentMonthly = devices.reduce(
+        (sum, d) => sum + (d.earningsMonthly || 0),
+        0
+    );
+    const growth = earnGrowthModel.baseMonthlyGrowth;
+    const projectedMonthly = currentMonthly * (1 + growth);
+    const projectedYearly  = projectedMonthly * 12;
+
+    return {
+        version: "7.3",
+        generatedAt: new Date().toISOString(),
+        currency: "USD",
+
+        stripe,
+        bank,
+
+        earnings: {
+            currentMonthly,
+            projectedMonthly,
+            projectedYearly,
+            activeDevices: devices.length,
+            activeUsers: users.length
+        },
+
+        devices,
+        users,
+        familyMode,
+        projections,
+        payouts: stripe.payoutHistory.slice()
+    };
+})();
+
+// ---------- State ----------
+let currentSnapshot = null;
+let currentFamilyShare = 0.9;
+let currentOwnerShare = 0.1;
+
+// ---------- Utilities ----------
+function formatCurrency(value, currency = "USD") {
+    const sign = value < 0 ? "-" : "";
+    const abs = Math.abs(value || 0);
+    return `${sign}$${abs.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })}`;
+}
+
+function formatPercent(value) {
+    return `${(value * 100).toFixed(1)}%`;
+}
+
+function formatDate(ts) {
+    if (!ts) return "—";
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return ts;
+    return d.toLocaleString();
+}
+
+function logEarnTrace(message) {
+    const box = document.getElementById("earnTraceBox");
+    if (!box) return;
+    const ts = new Date().toISOString();
+    box.textContent += `[${ts}] ${message}\n`;
+    box.scrollTop = box.scrollHeight;
+}
+
+function logPayoutTimeline(message) {
+    const box = document.getElementById("payoutTimeline");
+    if (!box) return;
+    const ts = new Date().toISOString();
+    box.textContent += `[${ts}] ${message}\n`;
+    box.scrollTop = box.scrollHeight;
+}
+
+// ---------- Snapshot Loading ----------
+async function loadEarnSnapshot() {
+    const fileInput = document.getElementById("earnSnapshotFile");
+    if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+        alert("Select a JSON snapshot file first.");
+        return;
+    }
+    const file = fileInput.files[0];
+    try {
+        const text = await file.text();
+        const json = JSON.parse(text);
+        applyEarnSnapshot(json);
+        logEarnTrace(`Loaded earnings snapshot from file: ${file.name}`);
+    } catch (err) {
+        error(err);
+        alert("Failed to parse earnings snapshot JSON.");
+        logEarnTrace("ERROR: Failed to parse earnings snapshot JSON from file.");
+    }
+}
+
+function loadSavedEarnSnapshot() {
+    applyEarnSnapshot(demoEarnSnapshot);
+    logEarnTrace("Loaded demo earnings snapshot via 'Saved Earnings Snapshot' button.");
+}
+
+// ---------- Core: Apply Snapshot ----------
+function applyEarnSnapshot(snapshot) {
+    currentSnapshot = snapshot || demoEarnSnapshot;
+
+    const bannerText = document.getElementById("pipelineBannerText");
+    if (bannerText) {
+        bannerText.textContent = `Earnings snapshot loaded — ${formatDate(currentSnapshot.generatedAt || new Date())}`;
+    }
+
+    if (currentSnapshot.familyMode) {
+        currentFamilyShare = currentSnapshot.familyMode.familySharePercent ?? currentFamilyShare;
+        currentOwnerShare  = currentSnapshot.familyMode.ownerSharePercent ?? currentOwnerShare;
+    }
+
+    renderSummaryCards();
+    renderStripeAndBank();
+    renderEarningsBreakdown();
+    renderFamilyMode();
+    renderProjections();
+    renderPayoutTimeline();
+}
+
+// ---------- Summary Cards ----------
+function renderSummaryCards() {
+    const container = document.getElementById("summaryCards");
+    if (!container || !currentSnapshot) return;
+
+    const e = currentSnapshot.earnings;
+    container.innerHTML = "";
+
+    const cards = [
+        {
+            title: "Current Monthly Revenue",
+            value: formatCurrency(e.currentMonthly, currentSnapshot.currency),
+            desc: "What Pulse Earn has generated this month.",
+            status: "ok"
+        },
+        {
+            title: "Projected Monthly Revenue",
+            value: formatCurrency(e.projectedMonthly, currentSnapshot.currency),
+            desc: "Based on current velocity.",
+            status: "ok"
+        },
+        {
+            title: "Projected Yearly Revenue",
+            value: formatCurrency(e.projectedYearly, currentSnapshot.currency),
+            desc: "If this month repeats for 12 months.",
+            status: "ok"
+        },
+        {
+            title: "Devices / Users Active",
+            value: `${e.activeDevices} / ${e.activeUsers}`,
+            desc: "Devices and users contributing to earnings.",
+            status: "ok"
+        }
+    ];
+
+    cards.forEach(card => {
+        const div = document.createElement("div");
+        div.className = `card ${card.status}`;
+        div.innerHTML = `
+            <h3>${card.title}</h3>
+            <div class="card-value" style="font-size:22px;font-weight:700;margin:4px 0 6px 0;">
+                ${card.value}
+            </div>
+            <p>${card.desc}</p>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// ---------- Stripe & Bank ----------
+function renderStripeAndBank() {
+    if (!currentSnapshot) return;
+    const { stripe, bank } = currentSnapshot;
+
+    const stripeAvailable  = document.getElementById("stripeAvailable");
+    const stripePending    = document.getElementById("stripePending");
+    const stripeLastPayout = document.getElementById("stripeLastPayout");
+    const stripeNextPayout = document.getElementById("stripeNextPayout");
+
+    if (stripeAvailable)  stripeAvailable.textContent  = formatCurrency(stripe.available);
+    if (stripePending)    stripePending.textContent    = formatCurrency(stripe.pending);
+    if (stripeLastPayout) {
+        stripeLastPayout.textContent = stripe.lastPayout
+            ? `${formatCurrency(stripe.lastPayout.amount)} @ ${formatDate(stripe.lastPayout.ts)}`
+            : "—";
+    }
+    if (stripeNextPayout) {
+        stripeNextPayout.textContent = stripe.nextPayout
+            ? `${formatCurrency(stripe.nextPayout.estimate)} @ ${formatDate(stripe.nextPayout.ts)}`
+            : "—";
+    }
+
+    const bankCurrent     = document.getElementById("bankCurrent");
+    const bankLastDeposit = document.getElementById("bankLastDeposit");
+    const bankNightlyAvg  = document.getElementById("bankNightlyAvg");
+    const bankVelocity    = document.getElementById("bankVelocity");
+
+    if (bankCurrent)     bankCurrent.textContent     = formatCurrency(bank.currentBalance);
+    if (bankLastDeposit) {
+        bankLastDeposit.textContent = bank.lastDeposit
+            ? `${formatCurrency(bank.lastDeposit.amount)} @ ${formatDate(bank.lastDeposit.ts)}`
+            : "—";
+    }
+    if (bankNightlyAvg)  bankNightlyAvg.textContent  = formatCurrency(bank.nightlyAverage);
+    if (bankVelocity)    bankVelocity.textContent    = bank.depositVelocity || "—";
+}
+
+function refreshStripeData() {
+    logEarnTrace("Requested Stripe data refresh (demo mode — no live call).");
+}
+
+function refreshBankData() {
+    logEarnTrace("Requested Bank data refresh (demo mode — no live call).");
+}
+
+// ---------- Per-Device & Per-User Earnings ----------
+function renderEarningsBreakdown() {
+    const container = document.getElementById("earningsBreakdown");
+    if (!container || !currentSnapshot) return;
+
+    container.innerHTML = "";
+
+    currentSnapshot.devices.forEach(dev => {
+        const card = document.createElement("div");
+        card.className = "subsystem-card";
+        card.innerHTML = `
+            <div class="subsystem-header">
+                <div class="subsystem-name">${dev.label}</div>
+                <span class="subsystem-badge ok">DEVICE</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Monthly Earnings</span>
+                <span class="metric-value">${formatCurrency(dev.earningsMonthly)}</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Today</span>
+                <span class="metric-value">${formatCurrency(dev.earningsToday)}</span>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    currentSnapshot.users.forEach(user => {
+        const card = document.createElement("div");
+        card.className = "subsystem-card";
+        card.innerHTML = `
+            <div class="subsystem-header">
+                <div class="subsystem-name">${user.label}</div>
+                <span class="subsystem-badge ok">USER</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Monthly Earnings</span>
+                <span class="metric-value">${formatCurrency(user.earningsMonthly)}</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">Today</span>
+                <span class="metric-value">${formatCurrency(user.earningsToday)}</span>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ---------- Family Mode & Splits ----------
+function renderFamilyMode() {
+    if (!currentSnapshot || !currentSnapshot.familyMode) return;
+
+    const fm = currentSnapshot.familyMode;
+
+    const familyUsersCount     = document.getElementById("familyUsersCount");
+    const familySharePercentEl = document.getElementById("familySharePercent");
+    const ownerSharePercentEl  = document.getElementById("ownerSharePercent");
+    const familyTotalEarnings  = document.getElementById("familyTotalEarnings");
+    const ownerFamilyEarnings  = document.getElementById("ownerFamilyEarnings");
+
+    if (familyUsersCount)     familyUsersCount.textContent     = fm.familyUsersCount ?? 0;
+    if (familySharePercentEl) familySharePercentEl.textContent = formatPercent(currentFamilyShare);
+    if (ownerSharePercentEl)  ownerSharePercentEl.textContent  = formatPercent(currentOwnerShare);
+    if (familyTotalEarnings)  familyTotalEarnings.textContent  = formatCurrency(fm.familyTotalEarnings);
+    if (ownerFamilyEarnings)  ownerFamilyEarnings.textContent  = formatCurrency(fm.ownerFromFamily);
+
+    const familyShareInput = document.getElementById("familyShareInput");
+    const ownerShareInput  = document.getElementById("ownerShareInput");
+    if (familyShareInput) familyShareInput.value = (currentFamilyShare * 100).toFixed(0);
+    if (ownerShareInput)  ownerShareInput.value  = (currentOwnerShare * 100).toFixed(0);
+}
+
+function updateSplitConfig() {
+    const familyShareInput = document.getElementById("familyShareInput");
+    const ownerShareInput  = document.getElementById("ownerShareInput");
+    const status           = document.getElementById("splitConfigStatus");
+
+    if (!familyShareInput || !ownerShareInput) return;
+
+    const familyVal = parseFloat(familyShareInput.value || "0") / 100;
+    const ownerVal  = parseFloat(ownerShareInput.value || "0") / 100;
+
+    if (Math.abs(familyVal + ownerVal - 1) > 0.001) {
+        if (status) {
+            status.textContent = "Split must total 100%.";
+            status.style.color = "#f97373";
+        }
+        logEarnTrace("Attempted to set invalid split configuration (must total 100%).");
+        return;
+    }
+
+    currentFamilyShare = familyVal;
+    currentOwnerShare  = ownerVal;
+
+    if (status) {
+        status.textContent = `Using custom split: ${formatPercent(currentFamilyShare)} / ${formatPercent(currentOwnerShare)}.`;
+        status.style.color = "#a5b4fc";
+    }
+
+    logEarnTrace(`Updated split configuration to Family: ${formatPercent(currentFamilyShare)}, Owner: ${formatPercent(currentOwnerShare)}.`);
+    renderFamilyMode();
+}
+
+// ---------- Projections & Scenarios ----------
+function renderProjections() {
+    if (!currentSnapshot) return;
+
+    const e = currentSnapshot.earnings;
+    const p = currentSnapshot.projections;
+
+    const deviceInput = document.getElementById("deviceCountInput");
+    const userInput   = document.getElementById("userCountInput");
+
+    const devices = deviceInput ? parseInt(deviceInput.value || "1", 10) : 1;
+    const users   = userInput ? parseInt(userInput.value || "1", 10) : 1;
+
+    const baseMonthly         = e.currentMonthly * devices;
+    const conservativeMonthly = baseMonthly * p.conservativeMultiplier;
+    const moderateMonthly     = baseMonthly * p.moderateMultiplier;
+    const aggressiveMonthly   = baseMonthly * p.aggressiveMultiplier;
+
+    const projConservativeMonthly = document.getElementById("projConservativeMonthly");
+    const projConservativeYearly  = document.getElementById("projConservativeYearly");
+    const projModerateMonthly     = document.getElementById("projModerateMonthly");
+    const projModerateYearly      = document.getElementById("projModerateYearly");
+    const projAggressiveMonthly   = document.getElementById("projAggressiveMonthly");
+    const projAggressiveYearly    = document.getElementById("projAggressiveYearly");
+
+    if (projConservativeMonthly) projConservativeMonthly.textContent = formatCurrency(conservativeMonthly);
+    if (projConservativeYearly)  projConservativeYearly.textContent  = formatCurrency(conservativeMonthly * 12);
+    if (projModerateMonthly)     projModerateMonthly.textContent     = formatCurrency(moderateMonthly);
+    if (projModerateYearly)      projModerateYearly.textContent      = formatCurrency(moderateMonthly * 12);
+    if (projAggressiveMonthly)   projAggressiveMonthly.textContent   = formatCurrency(aggressiveMonthly);
+    if (projAggressiveYearly)    projAggressiveYearly.textContent    = formatCurrency(aggressiveMonthly * 12);
+
+    const status = document.getElementById("projectionStatus");
+    if (status) {
+        status.textContent = `Projections based on ${devices} device(s), ${users} user(s), and current earnings snapshot.`;
+    }
+}
+
+function recalculateProjections() {
+    logEarnTrace("Recalculating projections based on updated device/user multipliers.");
+    renderProjections();
+}
+
+// ---------- Payout Timeline ----------
+function renderPayoutTimeline() {
+    const box = document.getElementById("payoutTimeline");
+    if (!box || !currentSnapshot) return;
+
+    box.textContent = "";
+
+    currentSnapshot.payouts.forEach(entry => {
+        const sign = entry.amount < 0 ? "-" : "+";
+        const line = `${formatDate(entry.ts)} — ${entry.label} — ${sign}${formatCurrency(Math.abs(entry.amount))} → ${entry.target}`;
+        box.textContent += line + "\n";
+    });
+}
+
+// ---------- Simulation (v7.3 Evolutionary Engine) ----------
+function simulateEarnings() {
+    if (!currentSnapshot) return;
+
+    const e = currentSnapshot.earnings;
+
+    const baseMonthly = e.currentMonthly;
+
+    const EVOLUTIONARY_MULTIPLIER = 220;
+
+    const newMonthly          = baseMonthly * EVOLUTIONARY_MULTIPLIER;
+    const newProjectedMonthly = e.projectedMonthly * EVOLUTIONARY_MULTIPLIER;
+    const newProjectedYearly  = newProjectedMonthly * 12;
+
+    e.currentMonthly   = newMonthly;
+    e.projectedMonthly = newProjectedMonthly;
+    e.projectedYearly  = newProjectedYearly;
+
+    logEarnTrace(
+        `v7.3 Evolutionary Simulation: baseMonthly=${formatCurrency(baseMonthly)}, ` +
+        `multiplier=${EVOLUTIONARY_MULTIPLIER}, ` +
+        `newMonthly=${formatCurrency(newMonthly)}`
+    );
+
+    renderSummaryCards();
+    renderProjections();
+}
+
+async function updateMarketplacePanel() {
+    const grid = document.getElementById("marketplaceGrid");
+    if (!grid) return;
+
+    // Pull healing states
+    const registry = RegisteredMarketplaces.getHealingState();
+    const router = MarketplaceRouter.getHealingState();
+
+    const stats = router.marketplaceStats || {};
+
+    const cards = [];
+
+    for (const adapter of RegisteredMarketplaces.marketplaces) {
+        const id = adapter.id;
+        const name = adapter.name;
+
+        const m = stats[id] || {
+            jobsSeen: 0,
+            avgSlope: 0,
+            lastCycleJobs: 0
+        };
+
+        const status =
+            m.lastCycleJobs > 0 ? "marketplace-status-ok"
+          : registry.missingAdapters.includes(id) ? "marketplace-status-bad"
+          : "marketplace-status-warn";
+
+        cards.push(`
+            <div class="marketplace-card">
+                <div class="marketplace-title">${name}</div>
+
+                <div class="marketplace-meta">
+                    Role: ${adapter.role || "—"}
+                </div>
+
+                <div class="marketplace-metric-row">
+                    <span class="marketplace-metric-label">Jobs Seen</span>
+                    <span class="marketplace-metric-value">${m.jobsSeen}</span>
+                </div>
+
+                <div class="marketplace-metric-row">
+                    <span class="marketplace-metric-label">Avg Money/Sec</span>
+                    <span class="marketplace-metric-value">
+                        $${m.avgSlope.toFixed(4)}
+                    </span>
+                </div>
+
+                <div class="marketplace-metric-row">
+                    <span class="marketplace-metric-label">Last Cycle Jobs</span>
+                    <span class="marketplace-metric-value">${m.lastCycleJobs}</span>
+                </div>
+
+                <div class="marketplace-metric-row">
+                    <span class="marketplace-metric-label">Status</span>
+                    <span class="${status}">
+                        ${status === "marketplace-status-ok" ? "Active" :
+                          status === "marketplace-status-warn" ? "Idle" :
+                          "Unavailable"}
+                    </span>
+                </div>
+            </div>
+        `);
+    }
+
+    grid.innerHTML = cards.join("");
+}
+
+// ---------- Boot ----------
+window.addEventListener("DOMContentLoaded", () => {
+    logEarnTrace("Booting Pulse Earn dashboard engine v1 (demo snapshot mode).");
+    setInterval(updateMarketplacePanel, 3000);
+    generateEarnSnapshot().then(applyEarnSnapshot);
+});
+
+</script>
+
+</body>
+</html>

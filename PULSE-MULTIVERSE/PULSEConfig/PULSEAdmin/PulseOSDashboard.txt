@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse OS Dashboard — System Control Room</title>
+
+
+  <style>
+/* GLOBAL */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+    color: #e5e7eb;
+}
+
+/* HEADER */
+header {
+    backdrop-filter: blur(14px);
+    background: linear-gradient(90deg, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    border-bottom: 1px solid rgba(148,163,184,0.4);
+    padding: 18px 28px 12px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+header img {
+    height: 52px;
+    filter: drop-shadow(0 0 10px rgba(56,189,248,0.9));
+}
+
+h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #f9fafb;
+    text-shadow: 0 0 12px rgba(56,189,248,0.7);
+}
+
+/* PIPELINE BANNER */
+.pipeline-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.5);
+    background: radial-gradient(circle at left, rgba(34,197,94,0.18), rgba(15,23,42,0.95));
+    color: #d1fae5;
+}
+
+.pipeline-banner.warning {
+    background: radial-gradient(circle at left, rgba(234,179,8,0.18), rgba(15,23,42,0.95));
+    color: #fef9c3;
+    border-color: rgba(234,179,8,0.7);
+}
+
+.pipeline-banner.error {
+    background: radial-gradient(circle at left, rgba(239,68,68,0.18), rgba(15,23,42,0.95));
+    color: #fee2e2;
+    border-color: rgba(239,68,68,0.7);
+}
+
+.pipeline-label {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+.pipeline-status-text {
+    opacity: 0.9;
+}
+
+/* LAYOUT */
+.container {
+    padding: 26px;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+/* CONTROLS */
+.controls {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+button {
+    background: linear-gradient(135deg, #22d3ee, #3b82f6);
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.6);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 26px rgba(37,99,235,0.8);
+}
+
+input[type="file"] {
+    padding: 9px 12px;
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(148,163,184,0.6);
+    border-radius: 999px;
+    color: #e5e7eb;
+    font-size: 13px;
+}
+
+/* SUMMARY CARDS */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.card {
+    width: 260px;
+    padding: 18px 18px 16px 18px;
+    border-radius: 18px;
+    background: radial-gradient(circle at top left, rgba(56,189,248,0.18), rgba(15,23,42,0.96));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+    transition: 0.25s ease;
+    border: 1px solid rgba(148,163,184,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -40%;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(56,189,248,0.35), transparent 70%);
+    opacity: 0.7;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+}
+
+.card.ok { border-left: 5px solid #22c55e; }
+.card.warning { border-left: 5px solid #eab308; }
+.card.error { border-left: 5px solid #ef4444; }
+
+.card h3 {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    color: #f9fafb;
+}
+
+.card p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5f5;
+}
+
+/* PANELS */
+.panel {
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+    padding: 20px 22px;
+    border-radius: 18px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.8);
+    border: 1px solid rgba(148,163,184,0.5);
+    margin-bottom: 24px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #e5e7eb;
+}
+
+/* SUBSYSTEMS GRID */
+.subsystems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+}
+
+.subsystem-card {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: radial-gradient(circle at top left, rgba(30,64,175,0.6), rgba(15,23,42,0.96));
+    border: 1px solid rgba(129,140,248,0.7);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+    font-size: 13px;
+}
+
+.subsystem-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.subsystem-name {
+    font-weight: 600;
+}
+
+.subsystem-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.7);
+}
+
+.subsystem-badge.ok { color: #22c55e; border-color: rgba(34,197,94,0.7); }
+.subsystem-badge.warning { color: #eab308; border-color: rgba(234,179,8,0.7); }
+.subsystem-badge.error { color: #ef4444; border-color: rgba(239,68,68,0.7); }
+
+/* EVENTS LIST */
+.event-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(55,65,81,0.8);
+    font-size: 13px;
+}
+
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.event-type {
+    font-weight: 700;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+
+.event-type.heal { color: #22c55e; }
+.event-type.drift { color: #f97373; }
+.event-type.fallback { color: #eab308; }
+
+/* DECISIONS */
+.decision-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(55,65,81,0.8);
+    font-size: 13px;
+}
+
+.decision-item:last-child {
+    border-bottom: none;
+}
+
+.decision-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.decision-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.7);
+    color: #cbd5f5;
+}
+
+/* TRACE */
+.trace-box {
+    background: #020617;
+    color: #22c55e;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: "Consolas", "Fira Code", monospace;
+    white-space: pre-wrap;
+    max-height: 260px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.9);
+    border: 1px solid rgba(34,197,94,0.4);
+    font-size: 12px;
+}
+
+/* DETAILS (native) */
+details {
+    margin-top: 4px;
+}
+
+details summary {
+    list-style: none;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+details summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 10px;
+    transform: translateY(-1px);
+    color: #93c5fd;
+}
+
+details[open] summary::before {
+    content: "▾";
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-main">
+        <img src="../../_EXPRESSIONS/_PEX/BUILD/PulseBand-Active.png" alt="Pulse Logo" />
+        <h1>PULSE OS — SYSTEM CONTROL ROOM</h1>
+    </div>
+    <div id="pipelineBanner" class="pipeline-banner">
+        <span class="pipeline-label">PIPELINE</span>
+        <span class="pipeline-status-text" id="pipelineBannerText">
+            Awaiting snapshot…
+        </span>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="controls">
+        <input type="file" id="osSnapshotFile" accept="application/json" />
+        <button onclick="loadSnapshot()">Load Pulse OS Snapshot</button>
+
+        <select id="osSnapshotDropdown" 
+                style="padding:8px 12px;border-radius:8px;background:#0f172a;color:#e5e7eb;border:1px solid #475569;">
+            <option value="">Saved Snapshots</option>
+        </select>
+
+        <button onclick="loadSavedOsSnapshot()">Load Saved Snapshot</button>
+    </div>
+
+
+    <div id="summaryCards" class="cards"></div>
+
+    <div class="panel">
+        <h2>Subsystem Health</h2>
+        <div id="subsystemsGrid" class="subsystems-grid"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Healing, Drift & Fallback Events</h2>
+        <div id="eventsList"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Routing & Supervisor Decisions</h2>
+        <div id="decisionsList"></div>
+    </div>
+
+    <div class="panel">
+        <h2>OS Trace</h2>
+        <div id="traceBox" class="trace-box"></div>
+    </div>
+
+</div>
+
+<!-- Backend Connector Layer -->
+<script type="module">
+    
+/* ============================================================
+   PULSE OS DASHBOARD v5 — CORE STATE
+   ============================================================ */
+
+let osSnapshot = null;          // raw snapshot
+let osNormalized = null;        // normalized v5 snapshot
+
+let osSavedSnapshots = JSON.parse(localStorage.getItem("osSavedSnapshots") || "[]");
+let osSnapshotPressTimes = [];
+let osHotkeyEnabled = true;
+let osSnapshotCooldownEnd = 0;
+let osCooldownDiv = null;
+
+
+/* ============================================================
+   CORE HELPERS
+   ============================================================ */
+
+function safeArray(value) {
+    if (!value) return [];
+    return Array.isArray(value) ? value : [value];
+}
+
+function classifySource(raw) {
+    if (!raw) return null;
+    if (typeof raw === "string") return raw;
+
+    if (typeof raw === "object") {
+        return (
+            raw.type ||
+            raw.kind ||
+            raw.mode ||
+            raw.label ||
+            raw.source ||
+            raw.valueSource ||
+            "unknown"
+        );
+    }
+    return String(raw);
+}
+
+
+/* ============================================================
+   NORMALIZATION HELPERS (SUBSYSTEM / EVENT / DECISION)
+   ============================================================ */
+
+function normalizeSubsystem(sub) {
+    const source = classifySource(sub.source || sub.valueSource);
+    const confidence =
+        sub.confidence != null
+            ? Number(sub.confidence)
+            : sub.signalConfidence != null
+            ? Number(sub.signalConfidence)
+            : null;
+
+    return {
+        name: sub.name || "Unnamed subsystem",
+        health: sub.health || "ok",
+
+        load: sub.load ?? sub.cpuLoad ?? null,
+        latencyMs: sub.latencyMs ?? sub.latency ?? null,
+        events: sub.events != null ? sub.events : 0,
+
+        source,
+        confidence,
+
+        lineage: safeArray(sub.lineage || sub.lineageChain || sub.derivedFrom),
+        formula: sub.formula || sub.math || null,
+        transitions: safeArray(
+            sub.transitions ||
+            sub.history ||
+            sub.transitionLog ||
+            sub.stateChanges
+        )
+    };
+}
+
+function normalizeEvent(ev) {
+    const source = classifySource(ev.source || ev.valueSource);
+    const confidence =
+        ev.confidence != null
+            ? Number(ev.confidence)
+            : ev.signalConfidence != null
+            ? Number(ev.signalConfidence)
+            : null;
+
+    return {
+        type: ev.type || ev.eventType || "fallback",
+        subsystem: ev.subsystem || ev.system || "Unknown subsystem",
+
+        time: ev.time || ev.timestamp || ev.t || "unknown time",
+        description: ev.description || ev.msg || ev.message || "",
+
+        decision: ev.decision || ev.action || null,
+        reason: ev.reason || ev.cause || null,
+
+        source,
+        confidence,
+
+        lineage: safeArray(ev.lineage || ev.lineageChain || ev.derivedFrom),
+        formula: ev.formula || ev.math || null,
+        transitions: safeArray(
+            ev.transitions ||
+            ev.history ||
+            ev.transitionLog ||
+            ev.stateChanges
+        )
+    };
+}
+
+function normalizeDecision(d) {
+    const source = classifySource(d.source || d.valueSource);
+    const confidence =
+        d.confidence != null
+            ? Number(d.confidence)
+            : d.signalConfidence != null
+            ? Number(d.signalConfidence)
+            : null;
+
+    const inputs = d.inputs || d.vars || d.parameters || {};
+
+    return {
+        subsystem: d.subsystem || d.system || "Unknown subsystem",
+        time: d.time || d.timestamp || d.t || "unknown time",
+
+        decision: d.decision || d.action || "unknown decision",
+        formula: d.formula || d.math || null,
+
+        inputs,
+        note: d.note || d.comment || null,
+
+        source,
+        confidence,
+
+        lineage: safeArray(d.lineage || d.lineageChain || d.derivedFrom),
+        transitions: safeArray(
+            d.transitions ||
+            d.history ||
+            d.transitionLog ||
+            d.stateChanges
+        )
+    };
+}
+
+
+/* ============================================================
+   VALUE INTELLIGENCE HELPERS
+   ============================================================ */
+
+function formatSourceConfidence(source, confidence) {
+    if (typeof source === "object" && source !== null) {
+        source = source.type || source.kind || source.label || "unknown";
+    }
+
+    if (!source && confidence == null) return "";
+
+    const src = source ? `source: ${source}` : "";
+    const conf = confidence != null
+        ? `confidence: ${Math.round(confidence * 100)}%`
+        : "";
+
+    return src && conf ? `${src} • ${conf}` : (src || conf);
+}
+
+function renderLineageDetails(lineage) {
+    if (!Array.isArray(lineage) || !lineage.length) return "";
+
+    const chain = lineage
+        .map(x => {
+            if (typeof x === "string") return x;
+            if (x && typeof x === "object") {
+                return x.name || x.key || x.id || JSON.stringify(x);
+            }
+            return String(x);
+        })
+        .join(" → ");
+
+    return `
+        <div><strong>Lineage:</strong></div>
+        <div style="font-size:12px;color:#9ca3af;margin-left:4px;">
+            <code>${chain}</code>
+        </div>
+    `;
+}
+
+function renderTransitionsDetails(transitions) {
+    if (!Array.isArray(transitions) || !transitions.length) return "";
+
+    const items = transitions
+        .map(t => {
+            if (typeof t === "string") return t;
+
+            const time = t.time || t.t || "";
+            const from = t.from ?? t.old ?? "?";
+            const to = t.to ?? t.new ?? "?";
+            const reason = t.reason || t.note || t.cause || "";
+
+            return `${time} — ${from} → ${to}${reason ? ` (${reason})` : ""}`;
+        })
+        .join("<br/>");
+
+    return `
+        <div><strong>Transitions:</strong></div>
+        <div style="font-size:12px;color:#9ca3af;margin-left:4px;">
+            ${items}
+        </div>
+    `;
+}
+
+
+/* ============================================================
+   SNAPSHOT NORMALIZATION (v5)
+   ============================================================ */
+
+function normalizeOsSnapshot(raw) {
+    if (!raw) return null;
+
+    const subsystems = safeArray(raw.subsystems).map(normalizeSubsystem);
+
+    const total = subsystems.length;
+    const okCount = subsystems.filter(s => s.health === "ok").length;
+    const warningCount = subsystems.filter(s => s.health === "warning").length;
+    const errorCount = subsystems.filter(s => s.health === "error").length;
+
+    const overallSeverity =
+        errorCount ? "error" :
+        warningCount ? "warning" : "ok";
+
+    const events = safeArray(raw.events).map(normalizeEvent);
+    const fallbackEvents = events.filter(e => e.type === "fallback").length;
+    const driftEvents = events.filter(e => e.type === "drift").length;
+    const healEvents = events.filter(e => e.type === "heal").length;
+
+    const decisions = safeArray(raw.decisions).map(normalizeDecision);
+
+    const pipelineStatus = raw.pipelineStatus || "unknown";
+    const pipelineSeverity =
+        pipelineStatus === "ok" || pipelineStatus === "healthy" ? "ok" :
+        pipelineStatus === "warning" ? "warning" :
+        pipelineStatus === "unknown" ? "warning" :
+        "error";
+
+    const summary = {
+        totalSubsystems: total,
+        okCount,
+        warningCount,
+        errorCount,
+        overallSeverity,
+
+        eventCount: events.length,
+        fallbackEvents,
+        driftEvents,
+        healEvents,
+
+        decisionCount: decisions.length,
+
+        pipelineStatus,
+        pipelineSeverity
+    };
+
+    const traceExtras = [];
+    if (raw.pipelineStatus) traceExtras.push(`Pipeline: ${raw.pipelineStatus}`);
+    if (raw.connectionMode) traceExtras.push(`Connection mode: ${raw.connectionMode}`);
+    if (raw.fallbackSummary) traceExtras.push(`Fallback summary: ${raw.fallbackSummary}`);
+
+    return {
+        raw,
+        summary,
+        subsystems,
+        events,
+        decisions,
+        traceExtras
+    };
+}
+
+
+/* ============================================================
+   SNAPSHOT SYSTEM (SAVE / LOAD / DROPDOWN)
+   ============================================================ */
+
+function saveOsSnapshot() {
+    if (!osSnapshot) return;
+
+    const name = `OS Snapshot — ${new Date().toLocaleString()}`;
+    osSavedSnapshots.push({ name, data: osSnapshot });
+
+    localStorage.setItem("osSavedSnapshots", JSON.stringify(osSavedSnapshots));
+    refreshOsSnapshotDropdown();
+}
+
+function loadSavedOsSnapshot() {
+    const select = document.getElementById("osSnapshotDropdown");
+    const index = select.value;
+    if (index === "") return;
+
+    const entry = osSavedSnapshots[index];
+    if (!entry) return;
+
+    osNormalized = normalizeOsSnapshot(entry.data);
+
+    updatePipelineBanner(osNormalized.summary.pipelineStatus);
+
+    renderSummaryCards(osNormalized.summary);
+    renderSubsystems(osNormalized.subsystems);
+    renderEvents(osNormalized.events);
+    renderDecisions(osNormalized.decisions);
+    renderTrace(osNormalized.traceExtras);
+}
+
+function refreshOsSnapshotDropdown() {
+    const select = document.getElementById("osSnapshotDropdown");
+    if (!select) return;
+
+    select.innerHTML = `<option value="">Saved Snapshots</option>`;
+
+    osSavedSnapshots.forEach((snap, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = snap.name;
+        select.appendChild(opt);
+    });
+}
+
+
+/* ============================================================
+   TILDE HOTKEY + COOLDOWN
+   ============================================================ */
+
+document.addEventListener("keydown", e => {
+    if (e.key !== "`") return;
+
+    const now = PulseRealm.PulseNOW;
+
+    if (!osHotkeyEnabled) {
+        const remaining = Math.ceil((osSnapshotCooldownEnd - now) / 1000);
+        showOsCooldownMessage(remaining);
+        return;
+    }
+
+    osSnapshotPressTimes.push(now);
+    osSnapshotPressTimes = osSnapshotPressTimes.filter(t => now - t < 2000);
+
+    if (osSnapshotPressTimes.length >= 2) {
+        osHotkeyEnabled = false;
+        osSnapshotCooldownEnd = now + 3 * 60 * 1000;
+        showOsCooldownMessage(180);
+        return;
+    }
+
+    saveOsSnapshot();
+});
+
+
+function showOsCooldownMessage(seconds) {
+    if (!osCooldownDiv) {
+        osCooldownDiv = document.createElement("div");
+        osCooldownDiv.style.position = "fixed";
+        osCooldownDiv.style.bottom = "20px";
+        osCooldownDiv.style.right = "20px";
+        osCooldownDiv.style.padding = "14px 18px";
+        osCooldownDiv.style.background = "rgba(15,23,42,0.9)";
+        osCooldownDiv.style.border = "1px solid rgba(239,68,68,0.7)";
+        osCooldownDiv.style.borderRadius = "12px";
+        osCooldownDiv.style.color = "#fee2e2";
+        osCooldownDiv.style.fontSize = "13px";
+        osCooldownDiv.style.boxShadow = "0 0 20px rgba(239,68,68,0.5)";
+        osCooldownDiv.style.zIndex = "9999";
+        document.body.appendChild(osCooldownDiv);
+    }
+
+    osCooldownDiv.innerHTML = `
+        <div><strong>Snapshot hotkey disabled</strong></div>
+        <div>Cooldown: ${seconds}s remaining</div>
+        <div style="margin-top:6px;">
+            <a href="#" style="color:#93c5fd;" onclick="forceEnableOsHotkey()">Done gaming?</a>
+        </div>
+    `;
+
+    const interval = setInterval(() => {
+        const now = PulseRealm.PulseNOW;
+        const remaining = Math.ceil((osSnapshotCooldownEnd - now) / 1000);
+
+        if (remaining <= 0) {
+            clearInterval(interval);
+            osHotkeyEnabled = true;
+            osCooldownDiv.remove();
+            osCooldownDiv = null;
+            return;
+        }
+
+        osCooldownDiv.innerHTML = `
+            <div><strong>Snapshot hotkey disabled</strong></div>
+            <div>Cooldown: ${remaining}s remaining</div>
+            <div style="margin-top:6px;">
+                <a href="#" style="color:#93c5fd;" onclick="forceEnableOsHotkey()">Done gaming?</a>
+            </div>
+        `;
+    }, 1000);
+}
+
+function forceEnableOsHotkey() {
+    osHotkeyEnabled = true;
+    osSnapshotPressTimes = [];
+    if (osCooldownDiv) osCooldownDiv.remove();
+    osCooldownDiv = null;
+}
+
+
+/* ============================================================
+   OVERRIDDEN loadSnapshot() + renderDashboard() (v5)
+   ============================================================ */
+
+async function loadSnapshot() {
+    const input = document.getElementById("osSnapshotFile");
+    if (!input.files[0]) {
+        alert("Please select a Pulse OS snapshot JSON file.");
+        return;
+    }
+
+    const text = await input.files[0].text();
+    osSnapshot = JSON.parse(text);
+
+    osNormalized = normalizeOsSnapshot(osSnapshot);
+
+    updatePipelineBanner(osNormalized.summary.pipelineStatus);
+
+    renderSummaryCards(osNormalized.summary);
+    renderSubsystems(osNormalized.subsystems);
+    renderEvents(osNormalized.events);
+    renderDecisions(osNormalized.decisions);
+    renderTrace(osNormalized.traceExtras);
+
+    refreshOsSnapshotDropdown();
+}
+
+function renderDashboard(normalized) {
+    if (!normalized) return;
+
+    renderSummaryCards(normalized.summary);
+    renderSubsystems(normalized.subsystems);
+    renderEvents(normalized.events);
+    renderDecisions(normalized.decisions);
+    renderTrace(normalized.traceExtras);
+}
+
+
+
+/* ============================================================
+   PIPELINE BANNER (UNCHANGED)
+   ============================================================ */
+
+function updatePipelineBanner(status) {
+    const banner = document.getElementById("pipelineBanner");
+    const text = document.getElementById("pipelineBannerText");
+
+    if (!banner || !text) return;
+
+    banner.classList.remove("warning", "error");
+
+    if (!status || status === "unknown") {
+        text.textContent = "Pipeline status unknown";
+        banner.classList.add("warning");
+        return;
+    }
+
+    if (status === "ok" || status === "healthy" || status === "verified") {
+        text.textContent = "Pipeline verified";
+        return;
+    }
+
+    if (status === "warning") {
+        text.textContent = "Pipeline warning";
+        banner.classList.add("warning");
+        return;
+    }
+
+    text.textContent = `Pipeline error: ${status}`;
+    banner.classList.add("error");
+}
+/* ============================================================
+   PULSE OS v5 — SINGLE-PASS SNAPSHOT NORMALIZATION
+   ============================================================ */
+
+function normalizeOsSnapshot(raw) {
+    if (!raw) return null;
+
+    /* ---------- Normalize subsystems ---------- */
+    const subsystems = safeArray(raw.subsystems).map(normalizeSubsystem);
+
+    const total = subsystems.length;
+    const okCount = subsystems.filter(s => s.health === "ok").length;
+    const warningCount = subsystems.filter(s => s.health === "warning").length;
+    const errorCount = subsystems.filter(s => s.health === "error").length;
+
+    const overallSeverity =
+        errorCount ? "error" :
+        warningCount ? "warning" : "ok";
+
+    /* ---------- Normalize events ---------- */
+    const events = safeArray(raw.events).map(normalizeEvent);
+
+    const fallbackEvents = events.filter(e => e.type === "fallback").length;
+    const driftEvents = events.filter(e => e.type === "drift").length;
+    const healEvents = events.filter(e => e.type === "heal").length;
+
+    /* ---------- Normalize decisions ---------- */
+    const decisions = safeArray(raw.decisions).map(normalizeDecision);
+
+    /* ---------- Pipeline ---------- */
+    const pipelineStatus = raw.pipelineStatus || "unknown";
+    const pipelineSeverity =
+        pipelineStatus === "ok" || pipelineStatus === "healthy" ? "ok" :
+        pipelineStatus === "warning" ? "warning" :
+        pipelineStatus === "unknown" ? "warning" :
+        "error";
+
+    /* ---------- Summary object (v5) ---------- */
+    const summary = {
+        totalSubsystems: total,
+        okCount,
+        warningCount,
+        errorCount,
+        overallSeverity,
+
+        eventCount: events.length,
+        fallbackEvents,
+        driftEvents,
+        healEvents,
+
+        decisionCount: decisions.length,
+
+        pipelineStatus,
+        pipelineSeverity
+    };
+
+    /* ---------- Trace extras ---------- */
+    const traceExtras = [];
+    if (raw.pipelineStatus) traceExtras.push(`Pipeline: ${raw.pipelineStatus}`);
+    if (raw.connectionMode) traceExtras.push(`Connection mode: ${raw.connectionMode}`);
+    if (raw.fallbackSummary) traceExtras.push(`Fallback summary: ${raw.fallbackSummary}`);
+
+    return {
+        raw,
+        summary,
+        subsystems,
+        events,
+        decisions,
+        traceExtras
+    };
+}
+
+
+/* ============================================================
+   SUMMARY CARDS — PURE RENDERER (v5)
+   ============================================================ */
+
+function renderSummaryCards(summary) {
+    const root = document.getElementById("summaryCards");
+    root.innerHTML = "";
+
+    const cards = [
+        {
+            title: "Overall OS Health",
+            severity: summary.overallSeverity,
+            description:
+                summary.totalSubsystems
+                    ? `${summary.okCount} OK • ${summary.warningCount} Warning • ${summary.errorCount} Error`
+                    : "No subsystems reported."
+        },
+        {
+            title: "Pipeline Integrity",
+            severity: summary.pipelineSeverity,
+            description: `Status: ${summary.pipelineStatus}`
+        },
+        {
+            title: "Healing / Drift / Fallback Events",
+            severity: summary.eventCount ? "warning" : "ok",
+            description: `${summary.eventCount} events • ${summary.healEvents} heal • ${summary.driftEvents} drift • ${summary.fallbackEvents} fallback`
+        },
+        {
+            title: "Routing & Supervisor Decisions",
+            severity: summary.decisionCount ? "ok" : "warning",
+            description: `${summary.decisionCount} decisions`
+        }
+    ];
+
+    cards.forEach(c => {
+        const div = document.createElement("div");
+        div.className = `card ${c.severity}`;
+        div.innerHTML = `
+            <h3>${c.title}</h3>
+            <p>${c.description}</p>
+        `;
+        root.appendChild(div);
+    });
+}
+
+
+/* ============================================================
+   SUBSYSTEMS PANEL — PURE RENDERER (v5)
+   ============================================================ */
+
+function renderSubsystems(subsystems) {
+    const root = document.getElementById("subsystemsGrid");
+    root.innerHTML = "";
+
+    if (!subsystems.length) {
+        root.innerHTML = `<p style="font-size:13px;color:#9ca3af;">No subsystems in snapshot.</p>`;
+        return;
+    }
+
+    subsystems.forEach(s => {
+        const severity = s.health || "ok";
+        const loadPercent = s.load != null ? Math.round(s.load * 100) : null;
+        const srcConf = formatSourceConfidence(s.source, s.confidence);
+
+        const detailsBlock =
+            (s.formula || s.lineage.length || s.transitions.length)
+                ? `
+            <details style="margin-top:6px;font-size:12px;color:#cbd5f5;">
+                <summary style="cursor:pointer;color:#93c5fd;">Details</summary>
+                ${s.formula ? `<div><strong>Formula:</strong> <code>${s.formula}</code></div>` : ""}
+                ${renderLineageDetails(s.lineage)}
+                ${renderTransitionsDetails(s.transitions)}
+            </details>
+        `
+                : "";
+
+        const div = document.createElement("div");
+        div.className = "subsystem-card";
+        div.innerHTML = `
+            <div class="subsystem-header">
+                <div class="subsystem-name">${s.name}</div>
+                <div class="subsystem-badge ${severity}">
+                    ${severity.toUpperCase()}
+                </div>
+            </div>
+            <div><strong>Load:</strong> ${loadPercent != null ? loadPercent + "%" : "n/a"}</div>
+            <div><strong>Latency:</strong> ${s.latencyMs != null ? s.latencyMs + " ms" : "n/a"}</div>
+            <div><strong>Events:</strong> ${s.events}</div>
+            ${
+                srcConf
+                    ? `<div style="margin-top:4px;font-size:12px;color:#9ca3af;"><strong>Signal:</strong> ${srcConf}</div>`
+                    : ""
+            }
+            ${detailsBlock}
+        `;
+        root.appendChild(div);
+    });
+}
+
+
+/* ============================================================
+   EVENTS PANEL — PURE RENDERER (v5)
+   ============================================================ */
+
+function renderEvents(events) {
+    const root = document.getElementById("eventsList");
+    root.innerHTML = "";
+
+    if (!events.length) {
+        root.innerHTML = `<p style="font-size:13px;color:#9ca3af;">No healing, drift, or fallback events in this snapshot.</p>`;
+        return;
+    }
+
+    events.forEach(ev => {
+        const typeClass =
+            ev.type === "heal" ? "heal" :
+            ev.type === "drift" ? "drift" :
+            "fallback";
+
+        const srcConf = formatSourceConfidence(ev.source, ev.confidence);
+
+        const detailsBlock =
+            (ev.formula || ev.lineage.length || ev.transitions.length)
+                ? `
+            <details style="margin-top:4px;font-size:12px;color:#cbd5f5;">
+                <summary style="cursor:pointer;color:#93c5fd;">Details</summary>
+                ${ev.formula ? `<div><strong>Formula:</strong> <code>${ev.formula}</code></div>` : ""}
+                ${renderLineageDetails(ev.lineage)}
+                ${renderTransitionsDetails(ev.transitions)}
+            </details>
+        `
+                : "";
+
+        root.innerHTML += `
+            <div class="event-item">
+                <div>
+                    <span class="event-type ${typeClass}">${ev.type.toUpperCase()}</span>
+                    <strong>${ev.subsystem}</strong>
+                    <span style="font-size:11px;color:#9ca3af;">@ ${ev.time}</span>
+                </div>
+                <div>${ev.description}</div>
+                ${ev.decision ? `<div><strong>Decision:</strong> ${ev.decision}</div>` : ""}
+                ${ev.reason ? `<div><strong>Reason:</strong> ${ev.reason}</div>` : ""}
+                ${
+                    srcConf
+                        ? `<div style="margin-top:4px;font-size:12px;color:#9ca3af;"><strong>Signal:</strong> ${srcConf}</div>`
+                        : ""
+                }
+                ${detailsBlock}
+            </div>
+        `;
+    });
+}
+
+
+/* ============================================================
+   DECISIONS PANEL — PURE RENDERER (v5)
+   ============================================================ */
+
+function renderDecisions(decisions) {
+    const root = document.getElementById("decisionsList");
+    root.innerHTML = "";
+
+    if (!decisions.length) {
+        root.innerHTML = `<p style="font-size:13px;color:#9ca3af;">No routing or supervisor decisions in this snapshot.</p>`;
+        return;
+    }
+
+    decisions.forEach(d => {
+        const inputs = d.inputs || {};
+        const inputsStr = Object.keys(inputs).length
+            ? Object.entries(inputs)
+                .map(([k, v]) => `${k}=${JSON.stringify(v)}`)
+                .join(", ")
+            : "none";
+
+        const srcConf = formatSourceConfidence(d.source, d.confidence);
+
+        const detailsBlock =
+            (d.formula || d.lineage.length || d.transitions.length)
+                ? `
+            <details style="margin-top:4px;font-size:12px;color:#cbd5f5;">
+                <summary style="cursor:pointer;color:#93c5fd;">Details</summary>
+                ${d.formula ? `<div><strong>Formula:</strong> <code>${d.formula}</code></div>` : ""}
+                ${renderLineageDetails(d.lineage)}
+                ${renderTransitionsDetails(d.transitions)}
+            </details>
+        `
+                : "";
+
+        root.innerHTML += `
+            <div class="decision-item">
+                <div class="decision-header">
+                    <div>
+                        <strong>${d.subsystem}</strong>
+                        <span style="font-size:11px;color:#9ca3af;">@ ${d.time}</span>
+                    </div>
+                    <div class="decision-badge">${d.decision}</div>
+                </div>
+                <div><strong>Inputs:</strong> <code>${inputsStr}</code></div>
+                ${d.note ? `<div><strong>Note:</strong> ${d.note}</div>` : ""}
+                ${
+                    srcConf
+                        ? `<div style="margin-top:4px;font-size:12px;color:#9ca3af;"><strong>Signal:</strong> ${srcConf}</div>`
+                        : ""
+                }
+                ${detailsBlock}
+            </div>
+        `;
+    });
+}
+
+
+/* ============================================================
+   TRACE PANEL — PURE RENDERER (v5)
+   ============================================================ */
+
+function renderTrace(traceExtras) {
+    const box = document.getElementById("traceBox");
+    box.textContent = traceExtras.join("\n");
+}
+
+</script>
+
+</body>
+</html>

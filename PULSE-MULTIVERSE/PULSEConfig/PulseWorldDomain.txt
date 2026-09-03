@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>PulseWorld OS • Admin Control Center</title>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldDomain.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldEmblem.webp.pex" type="image/webp"/>
+<style>
+:root {
+      --bg-main: #050814;
+      --bg-panel: #0b1020;
+      --bg-panel-alt: #0f1628;
+      --accent: #3cf5ff;
+      --accent-soft: #1b9fd1;
+      --accent-warm: #ffb347;
+      --accent-danger: #ff4b6a;
+      --text-main: #e9f3ff;
+      --text-soft: #9bb3d9;
+      --grid-line: rgba(90, 140, 255, 0.18);
+      --button-bg: #11182a;
+      --button-hover: #18223a;
+      --button-border: #2b3f6b;
+      --console-bg: #050a16;
+      --console-border: #1b2742;
+      --shadow-soft: 0 0 40px rgba(0, 0, 0, 0.7);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111a33 0%, #050814 45%, #02030a 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Subtle grid / NASA control room vibe */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at bottom right, rgba(60, 245, 255, 0.12), transparent 55%),
+                  radial-gradient(circle at top left, rgba(255, 179, 71, 0.12), transparent 55%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: -1;
+    }
+  /* FULL BACKGROUND IMAGE */
+  .pw-admin-bg {
+    position: fixed;
+    inset: 0;
+    background: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldDomain.webp.pex') center/cover no-repeat;
+    filter: brightness(0.35) blur(2px);
+    z-index: -3;
+  }
+
+  /* LIGHT OVERLAY GLOW */
+  .pw-admin-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(60,245,255,0.12), transparent 60%),
+                radial-gradient(circle at bottom, rgba(255,179,71,0.12), transparent 60%);
+    z-index: -2;
+  }
+
+  /* MAIN EMBLEM IMAGE */
+  .pw-admin-main-image {
+    width: 260px;
+    border-radius: 999px;
+    margin: 0 auto 30px;
+    display: block;
+    filter: drop-shadow(0 0 25px rgba(60,245,255,0.55));
+    
+    pointer-events: none;
+    z-index: 4;
+}
+    
+    .shell {
+      max-width: var(--tp-max-width);
+      margin: 32px auto;
+      padding: 0 24px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Top HUD */
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hud-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hud-title {
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hud-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+
+    .hud-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hud-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(60, 245, 255, 0.4);
+      background: linear-gradient(90deg, rgba(60, 245, 255, 0.12), rgba(17, 24, 42, 0.9));
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3cf5ff;
+      box-shadow: 0 0 8px rgba(60, 245, 255, 0.9);
+    }
+
+    .hud-clock {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    /* Main layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left: Control panels */
+    .panel {
+      background: linear-gradient(145deg, var(--bg-panel), var(--bg-panel-alt));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(90, 140, 255, 0.35);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(60, 245, 255, 0.12), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .panel-tag {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: var(--accent-soft);
+      background: rgba(5, 10, 22, 0.9);
+    }
+
+    .panel-body {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Buttons */
+    .admin-button {
+      background: var(--button-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--button-border);
+      padding: 12px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out;
+    }
+
+    .admin-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(60, 245, 255, 0.16), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.12s ease-out;
+      pointer-events: none;
+    }
+
+    .admin-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 18px rgba(60, 245, 255, 0.25);
+      border-color: rgba(60, 245, 255, 0.7);
+      background: var(--button-hover);
+    }
+
+    .admin-button:hover::before {
+      opacity: 1;
+    }
+
+    .admin-button-label {
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+
+    .admin-button-sub {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .admin-button-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--accent-soft);
+      opacity: 0.9;
+    }
+
+    .admin-button-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(60, 245, 255, 0.4);
+      background: rgba(5, 10, 22, 0.9);
+    }
+
+    /* Right: Consoles */
+    .console-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .console-panel {
+      background: var(--console-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--console-border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .console-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(60, 245, 255, 0.08), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .console-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .console-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--accent-soft);
+    }
+
+    .console-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #3cf5ff;
+      box-shadow: 0 0 8px rgba(60, 245, 255, 0.9);
+    }
+
+    .console-body {
+      position: relative;
+      z-index: 1;
+      background: rgba(3, 7, 18, 0.9);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(27, 39, 66, 0.9);
+      padding: 10px 10px 8px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      max-height: 180px;
+      overflow: hidden;
+    }
+
+    .console-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .console-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+    }
+
+    .console-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(155, 179, 217, 0.5);
+      background: rgba(5, 10, 22, 0.9);
+    }
+
+    /* Bottom: Route selector / NASA vibe */
+    .route-panel {
+      margin-top: 8px;
+      background: linear-gradient(135deg, #050814, #0b1020);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(90, 140, 255, 0.35);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .route-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(60, 245, 255, 0.12), transparent 60%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .route-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .route-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .route-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .route-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(60, 245, 255, 0.4);
+      background: rgba(5, 10, 22, 0.9);
+      font-size: 0.75rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.12s ease-out, transform 0.12s ease-out, box-shadow 0.12s ease-out;
+    }
+
+    .route-chip:hover {
+      background: rgba(24, 34, 58, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(60, 245, 255, 0.35);
+    }
+
+    .route-chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-warm);
+      box-shadow: 0 0 8px rgba(255, 179, 71, 0.9);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      opacity: 0.7;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- BACKGROUND IMAGE -->
+  <div class="pw-admin-bg"></div>
+
+  <!-- OVERLAY GLOW -->
+  <div class="pw-admin-overlay"></div>
+
+  <!-- MAIN EMBLEM IMAGE -->
+  <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldEmblem.webp.pex" class="pw-admin-main-image" alt="PulseWorld Emblem">
+
+  <div class="shell">
+    <!-- HUD -->
+    <header class="hud">
+      <div class="hud-left">
+        <div class="hud-title">PulseWorld OS • Admin Domain</div>
+        <div class="hud-subtitle">
+          Central Control • Route Selection • Subsystem Orchestration • Internal‑Only Identity Layer
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-pill">
+          <span class="hud-dot"></span>
+          <span>ADMIN VERSION: IMMORTAL‑INTEL • ONE‑BAND</span>
+        </div>
+        <div class="hud-clock" id="hudClock">LOCAL: —:—:— MST</div>
+      </div>
+    </header>
+
+    <!-- Main grid -->
+    <main class="main-grid">
+      <!-- LEFT: Admin panels -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Primary Admin Control Center</div>
+          <div class="panel-tag">Route Selector • Subsystem Entry</div>
+        </div>
+
+        <div class="panel-body">
+          <!-- Admin Email Control Center -->
+          <button class="admin-button" id="admin-emails" type="button">
+            <div class="admin-button-label">Admin Email Control Center</div>
+            <div class="admin-button-sub">
+              PulseMessenger routing • outbound campaigns • internal alerts • identity‑free telemetry.
+            </div>
+            <div class="admin-button-meta">
+              <span class="admin-button-pill">Channel: Messaging</span>
+              <span>PEX‑Linked</span>
+            </div>
+          </button>
+
+          <!-- PEX Builder -->
+          <button class="admin-button" id="admin-pex" type="button">
+            <div class="admin-button-label">PEX Builder</div>
+            <div class="admin-button-sub">
+              Pulse Expression Extension • UI routes • HUD layouts • warm‑path configuration.
+            </div>
+            <div class="admin-button-meta">
+              <span class="admin-button-pill">Channel: Interface</span>
+              <span>Design Tier</span>
+            </div>
+          </button>
+
+          <!-- Admin Business Center -->
+          <button class="admin-button" id="admin-business" type="button">
+            <div class="admin-button-label">Admin Business Center</div>
+            <div class="admin-button-sub">
+              Merchant logic • pricing models • inventory signals • non‑identity business telemetry.
+            </div>
+            <div class="admin-button-meta">
+              <span class="admin-button-pill">Channel: Operations</span>
+              <span>Tier‑2 Engine</span>
+            </div>
+          </button>
+
+          <!-- Admin Banking Center -->
+          <button class="admin-button" id="admin-bank" type="button">
+            <div class="admin-button-label">Admin Banking Center</div>
+            <div class="admin-button-sub">
+              Settlement routes • fee maps • interchange models • external‑only, identity‑free views.
+            </div>
+            <div class="admin-button-meta">
+              <span class="admin-button-pill">Channel: Finance</span>
+              <span>Secure Path</span>
+            </div>
+          </button>
+
+          <!-- Admin Analytics & Reports -->
+          <button class="admin-button" id="admin-reports" type="button">
+            <div class="admin-button-label">Admin Analytics & Reports</div>
+            <div class="admin-button-sub">
+              Interval logs • warm‑path metrics • GPU/CPU telemetry • non‑user analytics.
+            </div>
+            <div class="admin-button-meta">
+              <span class="admin-button-pill">Channel: Insight</span>
+              <span>Read‑Only</span>
+            </div>
+          </button>
+
+          <!-- Admin Settings -->
+          <button class="admin-button" id="admin-settings" type="button">
+            <div class="admin-button-label">Admin Settings</div>
+            <div class="admin-button-sub">
+              System toggles • interval timing • SQL routes • tunnel modes • safety caps.
+            </div>
+            <div class="admin-button-meta">
+              <span class="admin-button-pill">Channel: Core</span>
+              <span>Root Tier</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- RIGHT: Consoles -->
+      <section class="console-stack">
+        <!-- Console: Admin Activity -->
+        <div class="console-panel">
+          <div class="console-header">
+            <div class="console-title">Admin Activity Console</div>
+            <div class="console-status">
+              <span class="console-status-dot"></span>
+              <span>LIVE • INTERVAL‑SAFE • WRITE‑ONLY</span>
+            </div>
+          </div>
+          <div class="console-body">
+            <pre>
+[00:00.000] PULSEWORLD.ADMIN: LINK ESTABLISHED • ONE‑BAND MODE • LOCAL‑ONLY IDENTITY
+[00:00.120] SQL.LOG: INTERVAL ENGINE ARMED • WRITE‑ONLY • VIEW DISABLED • PUBLIC ACCESS: NONE
+[00:00.240] ROUTE.MAP: EMAIL • PEX • BUSINESS • BANKING • ANALYTICS • SETTINGS ONLINE
+[00:00.360] GPU.SENSE: HUD GRID ACTIVE • NASA‑STYLE CONTROL CENTER • ROUTE SELECTION READY
+[00:00.480] SAFETY.LAYER: EXTERNAL TRIGGERS: DISABLED • DYNAMIC INTERVAL: INTERNAL‑ONLY
+[00:00.600] STATUS: ADMIN DOMAIN PANEL READY • AWAITING HUMAN ROUTE DECISION
+            </pre>
+          </div>
+          <div class="console-footer">
+            <span class="console-tag">Channel: ReflexSense</span>
+            <span>PulseEngine v30 • Immortal‑Intel‑Omega</span>
+          </div>
+        </div>
+
+        <!-- Console: SQL Interval -->
+        <div class="console-panel">
+          <div class="console-header">
+            <div class="console-title">SQL Interval Telemetry</div>
+            <div class="console-status">
+              <span class="console-status-dot" style="background: var(--accent-warm); box-shadow: 0 0 8px rgba(255,179,71,0.9);"></span>
+              <span>INTERNAL‑ONLY • NON‑NAVIGATIONAL</span>
+            </div>
+          </div>
+          <div class="console-body">
+            <pre>
+[INTERVAL +60s] SQL.WRITE: CONSOLE_LOG_BATCH • ROWS: 42 • USER: ACTIVITY‑ONLY • ID: NONE
+[INTERVAL +60s] SQL.CHECK: STORAGE • 0.12 GB / 10 GB • STATUS: GREEN • PURGE: NOT REQUIRED
+[INTERVAL +60s] ENGINE: NO EXTERNAL CALLS • NO PUBLIC ENDPOINTS • NO VIEW ROUTES
+[INTERVAL +60s] SAFETY: DDoS VECTOR: NONE • SQL INJECTION VECTOR: NONE • IDENTITY VECTOR: NONE
+[INTERVAL +60s] NOTE: GROWTH = CONSEQUENCE OF REAL ACTIVITY • NOT A SECURITY RISK
+            </pre>
+          </div>
+          <div class="console-footer">
+            <span class="console-tag">Channel: SQL Interval</span>
+            <span>Mode: Closed‑Loop • Internal Physics Only</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Route selector / NASA vibe -->
+    <section class="route-panel">
+      <div class="route-header">
+        <div class="route-title">Route Selection • Admin Flight Paths</div>
+        <div class="console-tag">Choose Subsystem • No External Identity Required</div>
+      </div>
+      <div class="route-body">
+        <button class="route-chip" type="button">
+          <span class="route-chip-dot"></span>
+          <span>Route: Email Control Center</span>
+        </button>
+        <button class="route-chip" type="button">
+          <span class="route-chip-dot"></span>
+          <span>Route: PEX Builder</span>
+        </button>
+        <button class="route-chip" type="button">
+          <span class="route-chip-dot"></span>
+          <span>Route: Business Center</span>
+        </button>
+        <button class="route-chip" type="button">
+          <span class="route-chip-dot"></span>
+          <span>Route: Banking Center</span>
+        </button>
+        <button class="route-chip" type="button">
+          <span class="route-chip-dot"></span>
+          <span>Route: Analytics & Reports</span>
+        </button>
+        <button class="route-chip" type="button">
+          <span class="route-chip-dot"></span>
+          <span>Route: Admin Settings</span>
+        </button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      PulseWorld OS • Admin Domain • Local‑Only • Identity‑Free • NASA‑Style Control Center Shell
+    </footer>
+  </div>
+
+  <script>
+    // Simple local clock for HUD
+    function updateClock() {
+      const el = document.getElementById("hudClock");
+      if (!el) return;
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      el.textContent = `LOCAL: ${h}:${m}:${s} MST`;
+    }
+
+(async () => {
+    updateClock();
+    const adminEmailBtn =  document.getElementById("admin-emails");
+    const pexBuilderBtn =  document.getElementById("admin-pex");
+    adminEmailBtn.onclick = async () => {
+      loadInternalPage("PulseWorldAdminEmails");
+    }
+    pexBuilderBtn.onclick = async () => {
+      loadInternalPage("PulseWorldReality");
+      location.href="#PEXBuilder";
+    }
+    setInterval(updateClock, 1000);
+  })();
+  </script>
+</body>
+</html>

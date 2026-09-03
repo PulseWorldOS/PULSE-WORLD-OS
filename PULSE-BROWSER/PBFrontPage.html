@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseBrowser OS</title>
+
+  <!-- Preload Logo -->
+  <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
+  <link rel="preload" as="image" href="PulseWorldSplash512.png" />
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nebula {
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      background: url("PulseWorldEntrancePulseGPUPulseEarn.png") center/cover no-repeat;
+      filter: brightness(0.55);
+      opacity: 0.65;
+      animation: drift 40s linear infinite;
+      z-index: -3;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(-5%, -5%) scale(1.05); }
+      50% { transform: translate(5%, 5%) scale(1.1); }
+      100% { transform: translate(-5%, -5%) scale(1.05); }
+    }
+
+    .core {
+      text-align: center;
+      animation: fadeIn 2s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .logo {
+      width: 240px;
+      height: 240px;
+      border-radius: 30px;
+      box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44; }
+      50% { box-shadow: 0 0 70px #00ccffcc, 0 0 120px #00ccff66; }
+      100% { box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44; }
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: bold;
+      margin-top: 25px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px #00aaff;
+      animation: titleReveal 1.8s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes titleReveal {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .subtitle {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      opacity: 0;
+      animation: subtitleReveal 2.5s ease forwards;
+      animation-delay: 1.2s;
+      text-shadow: 0 0 8px #00aaff88;
+    }
+
+    @keyframes subtitleReveal {
+      to { opacity: 0.85; }
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .enter {
+      margin-top: 40px;
+      padding: 14px 34px;
+      background: #00aaff;
+      color: black;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .enter:hover {
+      background: #33bbff;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+
+    .shimmer {
+      position: absolute;
+      width: 400%;
+      border-radius: 40px;
+      height: 400%;
+      background: linear-gradient(120deg, transparent 0%, #00aaff22 50%, transparent 100%);
+      animation: shimmerMove 6s linear infinite;
+      z-index: -2;
+    }
+
+    @keyframes shimmerMove {
+      0% { transform: translateX(-100%) translateY(-100%); }
+      100% { transform: translateX(100%) translateY(100%); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="nebula"></div>
+  <div class="shimmer"></div>
+
+  <div class="core">
+    <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" />
+
+    <div class="title">PulseBrowser OS</div>
+
+    <div class="subtitle">
+      Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime
+    </div>
+
+    <!-- ⭐ FIXED BUTTON: real link -->
+    <a class="enter" id="enter" href="https://www.pulseworld.net">
+      Enter PulseWorld
+    </a>
+  </div>
+
+  <!-- ⭐ FIXED: external JS file -->
+  <script src="PBFrontpage.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pulse MeshLink • Mesh Intelligence OS</title>
+
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseMeshLinkBG.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalExpansion.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseMeshWaveIntelligence.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseMeshBTMeshNode.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseMeshSatelliteWifi.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseMeshLink" type="video/mp4">
+<style>
+/* ---------------------------------------------------------
+   BACKGROUND ELEMENTS — NO BODY CSS
+--------------------------------------------------------- */
+
+/* ---------------------------------------------------------
+   MAIN CONTAINER
+--------------------------------------------------------- */
+.meshlink-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 40px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 24px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-family: "Segoe UI", Helvetica, sans-serif;
+  color: #f5f5f5;
+}
+
+/* ---------------------------------------------------------
+   TITLE + HERO IMAGE
+--------------------------------------------------------- */
+.meshlink-title {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.meshlink-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #d0d0d0;
+}
+
+.meshlink-hero {
+  margin: 0 auto;
+  width: 35%;
+  border-radius: 999px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.2);
+  object-fit: cover;
+}
+
+/* ---------------------------------------------------------
+   IMAGE ROW — BUBBLE CORNERS
+--------------------------------------------------------- */
+.meshlink-images {
+  display: flex;
+  
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.meshlink-images img {
+  width: 30%;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  object-fit: cover;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.1), rgba(0,0,0,0.4));
+}
+
+.meshlink-images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+}
+
+/* ---------------------------------------------------------
+   SECTIONS
+--------------------------------------------------------- */
+section {
+  margin-bottom: 50px;
+  padding: 25px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 0 20px rgba(0,0,0,0.25);
+}
+
+h2 {
+  margin-top: 0;
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* ---------------------------------------------------------
+   BUTTON
+--------------------------------------------------------- */
+#activate-bluetooth-btn {
+  padding: 14px 24px;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, #ffffff, #dcdcdc);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #333;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#activate-bluetooth-btn:hover {
+  background: linear-gradient(90deg, #f0f0f0, #e0e0e0);
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------
+   LOG OUTPUT
+--------------------------------------------------------- */
+pre {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 12px;
+  color: #e0e0e0;
+  margin-top: 20px;
+  min-height: 100px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
+  font-size: 0.95rem;
+}
+
+/* ---------------------------------------------------------
+   SETTINGS LIST
+--------------------------------------------------------- */
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+  color: #e0e0e0;
+  padding-left: 20px;
+  position: relative;
+}
+
+ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #aaa;
+}
+</style>
+</head>
+
+<body>
+<video id="meshVideo" src="./_EXPRESSIONS/_VIDEOS/PulseMeshLink" autoplay muted playsinline style="display:block;" aria-label="MeshLink Video"></video>
+
+<div id="pulse-meshlink-page" class="meshlink-container">
+
+  <h1 class="meshlink-title">Pulse MeshLink</h1>
+  <p class="meshlink-subtitle">Mesh Intelligence • Wave Tech • Device Presence</p>
+
+  <!-- MAIN HERO IMAGE -->
+  <img src="./_EXPRESSIONS/_PEX/BUILD/PulsePalExpansion.webp.pex" class="meshlink-hero" alt="Pulse MeshLink Hero">
+
+  <!-- IMAGE ROW -->
+  <div class="meshlink-images">
+    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseMeshWaveIntelligence.webp.pex" alt="Mesh Wave Intelligence">
+    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseMeshBTMeshNode.webp.pex" alt="Bluetooth Mesh Node">
+    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseMeshSatelliteWifi.webp.pex" alt="Cell/WiFi/Satellite Map">
+  </div>
+
+  <!-- ACTIVATION -->
+  <section class="meshlink-activation">
+    <h2>Bluetooth Activation</h2>
+    <button id="activate-bluetooth-btn">Activate Bluetooth Mesh</button>
+    <pre id="bluetooth-log"></pre>
+  </section>
+
+  <!-- STATUS -->
+  <section class="meshlink-status">
+    <h2>Mesh Status</h2>
+    <div id="mesh-status-output">
+      <p>Bluetooth: <span id="mesh-bt-status">inactive</span></p>
+      <p>WiFi Wave: <span id="mesh-wifi-status">unknown</span></p>
+      <p>Cell Wave: <span id="mesh-cell-status">unknown</span></p>
+      <p>Satellite: <span id="mesh-sat-status">unknown</span></p>
+      <p>Mesh Tier: <span id="mesh-tier-status">none</span></p>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="meshlink-settings">
+    <h2>Mesh Settings</h2>
+    <ul>
+      <li>Enable Bluetooth Mesh</li>
+      <li>Enable WiFi Mesh</li>
+      <li>Enable Cellular Wave Detection</li>
+      <li>Enable Satellite Wave Detection</li>
+      <li>Enable PulseBand Proximity Tiering</li>
+    </ul>
+  </section>
+
+</div>
+
+<script>
+
+/* ---------------------------------------------------------
+   BLUETOOTH ACTIVATION — FULL
+--------------------------------------------------------- */
+async function activateBluetoothMesh() {
+  const log = document.getElementById("bluetooth-log");
+  log.textContent = "PulseWorld: Requesting Bluetooth activation…";
+
+  try {
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: ["battery_service"]
+    });
+
+    log.textContent += "\nPulseWorld: Bluetooth activated.";
+    log.textContent += `\nPulseWorld: Device granted: ${device.name || "Unnamed device"}`;
+
+    document.getElementById("mesh-bt-status").textContent = "active";
+
+    return device;
+
+  } catch (err) {
+    log.textContent += `\nPulseWorld: Bluetooth activation failed: ${err}`;
+    return null;
+  }
+}
+
+/* ---------------------------------------------------------
+   WAVE INTELLIGENCE
+--------------------------------------------------------- */
+function detectWaveIntelligence() {
+  const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+
+  if (!conn) return;
+
+  const eff = conn.effectiveType || "unknown";
+
+  if (eff.includes("wifi")) {
+    document.getElementById("mesh-wifi-status").textContent = "wifi";
+  }
+  if (eff.includes("4g") || eff.includes("5g")) {
+    document.getElementById("mesh-cell-status").textContent = eff;
+  }
+  if (eff.includes("slow-2g")) {
+    document.getElementById("mesh-cell-status").textContent = "2g";
+  }
+
+  document.getElementById("mesh-sat-status").textContent = "unknown";
+  document.getElementById("mesh-tier-status").textContent = "tier-0";
+}
+meshVideo = document.getElementById("meshVideo");
+
+(async () => {
+  meshVideo.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+    
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      meshVideo.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (meshVideo) {
+    meshVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] MeshLink Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        meshVideo.pause();
+        meshVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("meshVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      meshVideo.style.opacity = "0";
+      meshVideo.style.display = "none";
+    };
+  }
+/* ---------------------------------------------------------
+   UI BINDINGS
+--------------------------------------------------------- */
+document.getElementById("activate-bluetooth-btn")
+  .addEventListener("click", activateBluetoothMesh);
+
+detectWaveIntelligence();
+PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+})();
+
+</script>
+
+</body>
+</html>

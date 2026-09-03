@@ -1,0 +1,243 @@
+# ============================================================================
+# GLOBAL SECURITY & CORS HEADERS (applied to all routes by default)
+# ============================================================================
+# ⚡ FIX: This block MUST include Allow-Headers + Allow-Methods so that
+#        preflight OPTIONS requests (which browsers send before any
+#        cross-origin fetch with headers like `accept`, `content-type`,
+#        `authorization`, etc.) are NOT blocked by the browser.
+#        Without these, Netlify returns an empty preflight response and
+#        the browser raises:  "Request header field X is not allowed by
+#        Access-Control-Allow-Headers in preflight response."
+# ============================================================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cross-Origin-Opener-Policy   = "same-origin"
+    Cross-Origin-Embedder-Policy = "require-corp"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Timing-Allow-Origin          = "*"
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD"
+    Access-Control-Allow-Headers = "Accept, Accept-Language, Accept-Encoding, Authorization, Cache-Control, Content-Type, Content-Length, DNT, If-Modified-Since, Keep-Alive, Origin, Pragma, Range, Referer, User-Agent, X-Requested-With, X-HTTP-Method-Override, x-pulse-mode"
+    Access-Control-Max-Age       = "86400"
+
+
+# ============================================================================
+# ⚡ PULSE-PORT: Open CORS for PulseOSSpeed.js  (port.serviceworker.net)
+# ============================================================================
+[[headers]]
+  for = "/PULSE-PORT/PulseOSSpeed.js"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Content-Type                 = "application/javascript; charset=utf-8"
+
+# ============================================================================
+# ⚡ PULSE-PORT: Open CORS for PulseOSWorld.js  (port.pulseworld.net)
+# ============================================================================
+[[headers]]
+  for = "/PULSE-PORT/PulseOSWorld.js"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Content-Type                 = "application/javascript; charset=utf-8"
+
+# ============================================================================
+# ⚡ PULSE-PORT: Open CORS for PulseOSAbilities.js (abilities)
+# ============================================================================
+[[headers]]
+  for = "/PULSE-PORT/PulseOSAbilities.js"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Content-Type                 = "application/javascript; charset=utf-8"
+
+
+# ============================================================================
+# ⚡ PULSE-PORT: Open CORS for PulseOSTouch.js (touch)
+# ============================================================================
+[[headers]]
+  for = "/PULSE-PORT/PulseOSTouch.js"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Content-Type                 = "application/javascript; charset=utf-8"
+
+    # ============================================================================
+# ⚡ PULSE-PORT: Open CORS for PulseOSSenses.js (satellites)
+# ============================================================================
+[[headers]]
+  for = "/PULSE-PORT/PulseOSSenses.js"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Content-Type                 = "application/javascript; charset=utf-8"
+
+# ============================================================================
+# ⚡ PULSE-PORT: Open CORS for PulseOSEvolution.js (evolution)
+# ============================================================================
+[[headers]]
+  for = "/PULSE-PORT/PulseOSEvolution.js"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    Content-Type                 = "application/javascript; charset=utf-8"
+
+# ============================================================================
+# ⚡ MULTI-DOMAIN ASSET & CONFIG OPEN CORS (for failover & mirrors)
+# ============================================================================
+[[headers]]
+  for = "/_EXPRESSIONS/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS, HEAD"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+
+[[headers]]
+  for = "/PULSEConfig/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS, HEAD"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+
+[[headers]]
+  for = "/PULSE-MULTIVERSE/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS, HEAD"
+    Access-Control-Allow-Headers = "*"
+    Cross-Origin-Resource-Policy = "cross-origin"
+
+# ============================================================================
+# ⚡ NETLIFY FUNCTIONS OPEN CORS & PREFLIGHT HEADERS
+# ============================================================================
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD"
+    Access-Control-Allow-Headers = "Accept, Accept-Language, Accept-Encoding, Authorization, Cache-Control, Content-Type, Content-Length, DNT, If-Modified-Since, Keep-Alive, Origin, Pragma, Range, Referer, User-Agent, X-Requested-With, X-HTTP-Method-Override, x-pulse-mode"
+    Access-Control-Allow-Credentials = "true"
+    Access-Control-Max-Age       = "86400"
+
+[build]
+  publish = "PULSE-MULTIVERSE"
+  functions = "PULSE-SERVER/NETLIFY"
+
+# Prewarm function (runs every minute)
+[functions."PULSEWORLDNET-PREWARM"]
+  schedule = "* * * * *"
+
+# Route: Make FILES.PULSEWORLD.NET serve the _EXPRESSIONS folder
+[[redirects]]
+  from = "https://files.pulseworld.net/*"
+  to = "https://www.pulseworld.net/:splat"
+  status = 200
+  force = true
+
+# Route: Make PICTURES.PULSEWORLD.NET serve the _PICTURES folder
+[[redirects]]
+  from = "https://pictures.pulseworld.net/*"
+  to = "https://www.pulseworld.net/_EXPRESSIONS/_PICTURES/:splat"
+  status = 200
+  force = true
+
+# Route: Make BACKGROUNDS.PULSEWORLD.NET serve the _BACKGROUNDS folder
+[[redirects]]
+  from = "https://backgrounds.pulseworld.net/*"
+  to = "https://www.pulseworld.net/_EXPRESSIONS/_BACKGROUNDS/:splat"
+  status = 200
+  force = true
+
+# Route: Make STORY.PULSEWORLD.NET serve the _README folder
+[[redirects]]
+  from = "https://story.pulseworld.net/*"
+  to = "https://www.pulseworld.net/_README/:splat"
+  status = 200
+  force = true
+
+# Route: Make SOUNDS.PULSEWORLD.NET serve the _SOUNDS folder
+[[redirects]]
+  from = "https://sounds.pulseworld.net/*"
+  to = "https://www.pulseworld.net/_EXPRESSIONS/_SOUNDS/:splat"
+  status = 200
+  force = true
+
+# Route: Make VIDEOS.PULSEWORLD.NET serve the _VIDEOS folder
+[[redirects]]
+  from = "https://videos.pulseworld.net/*"
+  to = "https://www.pulseworld.net/_EXPRESSIONS/_VIDEOS/:splat"
+  status = 200
+  force = true
+
+# Route: Make ANIMATIONS.PULSEWORLD.NET serve the _ANIMATIONS folder
+[[redirects]]
+  from = "https://animations.pulseworld.net/*"
+  to = "https://www.pulseworld.net/_EXPRESSIONS/_ANIMATIONS/:splat"
+  status = 200
+  force = true
+
+# ⚡ PORT.PULSEWORLD.NET → PulseOSEvolution.js  (import world from "https://port.pulseworld.net")
+[[redirects]]
+  from   = "https://port.pulseworld.net/"
+  to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSEvolution.js"
+  status = 200
+  force  = true
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
+
+  
+# ⚡ PORT.PULSEWORLD.NET → PulseOSWorld.js  (import world from "https://port.binaryos.net")
+[[redirects]]
+  from   = "https://port.binaryos.net/"
+  to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSWorld.js"
+  status = 200
+  force  = true
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
+
+# ⚡ PORT.SERVICEWORKER.NET → PulseOSKernel.js  (import speed from "https://port.serviceworker.net")
+[[redirects]]
+  from   = "https://port.serviceworker.net/"
+  to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSSpeed.js"
+  status = 200
+  force  = true
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
+
+# ⚡ PORT.GPUPROCESSING.NET → PulseOSAbilities.js (import abilities from "https://port.gpuprocessing.net")
+[[redirects]]
+  from   = "https://port.gpuprocessing.net/"
+  to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSAbilities.js"
+  status = 200
+  force  = true
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
+
+
+# ⚡ PORT.BOOLEANLOGIC.NET → PulseOSAbilities.js (import touch from "https://port.booleanlogic.net")
+[[redirects]]
+  from   = "https://port.booleanlogic.net/"
+  to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSTouch.js"
+  status = 200
+  force  = true
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
+
+
+# ⚡ PORT.BOOLEANLOGIC.NET → PulseOSSenses.js (import senses from "https://port.orbitalmap.net")
+[[redirects]]
+  from   = "https://port.orbitalmap.net/"
+  to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSSenses.js"
+  status = 200
+  force  = true
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}

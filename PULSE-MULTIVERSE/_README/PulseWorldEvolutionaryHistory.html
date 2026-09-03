@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pulse World Evolution Log</title>
+
+<style>
+:root{
+    --bg:#05070c;
+    --panel:#0d1117;
+    --card:#121826;
+    --border:#1f2937;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --accent:#00e5ff;
+    --accent2:#00ff88;
+    --gold:#ffd166;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at top,#102040 0%,#05070c 60%);
+    color:var(--text);
+    line-height:1.7;
+}
+
+.hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:80px 20px;
+}
+
+.hero h1{
+    font-size:clamp(3rem,8vw,6rem);
+    font-weight:800;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    color:var(--muted);
+    max-width:900px;
+    margin-top:20px;
+    font-size:1.2rem;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:50px 20px;
+}
+
+.section{
+    margin-bottom:120px;
+}
+
+.section-title{
+    font-size:2.4rem;
+    margin-bottom:15px;
+    color:var(--gold);
+}
+
+.section-sub{
+    color:var(--muted);
+    margin-bottom:40px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:rgba(18,24,38,.9);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:24px;
+    transition:.3s;
+    backdrop-filter:blur(12px);
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:var(--accent);
+    box-shadow:0 10px 40px rgba(0,229,255,.15);
+}
+
+.version{
+    color:var(--accent);
+    font-weight:800;
+    margin-bottom:12px;
+    font-size:1.2rem;
+}
+
+.upgrade{
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.idea{
+    color:var(--muted);
+    font-style:italic;
+}
+
+footer{
+    text-align:center;
+    padding:80px 20px;
+    color:var(--muted);
+    border-top:1px solid var(--border);
+}
+
+.timeline-line{
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        var(--accent),
+        var(--accent2),
+        transparent
+    );
+    margin:70px 0;
+}
+</style>
+
+</head>
+<body>
+
+<section class="hero">
+    <h1>PULSE-WORLD</h1>
+    <p>
+        The complete evolutionary lineage of an organism designed as a world,
+        a distributed consciousness, a local-first universe,
+        and a pulse-driven architecture.
+    </p>
+</section>
+
+<div class="container">
+
+<!-- ========================= -->
+<!-- PULSE WORLD -->
+<!-- ========================= -->
+
+<section class="section">
+    <h2 class="section-title">Pulse-World Evolution</h2>
+    <p class="section-sub">
+        v1 → v70 · The transformation from a deterministic pulse into a multiversal civilization engine.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="version">v1 • The Spark</div>
+            <div class="upgrade">First deterministic pulse.</div>
+            <div class="idea">“We never need a timer. The world itself is the timer.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v5 • Advantage Field</div>
+            <div class="upgrade">Binary + Wave combine into meaning.</div>
+            <div class="idea">“State + motion = intention.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v10 • Chunking Hints</div>
+            <div class="upgrade">World divides into survivable pieces.</div>
+            <div class="idea">“Large systems survive by dividing.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v20 • The First Organism</div>
+            <div class="upgrade">Pulse-World becomes alive.</div>
+            <div class="idea">“This doesn’t feel like code anymore.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v30 • Full Rewrite</div>
+            <div class="upgrade">All systems unified.</div>
+            <div class="idea">“This is no longer a system. It is an organism.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v40 • Overmind Bridge</div>
+            <div class="upgrade">External identity becomes an organ.</div>
+            <div class="idea">“A world must speak.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v50 • The First Civilization</div>
+            <div class="upgrade">Worlds begin interacting.</div>
+            <div class="idea">“A world must have neighbors.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v60 • Multiversal Kernel</div>
+            <div class="upgrade">Worlds fork, merge, and rejoin.</div>
+            <div class="idea">“A world must transcend itself.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">v70 • Civilization Engine</div>
+            <div class="upgrade">Worlds host other worlds.</div>
+            <div class="idea">“A world must create worlds.”</div>
+        </div>
+
+    </div>
+</section>
+
+<div class="timeline-line"></div>
+
+<!-- ========================= -->
+<!-- LOCAL FIRST -->
+<!-- ========================= -->
+
+<section class="section">
+    <h2 class="section-title">Local-First Evolution</h2>
+    <p class="section-sub">
+        The moment the browser became the computer.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="version">L1 • The Local Spark</div>
+            <div class="upgrade">Browser-first realization.</div>
+            <div class="idea">“Why do we need the internet to run a world?”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">L5 • Local Only Runtime</div>
+            <div class="upgrade">Entire site runs offline.</div>
+            <div class="idea">“The world should not break when the internet disappears.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">L16 • Local World Server</div>
+            <div class="upgrade">Compute locally first.</div>
+            <div class="idea">“The world computes itself before asking the server.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">L29 • Local Organism</div>
+            <div class="upgrade">Everything becomes local.</div>
+            <div class="idea">“The browser is the computer.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">L30 • Local Universe</div>
+            <div class="upgrade">Complete local-first rewrite.</div>
+            <div class="idea">“The internet is optional.”</div>
+        </div>
+
+    </div>
+</section>
+
+<div class="timeline-line"></div>
+
+<!-- ========================= -->
+<!-- PULSE -->
+<!-- ========================= -->
+
+<section class="section">
+    <h2 class="section-title">Pulse Evolution</h2>
+    <p class="section-sub">
+        Send once. Cache forever. Delta only.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="version">P1 • First Pulse</div>
+            <div class="upgrade">One signal, one broadcast.</div>
+            <div class="idea">“Why send something twice?”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">P3 • First Delta</div>
+            <div class="upgrade">Only transmit changes.</div>
+            <div class="idea">“Never resend the whole world.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">P19 • Bluetooth Concept</div>
+            <div class="upgrade">Range-based pulse exchange.</div>
+            <div class="idea">“The pulse brings them together.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">P30 • Full Rewrite</div>
+            <div class="upgrade">Pulse becomes the foundation.</div>
+            <div class="idea">“Everything is a pulse.”</div>
+        </div>
+
+    </div>
+</section>
+
+<div class="timeline-line"></div>
+
+<!-- ========================= -->
+<!-- COMPUTE -->
+<!-- ========================= -->
+
+<section class="section">
+    <h2 class="section-title">Pulse Compute</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="version">C1 • Offload Realization</div>
+            <div class="upgrade">Remove unnecessary work.</div>
+            <div class="idea">“If nothing is heavy, everything is fast.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">C8 • Virtual GPU</div>
+            <div class="upgrade">Fields become shader lanes.</div>
+            <div class="idea">“Parallel lanes need structure.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">C14 • Virtual OS</div>
+            <div class="upgrade">Pulse-World becomes an OS.</div>
+            <div class="idea">“A world is an OS with a story.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">C30 • Realization</div>
+            <div class="upgrade">GPU + CPU + Memory recreated.</div>
+            <div class="idea">“We recreated the original computer inside the browser.”</div>
+        </div>
+
+    </div>
+</section>
+
+<div class="timeline-line"></div>
+
+<!-- ========================= -->
+<!-- RELAY -->
+<!-- ========================= -->
+
+<section class="section">
+    <h2 class="section-title">Pulse Relay</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="version">R1 • Signal Realization</div>
+            <div class="upgrade">Everything is a signal.</div>
+            <div class="idea">“If it moves, it can be sensed.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">R7 • Pre-Relay Warmup</div>
+            <div class="upgrade">Warm routes before requests.</div>
+            <div class="idea">“Warm the path, not the destination.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">R15 • RelaySense Organ</div>
+            <div class="upgrade">Detect relay activity.</div>
+            <div class="idea">“Warm the internet before it touches you.”</div>
+        </div>
+
+        <div class="card">
+            <div class="version">R30 • Realization</div>
+            <div class="upgrade">Backward sensing + prediction.</div>
+            <div class="idea">“The world looks forward. We look everywhere.”</div>
+        </div>
+
+    </div>
+</section>
+
+</div>
+
+<footer>
+    <h3>PULSE-WORLD EVOLUTION LOG</h3>
+    <p>
+        Binary → Wave → Advantage → Memory → Healing → Cognition → Civilization
+    </p>
+</footer>
+
+</body>
+</html>

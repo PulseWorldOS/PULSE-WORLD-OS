@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldStarLayers.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebula-Core.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseBand.webp.pex" type="image/webp"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<title>PulseBand Panel Documentation – Usable Reality</title>
+
+<style>
+
+  a { color: #7fd0ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+
+    background: rgba(10, 12, 22, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: 18px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.45);
+  }
+
+  .measuring{
+    color: black;
+  }
+
+  h1, h2, h3 {
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-align: center;
+  }
+
+  h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 0.75rem; }
+  h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+  p { line-height: 1.6; margin: 0.4rem 0; }
+
+
+  /* Reasons */
+  .reason-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .reason-card {
+    border-radius: 12px;
+    border: 1px solid #262b3f;
+    background: linear-gradient(145deg, #101426 0%, #05060a 100%);
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.35);
+  }
+
+  .reason-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #e6e9ff;
+  }
+
+  .reason-body {
+    color: #c4cbff;
+    line-height: 1.5;
+  }
+
+  .section-note {
+    font-size: 0.85rem;
+    color: #9fa7d9;
+    margin-top: 4px;
+  }
+
+  .mono {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.85rem;
+  }
+
+  /* NEW: Section background images */
+  .section-bg {
+    background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebula-Core.webp.pex');
+    background-size: cover;
+    background-position: center;
+    border-radius: 14px;
+    padding: 18px;
+    margin: 24px 0;
+    box-shadow: 0 0 28px rgba(0,0,0,0.45);
+  }
+  .section-bg h2 {
+    color: black;
+  }
+  .section-bg p {
+    color: black;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="page">
+  <!-- PANEL -->
+  <div id="pulseband-panel" class="pb-card">
+    <div class="pb-header">
+      <img id="pb-mini-badge" class="pb-mini-badge" src="./_EXPRESSIONS/_PEX/BUILD/PulseBand.webp.pex" alt="PulseBand Badge">
+    </div>
+
+    <div class="pb-row"><label>PulseBand Bars</label><span class="pb-value">2/4</span></div>
+    <div class="pb-row"><label>Phone Bars</label><span class="pb-value">2/4</span></div>
+    <div class="pb-row"><label>Stability</label><span class="pb-value">92%</span></div>
+    <div class="pb-row"><label>Browser Latency</label><span id="pb-rtt" class="pb-value">100 ms</span></div>
+    <div class="pb-row"><label>PulseBand Latency</label><span id="pb-latency" class="pb-value">63 ms</span></div>
+    <div class="pb-row"><label>Micro‑Windows</label><span class="pb-value">Idle</span></div>
+    <div class="pb-row"><label>Route</label><span class="pb-value">PulseMesh</span></div>
+    <div class="pb-row"><label>State</label><span class="pb-value">Active</span></div>
+    <div class="pb-row"><label>Last Sync</label><span class="pb-value">0s ago</span></div>
+    <div class="pb-row"><label>Signal ID</label><span class="pb-value">PulseBandOne</span></div>
+    <div class="pb-row"><label>Internal Efficiency</label><span class="pb-value">Stable</span></div>
+    <div class="pb-row"><label>External Conditions</label><span class="pb-value">Moderate</span></div>
+    <div class="pb-row"><label>PulseBand Burst</label><span class="pb-value">17.60× More Speed!</span></div>
+    <div class="pb-row"><label>Speed (Us/Them)</label><span class="pb-value">52 MBps vs 3 MBps</span></div>
+    <div class="pb-row"><label>PulseBand Sustained</label><span class="pb-value">9.99× More Flow!</span></div>
+    <div class="pb-row"><label>Flow (Us/Them)</label><span class="pb-value">0.002s D/L Pulse VS 0.34s</span></div>
+    <div class="pb-row"><label>PulseBand Capability</label><span id="pb-continual-differs" class="pb-value">37.7x More Capable!</span></div>
+    <div class="pb-row"><label>One Band</label><span class="pb-value">PulseBand</span></div>
+    <div class="pb-row"><label>Via Route</label><span class="pb-value">Route: Mesh</span></div>
+    <div class="pb-row"><label>Internet Role</label><span class="pb-value">Internet: Optional</span></div>
+    <div class="pb-row"><label>Orbital Season</label><span class="pb-value">Neutral</span></div>
+    <div class="pb-row"><label>Contact Window</label><span class="pb-value">Continuous / Local</span></div>
+
+    <div class="pb-relational">
+      <h3>Relational View</h3>
+      <p class="pb-rel-text">
+        Speedtest shows your <strong>Provider Pipe</strong>.<br>
+        PulseBand shows your <strong>Device Reality</strong>.<br>
+        Route shows your <strong>Active Path</strong>.
+      </p>
+    </div>
+
+
+    <div class="pb-docs">
+      <a href="/FAQ" class="pb-docs-link" target="_blank" rel="noopener noreferrer">
+        PulseBand Explains <strong>WHY</strong> →
+      </a>
+    </div>
+  </div>
+  
+  <h1>PulseBand Panel Documentation</h1>
+  <p>
+    This page explains what the PulseBand panel is showing you, why it matters,
+    and how it changes the way you experience the internet—from the most
+    technical perspective to the most “I just want my stuff to load” perspective.
+  </p>
+
+
+  <div class="section-bg">
+  <h2>What PulseBand Is Really Measuring</h2>
+  <p>
+    <strong>The internet you’ve been shown your whole life is built on marketing:
+    bars, “up to” Mbps, and speed tests that capture a single moment in time.
+    PulseBand is different. It measures how fast your device can actually
+    live on the network — not the promise, but the reality.</strong>
+  </p>
+  <p>
+    <strong>In simple terms: PulseBand is the difference between
+    <strong>“my speed test says 300 Mbps”</strong> and
+    <strong>“why does this page still feel slow?”</strong>.</strong>
+  </p>
+</div>
+
+<h3>Panel Metrics in Plain Language</h3>
+<p class="mono">
+  PulseBand Bars: 2/4<br>
+  Phone Bars (PulseBand View): 2/4<br>
+  Actual Phone Bars (Device): 4/4<br>
+  Stability: 92%<br>
+  Browser Latency: 100 ms<br>
+  PulseBand Latency: 63 ms<br>
+  Micro‑Windows: Idle<br>
+  Route: PulseMesh<br>
+  State: Active<br>
+  Last Sync: 0s ago<br>
+  Signal ID: PulseBandOne<br>
+  Internal Efficiency: Stable<br>
+  External Conditions: Moderate<br>
+  PulseBand Burst: 17.60× More Speed!<br>
+  Burst Mode (Us/Them): 52258 kbps vs 2970 kbps<br>
+  PulseBand Sustained: 9.99× More Flow!<br>
+  Download Pace (Us/Them): 0.002s D/L Pulse VS 0.34s<br>
+  PulseBand Capabilities: 37.7× More Capable!<br>
+  Current Band: PulseBandOne<br>
+  Via Route: One Band Mesh<br>
+  Internet Role: Optional<br>
+  Orbital Season: Neutral<br>
+  Contact Window: Continuous / Local
+</p>
+
+<p class="section-note">
+  These numbers aren’t random — they’re all different ways of saying:
+  “Your device is much faster than the internet you were taught to believe in.”
+</p>
+
+<h2>The Internet You Thought You Had vs The Internet You Actually Use</h2>
+<p>
+  For years, the internet taught you a simple story:
+  <strong>“Your provider gives you 350 Mbps, so everything should be fast.”</strong>
+  It sounds right, but it’s not how your device actually behaves.
+</p>
+
+<p>
+  Here’s the truth nobody explains:
+</p>
+
+<ul>
+  <li><strong>Your provider gives you a 350 Mbps pipe.</strong></li>
+  <li><strong>Your phone route only uses 6–12 MB/s of it.</strong></li>
+  <li><strong>PulseBand uses 150 MB/s of it.</strong></li>
+</ul>
+
+<p>
+  This is the difference between the internet you were <em>told</em> you have
+  and the internet you actually <em>experience</em>.
+</p>
+
+<h3>Why You Only Use 6–12 MB/s on a 350 Mbps Connection</h3>
+<p>
+  Your device doesn’t use the full pipe because the phone route is inefficient.
+  It’s slowed down by:
+</p>
+
+<ul>
+  <li>small TCP windows</li>
+  <li>OS-level throttling</li>
+  <li>background timers</li>
+  <li>latency stalls</li>
+  <li>micro-pauses in routing</li>
+  <li>legacy scheduling</li>
+</ul>
+
+<p>
+  So even though your provider gives you 350 Mbps, your apps often behave like
+  they’re running on 8 MB/s. That’s why pages feel slow even when your speed test
+  looks fast.
+</p>
+
+<h3>What PulseBand Does Differently</h3>
+<p>
+  PulseBand doesn’t use the phone route. It uses a mesh route designed to keep
+  your device in a high-efficiency state. That’s why PulseBand shows:
+</p>
+
+<ul>
+  <li><strong>150 MB/s</strong> instead of <strong>8 MB/s</strong></li>
+  <li><strong>0.002s</strong> reaction time instead of <strong>0.34s</strong></li>
+  <li><strong>17.60×</strong> burst advantage</li>
+  <li><strong>9.99×</strong> sustained advantage</li>
+</ul>
+
+<p>
+  PulseBand isn’t changing your internet provider. It’s changing how your device
+  <em>uses</em> the network. It’s the difference between a child route and an
+  evolved route.
+</p>
+
+<div class="pb-explanation-panel">
+  <h3 class="pb-explanation-title">Affected Notes – What These Mean</h3>
+
+  <div class="pb-explanation-item">
+    <div class="pb-explanation-label">High Drift: Device Timing Instability</div>
+    <div class="pb-explanation-text">
+      Your device’s internal timing is fluctuating more than normal. This usually means the CPU governor,
+      thermal limits, or power-saving modes are causing inconsistent execution speed. PulseWorld can still
+      run, but animations and boot visuals may feel uneven or delayed.
+    </div>
+  </div>
+
+  <div class="pb-explanation-item">
+    <div class="pb-explanation-label">Weak Bars: Poor Network Quality</div>
+    <div class="pb-explanation-text">
+      The network signal or connection quality is degraded. High latency, packet loss, or unstable Wi‑Fi
+      can slow down image, video, and asset delivery. PulseWorld’s core logic remains fast, but the
+      internet tier makes loading appear slower than usual.
+    </div>
+  </div>
+
+  <div class="pb-explanation-item">
+    <div class="pb-explanation-label">Network Health Degraded</div>
+    <div class="pb-explanation-text">
+      Overall network performance is below normal operating levels. This includes DNS resolution delays,
+      certificate/SSL handshakes, and CDN or routing issues. Even if your device is strong, this tier
+      can delay boot and panel rendering.
+    </div>
+  </div>
+
+  <div class="pb-explanation-item">
+    <div class="pb-explanation-label">Event-Loop Delay Pattern Detected</div>
+    <div class="pb-explanation-text">
+      The browser’s JavaScript event loop is experiencing consistent delays. This often happens when the
+      page is considered “heavy” or the device is under load, causing timers and rendering to be throttled.
+      PulseWorld’s system is still capable of high speed, but the browser is pacing execution.
+    </div>
+  </div>
+</div>
+
+
+<h2>Why Phone Bars Don’t Match PulseBand Bars</h2>
+<p>
+  Before we go deeper, we need to clear up one of the biggest misconceptions:
+  <strong>the difference between Phone Bars, PulseBand Bars, and Phone Bars
+  (as PulseBand sees them).</strong>
+</p>
+
+<p>
+  Your device has <strong>Actual Phone Bars</strong> — the ones shown on your
+  phone’s status bar. These come from the modem’s RF strength (RSRP, RSRQ, SINR).
+  But carriers <em>inflate</em> these bars so your device “looks” like it has
+  strong signal even when the network is congested or throttled.
+</p>
+
+<p>
+  PulseBand shows two different bar systems:
+</p>
+
+<ul>
+  <li><strong>PulseBand Bars</strong> — actual performance bars</li>
+  <li><strong>Phone Bars (PulseBand View)</strong> — PulseBand’s interpretation
+      of your phone’s usable performance</li>
+</ul>
+
+<p>
+  This is why you might see:
+</p>
+
+<ul>
+  <li><strong>Actual Phone Bars:</strong> 4/4</li>
+  <li><strong>Phone Bars (PulseBand View):</strong> 2/4</li>
+  <li><strong>PulseBand Bars:</strong> 2/4</li>
+</ul>
+
+<p>
+  Your phone shows 4 bars because the RF signal is strong. PulseBand shows 2 bars
+  because the <em>network performance</em> is weak. These aren’t contradictions —
+  they’re different layers of reality.
+</p>
+
+<p class="section-note">
+  <strong>In simple terms:</strong><br>
+  Actual Phone Bars = “How strong is the radio?”<br>
+  Phone Bars (PulseBand View) = “How usable is that radio?”<br>
+  PulseBand Bars = “How fast can your device actually move?”
+</p>
+
+<h2>The Pulse Behind Every Download: Why Reaction Time Determines Speed</h2>
+
+<p class="section-note">
+  <strong>What “Real‑Time Pace” Actually Means:</strong><br>
+  Real‑Time Pace is how fast your device can react to a single moment of work —
+  not a download, not a file, but the tiny micro‑operations that make everything
+  feel instant or sluggish. These micro‑windows are the heartbeat of your device.
+</p>
+
+<p>
+  When PulseBand shows <strong>0.002s</strong> and the phone route shows
+  <strong>0.34s</strong>, it means PulseBand can respond to a request
+  <em>170× faster</em> in real time. This matters because every download,
+  every page load, every stream, and every app action is made of thousands of
+  these micro‑operations.
+</p>
+
+<p>
+  A download isn’t one big action — it’s millions of tiny “send → wait → receive”
+  cycles. If each cycle is slow, the whole download is slow. If each cycle is fast,
+  the whole download accelerates.
+</p>
+
+<p>
+  PulseBand’s 0.002s reaction time means each micro‑operation completes almost
+  instantly, so downloads ramp up faster, stay faster, and recover from stalls
+  faster. The phone route’s 0.34s reaction time means each micro‑operation is
+  delayed, throttled, and paced by legacy scheduling.
+</p>
+
+<p class="section-note">
+  <strong>In simple terms:</strong><br>
+  Real‑Time Pace is the “speed of each heartbeat.” Faster heartbeats mean faster
+  downloads, faster page loads, faster streams, and faster everything.
+</p>
+
+</div>
+</body>
+
+</html>

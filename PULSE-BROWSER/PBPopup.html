@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PulseBrowser OS Console</title>
+  <!-- Preload Logo -->
+  <link rel="preload" as="image" href="PulseBrowserExtension.webp" />
+
+  <style>
+    body {
+      color: #00FF9C;
+      background: url("PulseBrowserExtension.webp") center top / contain no-repeat;
+      font-family: monospace;
+      padding: 10px;
+      width: 350px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #00FF9C;
+      text-align: center;
+    }
+
+    .section {
+      margin-top: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #00FF9C33;
+    }
+
+    .section-title {
+      background: #000000;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #FF8844;
+    }
+
+    button {
+      
+      background: #00FF9C;
+      border: none;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 14px;
+    }
+
+    button:hover {
+      background: #00C87A;
+    }
+
+    #output {
+      margin-top: 14px;
+      font-size: 12px;
+      background: #001F1A;
+      padding: 10px;
+      border-radius: 40px;
+      height: 140px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg"></div>
+  <h1>PulseBrowser OS Console</h1>
+
+  <!-- ========================= -->
+  <!-- OUTPUT -->
+  <!-- ========================= -->
+  <pre id="output"></pre>
+  <!-- ========================= -->
+  <!-- KERNEL -->
+  <!-- ========================= -->
+  <div class="section">
+    <div class="section-title">Kernel</div>
+    <button id="btn-ping">Ping Kernel</button>
+    <button id="btn-status">Kernel Status</button>
+    <button id="btn-refresh-hud">Refresh HUD</button>
+    <button id="btn-site-hud">View Site Stats</button>
+    <button id="btn-reset-os">Reset OS Settings</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- CACHE -->
+  <!-- ========================= -->
+  <div class="section">
+    <div class="section-title">Cache</div>
+    <button id="btn-clear-caches">Clear Pulse Caches</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- ACCELERATION -->
+  <!-- ========================= -->
+  <div class="section">
+    <div class="section-title">Acceleration</div>
+    <button id="btn-warmboot">Warm Boot (Preconnect)</button>
+    <button id="btn-warmpath">Full Warm-Path</button>
+    <button id="btn-accelerate-tab">Accelerate Current Tab</button>
+    <button id="btn-gpuwarm">GPU Warm-Path</button>
+    <button id="btn-decodewarm">Decode Warm-Path</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- NAVIGATION -->
+  <!-- ========================= -->
+  <div class="section">
+    <div class="section-title">Navigation</div>
+    <button id="btn-open-pulseworld">Open PulseWorld</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- SETTINGS -->
+  <!-- ========================= -->
+  <div class="section">
+    <div class="section-title">Settings</div>
+    <button id="btn-toggle-interceptor">Toggle Interceptor</button>
+    <button id="btn-toggle-accelerator">Toggle Accelerator</button>
+    <button id="btn-toggle-navigator">Toggle Navigator</button>
+    <button id="btn-toggle-router">Toggle Router</button>
+    <button id="btn-toggle-gpu">Toggle PulseGPU</button>
+    <button id="btn-toggle-decode">Toggle PulseDecode</button>
+    <button id="btn-open-settings">Open Settings Panel</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- DEVTOOLS -->
+  <!-- ========================= -->
+  <div class="section">
+    <div class="section-title">DevTools</div>
+    <button id="btn-dev-router">Router Inspector</button>
+    <button id="btn-dev-interceptor">Interceptor Inspector</button>
+    <button id="btn-dev-navigator">Navigator Inspector</button>
+    <button id="btn-dev-accelerator">Accelerator Inspector</button>
+    <button id="btn-dev-content">Content Runtime Inspector</button>
+    <button id="btn-dev-overlay">Overlay Inspector</button>
+    <button id="btn-dev-dump">Full OS Diagnostic Dump</button>
+  </div>
+
+  <script src="PBPopup.js"></script>
+</body>
+</html>

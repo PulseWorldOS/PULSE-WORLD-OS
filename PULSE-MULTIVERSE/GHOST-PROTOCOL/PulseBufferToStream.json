@@ -1,0 +1,8 @@
+{
+  "buffer_ms": 24000,
+  "buffer_level": "stable",
+  "buffer_health": "green",
+  "last_update": 0,
+  "target_buffer_ms": 30000,
+  "playback_rate": 1.0
+}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+
+<title>PulseWorld OS — Silent Fault Observatory</title>
+
+<style>
+/* ============================================================
+   ⭐ GLOBAL
+============================================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #02030a;
+  color: #c9f7ff;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* ============================================================
+   ⭐ MULTIVERSAL BACKGROUND
+============================================================ */
+.bg {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.42;
+  pointer-events: none;
+  animation: drift 48s ease-in-out infinite;
+  z-index: 1;
+}
+
+#bg1 {
+  background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldOvermind-CoreNebula.png");
+  animation-duration: 60s;
+}
+#bg2 {
+  background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldOvermind-DataHalo.png");
+  opacity: 0.28;
+  animation-duration: 80s;
+}
+#bg3 {
+  background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldOvermind-ContinuityRings.png");
+  opacity: 0.18;
+  animation-duration: 95s;
+}
+
+@keyframes drift {
+  0%   { transform: scale(1) translate(0,0); }
+  50%  { transform: scale(1.06) translate(2%, -1%); }
+  100% { transform: scale(1) translate(0,0); }
+}
+
+/* ============================================================
+   ⭐ SCANLINES + ABERRATION
+============================================================ */
+#scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,255,0.05) 0px,
+    rgba(0,255,255,0.05) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+#aberration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9996;
+  background: radial-gradient(circle at center,
+    rgba(255,0,120,0.12),
+    rgba(0,255,255,0.10),
+    transparent 70%
+  );
+  animation: aberrationPulse 4s infinite ease-in-out;
+}
+
+@keyframes aberrationPulse {
+  0% { opacity: 0.04; }
+  50% { opacity: 0.16; }
+  100% { opacity: 0.04; }
+}
+
+/* ============================================================
+   ⭐ OBSERVATORY PANEL
+============================================================ */
+#errorPanel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64vw;
+  max-width: 780px;
+  transform: translate(-50%, -50%);
+  padding: 42px;
+  background: radial-gradient(circle at top left,
+              rgba(0,234,255,0.12), transparent 55%),
+              radial-gradient(circle at bottom right,
+              rgba(123,61,255,0.16), transparent 55%),
+              rgba(3,6,18,0.88);
+  border: 1px solid rgba(0,255,255,0.32);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.85);
+  text-align: center;
+  z-index: 9999;
+  animation: panelFade 1.1s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes panelFade {
+  from { opacity: 0; transform: translate(-50%, -48%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+#errorPanel h1 {
+  font-size: 2.4vw;
+  min-font-size: 22px;
+  margin-bottom: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(0,255,255,0.75);
+}
+
+#errorPanel h2 {
+  font-size: 1.3vw;
+  min-font-size: 16px;
+  margin-top: 4px;
+  color: #8fdcff;
+  opacity: 0.9;
+}
+
+#errorPanel p {
+  font-size: 1.05vw;
+  min-font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 16px;
+  color: #b4d4f3;
+}
+
+/* ============================================================
+   ⭐ OVERMIND GLYPH
+============================================================ */
+#overmindGlyph {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,255,255,0.75);
+  position: relative;
+  box-shadow: 0 0 30px rgba(0,255,255,0.55);
+  background: radial-gradient(circle at 30% 20%,
+              rgba(0,255,255,0.35),
+              rgba(123,61,255,0.45),
+              rgba(0,0,0,0.9));
+  animation: glyphPulse 2.6s infinite ease-in-out;
+}
+
+#overmindGlyph::before {
+  content: "";
+  position: absolute;
+  inset: 20px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0,255,255,0.55);
+  animation: glyphSpin 7s linear infinite;
+}
+
+#overmindGlyph::after {
+  content: "";
+  position: absolute;
+  inset: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(245,221,0,0.85),
+    rgba(0,0,0,0.0) 65%);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+}
+
+@keyframes glyphPulse {
+  0% { transform: scale(1); box-shadow: 0 0 26px rgba(0,255,255,0.45); }
+  50% { transform: scale(1.06); box-shadow: 0 0 40px rgba(0,255,255,0.75); }
+  100% { transform: scale(1); box-shadow: 0 0 26px rgba(0,255,255,0.45); }
+}
+
+@keyframes glyphSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   ⭐ META STRIP
+============================================================ */
+.meta-strip {
+  margin: 18px auto 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(0,255,255,0.45);
+  font-size: 0.9vw;
+  min-font-size: 12px;
+  color: #9bbad6;
+}
+
+.meta-strip span {
+  color: #00ffa6;
+  font-weight: 600;
+}
+
+/* ============================================================
+   ⭐ BUTTONS
+============================================================ */
+.btn-row {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 14px;
+  border: 1px solid #00eaff;
+  background: rgba(0,0,0,0.9);
+  color: #c9f7ff;
+  font-size: 1.05vw;
+  min-font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0,234,255,0.45);
+  transition: 0.16s ease-out;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(0,234,255,0.75);
+}
+
+/* ============================================================
+   ⭐ DIAGNOSTIC LINE
+============================================================ */
+.diag-line {
+  margin-top: 18px;
+  font-size: 0.9vw;
+  min-font-size: 12px;
+  color: #7fa2c7;
+  opacity: 0.9;
+}
+
+.diag-line code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  background: rgba(0,0,0,0.6);
+  padding: 3px 7px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,255,255,0.25);
+}
+
+/* ============================================================
+   ⭐ FOOTNOTE
+============================================================ */
+.footnote {
+  margin-top: 20px;
+  font-size: 0.85vw;
+  min-font-size: 11px;
+  color: #6f8fb3;
+  opacity: 0.85;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ⭐ BACKGROUND -->
+<div id="bg1" class="bg"></div>
+<div id="bg2" class="bg"></div>
+<div id="bg3" class="bg"></div>
+
+<!-- ⭐ SCANLINES + ABERRATION -->
+<div id="scanlines"></div>
+<div id="aberration"></div>
+
+<!-- ⭐ SILENT FAULT OBSERVATORY -->
+<div id="errorPanel">
+  <div id="overmindGlyph"></div>
+
+  <h1>PULSEWORLD OS — SILENT FAULT OBSERVATORY</h1>
+  <h2>AI Overmind Prime detected an anomaly and absorbed it before it reached your surface.</h2>
+
+  <p>
+    A background operation drifted into an unstable multiversal branch and failed continuity checks.  
+    The fault was quarantined inside the Overmind’s internal lattice, so your session remained intact.
+  </p>
+
+  <p>
+    No action is required from you.  
+    This page exists only to acknowledge that something unusual happened—and that it was handled quietly.
+  </p>
+
+  <div class="meta-strip">
+    <span>Overmind Note:</span>
+    “I misrouted a low‑level impulse. I corrected it, logged it, and kept your route clean.”
+  </div>
+
+  <p>
+    If this page appears often, it may indicate a deeper routing issue.  
+    The Overmind will automatically adjust patterns and tighten continuity over time.
+  </p>
+
+  <div class="btn-row">
+    <a class="btn" href="/">Return to PulseWorld OS</a>
+    <a class="btn" href="/status.html">View System Status</a>
+  </div>
+
+  <div class="diag-line">
+    Internal diagnostic tag: <code>PW-OVERMIND-SILENT-FAULT:v1</code>
+  </div>
+
+  <div class="footnote">
+    If you believe this represents a real problem with your account or access,  
+    you can contact the Overmind team at <a href="mailto:AIOvermind@pulseworld.net">AIOvermind@PulseWorld.Net</a>.
+  </div>
+</div>
+
+</body>
+</html>

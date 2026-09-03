@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<head>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/Frustrated.webp.pex" type="image/webp"/>
+<title>Pulse World - User Profile</title>
+
+<!-- End Meta Pixel Code -->
+  <style>
+    
+.profile-container {
+  border-radius: 22px;
+  opacity: 0;
+  transition: opacity 1.2s ease-out 0.9s;
+  width: 100dvw;
+  min-width: 0;
+  min-height: auto;
+  flex-direction: column;
+  max-width: 464px;
+  margin: 1px auto 6px auto;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.profile {
+  max-width: 100dvw;
+  padding: 0 6px;
+  border: 3px solid #ffffff;
+  justify-self: center;
+  padding-top: 22px; /* ⬅ more top & bottom padding */
+  background: #ffff99;
+  text-align: center;
+  /* PREMIUM MAGIC */
+  opacity: 0;
+  transition: opacity 1.2s ease-out 0.9s;
+  border-radius: 22px;
+  /* Inner yellow stays crisp, outer ring fades */
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* Circular blurred aura */
+.profile::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* controls aura size */
+  z-index: -1;
+  /* Black → transparent fade */
+  border-radius: inherit; /* ← PERFECT FIX */
+  background: radial-gradient(
+    circle,
+    rgba(0,0,0,0.85) 0%,
+    rgba(0,0,0,0.55) 35%,
+    rgba(0,0,0,0.25) 60%,
+    rgba(0,0,0,0) 100%
+  );
+  filter: blur(45px);
+  opacity: 1;
+}
+
+.title {
+  width: 100%;
+  font-size: 28px;
+  max-height: 32px;
+  margin-top: -2px;
+  height: 100%;
+  min-height: 0;
+  color: #00a884;
+  justify-self: center;
+  text-align: center;
+  font-weight: 700;
+  /* The magic stack */
+  text-shadow:
+  /* white outline */
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px  1px 0 #000,
+  1px  1px 0 #000,
+
+  /* depth */
+  0 2px 4px rgba(0,0,0,0.45);
+
+  margin-bottom: -4px;
+}
+
+.subtitle {
+  font-size: 16px;
+  max-height: 22px;
+  height: 100%;
+  min-height: 0;
+  justify-self: center;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  font-size: 16px;
+  border: 2px solid #00a884;
+  border-radius: 10px;
+  outline: none;
+  text-align: center;
+  box-sizing: border-box;
+  background: white;
+}
+
+.btn {
+  background: #00a884;
+  color: white;
+  padding: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 6px 14px rgba(0,168,132,0.25);
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+
+.btn:hover {
+  background: #008f72;
+}
+
+.checkbox-row {
+  align-items: center;
+  display: grid;
+  width: 100%;
+  text-align: center;
+  grid-template-columns: 1fr 1fr;
+  min-width: 0;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 14px;
+  direction: ltr;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  position: static;
+}
+
+.checkbox-row span{
+  justify-content: center;
+  align-items: center;
+  
+  text-align: center;
+  
+  margin: 0;
+  position: static;
+}
+
+.msg {
+  display: none;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.msg.show {
+  transform: scale(1.03);
+}
+
+.display-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px; /* spacing between input and button */
+}
+
+#displayNameInput {
+  flex: 1; /* this makes it fill remaining space */
+  min-width: 0; /* prevents overflow */
+}
+
+.success { color: #00a884; }
+.error { color: #cc0000; }
+
+/* Profile Photo + Shimmr */
+.photo-section {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.photo-wrapper {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  border-radius: 50%;
+  box-shadow: outset 0 6px 18px rgba(0,0,0,0.15);
+  align-items: center;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.profile-photo {
+  width: 140px;
+  height: 140px;
+  justify-self: center;
+  box-shadow:
+0 4px 12px rgba(0,0,0,0.30),
+0 12px 28px rgba(0,0,0,0.32),
+inset 0 0 0 1px rgba(255,255,255,0.35);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #00a884;
+  background: white;
+  display: block; /* hidden until loaded */
+}
+
+/* Stripe Panel */
+.stripe-section {
+  width: 100%;
+  max-height: 110px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  text-align: center;
+  border-radius: 12px;
+  background: white;
+  color: #333;
+  border: 2px solid #00a884;
+}
+
+.stripe-title {
+  width: 100%;
+  max-height: 25px;
+  text-align: center;
+  color: #00a884;
+  font-size: 20px;
+}
+
+.stripe-status {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.btn.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(40%);
+}
+
+.pulse-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  gap: 36px;
+  min-width: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.pulse-points {
+  font-weight: 600;
+  color: #00a884;
+}
+
+.redeem-btn {
+  background: #00a884;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+#redeemConfirmInline {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+}
+
+.t-btn-tri {
+  background: #2bb3b1;
+  color: white;
+  padding: 6px 12px;      /* ↓ smaller vertical + horizontal */
+  line-height: 1;         /* ↓ tighter text box */
+  font-size: 14px;        /* ↓ smaller text */
+  border-radius: 8px;     /* ↓ slightly smaller pill */
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.t-btn-tri:hover {
+  background: #249c9a;
+}
+
+.t-btn-secondary {
+  background: #2bb3b1; /* teal */
+  color: white;
+  padding: 4px 8px;
+  max-height: 32px;
+  height: 100%;
+  min-height: 0;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.t-btn-secondary:hover {
+  background: #249c9a;
+}
+
+.t-btn-primary {
+  background: #2ecc71; /* Pulse World green */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 18px;
+  border: none;
+  max-height: 32px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.t-btn-primaryS {
+  background: #2ecc71; /* Pulse World green */
+  color: white;
+  border-radius: 18px;
+  padding: 4px 0;
+  border: none;
+  max-height: 32px;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.t-btn-primary:hover {
+  background: #27ae60;
+}
+.t-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.t-input {
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid #d7d7d7;
+  background: #ffffff;
+  font-size: 15px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.t-input:focus {
+  border-color: #2bb3b1; /* teal highlight */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(43, 179, 177, 0.2);
+}
+
+#displayNameStatus {
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 4px 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  display: none;
+}
+
+/* Softer success */
+.msg.success {
+  background: rgba(0, 150, 100, 0.10); /* lighter */
+  color: #007a55; /* deeper, less neon */
+  border: 1px solid rgba(0, 150, 100, 0.25);
+}
+
+/* Softer error */
+.msg.error {
+  background: rgba(255, 80, 80, 0.10);
+  color: #b33;
+  border: 1px solid rgba(255, 80, 80, 0.25);
+}
+
+.shimmer {
+  width: 140px;
+  height: 140px;
+  justify-self: center;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #e0e0e0 0%, #f8f8f8 50%, #e0e0e0 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  position: absolute;
+  top: 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+h2 {
+  color: #00a884;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  width: 100%;
+  justify-self: center;
+  font-size: 24px;
+  font-weight: 700;
+  /* The magic stack */
+  text-align: center;
+  text-shadow:
+    /* white outline */
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px  1px 0 #000,
+    1px  1px 0 #000,
+
+    /* depth */
+    0 2px 4px rgba(0,0,0,0.45);
+}
+
+   
+
+.hero-header-intro .profile-container {
+  opacity: 1;
+  transition: opacity 1.4s ease-out 0.9s;
+
+}
+
+.hero-header-intro .profile {
+  opacity: 1;
+  transition: opacity 1.4s ease-out 0.9s;
+
+}
+
+#hero-backdrop-top,
+#hero-backdrop-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.95);
+  pointer-events: none;
+  z-index: 999999;
+}
+
+/* Top backdrop covers above header */
+#hero-backdrop-top {
+  opacity: 0;
+  top: 0;
+  height: 100vh;
+  transition: height 1.2s ease-out, opacity 0.8s ease-out;
+}
+
+/* Bottom backdrop covers below header */
+#hero-backdrop-bottom {
+  opacity: 0;
+  bottom: 0;
+  height: 100vh;
+  transition: height 1.2s ease-out;
+}
+
+
+  </style>
+</head>
+<body>
+
+  <div id="hero-backdrop-top"></div>
+  <div id="hero-backdrop-bottom"></div>
+  <div class="profile-container">
+    <div class="profile">
+      <h1 class="title" id="pageTitle">User Profile</h1>
+      <p class="subtitle" id="pageSubtitle">Create or Update your Pulse World Account.</p>
+
+      <!-- PROFILE PHOTO -->
+      <div class="photo-section">
+        <div class="photo-wrapper">
+          <div id="shimmer" class="shimmer"></div>
+          <img id="profilePhoto" class="profile-photo" src="" />
+        </div>
+
+        <p id="changePhotoBtn" class="t-btn-secondary" style="display:inline-block; padding:2px 8px; border:2px solid black; color:black; border-radius:8px; font-weight:600; cursor:pointer; text-align:center;">📷 CHANGE PHOTO</p>
+        <input type="file" id="photoInput" accept="image/*" style="display:none;"></input>
+      </div>
+
+      <!-- USER FIELDS -->
+      <input id="fullName" class="t-input" type="text" placeholder="Full Name"></input>
+      <div class="t-row">
+        <input id="displayNameInput" class="t-input" type="text" placeholder="Display Name"></input>
+        <button id="checkDisplayNameBtn" class="t-btn-secondary">Check</button>
+      </div>
+
+      <p id="displayNameStatus" class="msg" style="display:none;"></p>
+      <input id="email" class="t-input" type="text" placeholder="Email"></input>
+
+      <button id="verifyEmailBtn" class="t-btn-secondary" style="display:none; margin-top:8px;">
+        Verify New Email
+      </button>
+
+      <div id="emailPinContainer" style="display:none; margin-top:10px;">
+        <input class="t-input" id="emailPinInput" placeholder="Enter PIN"></input>
+        <button id="submitEmailPinBtn" class="t-btn-primary">Submit PIN</button>
+      </div>
+
+      <input id="phone" class="t-input" type="text" placeholder="Phone" />
+
+      <!-- ⭐ FIXED PULSE POINTS ROW ⭐ -->
+      <div class="pulse-row">
+        <span id="pulsePointsDisplay" class="pulse-points">Pulse Points: 0</span>
+
+        <!-- Redeem button (default) -->
+        <button id="redeemPulseBtn" class="t-btn-primary">💱 Redeem</button>
+
+        <!-- Yes/No inline confirmation (hidden by default) -->
+        <div id="redeemConfirmInline" style="display:none; gap:6px;">
+          <span>Redeem Points?</span>
+          <button id="redeemYesBtn" class="t-btn-secondary" style="padding:4px 8px;">Yes</button>
+          <button id="redeemNoBtn" class="t-btn-secondary" style="padding:4px 8px;">No</button>
+        </div>
+      </div>
+
+      <!-- COUNTRY DROPDOWN -->
+      <select id="country" class="t-input">
+        <option value="">Select Country</option>
+        <option value="BZ">Belize</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="MX">Mexico</option>
+
+        <!-- FULL COUNTRY LIST -->
+        <option value="AF">Afghanistan</option>
+        <option value="AL">Albania</option>
+        <option value="DZ">Algeria</option>
+        <option value="AS">American Samoa</option>
+        <option value="AD">Andorra</option>
+        <option value="AO">Angola</option>
+        <option value="AI">Anguilla</option>
+        <option value="AG">Antigua and Barbuda</option>
+        <option value="AR">Argentina</option>
+        <option value="AM">Armenia</option>
+        <option value="AW">Aruba</option>
+        <option value="AU">Australia</option>
+        <option value="AT">Austria</option>
+        <option value="AZ">Azerbaijan</option>
+        <option value="BS">Bahamas</option>
+        <option value="BH">Bahrain</option>
+        <option value="BD">Bangladesh</option>
+        <option value="BB">Barbados</option>
+        <option value="BY">Belarus</option>
+        <option value="BE">Belgium</option>
+        <option value="BJ">Benin</option>
+        <option value="BM">Bermuda</option>
+        <option value="BT">Bhutan</option>
+        <option value="BO">Bolivia</option>
+        <option value="BA">Bosnia and Herzegovina</option>
+        <option value="BW">Botswana</option>
+        <option value="BR">Brazil</option>
+        <option value="BN">Brunei</option>
+        <option value="BG">Bulgaria</option>
+        <option value="BF">Burkina Faso</option>
+        <option value="BI">Burundi</option>
+        <option value="KH">Cambodia</option>
+        <option value="CM">Cameroon</option>
+        <option value="CV">Cape Verde</option>
+        <option value="KY">Cayman Islands</option>
+        <option value="CF">Central African Republic</option>
+        <option value="TD">Chad</option>
+        <option value="CL">Chile</option>
+        <option value="CN">China</option>
+        <option value="CO">Colombia</option>
+        <option value="KM">Comoros</option>
+        <option value="CG">Congo</option>
+        <option value="CR">Costa Rica</option>
+        <option value="CI">Côte d'Ivoire</option>
+        <option value="HR">Croatia</option>
+        <option value="CU">Cuba</option>
+        <option value="CY">Cyprus</option>
+        <option value="CZ">Czech Republic</option>
+        <option value="DK">Denmark</option>
+        <option value="DJ">Djibouti</option>
+        <option value="DM">Dominica</option>
+        <option value="DO">Dominican Republic</option>
+        <option value="EC">Ecuador</option>
+        <option value="EG">Egypt</option>
+        <option value="SV">El Salvador</option>
+        <option value="GQ">Equatorial Guinea</option>
+        <option value="ER">Eritrea</option>
+        <option value="EE">Estonia</option>
+        <option value="SZ">Eswatini</option>
+        <option value="ET">Ethiopia</option>
+        <option value="FJ">Fiji</option>
+        <option value="FI">Finland</option>
+        <option value="FR">France</option>
+        <option value="GA">Gabon</option>
+        <option value="GM">Gambia</option>
+        <option value="GE">Georgia</option>
+        <option value="DE">Germany</option>
+        <option value="GH">Ghana</option>
+        <option value="GR">Greece</option>
+        <option value="GD">Grenada</option>
+        <option value="GT">Guatemala</option>
+        <option value="GN">Guinea</option>
+        <option value="GY">Guyana</option>
+        <option value="HT">Haiti</option>
+        <option value="HN">Honduras</option>
+        <option value="HK">Hong Kong</option>
+        <option value="HU">Hungary</option>
+        <option value="IS">Iceland</option>
+        <option value="IN">India</option>
+        <option value="ID">Indonesia</option>
+        <option value="IR">Iran</option>
+        <option value="IQ">Iraq</option>
+        <option value="IE">Ireland</option>
+        <option value="IL">Israel</option>
+        <option value="IT">Italy</option>
+        <option value="JM">Jamaica</option>
+        <option value="JP">Japan</option>
+        <option value="JO">Jordan</option>
+        <option value="KZ">Kazakhstan</option>
+        <option value="KE">Kenya</option>
+        <option value="KI">Kiribati</option>
+        <option value="KR">South Korea</option>
+        <option value="KW">Kuwait</option>
+        <option value="KG">Kyrgyzstan</option>
+        <option value="LA">Laos</option>
+        <option value="LV">Latvia</option>
+        <option value="LB">Lebanon</option>
+        <option value="LS">Lesotho</option>
+        <option value="LR">Liberia</option>
+        <option value="LY">Libya</option>
+        <option value="LI">Liechtenstein</option>
+        <option value="LT">Lithuania</option>
+        <option value="LU">Luxembourg</option>
+        <option value="MO">Macau</option>
+        <option value="MG">Madagascar</option>
+        <option value="MW">Malawi</option>
+        <option value="MY">Malaysia</option>
+        <option value="MV">Maldives</option>
+        <option value="ML">Mali</option>
+        <option value="MT">Malta</option>
+        <option value="MH">Marshall Islands</option>
+        <option value="MQ">Martinique</option>
+        <option value="MR">Mauritania</option>
+        <option value="MU">Mauritius</option>
+        <option value="MX">Mexico</option>
+        <option value="FM">Micronesia</option>
+        <option value="MD">Moldova</option>
+        <option value="MC">Monaco</option>
+        <option value="MN">Mongolia</option>
+        <option value="ME">Montenegro</option>
+        <option value="MA">Morocco</option>
+        <option value="MZ">Mozambique</option>
+        <option value="MM">Myanmar</option>
+        <option value="NA">Namibia</option>
+        <option value="NP">Nepal</option>
+        <option value="NL">Netherlands</option>
+        <option value="NZ">New Zealand</option>
+        <option value="NI">Nicaragua</option>
+        <option value="NE">Niger</option>
+        <option value="NG">Nigeria</option>
+        <option value="NO">Norway</option>
+        <option value="OM">Oman</option>
+        <option value="PK">Pakistan</option>
+        <option value="PW">Palau</option>
+        <option value="PA">Panama</option>
+        <option value="PG">Papua New Guinea</option>
+        <option value="PY">Paraguay</option>
+        <option value="PE">Peru</option>
+        <option value="PH">Philippines</option>
+        <option value="PL">Poland</option>
+        <option value="PT">Portugal</option>
+        <option value="PR">Puerto Rico</option>
+        <option value="QA">Qatar</option>
+        <option value="RO">Romania</option>
+        <option value="RU">Russia</option>
+        <option value="RW">Rwanda</option>
+        <option value="KN">Saint Kitts and Nevis</option>
+        <option value="LC">Saint Lucia</option>
+        <option value="VC">Saint Vincent and the Grenadines</option>
+        <option value="WS">Samoa</option>
+        <option value="SM">San Marino</option>
+        <option value="ST">São Tomé and Príncipe</option>
+        <option value="SA">Saudi Arabia</option>
+        <option value="SN">Senegal</option>
+        <option value="RS">Serbia</option>
+        <option value="SC">Seychelles</option>
+        <option value="SL">Sierra Leone</option>
+        <option value="SG">Singapore</option>
+        <option value="SK">Slovakia</option>
+        <option value="SI">Slovenia</option>
+        <option value="SB">Solomon Islands</option>
+        <option value="SO">Somalia</option>
+        <option value="ZA">South Africa</option>
+        <option value="ES">Spain</option>
+        <option value="LK">Sri Lanka</option>
+        <option value="SD">Sudan</option>
+        <option value="SR">Suriname</option>
+        <option value="SE">Sweden</option>
+        <option value="CH">Switzerland</option>
+        <option value="SY">Syria</option>
+        <option value="TW">Taiwan</option>
+        <option value="TJ">Tajikistan</option>
+        <option value="TZ">Tanzania</option>
+        <option value="TH">Thailand</option>
+        <option value="TL">Timor-Leste</option>
+        <option value="TG">Togo</option>
+        <option value="TO">Tonga</option>
+        <option value="TT">Trinidad and Tobago</option>
+        <option value="TN">Tunisia</option>
+        <option value="TR">Turkey</option>
+        <option value="TM">Turkmenistan</option>
+        <option value="TV">Tuvalu</option>
+        <option value="UG">Uganda</option>
+        <option value="UA">Ukraine</option>
+        <option value="AE">United Arab Emirates</option>
+        <option value="GB">United Kingdom</option>
+        <option value="UY">Uruguay</option>
+        <option value="UZ">Uzbekistan</option>
+        <option value="VU">Vanuatu</option>
+        <option value="VE">Venezuela</option>
+        <option value="VN">Vietnam</option>
+        <option value="YE">Yemen</option>
+        <option value="ZM">Zambia</option>
+        <option value="ZW">Zimbabwe</option>
+      </select>
+
+
+      <select id="role" class="input">
+        <option value="Customer">Customer</option>
+        <option value="Deliverer">Deliverer</option>
+        <option value="Vendor">Vendor</option>
+        <option value="Admin">Admin (Locked)</option>
+      </select>
+
+      <label class="checkbox-row">
+        <span><input type="checkbox" id="smsOpt" /> SMS Opt-In</span>
+        <span><input type="checkbox" id="emailOpt" /> Email Opt-In</span>
+      </label>
+
+      
+      <div id="leaveConfirmRow" style="display:none; margin-top:10px;">
+        <span>You have unsaved changes. Leave without saving?</span>
+        <button id="leaveYesBtn" class="t-btn-secondary">Yes</button>
+        <button id="leaveNoBtn" class="t-btn-secondary">No</button>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <!-- STRIPE STATUS PANEL -->
+      <div class="stripe-section">
+        <h2 class="stripe-title">Stripe Account</h2>
+        <div id="stripeStatus" class="stripe-status">Checking status…</div>
+        <div id="stripeAction" class="t-btn-tri"></div>
+      </div>
+      <div class="t-btn-primaryS" id="saveBtn">Save Profile</div>
+    </div>
+</div>
+
+  <!-- 2. LOGIN PAGE LOGIC — SAFE TO RUN AFTER PORTAL -->
+<script type="module">
+/* -------------------------------------------------------
+   GLOBAL STATE
+------------------------------------------------------- */
+let identityUser     = PulseRealm.PulseIdentity || PulseRealm.PulseUser || {};
+let currentUser      = PulseRealm.PulseUser;
+let isAdmin          = identityUser.role === "Admin";
+let formIsDirty      = false;
+const markDirty      = () => formIsDirty = true;
+
+/* -------------------------------------------------------
+   DOM ELEMENTS
+------------------------------------------------------- */
+const img             = document.getElementById("profilePhoto");
+const emailInput      = document.getElementById("email");
+const verifyEmailBtn  = document.getElementById("verifyEmailBtn");
+const saveBtn         = document.getElementById("saveBtn");
+const msg             = document.getElementById("msg");
+
+/* -------------------------------------------------------
+   HERO HEADER ENTRANCE
+------------------------------------------------------- */
+async function runHeroHeaderEntrance() {
+  if (PulseRealm.__heroHeaderPlayed) return;
+  PulseRealm.__heroHeaderPlayed = true;
+
+  const top = document.createElement("div");
+  const bottom = document.createElement("div");
+
+  const base = {
+    position: "fixed",
+    left: "0",
+    right: "0",
+    background: "rgba(0,0,0,0.65)",
+    pointerEvents: "none",
+    zIndex: "9999",
+    opacity: "1",
+    willChange: "height, opacity"
+  };
+
+  Object.assign(top.style, base, {
+    top: "0",
+    height: "100vh",
+    transition: "height 1.1s ease-out, opacity 0.7s ease-out"
+  });
+
+  Object.assign(bottom.style, base, {
+    bottom: "0",
+    height: "100vh",
+    transition: "height 1.1s ease-out"
+  });
+
+  document.body.append(top, bottom);
+
+  await new Promise(requestAnimationFrame);
+  await new Promise(requestAnimationFrame);
+
+  bottom.style.height = "0";
+  top.style.height = "115px";
+
+  setTimeout(() => top.style.opacity = "0", 850);
+
+  setTimeout(() => {
+    bottom.style.opacity = "0";
+    top.remove();
+    bottom.remove();
+  }, 1600);
+}
+
+/* -------------------------------------------------------
+   UTILITIES
+------------------------------------------------------- */
+function normalizePhone(raw) {
+  if (!raw) return null;
+  let v = String(raw).replace(/\u00A0/g, " ").trim().replace(/[^\d+]/g, "");
+
+  if (v.startsWith("+") && v.length >= 8 && v.length <= 15) return v;
+  if (v.startsWith("+")) v = v.slice(1);
+
+  const digits = v.replace(/\D/g, "");
+  if (digits.length === 7) return "+501" + digits;
+  if (digits.startsWith("501") && digits.length === 10) return "+501" + digits.slice(3);
+  if (digits.length === 10) return "+1" + digits;
+  if (digits.length === 11 && digits.startsWith("1")) return "+1" + digits.slice(1);
+  if (digits.length >= 8 && digits.length <= 15) return "+" + digits;
+
+  return null;
+}
+
+function sanitizeDisplayName(name) {
+  if (!name) return "";
+  return name
+    .replace(/·/g, "•")
+    .replace(/[^\p{L}\p{N}\s\-_•]/gu, "")
+    .replace(/[\s\-_]+/g, "•")
+    .replace(/•+/g, "•")
+    .replace(/^•|•$/g, "")
+    .split("•")
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join("•");
+}
+
+/* -------------------------------------------------------
+   STRIPE STATUS
+------------------------------------------------------- */
+async function loadStripeStatus() {
+  if (!identityUser) return;
+
+  const statusEl = document.getElementById("stripeStatus");
+  const actionEl = document.getElementById("stripeAction");
+  if (!statusEl || !actionEl) return;
+
+  statusEl.textContent = "Checking Status…";
+
+  const stripeId = identityUser.stripeAccountID || identityUser.stripeId || null;
+
+  try {
+    const data = await getHook({
+      type: "getStripeStatus",
+      uid: identityUser.uid,
+      stripeAccountId: stripeId
+    });
+
+    if (!data.success) {
+      statusEl.textContent = "Unable to Load Stripe Status!?"; 
+      actionEl.innerHTML = "";
+      return;
+    }
+
+    const s = data.status;
+
+    if (s === "connected") {
+      statusEl.textContent = "Connected ✔";
+      actionEl.innerHTML = `<div class="t-btn-tri" onclick="attemptStripeRedirect('${data.dashboardLink}')">Open Stripe Dashboard</div>`;
+    } else if (s === "pending") {
+      statusEl.textContent = "Onboarding Not Complete";
+      actionEl.innerHTML = `<div class="t-btn-tri" onclick="attemptStripeRedirect('${data.onboardingLink}')">Continue Setup</div>`;
+    } else if (s === "needs_verification") {
+      statusEl.textContent = "Verification Required";
+      actionEl.innerHTML = `<div class="t-btn-tri" onclick="attemptStripeRedirect('${data.onboardingLink}')">Fix Now</div>`;
+    } else {
+      statusEl.textContent = "Not Connected";
+      actionEl.innerHTML = `<div class="t-btn-tri" onclick="attemptStripeRedirect('${data.onboardingLink}')">Start Setup</div>`;
+    }
+
+  } catch {
+    statusEl.textContent = "Error Loading Status!?";
+  }
+}
+
+/* -------------------------------------------------------
+   ADMIN DROPDOWN
+------------------------------------------------------- */
+function setupAdminUserDropdown() {
+  const dropdown = document.getElementById("userSelectDropdown");
+  if (!dropdown) return;
+
+  dropdown.style.display = "block";
+
+  const users = (typeof getUsersCache === "function" ? getUsersCache() : [])
+    .sort((a, b) => (a.displayName || "").localeCompare(b.displayName || ""));
+
+  dropdown.innerHTML = `<option value="">Select a user...</option>`;
+  users.forEach(u => {
+    const opt = document.createElement("option");
+    opt.value = u.id;
+    opt.textContent = `${u.displayName || u.email} (${u.email})`;
+    dropdown.appendChild(opt);
+  });
+
+  dropdown.onchange = () => {
+    currentUser = users.find(u => u.id === dropdown.value);
+    if (currentUser) populateUserUI(currentUser);
+  };
+}
+
+/* -------------------------------------------------------
+   POPULATE UI
+------------------------------------------------------- */
+function populateUserUI(user) {
+  if (!user) return;
+
+  document.getElementById("displayNameInput").value = user.displayName || "";
+  emailInput.value = user.email || "";
+  img.src = user.photoURL || "./_EXPRESSIONS/_PEX/BUILD/Frustrated.webp.pex";
+
+  const smsOptEl   = document.getElementById("smsOpt");
+  const emailOptEl = document.getElementById("emailOpt");
+
+  if (smsOptEl)   smsOptEl.checked   = Boolean(user.smsOpt ?? user.receiveSMS);
+  if (emailOptEl) emailOptEl.checked = (user.emailOpt ?? user.receiveMassEmails) !== false;
+
+  document.getElementById("emailPinContainer").style.display = "none";
+  verifyEmailBtn.style.display = "none";
+  saveBtn.disabled = false;
+  saveBtn.classList.remove("disabled");
+  formIsDirty = false;
+
+  loadFallbackPhoto();
+}
+
+/* -------------------------------------------------------
+   SAVE PROFILE
+------------------------------------------------------- */
+saveBtn.onclick = async () => {
+  if (!currentUser) return;
+
+  const smsOptEl   = document.getElementById("smsOpt");
+  const emailOptEl = document.getElementById("emailOpt");
+
+  const payload = {
+    uid: currentUser.id,
+    displayName: document.getElementById("displayNameInput").value.trim(),
+    email: currentUser.email,
+    photoURL: currentUser.photoURL,
+    smsOpt: smsOptEl ? smsOptEl.checked : (currentUser.smsOpt ?? currentUser.receiveSMS ?? false),
+    emailOpt: emailOptEl ? emailOptEl.checked : (currentUser.emailOpt ?? currentUser.receiveMassEmails ?? true)
+  };
+
+  const ok = await updateUserRecordFromUI(payload);
+  if (!ok) {
+    showMessage("Unable to update profile.", "error");
+    return;
+  }
+
+  Object.assign(currentUser, payload);
+
+  if (currentUser.id === identityUser.uid) {
+    Object.assign(identityUser, {
+      displayName: payload.displayName,
+      email: payload.email,
+      photoURL: payload.photoURL,
+      smsOpt: payload.smsOpt,
+      emailOpt: payload.emailOpt,
+      receiveSMS: payload.smsOpt,
+      receiveMassEmails: payload.emailOpt
+    });
+
+    localStorage.setItem("tp_identity_v4", JSON.stringify(identityUser));
+    localStorage.setItem("tp_optins_v1", JSON.stringify({
+      uid: identityUser.uid,
+      smsOpt: identityUser.smsOpt,
+      emailOpt: identityUser.emailOpt,
+      updatedAt: PulseRealm.PulseNOW
+    }));
+  }
+
+  showMessage("Profile updated!", "success");
+  formIsDirty = false;
+};
+
+/* -------------------------------------------------------
+   EMAIL CHANGE HANDLER
+------------------------------------------------------- */
+emailInput.addEventListener("input", () => {
+  if (!currentUser) return;
+
+  const newEmail = emailInput.value.trim().toLowerCase();
+  const currentEmail = (currentUser.email || "").toLowerCase();
+
+  if (isAdmin && currentUser.id !== identityUser.uid) {
+    emailInput.value = currentUser.email || "";
+    showMessage("Admins cannot change another user's email.", "error");
+    return;
+  }
+
+  const changed = newEmail && newEmail !== currentEmail;
+  verifyEmailBtn.style.display = changed ? "inline-block" : "none";
+  saveBtn.disabled = changed;
+  saveBtn.classList.toggle("disabled", changed);
+});
+
+/* -------------------------------------------------------
+   SEND EMAIL VERIFICATION PIN
+------------------------------------------------------- */
+verifyEmailBtn.onclick = async () => {
+  if (!currentUser) return;
+
+  const newEmail = emailInput.value.trim().toLowerCase();
+  if (!newEmail) return showMessage("Please enter a valid email first.", "error");
+
+  try {
+    const data = await getHook({
+      type: "sendPin",
+      email: newEmail,
+      uid: identityUser.uid,
+      purpose: "emailChange"
+    });
+
+    if (!data.success) return showMessage(data.error || "Unable to send verification PIN.", "error");
+
+    document.getElementById("emailPinContainer").style.display = "block";
+    showMessage("A verification code has been sent to " + newEmail, "success");
+  } catch {
+    showMessage("Unable to send verification PIN.", "error");
+  }
+};
+
+/* -------------------------------------------------------
+   VERIFY EMAIL PIN
+------------------------------------------------------- */
+document.getElementById("submitEmailPinBtn").onclick = async () => {
+  if (!currentUser) return;
+
+  const newEmail = emailInput.value.trim().toLowerCase();
+  const pin = document.getElementById("emailPinInput").value.trim();
+  if (!newEmail || !pin) return showMessage("Please enter both email and PIN.", "error");
+
+  try {
+    const data = await getHook({
+      type: "verifyPin",
+      email: newEmail,
+      pin,
+      uid: identityUser.uid,
+      purpose: "emailChange"
+    });
+
+    if (!data.success) return showMessage(data.error || "Invalid PIN.", "error");
+
+    identityUser.email = newEmail;
+    if (currentUser.id === identityUser.uid) currentUser.email = newEmail;
+
+    localStorage.setItem("tp_identity_v4", JSON.stringify(identityUser));
+
+    verifyEmailBtn.style.display = "none";
+    document.getElementById("emailPinContainer").style.display = "none";
+    saveBtn.disabled = false;
+    saveBtn.classList.remove("disabled");
+
+    showMessage("Email Verified and Updated!", "success");
+  } catch {
+    showMessage("Network error verifying PIN.", "error");
+  }
+};
+
+/* -------------------------------------------------------
+   MESSAGES
+------------------------------------------------------- */
+function showMessage(text, type = "error") {
+  msg.textContent = text;
+  msg.className = "msg " + type;
+  msg.style.display = "block";
+  msg.classList.add("show");
+
+  setTimeout(() => msg.classList.remove("show"), 300);
+  msg.scrollIntoView({ behavior: "smooth", block: "center" });
+  setTimeout(() => msg.style.display = "none", 4000);
+}
+
+/* -------------------------------------------------------
+   DIRTY FORM TRACKING
+------------------------------------------------------- */
+["fullName","displayNameInput","email","phone"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("input", markDirty);
+});
+
+["country","role","smsOpt","emailOpt"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("change", markDirty);
+});
+
+window.addEventListener("beforeunload", e => {
+  if (!formIsDirty) return;
+  e.preventDefault();
+  e.returnValue = "";
+});
+
+/* -------------------------------------------------------
+   FALLBACK PHOTO
+------------------------------------------------------- */
+function loadFallbackPhoto() {
+  const shimmer = document.getElementById("shimmer");
+  if (!shimmer || !img) return;
+
+  shimmer.style.display = "block";
+
+  const photo =
+    currentUser.photoURL.trim() ||
+    identityUser.photoURL.trim() ||
+    "./_EXPRESSIONS/_PEX/BUILD/Frustrated.webp.pex";
+
+  img.src = photo;
+
+  img.onload = () => {
+    shimmer.style.display = "none";
+    img.style.display = "block";
+  };
+
+  img.onerror = () => {
+    shimmer.style.display = "none";
+    img.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.webp.pex";
+    img.style.display = "block";
+  };
+}
+
+/* -------------------------------------------------------
+   STRIPE REDIRECT
+------------------------------------------------------- */
+PulseRealm.attemptStripeRedirect = function (url) {
+  if (url.includes("stripe.com") || url.includes("connect.stripe.com"))
+    return window.location.href = url;
+
+  if (!formIsDirty)
+    return window.location.href = url;
+
+  const row = document.getElementById("leaveConfirmRow");
+  row.style.display = "flex";
+
+  document.getElementById("leaveYesBtn").onclick = () => {
+    row.style.display = "none";
+    window.location.href = url;
+  };
+
+  document.getElementById("leaveNoBtn").onclick = () => {
+    row.style.display = "none";
+  };
+};
+
+function hidePWLoader() {
+  const loader = document.getElementById("pw-loading");
+  if (!loader) return;
+
+  // Ensure the browser has applied styles before fading
+  requestAnimationFrame(() => {
+    loader.style.opacity = "0";
+
+    // Remove after transition completes
+    loader.addEventListener("transitionend", () => loader.remove(), { once: true });
+  });
+}
+
+/* -------------------------------------------------------
+   USERRECORD BOOTSTRAP — FINAL
+------------------------------------------------------- */
+(async () => {
+  let lastTime = performance.now();
+  const log = console.log.bind(console);
+  const mark = (label, absolute = false) => {
+    const now = performance.now();
+    log(absolute ? `${label}: @${now.toFixed(1)}ms`
+                 : `${label}: +${(now - lastTime).toFixed(1)}ms`);
+    lastTime = now;
+  };
+
+  PulseRealm.isIdle = true;
+
+  // 1. SESSION CHECK (SkinReflex)
+  mark("USERRECORD: STARTING sessionCheck()");
+  const id = await PulseRealm.sessionCheck();
+  if (!id) return;
+
+  identityUser = id;
+  PulseRealm.identityUser = id;
+  isAdmin = id.role === "Admin";
+  PulseRealm.isAdmin = isAdmin;
+
+  // 2. DETERMINE CURRENT USER
+  if (isAdmin) {
+    if (typeof setupAdminUserDropdown === "function") {
+      setupAdminUserDropdown();
+    }
+  } else {
+    const isExistingUser = Boolean(id.resendToken);
+
+    if (isExistingUser) {
+      currentUser = {
+        id: id.uid,
+        displayName: id.displayName || "",
+        email: id.email || "",
+        photoURL: id.photoURL || "",
+        smsOpt: id.smsOpt ?? id.receiveSMS ?? false,
+        emailOpt: id.emailOpt ?? id.receiveMassEmails ?? true
+      };
+    } else {
+      currentUser = {
+        id: id.uid,
+        displayName: "",
+        email: id.email || "",
+        photoURL: id.photoURL || "",
+        smsOpt: false,
+        emailOpt: true
+      };
+    }
+
+    PulseRealm.currentUser = currentUser;
+
+    if (typeof populateUserUI === "function") {
+      populateUserUI(currentUser);
+    }
+  }
+
+  // 3. STRIPE UI
+  const stripeSection = document.querySelector(".stripe-section");
+  const pageTitle     = document.getElementById("pageTitle");
+  const pageSubtitle  = document.getElementById("pageSubtitle");
+
+  if (pageTitle)     pageTitle.textContent = "Your Pulse World Profile";
+  if (pageSubtitle)  pageSubtitle.textContent = "Update your account details and preferences.";
+  if (stripeSection) stripeSection.style.display = "block";
+
+  // 4. LOADER + STRIPE STATUS
+  hidePWLoader();
+  if (typeof loadStripeStatus === "function") {
+    await loadStripeStatus();
+  }
+
+  // 5. HERO HEADER
+  document.body.classList.add("hero-header-intro");
+  mark("USERRECORD: STARTING HERO ENTRANCE");
+  await runHeroHeaderEntrance();
+
+  mark("USERRECORD: ENDING DOM BOOTSTRAP");
+  mark("USERRECORD: ENDING DOM LOAD", true);
+})();
+</script>
+
+</body>
+</html>

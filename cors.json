@@ -1,0 +1,35 @@
+[
+  {
+    "origin": ["*"],
+    "method": ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "Content-Length",
+      "Content-Encoding",
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Headers",
+      "Access-Control-Allow-Methods",
+      "Access-Control-Max-Age",
+      "Accept",
+      "Accept-Language",
+      "Accept-Encoding",
+      "Authorization",
+      "Cache-Control",
+      "DNT",
+      "ETag",
+      "If-Modified-Since",
+      "Keep-Alive",
+      "Origin",
+      "Pragma",
+      "Range",
+      "Referer",
+      "User-Agent",
+      "X-Requested-With",
+      "X-HTTP-Method-Override",
+      "x-pulse-mode",
+      "x-goog-meta-*"
+    ],
+    "maxAgeSeconds": 86400
+  }
+]
+

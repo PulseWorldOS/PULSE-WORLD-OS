@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+  <title>Payment Successful • Pulse World</title>
+
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+    
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65); /* increase to 0.75 or 0.85 for deeper darkness */
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .card {
+      background: #ffff99;
+      margin: 1px auto 6px auto;
+      background: #0a6e3a;
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .loader {
+      margin: 25px auto;
+      border: 6px solid rgba(255,255,255,0.3);
+      border-top: 6px solid white;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <img src="../_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" class="logo" />
+
+    <h1>Payment Successful</h1>
+    <p>Your Credits are being Added. Redirecting you back to your Event…</p>
+
+    <div class="loader"></div>
+
+    <p class="footer">Pulse World • San Pedro, Belize</p>
+  </div>
+
+  <script>
+    async function runFlow() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventID = urlParams.get("eventID");
+
+        // If missing eventID, fallback to events page
+        if (!eventID) {
+          window.location.href="TropicPulseEvents";
+          return;
+        }
+
+        // Small delay so webhook finishes adding credits
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Redirect to the specific event
+        window.location.href=`TropicPulseEventDetail?id=${eventID}&payment=success`;
+
+      } catch (err) {
+        error("Payment success flow error:", err);
+        window.location.href="TropicPulseEvents";
+      }
+    }
+
+    runFlow();
+  </script>
+</body>
+</html>

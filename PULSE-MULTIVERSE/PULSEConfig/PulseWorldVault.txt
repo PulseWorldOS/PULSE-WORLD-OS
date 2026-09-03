@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+<!-- Preloads -->
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-2.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/AldwynVault1.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-1.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldBank-2.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseVault" type="video/mp4">
+<link rel="prefetch" fetchpriority="high" href="/" />
+<title>PulseWorld Vault</title>
+
+<style>
+ 
+  /* BACKGROUND WRAPPER */
+  .vaultBackground {
+    width: 100%;
+    min-height: 100dvh;
+    background: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-2.webp.pex") center/cover no-repeat fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 0;
+    box-sizing: border-box;
+  }
+
+  /* MAIN SHELL */
+  .vaultPageShell {
+    width: 100%;
+    max-width: var(--tp-max-width);
+    padding: 12px;
+    box-sizing: border-box;
+    backdrop-filter: blur(16px);
+    background: radial-gradient(circle at top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95));
+    border-radius: 24px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    box-shadow:
+      0 0 40px rgba(0, 0, 0, 0.9),
+      0 0 28px rgba(0, 0, 0, 0.8),
+      0 0 80px rgba(0, 255, 200, 0.25);
+    color: var(--pw-text);
+  }
+
+  /* HEADER */
+  .vaultHeaderRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .pulse-vault-bubble {
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 20%, #1b1f2a 0%, #090b10 45%, #000000 100%);
+    box-shadow:
+      0 35px 65px rgba(0, 0, 0, 0.75),
+      0 18px 40px rgba(0, 0, 0, 0.65),
+      0 0 55px rgba(0, 255, 200, 0.35),
+      0 0 0 2px rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 35px rgba(0, 255, 200, 0.45));
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+
+  .pulse-vault-bubble:hover {
+    transform: translateY(-6px) scale(1.03);
+    filter: drop-shadow(0 0 55px rgba(0, 255, 200, 0.75));
+  }
+
+  .pulse-vault-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #00a884;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.30),
+      0 12px 28px rgba(0, 0, 0, 0.32),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    background: #ffffff;
+  }
+
+  .vaultTitle {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vaultSubtitle {
+    font-size: 14px;
+    color: var(--pw-subtle);
+  }
+
+  .secureSessionBadge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.85));
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--pw-gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+  }
+
+  .secureSessionDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: radial-gradient(circle at center, var(--pw-gold), #c89a3a);
+    box-shadow: 0 0 8px rgba(245, 210, 122, 0.7);
+  }
+
+  /* DASHBOARD GRID */
+  .vaultDashboard {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 240px 1fr 240px;
+    margin-bottom: 32px;
+  }
+
+  .vaultSideColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .vaultPanel {
+    background: var(--pw-panel-bg);
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid var(--pw-panel-border);
+    box-shadow:
+      0 0 22px rgba(0, 0, 0, 0.8),
+      0 0 26px var(--pw-panel-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vaultPanel::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: radial-gradient(circle at top left,
+      rgba(0, 255, 200, 0.18),
+      transparent 55%);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .vaultPanelTitle {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--pw-gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vaultPanelItem {
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--pw-text);
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.9;
+  }
+
+  .vaultPanelItem span:first-child {
+    color: var(--pw-subtle);
+  }
+
+  .vaultPanelHighlight {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 6px 0 10px;
+    color: var(--pw-teal);
+    text-align: right;
+  }
+
+  /* VAULT CENTER */
+  .vaultCenter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+  }
+
+  .vaultDoor {
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-1.webp.pex") center/cover no-repeat;
+    box-shadow:
+      0 0 40px rgba(0, 0, 0, 0.9),
+      0 0 18px rgba(0, 0, 0, 0.7),
+      0 0 0 2px rgba(255, 255, 255, 0.08),
+      0 0 65px rgba(0, 255, 200, 0.55);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vaultDoor::after {
+    content: "PULSEVAULT CORE";
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pw-subtle);
+  }
+
+  /* MULTI-CONSOLE STRIP */
+  .vaultConsoleStrip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 28px;
+    margin-bottom: 18px;
+  }
+
+  .vaultConsolePanel {
+    border-radius: 18px;
+    padding: 14px;
+    background: var(--pw-console-bg);
+    box-shadow:
+      0 0 24px rgba(0, 0, 0, 0.85),
+      0 0 12px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid rgba(0, 255, 200, 0.25);
+  }
+
+  .vaultConsoleTitle {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--pw-gold);
+  }
+
+  .consoleBubbleArea {
+    flex: 1;
+    min-height: 90px;
+    max-height: 160px;
+    overflow-y: auto;
+    padding: 6px;
+    border-radius: 10px;
+    background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+    font-size: 12px;
+  }
+
+  .vaultConsoleInputRow {
+    display: flex;
+    gap: 6px;
+  }
+
+  .vaultConsoleInput {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(5, 7, 12, 0.95);
+    color: var(--pw-text);
+    font-size: 12px;
+    outline: none;
+  }
+
+  .vaultConsoleSend {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #f5d27a, #c89a3a);
+    color: #050608;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow:
+      0 0 12px rgba(245, 210, 122, 0.65),
+      0 4px 10px rgba(0, 0, 0, 0.6);
+  }
+
+  /* PRIMARY CONSOLE (existing) */
+  #messageBubbleArea {
+    flex: 1;
+    min-height: 160px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 8px;
+    border-radius: 12px;
+    background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+    font-size: 13px;
+  }
+
+  .vaultConsoleInputRowMain {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  #vaultConsoleInput {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(5, 7, 12, 0.95);
+    color: var(--pw-text);
+    font-size: 14px;
+    outline: none;
+  }
+
+  #vaultConsoleSend {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #f5d27a, #c89a3a);
+    color: #050608;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow:
+      0 0 12px rgba(245, 210, 122, 0.65),
+      0 4px 10px rgba(0, 0, 0, 0.6);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .vaultDashboard {
+      grid-template-columns: 1fr;
+    }
+    .vaultCenter {
+      order: -1;
+    }
+  }
+</style>
+</head>
+
+<body>
+<video id="vaultVideo" src="./_EXPRESSIONS/_VIDEOS/PulseVault" autoplay muted playsinline style="display:block;" aria-label="Vault Video"></video>
+<div class="vaultBackground">
+  <div class="vaultPageShell">
+
+    <!-- HEADER -->
+    <div class="vaultHeaderRow">
+      <div class="pulse-vault-bubble">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/AldwynVault1.webp.pex" class="pulse-vault-img" />
+      </div>
+
+      <div class="vaultTitle">The Pulse Chamber</div>
+      <div class="vaultSubtitle">Loyalty, Memory, and Magic Converge!</div>
+
+      <div class="secureSessionBadge">
+        <div class="secureSessionDot"></div>
+        Trusted
+      </div>
+    </div>
+
+    <!-- DASHBOARD GRID -->
+    <div class="vaultDashboard">
+
+      <!-- LEFT COLUMN: ASSETS / REWARDS / INVENTORY -->
+      <div class="vaultSideColumn">
+
+        <div class="vaultPanel">
+          <div class="vaultPanelTitle">Vault Assets</div>
+          <div class="vaultPanelHighlight">0 PulsePoints</div>
+          <div class="vaultPanelItem"><span>PulseCoins</span><span>0</span></div>
+          <div class="vaultPanelItem"><span>Locked Balance</span><span>0</span></div>
+          <div class="vaultPanelItem"><span>Available</span><span>0</span></div>
+        </div>
+
+        <div class="vaultPanel">
+          <div class="vaultPanelTitle">Rewards</div>
+          <div class="vaultPanelItem"><span>Earned</span><span>None</span></div>
+          <div class="vaultPanelItem"><span>Available</span><span>0</span></div>
+          <div class="vaultPanelItem"><span>Next Tier</span><span>Tier 2</span></div>
+        </div>
+
+        <div class="vaultPanel">
+          <div class="vaultPanelTitle">Inventory</div>
+          <div class="vaultPanelItem"><span>Items</span><span>Empty</span></div>
+          <div class="vaultPanelItem"><span>Capacity</span><span>2.7x</span></div>
+        </div>
+
+      </div>
+
+      <!-- CENTER: VAULT CORE -->
+      <div>
+        <div class="vaultCenter">
+          <div class="vaultDoor"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: ACTIVITY / EVENTS / SYSTEM -->
+      <div class="vaultSideColumn">
+
+        <div class="vaultPanel">
+          <div class="vaultPanelTitle">Vault Activity</div>
+          <div class="vaultPanelItem"><span>Recent Purchase</span><span>None</span></div>
+          <div class="vaultPanelItem"><span>Recent Reward</span><span>None</span></div>
+          <div class="vaultPanelItem"><span>Last Action</span><span>Idle</span></div>
+        </div>
+
+        <div class="vaultPanel">
+          <div class="vaultPanelTitle">Upcoming Events</div>
+          <div class="vaultPanelItem"><span>Next Event</span><span>None</span></div>
+          <div class="vaultPanelItem"><span>Schedule</span><span>Empty</span></div>
+        </div>
+
+        <div class="vaultPanel">
+          <div class="vaultPanelTitle">System & Overmind</div>
+          <div class="vaultPanelItem"><span>System Alert</span><span>None</span></div>
+          <div class="vaultPanelItem"><span>Overmind</span><span>Idle</span></div>
+          <div class="vaultPanelItem"><span>Mode</span><span>Tourist / Vault</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VAULT SYSTEMS PANEL -->
+    <div class="vaultPanel">
+      <div class="vaultPanelTitle">Vault Systems</div>
+      <div class="vaultPanelItem"><span>Engine Tier</span><span>Tier 1</span></div>
+      <div class="vaultPanelItem"><span>Stability</span><span>82%</span></div>
+      <div class="vaultPanelItem"><span>Power Output</span><span>147%</span></div>
+      <div class="vaultPanelItem"><span>Efficiency</span><span>138%</span></div>
+      <div class="vaultPanelItem"><span>Flow</span><span>162%</span></div>
+      <div class="vaultPanelItem"><span>Capacity</span><span>2.7x</span></div>
+      <div class="vaultPanelItem"><span>Upgrade Path</span><span>Tier 2</span></div>
+    </div>
+
+    <!-- MULTI-CONSOLE STRIP (AI OVERMIND / TOURIST / VAULT SPIRIT) -->
+    <div class="vaultConsoleStrip">
+
+      <div class="vaultConsolePanel">
+        <div class="vaultConsoleTitle">Overmind Core</div>
+        <div id="consoleOvermind" class="consoleBubbleArea"></div>
+        <div class="vaultConsoleInputRow">
+          <input id="consoleOvermindInput" class="vaultConsoleInput"
+                 type="text" placeholder="Ask Overmind…" />
+          <button id="consoleOvermindSend" class="vaultConsoleSend">Send</button>
+        </div>
+      </div>
+
+      <div class="vaultConsolePanel">
+        <div class="vaultConsoleTitle">Tourist Archetype</div>
+        <div id="consoleTourist" class="consoleBubbleArea"></div>
+        <div class="vaultConsoleInputRow">
+          <input id="consoleTouristInput" class="vaultConsoleInput"
+                 type="text" placeholder="Ask Tourist AI…" />
+          <button id="consoleTouristSend" class="vaultConsoleSend">Send</button>
+        </div>
+      </div>
+
+      <div class="vaultConsolePanel">
+        <div class="vaultConsoleTitle">Vault Spirit</div>
+        <div id="consoleSpirit" class="consoleBubbleArea"></div>
+        <div class="vaultConsoleInputRow">
+          <input id="consoleSpiritInput" class="vaultConsoleInput"
+                 type="text" placeholder="Ask Vault Spirit…" />
+          <button id="consoleSpiritSend" class="vaultConsoleSend">Send</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRIMARY CONSOLE (existing) -->
+    <div class="vaultConsolePanel">
+      <div class="vaultConsoleTitle">Vault Console Log</div>
+      <div id="messageBubbleArea"></div>
+      <div class="vaultConsoleInputRowMain">
+        <input id="vaultConsoleInput" type="text"
+               placeholder="Ask the Vault Spirit… (/help)" />
+        <button id="vaultConsoleSend">Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+  PulseRealm._2_DOM_START = performance.now();
+  log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+  log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+    "color:gold; font-weight:bold; font-family:monospace;");
+    
+vaultVideo = document.getElementById("vaultVideo");
+
+(async () => {
+  vaultVideo.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+   
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      vaultVideo.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (vaultVideo) {
+    vaultVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Vault Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        vaultVideo.pause();
+        vaultVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("vaultVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      vaultVideo.style.opacity = "0";
+      vaultVideo.style.display = "none";
+    };
+  }
+
+  function appendMessage(area, role, text) {
+    const bubble = document.createElement("div");
+    bubble.style.marginBottom = "6px";
+    bubble.style.fontSize = "13px";
+    bubble.style.lineHeight = "1.4";
+    bubble.style.color = role === "user" ? "#f9f9f9" : "#a7f5e4";
+    bubble.textContent = (role === "user" ? "You: " : "Spirit: ") + text;
+    area.appendChild(bubble);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  document.getElementById("vaultConsoleSend").onclick = () => {
+    const text = document.getElementById("vaultConsoleInput").value.trim();
+    if (!text) return;
+    appendMessage(document.getElementById("messageBubbleArea"), "user", text);
+    document.getElementById("vaultConsoleInput").value = "";
+    setTimeout(() => {
+      appendMessage(document.getElementById("messageBubbleArea"), "system", "The Vault Spirit hums… (stub response)");
+    }, 300);
+  };
+
+  function wireConsole(idInput, idSend, idArea, label) {
+    const input = document.getElementById(idInput);
+    const send = document.getElementById(idSend);
+    const area = document.getElementById(idArea);
+
+    send.onclick = () => {
+      const text = input.value.trim();
+      if (!text) return;
+      const bubble = document.createElement("div");
+      bubble.style.marginBottom = "5px";
+      bubble.style.fontSize = "12px";
+      bubble.style.lineHeight = "1.4";
+      bubble.style.color = "#f9f9f9";
+      bubble.textContent = "You (" + label + "): " + text;
+      area.appendChild(bubble);
+      area.scrollTop = area.scrollHeight;
+      input.value = "";
+
+      setTimeout(() => {
+        const resp = document.createElement("div");
+        resp.style.marginBottom = "5px";
+        resp.style.fontSize = "12px";
+        resp.style.lineHeight = "1.4";
+        resp.style.color = "#a7f5e4";
+        resp.textContent = label + ": (stub) Processing vault signals…";
+        area.appendChild(resp);
+        area.scrollTop = area.scrollHeight;
+      }, 350);
+    };
+  }
+
+  wireConsole("consoleOvermindInput", "consoleOvermindSend", "consoleOvermind", "Overmind");
+  wireConsole("consoleTouristInput", "consoleTouristSend", "consoleTourist", "Tourist AI");
+  wireConsole("consoleSpiritInput", "consoleSpiritSend", "consoleSpirit", "Vault Spirit");
+
+  PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+})();
+
+</script>
+
+</body>
+</html>

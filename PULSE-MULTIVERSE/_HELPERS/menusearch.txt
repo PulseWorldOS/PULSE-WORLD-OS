@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Menu Scanner</title>
+  <style>
+    body { background:#111; color:#eee; font-family:Arial; padding:20px; }
+    #log { height:400px; overflow-y:auto; background:#000; padding:10px; border:1px solid #333; }
+    button { padding:10px 20px; margin-right:10px; }
+  </style>
+</head>
+
+<body>
+
+<h2>🍽️ Pulse World — Menu Scanner</h2>
+
+<button id="run">RUN</button>
+<button id="stop">STOP</button>
+
+<div id="log"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- Tesseract.js for image OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script>
+/* -------------------------------------------------------
+   FIREBASE INIT
+------------------------------------------------------- */
+const cfg = {
+  apiKey: "AIzaSyD4I5YDtZMMC_tDuwR9CEjhs_iAdrLzthQ",
+  authDomain: "tropic-pulse.firebaseapp.com",
+  projectId: "tropic-pulse",
+  storageBucket: "tropic-pulse.firebasestorage.app",
+  messagingSenderId: "642785071979",
+  appId: "1:642785071979:web:4287c6bdf51f5233db722e"
+};
+
+firebase.initializeApp(cfg);
+const db = PulseRealm.PulseFirebaseDB;
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+/* -------------------------------------------------------
+   UI + LOGGING
+------------------------------------------------------- */
+const logEl = document.getElementById("log");
+const btnRun = document.getElementById("run");
+const btnStop = document.getElementById("stop");
+
+let STOP_REQUESTED = false;
+
+btnStop.onclick = () => {
+  STOP_REQUESTED = true;
+  log("🛑 STOP REQUESTED — finishing current business...", "warn");
+};
+
+function log(msg, type = "info") {
+  const c =
+    type === "error" ? "#ff4444" :
+    type === "warn"  ? "#ffbb33" :
+                       "#00ff66";
+
+  const time = new Date().toLocaleTimeString();
+  const formatted = `[${time}] ${msg}`;
+
+  logEl.innerHTML += `<div style="color:${c}; white-space:pre-wrap;">${formatted}</div>`;
+  logEl.scrollTop = logEl.scrollHeight;
+
+  if (type === "error") error(formatted);
+  else if (type === "warn") warn(formatted);
+  else log(formatted);
+}
+
+/* -------------------------------------------------------
+   CONFIG
+------------------------------------------------------- */
+const SERPER_KEY = "e37be7342ffd6445f1f3785aa4b46bd116ff2a41";
+const SCRAPER_ENDPOINT =
+  "https://us-central1-tropic-pulse.cloudfunctions.net/scrapeMenu";
+
+/* -------------------------------------------------------
+   SERPER SEARCH
+------------------------------------------------------- */
+async function serperSearch(query) {
+  try {
+    const res = await fetch("https://google.serper.dev/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": SERPER_KEY
+      },
+      body: JSON.stringify({ q: query })
+    });
+
+    if (!res.ok) {
+      log(`   ❌ Serper Search HTTP ${res.status}`, "error");
+      return null;
+    }
+
+    return await res.json();
+
+  } catch (err) {
+    log(`   ❌ Serper Search error: ${err.message}`, "error");
+    return null;
+  }
+}
+
+/* -------------------------------------------------------
+   HELPERS
+------------------------------------------------------- */
+function cleanName(biz) {
+  return biz.resolvedName || biz.busname || "San Pedro Belize";
+}
+
+  const badMenuPhrases = [
+    "dropdown menu",
+    "drop-down menu",
+    "navigation menu",
+    "nav menu",
+    "menu bar",
+    "menu icon",
+    "menu button",
+    "menu toggle",
+    "hamburger menu",
+    "menu coming soon",
+    "coming soon",
+    "menu unavailable",
+    "menu not available",
+    "menu will be added",
+    "menu options",
+    "settings menu",
+    "user menu",
+    "profile menu",
+    "toolbar menu",
+    "context menu"
+  ];
+
+function extractLikelyMenuLinks(html, baseUrl = null) {
+  const links = [];
+  const regex = /href="([^"]+)"/gi;
+  let m;
+
+  const imageMenuKeywords = [
+    "menu",
+    "breakfast",
+    "lunch",
+    "dinner",
+    "dessert",
+    "beverage",
+    "cocktail",
+    "takeaway"
+  ];
+
+  const badImageKeywords = [
+    "favicon",
+    "favi",
+    "icon",
+    "logo",
+    "header",
+    "footer",
+    "banner",
+    "sprite"
+  ];
+
+
+  const menuExtensions = [".pdf", ".jpg", ".jpeg", "", ".webp.pex"];
+
+  while ((m = regex.exec(html)) !== null) {
+    let raw = m[1];
+    let url = raw.toLowerCase();
+
+    if (baseUrl && !url.startsWith("http")) {
+      try {
+        raw = new URL(raw, baseUrl).href;
+        url = raw.toLowerCase();
+      } catch {}
+    }
+
+    if (badImageKeywords.some(k => url.includes(k))) continue;
+
+    if (url.endsWith(".pdf")) {
+      links.push(raw);
+      continue;
+    }
+
+    const isImage = menuExtensions.some(ext => url.endsWith(ext));
+    const isMenuImage = imageMenuKeywords.some(k => url.includes(k));
+
+    if (isImage && isMenuImage) {
+      links.push(raw);
+      continue;
+    }
+
+    if (imageMenuKeywords.some(k => url.includes(k))) {
+      links.push(raw);
+      continue;
+    }
+  }
+
+  return links;
+}
+
+/* -------------------------------------------------------
+   RESOLVE MENU FROM A PAGE (DRILL DOWN)
+------------------------------------------------------- */
+async function resolveMenuFromPage(pageUrl, sourceLabel) {
+  log(`   🌐 Resolving menu from page (${sourceLabel}): ${pageUrl}`);
+  function pageLooksLikeFakeMenu(html) {
+    const text = html.toLowerCase();
+    return badMenuPhrases.some(p => text.includes(p));
+  }
+  const html = await fetchHtml(pageUrl);
+  if (!html) {
+    log("   ⚠️ Could not fetch page HTML — using pageUrl as fallback menuUrl", "warn");
+    return {
+      pageUrl,
+      menuUrl: pageUrl,
+      menuSource: sourceLabel,
+      rawHtml: null
+    };
+  }
+
+  const links = extractLikelyMenuLinks(html, pageUrl);
+  if (pageLooksLikeFakeMenu(html)) {
+    log("   ❌ Page contains fake menu phrases — rejecting as menu", "warn");
+    return null;
+  }
+  if (links.length > 0) {
+    const menuUrl = links[0];
+    log("   ✅ Found menu link on page:");
+    log("      " + menuUrl);
+
+    const content = await fetchMenuContent(menuUrl);
+
+    return {
+      pageUrl,
+      menuUrl,
+      menuSource: sourceLabel,
+      rawHtml: content
+    };
+  }
+
+  log("   ⚠️ No deeper menu link found — treating page as menu container", "warn");
+
+  const content = await fetchMenuContent(pageUrl);
+
+  return {
+    pageUrl,
+    menuUrl: pageUrl,
+    menuSource: sourceLabel,
+    rawHtml: content
+  };
+}
+
+/* -------------------------------------------------------
+   HTML FETCH (via backend)
+------------------------------------------------------- */
+async function fetchHtml(url) {
+  const endpoint = `${SCRAPER_ENDPOINT}?url=${encodeURIComponent(url)}`;
+  log(`   🌐 Fetching HTML: ${url}`);
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(endpoint);
+      if (!res.ok) {
+        log(`   ❌ HTML fetch HTTP ${res.status} (attempt ${attempt})`, "warn");
+        continue;
+      }
+
+      const text = await res.text();
+      log(`   📄 HTML length: ${text.length}`);
+      if (attempt > 1) {
+        log(`   ✅ HTML fetch succeeded on attempt ${attempt}`, "warn");
+      }
+      return text;
+
+    } catch (err) {
+      log(`   ❌ HTML fetch error on attempt ${attempt}: ${err.message}`, "warn");
+    }
+  }
+
+  log("   ❌ HTML fetch failed after 3 attempts", "error");
+  return null;
+}
+
+/* -------------------------------------------------------
+   IMAGE OCR (JPG / PNG / WEBP)
+------------------------------------------------------- */
+async function ocrImageMenu(url) {
+  log(`   🖼️ Fetching image for OCR (via backend): ${url}`);
+
+  try {
+    const endpoint = `${SCRAPER_ENDPOINT}?url=${encodeURIComponent(url)}`;
+    const res = await fetch(endpoint);
+
+    if (!res.ok) {
+      log(`   ❌ Image fetch failed HTTP ${res.status}`, "error");
+      return "";
+    }
+
+    const blob = await res.blob();
+    log(`   📦 Image blob size: ${blob.size} bytes`);
+
+    const img = await new Promise((resolve, reject) => {
+      const image = new Image();
+      image.crossOrigin = "Anonymous";
+      image.onload = () => resolve(image);
+      image.onerror = reject;
+      image.src = URL.createObjectURL(blob);
+    });
+
+    log(`   🖼️ Image loaded: ${img.width}x${img.height}`);
+
+    if (!img.width || !img.height) {
+      log("   ⚠️ Image has zero dimensions — skipping OCR", "warn");
+      return "";
+    }
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+
+    log("   🔡 Running OCR on image...");
+    const dataUrl = canvas.toDataURL("image/png");
+
+    const {
+      data: { text }
+    } = await Tesseract.recognize(dataUrl, "eng");
+
+    log("   ✅ Image OCR complete");
+    log(`   📏 OCR text length: ${text.length}`);
+
+    return text;
+
+  } catch (err) {
+    log(`   ❌ Image OCR failed: ${err.message}`, "error");
+    return "";
+  }
+}
+
+/* -------------------------------------------------------
+   PDF FETCH + TEXT (pdf.js, NO PDF OCR)
+------------------------------------------------------- */
+async function fetchPdfText(url) {
+  const endpoint = `${SCRAPER_ENDPOINT}?url=${encodeURIComponent(url)}`;
+  log(`   📄 Requesting PDF (binary stream): ${url}`);
+
+  try {
+    const res = await fetch(endpoint);
+    if (!res.ok) {
+      log(`   ❌ PDF fetch failed HTTP ${res.status}`, "error");
+      return "";
+    }
+
+    const arrayBuffer = await res.arrayBuffer();
+    log(`   📐 PDF byte length received: ${arrayBuffer.byteLength}`);
+
+    const bytes = new Uint8Array(arrayBuffer);
+
+    let pdf;
+    try {
+      const loadingTask = pdfjsLib.getDocument({ data: bytes });
+      pdf = await loadingTask.promise;
+      log(`   📚 PDF loaded: ${pdf.numPages} pages`);
+    } catch (err) {
+      log(`   ⚠️ pdf.js failed (${err.message})`, "warn");
+      return "";
+    }
+
+    let fullText = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      try {
+        log(`   📝 Extracting page ${i}/${pdf.numPages}`);
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items.map(it => it.str).join("\n");
+        fullText += pageText + "\n";
+      } catch (err) {
+        log(`   ⚠️ Page ${i} unreadable (${err.message})`, "warn");
+      }
+    }
+
+    if (!fullText.trim()) {
+      log("   ⚠️ PDF text layer empty", "warn");
+      return "";
+    }
+
+    log("   ✅ PDF text extraction complete");
+    return fullText;
+
+  } catch (err) {
+    log("   ❌ PDF extraction failed: " + err.message, "error");
+    return "";
+  }
+}
+
+/* -------------------------------------------------------
+   MENU CONTENT FETCH (PDF / IMAGE / HTML)
+------------------------------------------------------- */
+async function fetchMenuContent(menuUrl) {
+  const lower = menuUrl.toLowerCase();
+
+  const isPdfExt = lower.endsWith(".pdf");
+  const isImageExt = lower.match(/\(jpg|jpeg|png|webp|gif)$/i);
+
+  if (isPdfExt) {
+    log("   📄 PDF menu detected (extension) — extracting text...");
+    return await fetchPdfText(menuUrl);
+  }
+
+  if (isImageExt) {
+    log("   🖼️ Image menu detected (extension) — running OCR...");
+    return await ocrImageMenu(menuUrl);
+  }
+
+  try {
+    const headRes = await fetch(
+      `${SCRAPER_ENDPOINT}?url=${encodeURIComponent(menuUrl)}`,
+      { method: "GET" }
+    );
+
+    const contentType = headRes.headers.get("content-type") || "";
+
+    if (contentType.includes("pdf")) {
+      log("   📄 PDF menu detected (content-type) — extracting text...");
+      return await fetchPdfText(menuUrl);
+    }
+
+    if (contentType.startsWith("image/")) {
+      log("   🖼️ Image menu detected (content-type) — running OCR...");
+      return await ocrImageMenu(menuUrl);
+    }
+
+  } catch (err) {
+    log("   ⚠️ HEAD/content-type detection failed — continuing...", "warn");
+  }
+
+  log("   🌐 Treating as HTML menu — fetching page...");
+  return await fetchHtml(menuUrl);
+}
+
+/* -------------------------------------------------------
+   SERPER MENU HELPERS (MINIMAL CALLS)
+------------------------------------------------------- */
+async function serperDomainMenu(website) {
+  if (!website) return null;
+  log("   🔍 Serper domain search...");
+  try {
+    const domain = new URL(website).hostname;
+    const q = `site:${domain} menu`;
+    const json = await serperSearch(q);
+    if (!json) return null;
+
+    const candidates = (json.organic || []).map(o => o.link).filter(Boolean);
+    const best = candidates.find(l => l.toLowerCase().includes("menu")) || candidates[0];
+    return best || null;
+  } catch (e) {
+    log("   ⚠️ Serper domain search failed", "warn");
+    return null;
+  }
+}
+
+async function serperGeneralMenu(name) {
+  log("   🔎 Serper general search...");
+  const q = `${name} San Pedro Belize menu`;
+  const json = await serperSearch(q);
+  if (!json) return null;
+
+  const candidates = (json.organic || []).map(o => o.link).filter(Boolean);
+  const best = candidates.find(l => l.toLowerCase().includes("menu")) || candidates[0];
+  return best || null;
+}
+
+async function serperPdfMenu(name) {
+  log("   📄 Serper PDF search...");
+  const q = `${name} San Pedro Belize menu pdf`;
+  const json = await serperSearch(q);
+  if (!json) return null;
+
+  const candidates = (json.organic || []).map(o => o.link).filter(Boolean);
+  const pdf = candidates.find(l => l.toLowerCase().endsWith(".pdf"));
+  return pdf || null;
+}
+
+/* -------------------------------------------------------
+   FIND MENU FOR BUSINESS (PIPELINE)
+------------------------------------------------------- */
+async function findMenuForBusiness(biz) {
+  const name = cleanName(biz);
+  const website = biz.websites && biz.websites.length > 0 ? biz.websites[0] : null;
+
+  /* STEP 1 — Scan website */
+  if (website) {
+    log("   🌐 Scanning website...");
+    const html = await fetchHtml(website);
+
+    if (html) {
+      const links = extractLikelyMenuLinks(html, website);
+
+      if (links.length > 0) {
+        const menuUrl = links[0];
+        log("   ✅ Menu link found on website:");
+        log("      " + menuUrl);
+
+        const menuHtml = await fetchMenuContent(menuUrl);
+
+        if (menuHtml && menuHtml.trim().length > 50) {
+          return {
+            pageUrl: website,
+            menuUrl,
+            menuSource: "website",
+            rawHtml: menuHtml
+          };
+        } else {
+          log("   ⚠️ Website menu content too small/empty — escalating", "warn");
+        }
+      }
+    }
+  }
+
+  /* STEP 2 — Serper domain search */
+  if (website) {
+    const domainMenu = await serperDomainMenu(website);
+    if (domainMenu) {
+      log("   ✅ Menu found via domain search:");
+      log("      " + domainMenu);
+
+      const menuHtml = await fetchMenuContent(domainMenu);
+      if (menuHtml && menuHtml.trim().length > 50) {
+        return {
+          pageUrl: website,
+          menuUrl: domainMenu,
+          menuSource: "serper-domain",
+          rawHtml: menuHtml
+        };
+      } else {
+        log("   ⚠️ Domain menu content too small/empty — escalating", "warn");
+      }
+    }
+  }
+
+  /* STEP 3 — Serper general search */
+  const generalMenuPage = await serperGeneralMenu(name);
+  if (generalMenuPage) {
+    const resolved = await resolveMenuFromPage(generalMenuPage, "serper-general");
+
+    if (resolved && resolved.rawHtml && resolved.rawHtml.trim().length > 50) {
+      return resolved; // { pageUrl, menuUrl, menuSource, rawHtml }
+    } else {
+      log("   ⚠️ General search result rejected or empty", "warn");
+    }
+  }
+
+  /* STEP 4 — Serper PDF search */
+  const pdfMenu = await serperPdfMenu(name);
+  if (pdfMenu) {
+    log("   📄 Menu found via PDF search:");
+    log("      " + pdfMenu);
+
+    const menuHtml = await fetchMenuContent(pdfMenu);
+    if (menuHtml && menuHtml.trim().length > 50) {
+      return {
+        pageUrl: null,
+        menuUrl: pdfMenu,
+        menuSource: "serper-pdf",
+        rawHtml: menuHtml
+      };
+    } else {
+      log("   ⚠️ PDF menu content too small/empty", "warn");
+    }
+  }
+
+  log("   ⚠️ No menu found");
+  return null;
+}
+
+/* -------------------------------------------------------
+   MENU PARSER v3 — SEGMENT + REGEX + FULL DEBUG LOGGING
+   Designed for Aqua-style menus and Belize patterns
+------------------------------------------------------- */
+
+function extractVisibleText(html) {
+  if (!html) return "";
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<\/p>/gi, " ")
+    .replace(/<\/h[1-6]>/gi, " ")
+    .replace(/<li[^>]*>/gi, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeMenuText(rawHtml) {
+  let text = extractVisibleText(rawHtml);
+
+  // Remove nav/header junk
+  text = text.replace(/Aqua Restaurant Menu Gallery Contact Reservations/gi, " ");
+
+  text = text.replace(/\s+/g, " ").trim();
+
+  log("🔧 NORMALIZED TEXT:", text.substring(0, 500));
+
+  return text;
+}
+
+function parseMenu(rawHtml) {
+  if (!rawHtml) return fallbackMenu("No content");
+
+  if (rawHtml.length > 500000) {
+    rawHtml = rawHtml.substring(0, 500000);
+  }
+
+  const text = normalizeMenuText(rawHtml);
+  if (!text) return fallbackMenu("No text found");
+
+  return parseSegmentedMenu(text);
+}
+
+const MENU_SECTION_MARKERS = [
+  "Appetizers",
+  "Starters",
+  "Breakfast",
+  "Lunch",
+  "Dinner",
+  "Burgers",
+  "Pizza",
+  "Sandwiches",
+  "Seafood",
+  "Chicken",
+  "Desserts",
+  "Drinks",
+  "Beverages",
+  "Cocktails",
+  "Barbecue",
+  "Thai",
+  "Chinese",
+  "Indian",
+  "Italian",
+  "Sushi",
+  "Sashimi",
+  "Rolls",
+  "Specials",
+  "Kids Menu",
+  "Sides",
+  "Soups",
+  "Salads",
+  "Entrees",
+  "Mains"
+];
+
+function parseSegmentedMenu(text) {
+  log("🔍 START SEGMENT PARSE");
+
+  // Use all known menu categories as markers
+  const markers = MENU_SECTION_MARKERS;
+
+  const positions = [];
+
+  markers.forEach(marker => {
+    const idx = text.indexOf(marker);
+    log(`🔎 Searching for marker "${marker}" → index:`, idx);
+    if (idx !== -1) positions.push({ marker, index: idx });
+  });
+
+  if (positions.length === 0) {
+    log("❌ No category markers found");
+    return fallbackMenu("No category markers found");
+  }
+
+  // Sort by appearance in text
+  positions.sort((a, b) => a.index - b.index);
+
+  const categories = [];
+
+  for (let i = 0; i < positions.length; i++) {
+    const { marker, index } = positions[i];
+    const nextIndex = i + 1 < positions.length ? positions[i + 1].index : text.length;
+
+    log(`\n📦 CATEGORY SEGMENT: "${marker}"`);
+    log("   Segment start:", index, "end:", nextIndex);
+
+    const segment = text.substring(index, nextIndex).trim();
+    log("   Raw segment:", segment.substring(0, 300));
+
+    const items = extractItemsFromSegment(segment);
+
+    categories.push({
+      category: marker,
+      subcategories: [
+        {
+          name: "Items",
+          items
+        }
+      ]
+    });
+  }
+
+  return categories.length ? categories : fallbackMenu("No structured items found");
+}
+// 🔧 High-level entry
+function parseMenuPage(rawHtml, businessId, businessName) {
+  log("🌴 parseMenuPage for:", businessName, businessId);
+
+  const text = normalizeMenuText(rawHtml);
+  const segments = segmentByCategories(text);
+
+  const menu = segments.map(seg => {
+    const items = extractItemsFromSegment(seg.segment, seg.category);
+    return {
+      category: seg.category,
+      subcategories: [
+        {
+          name: "Items",
+          items
+        }
+      ]
+    };
+  });
+
+  return {
+    businessId,
+    businessName,
+    menu
+  };
+}
+
+// 🔧 Normalize text (NBSP, entities, whitespace)
+function normalizeMenuText(html) {
+  let text = html;
+
+  // Basic HTML entity cleanup
+  text = text.replace(/&nbsp;/gi, " ");
+  text = text.replace(/&amp;/gi, "&");
+  text = text.replace(/&quot;/gi, '"');
+  text = text.replace(/&#39;/gi, "'");
+  text = text.replace(/&lt;/gi, "<");
+  text = text.replace(/&gt;/gi, ">");
+
+  // Remove obvious nav junk
+  text = text.replace(/Menu Gallery Contact Reservations/gi, " ");
+
+  // Normalize whitespace
+  text = text.replace(/\u00A0/g, " "); // NBSP → space
+  text = text.replace(/\s+/g, " ").trim();
+
+  log("🧹 Normalized text (first 300):", text.substring(0, 300));
+  return text;
+}
+
+// 🔧 Known category markers (extend over time)
+const CATEGORY_MARKERS = [
+  "Appetizers",
+  "Dinner",
+  "Lunch",
+  "Sashimi Platter", // spelling variant
+  "Starters",
+  "Mains",
+  "Main Courses",
+  "Entrees",
+  "Desserts",
+  "Drinks",
+  "Beverages"
+];
+
+// 🔧 Segment text by category markers
+function segmentByCategories(text) {
+  const segments = [];
+  const positions = [];
+
+  CATEGORY_MARKERS.forEach(marker => {
+    const idx = text.indexOf(marker);
+    if (idx !== -1) {
+      positions.push({ marker, index: idx });
+      log("🔎 Found category marker:", marker, "at index:", idx);
+    }
+  });
+
+  if (positions.length === 0) {
+    log("⚠️ No category markers found, returning single Uncategorized segment");
+    return [{ category: "Uncategorized", segment: text }];
+  }
+
+  positions.sort((a, b) => a.index - b.index);
+
+  for (let i = 0; i < positions.length; i++) {
+    const { marker, index } = positions[i];
+    const nextIndex = i + 1 < positions.length ? positions[i + 1].index : text.length;
+
+    const segment = text.substring(index, nextIndex).trim();
+    log("\n📦 CATEGORY SEGMENT:", `"${marker}"`);
+    log("   Segment start:", index, "end:", nextIndex);
+    log("   Raw segment:", segment.substring(0, 200));
+
+    segments.push({ category: marker, segment });
+  }
+
+  return segments;
+}
+
+// 🔧 Extract items from a category segment
+function extractItemsFromSegment(segment, categoryMarker = null) {
+  log("🔧 Extracting items from segment:", segment.substring(0, 200));
+
+  const items = [];
+
+  // Normalize whitespace again (safety)
+  segment = segment.replace(/\u00A0/g, " ");
+  segment = segment.replace(/\s+/g, " ").trim();
+
+  // Strip category marker at start
+  if (categoryMarker) {
+    const escaped = categoryMarker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const stripRegex = new RegExp("^" + escaped + "\\s+", "i");
+    segment = segment.replace(stripRegex, "").trim();
+    log("   ✂️ After stripping category:", segment.substring(0, 200));
+  }
+
+  // Hard stop: footer / info phrases (we'll cut the segment before these)
+  const FOOTER_MARKERS = [
+    "Sushi available every",
+    "Delivery time is at",
+    "Delivery fee is",
+    "Orders can be placed",
+    "Whatsapp at",
+    "WhatsApp at",
+    "Whats App at"
+  ];
+  for (const marker of FOOTER_MARKERS) {
+    const idx = segment.indexOf(marker);
+    if (idx !== -1) {
+      log("   ✂️ Truncating segment at footer marker:", marker);
+      segment = segment.substring(0, idx).trim();
+      break;
+    }
+  }
+
+  // Special case: Sashimi / Shashimi Platter – treat whole block as one item
+  if (/sashimi platter|shashimi platter/i.test(categoryMarker || "")) {
+    const sashimiItem = extractSingleSashimiItem(segment, categoryMarker);
+    if (sashimiItem) {
+      items.push(sashimiItem);
+      return items;
+    }
+  }
+
+  // Core item regex: Name + Description + Price
+  // Example matches:
+  // "Edamame Whole soy beans pods sprinkled with kosher salt ~ $8"
+  // "Shrimp Dumplings 15"
+  const itemRegex =
+    /([A-Z][A-Za-z]*(?: [A-Z][A-Za-z]*){0,3})\s+([^~$]*?)\s*(?:~\s*)?\$?\s*(\d{1,3}(?:\.\d{2})?)(?!\d)/g;
+
+  let match;
+  while ((match = itemRegex.exec(segment)) !== null) {
+    let rawName = match[1].trim();
+    let rawDesc = match[2].trim();
+    let price = parseFloat(match[3]);
+
+    log("   🟢 RAW ITEM MATCH:");
+    log("      rawName:", rawName);
+    log("      rawDesc:", rawDesc);
+    log("      rawPrice:", price);
+
+    // Reject obvious junk: phone/time/huge numbers
+    if (price > 200) {
+      log("      ❌ Rejecting match: price looks like phone/time:", price);
+      continue;
+    }
+
+    // Reject if name is exactly the category
+    if (categoryMarker && rawName.toLowerCase() === categoryMarker.toLowerCase()) {
+      log("      ❌ Rejecting match: name equals category marker");
+      continue;
+    }
+
+    const fullLine = (rawName + " " + rawDesc).trim();
+    const name = smartExtractItemName(fullLine, categoryMarker);
+    const description = smartExtractDescription(fullLine, name);
+
+    log("   🎯 SMART PARSE:");
+    log("      Name:", name);
+    log("      Desc:", description);
+    log("      Price:", price);
+
+    items.push({ name, description, price });
+  }
+
+  // If nothing matched but we have a category, fallback: treat segment as one item
+  if (items.length === 0 && categoryMarker) {
+    log("   ⚠️ No items matched — using category as single item");
+    const price = extractTrailingPrice(segment);
+    const desc = segment.replace(/(?:~\s*)?\$?\s*\d{1,3}(?:\.\d{2})?\s*$/, "").trim();
+    items.push({
+      name: categoryMarker,
+      description: desc,
+      price
+    });
+  }
+
+  return items;
+}
+
+// 🔧 Sashimi special handling
+function extractSingleSashimiItem(segment, categoryMarker) {
+  log("   🧪 Sashimi fallback for segment:", segment.substring(0, 200));
+
+  const price = extractTrailingPrice(segment);
+  const desc = segment.replace(/(?:~\s*)?\$?\s*\d{1,3}(?:\.\d{2})?\s*$/, "").trim();
+
+  if (!desc) return null;
+
+  return {
+    name: categoryMarker || "Sashimi Platter",
+    description: desc,
+    price
+  };
+}
+
+// 🔧 Extract trailing price from a block of text
+function extractTrailingPrice(text) {
+  const priceMatch = /(?:~\s*)?\$?\s*(\d{1,3}(?:\.\d{2})?)\s*$/.exec(text);
+  if (!priceMatch) return null;
+  const price = parseFloat(priceMatch[1]);
+  log("   💰 Extracted trailing price:", price, "from:", text.substring(text.length - 40));
+  return price;
+}
+
+// 🔧 Smart item name extraction
+function smartExtractItemName(fullLine, categoryMarker) {
+  log("      🔍 smartExtractItemName input:", fullLine);
+
+  // If line ends with known item endings, use that chunk
+  const ENDINGS = [
+    "Roll",
+    "Soup",
+    "Salad",
+    "Dumplings",
+    "Burger",
+    "Tacos",
+    "Platter",
+    "Pizza",
+    "Pasta"
+  ];
+
+  for (const ending of ENDINGS) {
+    const regex = new RegExp(
+      "\\b([A-Z][A-Za-z]*(?: [A-Z][A-Za-z]*)* " + ending + ")\\b"
+    );
+    const m = fullLine.match(regex);
+    if (m) {
+      log("      🟢 Name detected by ending:", m[1]);
+      return m[1].trim();
+    }
+  }
+
+  // Fallback: take first 2–3 capitalized words
+  const words = fullLine.split(" ");
+  const nameWords = [];
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i];
+    if (/^[A-Z]/.test(w)) {
+      nameWords.push(w);
+      if (nameWords.length >= 3) break;
+    } else {
+      break;
+    }
+  }
+
+  if (nameWords.length) {
+    const fallback = nameWords.join(" ");
+    log("      🟡 Fallback name:", fallback);
+    return fallback;
+  }
+
+  // Last resort: category marker
+  log("      🔻 Using category as name fallback:", categoryMarker || fullLine);
+  return categoryMarker || fullLine;
+}
+
+// 🔧 Smart description extraction
+function smartExtractDescription(fullLine, name) {
+  log("      🔍 smartExtractDescription:", fullLine, " | name:", name);
+  if (!name) return fullLine;
+
+  const idx = fullLine.indexOf(name);
+  if (idx === -1) return fullLine;
+
+  const after = fullLine.substring(idx + name.length).trim();
+  return after;
+}
+
+function fallbackMenu(reason) {
+  log("❌ FALLBACK MENU:", reason);
+  return [
+    {
+      category: "Uncategorized",
+      subcategories: [
+        {
+          name: "Items",
+          items: [
+            {
+              name: "Unable to parse",
+              description: reason,
+              price: null
+            }
+          ]
+        }
+      ]
+    }
+  ];
+}
+
+/* -------------------------------------------------------
+   SAVE TO FIRESTORE
+------------------------------------------------------- */
+async function savePendingMenu(bizId, bizName, website, result) {
+  const visible = extractVisibleText(result.rawHtml || "");
+  const trimmed = visible.substring(0, 200000);
+
+  const doc = {
+    businessId: bizId,
+    businessName: bizName,
+    website: website || null,
+    menuSource: result.menuSource,
+    menuUrl: result.menuUrl,
+    menu: parseMenu(trimmed),
+    rawHtml: trimmed,
+    scannedAt: new Date(),
+    status: "pending-review",
+    notes: "Auto-scanned"
+  };
+
+  await db.collection("PendingMenus").add(doc);
+}
+
+/* -------------------------------------------------------
+   MAIN RUNNER (SINGLE ID)
+------------------------------------------------------- */
+// async function run() {
+//   STOP_REQUESTED = false;
+//   btnRun.disabled = true;
+//   log("🚀 Starting SINGLE-ID Menu Scanner...\n");
+
+//   const targetId = "14007574"; // Aqua example; change as needed
+
+//   const doc = await db.collection("Businesses").doc(targetId).get();
+//   if (!doc.exists) {
+//     log("❌ Business not found", "error");
+//     btnRun.disabled = false;
+//     return;
+//   }
+
+//   const biz = doc.data();
+//   log(`📍 Scanning business: ${targetId}`);
+//   log(`🏪 ${cleanName(biz)}`);
+
+//   const result = await findMenuForBusiness(biz);
+
+//   if (result) {
+//     await savePendingMenu(
+//       targetId,
+//       cleanName(biz),
+//       biz.websites && biz.websites.length > 0 ? biz.websites[0] : null,
+//       result
+//     );
+//     log("   💾 Saved to PendingMenus");
+//   } else {
+//     log("   ⚠️ No menu saved");
+//   }
+
+//   log("\n🎉 COMPLETE — Single business processed.");
+//   btnRun.disabled = false;
+// }
+
+/* -------------------------------------------------------
+   CATEGORY FILTER — ONLY SCAN FOOD/DRINK BUSINESSES
+------------------------------------------------------- */
+
+const MENU_CATEGORIES = new Set([
+  "food",
+  "drinks",
+  "lunch",
+  "dinner",
+  "bar-restaurant",
+  "breakfast",
+  "burgers",
+  "chicken",
+  "chinese",
+  "desserts",
+  "groceries",     // optional
+  "pizza",
+  "sandwiches",
+  "thai",
+  "seafood",
+  "italian",
+  "indian",
+  "barbecue",
+  "alcoholic",
+  "non-alcoholic"
+]);
+
+function normalizeCategory(cat) {
+  if (!cat) return "";
+  return cat
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[\s\/]+/g, "-")   // spaces & slashes → hyphens
+    .replace(/[^a-z0-9\-]/g, ""); // remove weird chars
+}
+
+function businessNeedsMenu(biz) {
+  const cats = biz.categories || [];
+  const subs = biz.subcategories || [];
+
+  // Normalize all categories + subcategories
+  const all = [...cats, ...subs].map(normalizeCategory);
+
+  // Check if ANY normalized category matches a menu category
+  return all.some(cat => MENU_CATEGORIES.has(cat));
+}
+/* -------------------------------------------------------
+   🔥 MASTER SCAN LOOP — SCAN ALL BUSINESSES
+   This is the missing final piece.
+------------------------------------------------------- */
+
+async function scanAllBusinesses() {
+  STOP_REQUESTED = false;
+  btnRun.disabled = true;
+
+  log("🚀 Starting FULL SCAN (food/drink businesses only)...\n");
+
+  const snap = await db.collection("Businesses").get();
+  const all = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+  const targets = all.filter(businessNeedsMenu);
+
+  log(`📊 Found ${targets.length} businesses that require menus.`);
+
+  for (const biz of targets) {
+    if (STOP_REQUESTED) {
+      log("🛑 STOP REQUESTED — ending scan.");
+      break;
+    }
+    await scanSingleBusiness(biz);
+  }
+
+  log("\n🎉 FULL SCAN COMPLETE.");
+  btnRun.disabled = false;
+}
+
+/* -------------------------------------------------------
+   🔥 SCAN A SINGLE BUSINESS (FULL PIPELINE)
+------------------------------------------------------- */
+
+async function scanSingleBusiness(biz) {
+  const bizId = biz.id;
+  const bizName = cleanName(biz);
+  const website = biz.websites && biz.websites.length > 0 ? biz.websites[0] : null;
+
+  log(`\n---------------------------------------------`);
+  log(`🏪 SCANNING BUSINESS: ${bizName} (${bizId})`);
+  log(`🌐 Website: ${website || "None"}`);
+
+  // STEP 1 — FIND MENU (ALWAYS RETURNS MENU URL OR NULL)
+  const result = await findMenuForBusiness(biz);
+
+  // ALWAYS SAVE THE MENU LINK, EVEN IF BAD
+  await saveMenuSourceRecord(bizId, bizName, result);
+
+  if (!result) {
+    log("⚠️ No menu found — nothing to save.");
+    return;
+  }
+
+  // STEP 2 — SAVE TO PendingMenus
+  await savePendingMenu(
+    bizId,
+    bizName,
+    website,
+    result
+  );
+
+  log("💾 Saved to PendingMenus");
+}
+
+/* -------------------------------------------------------
+   🔥 ALWAYS SAVE MENU SOURCE (GOOD OR BAD)
+   This is what you asked for: ALWAYS record the URL.
+------------------------------------------------------- */
+
+async function saveMenuSourceRecord(bizId, bizName, result) {
+  const doc = {
+    businessId: bizId,
+    businessName: bizName,
+    found: !!result,
+    pageUrl: result ? result.pageUrl || null : null,
+    menuUrl: result ? result.menuUrl || null : null,
+    menuSource: result ? result.menuSource : null,
+    timestamp: new Date(),
+    notes: result ? "Menu source discovered" : "No menu found"
+  };
+
+  await db.collection("MenuSources").add(doc);
+
+  if (result) {
+    log(`📌 Saved menu source: ${result.menuUrl}`);
+  } else {
+    log("📌 Saved menu source record: NO MENU FOUND");
+  }
+}
+
+/* -------------------------------------------------------
+   🔥 CONNECT FULL SCAN TO BUTTON
+------------------------------------------------------- */
+
+btnRun.onclick = scanAllBusinesses;
+</script>
+
+</body>
+</html>

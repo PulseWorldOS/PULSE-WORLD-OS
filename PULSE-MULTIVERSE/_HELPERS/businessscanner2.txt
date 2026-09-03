@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pending → Business Full Schema Audit</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Consolas, monospace;
+      padding: 20px;
+    }
+    #log {
+      width: 100%;
+      height: 600px;
+      background: #000;
+      border: 1px solid #444;
+      padding: 10px;
+      overflow-y: scroll;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Pending → Business Full Schema Audit</h1>
+
+  <button id="run">RUN AUDIT</button>
+  <button id="delete">DELETE BAD AUDIT</button>
+  <button id="stop">STOP</button>
+
+  <div id="log"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+   
+
+    const logEl = document.getElementById("log");
+    const btnRun = document.getElementById("run");
+    const btnDel = document.getElementById("delete");
+    const btnStop = document.getElementById("stop");
+
+    let STOP_REQUESTED = false;
+
+    btnStop.onclick = () => {
+      STOP_REQUESTED = true;
+      log("🛑 STOP REQUESTED — finishing current item...", "warn");
+    };
+
+    function log(msg, type = "info") {
+      const c =
+        type === "error" ? "#ff4444" :
+        type === "warn"  ? "#ffbb33" :
+                           "#00ff66";
+
+      logEl.innerHTML += `<div style="color:${c}">${msg}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function mapCategoriesFromTypes(types = []) {
+  const normalized = types.map(t => t.toLowerCase());
+  const categories = new Set();
+  const sub = new Set();
+
+  // ---------------- FOOD ----------------
+  if (normalized.some(t =>
+    t.includes("restaurant") ||
+    t.includes("food") ||
+    t.includes("pupuseria") ||
+    t.includes("cafe") ||
+    t.includes("bakery") ||
+    t.includes("diner") ||
+    t.includes("breakfast") ||
+    t.includes("pizza") ||
+    t.includes("seafood") ||
+    t.includes("ice cream") ||
+    t.includes("juice bar") ||
+    t.includes("supermarket") ||
+    t.includes("market") ||
+    t.includes("grocery") ||
+    t.includes("deli") ||
+    t.includes("fast food")
+  )) {
+    categories.add("food");
+
+    if (normalized.some(t => t.includes("bar") && t.includes("restaurant"))) sub.add("bar-restaurant");
+    if (normalized.some(t => t.includes("breakfast"))) sub.add("breakfast");
+    if (normalized.some(t => t.includes("seafood"))) sub.add("seafood");
+    if (normalized.some(t => t.includes("pizza"))) sub.add("pizza");
+    if (normalized.some(t => t.includes("burger"))) sub.add("burgers");
+    if (normalized.some(t => t.includes("sandwich") || t.includes("deli"))) sub.add("sandwiches");
+    if (normalized.some(t => t.includes("ice cream") || t.includes("dessert") || t.includes("bakery"))) sub.add("desserts");
+    if (normalized.some(t => t.includes("supermarket") || t.includes("grocery") || t.includes("market"))) sub.add("groceries");
+    if (normalized.some(t => t.includes("italian"))) sub.add("italian");
+    if (normalized.some(t => t.includes("thai"))) sub.add("thai");
+    if (normalized.some(t => t.includes("mexican"))) sub.add("mexican");
+    if (normalized.some(t => t.includes("salvadoran"))) sub.add("salvadoran");
+    if (normalized.some(t => t.includes("bbq") || t.includes("barbecue"))) sub.add("barbecue");
+    if (normalized.some(t => t.includes("chicken"))) sub.add("chicken");
+  }
+
+  // ---------------- DRINKS ----------------
+  if (normalized.some(t =>
+    t.includes("bar") ||
+    t.includes("pub") ||
+    t.includes("nightclub") ||
+    t.includes("brewery") ||
+    t.includes("cocktail") ||
+    t.includes("wine bar")
+  )) {
+    categories.add("drinks");
+
+    if (normalized.some(t => t.includes("bar") || t.includes("pub") || t.includes("brewery"))) sub.add("alcoholic");
+    if (normalized.some(t => t.includes("juice bar") || t.includes("smoothie"))) sub.add("non-alcoholic");
+    if (normalized.some(t => t.includes("restaurant"))) sub.add("bar-restaurant");
+  }
+
+  // ---------------- APPAREL ----------------
+  if (normalized.some(t =>
+    t.includes("clothing") ||
+    t.includes("apparel") ||
+    t.includes("boutique") ||
+    t.includes("shoe store") ||
+    t.includes("swimwear")
+  )) {
+    categories.add("apparel");
+  }
+
+  // ---------------- ELECTRONICS ----------------
+  if (normalized.some(t =>
+    t.includes("electronics") ||
+    t.includes("computer store") ||
+    t.includes("phone store") ||
+    t.includes("mobile phone") ||
+    t.includes("camera store")
+  )) {
+    categories.add("electronics");
+  }
+
+  // ---------------- HOME-ESSENTIALS ----------------
+  if (normalized.some(t =>
+    t.includes("hardware") ||
+    t.includes("home goods") ||
+    t.includes("home improvement") ||
+    t.includes("water purification") ||
+    t.includes("telephone company") ||
+    t.includes("construction") ||
+    t.includes("builder") ||
+    t.includes("carpenter") ||
+    t.includes("electrician") ||
+    t.includes("plumber") ||
+    t.includes("appliance")
+  )) {
+    categories.add("home-essentials");
+  }
+
+  // ---------------- PHARMACY ----------------
+  if (normalized.some(t =>
+    t.includes("pharmacy") ||
+    t.includes("drug store") ||
+    t.includes("medical supply")
+  )) {
+    categories.add("pharmacy");
+  }
+
+  // ---------------- BEAUTY-SPA ----------------
+  if (normalized.some(t =>
+    t.includes("spa") ||
+    t.includes("day spa") ||
+    t.includes("massage") ||
+    t.includes("beauty salon") ||
+    t.includes("nail salon") ||
+    t.includes("barber") ||
+    t.includes("hair salon")
+  )) {
+    categories.add("beauty-spa");
+
+    if (normalized.some(t => t.includes("massage"))) sub.add("massage");
+  }
+
+  // ---------------- ADVENTURES-EXCURSIONS ----------------
+  if (normalized.some(t =>
+    t.includes("kayak") ||
+    t.includes("canoe") ||
+    t.includes("boat rental") ||
+    t.includes("tour") ||
+    t.includes("charter") ||
+    t.includes("snorkel") ||
+    t.includes("scuba") ||
+    t.includes("dive shop")
+  )) {
+    categories.add("adventures-excursions");
+
+    if (normalized.some(t => t.includes("kayak"))) sub.add("kayak");
+    if (normalized.some(t => t.includes("canoe"))) sub.add("canoe");
+    if (normalized.some(t => t.includes("tour"))) sub.add("tours");
+    if (normalized.some(t => t.includes("dive"))) sub.add("dive");
+  }
+
+  // ---------------- MUSIC ----------------
+  if (normalized.some(t =>
+    t.includes("recording studio") ||
+    t.includes("music")
+  )) {
+    categories.add("music");
+  }
+
+  // ---------------- JEWELRY ----------------
+  if (normalized.some(t =>
+    t.includes("jewelry") ||
+    t.includes("jeweller")
+  )) {
+    categories.add("jewelry");
+  }
+
+  // ---------------- ANIMAL-PET SERVICES ----------------
+  if (normalized.some(t =>
+    t.includes("pet") ||
+    t.includes("veterinary") ||
+    t.includes("dog grooming") ||
+    t.includes("pet boarding")
+  )) {
+    categories.add("animal-pet services");
+  }
+
+  // ---------------- ATM-BANKS ----------------
+  if (normalized.some(t =>
+    t.includes("bank") ||
+    t.includes("atm") ||
+    t.includes("credit union")
+  )) {
+    categories.add("atm-banks");
+  }
+
+  // ---------------- HOTEL ----------------
+  if (normalized.some(t =>
+    t.includes("hotel") ||
+    t.includes("resort") ||
+    t.includes("lodge") ||
+    t.includes("hostel") ||
+    t.includes("guest house")
+  )) {
+    categories.add("hotel-lodging");
+  }
+
+  // ---------------- TRANSPORTATION ----------------
+  if (normalized.some(t =>
+    t.includes("taxi") ||
+    t.includes("shuttle") ||
+    t.includes("car rental") ||
+    t.includes("golf cart") ||
+    t.includes("boat taxi")
+  )) {
+    categories.add("transportation");
+  }
+
+  // ---------------- TOBACCO-VAPES ----------------
+  if (normalized.some(t =>
+    t.includes("vape") ||
+    t.includes("tobacco")
+  )) {
+    categories.add("tobacco-vapes");
+  }
+
+  // ---------------- ADULT ----------------
+  if (normalized.some(t =>
+    t.includes("adult")
+  )) {
+    categories.add("adult");
+  }
+
+  // ---------------- LANDMARKS ----------------
+  if (normalized.some(t =>
+    t.includes("museum") ||
+    t.includes("landmark") ||
+    t.includes("historical") ||
+    t.includes("cultural")
+  )) {
+    categories.add("landmarks-cultural sites");
+  }
+
+  return {
+    categories: Array.from(categories),
+    subcategories: Array.from(sub)
+  };
+}
+
+    // ---------------- FULL BUSINESS SCHEMA ----------------
+    const BUSINESS_SCHEMA = {
+      busname: null,
+      title: null,
+      resolvedName: null,
+
+      address: null,
+      resolvedAddress: null,
+
+      categories: null,
+      subcategories: null,
+      googleTypes: null,
+      type: null,
+      types: null,
+
+      description: null,
+      summary: null,
+
+      phoneNumber: null,
+      phones: null,
+      whatsapp: null,
+
+      website: null,
+      websites: null,
+      social: null,
+
+      placeId: null,
+      cid: null,
+      fid: null,
+      googleCid: null,
+      googleFid: null,
+
+      lat: null,
+      lng: null,
+      latitude: null,
+      longitude: null,
+
+      mapImageUrl: null,
+      mapsWebUrl: null,
+      mainPhotoURL: null,
+      images: null,
+
+      openingHours: null,
+      weeklyHours: null,
+      hours: null,
+      hoursText: null,
+      hoursSource: null,
+      hoursLastUpdatedAt: null,
+
+      rating: null,
+      ratingCount: null,
+      priceLevel: null,
+      priceRating: null,
+      priceFinalScore: null,
+
+      menuUrl: null,
+      menu: null,
+
+      environment: null,
+      busIndex: null,
+      listing_id: null,
+      externalId: null,
+      duplicateCount: null,
+      lastDuplicateRemovedAt: null,
+      updatedAt: null,
+      position: null
+    };
+    async function deleteBadBusinesses() {
+  const snap = await db.collection("Businesses").get();
+  let deleted = 0;
+
+  for (const doc of snap.docs) {
+    const idNum = Number(doc.id);
+    if (!isNaN(idNum) && idNum >= 14009271) {
+      await db.collection("Businesses").doc(doc.id).delete();
+      deleted++;
+      log("🗑️ Deleted bad doc:", doc.id);
+    }
+  }
+
+  log("✅ DONE. Deleted:", deleted);
+}
+async function saveMappedBusinesses(mappedList) {
+
+  // 1. Load existing placeIds + max busIndex
+  const existingSnap = await db.collection("Businesses").get();
+  const existingPlaceIds = new Set();
+  let maxBusIndex = 932;
+
+  existingSnap.forEach(doc => {
+    const d = doc.data();
+    if (d.placeId) existingPlaceIds.add(d.placeId);
+    if (d.busIndex && d.busIndex > maxBusIndex) maxBusIndex = d.busIndex;
+  });
+
+  log("📌 Existing placeIds:", existingPlaceIds.size);
+  log("📌 Highest busIndex:", maxBusIndex);
+
+  // 2. Start values YOU defined
+  let nextListingId = 14009271;
+  let nextBusIndex = maxBusIndex + 1;
+
+  log("➡️ Starting listing_id:", nextListingId);
+  log("➡️ Starting busIndex:", nextBusIndex);
+
+  let insertedCount = 0;
+
+  // 3. Insert only NEW businesses
+  for (const mock of mappedList) {
+
+    // MUST have placeId
+    if (!mock.placeId) {
+      log("⏭ SKIPPED (no placeId):", mock.busname);
+      continue;
+    }
+
+    // Dedupe by placeId
+    if (existingPlaceIds.has(mock.placeId)) {
+      log("⏭ SKIPPED (duplicate placeId):", mock.busname);
+      continue;
+    }
+
+    // Assign busIndex
+    mock.busIndex = nextBusIndex++;
+
+    // Assign new listing_id/docId
+    const docId = String(nextListingId++);
+    mock.listing_id = docId;
+
+    // Save
+    await db.collection("Businesses").doc(docId).set(mock, { merge: true });
+
+    insertedCount++;
+    log(`✔ INSERTED: ${mock.busname} → docId ${docId}, busIndex ${mock.busIndex}`);
+  }
+
+  log(`🎉 DONE — Inserted ${insertedCount} new businesses.`);
+}
+
+    function buildMockBusinessFromPending(p) {
+  let hasImages = !!(
+    (p.images && p.images.length > 0) ||
+    (p.raw && p.raw.images && p.raw.images.length > 0) ||
+    p.thumbnailUrl ||
+    (p.raw && p.raw.thumbnailUrl) ||
+    (p.mainPhotoUrl) ||
+    (p.raw && p.raw.mainPhotoUrl) ||
+    (p.photos && p.photos.length > 0) ||
+    (p.raw && p.raw.photos && p.raw.photos.length > 0)
+  );
+
+  let hasDescription = !!(
+    (p.description && p.description.trim().length > 0) ||
+    (p.summary && p.summary.trim().length > 0) ||
+    (p.about && p.about.trim().length > 0) ||
+    (p.editorialSummary && p.editorialSummary.trim().length > 0) ||
+    (p.snippet && p.snippet.trim().length > 0) ||
+
+    (p.raw && p.raw.description && p.raw.description.trim().length > 0) ||
+    (p.raw && p.raw.summary && p.raw.summary.trim().length > 0) ||
+    (p.raw && p.raw.about && p.raw.about.trim().length > 0) ||
+    (p.raw && p.raw.editorialSummary && p.raw.editorialSummary.trim().length > 0) ||
+    (p.raw && p.raw.snippet && p.raw.snippet.trim().length > 0)
+  );
+
+  const mock = { ...BUSINESS_SCHEMA };
+
+  mock.busname = p.title || p.name || null;
+  mock.title = p.title || null;
+
+  mock.address = p.address || p.raw.address || null;
+
+  // REMOVE old category placeholders — categories will be assigned later
+  mock.categories = null;
+  mock.subcategories = null;
+
+  mock.googleTypes = p.types || p.raw.types || null;
+  mock.types = p.types || null;
+  mock.type = p.type || null;
+
+  mock.description = p.description || null;
+  mock.descriptionExists = hasDescription;
+  mock.summary = p.summary || null;
+
+  mock.phoneNumber = p.phoneNumber || p.raw.phoneNumber || null;
+  mock.phones = p.phones || (p.phoneNumber ? [p.phoneNumber] : null);
+  mock.whatsapp = p.whatsapp || null;
+
+  mock.website = p.website || p.raw.website || null;
+  mock.websites = p.websites || (p.website ? [p.website] : null);
+  mock.social = p.social || null;
+
+  mock.placeId =
+    p.placeId ||
+    p.place_id ||
+    (p.raw && p.raw.placeId) ||
+    (p.raw && p.raw.place_id) ||
+    null;
+
+  mock.cid = p.cid || p.raw.cid || null;
+  mock.fid = p.fid || p.raw.fid || null;
+  mock.googleCid = p.cid || null;
+  mock.googleFid = p.fid || null;
+
+  mock.lat = p.lat || p.raw.latitude || null;
+  mock.lng = p.lng || p.raw.longitude || null;
+
+  mock.latitude = p.raw.latitude || null;
+  mock.longitude = p.raw.longitude || null;
+
+  mock.images = hasImages;
+  mock.mainPhotoURL = p.thumbnailUrl || p.raw.thumbnailUrl || null;
+
+  mock.openingHours = p.openingHours || p.raw.openingHours || null;
+  mock.weeklyHours = p.openingHours || p.raw.openingHours || null;
+  mock.hours = p.hours || null;
+  mock.hoursText = p.hoursText || null;
+
+  mock.rating = p.rating || p.raw.rating || null;
+  mock.ratingCount = p.ratingCount || p.raw.ratingCount || null;
+
+  mock.priceLevel = p.priceLevel || null;
+
+  mock.menuUrl = p.menu || null;
+  mock.menu = p.menu || null;
+
+  mock.position = p.position || null;
+
+  return mock;
+}
+
+    function findMissingFields(mock) {
+      return Object.keys(mock).filter(k => mock[k] === null);
+    }
+
+    // ---------------- VALIDATORS ----------------
+function isValidBelizePhone(phone) {
+  if (!phone) return false;
+  const cleaned = phone.replace(/\D/g, ""); // remove non-digits
+  return cleaned.length === 11 && cleaned.startsWith("501");
+}
+// -----------------------------------------------------
+// PHONE NORMALIZER
+// -----------------------------------------------------
+function normalizePhone(raw, row, coords = {}) {
+  if (!raw) return null;
+
+  // Clean weird whitespace + NBSP
+  let v = String(raw)
+    .replace(/\u00A0/g, " ")
+    .trim();
+
+  // Strip everything except digits and +
+  v = v.replace(/[^\d+]/g, "");
+
+  // Already valid E.164
+  if (v.startsWith("+") && v.length >= 8 && v.length <= 15) {
+    return v;
+  }
+
+  // Remove leading +
+  if (v.startsWith("+")) v = v.slice(1);
+
+  // Pure digits
+  const digits = v.replace(/\D/g, "");
+
+  // --- BELIZE LOGIC ---
+  // 7‑digit local numbers → +501
+  if (digits.length === 7) {
+    return "+501" + digits;
+  }
+
+  // 501 + 7 digits → +501xxxxxxx
+  if (digits.startsWith("501") && digits.length === 10) {
+    return "+501" + digits.slice(3);
+  }
+
+  // --- US / CANADA ---
+  if (digits.length === 10) {
+    return "+1" + digits;
+  }
+
+  if (digits.length === 11 && digits.startsWith("1")) {
+    return "+1" + digits.slice(1);
+  }
+
+  // --- INTERNATIONAL FALLBACK ---
+  if (digits.length >= 8 && digits.length <= 15) {
+    return "+" + digits;
+  }
+
+  // Reject everything else
+  return null;
+}
+
+function isValidWebsite(url) {
+  if (!url) return false;
+  if (url.startsWith("http://") || url.startsWith("https://")) return true;
+  if (url.includes(".") && !url.includes(" ")) return true;
+  return false;
+}
+
+function normalizeWebsite(url) {
+  if (!url) return null;
+
+  url = url.trim();
+
+  // If it already starts with http/https → good
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  // If it contains a dot and no spaces → add https://
+  if (url.includes(".") && !url.includes(" ")) {
+    return "https://" + url;
+  }
+
+  return null;
+}
+
+async function auditPendingToBusinessFormat() {
+  STOP_REQUESTED = false;
+  btnRun.disabled = true;
+
+  log("🚀 Starting FULL Pending → Business audit...\n");
+
+  const snap = await db.collection("PendingBusinesses").get();
+  const pending = [];
+  snap.forEach(doc => pending.push({ id: doc.id, ...doc.data() }));
+
+  // ---------------- SUMMARY COUNTERS ----------------
+  let total = 0;
+  let missingSummary = {};
+
+  let phoneMissing = 0;
+  let phoneInvalid = 0;
+  let phoneValid = 0;
+
+  let businessesWithImages = 0;
+  let businessesWithText = 0;
+
+  let websiteMissing = 0;
+  let websiteInvalid = 0;
+  let websiteValid = 0;
+
+  // Collect mapped businesses for saving later
+  const mappedBusinesses = [];
+
+  // ---------------- FILTER ----------------
+  const sanPedroWithHours = pending.filter(p => {
+    const addr = (p.address || (p.raw && p.raw.address) || "").toLowerCase();
+
+    // Exclude San Pedro, CA
+    if (addr.includes("san pedro, ca")) return false;
+    if (addr.includes("san pedro ca")) return false;
+    if (addr.includes("sanpedro, ca")) return false;
+    if (addr.includes("sanpedro ca")) return false;
+    if (addr.includes("san pedro, california")) return false;
+    if (addr.includes("san pedro california")) return false;
+    if (addr.includes("sanpedro california")) return false;
+
+    // ZIP codes (San Pedro, CA)
+    if (addr.includes("90731")) return false;
+    if (addr.includes("90732")) return false;
+
+    // Exclude San Pedro, Mexico
+    if (addr.includes("san pedro") && addr.includes("mexico")) return false;
+
+    // Include San Pedro, Belize
+    const isSP = addr.includes("san pedro");
+
+    const hasHours =
+      (p.openingHours && Object.keys(p.openingHours).length > 0) ||
+      (p.raw && p.raw.openingHours && Object.keys(p.raw.openingHours).length > 0);
+
+    return isSP && hasHours;
+  });
+
+  log(`📊 Found ${sanPedroWithHours.length} PendingBusinesses in San Pedro WITH hours.\n`);
+
+  let i = 0;
+
+  // ---------------- MAIN LOOP ----------------
+  for (const p of sanPedroWithHours) {
+    if (STOP_REQUESTED) break;
+
+    i++;
+    total++;
+
+
+    const mock = buildMockBusinessFromPending(p);
+    const missing = findMissingFields(mock);
+
+    // ---------------- NORMALIZE PLACEID ----------------
+    mock.placeId =
+      p.placeId ||
+      p.place_id ||
+      (p.raw && p.raw.placeId) ||
+      (p.raw && p.raw.place_id) ||
+      null;
+
+    // ---------------- MAIN FIELD CHECK ----------------
+    const mainMissing = [];
+
+    if (!mock.busname) mainMissing.push("busname");
+    if (!mock.address) mainMissing.push("address");
+    if (!mock.lat || !mock.lng) mainMissing.push("latlng");
+    if (!mock.openingHours) mainMissing.push("hours");
+
+    // ---------------- PHONE NORMALIZATION ----------------
+    let normalizedPhone = null;
+
+    if (mock.phoneNumber) {
+      normalizedPhone = normalizePhone(mock.phoneNumber);
+    }
+
+    if (!mock.phoneNumber) {
+      mainMissing.push("phone");
+      phoneMissing++;
+    } else if (!normalizedPhone) {
+      phoneInvalid++;
+    } else {
+      phoneValid++;
+    }
+
+    mock.phoneNumber = normalizedPhone;
+
+    // Normalize phones array
+    let phonesArray = [];
+
+    if (p.phones && Array.isArray(p.phones)) {
+      for (const ph of p.phones) {
+        const n = normalizePhone(ph);
+        if (n) phonesArray.push(n);
+      }
+    }
+
+    if (phonesArray.length === 0 && normalizedPhone) {
+      phonesArray.push(normalizedPhone);
+    }
+
+    phonesArray = [...new Set(phonesArray)];
+    mock.phones = phonesArray.length > 0 ? phonesArray : null;
+
+    // ---------------- WEBSITE NORMALIZE + VALIDATE ----------------
+    let normalizedWebsite = null;
+
+    if (mock.website) {
+      normalizedWebsite = normalizeWebsite(mock.website);
+    }
+
+    if (!mock.website) {
+      mainMissing.push("website");
+      websiteMissing++;
+    } else if (!normalizedWebsite) {
+      websiteInvalid++;
+    } else {
+      websiteValid++;
+    }
+
+    mock.website = normalizedWebsite;
+
+    // ---------------- IMAGE CHECK ----------------
+    let hasImages = !!(
+      (p.images && p.images.length > 0) ||
+      (p.raw && p.raw.images && p.raw.images.length > 0) ||
+      p.thumbnailUrl ||
+      (p.raw && p.raw.thumbnailUrl) ||
+      (p.mainPhotoUrl) ||
+      (p.raw && p.raw.mainPhotoUrl) ||
+      (p.photos && p.photos.length > 0) ||
+      (p.raw && p.raw.photos && p.raw.photos.length > 0)
+    );
+
+    if (hasImages) {
+      businessesWithImages++;
+    }
+    mock.images = hasImages;
+
+    // ---------------- DESCRIPTION CHECK ----------------
+    let hasDescription = !!(
+      (p.description && p.description.trim().length > 0) ||
+      (p.summary && p.summary.trim().length > 0) ||
+      (p.about && p.about.trim().length > 0) ||
+      (p.editorialSummary && p.editorialSummary.trim().length > 0) ||
+      (p.snippet && p.snippet.trim().length > 0) ||
+
+      (p.raw && p.raw.description && p.raw.description.trim().length > 0) ||
+      (p.raw && p.raw.summary && p.raw.summary.trim().length > 0) ||
+      (p.raw && p.raw.about && p.raw.about.trim().length > 0) ||
+      (p.raw && p.raw.editorialSummary && p.raw.editorialSummary.trim().length > 0) ||
+      (p.raw && p.raw.snippet && p.raw.snippet.trim().length > 0)
+    );
+
+    if (!hasDescription) {
+      const types = (p.types && p.types.length > 0) ? p.types : null;
+      const rawTypes = (p.raw && p.raw.types && p.raw.types.length > 0) ? p.raw.types : null;
+
+      if (types || rawTypes) {
+        hasDescription = true;
+      }
+    }
+
+    if (hasDescription) {
+      businessesWithText++;
+    }
+
+    mock.descriptionExists = hasDescription;
+
+    // ---------------- CATEGORY ENGINE ----------------
+    const allTypes = [
+      ...(p.types || []),
+      ...(p.googleTypes || []),
+      ...(p.raw.types || []),
+      ...(p.raw.googleTypes || [])
+    ];
+
+    const { categories, subcategories } = mapCategoriesFromTypes(allTypes);
+
+    mock.categories = categories.length > 0 ? categories : null;
+    mock.subcategories = subcategories.length > 0 ? subcategories : null;
+
+    // ---------------- SUMMARY KEY ----------------
+    const key = mainMissing.join(",") || "none";
+    missingSummary[key] = (missingSummary[key] || 0) + 1;
+
+    // ---------------- LOGGING ----------------
+    log(`📄 Mock Business Document:`);
+    log(JSON.stringify(mock, null, 2));
+
+    log(`⚠️ Missing Fields: ${JSON.stringify(missing)}`);
+    log(`⚠️ Missing MAIN Fields: ${mainMissing.length ? mainMissing.join(", ") : "none"}`);
+
+    // Collect for saving
+    mappedBusinesses.push(mock);
+  }
+
+  // ---------------- SUMMARY OUTPUT ----------------
+  log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  log("📊 SUMMARY OF MISSING MAIN FIELDS:\n");
+
+  Object.entries(missingSummary).forEach(([key, count]) => {
+    log(`• ${count} businesses missing: ${key}`);
+  });
+
+  // PHONE SUMMARY
+  log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  log("📞 PHONE SUMMARY:");
+  log(`• Missing: ${phoneMissing}`);
+  log(`• Invalid: ${phoneInvalid}`);
+  log(`• Valid: ${phoneValid}`);
+
+  // IMAGE SUMMARY
+  log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  log("🖼️ IMAGE SUMMARY:");
+  log(`• Businesses with images: ${businessesWithImages}`);
+  log(`• Businesses without images: ${sanPedroWithHours.length - businessesWithImages}`);
+
+  // DESCRIPTION SUMMARY
+  log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  log("📝 DESCRIPTION SUMMARY:");
+  log(`• Businesses with descriptions: ${businessesWithText}`);
+  log(`• Businesses without descriptions: ${sanPedroWithHours.length - businessesWithText}`);
+
+  // WEBSITE SUMMARY
+  log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  log("🌐 WEBSITE SUMMARY:");
+  log(`• Missing: ${websiteMissing}`);
+  log(`• Invalid: ${websiteInvalid}`);
+  log(`• Valid: ${websiteValid}`);
+
+  log("\n🎉 AUDIT COMPLETE.");
+
+  // ---------------- SAVE TO BUSINESSES ----------------
+  await saveMappedBusinesses(mappedBusinesses);
+
+  btnRun.disabled = false;
+}
+
+    btnRun.onclick = auditPendingToBusinessFormat;
+    btnDel.onclick = deleteBadBusinesses;
+  </script>
+</body>
+</html>

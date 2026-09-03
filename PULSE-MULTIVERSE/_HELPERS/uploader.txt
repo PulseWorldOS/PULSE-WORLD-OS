@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com">
+  <title>Pulse World Business CSV Importer</title>
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      padding: 20px;
+      background: #f5fff0;
+    }
+    #log {
+      white-space: pre-wrap;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      font-size: 14px;
+    }
+    button {
+      padding: 12px 20px;
+      background: #0a6e3a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+<h2>📦 Pulse World Business CSV Importer</h2>
+
+<input type="file" id="csvFile" accept=".csv" />
+<button onclick="startUpload()">Upload CSV</button>
+
+<div id="log"></div>
+
+<script>
+function log(msg) {
+  const el = document.getElementById("log");
+  el.textContent += msg + "\n";
+  requestAnimationFrame(() => {
+    el.scrollTop = el.scrollHeight;
+  });
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// -----------------------------------------------------
+// FULL VISIBILITY RETRY WRAPPER — YOU WILL SEE EVERYTHING
+// -----------------------------------------------------
+async function postWithRetry(url, row, retries = 3) {
+  const listingId = row.listing_id || "(missing)";
+  const name = (row["heading*"] || row.heading || "").trim() || "(no name)";
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const start = performance.now();
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(row)
+      });
+      const duration = Math.round(performance.now() - start);
+
+      const status = res.status;
+      let raw = "";
+      let data = null;
+
+      try {
+        raw = await res.text();
+      } catch (e) {
+        log(`⚠️ Could not read response text (attempt ${attempt}): ${e}`);
+      }
+
+      try {
+        data = raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        log(`⚠️ JSON parse failed (attempt ${attempt}): ${e}`);
+        data = null;
+      }
+
+      // SUCCESS
+      if (res.ok && data) {
+        return data;
+      }
+
+      // SERVER ERROR OR EMPTY BODY → RETRY
+      if (status >= 500 || !data) {
+        const wait = 200 * attempt;
+
+        log(`\n⚠️ SERVER ERROR on listing_id ${listingId} (${name})`);
+        log(`   Attempt: ${attempt}`);
+        log(`   HTTP Status: ${status}`);
+        log(`   Duration: ${duration}ms`);
+        log(`   Raw Response: "${raw}"`);
+        log(`   CSV Row: ${JSON.stringify(row)}`);
+        log(`   Retrying in ${wait}ms...\n`);
+
+        await sleep(wait);
+        continue;
+      }
+
+      // CLIENT ERROR → RETURN WHAT WE GOT
+      return data || {
+        ok: false,
+        error: "Invalid response",
+        raw,
+        listingId,
+        name,
+        row
+      };
+
+    } catch (err) {
+      const wait = 200 * attempt;
+
+      log(`\n⚠️ NETWORK FAILURE on listing_id ${listingId} (${name})`);
+      log(`   Attempt: ${attempt}`);
+      log(`   Error: ${err}`);
+      log(`   CSV Row: ${JSON.stringify(row)}`);
+      log(`   Retrying in ${wait}ms...\n`);
+
+      await sleep(wait);
+
+      if (attempt === retries) {
+        return {
+          ok: false,
+          error: "Network failure",
+          details: String(err),
+          listingId,
+          name,
+          row
+        };
+      }
+    }
+  }
+
+  return {
+    ok: false,
+    error: "Retries exhausted",
+    listingId,
+    name,
+    row
+  };
+}
+
+async function startUpload() {
+  const file = document.getElementById("csvFile").files[0];
+  if (!file) {
+    alert("Select a CSV file first!");
+    return;
+  }
+
+  log("Reading CSV…");
+
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: async function(results) {
+      const rows = results.data;
+      log(`Found ${rows.length} rows.`);
+
+      const ids = new Set();
+      rows.forEach(r => {
+        const raw = r.listing_id;
+        if (raw && raw !== "undefined" && raw !== "null") {
+          ids.add(String(raw));
+        }
+      });
+
+      log(`Detected ${ids.size} unique listing_id values.`);
+      log("Uploading…\n");
+
+      let index = 0;
+      let success = 0;
+      let fail = 0;
+
+      for (const row of rows) {
+        index++;
+
+        const data = await postWithRetry(
+          "https://us-central1-tropic-pulse.cloudfunctions.net/uploadBusinessRow",
+          row
+        );
+
+        if (data.ok) {
+          success++;
+
+          const incomingName10 = (row["heading*"] || row.heading || "").slice(0, 10);
+
+          log(`✔ Row ${index} → ID: ${data.id} ("${incomingName10}…")`);
+
+          if (data.matchDetails && data.matchDetails.length > 0) {
+            data.matchDetails.forEach(m => {
+              log(
+                `   ↳ matched with ${m.id} ("${m.name10}…") reason: ${m.reason}`
+              );
+            });
+          } else {
+            log("   ↳ no matches");
+          }
+
+        } else {
+          fail++;
+          log(`\n❌ Row ${index} FAILED`);
+          log(`   listing_id: ${data.listingId}`);
+          log(`   name: ${data.name}`);
+          log(`   error: ${data.error}`);
+          if (data.raw) log(`   raw: "${data.raw}"`);
+          log(`   row: ${JSON.stringify(data.row)}\n`);
+        }
+
+        await sleep(500);
+      }
+
+      log("\n🎉 Upload complete!");
+      log(`✅ Success: ${success}`);
+      log(`❌ Failed: ${fail}`);
+      log(`📄 Unique listing_ids: ${ids.size}`);
+    }
+  });
+}
+</script>
+
+</body>
+</html>

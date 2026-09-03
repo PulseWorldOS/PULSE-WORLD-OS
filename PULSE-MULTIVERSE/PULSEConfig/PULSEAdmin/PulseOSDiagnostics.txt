@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse Diagnostics Dashboard — Forensic Edition</title>
+
+
+  <style>
+/* -------------------------------------------------------
+   GLOBAL — Pulse OS aesthetic
+-------------------------------------------------------- */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+    color: #e5e7eb;
+    overflow-x: hidden;
+}
+
+/* -------------------------------------------------------
+   HEADER — glass + glow
+-------------------------------------------------------- */
+header {
+    backdrop-filter: blur(14px);
+    background: linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.6));
+    border-bottom: 1px solid rgba(148,163,184,0.4);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+header img {
+    height: 52px;
+    filter: drop-shadow(0 0 10px rgba(56,189,248,0.9));
+}
+
+h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #f9fafb;
+    text-shadow: 0 0 12px rgba(56,189,248,0.7);
+}
+
+/* -------------------------------------------------------
+   LAYOUT
+-------------------------------------------------------- */
+.container {
+    padding: 26px;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+/* -------------------------------------------------------
+   CONTROLS — neon buttons
+-------------------------------------------------------- */
+.controls {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+button {
+    background: linear-gradient(135deg, #22d3ee, #3b82f6);
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.6);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 26px rgba(37,99,235,0.8);
+}
+
+input[type="file"] {
+    padding: 9px 12px;
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(148,163,184,0.6);
+    border-radius: 999px;
+    color: #e5e7eb;
+    font-size: 13px;
+}
+
+/* -------------------------------------------------------
+   SUMMARY CARDS — 3D tiles
+-------------------------------------------------------- */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.card {
+    width: 250px;
+    padding: 18px 18px 16px 18px;
+    border-radius: 18px;
+    background: radial-gradient(circle at top left, rgba(56,189,248,0.18), rgba(15,23,42,0.95));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.7);
+    transition: 0.25s ease;
+    border: 1px solid rgba(148,163,184,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -40%;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(56,189,248,0.35), transparent 70%);
+    opacity: 0.7;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.85);
+}
+
+.card.ok { border-left: 5px solid #22c55e; }
+.card.warning { border-left: 5px solid #eab308; }
+.card.error { border-left: 5px solid #ef4444; }
+
+.card h3 {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    color: #f9fafb;
+}
+
+.card p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5f5;
+}
+
+/* -------------------------------------------------------
+   PANELS — glass containers
+-------------------------------------------------------- */
+.panel {
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+    padding: 20px 22px;
+    border-radius: 18px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+    border: 1px solid rgba(148,163,184,0.5);
+    margin-bottom: 24px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #e5e7eb;
+}
+
+/* -------------------------------------------------------
+   ISSUES LIST
+-------------------------------------------------------- */
+.issue {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(55,65,81,0.8);
+    font-size: 13px;
+}
+
+.issue:last-child {
+    border-bottom: none;
+}
+
+.issue .type {
+    font-weight: 700;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+
+.issue.error .type { color: #f97373; }
+.issue.warning .type { color: #facc15; }
+
+/* -------------------------------------------------------
+   TRACE TERMINAL
+-------------------------------------------------------- */
+.trace-box {
+    background: #020617;
+    color: #22c55e;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: "Consolas", "Fira Code", monospace;
+    white-space: pre-wrap;
+    max-height: 320px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.9);
+    border: 1px solid rgba(34,197,94,0.4);
+    font-size: 12px;
+}
+
+/* -------------------------------------------------------
+   VARIABLE LINEAGE PANEL
+-------------------------------------------------------- */
+.lineage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.lineage-item {
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: radial-gradient(circle at top left, rgba(30,64,175,0.6), rgba(15,23,42,0.95));
+    border: 1px solid rgba(129,140,248,0.7);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.lineage-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba(15,23,42,1);
+}
+
+.lineage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lineage-name {
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.lineage-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.7);
+    color: #cbd5f5;
+}
+
+.lineage-body {
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.lineage-body code {
+    background: rgba(15,23,42,0.9);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+/* collapsed details */
+.lineage-details {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(148,163,184,0.6);
+    display: none;
+}
+
+.lineage-item.expanded .lineage-details {
+    display: block;
+}
+</style>
+</head>
+
+<body>
+<header>
+    <img src="../../_EXPRESSIONS/_PEX/BUILD/PulseBand-Active.png" alt="Pulse Logo" />
+    <h1>PULSE AI ADMIN — FORENSIC DASHBOARD</h1>
+</header>
+
+<div class="container">
+
+    <div class="controls">
+        <input type="file" id="firestoreFile" accept="application/json" />
+        <input type="file" id="pulseSchemaFile" accept="application/json" />
+        <button onclick="runAudit()">Run Full Audit</button>
+
+        <!-- ⭐ NEW: Snapshot dropdown + loader -->
+        <select id="aiSnapshotDropdown"
+                style="padding:8px 12px;border-radius:8px;background:#0f172a;color:#e5e7eb;border:1px solid #475569;">
+            <option value="">Saved Snapshots</option>
+        </select>
+
+        <button onclick="loadSavedAiSnapshot()">Load Saved Snapshot</button>
+    </div>
+
+    <div id="summaryCards" class="cards"></div>
+
+    <div class="panel">
+        <h2>Issues</h2>
+        <div id="issueList"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Variable Lineage & Formulas</h2>
+        <div id="lineageList" class="lineage-list"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Trace</h2>
+        <div id="traceBox" class="trace-box"></div>
+    </div>
+
+</div>
+<!-- Backend Connector Layer -->
+ 
+ <script type="module">
+    
+/* ============================================================================
+   PULSE DIAGNOSTICS — PAGE BRAIN
+============================================================================ */
+
+/* DOM references */
+const issueList      = document.getElementById("issueList");
+const lineageList    = document.getElementById("lineageList");
+const traceBox       = document.getElementById("traceBox");
+const summaryCards   = document.getElementById("summaryCards");
+const snapshotSelect = document.getElementById("aiSnapshotDropdown");
+
+/* Utility: Safe append to trace */
+function trace(msg) {
+    traceBox.textContent += msg + "\n";
+    traceBox.scrollTop = traceBox.scrollHeight;
+}
+
+/* Utility: Create summary card */
+function addSummaryCard(title, value, status="ok") {
+    const card = document.createElement("div");
+    card.className = `card ${status}`;
+    card.innerHTML = `
+        <h3>${title}</h3>
+        <p>${value}</p>
+    `;
+    summaryCards.appendChild(card);
+}
+
+/* Utility: Add issue */
+function addIssue(type, message) {
+    const div = document.createElement("div");
+    div.className = `issue ${type}`;
+    div.innerHTML = `
+        <span class="type">${type}</span>
+        ${message}
+    `;
+    issueList.appendChild(div);
+}
+
+/* Utility: Add lineage item */
+function addLineageItem(name, formula, details) {
+    const item = document.createElement("div");
+    item.className = "lineage-item";
+
+    item.innerHTML = `
+        <div class="lineage-header">
+            <div class="lineage-name">${name}</div>
+            <div class="lineage-badge">formula</div>
+        </div>
+        <div class="lineage-body">
+            <code>${formula}</code>
+        </div>
+        <div class="lineage-details">${details}</div>
+    `;
+
+    item.addEventListener("click", () => {
+        item.classList.toggle("expanded");
+    });
+
+    lineageList.appendChild(item);
+}
+
+/* Load saved snapshot */
+async function loadSavedAiSnapshot() {
+    const key = snapshotSelect.value;
+    if (!key) return;
+
+    trace(`Loading snapshot: ${key}`);
+
+    const snapshot = await pulseband.snapshots.get(key);
+    if (!snapshot) {
+        trace("Snapshot not found.");
+        return;
+    }
+
+    runAudit(snapshot);
+}
+
+/* Populate snapshot dropdown */
+async function loadSnapshotList() {
+    const keys = await pulseband.snapshots.list();
+    snapshotSelect.innerHTML = `<option value="">Saved Snapshots</option>`;
+    keys.forEach(k => {
+        const opt = document.createElement("option");
+        opt.value = k;
+        opt.textContent = k;
+        snapshotSelect.appendChild(opt);
+    });
+}
+
+/* -------------------------------------------------------
+   MAIN AUDIT FUNCTION
+-------------------------------------------------------- */
+async function runAudit(overrideData=null) {
+    issueList.innerHTML = "";
+    lineageList.innerHTML = "";
+    summaryCards.innerHTML = "";
+    traceBox.textContent = "";
+
+    trace("Starting full forensic audit…");
+
+    // Load files or use override
+    let firestoreData = overrideData;
+    let schemaData    = null;
+
+    if (!overrideData) {
+        const fsFile = document.getElementById("firestoreFile").files[0];
+        const schemaFile = document.getElementById("pulseSchemaFile").files[0];
+
+        if (!fsFile || !schemaFile) {
+            trace("Missing files. Upload Firestore + Schema.");
+            return;
+        }
+
+        firestoreData = JSON.parse(await fsFile.text());
+        schemaData    = JSON.parse(await schemaFile.text());
+    }
+
+    trace("Data loaded. Beginning analysis…");
+
+    /* 1. SUMMARY CARDS */
+    addSummaryCard("Documents", Object.keys(firestoreData).length);
+    addSummaryCard("Schema Fields", Object.keys(schemaData || {}).length);
+    addSummaryCard("AI Snapshots", (await pulseband.snapshots.list()).length);
+
+    /* 2. ISSUE DETECTION */
+    for (const [docId, doc] of Object.entries(firestoreData)) {
+        if (!doc) {
+            addIssue("error", `Document ${docId} is null or missing.`);
+            continue;
+        }
+
+        if (!doc.updatedAt) {
+            addIssue("warning", `Document ${docId} missing updatedAt.`);
+        }
+
+        if (doc.errorState) {
+            addIssue("error", `Document ${docId} has errorState: ${doc.errorState}`);
+        }
+    }
+
+    /* 3. VARIABLE LINEAGE */
+    if (schemaData) {
+        for (const [field, def] of Object.entries(schemaData)) {
+            addLineageItem(
+                field,
+                def.formula || "no formula",
+                def.description || "No description provided."
+            );
+        }
+    }
+
+    /* 4. TRACE OUTPUT */
+    trace("Audit complete.");
+    trace("Rendering results…");
+
+    /* ⭐ ADDED — IMMUNE SYSTEM COMMANDER */
+    try {
+        trace("Invoking PulseSurgeonGeneral…");
+
+        const immuneReport = await PulseSurgeonGeneral.command({
+            issues: Array.from(issueList.querySelectorAll(".issue")).map(div => ({
+                message: div.textContent,
+                severity: div.classList.contains("error") ? 3 : 1
+            }))
+        });
+
+        trace("Surgeon General Report:");
+        trace(JSON.stringify(immuneReport, null, 2));
+    } catch (err) {
+        trace("Surgeon General ERROR: " + err.message);
+    }
+
+    /* 5. Auto-repair hook (PulseBand) */
+    attachScanner({
+        page: "PulseDiagnostics",
+        onRepair: (msg) => trace("[Auto-Repair] " + msg)
+    });
+}
+
+/* Initialize page */
+loadSnapshotList();
+PulseRealm.runAudit = runAudit;
+PulseRealm.loadSavedAiSnapshot = loadSavedAiSnapshot;
+
+</script>
+
+</body>
+</html>

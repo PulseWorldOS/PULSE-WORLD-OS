@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+    
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65); /* increase to 0.75 or 0.85 for deeper darkness */
+      pointer-events: none;
+      z-index: -1;
+    }
+
+  #qr-wrapper {
+    position: relative;
+    margin: 1px auto 6px auto;
+    padding: 20px;
+    background: #000;
+    border-radius: 16px;
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+
+  #close-area {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+  }
+
+  #close-btn {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    font-size: 32px;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="close-area"></div>
+
+<div id="qr-wrapper">
+  <div id="close-btn">✕</div>
+  <div id="qr"></div>
+</div>
+
+<script>
+  
+log("🌞 Script loaded, attaching visibility listener…");
+  // --- SIMPLE IDENTITY CHECK ---
+  let identityCheck = null;
+  try {
+    identityCheck = JSON.parse(localStorage.getItem("tp_identity_v4") || "null");
+  } catch {
+    identityCheck = null;
+  }
+
+  if (!identityCheck || !identityCheck.uid) {
+    // Clear all Pulse World keys
+    Object.keys(localStorage).forEach(k => {
+      if (
+        k.startsWith("tp_") ||
+        k.includes("vault") ||
+        k.includes("pulse")
+      ) {
+        localStorage.removeItem(k);
+      }
+    });
+
+    const returnTo = encodeURIComponent("PulseWorldBank");
+    window.location.href= returnTo;
+    throw new Error("No identity — redirecting to CheckEmail");
+  }
+  // --- END SIMPLE IDENTITY CHECK ---
+
+
+  const params = new URLSearchParams(location.search);
+  const code = params.get("code");
+
+  new QRCode(document.getElementById("qr"), {
+    text: code,
+    width: 260,
+    height: 260,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  document.getElementById("close-area").onclick = () => {
+    parent.postMessage({ action: "closeQRView" }, "*");
+  };
+
+  document.getElementById("close-btn").onclick = () => {
+    parent.postMessage({ action: "closeQRView" }, "*");
+  };
+</script>
+
+</body>
+</html>

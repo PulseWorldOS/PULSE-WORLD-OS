@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preload" fetchpriority="highest" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldUniversal2.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldAuthority.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldHeroEngine.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier1Engine.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier2Engine.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier3Engine.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseEngine" type="video/mp4">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<title>PulseWorld Tiers – Authority of Trust</title>
+<style>
+  
+
+  /* ============================================================
+     BODY — PNG #1: pw-bg-universe.webp
+     ============================================================ */
+  
+  .pw-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ============================================================
+     HERO — PNG #2: pw-hero-engine.webp
+     ============================================================ */
+
+  .pw-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .pw-hero-main-title {
+    font-size: 2.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .pw-hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--pw-text-soft);
+    margin-bottom: 18px;
+  }
+
+  .pw-hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--pw-border-soft);
+    background: linear-gradient(90deg, rgba(245, 201, 107, 0.08), rgba(91, 231, 255, 0.08));
+    font-size: 0.85rem;
+    color: var(--pw-text-soft);
+    margin-bottom: 18px;
+  }
+
+  .pw-hero-pill span {
+    font-weight: 600;
+    color: var(--pw-accent-gold);
+  }
+
+  .pw-hero-text {
+    font-size: 0.98rem;
+    color: var(--pw-text-soft);
+    max-width: 640px;
+  }
+
+  .pw-hero-visual {
+    position: relative;
+    height: 260px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--pw-border-soft);
+    background:
+      url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldHeroEngine.webp.pex") center / cover no-repeat,
+      radial-gradient(circle at 20% 0%, rgba(245, 201, 107, 0.25), transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(91, 231, 255, 0.25), transparent 55%),
+      radial-gradient(circle at 50% 50%, rgba(255, 107, 213, 0.18), transparent 60%);
+  }
+
+  .pw-hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 18px 18px;
+    mix-blend-mode: screen;
+    opacity: 0.7;
+  }
+
+  .pw-hero-orbit {
+    position: absolute;
+    inset: 18px;
+    border-radius: 999px;
+    border: 1px dashed rgba(233, 237, 247, 0.18);
+  }
+
+  .pw-hero-node {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 3px;
+    border: 1px solid rgba(233, 237, 247, 0.18);
+    backdrop-filter: blur(10px);
+  }
+
+  .pw-hero-node.tier1 {
+    background: rgba(27, 42, 74, 0.85);
+    box-shadow: var(--pw-glow-cyan);
+    top: 22px;
+    left: 24px;
+  }
+
+  .pw-hero-node.tier2 {
+    background: rgba(26, 59, 63, 0.85);
+    box-shadow: var(--pw-glow-magenta);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .pw-hero-node.tier3 {
+    background: rgba(51, 38, 63, 0.85);
+    box-shadow: var(--pw-glow-gold);
+    bottom: 22px;
+    right: 24px;
+  }
+
+  .pw-hero-caption {
+    position: absolute;
+    bottom: 14px;
+    left: 18px;
+    font-size: 0.8rem;
+    color: var(--pw-text-soft);
+    opacity: 0.9;
+  }
+
+  /* ============================================================
+     SECTION WRAPPER
+     ============================================================ */
+
+  .pw-section {
+    margin-top: 40px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--pw-border-soft);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  }
+
+  .pw-section-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .pw-section-subtitle {
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--pw-text-soft);
+    margin-bottom: 16px;
+  }
+
+  /* ============================================================
+     TIER CARDS — PNG #3, #4, #5
+     ============================================================ */
+
+  .pw-tier-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .pw-tier-card {
+    border-radius: 18px;
+    padding: 16px 14px 18px;
+    border: 1px solid var(--pw-border-soft);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pw-tier-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    pointer-events: none;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  /* IMAGE #3: Internet Tier Engine */
+  .pw-tier-card.tier1 {
+    background: radial-gradient(circle at top, var(--pw-tier1), var(--pw-tier2));
+    box-shadow: var(--pw-glow-cyan);
+  }
+
+  .pw-tier-card.tier1::before {
+    background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier1Engine.webp.pex");
+  }
+
+  /* IMAGE #4: Browser Tier Engine */
+  .pw-tier-card.tier2 {
+    background: radial-gradient(circle at top, var(--pw-tier2), var(--pw-tier3));
+    box-shadow: var(--pw-glow-magenta);
+  }
+
+  .pw-tier-card.tier2::before {
+    background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier2Engine.webp.pex");
+  }
+
+  /* IMAGE #5: Device Tier Engine */
+  .pw-tier-card.tier3 {
+    background: radial-gradient(circle at top, var(--pw-tier3), var(--pw-tier3));
+    box-shadow: var(--pw-glow-gold);
+  }
+
+  .pw-tier-card.tier3::before {
+    background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier3Engine.webp.pex");
+  }
+
+  .pw-tier-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-align: center;
+    margin-bottom: 6px;
+    opacity: 0.9;
+  }
+
+  .pw-tier-name {
+    font-size: 1.05rem;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .pw-tier-text {
+    font-size: 0.9rem;
+    color: var(--pw-text-main);
+    margin-bottom: 10px;
+  }
+
+  .pw-tier-list {
+    list-style: none;
+    font-size: 0.85rem;
+    color: var(--pw-text-main);
+  }
+
+  .pw-tier-list li {
+    margin-bottom: 4px;
+  }
+
+  .pw-tier-list strong {
+    color: var(--pw-accent-gold);
+  }
+
+  /* ============================================================
+     PATH SECTION — PNG #6: pw-path-authority.webp
+     ============================================================ */
+
+  .pw-path-section {
+    margin-top: 40px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--pw-border-soft);
+    background:
+      radial-gradient(circle at 0% 0%, rgba(91, 231, 255, 0.12), transparent 55%),
+      radial-gradient(circle at 100% 100%, rgba(245, 201, 107, 0.12), transparent 55%),
+      #05060a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pw-path-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldAuthority.webp.pex");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.18;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+
+  .pw-path-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
+    gap: 24px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pw-path-text {
+    font-size: 0.95rem;
+    color: var(--pw-text-soft);
+    margin-bottom: 10px;
+  }
+
+  .pw-path-highlight {
+    font-size: 0.95rem;
+    color: var(--pw-accent-gold);
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .pw-path-visual {
+    border-radius: 18px;
+    border: 1px solid var(--pw-border-soft);
+    padding: 14px 12px;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(91, 231, 255, 0.18), transparent 60%),
+      radial-gradient(circle at 80% 100%, rgba(255, 107, 213, 0.18), transparent 60%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pw-path-visual-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+
+  .pw-path-visual-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .pw-path-chip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(233, 237, 247, 0.12);
+    font-size: 0.8rem;
+    backdrop-filter: blur(8px);
+    background: rgba(5, 6, 10, 0.7);
+  }
+
+  .pw-path-chip-label {
+    color: var(--pw-text-soft);
+  }
+
+  .pw-path-chip-value {
+    color: var(--pw-accent-cyan);
+    font-weight: 600;
+  }
+
+  .pw-footer {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--pw-text-soft);
+    opacity: 0.8;
+  }
+
+  .pw-footer span {
+    color: var(--pw-accent-gold);
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .pw-hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .pw-tier-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .pw-path-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+</head>
+<body>
+  <video id="engine2Video" src="./_EXPRESSIONS/_VIDEOS/PulseEngine" autoplay muted playsinline style="display:block;" aria-label="Engine 2 Video"></video>
+
+  <div class="pw-page">
+
+    <!-- HERO -->
+    <section class="pw-hero">
+      <div>
+        <div class="pw-hero-pill">
+          <span>PULSEWORLD TIERS</span>
+          <span>TRUST → ACCESS</span>
+        </div>
+        <h1 class="pw-hero-main-title">Three Tiers of Authority</h1>
+        <p class="pw-hero-subtitle">
+          A future engine that begins with trust, not blind access — stabilizing the internet, the browser,
+          and the device as one layered system.
+        </p>
+        <p class="pw-hero-text">
+          The world gives access first and asks questions later. PulseWorld reverses this. We earn
+          <strong>trust</strong> at every tier — internet, browser, and device — and only then extend
+          <strong>access</strong>. This page reveals how our engine will grow into a three‑tier authority
+          model that lifts everything around it: websites, tabs, browsers, engines, GPUs, routing, memory,
+          and even the way you experience time on your device.
+        </p>
+      </div>
+
+      <div class="pw-hero-visual">
+        <div class="pw-hero-grid"></div>
+        <div class="pw-hero-orbit"></div>
+
+        <div class="pw-hero-node tier1">
+          Internet Tier<br />
+          DNS • SSL • Delivery
+        </div>
+        <div class="pw-hero-node tier2">
+          Browser Tier<br />
+          Event Loop • Render
+        </div>
+        <div class="pw-hero-node tier3">
+          Device Tier<br />
+          CPU • GPU • Memory
+        </div>
+
+        <div class="pw-hero-caption">
+          We Observe All Tiers — We Earn Authority thru Stabilization!
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER OVERVIEW -->
+    <section class="pw-section">
+      <h2 class="pw-section-title">The Three Tiers of Our Engine</h2>
+      <p class="pw-section-subtitle">
+        Each tier is a layer of authority. PulseWorld does not demand control — it earns it, by making
+        the environment more stable, more predictable, and more trustworthy.
+      </p>
+
+      <div class="pw-tier-row">
+        <!-- Tier 1 -->
+        <article class="pw-tier-card tier1">
+          <div class="pw-tier-label">Tier 1</div>
+          <div class="pw-tier-name">Internet Tier – Access Through Trust</div>
+          <p class="pw-tier-text">
+            DNS, SSL, routing, CDN, and asset delivery. This is where the world usually starts: it gives
+            access and hopes trust will follow. PulseWorld flips this. We measure drift, latency, and
+            delivery quality to understand when Tier‑1 is holding you back.
+          </p>
+          <ul class="pw-tier-list">
+            <li><strong>DNS & Routing:</strong> First gate of identity and path.</li>
+            <li><strong>Certificate Trust:</strong> Proof of legitimacy before access.</li>
+            <li><strong>Network Latency:</strong> The drag on every boot and load.</li>
+            <li><strong>CDN & Asset Delivery:</strong> How fast expression reaches you.</li>
+            <li><strong>Browser Fetch:</strong> The bottleneck of modern experience.</li>
+          </ul>
+        </article>
+
+        <!-- Tier 2 -->
+        <article class="pw-tier-card tier2">
+          <div class="pw-tier-label">Tier 2</div>
+          <div class="pw-tier-name">Browser Tier – Execution With Clarity</div>
+          <p class="pw-tier-text">
+            The browser is the engine of the web. It controls rendering, event loops, GPU acceleration,
+            memory, and sandbox rules. PulseWorld becomes a timing companion here — smoothing event‑loop
+            delays and reducing jitter so your experience feels coherent.
+          </p>
+          <ul class="pw-tier-list">
+            <li><strong>Event Loop:</strong> The heartbeat of execution.</li>
+            <li><strong>Rendering Pipeline:</strong> The painter of PulseWorld’s UI.</li>
+            <li><strong>GPU Acceleration:</strong> Dimensional visuals at only ~5% push.</li>
+            <li><strong>Memory Management:</strong> Keeping tabs and sites breathable.</li>
+            <li><strong>Sandbox Constraints:</strong> Operating safely within the browser’s rules.</li>
+          </ul>
+        </article>
+
+        <!-- Tier 3 -->
+        <article class="pw-tier-card tier3">
+          <div class="pw-tier-label">Tier 3</div>
+          <div class="pw-tier-name">Device Tier – Hardware as a Trusted Partner</div>
+          <p class="pw-tier-text">
+            CPU, GPU, RAM, battery, thermal limits — the true foundation. When this tier is strong,
+            everything above it becomes powerful. PulseWorld does not fight the device; it listens to it,
+            respects it, and adjusts its own behavior to keep the system healthy.
+          </p>
+          <ul class="pw-tier-list">
+            <li><strong>CPU Governor:</strong> The ruler of speed and power.</li>
+            <li><strong>Thermal Throttling:</strong> The invisible hand that slows everything.</li>
+            <li><strong>Battery Modes:</strong> Performance vs. longevity, chosen wisely.</li>
+            <li><strong>RAM Pressure:</strong> How many worlds your device can hold at once.</li>
+            <li><strong>Background Load:</strong> The unseen processes stealing cycles.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- PATH & FUTURE -->
+    <section class="pw-path-section">
+      <h2 class="pw-section-title">How PulseWorld Will Help Each Tier</h2>
+      <p class="pw-section-subtitle">
+        Our engine is not just a dashboard. It is a guide, a stabilizer, and a quiet force that lifts
+        everything around it — from websites and tabs to GPUs and routing.
+      </p>
+
+      <div class="pw-path-grid">
+        <div>
+          <p class="pw-path-text">
+            At <strong>Tier 1</strong>, PulseWorld watches the internet itself: DNS resolution, certificate
+            trust, network latency, and asset delivery. When this tier is slow, we show you why — and
+            protect your perception of PulseWorld by making it clear that the bottleneck is the world,
+            not your engine.
+          </p>
+          <p class="pw-path-text">
+            At <strong>Tier 2</strong>, we become a timing companion to the browser. We detect event‑loop
+            delay patterns, rendering congestion, and GPU throttling. With only about <strong>5% GPU
+            push</strong>, PulseWorld keeps your interface dimensional and alive without stealing power
+            from your games or heavy workloads.
+          </p>
+          <p class="pw-path-text">
+            At <strong>Tier 3</strong>, we respect the device. When you are gaming, PulseWorld steps back.
+            When you are exploring, creating, or working, PulseWorld steps forward — helping you earn
+            smoother performance, deeper trust, and more authority over time.
+          </p>
+          <p class="pw-path-highlight">
+            Trust first. Access second. Authority always earned — never assumed.
+          </p>
+        </div>
+        <div class="pw-path-visual">
+          <div class="pw-path-visual-title">Authority Path – Earning Forward</div>
+          <div class="pw-path-visual-row">
+            <div class="pw-path-chip">
+              <div class="pw-path-chip-label">Tier 1 – Internet Stability</div>
+              <div class="pw-path-chip-value">Drift • Latency • Delivery</div>
+            </div>
+            <div class="pw-path-chip">
+              <div class="pw-path-chip-label">Tier 2 – Browser Clarity</div>
+              <div class="pw-path-chip-value">Event Loop • Render • GPU</div>
+            </div>
+            <div class="pw-path-chip">
+              <div class="pw-path-chip-label">Tier 3 – Device Harmony</div>
+              <div class="pw-path-chip-value">CPU • Memory • Thermal</div>
+            </div>
+            <div class="pw-path-chip">
+              <div class="pw-path-chip-label">PulseWorld Engine</div>
+              <div class="pw-path-chip-value">≈ Truer Unlimited Capability Ceiling</div>
+            </div>
+            <div class="pw-path-chip">
+              <div class="pw-path-chip-label">User Journey</div>
+              <div class="pw-path-chip-value">Earn Forward → More Authority</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- FOOTER -->
+    <footer class="pw-footer">
+      <p>
+        PulseWorld is not just watching your tiers — <span>it is growing with them</span>.  
+        As you move through time, your trust, your access, and your authority will rise together.
+      </p>
+    </footer>
+  </div>
+<script>
+engine2Video = document.getElementById("engine2Video");
+
+(async () => {
+  engine2Video.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+   
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      engine2Video.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (engine2Video) {
+    engine2Video.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Engine Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        engine2Video.pause();
+        engine2Video.currentTime = 0;
+      } catch (err) {
+        console.warn("engine2Video pause error:", err);
+      }
+
+      // Hide the video membrane
+      engine2Video.style.opacity = "0";
+      engine2Video.style.display = "none";
+    };
+  }
+  
+  // ---------------------------------------------------------
+  // VIEWPORT
+  // ---------------------------------------------------------
+  PulseRealm.__LOAD_END = performance.now();
+  console.log(
+    `✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,
+    "color:#H02FHA; font-weight:bold; font-family:monospace;"
+  );
+})();
+</script>
+</body>
+</html>

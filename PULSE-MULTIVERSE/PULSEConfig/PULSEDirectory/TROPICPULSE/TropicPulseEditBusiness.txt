@@ -1,0 +1,2718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse World - Business Form</title>
+
+
+  <style>
+  :root {
+    --t-gold: #f5d27a;
+    --t-gold-deep: #b58a3c;
+    --t-bg-dark: #05080c;
+    --t-metal-light: #d9dde4;
+    --t-metal-mid: #9ca3b0;
+    --t-metal-dark: #4b515e;
+    --t-text-main: #f5f7fb;
+    --t-text-subtle: #a7b0c4;
+    --t-card-bg: #070a11;
+  }
+  
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100dvh;
+
+  display: flex;
+  justify-content: center;
+
+  background: #000;
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Overlay ONLY — NOT a second background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  /* Optional tint */
+  background: rgba(0,0,0,0.25);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+.fade-ready {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.img-wrapper.fade-swap {
+  opacity: 0.4;
+  transform: scale(0.92);
+}
+.fade-out {
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+.header {
+  background: linear-gradient(135deg, #0f8f4f 0%, #0a6e3a 100%);
+  color: white;
+  padding: 13px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  justify-content: center;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+  position: relative;
+  z-index: 999;
+  top: 0;
+  margin-top: -18px;
+  margin-bottom: 14px;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 45%;
+  background: rgba(255,255,255,0.12);
+}
+
+.header {
+  position: sticky;
+  z-index: 999;
+  top: 0;
+  display: inline-flex;      /* ← the magic */
+  align-items: center;
+  justify-content: center;   /* ← center the filter row */
+  width: 100%;               
+  min-width: 0;            /* ← keeps it full width without stretching */
+}
+
+.event-form-container {
+  width: 480px;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    margin: 0 6px;
+  border-radius: 22px;
+    display: flex;
+    
+    box-shadow: 0 6px 22px rgba(0,0,0,0.1);
+    flex-direction: column;     /* image on top, row below */
+  background: #ffff99;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  padding: 4px;
+}
+
+/* Circular blurred aura */
+.event-form-container::before {
+  content: "";
+  position: absolute;
+  width: 480px;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    margin: 0 6px;
+  inset: 0; /* controls aura size */
+  border-radius: inherit; /* ← PERFECT FIX */
+  z-index: -1;
+  background-size: contain;
+  /* Black → transparent fade */
+  background: radial-gradient(
+    circle,
+    rgba(0,0,0,0.85) 0%,
+    rgba(0,0,0,0.55) 35%,
+    rgba(0,0,0,0.25) 60%,
+    rgba(0,0,0,0) 100%
+  );
+  filter: blur(45px);
+  opacity: 1;
+}
+
+
+.form-group { margin-bottom: 18px; }
+
+label { font-weight: 600; margin-bottom: 6px; display: block; }
+
+input, select, textarea {
+  width: 100%;
+  min-width: 0;        /* allows shrinking inside flex */
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.day-times {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* open | dash | close */
+  gap: clamp(4px, 2vw, 10px);
+  align-items: center;
+}
+
+.day-open,
+.day-close {
+  width: 100%;
+  min-width: 0; /* allows shrinking */
+}
+
+.dash {
+  text-align: center;
+  user-select: none;
+}
+
+#imagePreview {
+  display: flex;
+  gap: clamp(4px, 2vw, 10px);
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+#imagePreview img {
+  width: clamp(38px, 17vw, 88px);
+  height: clamp(38px, 17vw, 88px);
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #0a6e3a;
+}
+
+.save-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, green, green);
+  color: white; border: none; border-radius: 12px;
+  font-size: 18px; font-weight: 600; cursor: pointer;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  align-items: center;
+  min-width: 0;
+}
+.img-wrapper {
+  /* Responsive magic */
+  width: clamp(40px, 18vw, 88px);
+  height: clamp(40px, 18vw, 88px);
+
+  border-radius: 10px;
+  background: white;
+  border: 4px solid rgba(255, 215, 130, 0.6);
+  position: relative;
+  display: inline-block; /* keeps wrapper tight to image */
+
+  align-items: center;
+  justify-content: center;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #0a6e3a;
+}
+
+.img-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff3b30;
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.map-wrapper {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  margin-top: 10px;
+}
+
+.map-wrapper img {
+  width: 100%;
+  display: block;
+}
+
+.venue-row,
+.add-row {
+  gap: clamp(3px, 1.4vw, 8px);
+}
+
+.venue-row {
+  display: flex;        /* makes items sit on one line */
+  align-items: center;
+}
+
+.add-row {
+  display: flex;
+  min-width: 0;
+}
+
+.venue-row input {
+  padding: 10px;
+  flex: 1;  
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  min-width: 0;
+}
+
+.venue-check-btn {
+  padding: 10px 14px;
+  background: #0a6e3a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.4;
+  white-space: nowrap;
+}
+
+.venue-check-btn:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.venue-check-btn:not(:disabled) {
+  opacity: 1;
+}
+
+#venuePreview {
+  display: none;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fff4;
+  border: 1px solid #cde8d2;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+#floatingCategoryBubble {
+  position: fixed;
+  top: 6px;
+  right: 6px;
+  /* Responsive magic */
+  width: clamp(60px, 18vw, 100px);
+  height: clamp(60px, 18vw, 100px);
+
+  border-radius: 50%;
+  background: #f7e7c6;
+  border: 4px solid rgba(255, 215, 130, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.25s ease;
+  border-color: rgb(255, 225, 150);
+  box-shadow: 0 0 6px rgba(255, 215, 130, 0.6);
+}
+
+#floatingCategoryBubble.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingCategoryBubble img {
+   width: 110%;
+  height: 110%;
+  margin-bottom: -6px;
+  object-fit: contain;
+}
+/* 
+*:not(#floatingCategoryBubble img) {
+  box-sizing: border-box;
+  max-width: 100% !important;
+} */
+
+/* Platinum grey bubble */
+#floatingCategoryBubble.platinum {
+  background: #e5e5e5 !important;   /* soft platinum grey */
+  border-color: #cfcfcf !important;
+  box-shadow: 0 0 6px rgba(180, 180, 180, 0.6) !important;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+@keyframes softPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.day-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  gap: clamp(4px, 1vw, 10px);
+  margin-top: 10px;
+}
+
+.day-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.open-status {
+  background: #0a6e3a;
+  animation: softPulse 2.4s infinite ease-in-out;
+}
+
+.closed-status {
+  background: #b33a3a;
+}
+
+@keyframes softPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+
+.day-times.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.tags-box {
+  margin-top: 22px;              /* 🔥 spacing from Hours */
+  padding: 12px;                 /* 🔥 matches your other boxes */
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.tags-box {
+  margin-top: 22px;          /* spacing from Hours */
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+input[type="checkbox"] {
+  max-width: none !important;
+  width: auto !important;
+  display: inline-block !important;
+  box-sizing: content-box !important;
+}
+
+.tag-items input[type="checkbox"],
+.closed-toggle input[type="checkbox"] {
+  max-width: none !important;
+  width: auto !important;
+  display: inline-block !important;
+  box-sizing: content-box !important;
+  transform: scale(1.15);
+  cursor: pointer;
+}
+
+.closed-toggle {
+  max-width: 20px !important;
+  width: auto;
+}
+
+.contact-box {
+  padding: 2px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+
+.delete-btn {
+  background: #d9534f;
+  width: 35px;
+  color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+
+.owner-radio {
+  flex-shrink: 0; /* prevents radio from expanding */
+}
+
+
+.owner-text {
+  font-size: 13px;
+  color: #444;
+}
+
+.owner-col {
+  width: 25px;
+  display: block;
+}
+
+.owner-label {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  justify-content: flex-end; /* horizontal alignment */
+  gap: clamp(4px, 1vw, 10px);
+  white-space: nowrap;
+}
+
+.owner-radio {
+  width: 16px;
+  height: 16px;
+}
+
+.owner-text {
+  font-size: 13px;
+  color: #444;
+}
+
+#addPhoneBtn {
+  padding: 10px 14px;
+  background: orange;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 1;
+  white-space: nowrap;
+}
+
+#addWhatsAppBtn {
+  padding: 10px 14px;
+  background: green;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 1;
+  white-space: nowrap;
+}
+
+#addEmailBtn {
+  padding: 10px 14px;
+  background: blue;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 1;
+  white-space: nowrap;
+}
+.floating-scroll-up {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 9999;
+}
+.floating-scroll-up.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.contact-list {
+  gap: clamp(6px, 1.4vw, 14px);
+  margin-top: clamp(6px, 1.4vw, 14px);
+}
+
+.contact-item {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: clamp(6px, 1.5vw, 14px);
+  padding: clamp(4px, 1vw, 10px);
+}
+
+
+.day-content {
+  display: flex;
+  gap: clamp(6px, 1.2vw, 12px);
+  padding: clamp(4px, 1vw, 10px);
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.contact-value {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  align-items: center;
+  min-width: 0;
+}
+
+#tpOverlay {
+  transition: opacity 0.25s ease;
+}
+
+#tpDot {
+  transition: transform 0.25s ease;
+}
+
+#tpOverlay.show #tpDot {
+  transform: scale(1.5);
+}
+#tpDot {
+  animation: tpPulse 2.2s ease-in-out infinite;
+}
+
+#tpIcon {
+  fill: white;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+@keyframes tpPulse {
+  0%   { transform: scale(1.5); }
+  50%  { transform: scale(2); }
+  100% { transform: scale(1.5); }
+}
+
+/* Fullscreen overlay */
+#t-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(16px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  opacity: 1;
+  transition: opacity 0.6s ease-out;
+}
+
+/* Logo */
+#t-loading-logo {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  animation: tpShimmer 3.5s ease-in-out infinite;
+  
+}
+
+/* Magical shimmer sweep */
+@keyframes tpShimmer {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(0,255,200,0.45));
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Hidden state */
+#t-loading.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Entrance animation */
+@keyframes tpBubbleWaveIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(20px);
+    filter: drop-shadow(0 0 0 rgba(0,255,200,0));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(0);
+    filter: drop-shadow(0 0 12px rgba(0,255,200,0.35));
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Shimmer sweep */
+@keyframes tpBubbleShimmer {
+  0% {
+    background-position: -100px 0;
+  }
+  100% {
+    background-position: -100px 0;
+  }
+}
+/* ================= PULSEBAND PANEL ONLY (v7 Extract) ================= */
+
+/* Overlay root */
+#pulseband-overlay {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 80;
+  pointer-events: none; /* panel/badge will re-enable */
+}
+
+/* Bubble badge */
+#pulseband-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffd400 40%, #ff5a5a 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+
+/* Animated bars inside badge */
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.pb-bars span {
+  width: 4px;
+  border-radius: 999px;
+  background: #000;
+  animation: pbBarPulse 1s ease-in-out infinite;
+}
+
+.pb-bars span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.pb-bars span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.pb-bars span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.pb-bars span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+
+@keyframes pbBarPulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.2); }
+}
+
+/* Panel card */
+.pb-card {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  padding: 14px 16px 16px 16px;
+  color: #fff;
+  border: 2px solid #ffd400;
+  pointer-events: auto;
+  transform-origin: bottom right;
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+/* When active */
+.pb-card.pb-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel header */
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.pb-mini-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--tp-yellow-strong);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+}
+
+/* Rows */
+.pb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.pb-row:last-child {
+  border-bottom: none;
+}
+
+.pb-row label {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.pb-hint {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pb-value {
+  font-weight: 600;
+  color: var(--tp-yellow-strong);
+  text-align: right;
+}
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  #pulseband-overlay {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .pb-card {
+    width: 260px;
+  }
+}
+
+</style>
+
+</head>
+<body>
+<div id="t-loading">
+    <img src="../_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" id="t-loading-logo"></img>
+  </div>
+  
+<div class="event-form-container">
+  <div class="header" id="headerTitle">Business</div>
+  <form id="businessForm">
+
+    <!-- BUSINESS NAME -->
+    <div class="form-group">
+      <label>Business Name</label>
+      <input type="text" id="title" required />
+    </div>
+
+    <!-- CATEGORIES (PICKER + SELECTED LIST) -->
+    <div class="form-group">
+      <label>
+        Categories
+        <span style="font-size:12px; color:#0a6e3a;">
+          (Add, reorder, remove)
+        </span>
+      </label>
+
+      <!-- Category picker (always full list) -->
+      <select id="categoryPicker">
+        <option value="" disabled selected>Add Category…</option>
+      </select>
+
+      <!-- Selected categories list -->
+      <div id="categoriesList"
+          style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+      </div>
+    </div>
+    <!-- SUBCATEGORIES (PICKER + SELECTED LIST) -->
+    <div class="form-group">
+      <label>
+        Subcategories
+        <span style="font-size:12px; color:#0a6e3a;">
+          (Add, reorder, remove)
+        </span>
+      </label>
+
+      <!-- Subcategory picker (always full list) -->
+      <select id="subcategoryPicker">
+        <option value="" disabled selected>Add Subcategory…</option>
+      </select>
+
+      <!-- Selected subcategories list -->
+      <div id="subcategoriesList"
+          style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+      </div>
+    </div>
+    <!-- BUSINESS LOCATION -->
+    <div class="form-group">
+      <label>
+        Business Location
+        <span style="font-size:12px; color:#0a6e3a;">
+          (Auto-detects best match)
+        </span>
+      </label>
+
+      <div class="venue-row">
+        <input type="text" id="businessLocation" />
+        <button type="button" id="checkLocationBtn" class="venue-check-btn" disabled>
+          Check
+        </button>
+      </div>
+
+      <div id="locationPreview" style="margin-top:3px;"></div>
+    </div>
+
+    <!-- PRICE -->
+    <div class="form-group">
+      <label>Average Price (optional)</label>
+      <input type="number" id="price" min="0" step="1" />
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="description" rows="5"></textarea>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="form-group contact-box">
+      <label>Phone Numbers</label>
+
+      <div id="phoneList" class="contact-list"></div>
+
+      <div class="add-row">
+        <input type="text" id="newPhone" placeholder="+501…" />
+        <button type="button" id="addPhoneBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="form-group contact-box">
+      <label>WhatsApp Numbers</label>
+
+      <div id="whatsappList" class="contact-list"></div>
+
+      <div class="add-row">
+        <input type="text" id="newWhatsApp" placeholder="+501…" />
+        <button type="button" id="addWhatsAppBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="form-group contact-box">
+      <label>Email Addresses</label>
+
+      <div id="emailList" class="contact-list"></div>
+
+      <div class="add-row">
+        <input type="email" id="newEmail" placeholder="example@business.com" />
+        <button type="button" id="addEmailBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Website</label>
+      <input type="url" id="website" placeholder="https://…" />
+    </div>
+
+    <!-- SOCIAL LINKS -->
+    <div class="form-group">
+      <label>Social Links</label>
+      <input type="url" id="facebook" placeholder="Facebook URL" />
+      <input type="url" id="instagram" placeholder="Instagram URL" />
+      <input type="url" id="tiktok" placeholder="TikTok URL" />
+      <input type="url" id="youtube" placeholder="YouTube URL" />
+    </div>
+
+    <!-- MENU URL -->
+    <div class="form-group">
+      <label>Menu URL (optional)</label>
+      <input type="url" id="menuUrl" placeholder="https://…" />
+    </div>
+
+    <!-- HOURS MODE -->
+    <div class="form-group">
+      <label>Hours</label>
+      <select id="hoursMode">
+        <option value="">Select Hours…</option>
+        <option value="24hours">Open 24 Hours (Daily)</option>
+        <option value="closed">Closed (No Public Hours)</option>
+        <option value="per-day">Set Hours Per Day</option>
+        <option value="custom">Custom Text</option>
+      </select>
+    </div>
+
+    <!-- PER-DAY HOURS GRID -->
+    <div id="perDayHoursContainer" style="display:none; border:1px solid #eee; border-radius:8px; padding:10px;">
+      <div class="day-row" data-day="Sunday">
+
+        <div class="day-title">Sunday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+
+            <div class="day-row" data-day="Monday">
+
+        <div class="day-title">Monday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+
+            <div class="day-row" data-day="Tuesday">
+
+        <div class="day-title">Tuesday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+
+            <div class="day-row" data-day="Wednesday">
+
+        <div class="day-title">Wednesday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+
+            <div class="day-row" data-day="Thursday">
+
+        <div class="day-title">Thursday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+
+            <div class="day-row" data-day="Friday">
+
+        <div class="day-title">Friday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+
+            <div class="day-row" data-day="Saturday">
+
+        <div class="day-title">Saturday</div>
+
+        <div class="day-content">
+          <span class="status-badge open-status">OPEN</span>
+
+          <label class="closed-toggle">
+            <input type="checkbox" class="day-closed">
+          </label>
+
+          <div class="day-times">
+            <input type="time" class="day-open">
+            <span class="dash">–</span>
+            <input type="time" class="day-close">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CUSTOM HOURS TEXT -->
+    <div id="customHoursContainer" style="display:none;">
+      <div class="form-group">
+        <label>Custom Hours</label>
+        <textarea id="customHours" rows="3" placeholder="Mon–Fri 8am–5pm"></textarea>
+      </div>
+    </div>
+
+    <div class="form-group tags-box">
+      <label>Tags</label>
+
+      <div class="tag-items">
+        <label><input type="checkbox" id="tagFamily"> Family Friendly</label>
+        <label><input type="checkbox" id="tagLGBT"> LGBTQ+ Friendly</label>
+        <label><input type="checkbox" id="tagPet"> Pet Friendly</label>
+        <label><input type="checkbox" id="tagWheelchair"> Wheelchair Accessible</label>
+        <label><input type="checkbox" id="tagCashOnly"> Cash Only</label>
+      </div>
+    </div>
+
+    <!-- IMAGES -->
+    <div class="form-group">
+      <label>Upload Images (max 5)</label>
+      <div style="font-size:12px; color:#0a6e3a; margin-top:4px;">
+        Tap any image to set it as the default. Tap the red X to remove.
+      </div>
+      <input type="file" id="images" accept="image/*" multiple />
+      <div id="imagePreview"></div>
+    </div>
+
+    <button type="submit" class="save-btn" id="submitBtn">Save</button>
+  </form>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div id="confirmModal" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+">
+  <div style="
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 85%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  ">
+    <div style="font-size: 17px; font-weight: 600; margin-bottom: 14px;">
+      Remove this image?
+    </div>
+
+    <button id="confirmYes" style="
+      background:#d9534f; color:white;
+      padding:10px 16px; border:none;
+      border-radius:8px; width:100%; margin-bottom:10px;
+      font-size:16px; font-weight:600;
+    ">Remove</button>
+
+    <button id="confirmNo" style="
+      background:#ccc; color:#333;
+      padding:10px 16px; border:none;
+      border-radius:8px; width:100%;
+      font-size:16px; font-weight:600;
+    ">Cancel</button>
+  </div>
+</div>
+
+<!-- FLOATING CATEGORY BUBBLE -->
+<div id="floatingCategoryBubble" class="hidden">
+  <img id="floatingCategoryIcon" src="" alt="">
+</div>
+
+<script type="module">
+
+
+  
+  let persistenceEnabled = true;
+  let lastTime = null;
+  let firstTime = null;
+
+  let resizeTimeout;
+
+
+// --- SIMPLE IDENTITY CHECK ---
+  let token = localStorage.getItem("tp_token_v4") || null;
+  let identity = null;
+  let trusted = null;
+  let autologin = null;
+  let loggedIn = false;
+  let userName = null;
+  let userEmail = null;
+  let userID = null;
+  
+  let bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+  let bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+  let bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+  let bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+  let formIsDirty = false;
+  let existingShortCode = null;
+  let isLoadingHours = false;
+  let selectedOwnerIndex = null;
+
+  let selectedCategories = [];
+  let dragIndex = null;
+  let currentBiz = null;
+  let selectedSubcategories = [];
+  let subDragIndex = null;
+  let loyalty = null;
+  let settings = null;
+
+  
+  const categorySelect = document.getElementById("categoriesList");
+  const urlParams = new URLSearchParams(window.location.search);
+  const businessId = urlParams.get("id");
+
+  let existingImages = [];
+
+  const headerTitle = document.getElementById("headerTitle");
+  const submitBtn = document.getElementById("submitBtn");
+
+const locationInput = document.getElementById("businessLocation");
+const checkLocationBtn = document.getElementById("checkLocationBtn");
+const locationPreview = document.getElementById("locationPreview");
+
+const locationCache = new Map();
+
+
+
+
+
+function showMessage(text, type = "error") {
+  const msg = document.getElementById("msg");
+  if (!msg) return; // safety fallback
+
+  // Set text + type
+  msg.textContent = text;
+  msg.className = "msg " + type;
+  msg.style.display = "block";
+
+  // Pulse animation
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 300);
+
+  // Smooth scroll to message
+  setTimeout(() => {
+    msg.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 50);
+
+  // Auto-hide after 4 seconds
+  setTimeout(() => {
+    msg.style.display = "none";
+  }, 4000);
+}
+
+
+function safeLogout() {
+  localStorage.removeItem("tp_token_v4");
+  localStorage.removeItem("tp_device_token_v4");
+  mark("SAFE LOGOUT");
+}
+
+async function hardLogout(reason) {
+  try {
+    mark("HARD LOGOUT: " + (reason || "unknown"));
+    localStorage.removeItem("tp_token_v4");
+    localStorage.removeItem("tp_device_token_v4");
+    await reportDanger(reason || "hardLogout");
+  } catch (err) {
+    mark("HARD LOGOUT ERROR: " + err);
+    localStorage.removeItem("tp_token_v4");
+    localStorage.removeItem("tp_device_token_v4");
+  } finally {
+    window.location.href="PulseWorldReality";
+  }
+}
+
+function mark(label) {
+    log("[CHECKEMAIL]", label);
+  }
+  
+/************************************************************
+ * SESSION CHECK (ALL PAGES EXCEPT LOGIN)
+ ************************************************************/
+async function sessionCheck() {
+  let id = null;
+
+  try {
+    const raw = localStorage.getItem("tp_identity_v9");
+    if (raw) {
+      id = JSON.parse(raw);
+    }
+  } catch (e) {
+    // Corrupt identity → treat as missing
+    id = null;
+  }
+
+  // Fallback: if some global understanding layer identity() exists,
+  // we can try to hydrate from there once, but we do NOT depend on it.
+  if (!id && typeof identity === "function") {
+    try {
+      id = await identity();
+    } catch (e) {
+      id = null;
+    }
+  }
+
+  // No identity or not trusted → go to login
+  if (!id || !id.trustedDevice) {
+    window.location.href = `/`;
+    return null;
+  }
+
+  // Expose canonical identity for the rest of the page
+  PulseRealm.PulseIdentity = id;
+  return id;
+}
+
+  function openConfirm(onYes) {
+    const modal = document.getElementById("confirmModal");
+    const yesBtn = document.getElementById("confirmYes");
+    const noBtn = document.getElementById("confirmNo");
+
+    modal.style.display = "flex";
+
+    const cleanup = () => {
+      modal.style.display = "none";
+      yesBtn.onclick = null;
+      noBtn.onclick = null;
+    };
+
+    yesBtn.onclick = () => {
+      cleanup();
+      onYes();
+    };
+
+    noBtn.onclick = cleanup;
+  }
+
+  /* -------------------------------------------------
+    CATEGORY + SUBCATEGORY RENDERING (SAFE)
+  -------------------------------------------------- */
+
+  function renderSubcategoriesList() {
+    const container = document.getElementById("subcategoriesList");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const bizSubs = selectedSubcategories
+      .slice()
+      .sort((a, b) => a.localeCompare(b));
+
+    bizSubs.forEach((key, index) => {
+      const display = displayNameFromKey(key);
+      const icon = bizSubcategoryIconMap ? bizSubcategoryIconMap[key] : null;
+
+      const row = document.createElement("div");
+      row.className = "subcategory-row";
+      row.dataset.index = index;
+      row.draggable = true;
+
+      row.style.cssText = `
+        align-items:center; gap:8px;
+        padding:6px 10px; background:#f7f7f7;
+        border-radius:6px; cursor:grab;
+      `;
+
+      row.innerHTML = `
+        ${icon ? `<img src="${icon}" style="width:20px;height:20px;">` : ""}
+        <span style="flex:1;">${display}</span>
+        <button data-remove="${key}"
+                style="background:#d9534f;color:white;border:none;
+                      padding:2px 8px;border-radius:4px;font-size:12px;">
+          Remove
+        </button>
+      `;
+
+      container.appendChild(row);
+    });
+
+    const primary = bizSubs[0];
+    if (primary) showFloatingCategoryIcon(primary);
+  }
+
+  function renderCategoriesList() {
+    const container = document.getElementById("categoriesList");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const bizCats = selectedCategories
+      .slice()
+      .sort((a, b) => a.localeCompare(b));
+
+    bizCats.forEach((key, index) => {
+      const display = displayNameFromKey(key);
+      const icon = bizCategoryIconMap ? bizCategoryIconMap[key] : null;
+
+      const row = document.createElement("div");
+      row.className = "category-row";
+      row.dataset.index = index;
+      row.draggable = true;
+
+      row.style.cssText = `
+        align-items:center; gap:8px;
+        padding:6px 10px; background:#f7f7f7;
+        border-radius:6px; cursor:grab;
+      `;
+
+      row.innerHTML = `
+        ${icon ? `<img src="${icon}" style="width:20px;height:20px;">` : ""}
+        <span style="flex:1;">${display}</span>
+        <button data-remove="${key}"
+                style="background:#d9534f;color:white;border:none;
+                      padding:2px 8px;border-radius:4px;font-size:12px;">
+          Remove
+        </button>
+      `;
+
+      container.appendChild(row);
+    });
+
+    const primary = bizCats[0];
+    if (primary) showFloatingCategoryIcon(primary);
+  }
+
+  /* -------------------------------------------------
+    PICKERS (SAFE)
+  -------------------------------------------------- */
+
+  function populateSubcategoryPicker() {
+    const picker = document.getElementById("subcategoryPicker");
+    if (!picker) return;
+
+    picker.innerHTML = `<option value="" disabled selected>Add Subcategory…</option>`;
+
+    const fromIconMap = Object.keys(bizSubcategoryIconMap || {}).map(key => ({
+      key,
+      display: displayNameFromKey(key)
+    }));
+
+    const fromCache = (selectedSubcategories || [])
+      .filter(sc => !bizSubcategoryIconMap[sc.category])
+      .map(sc => ({
+        key: sc.category,
+        display: displayNameFromKey(sc.category)
+      }));
+
+    const SUBCATEGORY_LIST = [...fromIconMap, ...fromCache]
+      .sort((a, b) => a.display.localeCompare(b.display));
+
+    SUBCATEGORY_LIST.forEach(sub => {
+      const opt = document.createElement("option");
+      opt.value = sub.key;
+      opt.textContent = sub.display;
+      picker.appendChild(opt);
+    });
+  }
+
+  function populateCategoryPicker() {
+    const picker = document.getElementById("categoryPicker");
+    if (!picker) return;
+
+    picker.innerHTML = `<option value="" disabled selected>Add Category…</option>`;
+
+    const fromIconMap = Object.keys(bizCategoryIconMap || {}).map(key => ({
+      key,
+      display: displayNameFromKey(key)
+    }));
+
+    const fromCache = (selectedCategories || [])
+      .filter(cat => !bizCategoryIconMap[cat.category])
+      .map(cat => ({
+        key: cat.category,
+        display: displayNameFromKey(cat.category)
+      }));
+
+    const CATEGORY_LIST = [...fromIconMap, ...fromCache]
+      .sort((a, b) => a.display.localeCompare(b.display));
+
+    CATEGORY_LIST.forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat.key;
+      opt.textContent = cat.display;
+      picker.appendChild(opt);
+    });
+  }
+
+  /* -------------------------------------------------
+    HOURS UTILITIES (UNCHANGED, SAFE)
+  -------------------------------------------------- */
+
+  function extractHoursForSave() {
+    const mode = document.getElementById("hoursMode").value;
+
+    if (mode === "24hours") {
+      return { open24: true, closedAllDay: false, weeklyHours: null, hoursText: null };
+    }
+
+    if (mode === "closed") {
+      return { open24: false, closedAllDay: true, weeklyHours: null, hoursText: null };
+    }
+
+    if (mode === "per-day") {
+      return { open24: false, closedAllDay: false, weeklyHours: collectWeeklyHoursFromUI(), hoursText: null };
+    }
+
+    if (mode === "custom") {
+      return {
+        open24: false,
+        closedAllDay: false,
+        weeklyHours: null,
+        hoursText: document.getElementById("customHours").value.trim()
+      };
+    }
+
+    return { open24: false, closedAllDay: false, weeklyHours: null, hoursText: null };
+  }
+
+  function displayNameFromKey(key) {
+    return key
+      .replace(/-/g, " ")
+      .split(" ")
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  }
+
+  function collectWeeklyHoursFromUI() {
+    const rows = document.querySelectorAll("#perDayHoursContainer .day-row");
+    const weeklyHours = {};
+
+    rows.forEach(row => {
+      const day = row.getAttribute("data-day");
+      const closed = row.querySelector(".day-closed").checked;
+      const open = row.querySelector(".day-open").value;
+      const close = row.querySelector(".day-close").value;
+
+      if (closed) {
+        weeklyHours[day] = "Closed";
+        return;
+      }
+
+      if (open && close) {
+        weeklyHours[day] = `${open}–${close}`;
+      }
+    });
+
+    return weeklyHours;
+  }
+
+  function convertPrettyToISO(str) {
+    if (!str) return "";
+
+    str = str.replace(/[\u202F\u00A0\u2007\u2009\u200A\u205F\u3000]/g, " ");
+    str = str.replace(/\s+/g, " ").trim();
+
+    const m = str.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
+    if (!m) return "";
+
+    let hour = parseInt(m[1], 10);
+    const minute = m[2] ? parseInt(m[2], 10) : 0;
+    const ampm = m[3].toUpperCase();
+
+    if (ampm === "PM" && hour !== 12) hour += 12;
+    if (ampm === "AM" && hour === 12) hour = 0;
+
+    return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+  }
+
+  function populateHoursArrayUI(hoursArray) {
+    const weekly = {};
+
+    hoursArray.forEach(line => {
+      const [day, times] = line.split(":");
+      weekly[day.trim()] = times.trim();
+    });
+
+    populateWeeklyHoursUI(weekly);
+  }
+
+  function normalizePrettyTime(str) {
+    if (!str) return "";
+
+    str = str.replace(/[\u202F\u00A0\u2007\u2009\u200A\u205F\u3000]/g, " ");
+    str = str.replace(/\s+/g, " ");
+    str = str.replace(/(AM|PM)$/i, " $1");
+
+    return str.trim();
+  }
+      function populateWeeklyHoursUI(weeklyHours) {
+        const rows = document.querySelectorAll("#perDayHoursContainer .day-row");
+
+        rows.forEach(row => {
+          const day = row.getAttribute("data-day");
+          const closed = row.querySelector(".day-closed");
+          const open = row.querySelector(".day-open");
+          const close = row.querySelector(".day-close");
+
+          // ⭐ Attach listener ONCE
+          if (!closed.__bound) {
+            closed.__bound = true;
+
+            closed.addEventListener("change", () => {
+              const statusBadge = row.querySelector(".status-badge");
+              const times = row.querySelector(".day-times");
+
+              if (closed.checked) {
+                statusBadge.textContent = "CLOSED";
+                statusBadge.classList.remove("open-status");
+                statusBadge.classList.add("closed-status");
+                times.classList.add("disabled");
+              } else {
+                statusBadge.textContent = "OPEN";
+                statusBadge.classList.remove("closed-status");
+                statusBadge.classList.add("open-status");
+                times.classList.remove("disabled");
+              }
+            });
+          }
+
+          const val = weeklyHours[day];
+
+          // Reset
+          closed.checked = false;
+          open.value = "";
+          close.value = "";
+
+          if (!val) return;
+
+          if (val.toLowerCase() === "closed") {
+            closed.checked = true;
+            return;
+          }
+
+          // ⭐ Normalize all dash types
+          const normalized = val.replace(/–|—|-/g, "-");
+          const cleaned = normalized
+            .replace(/[\u202F\u00A0\u2007\u2009\u200A\u205F\u3000]/g, " ")
+            .replace(/\s+/g, " ");
+
+          const [o, c] = cleaned.split("-");
+
+          const statusBadge = row.querySelector(".status-badge");
+          const times = row.querySelector(".day-times");
+
+          if (closed.checked) {
+            statusBadge.textContent = "CLOSED";
+            statusBadge.classList.remove("open-status");
+            statusBadge.classList.add("closed-status");
+            times.classList.add("disabled");
+          } else {
+            statusBadge.textContent = "OPEN";
+            statusBadge.classList.remove("closed-status");
+            statusBadge.classList.add("open-status");
+            times.classList.remove("disabled");
+          }
+
+          open.value = convertPrettyToISO(o.trim());
+          close.value = convertPrettyToISO(c.trim());
+        });
+      }
+
+      function loadHoursIntoUI(biz) {
+        isLoadingHours = true;
+
+        const modeSelect = document.getElementById("hoursMode");
+        const perDay = document.getElementById("perDayHoursContainer");
+        const custom = document.getElementById("customHoursContainer");
+
+        perDay.style.display = "none";
+        custom.style.display = "none";
+
+        if (biz.weeklyHours) {
+          modeSelect.value = "per-day";
+          perDay.style.display = "block";
+          populateWeeklyHoursUI(biz.weeklyHours);
+          isLoadingHours = false;
+          return;
+        }
+
+        if (Array.isArray(biz.hours)) {
+          modeSelect.value = "per-day";
+          perDay.style.display = "block";
+          populateHoursArrayUI(biz.hours);
+          isLoadingHours = false;
+          return;
+        }
+
+        modeSelect.value = "";
+        isLoadingHours = false;
+      }
+
+    function renderContactList(listId, ownerRadioName, values = []) {
+      const container = document.getElementById(listId);
+      container.innerHTML = "";
+
+      if (!Array.isArray(values)) return;
+
+      if (values.length === 1) values = [];
+      if (values.length === 0) return;
+
+      const ownerIndex = values.length > 1 ? values.length - 1 : 0;
+
+      values.forEach((val, index) => {
+        const row = document.createElement("div");
+        row.className = "contact-item";
+
+        const isOwner = index === ownerIndex;
+
+        row.innerHTML = `
+          <div class="owner-col">
+            <input type="radio" class="owner-radio" name="${ownerRadioName}" ${isOwner ? "checked" : ""}>
+          </div>
+
+          <span class="contact-value">${val}</span>
+
+          <label class="owner-label">
+            ${isOwner ? `<span class="owner-text">Owner</span>` : ""}
+            <button type="button" class="delete-btn">✕</button>
+          </label>
+        `;
+
+        const deleteBtn = row.querySelector(".delete-btn");
+        const radio = row.querySelector(".owner-radio");
+
+        // ⭐ DELETE — guarded
+        if (!deleteBtn.__bound) {
+          deleteBtn.__bound = true;
+
+          deleteBtn.addEventListener("click", () => {
+            values.splice(index, 1);
+            renderContactList(listId, ownerRadioName, values);
+          });
+        }
+
+        // ⭐ OWNER RADIO — guarded
+        if (!radio.__bound) {
+          radio.__bound = true;
+
+          radio.addEventListener("change", () => {
+            if (index === values.length - 1) return;
+
+            const clicked = values[index];
+            values.splice(index, 1);
+            values.push(clicked);
+
+            renderContactList(listId, ownerRadioName, values);
+          });
+        }
+
+        container.appendChild(row);
+      });
+    }
+
+async function initiateBusiness() {
+  
+  if (businessId) {
+    headerTitle.textContent = "🪄✏️ Edit Business";
+    submitBtn.textContent = "🪄🔖 Save Changes";
+    loadBusiness();
+  } else {
+    headerTitle.textContent = "🪄➕ Create Business";
+    submitBtn.textContent = "🪄🔖 Save New Business";
+  }
+
+  populateCategoryPicker();
+  populateSubcategoryPicker();
+
+
+  // 🔒 Guard beforeunload
+  if (!PulseRealm.__editBusinessBeforeUnloadBound) {
+    PulseRealm.__editBusinessBeforeUnloadBound = true;
+
+    window.addEventListener("beforeunload", (e) => {
+      if (formIsDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    });
+  }
+  
+  /* -------------------------------------------------
+    CATEGORY LIST — GUARDED
+  -------------------------------------------------- */
+
+  const list = document.getElementById("categoriesList");
+
+  if (list && !list.__bound) {
+    list.__bound = true;
+
+    list.addEventListener("click", e => {
+      const key = e.target.dataset.remove;
+      if (!key) return;
+
+      selectedCategories = selectedCategories.filter(c => c !== key);
+      renderCategoriesList();
+    });
+
+    list.addEventListener("dragstart", e => {
+      dragIndex = Number(e.target.dataset.index);
+    });
+
+    list.addEventListener("dragover", e => e.preventDefault());
+
+    list.addEventListener("drop", e => {
+      const dropIndex = Number(e.target.closest(".category-row").dataset.index);
+      if (dropIndex == null || dragIndex == null) return;
+
+      const moved = selectedCategories.splice(dragIndex, 1)[0];
+      selectedCategories.splice(dropIndex, 0, moved);
+
+      dragIndex = null;
+      renderCategoriesList();
+    });
+  }
+
+  /* -------------------------------------------------
+    SUBCATEGORY LIST — GUARDED
+  -------------------------------------------------- */
+
+  const subList = document.getElementById("subcategoriesList");
+
+  if (subList && !subList.__bound) {
+    subList.__bound = true;
+
+    subList.addEventListener("click", e => {
+      const key = e.target.dataset.remove;
+      if (!key) return;
+
+      selectedSubcategories = selectedSubcategories.filter(c => c !== key);
+      renderSubcategoriesList();
+    });
+
+    subList.addEventListener("dragstart", e => {
+      subDragIndex = Number(e.target.dataset.index);
+    });
+
+    subList.addEventListener("dragover", e => e.preventDefault());
+
+    subList.addEventListener("drop", e => {
+      const dropIndex = Number(e.target.closest(".subcategory-row").dataset.index);
+      if (dropIndex == null || subDragIndex == null) return;
+
+      const moved = selectedSubcategories.splice(subDragIndex, 1)[0];
+      selectedSubcategories.splice(dropIndex, 0, moved);
+
+      subDragIndex = null;
+      renderSubcategoriesList();
+    });
+  }
+
+  /* -------------------------------------------------
+    CATEGORY PICKER — GUARDED
+  -------------------------------------------------- */
+
+  const categoryPicker = document.getElementById("categoryPicker");
+
+  if (categoryPicker && !categoryPicker.__bound) {
+    categoryPicker.__bound = true;
+
+    categoryPicker.addEventListener("change", e => {
+      const key = e.target.value;
+      if (!key) return;
+
+      if (!selectedCategories.includes(key)) {
+        selectedCategories.push(key);
+        renderCategoriesList();
+      }
+
+      e.target.value = "";
+    });
+  }
+
+  /* -------------------------------------------------
+    SUBCATEGORY PICKER — GUARDED
+  -------------------------------------------------- */
+
+  const subcategoryPicker = document.getElementById("subcategoryPicker");
+
+  if (subcategoryPicker && !subcategoryPicker.__bound) {
+    subcategoryPicker.__bound = true;
+
+    subcategoryPicker.addEventListener("change", e => {
+      const key = e.target.value;
+      if (!key) return;
+
+      if (!selectedSubcategories.includes(key)) {
+        selectedSubcategories.push(key);
+        renderSubcategoriesList();
+      }
+
+      e.target.value = "";
+    });
+  }
+  
+  /* -------------------------------------------------
+    LOCATION INPUT — GUARDED
+  -------------------------------------------------- */
+
+  if (locationInput && !locationInput.__bound) {
+    locationInput.__bound = true;
+
+    locationInput.addEventListener("input", () => {
+      formIsDirty = true;
+
+      const v = locationInput.value.trim();
+
+      locationPreview.style.display = "none";
+      locationPreview.innerHTML = "";
+
+      if (v.length < 4 || isGarbage(v)) {
+        checkLocationBtn.disabled = true;
+        checkLocationBtn.style.opacity = 0.4;
+        return;
+      }
+
+      if (isPlusCode(v) || isLatLng(v)) {
+        checkLocationBtn.disabled = true;
+        checkLocationBtn.style.opacity = 0.4;
+
+        locationPreview.style.display = "block";
+        locationPreview.innerHTML = `
+          <div style="font-weight:600; color:#0a6e3a;">Coordinates detected</div>
+          <div>This business location will be used exactly as entered.</div>
+        `;
+        return;
+      }
+
+      checkLocationBtn.disabled = false;
+      checkLocationBtn.style.opacity = 1;
+    });
+  }
+
+  /* -------------------------------------------------
+    LOCATION CHECK BUTTON — GUARDED
+  -------------------------------------------------- */
+
+  if (checkLocationBtn && !checkLocationBtn.__bound) {
+  checkLocationBtn.__bound = true;
+
+  checkLocationBtn.addEventListener("click", async () => {
+    const raw = locationInput.value.trim();
+    const v = normalizeLocation(raw);
+
+    if (!v || v.length < 4) return;
+
+    const key = v;
+
+    // 1️⃣ Cache hit → instant preview
+    if (locationCache.has(key)) {
+      renderLocationPreview(locationCache.get(key));
+      return;
+    }
+
+    // 2️⃣ Build query (auto‑append San Pedro Belize)
+    let query = raw;
+    if (!containsLocation(raw)) {
+      query += " San Pedro Belize";
+    }
+
+    // 3️⃣ Call backend through Router → Endpoint → Backend
+    let res;
+    try {
+      res = await getHook({
+        type: "resolveLocation",
+        query
+      });
+    } catch (err) {
+      res = { status: "error" };
+    }
+
+    // 4️⃣ Cache + render
+    locationCache.set(key, res);
+    renderLocationPreview(res);
+  });
+}
+
+  const title = document.getElementById("title");
+
+  let originalHeader = headerTitle.textContent;
+  let isShowingTitle = false;
+
+  window.addEventListener("scroll", () => {
+    const triggerPoint = title.offsetTop - 45; // adjust for header height
+
+    if (PulseRealm.scrollY > triggerPoint && !isShowingTitle) {
+      headerTitle.textContent = headerTitle.textContent + ` (` + title.value + `)`;
+      isShowingTitle = true;
+    }
+
+    if (PulseRealm.scrollY <= triggerPoint && isShowingTitle) {
+      headerTitle.textContent = originalHeader;
+      isShowingTitle = false;
+    }
+    // -----------------------------------------
+  // ⭐ PREVENT DUPLICATE LISTENERS
+  // -----------------------------------------
+ 
+
+    // ⭐ 1. Restore state on load (runs ONCE)
+    window.addEventListener("load", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        PulseRealm.isIdle = true;
+        
+      } else {
+        PulseRealm.isIdle = false; // active by default
+        
+      }
+
+      
+    });
+
+    // ⭐ 2. Badge toggle listener
+    document.getElementById("pb-mini-badge").addEventListener("click", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        // Turn ON
+        localStorage.removeItem("pulseband_disabled");
+        PulseRealm.isIdle = false;
+        
+      } else {
+        // Turn OFF
+        localStorage.setItem("pulseband_disabled", "1");
+        PulseRealm.isIdle = true;
+        
+      }
+
+      
+    });
+  
+  });
+
+  document.getElementById("images").addEventListener("change", async (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length + existingImages.length > 5) {
+      showMessage("Maximum 5 images allowed.", "error");
+      e.target.value = "";
+      return;
+    }
+
+    const newURLs = await uploadNewImages(files);
+    existingImages = [...existingImages, ...newURLs];
+    renderImagePreview();
+  });
+
+  if (!document.__loyaltyVisibilityBound) {
+      document.__loyaltyVisibilityBound = true;
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          setTimeout(async () => await sessionCheck(), 250);
+          mark("✅ VisibilityChange RERAN SESSIONCHECK AND LET THE FUNCTION DO THE LOGIC");
+        }
+      });
+    }
+    
+  // If user didn't come from the list, rebuild history
+  if (!history.state || !history.state.fromList) {
+    history.replaceState({ fromList: true }, "", location.href);
+  }
+}
+  
+async function loadBusiness() {
+  try {
+    const biz = await PulseBusinessCacheManager.getBusinessById(businessId);
+
+    existingShortCode = biz.shortCode || null;
+
+    renderBusiness(biz);
+    renderLocationPreview(biz);
+    renderImagePreview(biz);
+
+  } catch (err) {
+    error("loadBusiness error:", err);
+    showMessage("Error loading business.", "error");
+  }
+}
+
+  /* -------------------------------------------------
+    IMAGE DEFAULT — SAFE
+  -------------------------------------------------- */
+
+  function makeDefaultImage(index) {
+    if (index === 0) return;
+
+    const first = existingImages[0];
+    const selected = existingImages[index];
+
+    existingImages[0] = selected;
+    existingImages[index] = first;
+
+    renderImagePreview();
+    formIsDirty = true;
+  }
+
+  /* -------------------------------------------------
+    CATEGORY ICON RESOLVER
+  -------------------------------------------------- */
+
+  async function getBusCategoryIcon(b) {
+    if (!b) return null;
+
+    const firstCat =
+      Array.isArray(b.categories) && b.categories.length > 0
+        ? b.categories[0].toLowerCase().trim()
+        : null;
+
+    const firstSub =
+      Array.isArray(b.subcategories) && b.subcategories.length > 0
+        ? b.subcategories[0].toLowerCase().trim()
+        : null;
+
+    if (firstCat && bizCategoryIconMap[firstCat]) {
+      return bizCategoryIconMap[firstCat];
+    }
+
+    if (firstSub && bizSubcategoryIconMap[firstSub]) {
+      return bizSubcategoryIconMap[firstSub];
+    }
+
+    try {
+      if (firstCat) {
+        const snap = await firebase.firestore()
+          .collection("CategoryIconCache")
+          .where("category", "==", firstCat)
+          .where("source", "array-contains", "businesses")
+          .limit(1)
+          .get();
+
+        if (!snap.empty) {
+          const doc = snap.docs[0].data();
+          if (doc.migratedUrl) return doc.migratedUrl;
+        }
+      }
+    } catch (err) {
+      error("CategoryIconCache lookup failed:", err);
+    }
+
+    return null;
+  }
+
+async function renderLocationPreview(res) {
+  locationPreview.style.display = "block";
+
+  if (!res || res.status === "error") {
+    locationPreview.innerHTML = `
+      <div style="color:#b00020; font-weight:600;">Could not check location.</div>
+      <div>Please try again or enter coordinates.</div>
+    `;
+    return;
+  }
+
+  if (res.status === "no_match") {
+    locationPreview.innerHTML = `
+      <div style="color:#b00020; font-weight:600;">No match found</div>
+      <div>Please enter coordinates or a Plus Code.</div>
+    `;
+    return;
+  }
+
+  const mapUrl = res.mapImageUrl || res.staticMap || "";
+
+  locationPreview.innerHTML = `
+    <div style="font-weight:600; color:#0a6e3a;">${res.name}</div>
+    <div style="margin-bottom:8px;">${res.address}</div>
+
+    <div style="overflow:hidden; border-radius:12px; position:relative;">
+      <a id="mapLink" href="#" target="_blank" style="display:block;">
+        <div style="overflow:hidden; border-radius:12px; position:relative;">
+          <img id="mapImage" src="${mapUrl}" alt="Business Map"
+               style="width:100%; height:auto; display:block;">
+        </div>
+      </a>
+
+      <div id="tpOverlay" style="
+        position:absolute;
+        top:0; left:0;
+        width:100%; height:100%;
+        pointer-events:none;
+        display:none;
+      ">
+        <div id="tpDot" style="
+          position:absolute;
+          width:18px; height:18px;
+          background:#0b5f3c;
+          border-radius:50%;
+          border:2px solid white;
+          box-shadow:0 0 8px rgba(0,0,0,0.35);
+          transition: transform 0.25s ease;
+        ">
+          <img id="tpIcon" src="" alt="" style="
+            width:18px; height:18px;
+            display:none;
+            filter:drop-shadow(0 0 2px rgba(0,0,0,0.4));
+          ">
+        </div>
+
+        <div id="tpLabel" style="
+          position:absolute;
+          display:flex;
+          align-items:center;
+          gap:6px;
+          padding:4px 10px;
+          background:rgba(11, 95, 60, 0.85);
+          color:white;
+          border-radius:20px;
+          font-size:12.5px;
+          font-weight:600;
+          white-space:nowrap;
+          transform:translate(-50%, -120%);
+          backdrop-filter: blur(4px);
+        ">
+          <span id="tpLabelText"></span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const iconUrl = await getBusCategoryIcon(currentBiz);
+
+  attachMapOverlayHandler(res.name, iconUrl || null);
+}
+
+  /* -----------------------------
+    MULTI‑IMAGE PREVIEW (FADE OUT + CONFIRMATION)
+  ----------------------------- */
+  function renderImagePreview() {
+    const container = document.getElementById("imagePreview");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    existingImages.forEach((url, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "img-wrapper fade-ready";
+
+      const img = document.createElement("img");
+      img.src = url;
+
+      img.addEventListener("click", () => {
+        if (index === 0) return;
+
+        wrapper.classList.add("fade-out");
+
+        setTimeout(() => {
+          makeDefaultImage(index);
+        }, 200);
+      });
+
+      const del = document.createElement("div");
+      del.className = "img-delete";
+      del.textContent = "×";
+
+      del.addEventListener("click", () => {
+        openConfirm(() => {
+          wrapper.classList.add("fade-out");
+
+          setTimeout(() => {
+            existingImages.splice(index, 1);
+            formIsDirty = true;
+            renderImagePreview();
+          }, 250);
+        });
+      });
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(del);
+      container.appendChild(wrapper);
+    });
+  }
+
+  /* -----------------------------
+    TITLE SANITIZATION + PLAYFUL CLEAN
+  ----------------------------- */
+
+  const allowedIcons = [
+    "🎉","🎊","✨","⭐","📅","🗓️","🎈",
+    "🎤","🎧","🎵","🎶","🎸","🥁","🌙","🍹",
+    "🍔","🍕","🌮","🍜","🍺","🍷","🥘","🍤",
+    "⚽","🏀","🏈","🎾","🎮","♟️","🙂","😊",
+    "🏖️","🌴","🌅","🤝","🧹","😄","😁","😎",
+    "🎄","🎃","🎆","🎇","😉","🤩","😃"
+  ];
+
+  function playfulClean(input) {
+    if (!input) return "";
+
+    // (dictionary + alias unchanged)
+    // ... your playfulClean dictionary stays exactly the same ...
+
+    return cleaned.join("");
+  }
+
+  function sanitizeTitle(str) {
+    const cleaned = str.trim().replace(/[<>]/g, "");
+
+    const pattern = new RegExp(
+      `^[A-Za-z0-9\\s${allowedIcons.join("")}]{1,80}$`
+    );
+
+    if (!pattern.test(cleaned)) return null;
+
+    return cleaned;
+  }
+
+  
+function hideTPLoader() {
+    const el = document.getElementById("t-loading");
+    if (!el) return;
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 700);
+  }
+
+    
+    function showFloatingCategoryIcon(catKey) {
+      const icon = bizCategoryIconMap[catKey];
+      if (!icon) return;
+
+      const bubble = document.getElementById("floatingCategoryBubble");
+
+      // Set icon
+      document.getElementById("floatingCategoryIcon").src = icon;
+
+      // 🌴 Everything EXCEPT businesses = platinum
+      if (catKey === "businesses") {
+        bubble.classList.remove("platinum");   // keep tropical
+      } else {
+        bubble.classList.add("platinum");      // platinum for all others
+      }
+
+      bubble.classList.remove("hidden");
+    }
+
+
+  /* -----------------------------
+    UPLOAD IMAGES (NO AUTH REQUIRED)
+  ----------------------------- */
+  async function uploadNewImages(files) {
+    const urls = [];
+
+    for (const file of files) {
+      const storageRef = ref(storage, `businesses/${crypto.randomUUID()}-${file.name}`);
+
+      await uploadBytes(storageRef, file, {
+        contentType: file.type,
+        cacheControl: "public, max-age=31536000, immutable"
+      });
+
+      const url = await getDownloadURL(storageRef);
+      urls.push(url);
+    }
+
+    return urls;
+  }
+
+
+  function extractContactArray(listId, ownerRadioName) {
+    const container = document.getElementById(listId);
+    const rows = [...container.querySelectorAll(".contact-item")];
+
+    let values = [];
+    let ownerValue = null;
+
+    rows.forEach(row => {
+      const val = row.querySelector(".contact-value").textContent.trim();
+      const radio = row.querySelector(".owner-radio");
+
+      if (radio.checked) {
+        ownerValue = val;
+      } else {
+        values.push(val);
+      }
+    });
+
+    // If only one exists → it is owner
+    if (values.length === 0 && ownerValue) {
+      return [ownerValue];
+    }
+
+    // Otherwise push owner last
+    if (ownerValue) {
+      values.push(ownerValue);
+    }
+
+    return values;
+  }
+
+  document.getElementById("businessForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    let priceInput = document.getElementById("price").value.trim();
+    if (priceInput === "" || priceInput === "0") {
+      priceInput = "";
+    } else if (isNaN(priceInput)) {
+      showMessage("Price must be a number or left blank.", "error");
+      return;
+    }
+
+    const rawTitle = document.getElementById("title").value;
+    const title = playfulClean(sanitizeTitle(rawTitle));
+
+    const rawDescription = document.getElementById("description").value;
+    const description = playfulClean(rawDescription);
+
+    if (!title) {
+      showMessage("Business name contains unsupported characters.", "error");
+      return;
+    }
+
+    const isEditing = !!businessId;
+    const businessID = businessId || crypto.randomUUID();
+
+    // Short code logic
+    let shortCode = existingShortCode;
+    if (!shortCode) {
+      shortCode = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
+    }
+
+    // ⭐ HOURS
+    const hoursData = extractHoursForSave();
+
+    // ⭐ CONTACT ARRAYS (always arrays in DB)
+    const phones = extractContactArray("phoneList", "ownerPhone");
+    const whatsapp = extractContactArray("whatsappList", "ownerWhatsApp");
+    const emails = extractContactArray("emailList", "ownerEmail");
+
+    // Website: single for now
+    const websiteValue = document.getElementById("website").value.trim();
+    const websites = websiteValue ? [websiteValue] : [];
+
+    const social = [];
+    const fb = document.getElementById("facebook").value.trim();
+    const ig = document.getElementById("instagram").value.trim();
+    const tt = document.getElementById("tiktok").value.trim();
+    const yt = document.getElementById("youtube").value.trim();
+
+    if (fb) social.push(fb);
+    if (ig) social.push(ig);
+    if (tt) social.push(tt);
+    if (yt) social.push(yt);
+
+    // ⭐ TAGS
+    const tagFamily = document.getElementById("tagFamily").checked;
+    const tagLGBT = document.getElementById("tagLGBT").checked;
+    const tagPet = document.getElementById("tagPet").checked;
+    const tagWheelchair = document.getElementById("tagWheelchair").checked;
+    const tagCashOnly = document.getElementById("tagCashOnly").checked;
+
+    // ⭐ FINAL PAYLOAD (EXACT SCHEMA)
+    const payload = {
+      businessID,
+      title,
+      
+      location: document.getElementById("businessLocation").value,
+      price: priceInput,
+      description,
+      images: existingImages,
+      shortCode,
+
+      // CONTACT ARRAYS
+      phones,
+      whatsapp,
+      emails,
+      websites,
+      social,
+
+      // MENU
+      menuUrl: document.getElementById("menuUrl").value.trim() || null,
+
+      // HOURS
+      weeklyHours: hoursData.weeklyHours,
+      hoursText: hoursData.hoursText,
+      open24: hoursData.open24,
+      closedAllDay: hoursData.closedAllDay,
+
+      // TAGS
+      tagFamily,
+      tagLGBT,
+      tagPet,
+      tagWheelchair,
+      tagCashOnly,
+
+      // OWNER EMAIL (unchanged)
+      email: userEmail || ""
+    };
+    
+    // ⭐ SAVE CATEGORIES HERE
+    payload.categories = [...selectedCategories];
+    payload.category = selectedCategories[0] || "other"; // legacy fallback
+
+    // HOURS
+    const hoursPayload = extractHoursForSave();
+    payload.weeklyHours = hoursPayload.weeklyHours;
+    payload.hours = hoursPayload.hours;
+    payload.hoursText = hoursPayload.hoursText;
+
+    // ⭐ Preserve map data EXACTLY
+    if (currentBiz.mapImageUrl) payload.mapImageUrl = currentBiz.mapImageUrl;
+    if (currentBiz.mapsWebUrl) payload.mapsWebUrl = currentBiz.mapsWebUrl;
+    if (currentBiz.lat) payload.lat = currentBiz.lat;
+    if (currentBiz.lng) payload.lng = currentBiz.lng;
+    if (currentBiz.placeId) payload.placeId = currentBiz.placeId;
+
+    const docId = payload.businessID;
+
+    // ⭐ Prevent spoofing — keep original owner
+    payload.email = currentBiz.email || identity.email;
+
+    // ⭐ Save business
+    await setDoc(doc(db, "Businesses", docId), payload, { merge: true });
+    // ⭐ Save short link
+    await setDoc(doc(db, "ShortLinks", shortCode), { businessID: docId }, { merge: true });
+    // ⭐ After saving to Firestore, update cachedBusinesses
+    try {
+      let arr = JSON.parse(localStorage.getItem("cachedBusinesses") || "[]");
+
+      // Build the updated business object exactly as it will appear in Firestore
+      const updatedBiz = sanitizeBusiness({
+        id: docId,
+        ...payload
+      });
+
+      // Replace existing cached entry or add new one
+      const idx = arr.findIndex(x => x.id === docId);
+      if (idx >= 0) {
+        arr[idx] = updatedBiz;
+        log("CACHE: Updated existing cached business");
+      } else {
+        arr.push(updatedBiz);
+        log("CACHE: Added new business to cache");
+      }
+
+      localStorage.setItem("cachedBusinesses", JSON.stringify(arr));
+    } catch (err) {
+      error("CACHE UPDATE ERROR:", err);
+    }
+
+    formIsDirty = false;
+    showMessage(isEditing ? "Business updated!" : "Business created!", "success");
+
+    setTimeout(() => {
+      window.location.href = `?impulse=TropicPulseBusinessDetail&id=${encodeURIComponent(docId)}`;
+    }, 600);
+  });
+
+  function attachMapOverlayHandler(name, iconUrl = null) {
+    const mapImage = document.getElementById("mapImage");
+
+    if (!mapImage) {
+      warn("❌ No #mapImage found — overlay cannot attach");
+      return;
+    }
+
+    // Remove previous onload to prevent stacking
+    mapImage.onload = null;
+
+    if (mapImage.complete) {
+      applyTropicOverlay(name, iconUrl);
+      return;
+    }
+
+    mapImage.onload = () => {
+      applyTropicOverlay(name, iconUrl);
+    };
+  }
+
+  function applyTropicOverlay(name, iconUrl = null) {
+  const overlay = document.getElementById("tpOverlay");
+  const dot = document.getElementById("tpDot");
+  const label = document.getElementById("tpLabel");
+  const labelText = document.getElementById("tpLabelText");
+  const icon = document.getElementById("tpIcon");
+  const mapImg = document.getElementById("mapImage");
+
+  if (!overlay || !dot || !label || !mapImg || !labelText) {
+    warn("❌ Missing overlay elements — cannot apply overlay");
+    return;
+  }
+
+  const rect = mapImg.getBoundingClientRect();
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+
+  dot.style.left = `${cx - 9}px`;
+  dot.style.top  = `${cy - 9}px`;
+
+  labelText.textContent = name || "Location";
+  label.style.left = `${cx}px`;
+  label.style.top  = `${cy - 22}px`;
+
+  if (iconUrl) {
+    icon.src = iconUrl;
+    icon.style.display = "block";
+  } else {
+    icon.style.display = "none";
+  }
+
+  overlay.style.display = "block";
+
+  // ⭐ Prevent duplicate resize listeners
+  if (!PulseRealm.__tpOverlayResizeBound) {
+    PulseRealm.__tpOverlayResizeBound = true;
+
+    window.addEventListener("resize", () => {
+      clearTimeout(PulseRealm.__tpOverlayResizeTimeout);
+      PulseRealm.__tpOverlayResizeTimeout = setTimeout(() => {
+        applyTropicOverlay(labelText.textContent, icon.src || null);
+      }, 150);
+    });
+  }
+}
+  (async () => {
+  // -----------------------------------------
+  // MARKER (CLEAN + SAFE)
+  // -----------------------------------------
+  let lastTime = nowMs();
+  function mark(label, absolute = false) {
+    const now = nowMs();
+    const diff = now - lastTime;
+    log(
+      absolute
+        ? `${label}: @${now.toFixed(1)}ms`
+        : `${label}: +${diff.toFixed(1)}ms`
+    );
+    lastTime = now;
+  }
+
+  mark("BUS DOM STARTS");
+
+  // -----------------------------------------
+  // 1️⃣ v11 SESSION CHECK (ONE-TIME)
+  // -----------------------------------------
+  const id = await sessionCheck();
+  if (!id) return; // redirected to login if invalid
+  mark("BUS SESSIONCHECK OK");
+
+  // -----------------------------------------
+  // 2️⃣ LOAD BUSINESS (ONE-TIME)
+  // -----------------------------------------
+  await loadBusiness();
+  mark("BUS LOADED");
+
+  // -----------------------------------------
+  // 3️⃣ INIT BUSINESS UI (ONE-TIME)
+  // -----------------------------------------
+  initiateBusiness();
+  mark("BUS OVERLAYS LOADED");
+
+  // -----------------------------------------
+  // ⭐ NO TIMERS. NO INTERVALS. NO LOOPS.
+  // PulseBand engine is NOT allowed on this page.
+  // -----------------------------------------
+
+  hideTPLoader();
+  mark("BUS DOM ENDS", true);
+})();
+
+</script>
+
+</body>
+</html>

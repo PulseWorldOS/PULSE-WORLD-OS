@@ -1,0 +1,4693 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/AldwynVault1.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/Frustrated.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-1.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/ToucanThumbsUp.webp.pex" type="image/webp"/>
+<title>The Pulse Chamber</title>
+
+<!-- End Meta Pixel Code -->
+  <style>
+    .pulse-vault-bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(180px, 32vw, 360px);
+      height: clamp(180px, 32vw, 360px);
+      max-width: 360px;
+      max-height: 360px;
+      margin-bottom: 2.25rem;
+      margin: 0 auto;
+      border-radius: 999px;
+      z-index: 10000;
+      /* Deep radial shell */
+      background: radial-gradient(
+        circle at 30% 20%,
+        #1b1f2a 0%,
+        #090b10 45%,
+        #000000 100%
+      );
+
+      /* Multi-layer 3D shadow */
+      box-shadow:
+        0 35px 65px rgba(0, 0, 0, 0.75),
+        0 18px 40px rgba(0, 0, 0, 0.65),
+        0 0 55px rgba(0, 255, 200, 0.20), /* PulseWorld glow */
+        0 0 0 2px rgba(255, 255, 255, 0.05);
+
+      /* Soft bloom aura */
+      filter: drop-shadow(0 0 35px rgba(0,255,200,0.25));
+
+      /* Smooth 3D feel */
+      transform: translateZ(0);
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+
+    /* Hover lift */
+    .pulse-vault-bubble:hover {
+      transform: translateY(-10px) scale(1.04);
+      filter: drop-shadow(0 0 45px rgba(0,255,200,0.45));
+    }
+    
+    .pulse-vault-img {
+      width: 300px;
+      height: 300px;
+      justify-self: center;
+      box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #00a884;
+      background: white;
+      display: block; /* hidden until loaded */
+    }
+
+    .vaultPageShell {
+      border-radius: 18px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+      background: #ffff99;
+      width: 504px;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 0;
+      margin: 0 auto;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .vaultTitleBlock {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .vaultTitle {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .vaultSubtitle {
+      font-size: 13px;
+      color: var(--t-text-subtle);
+    }
+
+    .secureSessionBadge {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.12), rgba(0,0,0,0.85));
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--t-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.7);
+    }
+
+    .secureSessionDot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, var(--t-gold), var(--t-gold-deep));
+      box-shadow: 0 0 8px rgba(245,210,122,0.7);
+    }
+
+    /* Vault container */
+
+    /* -----------------------------------------------------------
+   VAULT OUTER CONTAINER (layout + background)
+    ----------------------------------------------------------- */
+    .vaultStage {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      padding: 12px 6px 10px; /* more breathing room for header */
+      box-sizing: border-box;
+
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top, rgba(245, 210, 122, 0.16) 0, transparent 55%),
+        radial-gradient(circle at bottom, rgba(0, 0, 0, 0.9) 0, #020308 70%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.9),
+        0 0 28px rgba(0, 0, 0, 0.8);
+
+      /* 3D root */
+      perspective: 1600px;
+      transform-style: preserve-3d;
+      z-index: 2;
+    }
+
+    /* -----------------------------------------------------------
+      VAULT INNER CONTAINER (centers the vault)
+    ----------------------------------------------------------- */
+    .vaultStageInner {
+      position: relative;
+      width: var(--vault-size);
+      height: var(--vault-size);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      margin: 0 auto;
+      transform-style: preserve-3d;
+      z-index: 3;
+    }
+
+    /* Shake animation hook */
+    .vaultStageInner.preOpenShake {
+      animation: vaultDoorShake 0.25s ease-out;
+    }
+    /* Vault door */
+
+    /* Make door use transform instead of animation for opening */
+    .vaultDoor {
+      z-index: 100;
+      position: relative;
+      backface-visibility: visible !important;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 20%, #fdfdfd 0, #d0d5df 18%, #9ca3b0 40%, #4b515e 70%, #1b1f27 100%);
+      box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(0, 0, 0, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      transform-style: preserve-3d !important;
+      transform-origin: left center;
+      cursor: pointer;
+      overflow: visible !important;
+    }
+    
+
+    @keyframes vaultDoorShake {
+      0%   { transform: translateX(0); }
+      25%  { transform: translateX(-2px); }
+      50%  { transform: translateX(2px); }
+      75%  { transform: translateX(-1px); }
+      100% { transform: translateX(0); }
+    }
+
+    .vaultDoorOuterBevel {
+      position: absolute;
+      inset: 4%;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        #2b303a,
+        #4b515e,
+        #9ca3b0,
+        #d9dde4,
+        #9ca3b0,
+        #4b515e,
+        #2b303a
+      );
+      filter: brightness(1.05) contrast(1.1);
+      box-shadow:
+        inset 0 0 12px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(0, 0, 0, 0.8);
+      z-index: 101;
+    }
+
+    .vaultDoorInnerPlate {
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      z-index: 102;
+      background:
+        radial-gradient(circle at 30% 20%, #f5f7fb 0, #c3c9d4 25%, #8f96a4 55%, #3b414d 100%);
+      box-shadow:
+        inset 0 0 22px rgba(0, 0, 0, 0.75),
+        0 0 22px rgba(245, 210, 122, 0.35);
+    }
+
+    .vaultDoorBoltRing {
+      position: absolute;
+      inset: 6%;
+      z-index: 103;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.08), rgba(0,0,0,0.4));
+      border: 2px dashed rgba(0, 0, 0, 0.5);
+      box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .vaultDoorBolt {
+      position: absolute;
+      width: 8px;
+      transition: filter 0.3s ease;
+      .vaultDoorRotating .vaultDoorBolt {
+        filter: brightness(1.2);
+      }
+      z-index: 103;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #c3c9d4, #4b515e);
+      box-shadow:
+        0 0 6px rgba(0, 0, 0, 0.8),
+        inset 0 0 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .vaultDoorBolt:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); }
+    .vaultDoorBolt:nth-child(2) { top: 50%; right: 0; transform: translate(50%, -50%); }
+    .vaultDoorBolt:nth-child(3) { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+    .vaultDoorBolt:nth-child(4) { top: 50%; left: 0; transform: translate(-50%, -50%); }
+
+    .vaultDoorRimGlow {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid rgba(245, 210, 122, 0.4);
+      box-shadow:
+        0 0 18px rgba(245, 210, 122, 0.7),
+        0 0 40px rgba(245, 210, 122, 0.3);
+      mix-blend-mode: screen;
+      opacity: 1;
+      z-index: 104;
+      pointer-events: none;
+    }
+
+    .vaultDoorHandle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 78px;
+      height: 78px;
+      z-index: 105;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) translateZ(12px) !important;
+      backface-visibility: hidden !important;
+      background:
+        radial-gradient(circle at 30% 20%, #ffffff 0, #d0d5df 25%, #9ca3b0 55%, #4b515e 100%);
+      box-shadow:
+        inset 0 0 12px rgba(0, 0, 0, 0.7),
+        0 0 12px rgba(245, 210, 122, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+    }
+
+    .vaultDoorHandleSpokes {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 0, 0, 0.6);
+      box-shadow:
+        inset 0 0 8px rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(245, 210, 122, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .vaultDoorHandleSpokes::before,
+    .vaultDoorHandleSpokes::after {
+      content: "";
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d0d5df, #4b515e);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
+    }
+
+    .vaultDoorHandleSpokes::after {
+      transform: rotate(90deg);
+    }
+    .spinHandle {
+      transform: rotate(210deg);
+    }
+    .vaultDoorHandleCenter {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ffffff 0, #c3c9d4 40%, #4b515e 100%);
+      box-shadow:
+        inset 0 0 6px rgba(0, 0, 0, 0.8),
+        0 0 6px rgba(245, 210, 122, 0.4);
+    }
+
+    .vaultDoor:focus {
+      outline: none !important;
+    }
+    .vaultDoorHint {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: var(--t-text-subtle);
+      opacity: 1;
+      transition: opacity 0.25s ease-out;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vaultDoorHintDot {
+      width: 6px;
+      opacity: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, var(--t-gold) 0, var(--t-gold-deep) 60%, #4b3a16 100%);
+      box-shadow: 0 0 8px rgba(245, 210, 122, 0.8);
+    }
+
+    .vaultCoin {
+      position: absolute;
+      inset: 26%;              /* scales with vault door */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+
+      transform-style: preserve-3d !important;
+      backface-visibility: hidden;
+    }
+    .vaultDoor,
+    .vaultDoor * {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none !important;
+      transform-style: preserve-3d !important;
+    }
+    .vaultCoinCore {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: 51;
+      background:
+        radial-gradient(circle at 30% 15%, #ffffff 0, #f5d27a 18%, #b58a3c 40%, #4b3a16 70%, #120b03 100%);
+      box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(245, 210, 122, 0.6);
+      transform-style: preserve-3d;
+    }
+
+    .vaultCoinRim {
+      position: absolute;
+      inset: 4%;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        #f5d27a,
+        #b58a3c,
+        #f5d27a,
+        #fff3c4,
+        #b58a3c,
+        #f5d27a
+      );
+      box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.7),
+        0 0 18px rgba(245, 210, 122, 0.7);
+      transform: translateZ(8px);
+    }
+
+    .vaultCoinInner {
+      position: absolute;
+      inset: 16%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 20%, #1b2430 0, #05080c 55%, #000 100%);
+      box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(0, 0, 0, 0.8);
+      transform: translateZ(14px);
+      overflow: hidden;
+
+      /* Stability for 3D transforms */
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .vaultCoinToucan {
+      position: absolute;
+      inset: 12%;
+      aspect-ratio: 1 / 1;          /* Ensures perfect circle */
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 20%, #ffe9b5 0, #f5d27a 35%, #b58a3c 80%);
+      box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.5),
+        0 0 16px rgba(245, 210, 122, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateZ(22px);
+      overflow: hidden;
+
+      /* Prevents pixel jitter during 3D transforms */
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .vaultCoinToucan img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+
+      /* Prevents subpixel blur on mobile */
+      image-rendering: -webkit-optimize-contrast;
+      backface-visibility: hidden;
+
+      /* Keeps the glow clean */
+      filter: drop-shadow(0 0 6px rgba(0,0,0,0.6));
+    }
+
+    .vaultCoinToucan span {
+      transform: translateY(2px);
+    }
+
+    .vaultCoinGlow {
+      position: absolute;
+      inset: -18%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, rgba(245, 210, 122, 0.55) 0, transparent 60%);
+      mix-blend-mode: screen;
+      opacity: 0;
+      z-index: 52;
+      transform: translateZ(40px) scale(1.1); /* FIX */
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+
+      pointer-events: none;
+    }
+
+    @keyframes vaultCoinSpin {
+      0% {
+        transform: translateZ(40px) rotateY(0deg) scale(0.9);
+      }
+      10% {
+        transform: translateZ(40px) rotateY(90deg) scale(1);
+      }
+      50% {
+        transform: translateZ(40px) rotateY(540deg) scale(1.02);
+      }
+      100% {
+        transform: translateZ(40px) rotateY(900deg) scale(0.96);
+      }
+    }
+
+    @keyframes vaultCoinReveal {
+      0% {
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes vaultCoinGlowPulse {
+      0% {
+        opacity: 0.0;
+      }
+      20% {
+        opacity: 0.9;
+      }
+      60% {
+        opacity: 0.7;
+      }
+      100% {
+        opacity: 0.0;
+      }
+    }
+
+    .vaultCoin.active {
+      opacity: 1;
+      animation:
+        vaultCoinSpin 2.6s cubic-bezier(0.19, 1, 0.22, 1),
+        vaultCoinReveal 2.6s ease-out;
+    }
+
+    .vaultCoin.active .vaultCoinGlow {
+      animation: vaultCoinGlowPulse 2.6s ease-out;
+    }
+    /* Wallet card */
+
+    .walletCard {
+      z-index: 500;
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 20px;
+      padding: 14px 14px 12px;
+      background:
+        linear-gradient(145deg, #151922, #05070c),
+        radial-gradient(circle at top left, rgba(245, 210, 122, 0.18) 0, transparent 55%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.9),
+        0 0 26px rgba(0, 0, 0, 0.8);
+      position: relative;
+      height: 0;          /* ← belongs here */
+      overflow: hidden;   /* keep it clean */
+
+      /* animation state */
+      opacity: 0;
+      visibility: hidden; /* ← REQUIRED */
+      transform: translateY(12px);
+      transition:
+        opacity .45s ease-out,
+        transform .45s ease-out,
+        visibility 0s linear .45s; /* ← reveal only after fade */
+    }
+
+    .walletCard.ready {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      height: auto;       /* ← THIS is the fix */
+    }
+
+    .walletCardVaultTexture {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.12) 0, transparent 45%),
+        radial-gradient(circle at 80% 100%, rgba(245, 210, 122, 0.18) 0, transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .walletCardTopRow {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+      min-height: 0;
+      overflow: hidden;
+
+      margin-bottom: 10px;
+    }
+
+    .walletCardProfile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .walletCardProfileAvatarWrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--t-gold), var(--t-gold-deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 14px rgba(0, 0, 0, 0.9);
+    }
+
+    .walletCardProfileAvatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 1px solid rgba(0, 0, 0, 0.7);
+    }
+
+    .walletCardProfileText {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .walletCardProfileLabel {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--t-text-subtle);
+    }
+
+    .walletCardProfileName {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .walletCardBadge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(245, 210, 122, 0.2) 0, rgba(0, 0, 0, 0.8) 70%);
+      border: 1px solid rgba(245, 210, 122, 0.6);
+      color: var(--t-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .walletCardBalanceBlock {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .walletBalanceLabelRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .walletCardBalanceLabel,
+    .pointCardBalanceLabel {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--t-text-subtle);
+    }
+
+    .walletBalanceValueRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .walletCardBalanceValue,
+    .pointCardBalanceValue {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+    }
+
+    .walletCardBalanceShimmer {
+      position: absolute;
+      top: 0;
+      left: -40%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+      transform: skewX(-20deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .walletCardBalanceValue.shimmer .walletCardBalanceShimmer {
+      animation: balanceShimmer 1.4s ease-out forwards;
+    }
+
+    @keyframes balanceShimmer {
+      0% {
+        opacity: 0;
+        transform: translateX(0) skewX(-20deg);
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(220%) skewX(-20deg);
+      }
+    }
+
+    .walletCardActionsRow {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .walletActionPrimary,
+    .walletActionSecondary {
+      flex: 1;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.16s ease-out, box-shadow 0.16s ease-out, background 0.16s ease-out;
+      min-width: 0;
+      flex-shrink: 1;
+    }
+
+    .walletActionPrimary {
+      background: linear-gradient(135deg, var(--t-gold), var(--t-gold-deep));
+      color: #1a1204;
+      box-shadow:
+        0 0 16px rgba(245, 210, 122, 0.7),
+        0 0 26px rgba(245, 210, 122, 0.4);
+    }
+
+    .walletActionPrimary:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow:
+        0 0 20px rgba(245, 210, 122, 0.9),
+        0 0 30px rgba(245, 210, 122, 0.6);
+    }
+
+    .walletActionSecondary {
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08) 0, rgba(0, 0, 0, 0.9) 70%);
+      color: var(--t-text-main);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+    }
+
+    .walletActionSecondary:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow:
+        0 0 18px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(245, 210, 122, 0.3);
+    }
+
+    .walletActionIcon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.7);
+      background: radial-gradient(circle at center, #1a1204 0, #4b3a16 60%, var(--t-gold) 100%);
+      box-shadow: 0 0 8px rgba(245, 210, 122, 0.7);
+    }
+
+    .walletActionIconSecondary {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #f5f7fb, #9ca3b0);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Base session container */
+    #vaultSessionContainer {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(255,255,255,0.12);
+      overflow-y: auto;
+      overflow-x: hidden;
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 1px;
+      margin: 1px;
+      box-shadow: 0 0 18px rgba(0,0,0,0.55);
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+
+      opacity: 1;
+      transform: translateY(0);
+
+      /* NEW: flexible height */
+      max-height: 310px;
+      height: auto;
+
+      transition:
+        opacity .25s ease,
+        transform .25s ease,
+        max-height .35s ease;
+    }
+
+    /* Hidden after intro */
+    .vault-post-intro #vaultSessionContainer:not(.vaultSessionContainer-reopen) {
+      opacity: 0;
+      transform: translateY(8px);
+      max-height: 0;
+      pointer-events: none;
+    }
+    .vault-post-intro.helperHint {
+      opacity: 0;
+      transform: translateY(8px);
+      max-height: 0;
+      pointer-events: none;
+    }
+
+    /* Reopen state */
+    .vaultSessionContainer-reopen {
+      display: flex !important;
+      flex-direction: column;
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+
+      /* NEW: flexible reopen */
+      max-height: 310px !important;
+      height: auto !important;
+      overflow-y: auto;
+    }
+
+    /* When minimized, collapse the spacer */
+    .sessionSpacer.minimized {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* When minimized, collapse the bubble area */
+    .messageBubbleArea.minimized {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      overflow: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* Reopen animation for spacer + bubble area */
+    .sessionSpacer.reopen,
+    .messageBubbleArea.reopen {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+    }
+    /* Minimized */
+    #vaultSessionContainer.minimized {
+      max-height: 0 !important;
+      overflow: hidden;
+      opacity: 0 !important;
+      transform: translateY(8px) !important;
+      pointer-events: none !important;
+    }
+
+    /* Reopen animation */
+    #vaultSessionContainer.reopenAnim {
+      animation: sessionReopen 0.35s ease-out;
+    }
+
+    .helperBubbleRow {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      min-width: 0;
+      gap: 8px;
+      z-index: 302;
+      pointer-events: none;
+    }
+
+    .helperAvatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      flex-shrink: 0;
+    }
+
+    .helperAvatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .helperBubble {
+      z-index: 303;
+      display: inline-flex;
+      flex-direction: column;
+
+      /* Critical for mobile */
+      min-width: 0;
+      flex-shrink: 1;
+
+      max-width: 92%;
+      flex-grow: 0;
+      flex-basis: auto;
+
+      /* Prevent overflow */
+      overflow-wrap: break-word;
+      word-break: break-word;
+
+      border-radius: 14px 14px 14px 4px;
+      padding: 8px 10px;
+      background: radial-gradient(circle at top left, #181b25 0, #05080c 70%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--t-text-main);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .helperBubbleLabel {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--t-gold-deep);
+      margin-bottom: 2px;
+      display: block;
+    }
+
+
+    .helperBubbleUser .helperBubbleLabel {
+      color: var(--t-gold);
+    }
+
+    .helperBubbleUser .helperAvatar {
+      order: 2;
+    }
+
+
+    .helperHint {
+      z-index: 600;
+      margin-top: 6px;
+      width: 100%;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.55);
+      opacity: 0.85;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out, max-height 0.35s ease-out;
+      max-height: 60px;
+      overflow: hidden;
+    }
+
+    /* Points styling */
+
+    .pointCardBalanceLabel {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.65;
+      margin-top: 10px;
+      margin-bottom: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    .pointCardBalanceValue {
+      position: relative;
+      font-size: 22px;
+      font-weight: 600;
+      color: #dff9ff;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .pointCardBalanceShimmer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+      opacity: 0;
+      pointer-events: none;
+      animation: shimmer 1.4s ease-out forwards;
+    }
+
+    @keyframes shimmer {
+      0% { opacity: 0; transform: translateX(-40%); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: translateX(140%); }
+    }
+
+    .vaultCircleFrame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 11;
+      overflow: visible !important;
+    }
+    .vaultDoorHandle.spin {
+      animation: vaultHandleSpin 0.6s ease-out forwards;
+    }
+
+    @keyframes vaultHandleSpin {
+      from { transform: rotateZ(0deg); }
+      to   { transform: rotateZ(180deg); }
+    }
+
+    .vaultDoor.preOpenShake {
+      animation: vaultDoorShake 0.25s ease-out;
+    }
+
+    @keyframes vaultDoorShake {
+      0%   { transform: translateX(0); }
+      25%  { transform: translateX(-2px); }
+      50%  { transform: translateX(2px); }
+      75%  { transform: translateX(-1px); }
+      100% { transform: translateX(0); }
+    }
+
+    /* ---------------------------------------------------------
+   VAULT 3D FIX PATCH — NON‑DESTRUCTIVE
+   --------------------------------------------------------- */
+
+.helperthread   { z-index: 301; }
+
+    /* 3. Prevent handle from drifting to bottom-right */
+    .vaultDoorHandle {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) translateZ(12px) !important;
+    }
+
+    /* 4. Stabilize the spokes so rotation doesn’t shift layout */
+    .vaultDoorHandleSpokes {
+      transform-origin: center center !important;
+    }
+
+    /* 7. Shake animation must NOT override rotation */
+      
+
+    .vaultConsoleInputRow {
+      z-index: 400;
+      margin-top: 8px;
+      display: flex;        /* REQUIRED */
+      flex-direction: row;  /* REQUIRED */
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    #vaultConsoleInput {
+      flex: 1;
+      min-width: 0;
+      max-width: 410px;
+
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #0a0d14;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--t-text-main);
+      pointer-events: auto !important;
+      font-size: 13px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+    }
+    
+
+
+    #vaultConsoleSend {
+      padding: 10px 14px;
+      flex: 0 1 auto;   /* allow shrink, allow grow only if space */
+      min-width: 0;
+      max-width: 60px;
+
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--t-gold), var(--t-gold-deep));
+      color: #1a1204;
+      font-weight: 600;
+      pointer-events: auto !important;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(245,210,122,0.6);
+    }
+
+    /* ---------------------------------------------------------
+   VAULT 3D FIX PATCH — NON‑DESTRUCTIVE
+   --------------------------------------------------------- */
+
+  /* 1. Ensure the entire vault scene actually renders in 3D */
+  
+  
+  
+  .vaultCoinWrapper {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  /* 2. Ensure ALL children stay inside the 3D space */
+  .vaultDoor,
+  .vaultDoor *,
+  .vaultDoorHandle,
+  .vaultDoorHandle *,
+  .vaultCoin,
+  .vaultCoin * {
+    transform-style: preserve-3d !important;
+    backface-visibility: visible;
+    transform-box: fill-box !important;
+  }
+  
+  /* 6. Coin must sit in front of the chamber but behind the door */
+  .vaultCoin {
+    z-index: 50 !important;
+    transform: translateZ(50px) rotateY(180deg) scale(0.9);
+  }
+
+
+  /* 8. Shake animation must NOT override rotation */
+  .vaultDoor.preOpenShake {
+    animation: vaultDoorShake 0.25s ease-out;
+    transform: rotateY(0deg) !important;
+  }
+
+  /* 9. Handle drifting fix */
+  .vaultDoorHandle {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) translateZ(12px) !important;
+    transform-origin: center center !important;
+  }
+
+  /* 10. Spokes rotation stability */
+  .vaultDoorHandleSpokes {
+    transform-origin: center center !important;
+  }
+  
+  /* User row: content on the right */
+  .helperBubbleRow.helperBubbleUser {
+    justify-content: flex-end;
+  }
+
+  /* Bubble before avatar (closer to center) */
+  .helperBubbleRow.helperBubbleUser .helperBubble {
+    order: 1;
+    margin-right: 8px;
+    border-radius: 14px 14px 4px 14px;
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(245,210,122,0.4);
+    color: var(--t-text-subtle);
+    max-width: 92%; /* match assistant bubbles */
+    text-align: right;
+    /* KEEP shrink behavior */
+    display: inline-flex;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 1;
+  }
+
+  /* Avatar on the far right */
+  .helperBubbleRow.helperBubbleUser .helperAvatar {
+    order: 2;
+  }
+  .helperBubbleText {
+    display: block;
+  }
+
+/* ---------------------------------------------------------
+   DOOR MOVEMENT STATES
+   --------------------------------------------------------- */
+
+/* Neutral resting state */
+.vaultDoorWrapper .vaultDoor {
+  transform-style: preserve-3d;
+  transform-origin: left center;        /* Hinge on the left */
+  transform: rotateY(0deg) translateZ(0);
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+  backface-visibility: hidden;
+  user-select: none;
+  opacity: 1 !important;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none !important;
+}
+
+/* Door opens — your required rule */
+.vaultDoorWrapper .vaultDoor.open {
+  transform: rotateY(-115deg) translateZ(0) !important;
+  
+  transform-style: preserve-3d;
+  opacity: 1 !important;
+}
+
+/* Optional: subtle hover wiggle (premium, magical) */
+.vaultDoorWrapper .vaultDoor:not(.open):hover {
+  transform: rotateY(-6deg);
+  transition: transform 0.35s ease-out;
+  
+  transform-style: preserve-3d;
+  opacity: 1 !important;
+}
+
+/* ---------------------------------------------------------
+   OPTIONAL: DOOR SHADOW FOR DEPTH
+   --------------------------------------------------------- */
+
+.vaultDoorWrapper::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0,0,0,0.35) 0%,
+    rgba(0,0,0,0.55) 60%,
+    rgba(0,0,0,0.75) 100%
+  );
+  filter: blur(18px);
+  transform: translateZ(-40px);
+  pointer-events: none;
+}
+
+.vaultDoor {
+  opacity: 1;
+  visibility: visible;
+}
+.vaultDoorFront,
+.vaultDoorFront * {
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  opacity: 1;
+  transform: translateZ(1px);
+}
+
+
+@keyframes sessionReopen {
+  0% { opacity: 0; transform: translateY(12px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.vaultDoor {
+  transform: rotateY(0.01deg) translateZ(0.1px);
+  opacity: 1;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #001f1f 0%, #000 100%);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+}
+
+.danger-overlay.hidden {
+  display: none;
+}
+
+.lock-screen.hidden {
+  display: none;
+}
+
+
+.lock-inner {
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 30px;
+  border-radius: 16px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.25);
+}
+
+.lock-title {
+  font-size: 22px;
+  color: #00ffc8;
+  margin-bottom: 10px;
+}
+
+.lock-sub {
+  font-size: 14px;
+  color: #c8fff4;
+  margin-bottom: 20px;
+}
+
+.pin-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  letter-spacing: 4px;
+}
+
+.pin-submit {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  background: #00ffc8;
+  color: #00332f;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pin-submit:hover {
+  background: #00e6b4;
+}
+
+.pin-error {
+  margin-top: 10px;
+  color: #ff6b6b;
+  font-size: 14px;
+  opacity: 1;
+}
+.pin-error.hidden {
+  margin-top: 10px;
+  color: #ff6b6b;
+  font-size: 14px;
+  opacity: 0;
+}
+
+.lock-footer {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #00ffc8;
+  cursor: pointer;
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s ease;
+}
+.danger-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+.danger-title {
+  color: #ff4d4d;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 22px;
+}
+
+.danger-sub {
+  color: #ffd6d6;
+  text-align: center;
+  margin-top: 10px;
+}
+.pinWarning {
+  margin-top: 10px;
+  text-align: center;
+  color: #ffcc00;
+  font-weight: 600;
+  opacity: 1;
+  transform: translateY(5px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.pinWarning.hidden {
+  opacity: 0;
+  transform: translateY(0);
+}
+
+.pinWarningIcon {
+  font-size: 22px;
+  margin-right: 6px;
+}
+@keyframes vaultPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.03); filter: brightness(1.3); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.vaultPulseEffect {
+  animation: vaultPulse 0.6s ease;
+}
+@keyframes vaultUnlockGlow {
+  0% { filter: drop-shadow(0 0 0px gold); }
+  50% { filter: drop-shadow(0 0 12px gold); }
+  100% { filter: drop-shadow(0 0 0px gold); }
+}
+
+.vaultUnlockGlow {
+  animation: vaultUnlockGlow 0.8s ease;
+}
+@keyframes vaultSeal {
+  0% { transform: scale(1); filter: grayscale(0); }
+  50% { transform: scale(0.97); filter: grayscale(0.7); }
+  100% { transform: scale(1); filter: grayscale(0); }
+}
+
+.vaultSealEffect {
+  animation: vaultSeal 0.8s ease;
+}
+@keyframes unlockScreenGlow {
+  0% { background: rgba(255, 215, 0, 0); }
+  50% { background: rgba(255, 215, 0, 0.15); }
+  100% { background: rgba(255, 215, 0, 0); }
+}
+
+.unlockGlow {
+  animation: unlockScreenGlow 1.2s ease;
+}
+.vaultLockedIcon {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.vaultLockedIcon.show {
+  opacity: 1;
+}
+#appLockScreen {
+  background: transparent;
+}
+
+.sessionHideButton {
+  position: absolute;
+  top: 4px;          /* ← lift it higher */
+  right: 10px;
+  font-size: 20px;   /* slightly smaller for premium feel */
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+  padding: 2px 6px;  /* tighter padding */
+  opacity: 0.85;
+  z-index: 9999;
+  transition: opacity 0.2s;
+}
+
+.sessionHideButton:hover {
+  opacity: 1;
+}
+
+
+#vaultSessionHeader {
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  z-index: 10;
+}
+
+.vaultSessionSpacer {
+  margin-top: 22px; /* or 16px, 18px */
+}
+#walletWrapper {
+  width: 100%;
+  overflow: hidden;
+  max-height: 0;            /* fully collapsed */
+  opacity: 0;               /* invisible */
+  pointer-events: none;     /* no ghost clicks */
+  display: block;           /* REQUIRED */
+  transition: max-height .45s ease, opacity .35s ease;
+}
+
+#walletWrapper.open {
+  max-height: 100%;       /* enough to fit walletCard */
+  opacity: 1;
+  pointer-events: auto;
+}
+#appLockScreen {
+  z-index: 99999;
+}
+#vaultLockScreen {
+  z-index: 99999;
+}
+#dangerOverlay {
+  z-index: 999999;
+}
+#resetPinModal {
+  z-index: 999998;
+}
+
+.helperBubbleOptions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.bubbleBtn, .optionBtn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--t-metal-light);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bubbleBtn:hover, .optionBtn:hover {
+  opacity: 0.8;
+}
+
+.vaultSpiritBreathing {
+  animation: vaultBreathing 3.6s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes vaultBreathing {
+  0% {
+    transform: scale(1);
+    opacity: 0.94;
+    filter: drop-shadow(0 0 6px rgba(0, 200, 190, 0.18));
+  }
+  50% {
+    transform: scale(1.028);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 220, 210, 0.28));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.94;
+    filter: drop-shadow(0 0 6px rgba(0, 200, 190, 0.18));
+  }
+}
+
+.bubbleFadeOut {
+  opacity: 0 !important;
+  transform: translateY(10px) !important;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.vaultSpiritBreathingContainer {
+  animation: vaultBreathing 3.6s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+  pointer-events: none !important;
+}
+.vaultIntroBubble {
+  pointer-events: none !important;
+}
+
+.vaultDoor,
+.vaultDoorHandle,
+.vaultDoorHint {
+  pointer-events: auto;
+}
+
+.vaultDoorWrapper {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* THE IMPORTANT PART */
+  z-index: 102 !important;
+  pointer-events: auto;
+
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+
+  /* Required overrides */
+  opacity: 1;
+  visibility: visible;
+  min-width: 1px;
+  min-height: 1px;
+  will-change: transform;
+}
+.vaultDoor,
+.vaultDoor * {
+    pointer-events: auto !important;
+}
+.vault-post-intro .vaultDoor,
+.vault-post-intro .vaultDoorHandle,
+.vault-post-intro .vaultDoorHandleSpokes {
+  pointer-events: none !important;
+}
+.vault-post-intro .vaultCoin {
+  pointer-events: auto !important;
+}
+
+.vaultSessionSpacer {
+  width: 100%;
+  height: auto;
+  transition: height 0.25s ease;
+  overflow: visible;
+  display: block;
+}
+
+#messageBubbleArea {
+  height: auto;
+  max-height: 100%;
+  overflow-y: auto;
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  scroll-behavior: smooth;
+}
+
+/* -------------------------------------------------------
+   GLOBAL SMOKE LAYER — FLOATING ABOVE EVERYTHING
+-------------------------------------------------------- */
+.smoke-layer {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9999;
+
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+}
+
+/* -------------------------------------------------------
+   AMBIENT HAZE (BEFORE VAULT OPENS)
+-------------------------------------------------------- */
+.smoke-layer.smoke-start {
+  opacity: 0.45;
+  backdrop-filter: blur(3px);
+}
+
+.smoke-layer.smoke-start::before,
+.smoke-layer.smoke-start::after {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  background: radial-gradient(
+    circle at 50% 70%,
+    rgba(255,255,255,0.25) 0%,
+    rgba(255,255,255,0.05) 40%,
+    rgba(255,255,255,0) 70%
+  );
+  animation: ambientSmoke 14s ease-in-out infinite;
+  mix-blend-mode: screen;
+  opacity: 0.25;
+}
+
+.smoke-layer.smoke-start::after {
+  animation-duration: 18s;
+  animation-direction: reverse;
+}
+
+@keyframes ambientSmoke {
+  0%   { transform: translateY(0px) scale(1); }
+  50%  { transform: translateY(-40px) scale(1.15); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+/* -------------------------------------------------------
+   PUFF / SPILL-OUT BURST (WHEN VAULT OPENS)
+-------------------------------------------------------- */
+.smoke-layer.smoke-puff {
+  opacity: 1;
+}
+
+.smoke-layer.smoke-puff::before {
+  content: "";
+  position: absolute;
+  background: radial-gradient(
+    circle at center,
+    rgba(255,255,255,1) 0%,      /* full white */
+    rgba(255,255,255,0.6) 35%,   /* brighter mid */
+    rgba(255,255,255,0) 70%
+  );
+  filter: blur(60px) brightness(1.4); /* ← this is the magic */
+  mix-blend-mode: screen;
+  animation: smokePuff 1.6s ease-out forwards;
+  opacity: 1; /* max */
+}
+
+@keyframes smokePuff {
+  0%   { transform: scale(0.4); opacity: 0.9; }
+  40%  { transform: scale(1.4); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* -------------------------------------------------------
+   DISSIPATION (AFTER PUFF)
+-------------------------------------------------------- */
+.smoke-layer.smoke-dissipate {
+  opacity: 0;
+  transition: opacity 2.5s ease-out;
+}
+
+.smoke-layer.smoke-dissipate::before,
+.smoke-layer.smoke-dissipate::after {
+  animation: none;
+  opacity: 0;
+}
+
+/* -------------------------------------------------------
+   FLOATING SMOKE BLOBS (VISIBLE + MAGICAL)
+-------------------------------------------------------- */
+.smoke-layer .blob1,
+.smoke-layer .blob2 {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(
+      circle,
+      rgba(255,255,255,0.35) 0%,
+      rgba(255,255,255,0.12) 40%,
+      rgba(255,255,255,0) 70%
+  );
+  filter: blur(65px);
+  mix-blend-mode: screen;
+  opacity: 0.95;
+}
+
+/* Blob 1 — upper-left zone */
+.blob1 {
+  top: 8%;
+  left: 12%;
+  --t: 22s;
+  animation: blob1Drift var(--t) ease-in-out infinite alternate;
+}
+
+/* Blob 2 — lower-right zone */
+.blob2 {
+  bottom: 8%;
+  right: 12%;
+  --t: 28s;
+  animation: blob2Drift var(--t) ease-in-out infinite alternate-reverse;
+}
+
+/* -------------------------------------------------------
+   DRIFT ANIMATIONS (SEPARATED, NEVER COLLIDE)
+-------------------------------------------------------- */
+@keyframes blob1Drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(60px, -40px) scale(1.2); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes blob2Drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-60px, 40px) scale(1.25); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+
+/* -----------------------------------------------------------
+   SHARED GEOMETRY — all vault layers use the same size
+----------------------------------------------------------- */
+.vaultChamber,
+.vaultChamberRings,
+.vaultChamberGlow,
+.vaultInteriorBackGlow,
+.vaultDoorWrapper,
+.vaultDoor,
+.vaultDoorRimGlow {
+  position: absolute;
+  width: var(--vault-size);
+  height: var(--vault-size);
+  inset: 0;
+  margin: auto;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.vaultInteriorBackGlow {
+  background: radial-gradient(circle at center, rgba(245, 210, 122, 0.22), transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   VAULT CHAMBER (background interior)
+----------------------------------------------------------- */
+.vaultChamber {
+  z-index: 10;
+  background:
+    radial-gradient(circle at center, #05070c 0, #020308 60%),
+    linear-gradient(145deg, #05070b, #10131c);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* -----------------------------------------------------------
+   RINGS
+----------------------------------------------------------- */
+.vaultChamberRings {
+  z-index: 12;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 0 40px rgba(245, 210, 122, 0.16),
+    inset 0 0 40px rgba(0, 0, 0, 0.9);
+  opacity: 0.7;
+}
+
+.vaultChamberRings::before,
+.vaultChamberRings::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+.vaultChamberRings::after {
+  border-color: rgba(245, 210, 122, 0.18);
+}
+
+/* -----------------------------------------------------------
+   GLOW
+----------------------------------------------------------- */
+.vaultChamberGlow {
+  z-index: 14;
+  background:
+    radial-gradient(circle at center, rgba(245, 210, 122, 0.18) 0, transparent 55%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   BACK GLOW
+----------------------------------------------------------- */
+.vaultInteriorBackGlow {
+  z-index: 13;
+  background:
+    radial-gradient(circle at center, rgba(245, 210, 122, 0.12) 0, transparent 70%);
+  pointer-events: none;
+}
+
+
+.vaultStageInner {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+
+.vaultCircleFrame {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+
+.vaultChamber {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+
+.vaultChamberRings {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+.vaultChamberGlow {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+/* 
+.vaultCoinGlow {
+  width: min(160px, 15vw);
+  height: min(160px, 15vw);
+}
+
+.vaultCoin {
+  width: min(100px, 15vw);
+  height: min(100px, 15vw);
+} */
+
+.vaultInteriorBackGlow {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+
+.vaultDoorWrapper {
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+}
+
+.vaultDoor {
+  width: min(220px, 40vw);
+  height: min(220px, 40vw);
+}
+
+.vaultDoorRimGlow {
+  width: min(220px, 40vw);
+  height: min(220px, 40vw);
+}
+
+.walletCardBadge {
+  white-space: nowrap;
+  flex-shrink: 0; /* keep it intact */
+}
+.walletCardProfile {
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+  </style>
+  </head>
+
+  <body><div class="vaultPageShell">
+
+  <!-- ========================= -->
+  <!-- ROW 1: HEADER (STACKED)   -->
+  <!-- ========================= -->
+  <div class="vaultHeaderRow">
+    
+    <div class="pulse-vault-chamber">
+      <div class="pulse-vault-bubble">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-1.webp.pex"
+             alt="Pulse Vault"
+             class="pulse-vault-img">
+      </div>
+    </div>
+
+    <div class="vaultTitleBlock">
+      <div class="vaultTitle">The Pulse Chamber</div>
+      <div class="vaultSubtitle">Loyalty, Memory, and Magic Converge!</div>
+    </div>
+
+    <div class="secureSessionBadge">
+      <div class="secureSessionDot"></div>
+      Trusted
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- ROW 2: MAIN CONTENT SPLIT -->
+  <!-- ========================= -->
+  <div class="vaultMainSplit">
+
+    <!-- LEFT SIDE: VAULT -->
+    <div class="vaultLeftSide">
+
+      <div class="vaultStage">
+        <div class="vaultStageInner">
+
+          <div class="vaultChamber">
+            <div class="vaultCircleFrame">
+              <div class="vaultChamberRings"></div>
+              <div class="vaultChamberGlow"></div>
+              <div class="vaultInteriorBackGlow"></div>
+            </div>
+          </div>
+
+          <div class="vaultDoorWrapper">
+
+            <div id="vaultCoin" class="vaultCoin">
+              <div class="vaultCoinCore">
+                <div class="vaultCoinRim"></div>
+                <div class="vaultCoinInner"></div>
+                <div class="vaultCoinToucan">
+                  <img id="vaultCoinToucanImg" alt="Toucan" loading="lazy">
+                </div>
+                <div class="vaultCoinGlow"></div>
+              </div>
+            </div>
+
+            <div id="vaultSmoke" class="smoke-layer">
+              <div class="blob1"></div>
+              <div class="blob2"></div>
+            </div>
+
+            <div id="vaultDoor" class="vaultDoor">
+              <div id="vaultLockedIcon" class="vaultLockedIcon hidden">🔒</div>
+              <div class="vaultDoorOuterBevel"></div>
+              <div class="vaultDoorInnerPlate"></div>
+
+              <div class="vaultDoorBoltRing">
+                <div class="vaultDoorBolt"></div>
+                <div class="vaultDoorBolt"></div>
+                <div class="vaultDoorBolt"></div>
+                <div class="vaultDoorBolt"></div>
+              </div>
+
+              <div class="vaultDoorRimGlow"></div>
+
+              <div class="vaultDoorHandle">
+                <div class="vaultDoorHandleSpokes">
+                  <div class="vaultDoorHandleCenter"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT SIDE: CONSOLE PANEL -->
+    <div class="vaultRightSide">
+
+      <div class="vaultSessionSpacer">
+        <div id="vaultSessionContainer">
+          <div id="vaultSessionHeader">
+            <div class="sessionHideButton">–</div>
+          </div>
+          <div id="messageBubbleArea" class="helperThread"></div>
+        </div>
+      </div>
+
+      <div class="vaultConsoleInputRow">
+        <input id="vaultConsoleInput"
+               type="text"
+               placeholder="Ask the Vault Spirit… (/help)" />
+        <button id="vaultConsoleSend">Send</button>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- ROW 3: WALLET + LOCKSCREENS -->
+  <!-- ========================= -->
+  <div id="walletWrapper">
+    <div class="walletCard" id="walletCard">
+      <div class="walletCardVaultTexture"></div>
+
+      <div class="walletCardTopRow">
+        <div class="walletCardProfile">
+          <div class="walletCardProfileAvatarWrap">
+            <img id="walletProfileAvatar"
+                 class="walletCardProfileAvatar"
+                 src=""
+                 alt="Profile" />
+          </div>
+          <div class="walletCardProfileText">
+            <div class="walletCardProfileLabel">Vault Owner</div>
+            <div id="walletProfileName" class="walletCardProfileName">Guest</div>
+          </div>
+        </div>
+        <div class="walletCardBadge">Premium</div>
+      </div>
+
+      <div class="walletCardBalanceBlock">
+        <div class="walletBalanceLabelRow">
+          <div class="walletCardBalanceLabel">Available Balance:</div>
+          <div class="pointCardBalanceLabel">Available Points:</div>
+        </div>
+
+        <div class="walletBalanceValueRow">
+          <div id="walletBalance" class="walletCardBalanceValue">
+            <span id="walletBalanceValue">BZ $0</span>
+            <div class="walletCardBalanceShimmer"></div>
+          </div>
+
+          <div id="pointBalance" class="pointCardBalanceValue">
+            <span id="pointBalanceValue">0 pts</span>
+            <div class="pointCardBalanceShimmer"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="walletCardActionsRow">
+        <button id="openVaultButton" class="walletActionPrimary">
+          <div class="walletActionIcon"></div>
+          Open Vault Wallet
+        </button>
+        <button class="walletActionSecondary">
+          <div class="walletActionIconSecondary"></div>
+          View Activity
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- LOCK SCREENS -->
+  <div id="appLockScreen" class="lock-screen hidden">
+    <div class="lock-inner">
+      <div class="lock-title">Enter Your PIN</div>
+      <div class="lock-sub">The realm is sealed until you verify your identity.</div>
+      <input id="pinInput" type="password" maxlength="8" class="pin-input" />
+      <button id="pinSubmit" class="pin-submit">Unlock</button>
+      <div id="pinError" class="pin-error hidden">Incorrect PIN. Try again.</div>
+      <div class="lock-footer">
+        <span id="resetPinLink">Forgot PIN?</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="vaultLockScreen" class="lock-screen hidden">
+    <div class="lock-inner">
+      <div class="lock-title">Vault Locked</div>
+      <div class="lock-sub">A PIN is required to open the vault.</div>
+      <input id="vaultPinInput" type="password" maxlength="8" class="pin-input" />
+      <button id="vaultPinSubmit" class="pin-submit">Unlock Vault</button>
+      <div id="pinWarning" class="pinWarning hidden">
+        <span class="pinWarningIcon">⚠️</span>
+        <span class="pinWarningText">Your Vault Pulses… It Refuses to Open!?</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="dangerOverlay" class="danger-overlay hidden">
+    <div class="danger-inner">
+      <div class="danger-title">⚠ Danger Mode Active</div>
+      <div class="danger-sub">Your account is sealed due to suspicious activity.</div>
+      <div class="danger-sub">Enter your PIN to restore access.</div>
+    </div>
+  </div>
+
+  <div id="resetPinModal" class="lock-screen hidden">
+    <div class="lock-inner">
+      <div class="lock-title">Reset PIN</div>
+      <div class="lock-sub">A verification code will be sent to your email.</div>
+      <button id="resetPinRequest" class="pin-submit">Send Reset Code</button>
+      <div id="resetPinStatus" class="pin-error hidden"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+log("🌞 Script loaded, attaching visibility listener…");
+
+if (PulseRealm.__vaultScriptLoaded) {
+  warn("🔥 VAULT SCRIPT EXECUTED TWICE — ABORTING SECOND RUN");
+  // Do NOTHING — just skip the rest of the file
+} else {
+  log("🌞 Vault script executing for the FIRST time");
+  PulseRealm.__vaultScriptLoaded = true;
+{
+log("🌞 Vault script CONTINUING AS IS");
+let vaultOpened = false;
+let visibilityArmed = false;
+let vaultStart = null;
+let loyalty = null;
+let settings = null;
+let resizeTimeout;
+// one‑shot guards
+let appStarted = false;
+let chamberWatcherStarted = false;
+let vaultIntroStarted = false;
+PulseRealm.__vaultInitStarted = false;
+PulseRealm.__vaultIntroShown = false;
+
+
+let persistenceEnabled = true;
+  let lastTime = null;
+  let firstTime = null;
+
+  
+const FALLBACK_PROFILE_URL = "./_EXPRESSIONS/_PEX/BUILD/FrustratedLogo.webp.pex";
+const TOUCAN_SPIRIT_URL = "./_EXPRESSIONS/_PEX/BUILD/ToucanVaultSpirit.png";
+
+let token = localStorage.getItem("tp_token_v4") || null;
+let identity = PulseRealm.PulseIdentity;
+let trusted = null;
+let autologin = null;
+let loggedIn = false;
+let userName = null;
+let userEmail = null;
+let userID = null;
+let identityRefreshed = false;
+let identityPromise = null;
+let lastbubbleDelay = null;
+let cachedLoyalty = JSON.parse(localStorage.getItem("cachedLoyalty") || "{}");
+let cachedHistory = JSON.parse(localStorage.getItem("cachedHistory") || "[]");
+let cachedSettings = JSON.parse(localStorage.getItem("cachedSettings") || "{}");
+let cachedUsers = JSON.parse(localStorage.getItem("cachedUsers") || "[]");
+let cachedBusinesses = JSON.parse(localStorage.getItem("cachedBusinesses") || "[]");
+let bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+let bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+let bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+let bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+let cachedEvents = JSON.parse(localStorage.getItem("cachedEvents") || "[]");
+let eventCategories = JSON.parse(localStorage.getItem("eventCategories") || "[]");
+let eventSubcategories = JSON.parse(localStorage.getItem("eventSubcategories") || "[]");
+let eventCategoryIconMap = JSON.parse(localStorage.getItem("eventCategoryIconMap") || "{}");
+let eventSubcategoryIconMap = JSON.parse(localStorage.getItem("eventSubcategoryIconMap") || "{}");
+let allEvents = [];
+let savedEvents = [];
+let allBusinesses = [];
+let savedBusinesses = [];
+let allUsers = [];
+let allHistory = [];
+let allSettings = {};
+let settingsCache = null;
+let userAvatarUrl = FALLBACK_PROFILE_URL;
+let chamberLastActivity = nowMs();
+
+// ───────────────────────────────────────────────
+// DOM LOOKUPS
+// ───────────────────────────────────────────────
+
+const walletProfileAvatar = document.getElementById("walletProfileAvatar");
+const walletProfileName = document.getElementById("walletProfileName");
+const helperUserAvatar = document.getElementById("helperUserAvatar");
+
+const openVaultButton = document.getElementById("openVaultButton");
+const walletBalance = document.getElementById("walletBalance");
+const pointBalance = document.getElementById("pointBalance");
+const walletBalanceValue = document.getElementById("walletBalanceValue");
+const pointBalanceValue = document.getElementById("pointBalanceValue");
+
+const vaultHint = document.querySelector(".vaultDoorHint");
+
+
+const walletShimmer = document.querySelector(".walletCardBalanceShimmer");
+const pointShimmer = document.querySelector(".pointCardBalanceShimmer");
+const vaultConsoleSend = document.getElementById("vaultConsoleSend");
+const vaultConsoleInput = document.getElementById("vaultConsoleInput");
+const messageBubbleArea = document.getElementById("messageBubbleArea");
+const door = document.querySelector(".vaultDoor");
+const vaultDoorHandle = document.querySelector(".vaultDoorHandle");
+const spokes = document.querySelector(".vaultDoorHandleSpokes");
+const coin = document.querySelector(".vaultCoin");
+const walletCard = document.querySelector(".walletCard");
+const walletWrapper = document.getElementById("walletWrapper");
+const helperHint = document.querySelector(".helperHint");
+const pageShell = document.querySelector(".vaultPageShell");
+const vaultSmoke = document.querySelector(".smoke-layer");
+const vaultStageInner = document.querySelector(".vaultStageInner");
+const sessionSpacer = document.querySelector(".vaultSessionSpacer");
+const sessionContainer = document.getElementById("vaultSessionContainer");
+const hideBtn = document.querySelector(".sessionHideButton");
+const sendBtn = document.getElementById("vaultConsoleSend");
+const inputEl = document.getElementById("vaultConsoleInput");
+const thread = document.getElementById("messageBubbleArea");
+const resetPinRequest = document.getElementById("resetPinRequest");
+const vaultPinInput = document.getElementById("vaultPinInput");
+const vaultLockScreen = document.getElementById("vaultLockScreen");
+const resetPinStatus = document.getElementById("resetPinStatus");
+const vaultPinSubmit = document.getElementById("vaultPinSubmit");
+const vaultPinError = document.getElementById("vaultPinError");
+const resetPinModal = document.getElementById("resetPinModal");
+
+const appLockScreen = document.getElementById("appLockScreen");
+const pinInput = document.getElementById("pinInput");
+const pinSubmit = document.getElementById("pinSubmit");
+const pinError = document.getElementById("pinError");
+const resetPinLink = document.getElementById("resetPinLink");
+const dangerOverlay = document.getElementById("dangerOverlay");
+
+// ───────────────────────────────────────────────
+// SOUNDS
+// ───────────────────────────────────────────────
+
+// 🌴 Lazy-loaded sound registry (replaces all your Audio() declarations)
+const soundRegistry = {
+soundVaultUnlock:       { el: null, src: "/_EXPRESSIONS/_SOUNDS/vault-unlock",        base: 0.5, mobile: 0.45 },
+soundMagicCoinShimmer:  { el: null, src: "/_EXPRESSIONS/_SOUNDS/magic-coinshimmer",   base: 0.4, mobile: 0.4  },
+soundHandleSpin:        { el: null, src: "/_EXPRESSIONS/_SOUNDS/handle-spin",         base: 0.4, mobile: 0.5  },
+soundHingeCreak:        { el: null, src: "/_EXPRESSIONS/_SOUNDS/vault-hinge-creak",   base: 0.25, mobile: 0.3 },
+soundVaultWhoosh:       { el: null, src: "/_EXPRESSIONS/_SOUNDS/vault-whoosh",        base: 0.6, mobile: 0.55 },
+soundMagicShimmer:      { el: null, src: "/_EXPRESSIONS/_SOUNDS/magic-shimmer",       base: 0.4, mobile: 0.4  },
+soundVaultClunk:        { el: null, src: "/_EXPRESSIONS/_SOUNDS/vault-clunk",         base: 0.6, mobile: 0.4  },
+soundMagicPulse:        { el: null, src: "/_EXPRESSIONS/_SOUNDS/magic-pulse",         base: 0.5, mobile: 0.3  }
+};
+
+let soundsLoaded = false;
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+log("🌞 Vault Script Booting…");
+log("Initial Flags:", {
+vaultStart,
+vaultOpened,
+visibilityArmed,
+appStarted,
+chamberWatcherStarted,
+vaultIntroStarted,
+__vaultInitStarted: PulseRealm.__vaultInitStarted,
+__vaultIntroShown: PulseRealm.__vaultIntroShown
+});
+
+
+
+async function loadEvents() {
+  mark("VAULT: loadEvents");
+
+  const htmlVersion = PulseRealm.globalCacheVersion.eventVersion || 1;
+  const localVersion = Number(localStorage.getItem("eventCacheVersion") || 1);
+
+  // HTML version newer → force reload
+  if (htmlVersion > localVersion) {
+    localStorage.setItem("forceReload_events", "1");
+    localStorage.setItem("eventCacheVersion", htmlVersion);
+  }
+
+  const forceReload = localStorage.getItem("forceReload_events") === "1";
+
+  // Load cached events
+  const cachedRaw = localStorage.getItem("cachedUnifiedEvents");
+  const cached = cachedRaw ? JSON.parse(cachedRaw) : null;
+
+  const validCache =
+    cached &&
+    typeof cached === "object" &&
+    Array.isArray(cached.all) &&
+    Array.isArray(cached.today) &&
+    Array.isArray(cached.upcoming);
+
+  // USE CACHE IF VALID + NOT FORCE RELOAD
+  if (!forceReload && validCache) {
+    mark("VAULT: Using cached unified events");
+    PulseRealm.allEvents      = cached.all;
+    PulseRealm.eventsToday    = cached.today;
+    PulseRealm.eventsUpcoming = cached.upcoming;
+    PulseRealm.eventsNow      = cached.now;
+    PulseRealm.eventsThisWeek = cached.thisWeek;
+    PulseRealm.eventsWeekend  = cached.weekend;
+    PulseRealm.eventsTonight  = cached.tonight;
+    return cached;
+  }
+
+  // Otherwise → fetch fresh
+  mark("VAULT: Fetching unified events from Cloud Function…");
+
+  try {
+    const data = await getHook({
+      type: "getEvents"
+    });
+
+    const normalized = {
+      all:      Array.isArray(data.all)      ? data.all      : [],
+      today:    Array.isArray(data.today)    ? data.today    : [],
+      upcoming: Array.isArray(data.upcoming) ? data.upcoming : [],
+      now:      Array.isArray(data.now)      ? data.now      : [],
+      thisWeek: Array.isArray(data.thisWeek) ? data.thisWeek : [],
+      weekend:  Array.isArray(data.weekend)  ? data.weekend  : [],
+      tonight:  Array.isArray(data.tonight)  ? data.tonight  : []
+    };
+
+    // Save to cache
+    localStorage.setItem("cachedUnifiedEvents", JSON.stringify(normalized));
+    localStorage.removeItem("forceReload_events");
+
+    // Populate globals
+    PulseRealm.allEvents      = normalized.all;
+    PulseRealm.eventsToday    = normalized.today;
+    PulseRealm.eventsUpcoming = normalized.upcoming;
+    PulseRealm.eventsNow      = normalized.now;
+    PulseRealm.eventsThisWeek = normalized.thisWeek;
+    PulseRealm.eventsWeekend  = normalized.weekend;
+    PulseRealm.eventsTonight  = normalized.tonight;
+
+    return normalized;
+
+  } catch (err) {
+    error("❌ Failed to load unified events:", err);
+    return null;
+  }
+}
+
+async function loadBusinesses() {
+  mark("VAULT: loadBusinesses");
+
+  const htmlVersion = PulseRealm.globalCacheVersion.businessVersion || 1;
+  const localVersion = Number(localStorage.getItem("businessCacheVersion") || 1);
+
+  // HTML version newer → force reload
+  if (htmlVersion > localVersion) {
+    localStorage.setItem("forceReload_business", "1");
+    localStorage.setItem("businessCacheVersion", htmlVersion);
+  }
+
+  const forceReload = localStorage.getItem("forceReload_business") === "1";
+
+  // Load cached businesses
+  const cachedRaw = localStorage.getItem("cachedUnifiedBusinesses");
+  const cached = cachedRaw ? JSON.parse(cachedRaw) : null;
+
+  const validCache = Array.isArray(cached);
+
+  // USE CACHE IF VALID + NOT FORCE RELOAD
+  if (!forceReload && validCache) {
+    mark("VAULT: Using cached unified businesses");
+    PulseRealm.allBusinesses = cached;
+    return cached;
+  }
+
+  // Otherwise → fetch fresh
+  mark("VAULT: Fetching unified businesses from Cloud Function…");
+
+  try {
+    const { lat, lng } = PulseRealm.userLoyaltyContext.location || {};
+
+    const raw = await getHook({
+      type: "getBusinesses",
+      lat,
+      lng
+    });
+
+    // raw is already JSON, no need for res.json()
+    const cleaned = raw.map(b => ({
+      id: b.id,
+      busname: b.busname || "Unnamed Business",
+
+      address: b.address || null,
+      location: b.address || null,
+      lat: b.lat || null,
+      lng: b.lng || null,
+      coords: b.coords || (b.lat && b.lng ? { lat: b.lat, lng: b.lng } : null),
+
+      categories: Array.isArray(b.categories) ? b.categories : [],
+      subcategories: Array.isArray(b.subcategories) ? b.subcategories : [],
+
+      vibeTags: b.vibeTags || [],
+      priceRange: b.priceRange || null,
+
+      emails: b.emails || [],
+      phones: b.phones || [],
+      whatsapp: b.whatsapp || [],
+
+      websites: b.websites || [],
+      social: b.social || {
+        facebook: [],
+        instagram: [],
+        twitter: [],
+        youtube: [],
+        other: []
+      },
+
+      openNow: b.openNow ?? null,
+      hours: Array.isArray(b.hours) ? b.hours : null,
+      hoursText: b.hoursText || null,
+      weeklyHours: b.weeklyHours || null,
+      hoursSource: b.hoursSource || null,
+
+      mainPhotoURL: b.mainPhotoURL || null,
+      googleThumbnailUrl: b.googleThumbnailUrl || null,
+      mapImageUrl: b.mapImageUrl || null,
+      images: Array.isArray(b.images) ? b.images : [],
+      banners: Array.isArray(b.banners) ? b.banners : [],
+
+      mapsWebUrl: b.mapsWebUrl || null,
+      placeId: b.placeId || null,
+      googleCid: b.googleCid || null,
+      googleFid: b.googleFid || null,
+
+      menuUrl: b.menuUrl || null,
+
+      externalId: b.externalId || null,
+      listing_id: b.listing_id || null,
+
+      _distance: b._distance || null,
+
+      ...b
+    }));
+
+    // Save to cache
+    localStorage.setItem("cachedUnifiedBusinesses", JSON.stringify(cleaned));
+    localStorage.removeItem("forceReload_business");
+
+    PulseRealm.allBusinesses = cleaned;
+    return cleaned;
+
+  } catch (err) {
+    error("❌ Failed to load businesses:", err);
+    PulseRealm.allBusinesses = [];
+    return [];
+  }
+}
+
+function mark(label) {
+    console.log("[CHECKEMAIL]", label);
+  }
+
+function scrollToBottom() {
+const area = document.getElementById("messageBubbleArea");
+if (!area) return;
+
+// Force layout before scroll
+requestAnimationFrame(() => {
+area.scrollTop = area.scrollHeight;
+});
+}
+// 🌺 Lazy-load all sounds ONLY when vault sequence begins
+function configureSound() {
+if (soundsLoaded) return;
+soundsLoaded = true;
+
+for (const key in soundRegistry) {
+const s = soundRegistry[key];
+const audio = new Audio();
+audio.src = s.src;
+
+// Volume scaling
+audio.volume = isMobile ? s.base * s.mobile : s.base;
+
+s.el = audio;
+}
+
+log("✨ Sounds lazy-loaded at vault sequence");
+}
+
+// 🌊 Safe sound playback helper
+function playSound(name) {
+const s = soundRegistry[name];
+if (!s.el) return;
+
+s.el.currentTime = 0;
+s.el.play().catch(() => {
+warn("Audio play blocked until user gesture");
+});
+}
+
+// ───────────────────────────────────────────────
+// IDENTITY HELPERS
+// ───────────────────────────────────────────────
+
+function getProfilephotoURL() {
+if (identity && identity.photoURL) return identity.photoURL;
+return FALLBACK_PROFILE_URL;
+}
+
+function getProfileName() {
+if (identity && identity.name) return identity.name;
+return identity.email || "Guest";
+}
+
+// ───────────────────────────────────────────────
+// SETTINGS (unchanged, just used via loadSettings())
+// ───────────────────────────────────────────────
+
+async function loadSettings() {
+  // 1. Validate cached settings
+  
+  const EXPECTED_SETTINGS_FIELDS = 25;
+
+  if (
+    cachedSettings &&
+    typeof cachedSettings === "object" &&
+    Object.keys(cachedSettings).length === EXPECTED_SETTINGS_FIELDS
+  ) {
+    return cachedSettings;
+  }
+
+  const data = await getHook({
+    type: "getsettings"
+  });
+
+  const s = data.settings || {};
+
+  // 3. Normalize into deterministic structure
+  cachedSettings = {
+    maxTotalMultiplier: Number(s.maxTotalMultiplier) || 1,
+
+    tierMultiplier_Seashell: Number(s.tierMultiplier_Seashell) || 1,
+    tierMultiplier_ReefDiver: Number(s.tierMultiplier_ReefDiver) || 1,
+    tierMultiplier_ToucanSpirit: Number(s.tierMultiplier_ToucanSpirit) || 1,
+    tierMultiplier_VolcanoHeart: Number(s.tierMultiplier_VolcanoHeart) || 1,
+    tierMultiplier_HurricaneLegend: Number(s.tierMultiplier_HurricaneLegend) || 1,
+
+    tierThreshold_ReefDiver: Number(s.tierThreshold_ReefDiver) || 0,
+    tierThreshold_ToucanSpirit: Number(s.tierThreshold_ToucanSpirit) || 0,
+    tierThreshold_VolcanoHeart: Number(s.tierThreshold_VolcanoHeart) || 0,
+    tierThreshold_HurricaneLegend: Number(s.tierThreshold_HurricaneLegend) || 0,
+
+    seasonalActive: Boolean(s.seasonalActive),
+    seasonalName: s.seasonalName || "",
+    seasonalMultiplier: Number(s.seasonalMultiplier) || 1,
+
+    streakDurationDays: Number(s.streakDurationDays) || 1,
+    streakMultiplierBase: Number(s.streakMultiplierBase) || 1,
+    streakMultiplierPerDay: Number(s.streakMultiplierPerDay) || 0.1,
+    streakMaxMultiplier: Number(s.streakMaxMultiplier) || 2,
+
+    referralBaseBonus_NewUser: Number(s.referralBaseBonus_NewUser) || 0,
+    referralBaseBonus_Referrer: Number(s.referralBaseBonus_Referrer) || 0,
+    referralEarningRate: Number(s.referralEarningRate) || 0,
+    referralStreakMultiplier: Number(s.referralStreakMultiplier) || 1,
+    seasonalReferralBonus_NewUser: Number(s.seasonalReferralBonus_NewUser) || 0,
+    seasonalReferralBonus_Referrer: Number(s.seasonalReferralBonus_Referrer) || 0,
+
+    seasonalPeriods: s.seasonalPeriods || {},
+    ui: s.ui || {}
+  };
+
+  // 4. Save to localStorage
+  localStorage.setItem("cachedSettings", JSON.stringify(cachedSettings));
+
+  // 5. Return normalized settings
+  return cachedSettings;
+}
+
+// ---------------------------------------------------------
+// MAGICAL HELPERS
+// ---------------------------------------------------------
+
+function pick(arr) {
+return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ───────────────────────────────────────────────
+// VAULT CONTEXT + LOYALTY MEMORY
+// ───────────────────────────────────────────────
+
+function saveVaultContext(context) {
+localStorage.setItem("vault_ui_context", JSON.stringify(context));
+}
+
+function loadVaultContext() {
+const raw = localStorage.getItem("vault_ui_context");
+return raw ? JSON.parse(raw) : {};
+}
+
+function updateLoyaltyMemory() {
+const ctx = loadVaultContext() || {};
+
+const safe = {
+lastIntent: "loyalty_update",
+lastUpdated: nowMs()
+};
+
+// ⭐ Merge instead of overwrite
+saveVaultContext({
+...ctx,
+...safe
+});
+}
+
+// ───────────────────────────────────────────────
+// LOYALTY + WALLET LOADERS (unchanged logic)
+// ───────────────────────────────────────────────
+
+async function loadLoyalty(uid) {
+  try {
+    // ---------------------------------------------
+    // 1. LOAD PULSE IDENTITY FROM LOCAL STORAGE
+    // ---------------------------------------------
+    let rawIdentity = localStorage.getItem("PulseIdentity");
+    let identity = rawIdentity ? JSON.parse(rawIdentity) : null;
+
+    // If identity missing or wrong user → reset
+    if (!identity || identity.bank !== uid) {
+      identity = {
+        bank,
+        loyalty: {},
+        wallet: {},
+        photos: {}
+      };
+    }
+
+    // ---------------------------------------------
+    // 2. CHECK FOR LEGACY STANDALONE LOYALTY
+    // ---------------------------------------------
+    let legacyRaw = localStorage.getItem("PulseLoyalty");
+    let legacy = legacyRaw ? JSON.parse(legacyRaw) : null;
+
+    // ---------------------------------------------
+    // 3. MERGE PRIORITY:
+    // identity.loyalty > legacy loyalty > empty loyalty
+    // ---------------------------------------------
+    let loyalty = identity.loyalty && typeof identity.loyalty === "object"
+      ? identity.loyalty
+      : legacy && typeof legacy === "object"
+        ? legacy
+        : {};
+
+    // ---------------------------------------------
+    // 4. NORMALIZE LOYALTY FIELDS
+    // ---------------------------------------------
+    loyalty = {
+      uid,
+      pointsBalance: Number(loyalty.pointsBalance) || 0,
+      lifetimePoints: Number(loyalty.lifetimePoints) || 0,
+      history: loyalty.history || [],
+
+      streakCount: Number(loyalty.streakCount) || 0,
+      tier: loyalty.tier || "Seashell",
+
+      seasonalActive: Boolean(loyalty.seasonalActive),
+      seasonalMultiplier: Number(loyalty.seasonalMultiplier) || 1,
+      seasonalName: loyalty.seasonalName || "",
+
+      referralCode: loyalty.referralCode || "",
+      referrals: loyalty.referrals || [],
+
+      lastVaultVisit: loyalty.lastVaultVisit || null,
+      lastEarnedDate: loyalty.lastEarnedDate || null,
+      lastOrderDate: loyalty.lastOrderDate || null,
+      totalOrders: Number(loyalty.totalOrders) || 0,
+      vaultVisitCount: Number(loyalty.vaultVisitCount) || 0,
+      lastActive: loyalty.lastActive || null
+    };
+
+    // ---------------------------------------------
+    // 5. WRITE LOYALTY BACK INTO IDENTITY
+    // ---------------------------------------------
+    identity.loyalty = loyalty;
+
+    // ---------------------------------------------
+    // 6. SAVE UPDATED IDENTITY TO LOCAL STORAGE
+    // ---------------------------------------------
+    localStorage.setItem("PulseIdentity", JSON.stringify(identity));
+
+    // ---------------------------------------------
+    // 7. REMOVE LEGACY KEYS (CLEANUP)
+    // ---------------------------------------------
+    localStorage.removeItem("PulseLoyalty");
+    localStorage.removeItem("cachedLoyalty");
+    localStorage.removeItem("loyaltyCacheVersion");
+    localStorage.removeItem("forceReload_loyalty");
+
+    // ---------------------------------------------
+    // 8. RETURN FINAL LOYALTY OBJECT
+    // ---------------------------------------------
+    return loyalty;
+
+  } catch (err) {
+    console.error("❌ loadLoyalty failed:", err);
+
+    // Safe fallback loyalty
+    const fallback = {
+      uid,
+      pointsBalance: 0,
+      lifetimePoints: 0,
+      history: [],
+      tier: "Seashell",
+      streakCount: 0,
+      seasonalActive: false,
+      seasonalMultiplier: 1,
+      seasonalName: "",
+      referralCode: "",
+      referrals: []
+    };
+
+    return fallback;
+  }
+}
+
+async function loadWallet(uid) {
+  try {
+    // ---------------------------------------------
+    // 1. LOAD PULSE IDENTITY FROM LOCAL STORAGE
+    // ---------------------------------------------
+    let rawIdentity = localStorage.getItem("PulseIdentity");
+    let identity = rawIdentity ? JSON.parse(rawIdentity) : null;
+
+    // If identity missing or wrong user → reset
+    if (!identity || identity.bank !== uid) {
+      identity = {
+        bank,
+        loyalty: {},
+        wallet: {},
+        photos: {}
+      };
+    }
+
+    // ---------------------------------------------
+    // 2. CHECK FOR LEGACY STANDALONE WALLET
+    // ---------------------------------------------
+    let legacyRaw = localStorage.getItem("PulseWallet");
+    let legacy = legacyRaw ? JSON.parse(legacyRaw) : null;
+
+    // ---------------------------------------------
+    // 3. MERGE PRIORITY:
+    // identity.wallet > legacy wallet > empty wallet
+    // ---------------------------------------------
+    let wallet = identity.wallet && typeof identity.wallet === "object"
+      ? identity.wallet
+      : legacy && typeof legacy === "object"
+        ? legacy
+        : {};
+
+    // ---------------------------------------------
+    // 4. NORMALIZE WALLET FIELDS
+    // ---------------------------------------------
+    wallet = {
+      balance: Number(wallet.balance) || 0,
+      pulsePoints: Number(wallet.pulsePoints) || 0
+    };
+
+    // ---------------------------------------------
+    // 5. WRITE WALLET BACK INTO IDENTITY
+    // ---------------------------------------------
+    identity.wallet = wallet;
+
+    // ---------------------------------------------
+    // 6. SAVE UPDATED IDENTITY TO LOCAL STORAGE
+    // ---------------------------------------------
+    localStorage.setItem("PulseIdentity", JSON.stringify(identity));
+
+    // ---------------------------------------------
+    // 7. REMOVE LEGACY KEYS (CLEANUP)
+    // ---------------------------------------------
+    localStorage.removeItem("PulseWallet");
+    localStorage.removeItem("cachedWallet");
+    localStorage.removeItem("walletCacheVersion");
+    localStorage.removeItem("forceReload_wallet");
+
+    // ---------------------------------------------
+    // 8. RETURN FINAL WALLET OBJECT
+    // ---------------------------------------------
+    return wallet;
+
+  } catch (err) {
+    console.error("❌ loadWallet failed:", err);
+
+    // Safe fallback wallet
+    const fallback = {
+      balance: 0,
+      pulsePoints: 0
+    };
+
+    return fallback;
+  }
+}
+
+
+function updateBubble(bubbleOrId, newText, options = {}) {
+let row;
+
+// Accept DOM node or bubbleId
+if (bubbleOrId instanceof HTMLElement) {
+row = bubbleOrId;
+} else if (typeof bubbleOrId === "string") {
+row = document.querySelector(`[data-bubble-id="${bubbleOrId}"]`);
+}
+
+if (!row) {
+warn("updateBubble: bubble not found:", bubbleOrId);
+return;
+}
+
+const bubble = row.querySelector(".helperBubble");
+if (!bubble) {
+warn("updateBubble: .helperBubble not found:", bubbleOrId);
+return;
+}
+
+const textEl = bubble.querySelector(".helperBubbleText");
+if (!textEl) {
+warn("updateBubble: .helperBubbleText not found:", bubbleOrId);
+return;
+}
+
+// Only update if text actually changed
+if (newText && textEl.innerHTML !== newText) {
+textEl.innerHTML = newText;
+}
+
+// Remove old options (if any)
+const oldOptions = bubble.querySelector(".helperBubbleOptions");
+if (oldOptions) oldOptions.remove();
+
+// Add new options if provided
+if (options.optionsHtml) {
+const opt = document.createElement("div");
+opt.className = "helperBubbleOptions";
+opt.innerHTML = options.optionsHtml;
+bubble.appendChild(opt);
+}
+
+scrollToBottom();
+}
+
+function playBalanceShimmer() {
+try {
+soundMagicShimmer.currentTime = 0;
+soundMagicShimmer.play().catch(() => {});
+} catch (e) {}
+
+walletBalance.classList.remove("shimmer");
+void walletBalance.offsetWidth;
+walletBalance.classList.add("shimmer");
+}
+
+function playPointShimmer() {
+try {
+soundMagicShimmer.currentTime = 0;
+soundMagicShimmer.play().catch(() => {});
+} catch (e) {}
+
+pointBalance.classList.remove("shimmer");
+void pointBalance.offsetWidth;
+pointBalance.classList.add("shimmer");
+}
+
+function closeWallet() {
+// 1. Hide card first (so wrapper can collapse cleanly)
+walletCard.classList.remove("ready");
+log("Closing wallet");
+// 2. Collapse wrapper
+walletWrapper.classList.remove("open");
+
+// 3. Force reflow (optional but helps consistency)
+void walletWrapper.offsetHeight;
+}
+
+function openWallet() {
+walletWrapper.classList.add("open");
+log("Opening wallet");
+// 2. THEN reveal card on the next frame
+requestAnimationFrame(() => {
+walletCard.classList.add("ready");
+});
+}
+
+function loadVaultCoinImage() {
+const img = document.getElementById("vaultCoinToucanImg");
+if (img && !img.src) img.src = "./_EXPRESSIONS/_PEX/BUILD/ToucanThumbsUp.png";
+}
+
+// ───────────────────────────────────────────────
+// BUBBLES + AI
+// ───────────────────────────────────────────────
+
+function addBubble(label, text, isUser = false, options = {}) {
+const {
+avatarUrl = isUser ? userAvatarUrl : TOUCAN_SPIRIT_URL,
+extraClasses = "",
+disableScroll = false,
+animationDuration = 350,
+bubbleId = null,
+role = isUser ? "user" : "spirit",
+optionsHtml = ""
+} = options;
+
+const row = document.createElement("div");
+row.className =
+"helperBubbleRow" +
+(isUser ? " helperBubbleUser" : "") +
+(extraClasses ? ` ${extraClasses}` : "");
+
+if (bubbleId) row.dataset.bubbleId = bubbleId;
+
+row.style.opacity = "0";
+row.style.transform = "translateY(10px)";
+
+// Avatar
+const avatar = document.createElement("div");
+avatar.className = "helperAvatar";
+
+const img = document.createElement("img");
+img.src = avatarUrl;
+avatar.appendChild(img);
+
+// Bubble
+const bubble = document.createElement("div");
+bubble.className = "helperBubble";
+
+const labelEl = document.createElement("div");
+labelEl.className = "helperBubbleLabel";
+labelEl.textContent = label;
+
+const textEl = document.createElement("div");
+textEl.className = "helperBubbleText";
+textEl.innerHTML = text;
+
+bubble.appendChild(labelEl);
+bubble.appendChild(textEl);
+
+// Options (Yes/No buttons)
+if (optionsHtml) {
+const opt = document.createElement("div");
+opt.className = "helperBubbleOptions";
+opt.innerHTML = optionsHtml;
+bubble.appendChild(opt);
+}
+
+row.appendChild(avatar);
+row.appendChild(bubble);
+
+messageBubbleArea.appendChild(row);
+
+// Animate in
+requestAnimationFrame(() => {
+row.style.transition = `opacity ${animationDuration}ms ease, transform ${animationDuration}ms ease`;
+row.style.opacity = "1";
+row.style.transform = "translateY(0)";
+});
+
+if (!disableScroll) scrollToBottom();
+
+return row;
+}
+
+function saveConversationMemory(update) {
+const ctx = loadVaultContext() || {};
+Object.assign(ctx, update);
+saveVaultContext(ctx);
+}
+
+function fadeOutLastBubble() {
+const rows = document.querySelectorAll(".helperBubbleRow");
+const last = rows[rows.length - 1];
+if (!last) return;
+
+last.classList.add("bubbleFadeOut");
+setTimeout(() => last.remove(), 300);
+}
+
+async function askVaultSpirit(message) {
+  const ctx = loadVaultContext() || {};
+  const text = message.trim().toLowerCase();
+
+  // ----------------------------------------------
+  // 1. MEMORY RECALL OVERRIDE
+  // ----------------------------------------------
+  if (text.startsWith("do you remember")) {
+    return {
+      text: "🌙 I remember your steps across the island — your visits, your progress, your loyalty. What would you like me to recall?",
+      optionsHtml: ""
+    };
+  }
+
+  // ----------------------------------------------
+  // 2. LOAD USER CONTEXT (FIREBASE ONLY)
+  // ----------------------------------------------
+  const loyalty = await loadLoyalty(identity.bank);
+  const identityData = PulseRealm.PulseIdentity || {};
+
+  // ----------------------------------------------
+  // 3. LOCAL AI ENGINE
+  // ----------------------------------------------
+  let reply;
+  try {
+    reply = await localVaultAI({
+      text: message,
+      uid: identity.bank,
+      identity: identityData,
+      loyalty,
+      pendingQuestion: ctx.pendingQuestion || "",
+      pendingData: ctx.pendingData || {}
+    });
+  } catch (err) {
+    error("AI error:", err);
+    return {
+      text: "🌿 The Vault Intelligence is having Trouble Responding!",
+      optionsHtml: ""
+    };
+  }
+
+  // ----------------------------------------------
+  // 4. SAVE MEMORY BACK TO FRONTEND
+  // ----------------------------------------------
+  const newCtx = loadVaultContext() || {};
+  newCtx.pendingQuestion = reply.pendingQuestion || null;
+  newCtx.pendingData = reply.pendingData || null;
+  saveVaultContext(newCtx);
+
+  // ----------------------------------------------
+  // 5. NORMALIZE FOR UI
+  // ----------------------------------------------
+  return {
+    text: reply.text || "",
+    optionsHtml: reply.optionsHtml || "",
+    pendingQuestion: reply.pendingQuestion || null,
+    pendingData: reply.pendingData || null
+  };
+}
+
+function getLoyaltyFlavor(loyalty) {
+if (!loyalty) return "";
+
+const lines = [];
+
+if (loyalty.streakCount > 1) {
+lines.push(`Your Streak is Holding at **${loyalty.streakCount} Days**.`);
+}
+
+if (loyalty.tier) {
+lines.push(`You’re Sitting Comfortably in **${loyalty.tier} Tier**.`);
+}
+
+if (loyalty.pulsePoints > 0) {
+lines.push(
+  `And those Pulse Points… looking **Real** nice at **${loyalty.pulsePoints}**.`
+);
+}
+
+if (loyalty.referralsToday > 0) {
+lines.push(
+  `You Brought in **${loyalty.referralsToday}** New Travelers Today.`
+);
+}
+
+return lines.join(" ");
+}
+
+function normalizeDateMs(value) {
+if (!value) return null;
+
+// Firestore Timestamp object
+if (typeof value.toMillis === "function") {
+return value.toMillis();
+}
+
+// Firestore server timestamp placeholder (not resolved yet)
+if (value instanceof Date) {
+const ms = value.getTime();
+return isNaN(ms) ? null : ms;
+}
+
+// Firestore { _seconds, _nanoseconds }
+if (typeof value === "object" && "_seconds" in value) {
+return value._seconds * 1000 + Math.floor((value._nanoseconds || 0) / 1e6);
+}
+
+// Human-readable Firestore console string
+// Example: "March 10, 2026 at 2:09:53 PM UTC-7"
+if (typeof value === "string") {
+const cleaned = value
+  .replace(" at ", " ")
+  .replace("UTC", "GMT"); // Date.parse understands GMT offsets
+
+const ms = Date.parse(cleaned);
+if (!isNaN(ms)) return ms;
+
+// Fallback: try raw parse
+const fallback = Date.parse(value);
+return isNaN(fallback) ? null : fallback;
+}
+
+// Milliseconds number
+if (typeof value === "number") {
+return value > 0 ? value : null;
+}
+
+return null;
+}
+
+async function vaultYes() {
+// Clear pending state (localStorage)
+const ctx = loadVaultContext() || {};
+ctx.pendingQuestion = null;
+ctx.pendingData = null;
+saveVaultContext(ctx);
+
+// Clear pending state (in-memory)
+const mem = PulseRealm.userLoyaltyContext || PulseRealm.userContext || {};
+mem.pendingQuestion = null;
+mem.pendingData = null;
+
+// Remove the Yes/No bubble from UI
+fadeOutLastBubble();
+
+// Send YES to backend
+const reply = await askVaultSpirit("yes");
+log("🟢 vaultYes() reply:", reply);
+
+if (typeof reply === "string") {
+addBubble("Vault Spirit", reply, false);
+} else {
+addBubble("Vault Spirit", reply.text, false, {
+  optionsHtml: reply.optionsHtml || "",
+  extraClasses: reply.extraClasses || ""
+});
+}
+}
+
+async function vaultNo() {
+// Clear pending state (localStorage)
+const ctx = loadVaultContext() || {};
+ctx.pendingQuestion = null;
+ctx.pendingData = null;
+saveVaultContext(ctx);
+
+// Clear pending state (in-memory)
+const mem = PulseRealm.userLoyaltyContext || PulseRealm.userContext || {};
+mem.pendingQuestion = null;
+mem.pendingData = null;
+
+// Remove the Yes/No bubble from UI
+fadeOutLastBubble();
+
+// Send NO to backend
+const reply = await askVaultSpirit("no");
+log("🔴 vaultNo() reply:", reply);
+
+if (typeof reply === "string") {
+addBubble("Vault Spirit", reply, false);
+} else {
+addBubble("Vault Spirit", reply.text, false, {
+  optionsHtml: reply.optionsHtml || "",
+  extraClasses: reply.extraClasses || ""
+});
+}
+}
+
+function isWalkable(userLoc, coords) {
+if (!userLoc || !coords) return false;
+const dist = getDistanceMeters(userLoc, coords);
+return dist !== null && dist <= 1200;
+}
+
+function getDistanceMeters(userLoc, businessLoc) {
+if (!userLoc || !businessLoc) return null;
+
+const R = 6371000;
+const toRad = d => (d * Math.PI) / 180;
+
+const dLat = toRad(businessLoc.lat - userLoc.lat);
+const dLon = toRad(businessLoc.lng - userLoc.lng);
+
+const lat1 = toRad(userLoc.lat);
+const lat2 = toRad(businessLoc.lat);
+
+const a =
+Math.sin(dLat / 2) ** 2 +
+Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+
+return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+}
+
+async function handleDirectionsIntent(message, userLocation) {
+if (!isDirectionsIntent(message)) return null;
+
+const result = resolvePlace(
+message,
+PulseRealm.allBusinesses,
+PulseRealm.allEvents
+);
+
+// SINGLE MATCH
+if (result.mode === "single") {
+const item = result.match.item;
+const coords = item.coords || null;
+
+return buildDirections(item, {
+  type: result.match.type,
+  walkable: isWalkable(userLocation, coords),
+  distanceMeters: getDistanceMeters(userLocation, coords)
+});
+}
+
+// ASK USER TO CHOOSE
+if (result.mode === "ask") {
+PulseRealm.__pendingPlaceChoices = result.matches;
+return respondToResolution(result);
+}
+
+// NEED MORE DETAIL
+if (result.mode === "refine") {
+return {
+  text: "✨ I found several possible matches. Try giving me a little more detail.",
+  optionsHtml: ""
+};
+}
+
+// GOOGLE FALLBACK
+if (result.mode === "none") {
+const google = await fetch(`/resolveVenue?q=${encodeURIComponent(message)}`)
+  .then(r => r.json());
+
+if (google.status === "ok") {
+  return buildDirections(google, {
+    type: "google",
+    walkable: isWalkable(userLocation, google),
+    distanceMeters: getDistanceMeters(userLocation, google)
+  });
+}
+
+return {
+  text: "✨ I couldn’t find anything that matches that.",
+  optionsHtml: ""
+};
+}
+
+return null;
+}
+
+function hideTPLoader() {
+    const el = document.getElementById("t-loading");
+    if (!el) return;
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 700);
+  }
+
+async function handlePlaceChoice(message, userLocation) {
+const idx = parseInt(message.trim(), 10) - 1;
+const selected = PulseRealm.__pendingPlaceChoices[idx];
+PulseRealm.__pendingPlaceChoices = null;
+
+const item = selected.item;
+const coords = item.coords || null;
+
+return buildDirections(item, {
+type: selected.type,
+walkable: isWalkable(userLocation, coords),
+distanceMeters: getDistanceMeters(userLocation, coords)
+});
+}
+
+function isDirectionsIntent(message) {
+return /directions|where|how do i get|how to get|way to|route to|go to|take me to/i
+.test(message);
+}
+
+function buildDirections(place, meta = {}) {
+const { walkable, distanceMeters, type } = meta;
+
+const dist = distanceMeters
+? `${Math.round(distanceMeters)}m`
+: "nearby";
+
+const vibe = walkable
+? "🚶‍♂️ A short walk away"
+: "🛺 A quick golf cart ride";
+
+// BUSINESS
+if (type === "business" || place.busname) {
+const name = place.busname || place.name;
+const loc = place.location || place.address || "San Pedro";
+
+return {
+  text:
+    `🗺️ <b>Directions to ${name}</b><br>` +
+    `${vibe} — about <b>${dist}</b>.<br><br>` +
+    `📍 ${loc}<br>` +
+    `✨ I can guide you turn‑by‑turn soon.`,
+  optionsHtml: ""
+};
+}
+
+// EVENT
+if (type === "event" || place.title || place.venue) {
+const name =
+  place.title ||
+  place.venue ||
+  (place.description && place.description.split(" ").slice(0, 3).join(" "));
+
+const loc = place.address
+  ? `${place.venue || place.title}, ${place.address}`
+  : (place.venue || place.title);
+
+return {
+  text:
+    `🗺️ <b>Directions to ${name}</b><br>` +
+    `${vibe} — about <b>${dist}</b>.<br><br>` +
+    `📍 ${loc}<br>` +
+    `✨ I can guide you turn‑by‑turn soon.`,
+  optionsHtml: ""
+};
+}
+
+// GOOGLE MAPS
+if (type === "google" || place.placeId) {
+return {
+  text:
+    `🗺️ <b>Directions to ${place.name}</b><br>` +
+    `${vibe} — about <b>${dist}</b>.<br><br>` +
+    `📍 ${place.address}<br>` +
+    `✨ Tap the map for turn‑by‑turn navigation.`,
+  optionsHtml: "",
+  map: place.staticMap
+};
+}
+
+return {
+text: "🗺️ I can guide you once I know where you're headed.",
+optionsHtml: ""
+};
+}
+
+
+function respondToResolution(result) {
+if (result.mode === "none") {
+return {
+  speaker: "Vault Spirit",
+  text: "✨ I couldn’t find a place that matches that. Try giving me a bit more detail.",
+  optionsHtml: ""
+};
+}
+
+if (result.mode === "single") {
+return buildDirections(result.match.item, { type: result.match.type });
+}
+
+if (result.mode === "ask") {
+let list = result.matches
+  .map((m, i) => {
+    const name = m.item.busname || m.item.title || m.item.venue;
+    const type = m.type === "business" ? "Business" : "Event";
+    return `${i + 1}. ${name} <span style="opacity:0.6">(${type})</span>`;
+  })
+  .join("<br>");
+
+return {
+  speaker: "Vault Spirit",
+  text:
+    `✨ I found a few matches. Which one did you mean?<br><br>${list}<br><br>` +
+    `Just tell me the number.`,
+  optionsHtml: ""
+};
+}
+
+if (result.mode === "refine") {
+return {
+  speaker: "Vault Spirit",
+  text:
+    "✨ I found several possible matches. Try giving me a little more detail so I can find the right one.",
+  optionsHtml: ""
+};
+}
+}
+
+function matchField(query, text) {
+  return sharesMeaningfulToken(query, text) && fuzzyMatchSafe(text, query);
+}
+
+function fuzzyMatchSafe(a, b) {
+  if (!a || !b) return false;
+
+  a = a.toLowerCase().replace(/[^a-z0-9]/g, "");
+  b = b.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  if (a.includes(b) || b.includes(a)) return true;
+
+  if (Math.abs(a.length - b.length) > 3) return false;
+
+  const dp = Array(b.length + 1).fill(null).map(() =>
+    Array(a.length + 1).fill(null)
+  );
+
+  for (let i = 0; i <= a.length; i++) dp[0][i] = i;
+  for (let j = 0; j <= b.length; j++) dp[j][0] = j;
+
+  for (let j = 1; j <= b.length; j++) {
+    for (let i = 1; i <= a.length; i++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[j][i] = Math.min(
+        dp[j][i - 1] + 1,
+        dp[j - 1][i] + 1,
+        dp[j - 1][i - 1] + cost
+      );
+    }
+  }
+
+  return dp[b.length][a.length] <= 2;
+}
+
+function resolvePlace(query, businesses, events) {
+  const tiers = [
+    // Tier 1 — Strongest
+    { label: "Business Name", type: "business", field: "busname", list: businesses },
+    { label: "Event Title", type: "event", field: "title", list: events },
+
+    // Tier 2 — Medium
+    { label: "Business Location", type: "business", field: "location", list: businesses },
+    { label: "Event Venue", type: "event", field: "venue", list: events },
+
+    // Tier 3 — Weak
+    { label: "Business Description", type: "business", field: "description", list: businesses },
+    { label: "Event Description", type: "event", field: "description", list: events }
+  ];
+
+  let candidates = [];
+
+  for (const tier of tiers) {
+    for (const item of tier.list) {
+      const text = item[tier.field];
+      if (matchField(query, text)) {
+        candidates.push({ item, type: tier.type });
+        if (candidates.length >= 3) break;
+      }
+    }
+
+    if (candidates.length > 0) break; // stop at first tier with matches
+  }
+
+  // No matches
+  if (candidates.length === 0) {
+    return { mode: "none" };
+  }
+
+  // One match — return immediately
+  if (candidates.length === 1) {
+    return { mode: "single", match: candidates[0] };
+  }
+
+  // 2–3 matches — ask user
+  if (candidates.length <= 3) {
+    return { mode: "ask", matches: candidates };
+  }
+
+  // More than 3 — ask user to refine
+  return { mode: "refine" };
+}
+
+function sharesMeaningfulToken(query, text) {
+  if (!text) return false;
+
+  const qTokens = tokenize(query);
+  const tTokens = tokenize(text);
+
+  return qTokens.some(qt =>
+    qt.length >= 3 && tTokens.some(tt => tt.includes(qt) || qt.includes(tt))
+  );
+}
+
+function tokenize(str) {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+// ───────────────────────────────────────────────
+// REMINDERS (unchanged logic, just used once)
+// ───────────────────────────────────────────────
+
+async function checkReminders(userContext) {
+  if (PulseRealm.__remindersChecked) return;
+  PulseRealm.__remindersChecked = true;
+
+  const uid = userContext.bank;
+  if (!uid) return;
+
+  try {
+    // -----------------------------------------
+    // ⭐ LOAD REMINDERS FROM FIRESTORE
+    // -----------------------------------------
+    const snap = await getDocs(
+      collection(db, "Users", uid, "Reminders")
+    );
+
+    const reminders = snap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    if (!reminders.length) return;
+
+    const now = PulseRealm.PulseNOW;
+    const triggered = [];
+
+    // -----------------------------------------
+    // ⭐ FILTER TRIGGERED REMINDERS
+    // -----------------------------------------
+    for (const r of reminders) {
+      if (r.triggered) continue;
+
+      if (r.type === "nextVaultOpen") {
+        triggered.push(r);
+      }
+
+      if (r.type === "time" && r.triggerAt && r.triggerAt.toMillis() <= now) {
+        triggered.push(r);
+      }
+
+      if (r.type === "nextAppOpen") {
+        triggered.push(r);
+      }
+    }
+
+    if (!triggered.length) return;
+
+    // -----------------------------------------
+    // ⭐ CLEAR PENDING STATE
+    // -----------------------------------------
+    const ctx = loadVaultContext() || {};
+    ctx.pendingQuestion = null;
+    ctx.pendingData = null;
+    saveVaultContext(ctx);
+
+    // -----------------------------------------
+    // ⭐ DISPLAY REMINDERS
+    // -----------------------------------------
+    for (const r of triggered) {
+      addBubble("Vault Spirit", r.message, false, {
+        extraClasses: "reminderBubble",
+        optionsHtml: r.optionsHtml || ""
+      });
+
+      // Mark as triggered
+      await updateDoc(
+        doc(db, "Users", uid, "Reminders", r.id),
+        { triggered: true }
+      );
+    }
+
+  } catch (err) {
+    error("checkReminders error:", err);
+  }
+}
+async function handleReminder(text, userContext, forceSave = false) {
+  if (!userContext.uid) {
+    return "🌙 I can’t store a reminder without knowing who you are.";
+  }
+
+  // ------------------------------------
+  // 1. PARSE NATURAL LANGUAGE (LOCAL)
+  // ------------------------------------
+  const parsed = buildParsedReminder(text);
+
+  if (!parsed.trigger) {
+    return "🌴 I heard you, but I’m not sure when you want me to remind you.";
+  }
+
+  // Load existing context so we can MERGE instead of overwrite
+  const ctx = loadVaultContext() || {};
+
+  // ------------------------------------
+  // 2. FORCE SAVE MODE (YES button)
+  // ------------------------------------
+  if (forceSave) {
+    try {
+      await addDoc(
+        collection(db, "Users", userContext.uid, "Reminders"),
+        {
+          message: parsed.text,
+          trigger: parsed.trigger,
+          time: parsed.time ? new Date(parsed.time) : null,
+          location: parsed.location || null,
+          triggered: false,
+          createdAt: new Date()
+        }
+      );
+    } catch (err) {
+      error("addReminder error:", err);
+      return "🔥 The Vault hesitated… I couldn’t store that reminder just now.";
+    }
+
+    // ⭐ MERGE context instead of overwriting
+    saveVaultContext({
+      ...ctx,
+      lastIntent: "reminder",
+      lastReminderText: parsed.text,
+      unresolved: false,
+      pendingQuestion: null,
+      pendingData: null
+    });
+
+    return pick([
+      "✨ I’ll remember that. When the moment arrives, I’ll whisper it back to you.",
+      "🌺 Your reminder is safe within the Vault.",
+      "🌴 I’ve stored that for the perfect moment.",
+      "🔥 It is remembered. I’ll bring it forth when the time is right.",
+      "🌙 Your words now rest in the quiet corners of the Vault."
+    ]);
+  }
+
+  // ------------------------------------
+  // 3. NORMAL CONFIRMATION FLOW
+  // ------------------------------------
+  if (parsed.needsConfirmation) {
+    saveVaultContext({
+      ...ctx,
+      pendingQuestion: "reminder_confirmation",
+      pendingData: parsed
+    });
+
+    return {
+      text: `📝 Should I remind you **${parsed.text}**?`,
+      optionsHtml: `
+        <button class="bubbleBtn" onclick="vaultYes()">Yes</button>
+        <button class="bubbleBtn" onclick="vaultNo()">No</button>
+      `
+    };
+  }
+
+  // ------------------------------------
+  // 4. SAVE IMMEDIATELY (no confirmation)
+  // ------------------------------------
+  try {
+    await addDoc(
+      collection(db, "Users", userContext.uid, "Reminders"),
+      {
+        message: parsed.text,
+        trigger: parsed.trigger,
+        time: parsed.time ? new Date(parsed.time) : null,
+        location: parsed.location || null,
+        triggered: false,
+        createdAt: new Date()
+      }
+    );
+  } catch (err) {
+    error("addReminder error:", err);
+    return "🔥 The Vault hesitated… I couldn’t store that reminder just now.";
+  }
+
+  // ⭐ MERGE context instead of overwriting
+  saveVaultContext({
+    ...ctx,
+    lastIntent: "reminder",
+    lastReminderText: parsed.text,
+    unresolved: false,
+    pendingQuestion: null,
+    pendingData: null
+  });
+
+  return pick([
+    "✨ I’ll remember that. When the moment arrives, I’ll whisper it back to you.",
+    "🌺 Your reminder is safe within the Vault.",
+    "🌴 I’ve stored that for the perfect moment.",
+    "🔥 It is remembered. I’ll bring it forth when the time is right.",
+    "🌙 Your words now rest in the quiet corners of the Vault."
+  ]);
+}
+
+// ───────────────────────────────────────────────
+// SECURITY HELPERS (unchanged logic)
+// ───────────────────────────────────────────────
+
+async function fetchSecurityState(uid) {
+  if (!uid) return {};
+
+  try {
+    const ref = doc(db, "Users", uid, "TPSecurity", "state");
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) return {};
+
+    return snap.data() || {};
+  } catch (err) {
+    error("fetchSecurityState error:", err);
+    return {};
+  }
+}
+
+async function handleLockApp(userContext) {
+  const uid = userContext.uid;
+  if (!uid) return "⚠️ No user found to lock.";
+
+  try {
+    const ref = doc(db, "Users", uid, "TPSecurity", "state");
+
+    await setDoc(
+      ref,
+      {
+        appLocked: true,
+        requiresPin: true,
+        lastUpdated: new Date()
+      },
+      { merge: true }
+    );
+  } catch (err) {
+    error("handleLockApp error:", err);
+    return "🔥 The Vault hesitated… I couldn’t lock the realm.";
+  }
+
+  door.classList.add("vaultSealEffect");
+  setTimeout(() => door.classList.remove("vaultSealEffect"), 800);
+
+  return "🔒 The Realm is Sealed. No Screen may Open without your Command.";
+}
+
+function showAppLockScreen() {
+  appLockScreen.classList.remove("hidden");
+  pinInput.value = "";
+  pinError.classList.add("hidden");
+  pinInput.focus();
+}
+
+function hideAppLockScreen() {
+  appLockScreen.classList.add("hidden");
+}
+
+function showVaultLockScreen() {
+  vaultLockScreen.classList.remove("hidden");
+  vaultPinInput.value = "";
+  vaultPinError.classList.add("hidden");
+  vaultPinInput.focus();
+}
+
+function showDangerOverlay() {
+  dangerOverlay.classList.remove("hidden");
+}
+
+function hideDangerOverlay() {
+  dangerOverlay.classList.add("hidden");
+}
+
+// ───────────────────────────────────────────────
+// INACTIVITY ENGINE
+// ───────────────────────────────────────────────
+
+function resetChamberActivity() {
+  chamberLastActivity = nowMs();
+}
+
+async function runVaultSpiritIntro(loyalty) {
+  const ctx = loadVaultContext() || {};
+  if (ctx.pendingQuestion) return;
+
+  // ------------------------------------------
+  // 1. FASTEST PAINT: placeholder bubble
+  // ------------------------------------------
+  const placeholderId = addBubble(
+    "Vault Spirit",
+    "✨ …",
+    false,
+    { extraClasses: "vaultIntroBubble vaultSpiritBreathingContainer" }
+  );
+
+  const bubbleStart = nowMs();
+  await new Promise(r => requestAnimationFrame(r));
+
+  try {
+    // ------------------------------------------
+    // 2. LAST VISIT CALCULATION
+    // ------------------------------------------
+    const rawLastVisit =
+      PulseRealm.userLoyaltyContext.lastVaultVisit ??
+      PulseRealm.userRecord.lastVaultVisit ??
+      null;
+
+    const lastVisit = normalizeDateMs(rawLastVisit);
+    const now = nowMs();
+
+    const days = lastVisit
+      ? Math.floor((now - lastVisit) / 86400000)
+      : 0;
+
+    const isFirstTime = !lastVisit;
+
+    // ------------------------------------------
+    // 3. INTRO LINE SELECTION
+    // ------------------------------------------
+    let introLine;
+
+    if (isFirstTime) {
+      introLine = pick([
+        "✨ The Vault Awakens to your Presence for the Very First Time!",
+        "🌺 A New Traveler Approaches — the Vault Spirit Stirs.",
+        "🌴 Your First Step into the Vault… the Air Hums Softly.",
+        "🌙 The Vault Opens Its Eyes — It Has Never Seen You Before.",
+        "🔥 A Fresh Aura Enters — the Vault Recognizes a New Soul."
+      ]);
+    } else if (days === 0) {
+      introLine = pick([
+        "🌺 Welcome Back — the Vault Remembers You from Earlier Today.",
+        "✨ You Return Within the Same Sun Cycle — the Vault Still Hums.",
+        "🌴 The Vault Recognizes Your Energy from Today.",
+        "🌙 Your Presence Lingers — Welcome Again.",
+        "🔥 Back So Soon? The Vault Spirit Smiles."
+      ]);
+    } else if (days === 1) {
+      introLine = pick([
+        "🌴 Welcome Back — the Vault Remembers You from Yesterday.",
+        "✨ Only One Day Has Passed — the Vault Still Feels You.",
+        "🌺 Yesterday’s Footsteps Still Echo in the Vault.",
+        "🌙 The Vault Spirit Recognizes You from the Previous Sun.",
+        "🔥 A Familiar Aura Returns After One Day."
+      ]);
+    } else {
+      introLine = pick([
+        `🌙 It Has Been **${days} Days** Since Your Last Visit. The Vault Stirs.`,
+        `✨ After **${days} Days**, the Vault Spirit Awakens to Greet You.`,
+        `🌴 **${days} Days** Have Passed — the Vault Hums at Your Return.`,
+        `🌺 The Vault Remembers — **${days} Days** Since Your Last Presence.`,
+        `🔥 The Vault Senses Your Return After **${days} Days** Wandering.`
+      ]);
+    }
+
+    // ------------------------------------------
+    // 4. UPDATE PLACEHOLDER BUBBLE
+    // ------------------------------------------
+    setTimeout(() => {
+      updateBubble(placeholderId, introLine);
+    }, 1000);
+
+    // ------------------------------------------
+    // 5. FIRST-TIME TEACHING SEQUENCE
+    // ------------------------------------------
+    if (isFirstTime) {
+      const teachingSequence = [
+        { speaker: "You", isUser: true, text: "What does that mean?" },
+        {
+          speaker: "Vault Spirit",
+          isUser: false,
+          text: "📍 Your Activity across the Island leaves a Trace — your Balance, your Points, your Progress."
+        },
+        { speaker: "You", isUser: true, text: "What can I ask you?" },
+        {
+          speaker: "Vault Spirit",
+          isUser: false,
+          text: `
+            💬 Ask about your <span style="color:#00c2ff;">Balance</span> or your <span style="color:#00c2ff;">Points</span>.<br>
+            🌱 Ask where you can <span style="color:#00e676;">Earn More</span> around San Pedro.<br>
+            🗺️ Ask about any <span style='color:#ffca28;'>Pulse World</span> Business, Event, or Place — I’m Linked to the Island’s Living Database.<br>
+            🧠 The Console is the <span style='color:#ff8a80;'>Mind of Pulse World</span>… a Guide, a Navigator, a Watcher of Everything Happening Across Town.<br>
+            🔐 When you’re Ready to Affect your <span style='color:#00c2ff;'>Wallet</span>, Open the Door — the Vault Will Respond.
+          `
+        }
+      ];
+
+      // Shimmer chance
+      const shimmerChance =
+        isFirstTime ? 0.20 :
+        days >= 30 ? 1.0 :
+        days >= 7 ? 0.15 :
+        days === 1 ? 0.05 :
+        0.05;
+
+      if (Math.random() < shimmerChance) {
+        setTimeout(() => {
+          addBubble(
+            "Vault Spirit",
+            pick([
+              "✨ A faint shimmer ripples through the Vault… something feels aligned.",
+              "🌙 A soft glow pulses in the Vault… the energy feels different.",
+              "🌺 A gentle sparkle flickers in the air… the Vault Spirit is pleased.",
+              "🔥 A warm pulse echoes through the Vault… magic is stirring.",
+              "🌴 A subtle shimmer dances across the walls… the Vault is awake."
+            ]),
+            false,
+            { extraClasses: "rareShimmerBubble" }
+          );
+        }, isFirstTime ? 3400 : 1500);
+      }
+
+      // Teaching sequence
+      let delay = 600;
+      for (const line of teachingSequence) {
+        setTimeout(() => {
+          addBubble(line.speaker, line.text, line.isUser, {
+            extraClasses: "teachingBubble"
+          });
+        }, delay);
+        delay += 900;
+      }
+    }
+
+    // ------------------------------------------
+    // 6. UNFINISHED TASK PROMPT
+    // ------------------------------------------
+    if (!isFirstTime && ctx.unfinishedTask) {
+      setTimeout(() => {
+        addBubble(
+          "Vault Spirit",
+          `📝 Before We Dive In… Want To Continue With **${ctx.unfinishedTask}**?`,
+          false,
+          {
+            extraClasses: "unfinishedTaskBubble",
+            optionsHtml: `
+              <button class="bubbleBtn" onclick="continueUnfinishedTask()">Yes</button>
+              <button class="bubbleBtn" onclick="dismissUnfinishedTask()">No</button>
+            `
+          }
+        );
+      }, 900);
+    }
+
+  } catch (err) {
+    error("Vault intro error:", err);
+  }
+}
+
+// ───────────────────────────────────────────────
+// PROFILE VISUALS
+// ───────────────────────────────────────────────
+
+function initProfileVisuals() {
+  // If identity isn't ready yet, retry shortly (mobile fix)
+  if (!identity) {
+    warn("⏳ identity not ready — retrying initProfileVisuals");
+    setTimeout(initProfileVisuals, 120);
+    return;
+  }
+
+  // Avatar
+  if (walletProfileAvatar) {
+    walletProfileAvatar.src = identity.photoURL || FALLBACK_PROFILE_URL;
+  }
+
+  // Name
+  if (walletProfileName) {
+    walletProfileName.textContent =
+      identity.displayName || identity.email || "Guest";
+  }
+
+  // Smooth scroll
+  if (messageBubbleArea) {
+    requestAnimationFrame(() => {
+      messageBubbleArea.scrollTo({
+        top: messageBubbleArea.scrollHeight,
+        behavior: "smooth"
+      });
+    });
+  }
+}
+
+async function onWalletPageShow() {
+ 
+  initProfileVisuals();
+}
+
+// ───────────────────────────────────────────────
+// APP START (chat + events) — one‑shot
+// ───────────────────────────────────────────────
+
+async function startApp() {
+
+  // 🔒 HARD GUARD — prevents ANY duplicate initialization
+  if (PulseRealm.__startAppLocked) return;
+  PulseRealm.__startAppLocked = true;
+
+
+  // Ensure DOM is fully loaded (mobile fix)
+  if (document.readyState !== "complete") {
+    window.addEventListener("load", startApp, { once: true });
+    return;
+  }
+
+  // Ensure identity is ready
+  if (!identity) {
+    await new Promise(r => setTimeout(r, 50));
+    return startApp();
+  }
+
+  if (appStarted) return;
+  appStarted = true;
+
+  // Wait for vault UI to mount
+  await new Promise(r => requestAnimationFrame(r));
+
+  initProfileVisuals();
+
+  requestAnimationFrame(() => {
+    checkReminders(identity).catch(warn);
+  });
+
+  log("StartApp Flags:", {
+    vaultStart,
+    vaultOpened,
+    visibilityArmed,
+    appStarted,
+    chamberWatcherStarted,
+    vaultIntroStarted,
+    __vaultInitStarted: PulseRealm.__vaultInitStarted,
+    __vaultIntroShown: PulseRealm.__vaultIntroShown
+  });
+}
+
+function updateVaultButtonAfterOpen() {
+  const btn = document.getElementById("openVaultButton");
+
+  // Replace only the text, not the icon container
+  const icon = btn.querySelector(".walletActionIcon");
+  // Replace only the text portion
+  btn.innerHTML = " Enter Vault";
+
+  // Reinsert icon at the front
+  btn.prepend(icon);
+}
+
+function initializeVaultButton() {
+  const btn = document.getElementById("openVaultButton");
+  const vaultDoorHandle = document.querySelector(".vaultDoorHandle");
+  const coin = document.querySelector(".vaultCoin");
+
+  // Normalize initial state only once
+  if (!btn.dataset.initialized) {
+    btn.dataset.initialized = "true";
+
+    if (!btn.querySelector(".walletActionIcon")) {
+      btn.innerHTML = `<div class="walletActionIcon"></div> Open Vault`;
+    }
+  }
+
+  // OPEN vault (button + handle)
+  const openVault = () => {
+    if (vaultOpened) {
+      // If already open, entering is handled by coin only
+      return;
+    }
+
+    // Reset smoke
+    vaultSmoke.classList.remove("smoke-start", "smoke-puff", "smoke-dissipate");
+    vaultSmoke.style.opacity = "";
+
+    // Reset blobs
+    const blobs = vaultSmoke.querySelectorAll('.blob1, .blob2');
+    blobs.forEach(b => b.style.opacity = "");
+
+    // Start haze
+    vaultSmoke.classList.add("smoke-start");
+
+    // Run vault sequence
+    setTimeout(() => {
+      runVaultSequence();
+    }, 120);
+  };
+
+  // ENTER vault (coin only)
+  const enterVault = () => {
+    if (!vaultOpened) {
+      // If vault isn't open yet, treat coin as open trigger
+      openVault();
+      return;
+    }
+
+    window.location.href = "?impulse=PulseWorldInnerVault";
+  };
+
+  // Attach listeners ONCE
+  if (btn && !btn.__vaultClickAdded) {
+    btn.addEventListener("click", openVault);
+    btn.__vaultClickAdded = true;
+  }
+
+  if (vaultDoorHandle && !vaultDoorHandle.__vaultClickAdded) {
+    vaultDoorHandle.addEventListener("click", openVault);
+    vaultDoorHandle.__vaultClickAdded = true;
+  }
+
+  if (coin && !coin.__vaultClickAdded) {
+    coin.addEventListener("click", enterVault);
+    coin.__vaultClickAdded = true;
+  }
+}
+
+// ───────────────────────────────────────────────
+// VAULT SEQUENCE
+// ───────────────────────────────────────────────
+
+async function initWalletPage() {
+  // Load wallet + loyalty in parallel
+  const [wallet, loyalty] = await Promise.all([
+    loadWallet(),
+    loadLoyalty(identity.bank, token)
+  ]);
+
+  openWallet();
+
+  if (loyalty) {
+    PulseRealm.currentLoyaltyData = loyalty;
+    updateLoyaltyMemory(loyalty);
+  }
+}
+function runVaultSequence() {
+  if (PulseRealm.__vaultSequenceRunning) return;
+  PulseRealm.__vaultSequenceRunning = true;
+
+  vaultStart = nowMs();
+
+  // Start haze immediately
+  vaultSmoke.classList.remove("smoke-puff", "smoke-dissipate");
+  vaultSmoke.classList.add("smoke-start");
+
+  configureSound();
+  loadVaultCoinImage();
+  onWalletPageShow();
+
+  try { playSound("soundVaultUnlock"); } catch {}
+
+  vaultStageInner.classList.add("preOpenShake");
+
+  // TIMELINE ENGINE
+  const steps = [
+    {
+      t: 250,
+      fn: () => {
+        vaultStageInner.classList.remove("preOpenShake");
+        spokes.classList.add("spinHandle");
+        try { playSound("soundHandleSpin"); } catch {}
+      }
+    },
+    {
+      t: 250 + 580,
+      fn: () => {
+        try { playSound("soundVaultClunk"); } catch {}
+      }
+    },
+    {
+      t: 250 + 700,
+      fn: () => {
+        door.classList.add("open");
+
+        vaultSmoke.classList.remove("smoke-start");
+        vaultSmoke.classList.add("smoke-puff");
+
+        try { playSound("soundHingeCreak"); } catch {}
+        try { playSound("soundVaultWhoosh"); } catch {}
+
+        vaultOpened = true;
+        updateVaultButtonAfterOpen();
+
+        sessionContainer.classList.add("minimized");
+        sessionSpacer.classList.add("minimized");
+        messageBubbleArea.classList.add("minimized");
+
+        sessionContainer.classList.remove("vaultSessionContainer-reopen");
+        sessionSpacer.classList.remove("reopen");
+        messageBubbleArea.classList.remove("reopen");
+      }
+    },
+    {
+      t: 250 + 700 + 200,
+      fn: () => {
+        try { playSound("soundMagicPulse"); } catch {}
+      }
+    },
+    {
+      t: 250 + 700 + 300,
+      fn: () => {
+        coin.classList.add("active");
+        try { playSound("soundMagicCoinShimmer"); } catch {}
+      }
+    },
+    {
+      t: 250 + 700 + 600,
+      fn: async () => {
+        // Heavy logic moved OUT of animation chain
+        initWalletPage();
+      }
+    },
+    {
+      t: 250 + 700 + 800,
+      fn: () => {
+        addBubble("Vault Spirit", "🔓 The Vault Awakens!", false);
+      }
+    },
+    {
+      t: 3600,
+      fn: () => {
+        vaultSmoke.classList.remove("smoke-puff");
+        vaultSmoke.classList.add("smoke-dissipate");
+        document.body.classList.add("vault-post-intro");
+      }
+    }
+  ];
+
+  // Execute timeline
+  for (const step of steps) {
+    setTimeout(step.fn, step.t);
+  }
+}
+
+async function safeIntro(loyalty) {
+  if (PulseRealm.__vaultIntroShown) {
+    log("✨ Intro already shown — skipping");
+    return;
+  }
+
+  PulseRealm.__vaultIntroShown = true;
+
+  try {
+    await runVaultSpiritIntro(loyalty);
+  } catch (err) {
+    error("Intro failed, skipping:", err);
+    // Optional: allow retry if intro never actually started
+    // PulseRealm.__vaultIntroShown = false;
+  }
+}
+function onInputKeydown(e) {
+  // ENTER key only
+  if (e.key === "Enter") {
+    e.preventDefault();   // stop newline
+    e.stopPropagation();  // stop bubbling
+
+    // If Shift+Enter, allow newline (optional)
+    if (e.shiftKey) {
+      return;
+    }
+
+    // Trigger send
+    onSendClick(e);
+  }
+}
+
+// ───────────────────────────────────────────────
+// MAIN INIT (Optimized, Magical, Non-Blocking)
+// ───────────────────────────────────────────────
+async function initVaultPage() {
+  if (PulseRealm.__vaultInitStarted) return;
+  PulseRealm.__vaultInitStarted = true;
+
+  // Attach listeners once
+  if (!PulseRealm.__vaultListenersAttached) {
+    PulseRealm.__vaultListenersAttached = true;
+    sendBtn.onclick = onSendClick;
+    inputEl.addEventListener("keydown", onInputKeydown);
+    hideBtn.onclick = onHideClick;
+  }
+
+  sessionContainer.classList.remove("vaultSessionContainer-reopen");
+
+  vaultStart = nowMs();
+
+  // Preload sounds
+  initializeVaultButton();
+
+
+  // SECURITY FIRST — before heavy loads
+  const sec = await fetchSecurityState(identity.bank).catch(() => ({}));
+
+  if (sec.dangerMode || sec.appLocked || sec.requiresPin || sec.vaultLocked) {
+    showAppLockScreen();
+    if (sec.dangerMode) showDangerOverlay();
+    return;
+  }
+
+  // Load heavy data in parallel
+  const [wallet, loyalty, businesses, events] = await Promise.all([
+    loadWallet().catch(() => null),
+    loadLoyalty(identity.bank, token).catch(() => null),
+    loadBusinesses().catch(() => []),
+    loadEvents().catch(() => [])
+  ]);
+
+  PulseRealm.userLoyalty = loyalty;
+
+  // Normalize last visit
+  PulseRealm.userLoyaltyContext = {
+    ...PulseRealm.userLoyaltyContext,
+    lastVaultVisit: normalizeDateMs(identity.lastVaultVisit)
+  };
+
+  // Build user context
+  PulseRealm.userContext = {
+    ...identity,
+    ...(wallet || {}),
+    loyalty,
+    saveConversationMemory(update) {
+      const ctx = loadVaultContext() || {};
+      Object.assign(ctx, update);
+      saveVaultContext(ctx);
+    }
+  };
+
+  // Let layout settle
+  await new Promise(r => setTimeout(r, 300));
+
+  // Run intro in parallel
+  safeIntro(loyalty);
+
+  // Save last visit (Firestore, not backend)
+  queueMicrotask(() => {
+    setDoc(
+      doc(db, "Users", identity.bank),
+      { lastVaultVisit: serverTimestamp() },
+      { merge: true }
+    ).catch(() => {});
+  });
+
+  requestAnimationFrame(() => {
+    startApp();
+    armVisibility();
+  });
+
+  hideTPLoader();
+}
+async function onSendClick(e) {
+  let bubbleDelay = nowMs();
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  const minimized = sessionContainer.classList.contains("minimized");
+  const userLocation = PulseRealm.userLoyaltyContext.location || null;
+
+  // ───────────────────────────────────────────────
+  // Expand or minimize chat
+  // ───────────────────────────────────────────────
+  if (minimized) {
+    closeWallet();
+
+    sessionContainer.classList.remove("minimized");
+    sessionSpacer.classList.remove("minimized");
+    messageBubbleArea.classList.remove("minimized");
+
+    messageBubbleArea.style.maxHeight = "100%";
+    messageBubbleArea.style.height = "auto";
+
+    sessionContainer.classList.add("vaultSessionContainer-reopen");
+    sessionSpacer.classList.add("reopen");
+    messageBubbleArea.classList.add("reopen");
+
+    // Force layout once
+    void sessionContainer.offsetHeight;
+
+    sessionContainer.classList.add("reopenAnim");
+
+    const cleanup = () => {
+      sessionContainer.classList.remove("reopenAnim");
+      sessionSpacer.classList.remove("reopen");
+      sessionContainer.removeEventListener("transitionend", cleanup);
+    };
+
+    sessionContainer.addEventListener("transitionend", cleanup);
+
+  } else if (vaultOpened) {
+    // Minimize chat
+    sessionContainer.classList.add("minimized");
+    sessionSpacer.classList.add("minimized");
+    messageBubbleArea.classList.add("minimized");
+
+    sessionContainer.classList.remove("vaultSessionContainer-reopen");
+    sessionSpacer.classList.remove("reopen");
+    messageBubbleArea.classList.remove("reopen");
+
+    openWallet();
+  }
+
+  // Clear input
+  inputEl.value = "";
+
+  // User bubble
+  addBubble("You", text, true);
+
+  // ───────────────────────────────────────────────
+  // 1. Numeric choice
+  // ───────────────────────────────────────────────
+  if (PulseRealm.__pendingPlaceChoices && /^[1-3]$/.test(text)) {
+    const response = await handlePlaceChoice(text, userLocation);
+
+    addBubble("Vault Spirit", response.text, false, {
+      optionsHtml: response.optionsHtml || ""
+    });
+
+    return;
+  }
+
+  // ───────────────────────────────────────────────
+  // 2. Directions intent
+  // ───────────────────────────────────────────────
+  const maybeDirections = await handleDirectionsIntent(text, userLocation);
+
+  if (maybeDirections) {
+    addBubble("Vault Spirit", maybeDirections.text, false, {
+      optionsHtml: maybeDirections.optionsHtml || ""
+    });
+    return;
+  }
+
+  // ───────────────────────────────────────────────
+  // 3. Backend AI
+  // ───────────────────────────────────────────────
+  let reply;
+  try {
+    reply = await askVaultSpirit(text);
+  } catch (err) {
+    error("askVaultSpirit failed:", err);
+    addBubble("Vault Spirit", "🌺 The winds were noisy… try again.", false);
+    return;
+  }
+
+  // Render reply next frame
+  requestAnimationFrame(() => {
+    addBubble("Vault Spirit", reply.text || "", false, {
+      optionsHtml: reply.optionsHtml || "",
+      extraClasses: reply.extraClasses || ""
+    });
+
+    if (reply.pendingQuestion) {
+      saveVaultContext({
+        pendingQuestion: reply.pendingQuestion,
+        pendingData: reply.pendingData || null
+      });
+    }
+  });
+
+  // Timing log
+  bubbleDelay = nowMs() - bubbleDelay;
+  log("⏱ Bubble appeared after:", bubbleDelay, "ms");
+
+  // Save context (single write)
+  saveVaultContext({
+    lastIntent: "question",
+    lastQuestion: text,
+    unresolved: false
+  });
+}
+function onHideClick() {
+  const minimized = sessionContainer.classList.contains("minimized");
+
+  if (!minimized) {
+    // → MINIMIZE CHAT (batched)
+    sessionContainer.classList.add("minimized");
+    sessionSpacer.classList.add("minimized");
+    messageBubbleArea.classList.add("minimized");
+
+    sessionContainer.classList.remove("vaultSessionContainer-reopen");
+    sessionSpacer.classList.remove("reopen");
+    messageBubbleArea.classList.remove("reopen");
+
+    // Only open wallet if vault was opened
+    if (vaultOpened) openWallet();
+
+    return;
+  }
+
+  // → REOPEN CHAT (batched)
+  sessionContainer.classList.remove("minimized");
+  sessionSpacer.classList.remove("minimized");
+  messageBubbleArea.classList.remove("minimized");
+
+  sessionContainer.classList.add("vaultSessionContainer-reopen");
+  sessionSpacer.classList.add("reopen");
+  messageBubbleArea.classList.add("reopen");
+
+  // Always close wallet when chat reopens
+  closeWallet();
+}
+function tryInitVault(source = "unknown") {
+  const now = nowMs();
+
+  // Guard FIRST — no wasted logs, no wasted work
+  if (PulseRealm.__vaultInitStarted) {
+    log(`⛔ tryInitVault blocked (${source}) — init already started`);
+    return;
+  }
+
+  log(`🔍 tryInitVault from: ${source}`, {
+    now,
+    __vaultInitStarted: PulseRealm.__vaultInitStarted
+  });
+
+  // No debounce needed — initVaultPage owns the flag
+  tryInitVault.lastInitAttempt = now;
+
+  log("🚀 Running initVaultPage (from tryInitVault)");
+  initVaultPage();
+}
+
+// Arm visibility ONLY after vault init finishes
+function armVisibility() {
+visibilityArmed = true;
+}
+
+
+  function MergedPickASpeech(message, imagePath) {
+    if (!badge || !talk) return;
+
+    const img = badge.querySelector(".pulsepal-image");
+    const DEFAULT_IMAGE = "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex";   // ⭐ your default face
+
+    if (img) {
+      img.src = imagePath;
+      PulseRealm.PulsePalPhoto = imagePath;
+    }
+
+    talk.textContent = message;
+    badge.classList.add("talking");
+
+    // Clear any previous timers so speeches don't overlap
+    if (badge._speechTimer) {
+      clearTimeout(badge._speechTimer);
+    }
+
+    // Hide after 12 seconds AND restore default image
+    badge._speechTimer = setTimeout(() => {
+      badge.classList.remove("talking");
+
+      // ⭐ Restore default face
+      if (img) {
+        img.src = DEFAULT_IMAGE;
+      }
+    }, 8000);
+  }
+
+
+PulseRealm.PickASpeech8 = MergedPickASpeech;
+
+if (!PulseRealm.__vaultLoadListenerAttached) {
+  PulseRealm.__vaultLoadListenerAttached = true;
+
+  window.addEventListener("load", () => {
+      
+
+    PulseRealm.PickASpeech8(
+      "Welcome to the Vault! Protected, Secure, and Watched!  You have Control, Use it!",
+      "./_EXPRESSIONS/_PEX/BUILD/AldwynVault1.webp.pex"
+    );
+
+    mark("DOM LOADING");
+
+    // Guard FIRST — no wasted work
+    if (appStarted || PulseRealm.__vaultInitStarted) {
+      log("⛔ PulseRealm.load: vault already started — skipping reset/init");
+      return;
+    }
+
+    // Reset smoke only if vault never opened
+    if (!vaultOpened && !vaultIntroStarted) {
+      vaultSmoke.classList.remove("smoke-start", "smoke-puff", "smoke-dissipate");
+    }
+
+    // Batch DOM resets
+    document.body.classList.remove("vault-post-intro");
+    sessionContainer.classList.remove("vaultSessionContainer-reopen");
+
+    // Reset vault flags in one place
+    Object.assign(window, {
+      __vaultIntroShown: false,
+      __vaultInitStarted: false
+    });
+
+    vaultOpened = false;
+    appStarted = false;
+    chamberWatcherStarted = false;
+    vaultIntroStarted = false;
+    vaultStart = null;
+
+    log("Load Flags (after reset):", {
+      vaultStart,
+      vaultOpened,
+      visibilityArmed,
+      appStarted,
+      chamberWatcherStarted,
+      vaultIntroStarted,
+      __vaultInitStarted: PulseRealm.__vaultInitStarted,
+      __vaultIntroShown: PulseRealm.__vaultIntroShown
+    });
+
+    // Use rAF instead of setTimeout(0)
+    requestAnimationFrame(() => {
+      mark("TRYING INIT VAULT");
+      tryInitVault("PulseRealm.load");
+    });
+  });
+
+  mark("DOM ENDING");
+}
+function rebuildVaultUI() {
+  log("🔧 rebuildVaultUI() — visual reset only");
+
+  // Batch class resets
+  sessionContainer.classList.remove("minimized", "vaultSessionContainer-reopen", "reopenAnim");
+  sessionSpacer.classList.remove("minimized", "reopen");
+  messageBubbleArea.classList.remove("minimized", "reopen");
+
+  document.body.classList.remove("vault-post-intro");
+
+  // Batch style resets
+  messageBubbleArea.style.maxHeight = "";
+  messageBubbleArea.style.height = "";
+
+  // Force layout once
+  void sessionContainer.offsetHeight;
+
+  // Scroll only if not already at bottom
+  const maxScroll = messageBubbleArea.scrollHeight - messageBubbleArea.clientHeight;
+  if (messageBubbleArea.scrollTop < maxScroll) {
+    messageBubbleArea.scrollTop = maxScroll;
+  }
+}
+
+}
+}
+</script>
+</body>
+</html>

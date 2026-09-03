@@ -1,0 +1,26 @@
+{
+  "signature": {
+    "version": "v34",
+    "runtimeMode": "IMMORTAL++",
+    "executableMode": "fileformat",
+    "trustMode": "verified",
+    "shortcutMode": "none"
+  },
+  "fileFormatCompileSurface": {
+    "formatVersion": "pex-v34",
+    "supportedMedia": [
+      "image"
+    ],
+    "compiler": "PulseWorldCompiler-v34",
+    "deterministic": true,
+    "binarySurface": {
+      "chunks": 1,
+      "lanes": [
+        "band"
+      ],
+      "mode": "pex"
+    }
+  },
+  "mediaKind": "image",
+  "fileFormatMode": "pex"
+}

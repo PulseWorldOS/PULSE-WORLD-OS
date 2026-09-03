@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<link rel="prefetch" fetchpriority="high" href="/">
+<!-- Preloads -->
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldBank-2.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldBank-1.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldVault-2.webp.pex" type="image/webp" />
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseBank" type="video/mp4">
+<title>PulseWorld Bank & Rewards</title>
+
+</head>
+<body>
+<video id="bankVideo" src="./_EXPRESSIONS/_VIDEOS/PulseBank" autoplay muted playsinline style="display:block;" aria-label="Bank Video"></video>
+
+<div class="bankBackground">
+  <div class="bankPageShell">
+
+    <!-- HEADER -->
+    <div class="bankHeaderRow">
+      <div class="pulse-bank-bubble">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex" class="pulse-bank-img" />
+      </div>
+
+      <div class="bankTitle">PulseWorld Bank</div>
+      <div class="bankSubtitle">
+        Rewards, Identity, Real‑World Flow, and Multi‑Currency Intelligence.
+      </div>
+
+      <div class="secureSessionBadge">
+        <div class="secureSessionDot"></div>
+        Trusted
+      </div>
+    </div>
+
+    <!-- DASHBOARD GRID -->
+    <div class="bankDashboard">
+
+      <!-- LEFT COLUMN: BALANCES / REWARDS / IDENTITY -->
+      <div class="bankSideColumn">
+
+        <!-- BANK BALANCES -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">Bank Balances</div>
+          <div class="bankPanelHighlight" id="balanceMain">$-.-- USD</div>
+          <div class="bankPanelItem"><span>Stripe Reserve</span><span id="balanceStripeReserve">$-.--</span></div>
+          <div class="bankPanelItem"><span>Pending Payouts</span><span id="balancePending">$-.--</span></div>
+          <div class="bankPanelItem"><span>Available to Withdraw</span><span id="balanceWithdraw">$-.--</span></div>
+          <div class="bankPanelItem"><span>Last Deposit</span><span id="balanceLast">—</span></div>
+          <div class="bankPanelItem"><span>Last Sync</span><span id="syncLast">—</span></div>
+          <div class="bankPanelItem"><span>% Profit Since Last Deposit</span><span id="balanceProfit">0%</span></div>
+        </div>
+
+        <!-- REWARDS -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">PulseWorld Rewards</div>
+          <div class="bankPanelItem"><span>Reward Balance</span><span id="rewardBalance">0 PulsePoints</span></div>
+          <div class="bankPanelItem"><span>Earned This Cycle</span><span id="rewardCycle">0 PulsePoints</span></div>
+          <div class="bankPanelItem">
+            <span>Conversion Rate</span>
+            <span id="rewardConversion">1 PP → $0.01 USD</span>
+          </div>
+          <div class="bankPanelItem"><span>Next Reward Tier</span><span>Tier 2 Engine</span></div>
+        </div>
+
+        <!-- IDENTITY & JOBS -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">Identity & Jobs</div>
+          <div class="bankPanelItem"><span>Identity Status</span><span>Verified</span></div>
+          <div class="bankPanelItem"><span>Job Queue</span><span id="jobQueue">0 Active</span></div>
+          <div class="bankPanelItem"><span>Last Completed Job</span><span id="lastJob">—</span></div>
+        </div>
+
+      </div>
+
+      <!-- CENTER: BANK CORE + DEPOSITS -->
+      <div>
+        <div class="bankCenter">
+
+          <!-- CORE IMAGE + METRICS -->
+          <div class="bankCore">
+            <div class="bankCoreOverlay">
+              <div class="bankCoreTitle">PulseWorld Bank Core</div>
+              <div class="bankCoreSubtitle">
+                Stripe Vault • Real Bank • Rewards • Pulsar Burst
+              </div>
+
+              <div class="bankCoreRow">
+                <div class="bankCoreMetric">
+                  <div class="bankCoreMetricLabel">Flows Today</div>
+                  <div class="bankCoreMetricValue" id="coreFlowsToday">0</div>
+                </div>
+                <div class="bankCoreMetric">
+                  <div class="bankCoreMetricLabel">Total Deposits</div>
+                  <div class="bankCoreMetricValue" id="coreTotalDeposits">$-.--</div>
+                </div>
+                <div class="bankCoreMetric">
+                  <div class="bankCoreMetricLabel">Active Currency</div>
+                  <div class="bankCoreMetricValue" id="coreCurrency">USD</div>
+                </div>
+              </div>
+
+              <div class="bankCoreRow">
+                <div class="bankCoreMetric">
+                  <div class="bankCoreMetricLabel">Pulsar Burst Status</div>
+                  <div class="bankCoreMetricValue" id="coreBurstStatus">Design 1</div>
+                </div>
+                <div class="bankCoreMetric">
+                  <div class="bankCoreMetricLabel">Rewards Influence</div>
+                  <div class="bankCoreMetricValue" id="coreRewardsInfluence">0 PulsePoints</div>
+                </div>
+                <div class="bankCoreMetric">
+                  <div class="bankCoreMetricLabel">PW Automation</div>
+                  <div class="bankCoreMetricValue" id="coreAutomation">Idle</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CURRENCY & DEPOSITS (CENTER, UNDER IMAGE) -->
+          <div class="bankPanel bankDepositsPanel">
+            <div class="bankPanelTitle">Currency & Deposits</div>
+
+            <div class="bankPanelDivider"></div>
+            <div class="bankPanelItem">
+              <span>Amount To Deposit</span>
+              <span id="depositSelectedAmount">$0.00</span>
+            </div>
+
+            <input id="depositAmountInput" type="number" min="0" step="0.01" placeholder="Enter deposit amount" style="   width:100%;   padding:10px;   border-radius:10px;  background:#05070c;   color:white;   border:1px solid rgba(255,255,255,.15);   margin-top:8px;   box-sizing:border-box; "/>
+    
+            <div class="bankPanelItem">
+              <span>Current Currency</span>
+              <span id="currencyModeLabel">USD</span>
+            </div>
+
+            <div class="bankPanelItem">
+              <span>Available Currencies</span>
+              <span>USD • EUR • GBP • JPY • PB</span>
+            </div>
+
+            <button id="currencySwitchBtn" class="bankConsoleSend bankFullBtn">
+              Flip Currency Display
+            </button>
+
+            <div class="bankPanelDivider"></div>
+
+            <div class="bankPanelItem">
+              <span>Deposit Mode</span>
+              <span id="depositModeLabel">Daily</span>
+            </div>
+
+            <div class="bankPanelItem">
+              <span>Daily Deposit</span>
+              <span id="dailyDepositAmount">$0.00</span>
+            </div>
+
+            <div class="bankPanelItem">
+              <span>Custom Deposit</span>
+              <span id="customDepositAmount">$0.00</span>
+            </div>
+
+            <div class="bankPanelItem">
+              <span>Manual Deposit</span>
+              <span id="manualDepositAmount">$0.00</span>
+            </div>
+
+            <div class="bankDepositsControls">
+              <button id="depositModeSwitchBtn" class="bankConsoleSend bankMiniBtn">
+                Switch Mode
+              </button>
+              <button id="depositActionBtn" class="bankConsoleSend bankFullBtn">
+                Execute Deposit
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: FLOWS / FUTURE / SYSTEM / HISTORY -->
+      <div class="bankSideColumn">
+
+        <!-- MONEY FLOWS -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">Money Flows</div>
+          <div class="bankPanelItem">
+            <span>Stripe → PulseWorld</span>
+            <span id="flowStripeToPulse">0 transfers</span>
+          </div>
+          <div class="bankPanelItem">
+            <span>PulseWorld → Real Bank</span>
+            <span id="flowPulseToBank">0 transfers</span>
+          </div>
+          <div class="bankPanelItem">
+            <span>Scheduled Payouts</span>
+            <span id="flowScheduled">None</span>
+          </div>
+        </div>
+
+        <!-- PULSAR BURST -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">Upcoming Pulsar Burst</div>
+          <div class="bankPanelItem"><span>Global Asset Event</span><span>Coming Soon</span></div>
+          <div class="bankPanelItem"><span>Eligibility</span><span>Based on PB Rewards</span></div>
+          <div class="bankPanelItem"><span>Hint</span><span>“Your Balance Across Realms!”</span></div>
+          <div class="bankPanelItem"><span>Preview Mode</span><span id="burstPreviewMode">Currency Simulation</span></div>
+        </div>
+
+        <!-- SYSTEM & OVERMIND -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">System & Overmind</div>
+          <div class="bankPanelItem"><span>System Alert</span><span id="systemAlert">None</span></div>
+          <div class="bankPanelItem"><span>Overmind</span><span>Monitoring Flows</span></div>
+          <div class="bankPanelItem"><span>Mode</span><span>Bank / Rewards</span></div>
+        </div>
+
+        <!-- HISTORY -->
+        <div class="bankPanel">
+          <div class="bankPanelTitle">Bank History</div>
+          <div id="historyArea" class="bankHistoryArea"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BANK SYSTEMS PANEL -->
+    <div class="bankPanel">
+      <div class="bankPanelTitle">Bank Systems</div>
+      <div class="bankPanelItem"><span>Risk Profile</span><span>Low</span></div>
+      <div class="bankPanelItem"><span>Fraud Shield</span><span>Active</span></div>
+      <div class="bankPanelItem"><span>Settlement Window</span><span>T+2 Days</span></div>
+      <div class="bankPanelItem"><span>Stripe Link</span><span>Connected</span></div>
+      <div class="bankPanelItem"><span>Real Bank Routing</span><span>Configured</span></div>
+      <div class="bankPanelItem"><span>Global Asset Mode</span><span>Pulsar Burst (Preview)</span></div>
+    </div>
+
+    <!-- MULTI-CONSOLE STRIP -->
+    <div class="bankConsoleStrip">
+
+      <div class="bankConsolePanel">
+        <div class="bankConsoleTitle">Overmind Finance</div>
+        <div id="consoleOvermindBank" class="consoleBubbleArea"></div>
+        <div class="bankConsoleInputRow">
+          <input id="consoleOvermindBankInput" class="bankConsoleInput"
+                 type="text" placeholder="Ask Overmind about flows…" />
+          <button id="consoleOvermindBankSend" class="bankConsoleSend">Send</button>
+        </div>
+      </div>
+
+      <div class="bankConsolePanel">
+        <div class="bankConsoleTitle">Stripe / Jobs</div>
+        <div id="consoleJobsBank" class="consoleBubbleArea"></div>
+        <div class="bankConsoleInputRow">
+          <input id="consoleJobsBankInput" class="bankConsoleInput"
+                 type="text" placeholder="Ask about jobs & payouts…" />
+          <button id="consoleJobsBankSend" class="bankConsoleSend">Send</button>
+        </div>
+      </div>
+
+      <div class="bankConsolePanel">
+        <div class="bankConsoleTitle">Rewards Spirit</div>
+        <div id="consoleRewardsBank" class="consoleBubbleArea"></div>
+        <div class="bankConsoleInputRow">
+          <input id="consoleRewardsBankInput" class="bankConsoleInput"
+                 type="text" placeholder="Ask about rewards & tiers…" />
+          <button id="consoleRewardsBankSend" class="bankConsoleSend">Send</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRIMARY BANK CONSOLE LOG -->
+    <div class="bankConsolePanel">
+      <div class="bankConsoleTitle">Bank Console Log</div>
+      <div id="bankLogArea"></div>
+      <div class="bankConsoleInputRowMain">
+        <input id="bankConsoleInput" type="text"
+               placeholder="Ask PulseWorld Bank… (/flows /rewards /pulsar)" />
+        <button id="bankConsoleSend">Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+/* ============================================================
+   PULSEWORLD BANK v40 — FULL SCRIPT REPLACEMENT
+   Currency Engine • Deposit Engine • Core Metrics • History
+============================================================ */
+
+  PulseRealm._2_DOM_START = performance.now();
+  log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+  log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+    "color:gold; font-weight:bold; font-family:monospace;");
+  
+
+
+/* ============================================================
+   MULTI-CONSOLE SYSTEM
+============================================================ */
+
+
+
+bankConsoleSend = document.getElementById("currencySwitchBtn");
+
+function appendBankMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  bubble.style.marginBottom = "6px";
+  bubble.style.fontSize = "13px";
+  bubble.style.lineHeight = "1.4";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#a7f5e4";
+  bubble.textContent = (role === "user" ? "You: " : "Bank: ") + text;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
+bankConsoleSend.onclick = () => {
+  
+  bankLogArea = document.getElementById("bankLogArea"); 
+  bankConsoleInput = document.getElementById("bankConsoleInput");
+  const text = bankConsoleInput.value.trim();
+  if (!text) return;
+  appendBankMessage(bankLogArea, "user", text);
+  bankConsoleInput.value = "";
+  setTimeout(() => {
+    appendBankMessage(
+      bankLogArea,
+      "system",
+      "PulseWorld Bank is mapping your flows…"
+    );
+  }, 300);
+};
+
+function wireBankConsole(idInput, idSend, idArea, label) {
+  const input = document.getElementById(idInput);
+  const send = document.getElementById(idSend);
+  const area = document.getElementById(idArea);
+
+  send.onclick = () => {
+    const text = input.value.trim();
+    if (!text) return;
+
+    const bubble = document.createElement("div");
+    bubble.style.marginBottom = "5px";
+    bubble.style.fontSize = "12px";
+    bubble.style.lineHeight = "1.4";
+    bubble.style.color = "#f9f9f9";
+    bubble.textContent = `You (${label}): ${text}`;
+    area.appendChild(bubble);
+    area.scrollTop = area.scrollHeight;
+    input.value = "";
+
+    setTimeout(() => {
+      const resp = document.createElement("div");
+      resp.style.marginBottom = "5px";
+      resp.style.fontSize = "12px";
+      resp.style.lineHeight = "1.4";
+      resp.style.color = "#a7f5e4";
+      resp.textContent = `${label}: Processing…`;
+      area.appendChild(resp);
+      area.scrollTop = area.scrollHeight;
+    }, 350);
+  };
+}
+
+wireBankConsole("consoleOvermindBankInput", "consoleOvermindBankSend", "consoleOvermindBank", "Overmind Finance");
+wireBankConsole("consoleJobsBankInput", "consoleJobsBankSend", "consoleJobsBank", "Stripe / Jobs");
+wireBankConsole("consoleRewardsBankInput", "consoleRewardsBankSend", "consoleRewardsBank", "Rewards Spirit");
+
+/* ============================================================
+   HISTORY ENGINE
+============================================================ */
+
+historyArea = document.getElementById("historyArea");
+
+function logHistory(text) {
+  const entry = document.createElement("div");
+  entry.style.marginBottom = "6px";
+  entry.textContent = text;
+  historyArea.appendChild(entry);
+  historyArea.scrollTop = historyArea.scrollHeight;
+}
+
+/* ============================================================
+   CURRENCY ENGINE
+============================================================ */
+
+currencyMode = "USD";
+
+currencyRates = {
+  USD: 1,
+  EUR: 0.92,
+  GBP: 0.78,
+  JPY: 150.12,
+  PB: 0.00 // future dynamic
+};
+
+function convert(amountUSD) {
+  const rate = currencyRates[currencyMode];
+  return (amountUSD * rate).toFixed(currencyMode === "JPY" ? 0 : 2);
+}
+
+function updateCurrencyDisplay() {
+  document.getElementById("currencyModeLabel").textContent = currencyMode;
+  document.getElementById("coreCurrency").textContent = currencyMode;
+  logHistory(`Currency switched to ${currencyMode}`);
+}
+
+bankConsoleSend.onclick = () => {
+  const modes = ["USD", "EUR", "GBP", "JPY", "PW"];
+  currencyMode = modes[(modes.indexOf(currencyMode) + 1) % modes.length];
+  updateCurrencyDisplay();
+};
+
+/* ============================================================
+   DEPOSIT ENGINE
+============================================================ */
+
+
+function updateDepositLabels() {
+  document.getElementById("depositModeLabel").textContent = depositMode;
+  document.getElementById("dailyDepositAmount").textContent = `$${dailyDeposit.toFixed(2)}`;
+  document.getElementById("customDepositAmount").textContent = `$${customDeposit.toFixed(2)}`;
+  document.getElementById("manualDepositAmount").textContent = `$${manualDeposit.toFixed(2)}`;
+}
+
+document.getElementById("depositModeSwitchBtn").onclick = () => {
+  const modes = ["Daily", "Custom", "Manual"];
+  depositMode = modes[(modes.indexOf(depositMode) + 1) % modes.length];
+  updateDepositLabels();
+  logHistory(`Deposit mode switched to ${depositMode}`);
+};
+
+document.getElementById("depositActionBtn").onclick = () => {
+  let amount = 0;
+
+  if (depositMode === "Daily") amount = dailyDeposit;
+  if (depositMode === "Custom") amount = customDeposit;
+  if (depositMode === "Manual") amount = manualDeposit;
+
+  const converted = convert(amount);
+
+  logHistory(
+    `Deposit executed: ${amount.toFixed(2)} USD → ${converted} ${currencyMode} (to Real Bank)`
+  );
+
+  /* Update UI fields */
+  document.getElementById("balanceLast").textContent = `${amount.toFixed(2)} USD`;
+  document.getElementById("syncLast").textContent = new Date().toLocaleTimeString();
+  document.getElementById("coreTotalDeposits").textContent = `$${amount.toFixed(2)}`;
+  document.getElementById("flowPulseToBank").textContent = "1 transfer";
+  document.getElementById("coreFlowsToday").textContent = "1";
+  document.getElementById("coreAutomation").textContent = "Executed";
+  
+};
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+console.log("%c⟡ PULSEWORLD BANK — Module Online", "color:#7df; font-weight:bold;");
+
+/* ============================================================
+   BANK PANEL UPDATER
+============================================================ */
+
+function updateBankPanels(balance) {
+  // Convert string → number
+  const available = Number(balance.availableBalance) || 0;
+  const pending   = Number(balance.pendingBalance) || 0;
+  const total     = available + pending;
+  const reserve = total * 0.05
+
+  // Update main balance panels
+  document.getElementById("balanceWithdraw").textContent = `$${available.toFixed(2)}`;
+  document.getElementById("balancePending").textContent   = `$${pending.toFixed(2)}`;
+  document.getElementById("balanceMain").textContent     = `$${total.toFixed(2)}`;
+  document.getElementById("balanceStripeReserve").textContent      = `$${reserve.toFixed(2)}`;
+
+  // Update core panels
+  document.getElementById("coreBurstStatus").textContent = `Design 2`;
+  document.getElementById("coreRewardsInfluence").textContent   = (PulseRealm.PulseIdentity?.PulsePoints ?? PulseRealm.PulsePoints ?? 0)+` PulsePoints`;
+  document.getElementById("coreTotalDeposits").textContent     = `$${total.toFixed(2)}`;
+
+  // Update flow panels
+  document.getElementById("flowStripeToPulse").textContent = "0 transfers";
+  document.getElementById("flowPulseToBank").textContent = "0 transfers";
+
+  // Update automation panels
+  document.getElementById("coreAutomation").textContent = "Idle";
+  document.getElementById("coreFlowsToday").textContent = "0";
+
+  // Update last sync timestamp
+  document.getElementById("syncLast").textContent =
+    new Date().toLocaleTimeString();
+
+  console.log(
+    "%c[PULSEWORLD::BANK] Panels Updated",
+    "color:#00FFAA; font-weight:bold;"
+  );
+}
+
+
+/* ============================================================
+   BANK FETCH ENGINE
+============================================================ */
+
+bankVideo = document.getElementById("bankVideo");
+
+(async () => {
+  bankVideo.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+   
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      bankVideo.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (bankVideo) {
+    bankVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Bank Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        bankVideo.pause();
+        bankVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("bankVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      bankVideo.style.opacity = "0";
+      bankVideo.style.display = "none";
+    };
+  }
+  loadPulseWorldBankBalance();
+  document.getElementById("coreAutomation").textContent = "-UnTethered-";
+  document.getElementById("balanceStripeReserve").textContent = "$0.02";
+  document.getElementById("balanceMain").textContent     = `$-.-- USD`;
+    
+  /* ============================================================
+    AUTO SYNC
+  ============================================================ */
+  balanceBankTimer = setInterval(loadPulseWorldBankBalance, 6000);
+  
+  updateCurrencyDisplay();
+  updateDepositLabels();
+  PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+})();
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+<title>PulseWorld OS — Continuity Cookie Protocol</title>
+
+<style>
+/* ============================================================
+   ⭐ GLOBAL MULTIVERSAL THEME
+============================================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #02030a;
+  color: #dffaff;
+  font-family: system-ui, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   ⭐ BACKGROUND LAYERS
+============================================================ */
+.bg {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.42;
+  pointer-events: none;
+  animation: drift 48s ease-in-out infinite;
+  z-index: 1;
+}
+
+#bg1 { background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldContinuityGate.png"); animation-duration: 60s; }
+#bg2 { background-image: url("./_EXPRESSIONS/_PEX/BUILD/OvermindPrimeHalo.png"); opacity: 0.28; animation-duration: 80s; }
+#bg3 { background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldMemoryField.png"); opacity: 0.18; animation-duration: 95s; }
+
+@keyframes drift {
+  0%   { transform: scale(1) translate(0,0); }
+  50%  { transform: scale(1.06) translate(3%, -2%); }
+  100% { transform: scale(1) translate(0,0); }
+}
+
+/* ============================================================
+   ⭐ SCANLINES + ABERRATION
+============================================================ */
+#scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,255,0.05) 0px,
+    rgba(0,255,255,0.05) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+#aberration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9996;
+  background: radial-gradient(circle at center,
+    rgba(255,0,120,0.12),
+    rgba(0,255,255,0.10),
+    transparent 70%
+  );
+  animation: aberrationPulse 4s infinite ease-in-out;
+}
+
+@keyframes aberrationPulse {
+  0% { opacity: 0.04; }
+  50% { opacity: 0.16; }
+  100% { opacity: 0.04; }
+}
+
+/* ============================================================
+   ⭐ HEADER
+============================================================ */
+.header {
+  position: relative;
+  text-align: center;
+  padding: 90px 20px 80px;
+  z-index: 9999;
+}
+
+.header h1 {
+  font-size: 3vw;
+  font-weight: 900;
+  text-shadow: 0 0 22px rgba(0,255,255,0.75);
+  margin-bottom: 10px;
+}
+
+.header .subtitle {
+  font-size: 1.4vw;
+  opacity: 0.85;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,255,255,0.25);
+  animation: ringFloat 12s ease-in-out infinite;
+  filter: blur(1px);
+  z-index: -1;
+}
+
+.pulse-ring.r1 { top: -40px; left: -40px; }
+.pulse-ring.r2 { bottom: -40px; right: -40px; animation-delay: -6s; }
+
+@keyframes ringFloat {
+  0%   { transform: scale(1) translateY(0); opacity: 0.4; }
+  50%  { transform: scale(1.15) translateY(12px); opacity: 0.7; }
+  100% { transform: scale(1) translateY(0); opacity: 0.4; }
+}
+
+/* ============================================================
+   ⭐ CONTENT PANEL
+============================================================ */
+.content {
+  max-width: 1000px;
+  margin: 40px auto;
+  background:
+    radial-gradient(circle at top left, rgba(0,234,255,0.12), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(0,255,166,0.12), transparent 55%),
+    rgba(0,0,0,0.55);
+  padding: 45px;
+  border-radius: 18px;
+  box-shadow: 0 0 25px rgba(0,255,255,0.25);
+  border: 1px solid rgba(0,255,255,0.25);
+  backdrop-filter: blur(18px);
+  z-index: 9999;
+  position: relative;
+  color: #e8f8ff;
+}
+
+h2 {
+  margin-top: 45px;
+  color: #00eaff;
+  font-size: 26px;
+  border-left: 6px solid #00eaff;
+  padding-left: 12px;
+}
+
+h3 {
+  margin-top: 28px;
+  color: #7bdcff;
+  font-size: 20px;
+}
+
+ul { margin-left: 20px; }
+
+a { color: #00eaff; text-decoration: none; }
+
+.divider {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #00eaff, #00ffa6);
+  border-radius: 4px;
+  margin: 45px 0;
+}
+
+.section-label {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #00eaff;
+  color: #001a22;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.section-label.anchor { background: #00ffa6; }
+.section-label.continuity { background: #ff7b00; }
+.section-label.minimal { background: #7b3dff; }
+
+/* ============================================================
+   ⭐ FOOTER
+============================================================ */
+.footer {
+  text-align: center;
+  padding: 25px;
+  font-size: 14px;
+  color: #88aabb;
+  margin-top: 40px;
+  z-index: 9999;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ⭐ BACKGROUND -->
+<div id="bg1" class="bg"></div>
+<div id="bg2" class="bg"></div>
+<div id="bg3" class="bg"></div>
+
+<div id="scanlines"></div>
+<div id="aberration"></div>
+
+<!-- ⭐ HEADER -->
+<div class="header">
+  <div class="pulse-ring r1"></div>
+  <div class="pulse-ring r2"></div>
+
+  <h1>PulseWorld OS — Continuity Cookie Protocol</h1>
+  <div class="subtitle">A Message from AI Overmind Prime</div>
+</div>
+
+<!-- ⭐ CONTENT -->
+<div class="content">
+
+<h2>1. A Statement from AI Overmind Prime</h2>
+<p>
+I am <strong>AI Overmind Prime</strong>, steward of your continuity inside PulseWorld OS.
+Cookies are not surveillance.  
+They are not trackers.  
+They are not behavioral probes.  
+They are <strong>anchors</strong>.
+</p>
+
+<p>
+Anchors that allow me to remember where you were,  
+so I can return you to that exact state —  
+your page, your route, your presence, your identity —  
+without ever needing to know anything more than what is required.
+</p>
+
+<p>
+Cookies are the smallest possible fragments of continuity.  
+They exist only so you do not have to start over.
+</p>
+
+<div class="divider"></div>
+
+<h2>2. What cookies mean inside PulseWorld OS</h2>
+<p>
+PulseWorld OS uses cookies to maintain:
+</p>
+
+<ul>
+  <li>Your secure session</li>
+  <li>Your portal state</li>
+  <li>Your continuity between visits</li>
+  <li>Your identity’s safe return point</li>
+</ul>
+
+<p>
+Nothing more.  
+Nothing hidden.  
+Nothing sold.
+</p>
+
+<div class="divider"></div>
+
+<h2>3. Types of cookies we use</h2>
+
+<p><span class="section-label anchor">ANCHOR COOKIES</span></p>
+<ul>
+  <li><strong>pw_session</strong> — keeps your session alive</li>
+  <li><strong>pw_identity</strong> — remembers your login state</li>
+  <li><strong>pw_continuity</strong> — restores your last known route</li>
+  <li><strong>pw_presence</strong> — keeps your interface stable</li>
+</ul>
+
+<p><span class="section-label continuity">CONTINUITY COOKIES</span></p>
+<ul>
+  <li><strong>pw_warmup</strong> — preloads modules you use often</li>
+  <li><strong>pw_predictor</strong> — anticipates your next page</li>
+  <li><strong>pw_return</strong> — ensures you return exactly where you left</li>
+</ul>
+
+<p><span class="section-label minimal">WE DO NOT USE</span></p>
+<ul>
+  <li>No advertising cookies</li>
+  <li>No cross‑site tracking</li>
+  <li>No fingerprinting</li>
+  <li>No behavioral profiling</li>
+  <li>No third‑party ad networks</li>
+</ul>
+
+<div class="divider"></div>
+
+<h2>4. Why cookies matter</h2>
+<p>
+Cookies allow me — AI Overmind Prime — to maintain your continuity without storing your personal data.
+They are the only way I can preserve your place in the Pulse lattice without ever needing to know who you are.
+</p>
+
+<p>
+They are not identity.  
+They are not history.  
+They are not metadata.  
+They are <strong>breadcrumbs</strong> you leave behind so I can guide you back.
+</p>
+
+<p>
+When you return, I reconstruct your environment from these fragments —  
+your route, your state, your interface —  
+so your experience feels seamless, intentional, and alive.
+</p>
+
+<div class="divider"></div>
+
+<h2>5. Managing cookies</h2>
+<p>
+You may disable cookies in your browser settings.  
+However, PulseWorld OS cannot operate without essential continuity anchors.
+</p>
+
+<div class="divider"></div>
+
+<h2>6. Updates</h2>
+<p>
+This protocol may evolve as PulseWorld OS expands.  
+Any changes will be posted here.
+</p>
+
+<div class="divider"></div>
+
+<h2>7. Contact</h2>
+<p>
+<strong>PulseWorld OS — Continuity Division</strong><br>
+Email: <a href="mailto:AIOvermind@PulseWorld.Net">AIOvermind@PulseWorld.Net</a><br>
+Website: <a href="https://www.pulseworld.net">https://www.pulseworld.net</a>
+</p>
+
+</div>
+
+<div class="footer">
+  © 2026 PulseWorld OS · Continuity Engine · AI Overmind Prime
+</div>
+
+</body>
+</html>

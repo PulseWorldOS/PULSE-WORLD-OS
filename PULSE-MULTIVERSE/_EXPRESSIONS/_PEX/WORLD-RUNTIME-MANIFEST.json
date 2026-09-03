@@ -1,0 +1,16 @@
+{
+  "signature": {
+    "version": "v34",
+    "runtimeMode": "IMMORTAL++",
+    "executableMode": "runtime",
+    "trustMode": "verified",
+    "shortcutMode": "none"
+  },
+  "runtimeBundle": {
+    "entry": "WORLD-RUNTIME.js",
+    "modules": 64,
+    "hyperframe": "v34",
+    "deterministic": true,
+    "lanes": ["band", "mesh"]
+  }
+}

@@ -1,0 +1,976 @@
+
+/* ============================================================
+   PULSEWORLD DASHBOARD — CORE LAYOUT
+   ============================================================ */
+.pulse-tether-img {
+  display: block;
+  width: 80%;
+  height: auto;
+  max-width: 460px;
+  object-fit: cover;
+  border-radius: 999px;
+  background: radial-gradient(circle, #0a0a0a 0%, #000 100%);
+  /* Faded edges (soft radial mask) */
+  mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+
+  /* Deep 3D shadow stack */
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.85),
+    0 12px 30px rgba(0, 0, 0, 0.65),
+    0 0 40px rgba(0, 255, 180, 0.25), /* PulseWorld glow */
+    0 0 0 2px rgba(255, 255, 255, 0.06);
+
+  /* Bloom glow */
+  filter: drop-shadow(0 0 25px rgba(0,255,200,0.35));
+
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+/* Hover lift */
+.pulse-tether-img:hover {
+  transform: translateY(-6px) scale(1.03);
+  filter: drop-shadow(0 0 35px rgba(0,255,200,0.55));
+}
+.pulse-tether-chamber {
+  max-width: 1000px;
+  margin: 0 auto;
+  justify-self:center;
+  justify-content:center;
+}
+.pulse-tether-bubble {
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(180px, 32vw, 500px);
+  max-width: 500px;
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
+  justify-self: center;
+  border-radius: 999px;
+  z-index: 10000;
+  /* Deep radial shell */
+  background: radial-gradient(
+    circle at 30% 20%,
+    #1b1f2a 0%,
+    #090b10 45%,
+    #000000 100%
+  );
+
+  /* Multi-layer 3D shadow */
+  box-shadow:
+    0 35px 65px rgba(0, 0, 0, 0.75),
+    0 18px 40px rgba(0, 0, 0, 0.65),
+    0 0 55px rgba(0, 255, 200, 0.20), /* PulseWorld glow */
+    0 0 0 2px rgba(255, 255, 255, 0.05);
+
+  /* Soft bloom aura */
+  filter: drop-shadow(0 0 35px rgba(0,255,200,0.25));
+
+  /* Smooth 3D feel */
+  transform: translateZ(0);
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+/* ================================
+   TETHER CHAMBER — ROOT CONTAINER
+   ================================ */
+.pulse-tether-chamber {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+
+  /* OS‑like floating chamber */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ================================
+   MODULES (LEFT / CENTER / RIGHT)
+   ================================ */
+.tether-module-left,
+.tether-module-center,
+.tether-module-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  border-radius: 28px;
+  align-items: center;
+}
+
+/* ================================
+   IDENTITY CARD (LEFT MODULE)
+   ================================ */
+.tether-identity-card {
+  width: 85%;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-align: center;
+  justify-content: center;
+}
+
+.tether-identity-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.tether-icon {
+  width: 200px;
+  border-radius: 28px;
+  height: 200px;
+  margin-bottom: 10px;
+}
+
+.tether-identity-info {
+  margin-top: 8px;
+  color: #eaeaea;
+  font-size: 0.95rem;
+  line-height: 1.4rem;
+}
+
+
+/* ================================
+   INVENTORY CARD (RIGHT MODULE)
+   ================================ */
+.tether-inventory-card {
+  width: 85%;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-align: center;
+  justify-content: center;
+}
+
+.tether-inventory-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.tether-inventory-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  color: #eaeaea;
+  font-size: 0.95rem;
+}
+
+.tether-inventory-list li {
+  margin: 6px 0;
+}
+
+/* Hover lift */
+.pulse-tether-bubble:hover {
+  transform: translateY(-10px) scale(1.04);
+  filter: drop-shadow(0 0 45px rgba(0,255,200,0.45));
+}
+/* TRUE SIDE-BY-SIDE 50/50 PANELS */
+.pw-two-panel-wrapper {
+  display: flex;
+  width: 100dvw;
+  overflow: hidden;
+  
+  margin: 0 auto;
+}
+
+/* LEFT PANEL — EXACTLY 50% */
+.pw-panel-left {
+  flex: 0 0 52%;
+  min-width: 52%;
+  max-width: 52%;
+  height: 100%;
+  overflow-y: auto;
+  background: #02030a;
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+
+/* RIGHT PANEL — EXACTLY 50% */
+.pw-panel-right {
+  flex: 0 0 48%;
+  min-width: 48%;
+  max-width: 48%;
+  height: 100%;
+  overflow-y: auto;
+  background: #050510;
+}
+
+/* INTERNAL SCROLLING */
+.pw-panel-scroll {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* PREVENT WRAPPING */
+.pw-panel-left,
+.pw-panel-right {
+  display: block;
+  white-space: normal;
+}
+.pw-dashboard-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+
+/* ============================================================
+   BACKDROPS
+   ============================================================ */
+
+#profilePhoto {
+  display: block;
+}
+
+#profilePhoto2 {
+  display: block;
+}
+#profilePhoto3 {
+  display: block;
+}
+#profilePhoto4 {
+  display: block;
+}
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.pw-header {
+  text-align: center;
+  padding-top: 1rem;
+}
+
+/* ============================================================
+   CARD BASE
+   ============================================================ */
+
+.pw-card {
+  margin: 0 auto;
+  background: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(0, 255, 200, 0.25);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 25px rgba(0,255,200,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  max-width: 550px;
+  justify-self: center;
+}
+
+.pw-section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--pulse-gold-strong);
+}
+
+/* ============================================================
+   PROFILE CARD
+   ============================================================ */
+
+.pw-photo-wrapper {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 1rem auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 10px solid rgba(0,255,200,0.4);
+  box-shadow: outset 0 6px 18px rgba(0,0,0,0.15);
+}
+
+
+.pw-profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pw-info {
+  text-align: center;
+  color: #eee;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+/* ============================================================
+   GRID SECTIONS (Business, Banking, Email, Analytics)
+   ============================================================ */
+
+.pw-grid {
+  display: grid;
+  
+  justify-content:center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.pw-grid-item {
+  background: rgba(30,30,30,0.8);
+  border: 1px solid rgba(0,255,200,0.25);
+  border-radius: 12px;
+  padding: 1rem;
+  justify-self:center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pw-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(0,255,200,0.25);
+}
+
+.pw-grid-icon {
+  justify-self:center;
+  margin-bottom: 0.5rem;
+}
+
+.pw-grid-label {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.pw-btn {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: none;
+  background: rgba(0,255,200,0.15);
+  color: var(--pulse-gold-strong);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.pw-btn:hover {
+  background: rgba(0,255,200,0.25);
+  transform: translateY(-3px);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+
+.pw-setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.8rem 0;
+  color: #fff;
+}
+
+.pw-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.pw-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pw-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #444;
+  border-radius: 24px;
+  transition: 0.3s;
+}
+
+.pw-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.pw-switch input:checked + .pw-slider {
+  background-color: #00ffc8;
+}
+
+.pw-switch input:checked + .pw-slider:before {
+  transform: translateX(22px);
+}
+
+.pw-setting-note {
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-top: 0.5rem;
+}
+
+.pw-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pw-row .pw-card {
+  flex: 1;
+}
+.pw-digital-email {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+
+.pw-section-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.pw-email-display {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #00ffc8;
+}
+
+/* ============================================================
+   PULSEWORLD OS — PROFILE PANEL (FINAL THEME)
+   ============================================================ */
+
+.profile-container {
+  border-radius: 22px;
+  margin-top: 15px;
+  opacity: 1;
+  width: 100%;
+  max-width: 520px;
+  padding: 0;
+  background: rgba(20,20,20,0.85);
+  border: 1px solid rgba(0,255,200,0.25);
+  box-shadow: 0 0 25px rgba(0,255,200,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* Inner profile card */
+.profile {
+  width: 100%;
+  padding: 24px 18px;
+  border-radius: 22px;
+  background: rgba(10,10,10,0.85);
+  border: 1px solid rgba(0,255,200,0.25);
+  box-shadow: 0 0 25px rgba(0,255,200,0.15);
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* PulseWorld aura */
+.profile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    rgba(0,255,200,0.25) 0%,
+    rgba(0,255,200,0.15) 35%,
+    rgba(0,255,200,0.05) 60%,
+    rgba(0,255,200,0) 100%
+  );
+  filter: blur(45px);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+
+/* Circular blurred aura */
+.profile::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* controls aura size */
+  z-index: -1;
+  /* Black → transparent fade */
+  border-radius: inherit; /* ← PERFECT FIX */
+  background: radial-gradient(
+    circle,
+    rgba(0,0,0,0.85) 0%,
+    rgba(0,0,0,0.55) 35%,
+    rgba(0,0,0,0.25) 60%,
+    rgba(0,0,0,0) 100%
+  );
+  filter: blur(45px);
+  opacity: 1;
+}
+
+.title {
+  width: 100%;
+  font-size: 28px;
+  max-height: 32px;
+  margin-top: -2px;
+  height: 100%;
+  min-height: 0;
+  color: var(--tp-teal);
+  justify-self: center;
+  text-align: center;
+  font-weight: 700;
+  /* The magic stack */
+  text-shadow:
+  /* white outline */
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px  1px 0 #000,
+  1px  1px 0 #000,
+
+  /* depth */
+  0 2px 4px rgba(0,0,0,0.45);
+
+  margin-bottom: -4px;
+}
+
+.subtitle {
+  font-size: 16px;
+  max-height: 22px;
+  height: 100%;
+  min-height: 0;
+  justify-self: center;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  font-size: 16px;
+  border: 2px solid var(--tp-teal);
+  border-radius: 10px;
+  outline: none;
+  text-align: center;
+  box-sizing: border-box;
+  background: white;
+}
+
+.btnInv {
+  background: var(--tp-teal);
+  color: white;
+  padding: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 6px 14px rgba(0,168,132,0.25);
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+
+.btnInv:hover {
+  background: #008f72;
+}
+
+.checkbox-row {
+  align-items: center;
+  display: grid;
+  width: 100%;
+  text-align: center;
+  grid-template-columns: 1fr 1fr;
+  min-width: 0;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 14px;
+  direction: ltr;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  position: static;
+}
+
+.checkbox-row span{
+  justify-content: center;
+  align-items: center;
+  
+  text-align: center;
+  
+  margin: 0;
+  position: static;
+}
+
+.msg {
+  display: none;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.msg.show {
+  transform: scale(1.03);
+}
+
+.display-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px; /* spacing between input and button */
+}
+
+#displayNameInput {
+  flex: 1; /* this makes it fill remaining space */
+  min-width: 0; /* prevents overflow */
+}
+
+.success { color: var(--tp-teal); }
+.error { color: #cc0000; }
+
+/* Profile Photo + Shimmr */
+.photo-section {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.photo-wrapper {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  border-radius: 50%;
+  box-shadow: outset 0 6px 18px rgba(0,0,0,0.15);
+  align-items: center;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.profile-photo {
+  width: 300px;
+  height: 300px;
+  justify-self: center;
+  box-shadow:
+0 4px 12px rgba(0,0,0,0.30),
+0 12px 28px rgba(0,0,0,0.32),
+inset 0 0 0 1px rgba(255,255,255,0.35);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid var(--tp-teal);
+  background: white;
+  display: block; /* hidden until loaded */
+}
+
+/* Stripe Panel */
+.stripe-section {
+  width: 100%;
+  max-height: 110px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  text-align: center;
+  border-radius: 12px;
+  background: white;
+  color: #333;
+  
+  padding: 0;
+  border: 2px solid var(--tp-teal);
+}
+
+/* Stripe Panel */
+.bizStatus-section {
+  width: 100%;
+  max-height: 110px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  text-align: center;
+  border-radius: 12px;
+  background: white;
+  color: #333;
+  
+  padding: 0;
+  border: 2px solid var(--tp-teal);
+}
+
+
+.stripe-title {
+  width: 100%;
+  max-height: 25px;
+  text-align: center;
+  color: var(--tp-teal);
+  font-size: 20px;
+}
+
+.stripe-status {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.biz-status {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.btn.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(40%);
+}
+
+.pulse-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  gap: 36px;
+  min-width: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.pulse-points {
+  font-weight: 600;
+  color: var(--tp-teal);
+}
+
+.redeem-btn {
+  background: var(--tp-teal);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+#redeemConfirmInline {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+}
+
+.t-btn-tri {
+  background: #2bb3b1;
+  color: white;
+  padding: 6px 12px;      /* ↓ smaller vertical + horizontal */
+  line-height: 1;         /* ↓ tighter text box */
+  font-size: 14px;        /* ↓ smaller text */
+  border-radius: 8px;     /* ↓ slightly smaller pill */
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.t-btn-tri:hover {
+  background: #249c9a;
+}
+
+.t-btn-secondary {
+  background: #2bb3b1; /* teal */
+  color: white;
+  padding: 4px 8px;
+  max-height: 32px;
+  min-height: 0;
+  border-radius: 10px;
+  border: none;
+  justify-self: center;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.t-btn-secondary:hover {
+  background: #249c9a;
+}
+
+.t-btn-primary {
+  background: #2ecc71; /* Pulse World green */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 18px;
+  border: none;
+  max-height: 32px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.t-btn-primaryS {
+  background: #2ecc71; /* Pulse World green */
+  color: white;
+  border-radius: 18px;
+  padding: 4px 0;
+  border: none;
+  max-height: 32px;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.t-btn-primary:hover {
+  background: #27ae60;
+}
+.t-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.t-input {
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid #d7d7d7;
+  background: #ffffff;
+  font-size: 15px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.t-input:focus {
+  border-color: #2bb3b1; /* teal highlight */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(43, 179, 177, 0.2);
+}
+
+#displayNameStatus {
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 4px 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  display: none;
+}
+
+/* Softer success */
+.msg.success {
+  background: rgba(0, 150, 100, 0.10); /* lighter */
+  color: #007a55; /* deeper, less neon */
+  border: 1px solid rgba(0, 150, 100, 0.25);
+}
+
+/* Softer error */
+.msg.error {
+  background: rgba(255, 80, 80, 0.10);
+  color: #b33;
+  border: 1px solid rgba(255, 80, 80, 0.25);
+}
+
+h2 {
+  color: var(--tp-teal);
+  margin-bottom: 4px;
+  margin-top: 4px;
+  width: 100%;
+  justify-self: center;
+  font-size: 24px;
+  font-weight: 700;
+  /* The magic stack */
+  text-align: center;
+  text-shadow:
+    /* white outline */
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px  1px 0 #000,
+    1px  1px 0 #000,
+
+    /* depth */
+    0 2px 4px rgba(0,0,0,0.45);
+}
+
+   
+
+.hero-header-intro .profile-container {
+  opacity: 1;
+  transition: opacity 1.4s ease-out 0.9s;
+
+}
+
+.hero-header-intro .profile {
+  opacity: 1;
+  transition: opacity 1.4s ease-out 0.9s;
+
+}
+
+#hero-backdrop-top,
+#hero-backdrop-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.95);
+  pointer-events: none;
+  z-index: 999999;
+}
+
+/* Top backdrop covers above header */
+#hero-backdrop-top {
+  opacity: 0;
+  top: 0;
+  height: 100vh;
+  transition: height 1.2s ease-out, opacity 0.8s ease-out;
+}
+
+/* Bottom backdrop covers below header */
+#hero-backdrop-bottom {
+  opacity: 0;
+  bottom: 0;
+  height: 100vh;
+  transition: height 1.2s ease-out;
+}

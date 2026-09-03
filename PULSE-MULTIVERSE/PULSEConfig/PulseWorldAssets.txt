@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldDigitalAssets.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-Main2.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurst.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-Main.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-01.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-02.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-03.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-04.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/BinaryNode.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/BinaryLattice.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/BinaryPulse.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/BinaryShell.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/BinaryAnchor.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseAssets" type="video/mp4">
+<title>PulseWorld Asset Vault</title>
+
+<style>
+
+
+/* ============================================================
+   PAGE WRAPPER
+   ============================================================ */
+#asset-wrapper {
+    background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldDigitalAssets.webp.pex");
+    backdrop-filter: blur(8px);
+    padding: 30px;
+}
+
+
+/* ============================================================
+   SECTION TITLES
+   ============================================================ */
+.section-title {
+    font-size: 42px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 60px 0 20px 0;
+    text-align: center;
+    color: #00eaff;
+}
+
+/* ============================================================
+   ASSET GRID
+   ============================================================ */
+.asset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.asset-card {
+    background: rgba(20,20,20,0.75);
+    border: 1px solid #00eaff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,255,255,0.25);
+    justify-content: center;
+}
+
+.asset-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #00eaff;
+}
+
+.asset-card h3 {
+    margin-top: 15px;
+    font-size: 22px;
+    color: #00eaff;
+}
+
+.asset-card p {
+    font-size: 14px;
+    color: #c0c0c0;
+}
+
+/* ============================================================
+   GALLERY STRIP
+   ============================================================ */
+.gallery-strip {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.gallery-strip img {
+    width: 320px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #00eaff;
+}
+
+/* ============================================================
+   FULL WIDTH SHOWCASE
+   ============================================================ */
+.full-showcase {
+    width: 100%;
+    margin: 60px 0;
+    border: 2px solid #00eaff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0,255,255,0.35);
+}
+
+.full-showcase img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+}
+
+/* ============================================================
+   ASSET CATEGORY BLOCKS
+   ============================================================ */
+.category-block {
+    margin: 80px 0;
+    padding: 40px;
+    background: rgba(10,10,10,0.65);
+    border: 1px solid #00eaff;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0,255,255,0.25);
+}
+
+.category-block h2 {
+    font-size: 36px;
+    color: #00eaff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.category-block p {
+    font-size: 18px;
+    color: #c0c0c0;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ============================================================
+   MASSIVE IMAGE GRID (50+ placeholders)
+   ============================================================ */
+.massive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.massive-grid img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #00eaff;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+    margin-top: 120px;
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+}
+</style>
+</head>
+
+<body>'
+
+<video id="assetVideo" src="./_EXPRESSIONS/_VIDEOS/PulseAssets" autoplay muted playsinline style="display:block;" aria-label="Assets Video"></video>
+  
+<div id="asset-wrapper">
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<h1 class="section-title">PulseWorld Asset Vault</h1>
+
+<div class="full-showcase">
+    <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-Main2.webp.pex">
+</div>
+
+<!-- ============================================================
+     PULSARBURST SECTION
+     ============================================================ -->
+<div class="category-block">
+    <h2>PulsarBurst™ — High-Energy Digital Artifacts</h2>
+    <p>
+        PulsarBurst assets are the crown jewels of PulseWorld — luminous, high-frequency constructs
+        generated through BinaryOS and accelerated by the ServiceWorker kernel. These artifacts pulse
+        with OS-grade identity and represent the highest tier of digital mystique.
+    </p>
+
+    <div class="full-showcase">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurst.webp.pex">
+    </div>
+
+    <div class="gallery-strip">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-01.webp.pex">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-03.webp.pex">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-02.webp.pex">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-04.webp.pex">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulsarBurstSession-Main.webp.pex">
+    </div>
+</div>
+
+<!-- ============================================================
+     BINARYOS ASSETS
+     ============================================================ -->
+<div class="category-block">
+    <h2>BinaryOS Assets — The Operating System Layer</h2>
+    <p>
+        These assets define the structural backbone of PulseWorld. Compiled, deterministic, and
+        atomic — BinaryOS assets form the substrate upon which the universe is built.
+    </p>
+
+    <div class="asset-grid">
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/BinaryNode.webp.pex">
+            <h3>Binary Core Node</h3>
+            <p>Primary OS substrate artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/BinaryLattice.webp.pex">
+            <h3>Binary Lattice</h3>
+            <p>Structural OS-grade identity mesh.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/BinaryPulse.webp.pex">
+            <h3>Binary Pulse</h3>
+            <p>Compiled world modulation artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/BinaryShell.webp.pex">
+            <h3>Binary Shell</h3>
+            <p>OS-grade universe container.</p>
+        </div>
+
+        <!-- ⭐ NEW 5th CARD -->
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/BinaryAnchor.webp.pex">
+            <h3>Binary Anchor</h3>
+            <p>Deterministic OS grounding artifact.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     SERVICEWORKER ASSETS
+     ============================================================ -->
+<div class="category-block">
+    <h2>ServiceWorker Assets — The Kernel Layer</h2>
+    <p>
+        These artifacts represent the speed layer — deterministic boot, atomic loading, and kernel-grade
+        acceleration. The ServiceWorker company powers PulseWorld’s instant universe behavior.
+    </p>
+
+    <div class="asset-grid">
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/sw-01.png">
+            <h3>Kernel Burst</h3>
+            <p>High-speed boot artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/sw-02.png">
+            <h3>Cache Node</h3>
+            <p>Atomic world loader.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/sw-03.png">
+            <h3>Continuity Cell</h3>
+            <p>Offline universe continuity artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/sw-04.png">
+            <h3>Kernel Pulse</h3>
+            <p>Deterministic refresh engine.</p>
+        </div>
+
+        <!-- ⭐ NEW 5th CARD -->
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/sw-05.png">
+            <h3>Kernel Anchor</h3>
+            <p>Persistent kernel-grade stability node.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     GPU PROCESSING ASSETS
+     ============================================================ -->
+<div class="category-block">
+    <h2>GPUProcessing Assets — The Abilities Layer</h2>
+    <p>
+        GPUProcessing artifacts represent the ability engine — WASM acceleration, microtask scheduling,
+        distributed compute harvesting, and thermal-safe bursts.
+    </p>
+
+    <div class="asset-grid">
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/gpu-01.png">
+            <h3>Compute Burst</h3>
+            <p>High-energy GPU artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/gpu-02.png">
+            <h3>WASM Node</h3>
+            <p>Accelerated compute module.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/gpu-03.png">
+            <h3>Thermal Pulse</h3>
+            <p>Safe GPU burst artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/gpu-04.png">
+            <h3>Distributed Cell</h3>
+            <p>Compute harvesting node.</p>
+        </div>
+
+        <!-- ⭐ NEW 5th CARD -->
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/gpu-05.png">
+            <h3>Compute Anchor</h3>
+            <p>Deterministic GPU grounding artifact.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     BOOLEAN LOGIC ASSETS
+     ============================================================ -->
+<div class="category-block">
+    <h2>BooleanLogic Assets — The Intelligence Layer</h2>
+    <p>
+        These artifacts represent the logic engine — deterministic decision trees, reflex sense, and
+        OS-grade automation.
+    </p>
+
+    <div class="asset-grid">
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/logic-01.png">
+            <h3>Logic Node</h3>
+            <p>Primary decision engine artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/logic-02.png">
+            <h3>Reflex Cell</h3>
+            <p>Instant logic response module.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/logic-03.png">
+            <h3>Decision Lattice</h3>
+            <p>Deterministic rule mesh.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/logic-04.png">
+            <h3>Automation Pulse</h3>
+            <p>OS-grade automation artifact.</p>
+        </div>
+
+        <!-- ⭐ NEW 5th CARD -->
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/logic-05.png">
+            <h3>Logic Anchor</h3>
+            <p>Deterministic intelligence grounding node.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     ORBITAL MAP — THE UNIVERSE LAYER
+     ============================================================ -->
+<div class="category-block">
+    <h2>OrbitalMap Assets — The Cosmic Navigation Layer</h2>
+    <p>
+        The OrbitalMap represents PulseWorld’s highest tier of spatial intelligence — a living,
+        dynamic starfield that charts modules, realities, identities, and OS-grade constructs across
+        a cosmic topology. This is the universe’s master map, the place where every artifact finds
+        its orbit.
+    </p>
+
+    <!-- Five-card cosmic grid -->
+    <div class="asset-grid">
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/OrbitalNode.webp.pex">
+            <h3>Orbital Node</h3>
+            <p>Primary cosmic coordinate artifact.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/OrbitalLattice.webp.pex">
+            <h3>Orbital Lattice</h3>
+            <p>Universe-scale identity mesh.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/OrbitalPulse.webp.pex">
+            <h3>Orbital Pulse</h3>
+            <p>High-frequency cosmic modulation.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/OrbitalShell.webp.pex">
+            <h3>Orbital Shell</h3>
+            <p>Spatial container for multi-reality mapping.</p>
+        </div>
+
+        <div class="asset-card">
+            <img src="./_EXPRESSIONS/_PEX/BUILD/OrbitalAnchor.webp.pex">
+            <h3>Orbital Anchor</h3>
+            <p>Deterministic universe grounding artifact.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     MASSIVE IMAGE GRID (50+ placeholders)
+     ============================================================ -->
+<h2 class="section-title">Global Asset Gallery</h2>
+
+<div class="massive-grid">
+    <!-- 50+ placeholder images -->
+    /* <img src="./assets/gallery/img-001.png"> */
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+    PulseWorld Asset Vault — Powered by BinaryOS, ServiceWorker, GPUProcessing, BooleanLogic
+</footer>
+
+</div>
+
+  <!-- UI + identity creation (no pulling, pure build) -->
+<script>
+
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+/* ============================================================
+   PULSEWORLD ASSET VAULT v50
+   CLEAN REWRITE
+   ============================================================ */
+
+PulseRealm.__LOAD_START ??= performance.now();
+
+const BOOT_START = performance.now();
+
+/* ============================================================
+   LOGGER
+   ============================================================ */
+
+
+log(
+    "%c🌌 PulseWorld Asset Vault Booting",
+    "color:#00eaff;font-weight:bold;"
+);
+
+/* ============================================================
+   DOM CACHE
+   ============================================================ */
+
+const wrapper =
+    document.getElementById("asset-wrapper");
+
+const categoryBlocks =
+    [...document.querySelectorAll(".category-block")];
+
+const assetCards =
+    [...document.querySelectorAll(".asset-card")];
+
+const galleryImages =
+    [...document.querySelectorAll(".gallery-strip img")];
+
+const showcaseImages =
+    [...document.querySelectorAll(".full-showcase img")];
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+
+const PulseWorldState = {
+
+    ready: false,
+
+    ethersLoaded: false,
+
+    connectedWallet: null,
+
+    chainId: null,
+
+    network: null,
+
+    pulseAssets: null,
+
+    galleries: galleryImages.length,
+
+    cards: assetCards.length
+};
+
+/* ============================================================
+   ETHERS LOADER
+   ============================================================ */
+
+async function loadEthers() {
+
+    try {
+
+        const module = await import(
+            "https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.min.js"
+        );
+
+        window.ethers = module;
+
+        PulseWorldState.ethersLoaded = true;
+
+        log(
+            "%c✅ ethers loaded",
+            "color:#00ffaa"
+        );
+
+        return true;
+
+    }
+    catch(error){
+
+        console.warn(
+            "[PulseWorld] ethers unavailable",
+            error
+        );
+
+        return false;
+    }
+}
+
+/* ============================================================
+   ASSET DISCOVERY
+   ============================================================ */
+
+function scanAssets(){
+
+    const summary = {
+
+        categories : categoryBlocks.length,
+
+        cards      : assetCards.length,
+
+        galleries  : galleryImages.length,
+
+        showcases  : showcaseImages.length
+
+    };
+
+    console.table(summary);
+
+    return summary;
+}
+
+/* ============================================================
+   UI EFFECTS
+   ============================================================ */
+
+function installCardEffects(){
+
+    assetCards.forEach(card=>{
+
+        card.addEventListener("mouseenter",()=>{
+
+            card.style.transform =
+                "translateY(-6px)";
+
+            card.style.transition =
+                "all .25s ease";
+
+            card.style.boxShadow =
+                "0 0 40px rgba(0,234,255,.35)";
+        });
+
+        card.addEventListener("mouseleave",()=>{
+
+            card.style.transform =
+                "translateY(0px)";
+
+            card.style.boxShadow =
+                "";
+        });
+
+    });
+
+}
+
+function installImageEffects(){
+
+    galleryImages.forEach(image=>{
+
+        image.loading = "lazy";
+
+        image.addEventListener("click",()=>{
+
+            window.open(
+                image.src,
+                "_blank"
+            );
+
+        });
+    });
+
+}
+
+/* ============================================================
+   CATEGORY METADATA
+   ============================================================ */
+
+function attachCategoryData(){
+
+    categoryBlocks.forEach((block,index)=>{
+
+        block.dataset.categoryIndex =
+            index + 1;
+
+        const title =
+            block.querySelector("h2");
+
+        if(title){
+
+            block.dataset.category =
+                title.textContent.trim();
+        }
+
+    });
+
+}
+
+/* ============================================================
+   METAMASK
+   ============================================================ */
+
+async function connectMetaMask(){
+
+    if(!window.ethereum){
+
+        console.warn(
+            "[PulseWorld] MetaMask not detected"
+        );
+
+        return null;
+    }
+
+    try{
+
+        const accounts =
+            await window.ethereum.request({
+                method:"eth_requestAccounts"
+            });
+
+        const address =
+            accounts?.[0] ?? null;
+
+        const chainId =
+            await window.ethereum.request({
+                method:"eth_chainId"
+            });
+
+        PulseWorldState.connectedWallet =
+            address;
+
+        PulseWorldState.chainId =
+            chainId;
+
+        log(
+            `%c🔗 MetaMask Connected ${address}`,
+            "color:#38bdf8"
+        );
+
+        return {
+            address,
+            chainId
+        };
+
+    }
+    catch(error){
+
+        console.error(
+            "[PulseWorld] MetaMask connect failed",
+            error
+        );
+
+        return null;
+    }
+}
+
+/* ============================================================
+   PULSE ASSET SYSTEM
+   ============================================================ */
+
+async function initializePulseAssets(){
+
+    try{
+
+        if(
+            globalThis.PulseRealm &&
+            globalThis.PulseRealm.PulseAssets
+        ){
+
+            const assets =
+                PulseRealm.PulseAssets.getAssets?.() || {};
+
+            PulseWorldState.pulseAssets =
+                assets;
+
+            log(
+                "%c✅ Pulse Assets Attached",
+                "color:#00ffaa"
+            );
+
+            return assets;
+        }
+
+        log(
+            "%c⚠ PulseAssets unavailable",
+            "color:gold"
+        );
+
+        return null;
+
+    }
+    catch(error){
+
+        console.error(
+            "[PulseWorld] Asset initialization failed",
+            error
+        );
+
+        return null;
+    }
+
+}
+
+/* ============================================================
+   PERFORMANCE
+   ============================================================ */
+
+function performanceReport(){
+
+    const elapsed =
+        performance.now() - BOOT_START;
+
+    console.group(
+        "PulseWorld Asset Vault"
+    );
+
+    console.log(
+        "Cards:",
+        assetCards.length
+    );
+
+    console.log(
+        "Categories:",
+        categoryBlocks.length
+    );
+
+    console.log(
+        "Galleries:",
+        galleryImages.length
+    );
+
+    console.log(
+        "Ready:",
+        PulseWorldState.ready
+    );
+
+    console.log(
+        "Boot:",
+        elapsed.toFixed(2) + "ms"
+    );
+
+    console.groupEnd();
+
+}
+
+/* ============================================================
+   NETWORK WATCHERS
+   ============================================================ */
+
+function installEthereumListeners(){
+
+    if(!window.ethereum)
+        return;
+
+    ethereum.on(
+        "accountsChanged",
+        accounts=>{
+
+            PulseWorldState.connectedWallet =
+                accounts?.[0] || null;
+
+            log(
+                "👤 Wallet Changed",
+                PulseWorldState.connectedWallet
+            );
+        }
+    );
+
+    ethereum.on(
+        "chainChanged",
+        chainId=>{
+
+            PulseWorldState.chainId =
+                chainId;
+
+            log(
+                "🌐 Chain Changed",
+                chainId
+            );
+        }
+    );
+
+}
+
+/* ============================================================
+   BUILD
+   ============================================================ */
+
+async function init(){
+
+    try{
+
+        log(
+            "%c🚀 PulseWorld Initialization",
+            "color:#00eaff"
+        );
+
+        scanAssets();
+
+        attachCategoryData();
+
+        installCardEffects();
+
+        installImageEffects();
+
+        await loadEthers();
+
+        await initializePulseAssets();
+
+        installEthereumListeners();
+
+        PulseWorldState.ready = true;
+
+        performanceReport();
+
+        log(
+            "%c✅ PulseWorld Asset Vault Ready",
+            "color:#00ffaa;font-weight:bold;"
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "[PulseWorld] Fatal Initialization Error",
+            error
+        );
+
+    }
+
+}
+
+assetVideo = document.getElementById("assetVideo");
+
+
+(async () => {
+    assetVideo.style.display = PulseRealm.VideoDisabled;
+    setInterval(() => {
+    
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      assetVideo.style.display = "none";
+      timerX = 0;
+    }
+
+  }, 1000);
+
+  if (assetVideo) {
+    assetVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Asset Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        assetVideo.pause();
+        assetVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("assetVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      assetVideo.style.opacity = "0";
+      assetVideo.style.display = "none";
+    };
+  }
+  
+  init();
+
+/* ============================================================
+   BOOT COMPLETE
+   ============================================================ */
+
+PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+})();
+</script>
+
+</body>
+</html>

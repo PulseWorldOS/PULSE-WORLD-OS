@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="/" crossorigin>
+<link rel="preconnect" href="/404" crossorigin>
+<link rel="preload" fetchpriority="highest" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldCosmicSendOffGate.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSendOffParticles.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSendOffGlyphWall.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSendOffGateStructure.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSendOffMembrane.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSendOffSeal.webp.pex" type="image/webp"/>
+<link rel="modulepreload" href="./PULSE-MULTIVERSAL-TOUCH.js">
+<link rel="modulepreload" href="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js">
+<link rel="modulepreload" href="./_PROOF/PULSE-PROOF.js">
+<link rel="modulepreload" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js">
+<link rel="modulepreload" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<title>Pulse World — Send Off</title>
+<script type="module" src="./PULSE-MULTIVERSAL-TOUCH.js"></script>
+<script type="module" src="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js"></script>
+<script type="module" src="./_PROOF/PULSE-PROOF.js"></script>
+ 
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg: #05060b;
+      --panel: #090910;
+      --accent: #ff3b3b;
+      --accent-soft: rgba(255, 59, 59, 0.16);
+      --text-main: #f5f7ff;
+      --text-soft: #a0a6c0;
+      --border-soft: rgba(255, 255, 255, 0.06);
+
+      --mono: "JetBrains Mono", monospace;
+      --sans: system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1b1018 0, #05060b 55%, #020308 100%);
+      color: #fff;
+      font-family: var(--sans);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ⭐ TRUE INFINITE BACKGROUND LAYER */
+    .bg-universe {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: url('/_EXPRESSIONS/_BACKGROUNDS/PulseWorldCosmicSendOffGate.webp.pex') center/cover no-repeat;
+      animation: universe-spread 40s ease-in-out infinite;
+      transform-origin: center;
+      filter: brightness(1.05);
+    }
+
+    /* ⭐ REAL SPREAD ANIMATION (NO EDGES EVER) */
+    @keyframes universe-spread {
+      0%   { transform: scale(1); }
+      25%  { transform: scale(1.05); }
+      50%  { transform: scale(1.15); }
+      75%  { transform: scale(1.25); }
+      100% { transform: scale(1.1); }
+    }
+
+    /* OUTER LAYER — rotates + expands, but contains the detail */
+    .particles {
+      position: fixed;
+      
+      min-width: 100%;
+      min-height: 100%;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+
+      /* ⭐ This layer gets HUGE but contains the crisp inner layer */
+      transform-origin: center;
+      animation: sendoff-vortex 85s linear infinite;
+    }
+
+    /* INNER LAYER — stays crisp, never scales, never blurs */
+    .particles-inner {
+      position: absolute;
+      inset: -20%; /* makes it naturally huge */
+      background: url('/_EXPRESSIONS/_BACKGROUNDS/PulseWorldSendOffParticles.webp.pex') center/cover;
+      opacity: 0.35;
+      min-width: 100%;
+      min-height: 100%;
+      /* ⭐ NO SCALE HERE — stays sharp */
+      transform: rotate(0deg);
+    }
+
+    /* OUTER LAYER ROTATION ONLY */
+    @keyframes sendoff-vortex {
+      0%   { transform: rotate(0deg) scale(1.8); }
+      100% { transform: rotate(360deg) scale(1.8); }
+    }
+
+
+    .shell {
+      width: 100%;
+      max-width: 720px;
+      padding: 32px 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* PANEL + ⭐ GLYPH WALL TEXTURE */
+    .panel {
+      background:
+        url('/_EXPRESSIONS/_BACKGROUNDS/PulseWorldSendOffGlyphWall.webp.pex') center/cover no-repeat,
+        linear-gradient(145deg, var(--panel), #050509);
+
+      border-radius: 32px;
+      border: 1px solid var(--border-soft);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.7),
+        0 26px 90px rgba(0, 0, 0, 0.95),
+        0 0 120px rgba(255, 59, 59, 0.08);
+
+      padding: 28px 24px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ⭐ GATE STRUCTURE IMAGE */
+    .gate-structure {
+      position: absolute;
+      inset: 0;
+      background: url('/_EXPRESSIONS/_BACKGROUNDS/PulseWorldSendOffGateStructure.webp.pex') center/contain no-repeat;
+      opacity: 0.32;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ⭐ MEMBRANE OVERLAY IMAGE WITH SUBTLE BREATHING */
+    .gate-membrane-image {
+      position: absolute;
+      inset: 0;
+      background: url('/_EXPRESSIONS/_BACKGROUNDS/PulseWorldSendOffMembrane.webp.pex') center/cover no-repeat;
+      opacity: 0.22;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 2;
+      animation: membrane-shift 18s ease-in-out infinite;
+    }
+
+    @keyframes membrane-shift {
+      0%   { opacity: 0.18; transform: scale(1); }
+      50%  { opacity: 0.28; transform: scale(1.04); }
+      100% { opacity: 0.18; transform: scale(1); }
+    }
+
+    /* ⭐ FRACTURED PULSE SEAL WITH PULSE */
+    .pulse-seal {
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      width: 160px;
+      height: 160px;
+      background: url('/_EXPRESSIONS/_BACKGROUNDS/PulseWorldSendOffSeal.webp.pex') center/contain no-repeat;
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 3;
+      animation: seal-pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes seal-pulse {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+      50%      { transform: translateX(-50%) scale(1.06); opacity: 1; }
+    }
+
+    /* CONTENT LAYER */
+    .badge-row,
+    h1,
+    .subtitle,
+    .callout,
+    .list,
+    .footer-row {
+      position: relative;
+      z-index: 10;
+    }
+
+    .badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 59, 59, 0.7);
+      background: linear-gradient(120deg, rgba(255, 59, 59, 0.22), rgba(255, 59, 59, 0.04));
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(255, 59, 59, 0.9);
+    }
+
+    .badge-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 12px rgba(255, 59, 59, 0.35),
+        0 0 32px rgba(255, 59, 59, 0.18),
+        0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      font-size: 14px;
+      color: var(--text-soft);
+      max-width: 540px;
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.6),
+        0 0 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .callout {
+      margin: 0 0 18px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(255, 59, 59, 0.6);
+      font-size: 13px;
+      color: var(--text-main);
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.6),
+        0 0 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .callout strong {
+      font-weight: 600;
+    }
+
+    .list {
+      margin: 0 0 18px;
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--text-soft);
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.6),
+        0 0 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .list li + li {
+      margin-top: 4px;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between; /* left + right */
+      align-items: center;
+      width: 100%;
+      margin-top: 10px;
+
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.6),
+        0 0 14px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ensure the button row stays left */
+    .footer-row .btn-row {
+      display: flex;
+      gap: 10px; /* spacing between buttons */
+      align-items: center;
+    }
+
+    /* ensure the hint stays right */
+    .footer-row .hint {
+      margin-left: auto; /* pushes it fully right */
+      text-align: right;
+    }
+
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      align-content: right;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(5, 5, 10, 0.95);
+      color: var(--text-main);
+      cursor: default;
+      opacity: 0.9;
+      box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.8);
+    }
+
+    .btn-primary {
+      border-color: rgba(255, 59, 59, 0.9);
+      background: linear-gradient(135deg, #ff3b3b, #b31212);
+      color: #fff5f5;
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.6),
+        0 10px 30px rgba(179, 18, 18, 0.7);
+    }
+
+    .hint {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-soft);
+      opacity: 0.8;
+    }
+
+    .hint span {
+      color: var(--accent);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 22px;
+      }
+      .panel {
+        padding: 22px 18px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-universe"></div>
+  <!-- ⭐ PARTICLE FIELD -->
+  <div class="particles">
+    <div class="particles-inner"></div>
+  </div>
+
+
+  <main class="shell">
+    <section class="panel" aria-labelledby="sendoff-title">
+
+      <!-- ⭐ GATE STRUCTURE -->
+      <div class="gate-structure"></div>
+
+      <!-- ⭐ MEMBRANE -->
+      <div class="gate-membrane-image"></div>
+
+      <!-- ⭐ FRACTURED PULSE SEAL -->
+      <div class="pulse-seal"></div>
+
+      <!-- CONTENT -->
+      <div class="badge-row">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>Send Off Gate</span>
+        </div>
+        <div class="badge-label">Pulse World OS · Boundary Layer</div>
+      </div>
+
+      <h1 id="sendoff-title">This Door Stays Closed.</h1>
+
+      <p class="subtitle">
+        You’ve reached the <strong>Send‑Off Gate</strong>.<br />
+        For this connection, this device, or this pattern, Pulse World has chosen a firm <em>“no.”</em>
+      </p>
+
+      <p class="callout">
+        <strong>What this actually means:</strong><br />
+        The system detected a combination of signals that cross a hard boundary:
+        hostile automation, unsafe headers, corrupted state, or behavior that would put this world—or others in it—at risk.
+      </p>
+
+      <ul class="list">
+        <li>This is not a temporary slowdown; it is a protective refusal.</li>
+        <li>No additional verification or retry on this path will override this decision.</li>
+        <li>If you believe this is a mistake, you’ll need a clean, trusted entry path in the future.</li>
+      </ul>
+
+      <p class="subtitle">
+        A world that never says “no” cannot stay safe.<br />
+        This page exists so that the refusal is visible, honest, and final for this route.
+      </p>
+
+      <div class="footer-row">
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button">
+            Connection Terminated
+          </button>
+          <button class="btn" type="button">
+            Pulse World Protects Its Own
+          </button>
+        </div>
+        <div class="hint">
+          route: <span>/PulseWorldSendOff</span>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</body>
+</html>

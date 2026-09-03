@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseTether.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldInventory.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldIdentity.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseBusinessIcon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseBankIcon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseEmailIcon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseAnalyticsIcon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseThemeIcon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseAccessIcon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseIdentity" type="video/mp4">
+</head>
+<title>Pulse World Dashboard</title>
+
+<body>
+<video id="identityVideo" src="./_EXPRESSIONS/_VIDEOS/PulseIdentity" autoplay muted playsinline style="display:block;" aria-label="Inventory Video"></video>
+  <div class="pulse-tether-chamber">
+
+    <!-- LEFT MODULE: Identity -->
+    <div class="tether-module-left">
+      <div class="tether-identity-card">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldIdentity.webp.pex" class="tether-icon">
+        <h3>Your Identity</h3>
+        <div class="tether-identity-info">
+          <li><span id="tetherName">Aldwyn</span></li>
+          <li><span id="tetherSpecies">Human Species</span></li>
+          <li><span id="tetherLevel">Level 7</span></li>
+          <li><span id="tetherVerse">Pulse World [Human]</span></li>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER MODULE: Tether Bubble -->
+    <div class="tether-module-center">
+      <div class="pulse-tether-bubble">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseTether.webp.pex" class="pulse-tether-img">
+      </div>
+    </div>
+
+    <!-- RIGHT MODULE: Inventory -->
+    <div class="tether-module-right">
+      <div class="tether-inventory-card">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldInventory.webp.pex" class="tether-icon">
+        <h3>Your Inventory</h3>
+        <ul class="tether-inventory-list">
+          <li>🔑 Drift Key</li>
+          <li>💠 Nebula Token</li>
+          <li>📦 Storage Capsule</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pw-two-panel-wrapper">
+
+    <!-- LEFT PANEL (50%) -->
+    <div class="pw-panel-left">
+      <div class="pw-panel-scroll">
+
+        <div class="pw-max-container">
+
+          <div class="pw-dashboard-wrapper">
+
+            <div class="pw-row">
+
+              <!-- PROFILE -->
+              <div id="profile-identity" class="pw-card profile-card">
+            
+
+                <h1 class="title">Pulse World Dashboard</h2>
+                <p class="subtitle">Your Entire Digital Universe, Unified!</p>
+
+                <div class="pw-photo-wrapper">
+                  <img id="profilePhoto" class="pw-profile-photo" src="" />
+                  <!-- This becomes the real upload button -->
+                </div>
+
+                <button id="changePhotoBtn"
+                  class="t-btn-secondary"
+                  style="display:block; margin:10px auto; padding:2px 4px; border:2px solid black;
+                        color:black; border-radius:8px; font-weight:600; cursor:pointer;
+                        background:white; text-align:center;">
+                  📷 CHANGE PHOTO
+                </button>
+
+                
+                <!-- Hidden file input -->
+                <input type="file" id="photoInput" accept="image/*" style="display:none;">
+
+                
+                <div id="info" class="pw-info"></div>
+
+                <h2 id="profile-settings" class="pw-section-title">Device & OS Settings</h2>
+
+                <div class="pw-setting-row">
+                  <span>Stay Signed On This Device</span>
+                  <label class="pw-switch">
+                    <input type="checkbox" id="stayToggle">
+                    <span class="pw-slider"></span>
+                  </label>
+                </div>
+
+                <div class="pw-setting-row">
+                  <span>Disable Service Worker</span>
+                  <label class="pw-switch">
+                    <input type="checkbox" id="syncToggle">
+                    <span class="pw-slider"></span>
+                  </label>
+                </div>
+
+                <div class="pw-setting-row">
+                  <span>Disable Sound Expression</span>
+                  <label class="pw-switch">
+                    <input type="checkbox" id="driftToggle">
+                    <span class="pw-slider"></span>
+                  </label>
+                </div>
+
+                <div class="pw-setting-row">
+                  <span>Disable Video Expression</span>
+                  <label class="pw-switch">
+                    <input type="checkbox" id="warmToggle">
+                    <span class="pw-slider"></span>
+                  </label>
+                </div>
+
+                <div class="pw-setting-note">
+                  PulseWorld adapts to your device and environment automatically.
+                </div>
+              </div>
+
+              <!-- BUSINESS -->
+              <div id="profile-operations" class="pw-card business-card">
+                <h2 class="pw-section-title">Businesses & Operations</h2>
+
+                <div class="pw-grid">
+                  <div class="pw-grid-item">
+                    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseBusinessIcon.webp.pex" id="BizConsole" class="pw-grid-icon"/>
+                    <div class="pw-grid-label">Business Console</div>
+                  </div>
+
+                  <div class="pw-grid-item">
+                    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseBankIcon.webp.pex" id="BankConsole" class="pw-grid-icon"/>
+                    <div class="pw-grid-label">Banking & Accounts</div>
+                  </div>
+
+                  <div class="pw-grid-item">
+                    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseEmailIcon.webp.pex" id="EmailConsole" class="pw-grid-icon"/>
+                    <div class="pw-grid-label">Email Hub</div>
+                  </div>
+
+                  <div class="pw-grid-item">
+                    <img src="./_EXPRESSIONS/_PEX/BUILD/PulseAnalyticsIcon.webp.pex" id="ReportConsole" class="pw-grid-icon"/>
+                    <div class="pw-grid-label">Analytics & Reports</div>
+                  </div>
+                </div>
+
+                <button id="stripeBtn" class="pw-btn pw-dashboard-btn">
+                  <span class="btn-icon">📊</span> Stripe Dashboard
+                </button>
+
+                <div id="profile-email" class="pw-digital-email">
+                  <h3 class="pw-section-subtitle">PulseWorld Email</h3>
+                  <div id="digitalEmail" class="pw-email-display">&nbsp;</div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div id="hero-backdrop-top"></div>
+          <div id="hero-backdrop-bottom"></div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL (50%) -->
+    <div class="pw-panel-right">
+      <div class="pw-panel-scroll">
+
+        <div class="profile-container">
+          <div class="profile">
+
+          
+            <h1 class="title">Identity & Profile</h1>
+            <p class="subtitle">Your New True Online Identity!</p>
+            
+
+            <!-- PROFILE PHOTO -->
+            <div class="photo-section">
+              <div class="photo-wrapper">
+                <img id="profilePhoto2" class="profile-photo" src="" />
+              </div>
+
+              <!-- This becomes the real upload button -->
+              <button id="changePhotoBtn2"
+                class="t-btn-secondary"
+                style="display:inline-block; padding:2px 4px; border:2px solid black;
+                      color:black; border-radius:8px; font-weight:600; cursor:pointer;
+                      background:white; text-align:center;">
+                📷 CHANGE PHOTO
+              </button>
+
+
+              <!-- Hidden file input -->
+              <input type="file" id="photoInput2" accept="image/*" style="display:none;">
+            </div>
+
+            <!-- USER FIELDS -->
+            <input id="fullName" class="t-input" type="text" placeholder="Full Name"></input>
+
+            <div class="t-row">
+              <input id="displayNameInput" class="t-input" type="text" placeholder="Display Name"></input>
+            </div>
+
+            <p id="displayNameStatus" class="msg" style="display:none;"></p>
+
+            <input id="email" class="t-input" type="text" placeholder="Email"></input>
+
+            <button id="verifyEmailBtn" class="t-btn-secondary" style="display:none; margin-top:8px;">
+              Verify New Email
+            </button>
+
+            <div id="emailPinContainer" style="display:none; margin-top:10px;">
+              <input class="t-input" id="emailPinInput" placeholder="Enter PIN"></input>
+              <button id="submitEmailPinBtn" class="t-btn-primary">Submit PIN</button>
+            </div>
+
+            <input id="phone" class="t-input" type="text" placeholder="Phone" />
+
+            <!-- PULSE POINTS -->
+            <div class="pulse-row">
+              <span id="pulsePointsDisplay" class="pulse-points">Pulse Points: 0</span>
+
+              <button id="redeemPulseBtn" class="t-btn-primary">💱 Redeem</button>
+
+              <div id="redeemConfirmInline" style="display:none; gap:6px;">
+                <span>Redeem Points?</span>
+                <button id="redeemYesBtn" class="t-btn-secondary" style="padding:4px 8px;">Yes</button>
+                <button id="redeemNoBtn" class="t-btn-secondary" style="padding:4px 8px;">No</button>
+              </div>
+            </div>
+
+            <!-- COUNTRY LIST (FULL) -->
+            <select id="country" class="t-input">
+              <option value="">Select Country</option>
+              <option value="BZ">Belize</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="MX">Mexico</option>
+
+              <!-- FULL LIST -->
+              <option value="AF">Afghanistan</option>
+              <option value="AL">Albania</option>
+              <option value="DZ">Algeria</option>
+              <option value="AS">American Samoa</option>
+              <option value="AD">Andorra</option>
+              <option value="AO">Angola</option>
+              <option value="AI">Anguilla</option>
+              <option value="AG">Antigua and Barbuda</option>
+              <option value="AR">Argentina</option>
+              <option value="AM">Armenia</option>
+              <option value="AW">Aruba</option>
+              <option value="AU">Australia</option>
+              <option value="AT">Austria</option>
+              <option value="AZ">Azerbaijan</option>
+              <option value="BS">Bahamas</option>
+              <option value="BH">Bahrain</option>
+              <option value="BD">Bangladesh</option>
+              <option value="BB">Barbados</option>
+              <option value="BY">Belarus</option>
+              <option value="BE">Belgium</option>
+              <option value="BJ">Benin</option>
+              <option value="BM">Bermuda</option>
+              <option value="BT">Bhutan</option>
+              <option value="BO">Bolivia</option>
+              <option value="BA">Bosnia and Herzegovina</option>
+              <option value="BW">Botswana</option>
+              <option value="BR">Brazil</option>
+              <option value="BN">Brunei</option>
+              <option value="BG">Bulgaria</option>
+              <option value="BF">Burkina Faso</option>
+              <option value="BI">Burundi</option>
+              <option value="KH">Cambodia</option>
+              <option value="CM">Cameroon</option>
+              <option value="CV">Cape Verde</option>
+              <option value="KY">Cayman Islands</option>
+              <option value="CF">Central African Republic</option>
+              <option value="TD">Chad</option>
+              <option value="CL">Chile</option>
+              <option value="CN">China</option>
+              <option value="CO">Colombia</option>
+              <option value="KM">Comoros</option>
+              <option value="CG">Congo</option>
+              <option value="CR">Costa Rica</option>
+              <option value="CI">Côte d'Ivoire</option>
+              <option value="HR">Croatia</option>
+              <option value="CU">Cuba</option>
+              <option value="CY">Cyprus</option>
+              <option value="CZ">Czech Republic</option>
+              <option value="DK">Denmark</option>
+              <option value="DJ">Djibouti</option>
+              <option value="DM">Dominica</option>
+              <option value="DO">Dominican Republic</option>
+              <option value="EC">Ecuador</option>
+              <option value="EG">Egypt</option>
+              <option value="SV">El Salvador</option>
+              <option value="GQ">Equatorial Guinea</option>
+              <option value="ER">Eritrea</option>
+              <option value="EE">Estonia</option>
+              <option value="SZ">Eswatini</option>
+              <option value="ET">Ethiopia</option>
+              <option value="FJ">Fiji</option>
+              <option value="FI">Finland</option>
+              <option value="FR">France</option>
+              <option value="GA">Gabon</option>
+              <option value="GM">Gambia</option>
+              <option value="GE">Georgia</option>
+              <option value="DE">Germany</option>
+              <option value="GH">Ghana</option>
+              <option value="GR">Greece</option>
+              <option value="GD">Grenada</option>
+              <option value="GT">Guatemala</option>
+              <option value="GN">Guinea</option>
+              <option value="GY">Guyana</option>
+              <option value="HT">Haiti</option>
+              <option value="HN">Honduras</option>
+              <option value="HK">Hong Kong</option>
+              <option value="HU">Hungary</option>
+              <option value="IS">Iceland</option>
+              <option value="IN">India</option>
+              <option value="ID">Indonesia</option>
+              <option value="IR">Iran</option>
+              <option value="IQ">Iraq</option>
+              <option value="IE">Ireland</option>
+              <option value="IL">Israel</option>
+              <option value="IT">Italy</option>
+              <option value="JM">Jamaica</option>
+              <option value="JP">Japan</option>
+              <option value="JO">Jordan</option>
+              <option value="KZ">Kazakhstan</option>
+              <option value="KE">Kenya</option>
+              <option value="KI">Kiribati</option>
+              <option value="KR">South Korea</option>
+              <option value="KW">Kuwait</option>
+              <option value="KG">Kyrgyzstan</option>
+              <option value="LA">Laos</option>
+              <option value="LV">Latvia</option>
+              <option value="LB">Lebanon</option>
+              <option value="LS">Lesotho</option>
+              <option value="LR">Liberia</option>
+              <option value="LY">Libya</option>
+              <option value="LI">Liechtenstein</option>
+              <option value="LT">Lithuania</option>
+              <option value="LU">Luxembourg</option>
+              <option value="MO">Macau</option>
+              <option value="MG">Madagascar</option>
+              <option value="MW">Malawi</option>
+              <option value="MY">Malaysia</option>
+              <option value="MV">Maldives</option>
+              <option value="ML">Mali</option>
+              <option value="MT">Malta</option>
+              <option value="MH">Marshall Islands</option>
+              <option value="MQ">Martinique</option>
+              <option value="MR">Mauritania</option>
+              <option value="MU">Mauritius</option>
+              <option value="MX">Mexico</option>
+              <option value="FM">Micronesia</option>
+              <option value="MD">Moldova</option>
+              <option value="MC">Monaco</option>
+              <option value="MN">Mongolia</option>
+              <option value="ME">Montenegro</option>
+              <option value="MA">Morocco</option>
+              <option value="MZ">Mozambique</option>
+              <option value="MM">Myanmar</option>
+              <option value="NA">Namibia</option>
+              <option value="NP">Nepal</option>
+              <option value="NL">Netherlands</option>
+              <option value="NZ">New Zealand</option>
+              <option value="NI">Nicaragua</option>
+              <option value="NE">Niger</option>
+              <option value="NG">Nigeria</option>
+              <option value="NO">Norway</option>
+              <option value="OM">Oman</option>
+              <option value="PK">Pakistan</option>
+              <option value="PW">Palau</option>
+              <option value="PA">Panama</option>
+              <option value="PG">Papua New Guinea</option>
+              <option value="PY">Paraguay</option>
+              <option value="PE">Peru</option>
+              <option value="PH">Philippines</option>
+              <option value="PL">Poland</option>
+              <option value="PT">Portugal</option>
+              <option value="PR">Puerto Rico</option>
+              <option value="QA">Qatar</option>
+              <option value="RO">Romania</option>
+              <option value="RU">Russia</option>
+              <option value="RW">Rwanda</option>
+              <option value="KN">Saint Kitts and Nevis</option>
+              <option value="LC">Saint Lucia</option>
+              <option value="VC">Saint Vincent and the Grenadines</option>
+              <option value="WS">Samoa</option>
+              <option value="SM">San Marino</option>
+              <option value="ST">São Tomé and Príncipe</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="SN">Senegal</option>
+              <option value="RS">Serbia</option>
+              <option value="SC">Seychelles</option>
+              <option value="SL">Sierra Leone</option>
+              <option value="SG">Singapore</option>
+              <option value="SK">Slovakia</option>
+              <option value="SI">Slovenia</option>
+              <option value="SB">Solomon Islands</option>
+              <option value="SO">Somalia</option>
+              <option value="ZA">South Africa</option>
+              <option value="ES">Spain</option>
+              <option value="LK">Sri Lanka</option>
+              <option value="SD">Sudan</option>
+              <option value="SR">Suriname</option>
+              <option value="SE">Sweden</option>
+              <option value="CH">Switzerland</option>
+              <option value="SY">Syria</option>
+              <option value="TW">Taiwan</option>
+              <option value="TJ">Tajikistan</option>
+              <option value="TZ">Tanzania</option>
+              <option value="TH">Thailand</option>
+              <option value="TL">Timor-Leste</option>
+              <option value="TG">Togo</option>
+              <option value="TO">Tonga</option>
+              <option value="TT">Trinidad and Tobago</option>
+              <option value="TN">Tunisia</option>
+              <option value="TR">Turkey</option>
+              <option value="TM">Turkmenistan</option>
+              <option value="TV">Tuvalu</option>
+              <option value="UG">Uganda</option>
+              <option value="UA">Ukraine</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="GB">United Kingdom</option>
+              <option value="UY">Uruguay</option>
+              <option value="UZ">Uzbekistan</option>
+              <option value="VU">Vanuatu</option>
+              <option value="VE">Venezuela</option>
+              <option value="VN">Vietnam</option>
+              <option value="YE">Yemen</option>
+              <option value="ZM">Zambia</option>
+              <option value="ZW">Zimbabwe</option>
+              </select>
+
+              <select id="role" class="input">
+                <option value="User">User</option>
+                <option value="Mentor">Mentor</option>
+                <option value="PowerUser">PowerUser</option>
+                <option value="Partner">Partner</option>
+              </select>
+
+              <label class="checkbox-row">
+                <span><input type="checkbox" id="smsOpt" /> SMS Opt-In</span>
+                <span><input type="checkbox" id="emailOpt" /> Email Opt-In</span>
+              </label>
+
+              <div id="leaveConfirmRow" style="display:none; margin-top:10px;">
+                <span>You have unsaved changes. Leave without saving?</span>
+                <button id="leaveYesBtn" class="t-btn-secondary">Yes</button>
+                <button id="leaveNoBtn" class="t-btn-secondary">No</button>
+              </div>
+
+              <div id="msg" class="msg"></div>
+
+              <div class="stripe-section">
+                <h2 class="stripe-title">Stripe Account</h2>
+                <div id="stripeStatus" class="stripe-status">Checking Status…</div>
+              </div>
+
+              <button class="t-btn-primaryS" id="saveBtn">Save Dashboard</button>
+
+              </div> <!-- end .profile -->
+            </div> <!-- end .profile-container -->
+
+          </div> <!-- end right panel scroll -->
+        </div> <!-- end right panel -->
+
+      </div> <!-- end two-panel wrapper -->
+
+
+<div class="pw-two-panel-wrapper">
+
+  <!-- LEFT PANEL (50%) -->
+  <div class="pw-panel-left">
+    <div class="pw-panel-scroll">
+
+      <div class="pw-max-container">
+        <div class="pw-dashboard-wrapper">
+          <div class="pw-row">
+
+            <!-- PROFILE -->
+            <div id="profile-business" class="pw-card profile-card">
+
+              <h1 class="title">Pulse World Business Hub</h1>
+              <p class="subtitle">Your Business Hub Setup!</p>
+
+              <div class="pw-photo-wrapper">
+                <img id="profilePhoto3" class="pw-profile-photo" src="" />
+              </div>
+
+              <button id="changePhotoBtn3"
+                class="t-btn-secondary"
+                style="display:block; margin:10px auto; padding:2px 4px; border:2px solid black;
+                      color:black; border-radius:8px; font-weight:600; cursor:pointer;
+                      background:white; text-align:center;">
+                📷 CHANGE PHOTO
+              </button>
+
+              <input type="file" id="photoInput3" accept="image/*" style="display:none;">
+
+              <div id="info" class="pw-info"></div>
+
+              <h2 id="hub-settings" class="pw-section-title">Business Hub Settings</h2>
+
+              <!-- BUSINESS HUB SETTINGS -->
+              <div class="pw-setting-row">
+                <span>Public Visibility</span>
+                <label class="pw-switch">
+                  <input type="checkbox" id="publicToggle">
+                  <span class="pw-slider"></span>
+                </label>
+              </div>
+
+              <div class="pw-setting-row">
+                <span>Enable Partner Access</span>
+                <label class="pw-switch">
+                  <input type="checkbox" id="partnerToggle">
+                  <span class="pw-slider"></span>
+                </label>
+              </div>
+
+              <div class="pw-setting-row">
+                <span>Mentor Visibility</span>
+                <label class="pw-switch">
+                  <input type="checkbox" id="mentorToggle">
+                  <span class="pw-slider"></span>
+                </label>
+              </div>
+
+              <div class="pw-setting-row">
+                <span>Data Sharing Across Hubs</span>
+                <label class="pw-switch">
+                  <input type="checkbox" id="dataShareToggle">
+                  <span class="pw-slider"></span>
+                </label>
+              </div>
+
+              <div class="pw-setting-row">
+                <span>Enable Business Analytics</span>
+                <label class="pw-switch">
+                  <input type="checkbox" id="analyticsToggle">
+                  <span class="pw-slider"></span>
+                </label>
+              </div>
+
+              <div class="pw-setting-row">
+                <span>Authority Lockdown Mode</span>
+                <label class="pw-switch">
+                  <input type="checkbox" id="lockdownToggle">
+                  <span class="pw-slider"></span>
+                </label>
+              </div>
+
+              <div class="pw-setting-note">
+                PulseWorld Business Hub adapts dynamically to your visibility, collaboration, and authority preferences.
+              </div>
+
+            </div> <!-- end profile-identity -->
+
+            <!-- BUSINESS HUB -->
+            <div id="business-hub" class="pw-card business-card">
+              <h2 class="pw-section-title">Business Hub Configuration</h2>
+
+              <div class="pw-grid">
+                <div class="pw-grid-item">
+                  <img src="./_EXPRESSIONS/_PEX/BUILD/PulseThemeIcon.webp.pex" id="ThemeConsole" class="pw-grid-icon"/>
+                  <div class="pw-grid-label">Thematic Design System</div>
+                  <div class="pw-grid-desc">Customize your hub’s visual identity, color palette, and layout style.</div>
+                </div>
+
+                <div class="pw-grid-item">
+                  <img src="./_EXPRESSIONS/_PEX/BUILD/PulseAccessIcon.webp.pex" id="AccessConsole" class="pw-grid-icon"/>
+                  <div class="pw-grid-label">Access & Permissions</div>
+                  <div class="pw-grid-desc">Define user roles, authentication layers, and secure gateway protocols.</div>
+                </div>
+              </div>
+
+              <button id="hubSettingsBtn" class="pw-btn pw-dashboard-btn">
+                <span class="btn-icon">⚙️</span> Hub Settings
+              </button>
+
+              <div id="profile-theme" class="pw-digital-theme">
+                <h3 class="pw-section-subtitle">Active Theme</h3>
+                <div id="digitalTheme" class="pw-theme-display" style="text-align:center; font-weight:700;">
+                  Pulse World Multiversal - Human
+                </div>
+              </div>
+            </div> <!-- end business-hub -->
+
+          </div> <!-- end pw-row -->
+        </div> <!-- end pw-dashboard-wrapper -->
+
+        <div id="hero-backdrop-top"></div>
+        <div id="hero-backdrop-bottom"></div>
+
+      </div> <!-- end pw-max-container -->
+    </div> <!-- end pw-panel-scroll -->
+  </div> <!-- end pw-panel-left -->
+
+  <!-- RIGHT PANEL (50%) -->
+  <div class="pw-panel-right">
+    <div class="pw-panel-scroll">
+
+      <div class="profile-container">
+        <div class="profile">
+
+          <h1 class="title">Business Profile</h1>
+          <p class="subtitle">Your Public Facing Business View!</p>
+
+          <div class="photo-section">
+            <div class="photo-wrapper">
+              <img id="profilePhoto4" class="profile-photo" src="" />
+            </div>
+
+            <button id="changePhotoBtn4"
+              class="t-btn-secondary"
+              style="display:inline-block; padding:2px 4px; border:2px solid black;
+                    color:black; border-radius:8px; font-weight:600; cursor:pointer;
+                    background:white; text-align:center;">
+              📷 CHANGE PHOTO
+            </button>
+
+            <input type="file" id="photoInput4" accept="image/*" style="display:none;">
+          </div>
+
+          <input id="bizName" class="t-input" type="text" placeholder="Pulse World Business Name">
+
+          <div class="t-row">
+            <input id="displayNameInput" class="t-input" type="text" placeholder="Business Alias">
+          </div>
+
+          <p id="displayNameStatus" class="msg" style="display:none;"></p>
+
+          <input id="bizEmail" class="t-input" type="text" placeholder="Business Email">
+
+          <button id="verifyEmailBtn" class="t-btn-secondary" style="display:none; margin-top:8px;">
+            Verify New Email
+          </button>
+
+          <div id="emailPinContainer" style="display:none; margin-top:10px;">
+            <input class="t-input" id="emailPinInput" placeholder="Enter PIN">
+            <button id="submitEmailPinBtn" class="t-btn-primary">Submit PIN</button>
+          </div>
+
+          <input id="bizPhone" class="t-input" type="text" placeholder="Business Phone">
+
+          <div class="pulse-row">
+            <span id="pulsePointsDisplay" class="pulse-points">Pulse Points: 0</span>
+
+            <button id="redeemPulseBtn" class="t-btn-primary">💱 Redeem</button>
+
+            <div id="redeemConfirmInline" style="display:none; gap:6px;">
+              <span>Redeem Points?</span>
+              <button id="redeemYesBtn" class="t-btn-secondary" style="padding:4px 8px;">Yes</button>
+              <button id="redeemNoBtn" class="t-btn-secondary" style="padding:4px 8px;">No</button>
+            </div>
+          </div>
+                    
+          <select id="businessType" class="input">
+            <option value="Public">Public Hub</option>
+            <option value="Private">Private Hub</option>
+            <option value="Partner">Partner Hub</option>
+            <option value="Mentor">Mentor Hub</option>
+            <option value="Enterprise">Enterprise Hub</option>
+            <option value="Creator">Creator Hub</option>
+            <option value="Service">Service Hub</option>
+            <option value="Commerce">Commerce Hub</option>
+            <option value="Network">Network Hub</option>
+            <option value="Authority">Authority Hub</option>
+          </select>
+
+          <div class="bizStatus-section">
+            <h2 class="bizStatus-title">Business Hub Account</h2>
+            <div id="bizStatus" class="biz-status">Checking Status…</div>
+          </div>
+
+          <button class="t-btn-primaryS" id="saveBtn">Save Dashboard</button>
+
+        </div> <!-- end profile -->
+      </div> <!-- end profile-container -->
+
+    </div> <!-- end pw-panel-scroll -->
+  </div> <!-- end pw-panel-right -->
+
+</div> <!-- end pw-two-panel-wrapper -->
+
+
+<script>
+
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+
+function mark(label) {
+  console.log("%c[PulseWorldDashboard] " + label, "color:#00ffc8;font-weight:bold;");
+}
+
+/* ============================================================
+   MAIN RENDER (v40)
+   ============================================================ */
+
+async function renderDashboard(identity) {
+
+  const info = document.getElementById("info");
+  const fullName = document.getElementById("fullName");
+  const displayNameInput = document.getElementById("displayNameInput");
+  const email = document.getElementById("email");
+  const phone = document.getElementById("phone");
+  const country  = document.getElementById("country");
+  const stayToggle = document.getElementById("stayToggle");
+  const driftToggle = document.getElementById("driftToggle");
+  const syncToggle = document.getElementById("syncToggle");
+  const warmToggle = document.getElementById("warmToggle");
+  const BizConsole = document.getElementById("BizConsole");
+
+  const changePhotoBtn  = document.getElementById("changePhotoBtn");
+  const changePhotoBtn2 = document.getElementById("changePhotoBtn2");
+  const changePhotoBtn3 = document.getElementById("changePhotoBtn3");
+  const changePhotoBtn4 = document.getElementById("changePhotoBtn4");
+
+  const digitalEmail = document.getElementById("digitalEmail");
+
+  const photoInput  = document.getElementById("photoInput");
+  const photoInput2 = document.getElementById("photoInput2");
+  const photoInput3 = document.getElementById("photoInput3");
+  const photoInput4 = document.getElementById("photoInput4");
+
+  const profilePhoto  = document.getElementById("profilePhoto");
+  const profilePhoto2 = document.getElementById("profilePhoto2");
+  const profilePhoto3 = document.getElementById("profilePhoto3");
+  const profilePhoto4 = document.getElementById("profilePhoto4");
+
+  const tetherName = document.getElementById("tetherName");
+  const verifyEmailBtn = document.getElementById("verifyEmailBtn");
+  const saveBtn = document.getElementById("saveBtn");
+
+  // ============================================================
+  // INFO PANEL
+  // ============================================================
+
+  info.innerHTML = `
+    <div class="info-row"><span class="label">Name:</span> <span class="textA">${identity.name ?? "Unknown Pulse User"}</span></div>
+    <div class="info-row"><span class="label">Email:</span> <span class="textA">${identity.userEmail ?? "YourEmail@Domain.com"}</span></div>
+    <div class="info-row"><span class="label">Identity Role:</span> <span class="textA">${identity.role ?? "User"}</span></div>
+    <div class="info-row"><span class="label">Pulse World Role:</span> <span class="textA">${identity.pulseRole ?? "Entrepreneur"}</span></div>
+    <div class="info-row"><span class="label">Stripe Account:</span> <span class="textA">${identity.bank ?? "Not Tethered"}</span></div>
+    <div class="info-row"><span class="label">Trusted Device:</span> <span class="textA">${identity.device ? "Yes" : "No"}</span></div>
+  `;
+
+  tetherName.textContent = identity.name;
+  digitalEmail.textContent = identity.email;
+
+  stayToggle.checked = identity.device;
+  driftToggle.checked = PulseRealm.SoundDisabled;
+  syncToggle.checked = PulseRealm.ServiceWorkerOffline;
+  if (PulseRealm.VideoDisabled === "none") {
+    warmToggle.checked = true;
+  } else {
+    warmToggle.checked = false;
+  }
+
+  fullName.value = identity.userName;
+  displayNameInput.value = identity.name;
+  email.value = identity.userEmail;
+  phone.value = identity.phone;
+  country.value = identity.country;
+
+  const stripeStatus = document.getElementById("stripeStatus");
+  stripeStatus.textContent = identity.bank === "Connected ✔" ? "Connected ✔" : "Not Tethered";
+
+  const bizStatus = document.getElementById("bizStatus");
+  bizStatus.textContent = stripeStatus.textContent;
+
+  BizConsole.onclick = () => location.replace("https://www.pulseworld.biz");
+
+  const stripeBtn = document.getElementById("stripeBtn");
+  if (stripeBtn) {
+    const stripeUrl = identity.bankURL || identity.stripeLogin;
+    stripeBtn.onclick = () => (window.location.href = stripeUrl);
+  }
+
+  // ============================================================
+  // PHOTO RESTORE — SAFE, REFRESH-PROOF
+  // ============================================================
+
+  function safeSetPhoto(imgEl, savedValue, fallback) {
+    if (savedValue && typeof savedValue === "string" && savedValue.startsWith("data:image")) {
+      imgEl.src = savedValue;
+    } else {
+      imgEl.src = fallback;
+    }
+  }
+
+  safeSetPhoto(profilePhoto,  PulseRealm.PulsePhoto,        "./_EXPRESSIONS/_PEX/BUILD/FrustratedLogo.webp.pex");
+  safeSetPhoto(profilePhoto2, PulseRealm.PulseAliasPhoto,   "./_EXPRESSIONS/_PEX/BUILD/FrustratedAlias.webp.pex");
+  safeSetPhoto(profilePhoto3, PulseRealm.PulseBizPhoto,     "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizLogo.webp.pex");
+  safeSetPhoto(profilePhoto4, PulseRealm.PulseBizAliasPhoto,"./_EXPRESSIONS/_PEX/BUILD/FrustratedBizAlias.webp.pex");
+
+
+  // ============================================================
+  // PHOTO CHANGE HANDLERS — CLEAN, SAFE, REFRESH-PROOF
+  // ============================================================
+
+  function setupPhotoChange(btn, input, imgEl, realmKey) {
+
+    // Use PulseRealm as truth, NOT the DOM (DOM may contain corrupted blob)
+    const oldPhoto = PulseRealm[realmKey] || imgEl.src;
+
+    btn.onclick = () => input.click();
+
+    input.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        let result = e.target.result;
+
+        // ⭐ Normalize data URL (Chrome adds garbage on refresh)
+        result = result
+          .replace(/\s+/g, "")          // remove whitespace
+          .trim();
+
+        // ⭐ Accept ANY valid image data URL (png, jpg, webp, gif, svg)
+        if (!/^data:image\//i.test(result)) {
+          PulseRealm.PulseWorldPopup("Invalid image format", "OK", () => {});
+          return;
+        }
+
+        // ⭐ Save stable version
+        PulseRealm[realmKey] = result;
+
+        // ⭐ Apply to DOM
+        imgEl.src = result;
+
+        // ⭐ Undo handler
+        PulseRealm.PulseWorldPopup("Photo Updated", "Undo", () => {
+          PulseRealm[realmKey] = oldPhoto;
+          imgEl.src = oldPhoto;
+        });
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+
+  setupPhotoChange(changePhotoBtn,  photoInput,  profilePhoto,  "PulsePhoto");
+  setupPhotoChange(changePhotoBtn2, photoInput2, profilePhoto2, "PulseAliasPhoto");
+  setupPhotoChange(changePhotoBtn3, photoInput3, profilePhoto3, "PulseBizPhoto");
+  setupPhotoChange(changePhotoBtn4, photoInput4, profilePhoto4, "PulseBizAliasPhoto");
+
+  // ============================================================
+  // EMAIL VERIFICATION
+  // ============================================================
+
+  verifyEmailBtn.onclick = async () => {
+    if (!currentUser) return;
+
+    const newEmail = emailInput.value.trim().toLowerCase();
+    if (!newEmail) return showMessage("Please enter a valid email first.", "error");
+
+    try {
+      const data = await getHook({
+        type: "sendPin",
+        email: newEmail,
+        uid: identityUser.uid,
+        purpose: "emailChange"
+      });
+
+      if (!data.success) return showMessage(data.error || "Unable to send verification PIN.", "error");
+
+      document.getElementById("emailPinContainer").style.display = "block";
+      showMessage("A verification code has been sent to " + newEmail, "success");
+    } catch {
+      showMessage("Unable to send verification PIN.", "error");
+    }
+  };
+
+  saveBtn.onclick = () => savebutton();
+}
+
+function savePhotos() {
+  const photos = {
+    photoURL: PulseRealm.PulsePhoto ?? DEFAULT_PHOTO,
+    aliasPhotoURL: PulseRealm.PulseAliasPhoto ?? DEFAULT_ALIAS,
+    bizphotoURL: PulseRealm.PulseBizPhoto ?? DEFAULT_BIZ,
+    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto ?? DEFAULT_BIZ_ALIAS
+  };
+
+  localStorage.setItem("PulsePhotos", JSON.stringify(photos));
+
+}
+
+
+/* ============================================================
+  DASHBOARD BOOTSTRAP (v40)
+  ============================================================ */
+function save () {
+  console.log("[PulseIdentity] Building identity snapshot…");
+
+  identity = {
+    id: `world-${Math.random().toString(36).slice(2)}`,
+    createdAt: PulseRealm.PulseNOW,
+    tier: "temporal-os",
+
+    name: stripTimestamp(PulseRealm.PulseUser) ?? "Unknown Pulse User",
+    email: PulseRealm.PulseEmail ?? `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`,
+    userEmail: PulseRealm.PulseUserEmail ?? "YourEmail@Domain.com",
+    userName: PulseRealm.PulseUserName ?? "Aldwyn",
+    phone: PulseRealm.PulsePhone ?? "(555) 555-5555",
+    country: PulseRealm.PulseCountry ?? "US",
+
+    role: PulseRealm.PulseRole ?? "User",
+    pulseRole: PulseRealm.PulseWorldRole ?? "Entrepreneur",
+
+    bank: PulseRealm.PulseBank ?? "Unknown Stripe ID",
+    bankURL: PulseRealm.PulseBankURL || "https://www.pulseworld.net/?Impulse=PulseWorldBank",
+    stripeLogin: PulseRealm.PulseBankURL || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
+    tokenID: PulseRealm.PulseBankID || null,
+    assetsWallet: PulseRealm.PulseAssets || null,
+
+    drift: PulseRealm.DriftSignature ?? PulseRealm.GenerateDriftSignature,
+    device: PulseRealm.PulseTrustedDevice ?? true,
+
+    photoURL: PulseRealm.PulsePhoto,
+    aliasPhotoURL: PulseRealm.PulseAliasPhoto,
+    bizphotoURL: PulseRealm.PulseBizPhoto,
+    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto,
+
+    PulsePoints: PulseRealm.PulsePoints || 0,
+    PulseLoyalty: PulseRealm.PulseTierPhoto ?? "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
+  };
+
+  localStorage.setItem("PulseIdentity", JSON.stringify(identity));
+
+  // ⭐ ADD PHOTO STORAGE
+  savePhotos();
+}
+
+
+
+function savebutton() {
+
+  console.log("[SaveButton] Starting savebutton()…");
+
+  // Snapshot for undo
+  const previousIdentity = JSON.parse(localStorage.getItem("PulseIdentity") || "{}");
+
+  // ⭐ NOW WE ACTUALLY SAVE IT
+  console.log("[SaveButton] Calling save() to persist identity + photos…");
+  save();
+  // This CREATES identity (your original behavior)
+  console.log("[SaveButton] Calling loadPulseIdentityContinual()…");
+  loadPulseIdentityContinual();
+  // ⭐ NOW WE ACTUALLY SAVE IT
+  console.log("[SaveButton] Calling save() to persist identity + photos…");
+  save();
+  console.log("[SaveButton] Identity + Photos saved successfully.");
+
+  // Popup
+  PulseRealm.PulseWorldPopup("Dashboard Saved", "Undo", () => {
+
+    console.log("[SaveButton] Undo triggered. Restoring previous identity…");
+
+    // Undo restore
+    localStorage.setItem("PulseIdentity", JSON.stringify(previousIdentity));
+
+    // Re-render dashboard with old identity
+    renderDashboard(previousIdentity);
+
+    console.log("[SaveButton] Undo complete.");
+  });
+}
+
+identityVideo = document.getElementById("identityVideo");
+
+
+(async () => {
+identityVideo.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+    
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      identityVideo.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (identityVideo) {
+    identityVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Inventory Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        identityVideo.pause();
+        identityVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("identityVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      identityVideo.style.opacity = "0";
+      identityVideo.style.display = "none";
+    };
+  }
+    const badge2 = document.getElementById("pulsepal-badge");
+    const talk2 = document.getElementById("pulsepal-talk");
+    function pulsepalSpeak(message) {
+      talk2.textContent = message;
+      badge2.classList.add("talking");
+      setTimeout(() => badge2.classList.remove("talking"), 12000); // hides after 3s
+    }
+    pulsepalSpeak("Inventory is your personal multiversal locker — every item, every identity, every drift‑tool you’ve unlocked lives here. Your User Record is your pulse‑signature — your history, your drift‑footprint, your system privileges.");
+    
+    await loadPulseIdentityContinual();
+    
+    PulseRealm.PulseWorldPopup = function(title, buttonText, callback) {
+      // Remove any existing popup
+      const existing = document.getElementById("pulseworld-popup");
+      if (existing) existing.remove();
+
+      // Backdrop
+      const backdrop = document.createElement("div");
+      backdrop.id = "pulseworld-popup";
+      backdrop.style.position = "fixed";
+      backdrop.style.top = "0";
+      backdrop.style.left = "0";
+      backdrop.style.width = "100vw";
+      backdrop.style.height = "100vh";
+      backdrop.style.background = "rgba(0,0,0,0.55)";
+      backdrop.style.display = "flex";
+      backdrop.style.alignItems = "center";
+      backdrop.style.justifyContent = "center";
+      backdrop.style.zIndex = "99999";
+
+      // Modal
+      const modal = document.createElement("div");
+      modal.style.background = "#111";
+      modal.style.border = "2px solid #0af";
+      modal.style.borderRadius = "12px";
+      modal.style.padding = "24px 32px";
+      modal.style.color = "#fff";
+      modal.style.fontFamily = "Arial, sans-serif";
+      modal.style.boxShadow = "0 0 25px #0af";
+      modal.style.textAlign = "center";
+      modal.style.minWidth = "300px";
+
+      // Title
+      const titleEl = document.createElement("div");
+      titleEl.innerText = title;
+      titleEl.style.fontSize = "22px";
+      titleEl.style.marginBottom = "18px";
+      titleEl.style.fontWeight = "bold";
+      titleEl.style.color = "#0af";
+
+      // Button
+      const btn = document.createElement("button");
+      btn.innerText = buttonText;
+      btn.style.padding = "10px 20px";
+      btn.style.fontSize = "16px";
+      btn.style.border = "none";
+      btn.style.borderRadius = "8px";
+      btn.style.cursor = "pointer";
+      btn.style.background = "#0af";
+      btn.style.color = "#000";
+      btn.style.fontWeight = "bold";
+      btn.style.marginTop = "10px";
+      btn.style.transition = "0.2s";
+
+      btn.onmouseenter = () => (btn.style.background = "#09f");
+      btn.onmouseleave = () => (btn.style.background = "#0af");
+
+      btn.onclick = () => {
+        try {
+          callback && callback();
+        } catch (e) {
+          console.error("PulseRealm.PulseWorldPopup callback error:", e);
+        }
+        backdrop.remove();
+      };
+
+      // Close on backdrop click
+      backdrop.onclick = (e) => {
+        if (e.target === backdrop) backdrop.remove();
+      };
+
+      // Build
+      modal.appendChild(titleEl);
+      modal.appendChild(btn);
+      backdrop.appendChild(modal);
+      document.body.appendChild(backdrop);
+    };
+
+    await renderDashboard(PulseRealm.PulseIdentity);
+
+  PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+})();
+
+</script>
+
+
+</body>
+</html>

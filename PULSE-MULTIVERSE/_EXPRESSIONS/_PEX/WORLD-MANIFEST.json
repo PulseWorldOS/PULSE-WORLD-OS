@@ -1,0 +1,22 @@
+{
+  "signature": {
+    "version": "v34",
+    "runtimeMode": "IMMORTAL++",
+    "executableMode": "world",
+    "trustMode": "verified",
+    "shortcutMode": "none"
+  },
+  "artifacts": {
+    "worldBundle": "WORLD-BUILD.js",
+    "runtimeBundle": "WORLD-RUNTIME.js",
+    "executableBundle": "WORLD-EXEC.js"
+  },
+  "binaryBuildSurface": {
+    "lanes": ["band", "mesh", "gpu"],
+    "modules": 128,
+    "routes": 512,
+    "hyperframe": "v34",
+    "deterministic": true,
+    "fileFormatSupport": ["pex", "image", "video"]
+  }
+}

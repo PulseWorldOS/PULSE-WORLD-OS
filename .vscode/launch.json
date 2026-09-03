@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to PulseWorld Backend",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "protocol": "inspector"
+    },
+    {
+      "name": "Debug Frontend (Chrome - Live Server)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:8080/PULSE-MULTIVERSE/index.html",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}

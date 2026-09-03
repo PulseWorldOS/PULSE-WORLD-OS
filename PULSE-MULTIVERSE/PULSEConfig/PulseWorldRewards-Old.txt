@@ -1,0 +1,6014 @@
+<!DOCTYPE html>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/RealmLegend.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/Mysterious.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/DriftRunner.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/MeshSpirit.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/CoreHeart.webp.pex" type="image/webp"/>
+<title>Pulse World - Loyalty Card</title>
+
+
+<!-- End Meta Pixel Code -->
+  <style>
+    .pulse-rewards-bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(180px, 32vw, 360px);
+      height: clamp(180px, 32vw, 360px);
+      max-width: 360px;
+      max-height: 360px;
+      margin-bottom: 2.25rem;
+      margin: 0 auto;
+      border-radius: 999px;
+      z-index: 10000;
+      /* Deep radial shell */
+      background: radial-gradient(
+        circle at 30% 20%,
+        #1b1f2a 0%,
+        #090b10 45%,
+        #000000 100%
+      );
+
+      /* Multi-layer 3D shadow */
+      box-shadow:
+        0 35px 65px rgba(0, 0, 0, 0.75),
+        0 18px 40px rgba(0, 0, 0, 0.65),
+        0 0 55px rgba(0, 255, 200, 0.20), /* PulseWorld glow */
+        0 0 0 2px rgba(255, 255, 255, 0.05);
+
+      /* Soft bloom aura */
+      filter: drop-shadow(0 0 35px rgba(0,255,200,0.25));
+
+      /* Smooth 3D feel */
+      transform: translateZ(0);
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+
+    /* Hover lift */
+    .pulse-rewards-bubble:hover {
+      transform: translateY(-10px) scale(1.04);
+      filter: drop-shadow(0 0 45px rgba(0,255,200,0.45));
+    }
+    
+    .pulse-rewards-img {
+      width: 300px;
+      height: 300px;
+      justify-self: center;
+      box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #00a884;
+      background: white;
+      display: block; /* hidden until loaded */
+    }
+
+    .page-container {
+      border-radius: 22px;
+      display: flex;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.1);
+      width: 460px;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 0;
+      margin: 0 auto;
+      padding: 4px 0px;
+      flex-direction: column;     /* image on top, row below */
+    }
+
+    /* Circular blurred aura */
+    .page-container::before {
+      content: "";
+      position: absolute;
+      width: 460px;
+      min-width: 0;
+      margin: 0 auto;
+      max-width: 100%;
+      min-height: 0;
+      inset: 0; /* controls aura size */
+      border-radius: inherit; /* ← PERFECT FIX */
+      z-index: -1;
+      background-size: contain;
+      /* Black → transparent fade */
+      background: radial-gradient(
+        circle,
+        rgba(0,0,0,0.85) 0%,
+        rgba(0,0,0,0.55) 35%,
+        rgba(0,0,0,0.25) 60%,
+        rgba(0,0,0,0) 100%
+      );
+      filter: blur(45px);
+      opacity: 1;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .pulse-card {
+      position: relative;
+      border-radius: var(--card-radius);
+      width: 100%;
+      height: 100%;
+      padding: 10px 8px 8px;
+      background: linear-gradient(135deg, #042b24, #0b5b4a, #0f8f6a);
+      box-shadow: var(--shadow-soft);
+      overflow: clip;
+      margin-bottom: 12px;
+    }
+    .seasonal-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1; /* BELOW scanner + QR */
+    }
+    .pulse-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255,255,255,0.25) 50%,
+        transparent 100%
+      );
+      transform: skewX(-20deg);
+    }
+    /* Seasonal Variables — applied to <body> */
+    .season-spring {
+      --sparkle-1: #FFB7D5;
+      --sparkle-2: #FF8FB8;
+      --sparkle-3: #FFFFFF;
+      --season-glow: rgba(255, 180, 210, 0.55);
+    }
+
+    .season-winter {
+      --sparkle-1: #B3E5FF;
+      --sparkle-2: #E0F7FF;
+      --sparkle-3: #FFFFFF;
+      --season-glow: rgba(180, 220, 255, 0.55);
+    }
+
+    .season-fall {
+      --sparkle-1: #FFB07C;
+      --sparkle-2: #FFD9A0;
+      --sparkle-3: #FFEED1;
+      --season-glow: rgba(255, 180, 120, 0.55);
+    }
+
+    .season-grand-opening {
+      --sparkle-1: #FFD27F;
+      --sparkle-2: #FFE9B3;
+      --sparkle-3: #FFF5D6;
+      --season-glow: rgba(255, 215, 130, 0.7);
+    }
+
+    .season-summer {
+      --sparkle-1: #FFD27F;
+      --sparkle-2: #FF9E7D;
+      --sparkle-3: #FFF2C2;
+      --season-glow: rgba(255, 200, 120, 0.55);
+    }
+    
+    .username-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      margin-left: 6px;
+      min-height: 22px; /* matches your font size */
+
+    }
+    .pulse-card-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .twinkle {
+      position: absolute;
+      right: -14px;
+      top: -4px;
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(circle, white 0%, rgba(255,255,255,0) 70%);
+      opacity: 0;
+      transform: scale(0.2);
+      animation: twinkle 8s infinite ease-in-out;
+    }
+    .points-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      opacity: 0.65;
+      letter-spacing: 0.5px;
+    }
+
+    .current .points-value {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .historical .points-value {
+      font-size: 22px;
+      font-weight: 600;
+      opacity: 0.85;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: #fff;
+    }
+    
+    .tier-badge {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      width: auto;
+      max-height: 42px;
+      min-height: 0;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+      margin-top: -18px; /* adjust to taste */
+    }
+
+    .tier-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fff, #ffd27f, #ff8a3c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      animation: tierFloat 4s ease-in-out infinite;
+    }
+
+    .tier-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(6px, 8vw, 11px);;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #f5f5f5;
+    }
+
+    .tier-sub {
+      display: flex;
+      align-items: center;
+      font-size: clamp(5px, 8vw, 10px);;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    @keyframes tierFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .balance-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 4px;
+    }
+
+    .balance-value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .balance-unit {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .balance-sub {
+      display: flex;
+      position: relative;
+      text-align: left;
+      margin-left: 6px;
+      width: 100%;
+      margin-top: 4px;
+      font-size: 12px;
+      opacity: 0.75;
+      letter-spacing: 0.4px;
+    }
+
+    .multiplier-pill {
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.35);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+      width: auto;
+      height: 100%;
+      min-height: 0;
+      justify-content: center; /* centers the text nicely */
+    }
+
+    .multiplier-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(255, 179, 71, 0.8);
+      animation: pulseDot 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.25); opacity: 1; }
+    }
+
+    .card-actions {
+      display: flex;
+      width: auto;
+      height: 100%;
+      gap: 5px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary2 {
+      background: linear-gradient(135deg, #1fe0a2, #0fd18f);
+      color: #02110b;
+      box-shadow: 0 10px 24px rgba(15, 209, 143, 0.45);
+    }
+
+    .btn-secondary2 {
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: none;
+    }
+
+    .btn-icon {
+      font-size: 14px;
+    }
+
+    .info-box {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 10px;
+      border-radius: var(--card-radius);
+      padding: 10px 12px;
+      background: radial-gradient(circle at top left, rgba(31, 224, 162, 0.16), rgba(3, 10, 18, 0.96));
+      border: 1px solid var(--border-soft);
+      display: flex;
+      gap: 12px;
+    }
+
+    .info-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fff, #ffd27f, #ff8a3c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      transform-origin: center center;
+      will-change: transform;
+    }
+    .info-icon.fire-small,
+    .info-icon.fire-medium,
+    .info-icon.fire-big,
+    .info-icon.fire-legendary,
+    .info-icon.fire-eruption {
+      animation: flamePulse 1.6s ease-in-out infinite;
+    }
+    .info-text-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .info-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .referral-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      margin-top: 14px;
+      border-radius: var(--card-radius);
+      padding: 12px 12px 10px;
+      background: radial-gradient(circle at top, rgba(255, 179, 71, 0.16), rgba(3, 10, 18, 0.96));
+      border: 1px solid var(--border-soft);
+    }
+
+    .referral-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .referral-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .referral-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .referral-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .referral-qr {
+      margin: 0 auto;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #fff, #e6f7f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+      z-index: 5;
+    }
+
+    .referral-qr::after {
+      margin: 0 auto;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(31, 224, 162, 0.12), transparent 50%, rgba(255, 179, 71, 0.12));
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      position: relative;
+        z-index: 5;
+    }
+
+    .referral-code-block {
+      flex: 1;
+    }
+
+    .referral-code-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 2px;
+    }
+
+    .referral-code-value {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      margin-bottom: 6px;
+    }
+
+    .referral-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap; /* allows wrapping if needed */
+    }
+
+    .referral-actions .btn-ghost {
+      flex: 0 1 auto;  /* natural width */
+      white-space: nowrap; /* prevents text breaking */
+      padding: 8px 14px;
+      font-size: 12px;
+      border-radius: 999px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--text-main);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 19000;
+    }
+
+    .sheet-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      pointer-events: auto !important;
+      transform: translate(-50%, 100%); /* fully hidden off-screen */
+      width: 100%;
+      max-width: 480px;
+      background: rgba(3, 9, 16, 0.98);
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -18px 40px rgba(0, 0, 0, 0.7);
+      padding: 10px 14px 18px;
+      transition: transform 0.25s ease;
+      z-index: 19001;
+    }
+
+    .sheet.active {
+      transform: translate(-50%, 0); /* slide up */
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      margin: 4px auto 8px;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .sheet-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .sheet-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .sheet.disabled {
+      pointer-events: none !important;
+    }
+
+    .sheet-close {
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .history-list {
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-top: 4px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .history-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .history-main {
+      font-size: 12px;
+    }
+
+    .history-sub {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .history-amount {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .history-amount.positive {
+      color: var(--primary);
+    }
+
+    .history-amount.negative {
+      color: var(--danger);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 21000;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.96);
+      width: 90%;
+      max-width: 360px;
+      background: #030910;
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 21001;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .modal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .modal-option-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text-main);
+      padding: 8px 10px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(40px);
+      background: rgba(3, 10, 18, 0.96);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 60;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 360px) {
+      .referral-body {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .referral-qr {
+        width: 72px;
+        height: 72px;
+        position: relative;
+        z-index: 5;
+      }
+    }
+
+    .pulse-card-user-top {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(
+        135deg,
+        #f8e7c2 0%,
+        #f1d28b 25%,
+        #d9b15f 50%,
+        #f7e7b0 75%,
+        #c89a45 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+
+      /* Regal glow + depth */
+      text-shadow:
+        0px 1px 1px rgba(255, 255, 255, 0.6),   /* soft top highlight */
+        0px 2px 4px rgba(0, 0, 0, 0.25),        /* depth */
+        0px 0px 6px rgba(255, 220, 140, 0.45);  /* warm gold glow */
+
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .multiplier-row {
+      font-size: 12px;
+      display: flex;
+      padding: 4px 10px;
+      line-height: normal;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .multiplier-row.total {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      padding: 6px 10px;
+    }
+
+    .multiplier-row > span:first-child {
+      flex: 1;
+    }
+
+    .multiplier-row > span:last-child {
+      flex: 0;               /* do NOT stretch */
+      text-align: right;
+      position: relative;
+      display: inline-block; /* shrink to text width */
+    }
+
+    /* Bold + primary color when boosted */
+    .multiplier-boost {
+      font-weight: 600;
+      color: var(--primary);
+      position: relative; /* required for arrow positioning */
+    }
+
+    /* Arrow ONLY when boosted */
+    .multiplier-boost::before {
+      content: "➤";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .multiplier-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+      margin: 6px 0;
+    }
+
+    /* =========================================================
+   GRAND OPENING — PARTICLES, SHIMMER, COIN BURST, GLOW
+   ========================================================= */
+
+/* Particle container */
+.gp-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3;
+  
+}
+
+.gp-particles .p {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: gpFloat 6s ease-in-out infinite;
+  z-index: 3;
+  background: var(--sparkle-1);
+}
+
+@keyframes gpFloat {
+  0% { transform: translateY(20px) scale(0.6); opacity: 0; }
+  10% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translateY(-40px) scale(1); opacity: 0; }
+}
+
+/* Coin burst */
+.coin-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.coin-burst .coin {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, #fff, #ffd27f, #ff9a3c);
+  opacity: 0;
+  animation: coinPop 0.9s ease-out forwards;
+  z-index: 3;
+}
+
+@keyframes coinPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-40px) scale(1); opacity: 0; }
+}
+
+/* Soft gold glow for Grand Opening */
+.pulse-card.grand-opening-active {
+  box-shadow:
+    0 0 22px rgba(255, 200, 90, 0.45),
+    0 0 44px rgba(255, 200, 90, 0.25);
+}
+
+.seasonal-banner {
+  display: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(6px);
+  z-index: 0;
+}
+
+/* SUMMER — warm, golden, tropical heat */
+.seasonal-banner.season-summer {
+  background: linear-gradient(135deg, #ffb347, #ff7e5f);
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+  box-shadow: 0 0 12px rgba(255, 140, 60, 0.35);
+  z-index: 0;
+}
+
+/* WINTER — icy, frosted, cool teal */
+.seasonal-banner.season-winter {
+  background: linear-gradient(135deg, #8fd3f4, #84fab0);
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  box-shadow: 0 0 12px rgba(120, 220, 255, 0.35);
+  z-index: 0;
+}
+
+/* SPRING — floral, soft, fresh */
+.seasonal-banner.season-spring {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+  box-shadow: 0 0 12px rgba(255, 180, 200, 0.35);
+  z-index: 0;
+}
+
+/* FALL — amber, earthy, warm */
+.seasonal-banner.season-fall {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+  box-shadow: 0 0 12px rgba(255, 170, 90, 0.35);
+  z-index: 0;
+}
+
+/* GRAND OPENING — your existing gold/teal theme */
+.seasonal-banner.season-grand-opening {
+  background: linear-gradient(135deg, #ffd56b, #00ffd5);
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+  box-shadow: 0 0 14px rgba(255, 220, 120, 0.45);
+  z-index: 0;
+}
+
+/* ============================================================
+   RECEIPT POPUP — DARK TROPICAL PREMIUM STYLE
+   ============================================================ */
+.receipt-popup {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  pointer-events: auto;
+  transform: translate(-50%, 120%);
+  width: 360px;
+  max-width: 80vw;
+  max-height: 80vh;
+  background: rgba(3, 9, 16, 0.96);
+  border-radius: 18px 18px 0 0;
+  padding: 18px 20px;
+  box-shadow: 0 -18px 40px rgba(0,0,0,0.7);
+  transition: transform 0.28s ease;
+  z-index: 30001 !important;
+  overflow: hidden;
+  display: none;
+}
+
+.receipt-popup.active {
+  transform: translate(-50%, 0);
+  overflow-y: auto;
+  display: block;
+}
+
+/* Subtle Watermark */
+.receipt-popup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex");
+  background-size: 180px;
+  background-repeat: no-repeat;
+  background-position: center 40%;
+  opacity: 0.06;
+  pointer-events: none;
+  filter: grayscale(100%) contrast(0.8);
+  z-index: -1;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
+
+/* Header */
+.receipt-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  position: relative;
+  
+}
+
+.receipt-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  opacity: 0.95;
+  
+}
+
+.receipt-header-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.receipt-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+  
+}
+
+.receipt-timestamp {
+  font-size: 11px;
+  color: var(--text-soft);
+  
+}
+
+/* Body */
+.receipt-body {
+  position: relative;
+ 
+}
+
+.receipt-amount {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 10px 0 18px;
+}
+
+/* Delivery Time Row */
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 13px;
+  
+}
+
+.receipt-label {
+  color: var(--text-soft);
+  
+}
+
+.receipt-value {
+  display: flex;
+  align-items: center;
+  
+  gap: 6px;
+}
+
+/* Adjustment Block */
+.adjustment-block {
+  background: rgba(255, 179, 71, 0.12);
+  border: 1px solid rgba(255, 179, 71, 0.35);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  text-align: center;
+  width: fit-content;
+  margin: 12px auto;
+}
+
+.adjustment-title {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--warning);
+  margin-bottom: 2px;
+}
+
+.adjustment-points {
+  color: var(--demerit);
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+
+.adjustment-note {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+
+/* Breakdown */
+.receipt-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+.receipt-breakdown {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.45;
+  margin-bottom: 14px;
+  
+}
+
+/* Meta */
+.receipt-meta {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.receipt-meta .order-line {
+  margin-bottom: 4px;
+  
+}
+
+/* Footer */
+.receipt-footer {
+  text-align: center;
+  margin-top: 12px;
+  
+}
+
+.receipt-contact {
+  font-size: 12px;
+  color: var(--primary);
+  text-decoration: none;
+}
+#receiptContent {
+    max-height: 70vh;   /* inner content gets scroll */
+    overflow-y: auto !important;
+    padding-right: 10px; /* prevents text from touching scrollbar */
+    
+}
+#receiptContent::-webkit-scrollbar {
+    width: 6px;
+    
+}
+
+#receiptContent::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.25);
+    border-radius: 10px;
+    
+}
+
+#receiptContent::-webkit-scrollbar-track {
+    background: transparent;
+    
+}
+
+.delay-penalty-line {
+  color: var(--danger);
+  font-weight: 600;
+}
+.qr-placeholder {
+  width: 90px;
+  height: 90px;
+  background: #ffffff; /* REQUIRED for QR visibility */
+  border-radius: 6px;  /* optional, looks clean */
+}
+
+#referralListHeader {
+  display: grid;
+  grid-template-columns: 1fr auto; /* h3 grows, sort-wrapper stays tight */
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+  gap: 12px; /* optional spacing */
+}
+
+#referralListHeader h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(0, 160, 220, 0.75);
+}
+
+/* Universal button micro-press */
+button,
+.btn,
+.icon-btn,
+.referral-btn,
+.referral-chip,
+.referral-sort-label,
+#referralFilterBtn,
+#referralSortBtn {
+  transition: all 0.15s ease;
+}
+
+/* Click state */
+button:active,
+.btn:active,
+.icon-btn:active,
+.referral-btn:active,
+.referral-chip:active,
+.referral-sort-label:active,
+#referralFilterBtn:active,
+#referralSortBtn:active {
+  transform: scale(0.92); /* stronger press for small icon buttons */
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,1);
+}
+
+#referralFilterBtn {
+  min-height: 0;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.75);
+  display: flex;
+  height: auto;
+  width: auto;
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;
+
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease; /* smooth hover + click */
+}
+
+#referralFilterBtn:hover {
+  border-color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.9);
+}
+
+/* CLICK STATE */
+#referralFilterBtn:active {
+  transform: scale(0.96); /* micro-press */
+  background: rgba(255,255,255,0.15); /* subtle darken */
+  border-color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,1);
+}
+
+.referral-card {
+  background: linear-gradient(135deg, #0a1f2d, #113b4c);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  color: rgba(255,255,255,0.55); /* soft grey base */
+}
+
+.referral-name {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.referral-stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.referral-lifetime {
+  color: #4fd1c5;
+}
+
+.referral-earned {
+  color: #f6ad55;
+}
+
+.referral-date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Base pill style — now transparent by default */
+.referral-earneddate {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: transparent;   /* ← default: no pill */
+  color: var(--text-main);   /* same as Joined */
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.referral-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.referral-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;  
+}
+
+.referral-row-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.referral-bottom-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.referral-bottom-right {
+  display: flex;
+  align-items: center;
+}
+
+.referral-sort-wrapper {
+  height: 32px; /* or whatever fits your UI */
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;   /* allows children to shrink */
+
+  gap: 8px;
+}
+
+/* Magical tap pulse */
+.qr-tap-pulse {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(0,255,220,0.55) 0%,
+    rgba(0,200,180,0.35) 40%,
+    rgba(0,150,140,0.0) 70%
+  );
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  animation: tpQRpulse 420ms ease-out forwards;
+  z-index: 99999;
+}
+
+@keyframes tpQRpulse {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0.9; }
+  70% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.45; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+/* Long‑press popup */
+#qr-menu {
+  position: fixed;   /* ← THIS FIXES THE SCROLL BUG */
+  background: rgba(0,40,40,0.92);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  z-index: 999999;
+}
+
+.info-tag-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.info-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-countdown {
+  display: none;
+  margin-top: 2px;   /* adjust 2–6px depending on taste */
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-soft);
+  letter-spacing: 0.12em;
+}
+
+.qr-menu-item {
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.qr-menu-item:hover {
+  background: rgba(0,255,220,0.15);
+}
+
+.referral-spark {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  position: relative; /* gives a positioning context */
+  animation: twinkleSpark 2.8s ease-in-out infinite;
+}
+
+.referral-spark::before {
+  content: "✦";
+  position: absolute;   /* now top/left work */
+  top: -2px;            /* adjust height here */
+  left: 0;
+  font-size: 11px;
+  color: #ffb347;
+  opacity: 0.85;
+  text-shadow:
+    0 0 4px rgba(255, 179, 71, 0.9),
+    0 0 8px rgba(255, 179, 71, 0.6);
+}
+
+
+@keyframes twinkleSpark {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+    filter: brightness(1);
+  }
+  40% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: brightness(1.35);
+  }
+  60% {
+    transform: scale(0.95);
+    opacity: 0.8;
+    filter: brightness(1.1);
+  }
+}
+
+/* Recent (≤14 days) */
+.last-earn-green {
+  background: rgba(34, 197, 94, 0.18); /* soft green glow */
+  font-weight: 600;
+  color: white; /* match Joined */
+}
+
+.last-earn-green::before {
+  font-size: 11px;
+  opacity: 0.9;
+  margin-left: 4px;
+}
+
+/* Normal (15–60 days) */
+.last-earn-normal {
+  background: transparent !important;
+  color: inherit; /* match Joined */
+  font-weight: 400;
+}
+
+/* Old (>60 days) */
+.last-earn-red {
+  background: rgba(180, 45, 45, 0.15); /* soft red glow */
+  font-weight: 600;
+  color: white; /* match Joined */
+}
+
+.last-earn-red::before {
+  content: "❗";
+  font-size: 11px;
+  opacity: 0.85;
+  margin-left: 4px;
+}
+
+@keyframes twinklePop {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.2);
+    filter: brightness(1.2);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.35);
+    filter: brightness(2.2);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-50%) scale(0.9);
+    filter: brightness(1.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.2);
+    filter: brightness(1.0);
+  }
+}
+
+.referral-sort-label {
+  display: flex;
+  padding: 4px 10px;
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;     /* REQUIRED for flex shrink */
+  min-height: 0;    /* allows vertical shrink */
+  width: auto;      /* let flexbox control width */
+  height: auto;     /* let flexbox control height */
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(31,224,162,0.18), rgba(255,179,71,0.18));
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,215,130,0.75);
+  box-shadow: 0 0 8px rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
+}
+
+/* Animation only — does NOT change the look */
+.referral-sort-label.fade-out {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.referral-sort-label.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.pulse-big-tier-icon::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 50%;
+  filter: blur(8px);
+  z-index: -1;
+}
+
+.tier-wrapper {
+  position: relative;
+  width: auto;      /* match your big badge size */
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-big-tier-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;      /* match your big badge size */
+  height: 120px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-big-tier-shimmer {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.12) 45%,
+    rgba(255,255,255,0.35) 50%,
+    rgba(255,255,255,0.12) 55%,
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 200%;
+  animation: shimmerSweep 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes shimmerSweep {
+  0%   { background-position: -80% 0; opacity: 0; }
+  30%  { opacity: 1; }
+  100% { background-position: 80% 0; opacity: 0; }
+}
+
+.pulse-big-tier-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+
+  overflow: hidden;
+  border-radius: 50%; /* <-- FIXED */
+}
+
+.tier-icon-small {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.info-icon-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
+  gap: 6px;
+  white-space: nowrap;
+  z-index: 9999;
+  /* THIS breaks the “tiny circle” problem */
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.tier-icon-big::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  border-radius: 50%;
+  filter: blur(18px);
+  z-index: -1;
+}
+
+.tier-icon-big {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.25));
+  opacity: 0.55;
+}
+
+.points-right.historical {
+  margin-right: 6px;
+}
+
+/* Inactive streak */
+.info-icon.water {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #8fd3f4, #4fa3d1);
+  box-shadow: 0 0 6px rgba(79,163,209,0.45);
+}
+
+/* Small streak (2 days) */
+.info-icon.fire-small {
+  background: radial-gradient(circle at 30% 20%, #fff7e6, #ffd27f, #ff9b4a);
+  box-shadow: 0 0 4px rgba(255,150,60,0.35);
+  color: #ffd27f;
+  text-shadow:
+    0 0 6px rgba(255,210,127,0.75),
+    0 0 12px rgba(255,180,90,0.55);
+}
+
+/* Medium streak (4 days) */
+.info-icon.fire-medium {
+  background: radial-gradient(circle at 30% 20%, #fff2cc, #ffb85c, #ff7a1a);
+  box-shadow: 
+    0 0 10px rgba(255,120,40,0.55),
+    0 0 16px rgba(255,100,20,0.35);
+  transform: scale(1.08);
+  color: #fff7e6;
+  text-shadow:
+    0 0 8px rgba(255,240,200,0.85),
+    0 0 14px rgba(255,220,160,0.55);
+}
+
+/* Big streak (8+ days) */
+.info-icon.fire-big {
+  background: radial-gradient(circle at 30% 20%, #ffeccc, #ff9a3c, #ff4e00);
+  box-shadow:
+    0 0 14px rgba(255,120,40,0.75),
+    0 0 26px rgba(255,80,0,0.55),
+    0 0 40px rgba(255,60,0,0.35);
+  animation: flamePulse 1.6s ease-in-out infinite;
+  transform: scale(1.15);
+  color: #4ff5e0;
+  text-shadow:
+    0 0 8px rgba(79,245,224,0.85),
+    0 0 16px rgba(79,245,224,0.55);
+}
+
+@keyframes flamePulse {
+  0% { transform: scale(1.12); }
+  50% { transform: scale(1.22); }
+  100% { transform: scale(1.12); }
+}
+
+/* Big streak (12+ days) */
+.info-icon.fire-legendary {
+  background: radial-gradient(circle at 30% 20%, #fff2cc, #ff7a1a, #d62800);
+  box-shadow:
+    0 0 18px rgba(255,80,0,0.85),
+    0 0 32px rgba(255,40,0,0.55),
+    0 0 50px rgba(255,0,0,0.35);
+  animation: flamePulseLegend 1.3s ease-in-out infinite;
+  transform: scale(1.25);
+  color: #ffe066;
+  text-shadow:
+    0 0 10px rgba(255,224,102,0.85),
+    0 0 20px rgba(255,180,60,0.55);
+}
+.burst-water::after {
+  background: rgba(120,200,255,0.55);
+}
+.burst-small::after {
+  background: rgba(255,200,120,0.85);
+}
+.burst-medium::after {
+  background: rgba(255,255,255,0.9);
+}
+.burst-big::after {
+  background: rgba(79,245,224,0.85);
+}
+.burst-legendary::after {
+  background: rgba(255,200,60,0.85);
+}
+.burst-eruption::after {
+  background: rgba(255,80,0,0.85);
+}
+
+@keyframes flamePulseLegend {
+  0% { transform: scale(1.22); }
+  50% { transform: scale(1.32); }
+  100% { transform: scale(1.22); }
+}
+
+/* Eruption streak (14+ days) */
+.info-icon.fire-eruption {
+  background: radial-gradient(circle at 30% 20%, 
+    #fff4d6,   /* bright molten core */
+    #ff9a3c,   /* lava orange */
+    #d62800,   /* volcanic red */
+    #7a0f00    /* deep magma edge */
+  );
+  color: #ff9a3c;
+  text-shadow:
+    0 0 12px rgba(255,154,60,0.85),
+    0 0 24px rgba(255,100,20,0.55);
+  box-shadow:
+    0 0 20px rgba(255,100,0,0.85),
+    0 0 36px rgba(255,60,0,0.55),
+    0 0 60px rgba(255,20,0,0.35),
+    inset 0 0 12px rgba(255,180,80,0.45); /* molten inner glow */
+
+  transform: scale(1.28);
+  animation: eruptionPulse 1.1s ease-in-out infinite;
+}
+
+@keyframes eruptionPulse {
+  0%   { transform: scale(1.22); filter: brightness(1.05); }
+  50%  { transform: scale(1.32); filter: brightness(1.25); }
+  100% { transform: scale(1.22); filter: brightness(1.05); }
+}
+
+@keyframes streakBurst {
+  0%   { transform: scale(1); filter: brightness(1); }
+  20%  { transform: scale(1.25); filter: brightness(1.6); }
+  40%  { transform: scale(0.85); filter: brightness(0.9); }
+  60%  { transform: scale(1.3); filter: brightness(1.4); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.streak-burst {
+  animation: streakBurst 0.45s ease-out;
+  position: relative;
+  overflow: visible;
+}
+
+.streak-burst::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: burstRing 0.45s ease-out;
+}
+
+@keyframes burstRing {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  80%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Tier-colored rings */
+.burst-small::after      { background: rgba(255,150,60,0.45); }
+.burst-medium::after     { background: rgba(255,200,90,0.45); }
+.burst-big::after        { background: rgba(255,80,0,0.45); }
+.burst-legendary::after  { background: rgba(255,40,0,0.55); }
+.burst-eruption::after   { background: rgba(255,0,0,0.65); }
+
+/* This is the REAL fix */
+.info-icon-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+  white-space: nowrap;
+  min-width: fit-content;   /* allows the icon row to widen */
+}
+
+/* Each icon stays centered and never wraps */
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#qr-menu {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+#qr-menu.show {
+  opacity: 1;
+  transform: scale(1);
+}
+#receiptBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: auto;
+  transition: opacity 0.25s ease;
+  z-index: 30000 !important;
+  display: none;
+}
+
+#receiptBackdrop.active {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 30000 !important;
+}
+
+.receipt-backdrop,
+.sheet-backdrop,
+.modal-backdrop {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.receipt-backdrop.active,
+.sheet-backdrop.active,
+.modal-backdrop.active {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#tpScannerFrame {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  /* Magical fade + pulse scaling */
+  transform: scale(0.92); /* slightly shrunken, ready to bloom */
+  transition:
+    opacity 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1); /* premium pulse */
+}
+
+/* HIDDEN CLASS */
+#tpScannerFrame.hidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transform: scale(0.92); /* shrink back into the mist */
+}
+
+/* VISIBLE CLASS — magical reveal */
+#tpScannerFrame.visible {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 999999;
+  box-shadow: 0 0 40px rgba(0, 255, 200, 0.18);
+  /* Pulseview: gentle bloom-in */
+  transform: scale(1);
+}
+
+#tpQRFrame {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transform: translateX(200vw); /* FORCE IT OFF-SCREEN */
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+#tpQRFrame.hidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transform: translateX(0); /* no movement */
+}
+#tpQRFrame.visible {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 999999;
+  display: block !important;
+  transform: translateX(0); /* BRING IT BACK */
+}
+
+#multiplierDropdown {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  position: relative;
+  max-height: 0;
+  overflow: hidden;
+  z-index: 7998;
+  line-height: 0;      /* removes the ghost line */
+  padding: 0;          /* ensures no inherited padding */
+  margin: 0;           /* prevents margin gaps */
+}
+
+#multiplierDropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: 450px;
+  line-height: normal; /* restore natural spacing when open */
+  margin-top: 8px; /* spacing appears only when open */
+}
+
+#tierDropdown {
+  margin-top: 6px;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  transition: opacity 0.18s ease, transform 0.18s ease, max-height 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  max-height: 0;
+  overflow: hidden;
+  line-height: 0;      /* removes the ghost line */
+  padding: 0;          /* ensures no inherited padding */
+  margin: 0;           /* prevents margin gaps */
+}
+
+#tierDropdown .tier-option {
+  position: relative;        /* REQUIRED for glyphs */
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.01rem;
+  line-height: 1.1rem;
+  padding: 4px 22px;
+  font-weight: 500;
+  opacity: 1;
+}
+
+#tierDropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: 450px;
+  line-height: normal; /* restore natural spacing when open */
+}
+/* Base: highlighted tier is fully visible */
+.tier-option.current-tier-shimmer .tier-label,
+.tier-option.current-tier-shimmer .tier-icon {
+  color: #ffffff; /* visible text */
+  position: relative;
+}
+
+/* Shimmer overlay */
+.tier-option.current-tier-shimmer .tier-label::after,
+.tier-option.current-tier-shimmer .tier-icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(#fff 0 0);
+  mask-image: linear-gradient(#fff 0 0);
+
+  animation: tierOptionShimmer 3s ease-out infinite;
+}
+
+@keyframes tierOptionShimmer {
+  0% {
+    background-position: -150% 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1; /* shimmer becomes visible */
+  }
+  30% {
+    background-position: 150% 0;
+    opacity: 1;
+  }
+  40% {
+    opacity: 0; /* shimmer disappears */
+  }
+  100% {
+    opacity: 0; /* stays invisible until next cycle */
+  }
+}
+
+/* PulseSeed ✧ */
+.tier-option[data-tier="PulseSeed"]::before,
+.tier-option[data-tier="PulseSeed"]::after {
+  content: "✧";
+  color: gold;
+  opacity: 0.85;
+  font-size: 13px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.tier-option[data-tier="PulseSeed"]::before { left: 8px; }
+.tier-option[data-tier="PulseSeed"]::after { right: 8px; }
+
+/* DriftRunner ⟢ */
+.tier-option[data-tier="DriftRunner"]::before,
+.tier-option[data-tier="DriftRunner"]::after {
+  content: "⟢";
+  color: gold;
+  opacity: 0.85;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-51%);
+}
+.tier-option[data-tier="DriftRunner"]::before { left: 8px; }
+.tier-option[data-tier="DriftRunner"]::after { right: 8px; }
+
+/* MeshSpirit ❂ */
+.tier-option[data-tier="MeshSpirit"]::before,
+.tier-option[data-tier="MeshSpirit"]::after {
+  content: "❂";
+  color: gold;
+  opacity: 0.9;
+  font-size: 15px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-49%);
+}
+.tier-option[data-tier="MeshSpirit"]::before { left: 8px; }
+.tier-option[data-tier="MeshSpirit"]::after { right: 8px; }
+
+/* CoreHeart ༶ */
+.tier-option[data-tier="CoreHeart"]::before,
+.tier-option[data-tier="CoreHeart"]::after {
+  color: gold;
+  opacity: 0.9;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-71%); /* moved up */
+}
+.tier-option[data-tier="CoreHeart"]::before {
+  content: "༶";
+  left: 8px;
+}
+.tier-option[data-tier="CoreHeart"]::after {
+  content: "༶";
+  right: 8px;
+}
+
+/* RealmLegend ⟬⟭ */
+.tier-option[data-tier="RealmLegend"]::before,
+.tier-option[data-tier="RealmLegend"]::after {
+  color: gold;
+  opacity: 1;
+  font-size: 17px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-59%);
+}
+.tier-option[data-tier="RealmLegend"]::before {
+  content: "⟬";
+  left: 8px;
+}
+.tier-option[data-tier="RealmLegend"]::after {
+  content: "⟭";
+  right: 8px;
+}
+
+
+#userNameSmall {
+  display: inline-block;
+  min-width: 1px;
+  position: relative;
+  font-size: clamp(14px, 6vw, 25px);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  background-size: 250% 100%;
+  background-position: -180% 0;
+
+  background: linear-gradient(135deg, #f8e7c2 0%, #f1d28b 25%, #d9b15f 50%, #f7e7b0 75%, #c89a45 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+
+  /* Subtle inner glow for premium depth */
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.4),
+    0 0 8px rgba(255, 240, 180, 0.25);
+
+  /* Smooth shimmer animation */
+  animation: treasureShimmer 3.5s ease-in-out infinite;
+}
+
+
+/* TWINKLE */
+#userNameSmall::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,215,0,0.4), transparent);
+  border-radius: 50%;
+  transform: translateY(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+@keyframes treasureShimmer {
+  0%   { background-position: -180% 0; }
+  50%  { background-position: 180% 0; }
+  100% { background-position: -180% 0; }
+}
+
+/* Trigger shimmer 
+@keyframes nameShimmer {
+  0% { background-position: -150% 0; }
+  100% { background-position: 150% 0; }
+}
+
+*/
+#multiplierText.multiplier-boost {
+  font-weight: 600;
+  color: var(--primary);
+  position: relative;
+  padding-left: 14px; /* space for arrow */
+}
+
+#multiplierText.multiplier-boost::before {
+  content: "➤";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  opacity: 0.45;
+  pointer-events: none;
+}
+#multiplierLabel {
+  margin-right: 12px;
+}
+.vaultButtonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 22px; /* fixes hugging */
+}
+
+.vaultLinkPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    145deg,
+    #1a1a1d 0%,
+    #0f0f11 40%,
+    #1c1c20 100%
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.45);
+
+  color: #e6e6e6;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: all 0.25s ease;
+}
+
+.vaultLinkPill:hover {
+  background: linear-gradient(
+    145deg,
+    #202024 0%,
+    #141416 40%,
+    #222228 100%
+  );
+  box-shadow:
+    inset 0 0 10px rgba(255, 255, 255, 0.07),
+    0 6px 16px rgba(0, 0, 0, 0.55);
+  transform: translateY(-1px);
+}
+
+.vaultIcon {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
+}
+
+
+.pulse-card.seasonal-active::before {
+  opacity: 1;
+  z-index: 0;
+}
+.pulse-card-points {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  padding: 6px 12px 10px 12px;
+}
+.pulse-card-points.current .value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.pulse-card-points.historical .value {
+  font-size: 22px;
+  font-weight: 600;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.pulse-card-points .label {
+  font-size: 11px;
+  opacity: 0.65;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.pulse-card-points .value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: white;
+  line-height: 1;
+}
+
+@keyframes twinkle {
+  0%, 92% { opacity: 0; transform: scale(0.2); }
+  95% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.2); }
+}
+
+.pulse-card-header {
+  width: auto;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  min-width: 0; /* ← critical */
+  overflow: visible !important;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.pulse-card-title {
+  display: flex;
+  font-size: clamp(8px, 6px, 15px);
+  text-transform: uppercase;
+  width: 100%;
+  height: 100%;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 6px;
+  margin-left: 6px;
+}
+
+.pulse-card-balance {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.pulse-card-footer {
+  width: auto;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  min-width: 0; /* ← critical */
+  overflow: visible !important;
+  justify-content: space-between;
+  margin-top: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+</style>
+</head>
+<body>
+  <!-- PulseEngine Chamber -->
+  <div class="pulse-rewards-chamber">
+    <div class="pulse-rewards-bubble">
+      <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldBank-1.webp.pex" alt="Pulse Rewards" class="pulse-rewards-img">
+    </div>
+  </div>
+  <div class="page-container">
+    <!-- Pulse Card -->
+    <div class="pulse-card-wrapper">
+      <div class="pulse-card" id="pulseCard">
+        <div class="seasonal-layer gp-particles"></div>
+        <div class="seasonal-layer coin-burst"></div>
+
+        <div class="pulse-big-tier-wrapper">
+          <div class="pulse-big-tier-icon" id="bigTierIcon">
+            <div class="pulse-big-tier-shimmer" id="bigTierShimmer"></div>
+          </div>
+        </div>
+
+        <div class="pulse-card-header">
+          <div class ="pulse-card-user-top">
+            <div class="username-wrapper">
+              <span id="userNameSmall"></span>
+              <span class="twinkle"></span>
+            </div>
+            <div class="pulse-card-title">My Pulse Points</div>
+          </div>
+
+          <div class="tier-badge" id="tierBadge">
+            <div class="tier-icon" id="tierIcon">🌱</div>
+            <div class="tier-wrapper">
+              <div class="tier-label" id="tierLabel">PulseSeed</div>
+              <div class="tier-sub" id="tierSub">Base Boost 1.00×</div>
+            </div>
+          </div>
+        </div>
+        <div class="tier-dropdown" id="tierDropdown"></div>
+        <div class="pulse-card-points">
+          <div class="points-left current">
+            <div class="points-label">Current:</div>
+            <div class="points-value" id="currentPoints">0</div>
+          </div>
+          <div class="points-right historical">
+            <div class="points-label">Historical:</div>
+            <div class="points-value" id="historicalPoints">0</div>
+          </div>
+        </div>
+
+        <div class="balance-sub" id="balanceSubText">
+          Every 500 Points = BZ $5 reward.
+        </div>
+
+        <div class="multiplier-dropdown" id="multiplierDropdown">
+          <div class="multiplier-row"><span>Tier</span><span id="bdTier">1.00×</span></div>
+          <div class="multiplier-row"><span>Streak</span><span id="bdStreak">1.00×</span></div>
+          <div class="multiplier-row"><span>Seasonal</span><span id="bdSeasonal">1.00×</span></div>
+          <div class="multiplier-row"><span>Referral</span><span id="bdReferral">—</span></div>
+          <div class="multiplier-divider"></div>
+          <div class="multiplier-row total"><span>Total Boost</span><span id="bdTotal">1.00×</span></div>
+        </div>
+
+        <div class="pulse-card-footer">
+          <div class="multiplier-pill" id="multiplierPill">
+          <div class="multiplier-dot"></div>
+
+          <span id="multiplierLabel">Total Boost:</span>
+          <span id="multiplierValue">1.00×</span>
+
+          <button class="btn btn-secondary2" id="multiplierInfoBtn" style="padding:4px 10px;font-size:11px;">ℹ️</button>
+        </div>
+
+          <div class="card-actions">
+            <button class="btn btn-secondary2" id="historyBtn">
+              <span class="btn-icon">📜</span>History
+            </button>
+            <button class="btn btn-primary2" id="redeemBtn">
+              <span class="btn-icon">💸</span>Redeem
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seasonal Banner -->
+    <div id="seasonalBanner" class="seasonal-banner"></div>
+
+    <!-- Info Box -->
+    <div class="info-box" id="infoBox">
+      <div class="info-icon-row" id="infoIconRow">
+        <div class="info-icon-wrapper" id="infoIconWrapper">
+          <div class="info-icon water">🌊</div>
+        </div>
+      </div>
+
+      <div class="info-text-group">
+        <span class="info-tag" id="infoTag">No Active Streak!</span>
+        <div class="info-text-sub" id="infoSub">
+          Earn points Today to start your Streak and unlock Bonus Multipliers!
+        </div>
+
+        <div class="info-tag-row">
+          <span class="info-countdown" id="infoCountdown">Xh XXm Left!</span>
+        </div>
+      </div>
+    </div>
+    <div class="vaultButtonWrapper">
+    <a href="#vault" class="vaultLinkPill" onclick="loadInternalPage('PulseWorldVault'); return false;">
+      <svg class="vaultIcon" viewBox="0 0 24 24">
+        <defs>
+          <linearGradient id="vaultMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#d7d7d7"/>
+            <stop offset="40%" stop-color="#8f8f8f"/>
+            <stop offset="100%" stop-color="#cfcfcf"/>
+          </linearGradient>
+        </defs>
+
+        <path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7zm9 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"
+              fill="url(#vaultMetal)"/>
+      </svg>
+      Open Vault Wallet
+    </a>
+
+
+  </div>
+  <!-- Referral Box -->
+  <div class="referral-box">
+    <div class="referral-header">
+      <div>
+        <div class="referral-title">Invite friends, Earn Rewards!</div>
+        <div class="referral-sub">Share your Code or QR to earn Bonus Pulse Points.</div>
+      </div>
+    </div>
+
+    <div class="referral-body">
+      <div class="referral-qr">
+        <div id="qrContainer" class="qr-placeholder"></div>
+      </div>
+    </div>
+
+    <div class="referral-code-block">
+      <div class="referral-code-label">Your Referral Code</div>
+      <div class="referral-code-value" id="referralCode">XXXX-0000</div>
+
+      <div class="referral-actions">
+        <button class="btn-ghost" id="copyCodeBtn">Copy Code</button>
+        <button class="btn-ghost" id="shareLinkBtn">Share Link</button>
+        <button class="btn-ghost" id="show-large-qr">Show Large QR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Referral List Header -->
+  <div id="referralListHeader">
+    <h3>Your Referrals:</h3>
+    <div class="referral-sort-wrapper">
+      <span id="referralSortLabel" class="referral-sort-label">Lifetime</span>
+      <button id="referralFilterBtn">Sort</button>
+    </div>
+  </div>
+
+  <div id="referralListContainer"></div>
+
+<!-- History Sheet -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="historySheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div>
+      <div class="sheet-title">Transaction History</div>
+      <div class="sheet-sub">Recent points Earned, Redeemed, and Bonuses.</div>
+    </div>
+    <button class="sheet-close" id="sheetCloseBtn">×</button>
+  </div>
+  <div class="history-list" id="historyList"></div>
+</div>
+
+<!-- Redeem Modal -->
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="redeemModal">
+  <div class="modal-title">Redeem Pulse Points</div>
+  <div class="modal-sub" id="redeemModalSub">
+    Choose how many points to Redeem. Minimum 500 points, in increments of 500.
+  </div>
+  <div class="modal-options" id="redeemOptions"></div>
+  <div class="modal-footer">
+    <button class="btn-ghost" id="redeemCancelBtn">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- RECEIPT POPUP -->
+<div id="receiptBackdrop" class="receipt-backdrop"></div>
+
+<div id="receiptPopup" class="receipt-popup">
+  <div id="receiptContent">
+    
+    <!-- HEADER -->
+    <div class="receipt-header">
+      <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex" class="receipt-logo" />
+      
+      <div class="receipt-header-text">
+        <div id="receiptTitle" class="receipt-title"></div>
+        <div id="receiptTimestamp" class="receipt-timestamp"></div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="receipt-body">
+      <div id="receiptAmount" class="receipt-amount"></div>
+
+      <!-- DELIVERY TIME -->
+      <div class="receipt-row">
+        <div class="receipt-label">Delivery Time:</div>
+        <div class="receipt-value">
+          <span id="receiptOrderLength">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adjustment block -->
+    <div id="receiptAdjustmentBlock" class="adjustment-block" style="display:none;">
+      <div class="adjustment-title">⚠️ Delivery Delay Penalty</div>
+      <div class="adjustment-note">Delivery exceeded 1.5 hours!?</div>
+    </div>
+
+    <div class="receipt-section-title">Breakdown:</div>
+    <div id="receiptBreakdown" class="receipt-breakdown"></div>
+
+    <div class="receipt-meta">
+      <div id="receiptOrder"></div>
+    </div>
+
+    <div class="receipt-footer">
+      <a href="mailto:Sales@pulseworld.net" class="receipt-contact">Contact Admin</a>
+    </div>
+
+  </div>
+</div>
+<iframe
+  id="tpScannerFrame"
+  class="hidden"
+  allow="camera; microphone; fullscreen; geolocation; autoplay; encrypted-media; clipboard-read; clipboard-write;"></iframe>
+<iframe id="tpQRFrame" class="hidden"></iframe>
+</div> <!-- END .page -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="module">
+
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+let persistenceEnabled = true;
+let lastTime = null;
+let firstTime = null;
+
+/************************************************************
+ * IDENTITY / AUTH STATE
+ ************************************************************/
+
+let identity = PulseRealm.PulseIdentity
+let trusted = null;
+let autologin = null;
+let loggedIn = false;
+let userName = null;
+let userEmail = null;
+let userID = null;
+let resizeTimeout;
+let token = localStorage.getItem("tp_token_v4") || null;
+let referralSortMode = "lifetime";
+let referralBaseUrl = "https://www.pulseworld.net/r/";
+let lastRenderedTier = null;
+let lastRenderedPoints = null;
+let lastRenderedLifetime = null;
+let qrLoaded = false;
+let cachedHistory = JSON.parse(localStorage.getItem("cachedHistory") || "[]");
+let cachedSettings = JSON.parse(localStorage.getItem("cachedSettings") || "{}");
+let cachedUsers = JSON.parse(localStorage.getItem("cachedUsers") || "[]");
+let cachedBusinesses = JSON.parse(localStorage.getItem("cachedBusinesses") || "[]");
+let bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+let bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+let bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+let bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+let cachedEvents = JSON.parse(localStorage.getItem("cachedEvents") || "[]");
+let eventCategories = JSON.parse(localStorage.getItem("eventCategories") || "[]");
+let eventSubcategories = JSON.parse(localStorage.getItem("eventSubcategories") || "[]");
+let eventCategoryIconMap = JSON.parse(localStorage.getItem("eventCategoryIconMap") || "{}");
+let eventSubcategoryIconMap = JSON.parse(localStorage.getItem("eventSubcategoryIconMap") || "{}");
+let allEvents = [];
+let savedEvents = [];
+let allBusinesses = [];
+let savedBusinesses = [];
+let allUsers = [];
+let allHistory = [];
+let allSettings = {};
+let currentUser = null;
+let displayNameAnimatedOnce = false;
+let currentTierName = null;
+
+  
+
+/************************************************************
+ * DOM ELEMENTS
+ ************************************************************/
+
+/************************************************************
+ * STACKABLE DROPDOWNS — NORMAL TOGGLE + SPECIAL "OPEN BOTH" RULE
+ ************************************************************/
+
+
+const multiplierInfoBtn = document.getElementById("multiplierInfoBtn");
+const multiplierDropdown = document.getElementById("multiplierDropdown");
+
+/*  
+  RULES:
+  - Tapping the SAME button toggles its dropdown normally.
+  - Tapping the OTHER button opens its dropdown WITHOUT closing the first.
+  - Tapping outside closes ALL.
+*/
+
+const userNameSmall = document.getElementById("userNameSmall");
+const pointsBalanceEl = document.getElementById("currentPoints");
+const pointsBalanceHl = document.getElementById("historicalPoints");
+const balanceSubText = document.getElementById("balanceSubText");
+const tierBadge = document.getElementById("tierBadge");
+const tierIcon = document.getElementById("tierIcon");
+const bigTierIcon = document.getElementById("bigTierIcon");
+const tierLabel = document.getElementById("tierLabel");
+const tierSub = document.getElementById("tierSub");
+const multiplierPill = document.getElementById("multiplierPill");
+const multiplierText = document.getElementById("multiplierText");
+const infoBox = document.getElementById("infoBox");
+const infoIconWrapper = document.getElementById("infoIconWrapper");
+const infoSub = document.getElementById("infoSub");
+const infoTag = document.getElementById("infoTag");
+const referralCodeEl = document.getElementById("referralCode");
+const historyBtn = document.getElementById("historyBtn");
+const redeemBtn = document.getElementById("redeemBtn");
+const sheetBackdrop = document.getElementById("sheetBackdrop");
+const historySheet = document.getElementById("historySheet");
+const sheetCloseBtn = document.getElementById("sheetCloseBtn");
+const historyList = document.getElementById("historyList");
+const modalBackdrop = document.getElementById("modalBackdrop");
+const redeemModal = document.getElementById("redeemModal");
+const redeemOptions = document.getElementById("redeemOptions");
+const redeemCancelBtn = document.getElementById("redeemCancelBtn");
+const toastEl = document.getElementById("toast");
+const pulseCard = document.getElementById("pulseCard");
+const copyCodeBtn = document.getElementById("copyCodeBtn");
+const shareLinkBtn = document.getElementById("shareLinkBtn");
+const receiptBackdrop = document.getElementById("receiptBackdrop");
+const receiptPopup = document.getElementById("receiptPopup");
+/************************************************************
+ * BOOTSTRAP
+ ************************************************************/
+
+function mark(label) {
+    console.log("[CHECKEMAIL]", label);
+  }
+  
+function normalizeTS(ts) {
+  if (!ts) return null;
+
+  // Firestore Timestamp (client)
+  if (typeof ts.toMillis === "function") return ts.toMillis();
+
+  // JS Date
+  if (ts instanceof Date) {
+    const t = ts.getTime();
+    return isNaN(t) ? null : t;
+  }
+
+  // Plain object with _seconds/_nanoseconds
+  if (typeof ts === "object" && typeof ts._seconds === "number") {
+    return ts._seconds * 1000 + Math.floor((ts._nanoseconds || 0) / 1e6);
+  }
+
+  // Fallback: parseable string/number
+  const d = new Date(ts);
+  const t = d.getTime();
+  return isNaN(t) ? null : t;
+}
+
+async function fetchOrderByEmail(orderID, userEmail) {
+  // Query orders where the user is the customer
+  const q1 = query(
+    collection(db, "Orders"),
+    where("customerEmail", "==", userEmail),
+    where("orderID", "==", orderID)
+  );
+
+  const snap1 = await getDocs(q1);
+  if (!snap1.empty) return { id: snap1.docs[0].id, ...snap1.docs[0].data() };
+
+  // Query orders where the user is the deliverer
+  const q2 = query(
+    collection(db, "Orders"),
+    where("delivererEmail", "==", userEmail),
+    where("orderID", "==", orderID)
+  );
+
+  const snap2 = await getDocs(q2);
+  if (!snap2.empty) return { id: snap2.docs[0].id, ...snap2.docs[0].data() };
+
+  warn("Order not found or not authorized:", orderID);
+  return null;
+}
+
+function formatMs(ms) {
+  if (ms <= 0) return "Expired";
+
+  const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+  const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+  const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+
+  return `${days}d ${hours}h ${minutes}m left`;
+}
+
+async function loadHistory(uid) {
+  mark("loadHistory");
+  // ---------------------------------------------------------
+  // 0. VERSION CHECK (MATCH BUSINESS PAGE)
+  // ---------------------------------------------------------
+try {
+  const htmlHistoryVersion = PulseRealm.globalCacheVersion.historyVersion || 1;
+  let localHistoryVersion = Number(localStorage.getItem("historyCacheVersion") || 1);
+
+  // HTML version newer → force reload
+  if (htmlHistoryVersion > localHistoryVersion) {
+    localStorage.setItem("forceReload_history", "1");
+    localStorage.setItem("historyCacheVersion", htmlHistoryVersion);
+    mark("HISTORY CACHE UPDATED");
+    localHistoryVersion = htmlHistoryVersion; // IMPORTANT FIX
+  } else {
+    // Firestore fallback (non-blocking)
+    setTimeout(async () => {
+      try {
+        const snap = await getDocs(collection(db, "CACHE_CONTROL"));
+        const doc = snap.docs[0].data() || {};
+        const serverHistoryVersion = doc.historyVersion || 1;
+        mark("PULLING HISTORY VERSION FROM SERVER CACHE_CONTROL: Version " + serverHistoryVersion);
+
+        if (serverHistoryVersion !== localHistoryVersion) {
+          localStorage.setItem("forceReload_history", "1");
+          localStorage.setItem("historyCacheVersion", serverHistoryVersion);
+          mark("HISTORY CACHE UPDATED");
+        }
+      } catch (err) {
+        mark("VERSIONCHECK HISTORY FALLBACK ERROR: " + err);
+      }
+    }, 0);
+  }
+  } catch (err) {
+    mark("VERSIONCHECK HISTORY FAILED ERROR " + err);
+  }
+
+  // ---------------------------------------------------------
+  // 1. TTL CHECK
+  // ---------------------------------------------------------
+  const raw = localStorage.getItem("cachedHistoryTimestamp");
+  const last = raw && !isNaN(Number(raw)) ? Number(raw) : 0;
+  const age = nowMs() - last;
+  const TTL = 4 * 24 * 60 * 60 * 1000; // 4 days
+  const ageLeft = TTL - age;
+  const formattedAgeLeft = formatMs(ageLeft);
+
+  const cachedHistoryRaw = localStorage.getItem("cachedHistory");
+  const cachedHistory = cachedHistoryRaw ? JSON.parse(cachedHistoryRaw) : [];
+
+  const forceReload = localStorage.getItem("forceReload_history") === "1";
+
+  // ---------------------------------------------------------
+  // 2. USE CACHE IF VALID
+  // ---------------------------------------------------------
+
+  if (!forceReload && Array.isArray(cachedHistory) && cachedHistory.length > 0 && age < TTL) {
+    mark("CACHED HISTORY FOUND → USING CACHE (Age Left: " + formattedAgeLeft + ")");
+    allHistory = cachedHistory;
+    return allHistory;
+  }
+
+  // ---------------------------------------------------------
+  // 3. SEMANTIC INVALIDATION (CHANGES collection)
+  // ---------------------------------------------------------
+
+  async function hasUserChanges() {
+    const q = query(
+      collection(db, "CHANGES"),
+      where("collection", "==", "PulseHistory"),
+      where("processed", "==", false)
+    );
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
+
+  const userChanges = await hasUserChanges();
+
+  // ---------------------------------------------------------
+  // 4. FETCH FRESH HISTORY IF NEEDED
+  // ---------------------------------------------------------
+
+  if (forceReload || userChanges || cachedHistory.length === 0) {
+    mark("FETCHING FRESH HISTORY FROM FIREBASE");
+
+    try {
+      // Load history entries (50 max)
+      const historyRef = collection(db, "PulseHistory", uid, "entries");
+      const q = query(historyRef, orderBy("ts", "desc"), limit(50));
+      const histSnap = await getDocs(q);
+      const docs = histSnap.docs;
+
+      // Prepare order fetches in parallel
+      const orderFetches = docs.map(async d => {
+        const item = { id: d.id, ...d.data() };
+
+        // Normalize timestamps
+        item.ts = normalizeTS(item.ts);
+        item.createdAt = normalizeTS(item.createdAt);
+
+        // Only hydrate if orderID is valid
+        const validOrderId =
+          typeof item.orderID === "string" &&
+          item.orderID.trim().length > 0 &&
+          item.orderID !== "null" &&
+          item.orderID !== "undefined";
+
+        if (validOrderId) {
+          try {
+            const order = await fetchOrderByEmail(item.orderID.trim(), userEmail);
+            if (order) {
+              item.orderLength = order.orderLength ?? null;
+              item.orderedAt = normalizeTS(order.orderedAt);
+              item.deliveredAt = normalizeTS(order.deliveredAt);
+              item.pointsSnapshot = order.pointsSnapshot ?? null;
+              item.itemName = order.itemName ?? null;
+              item.orderprice = order.orderprice ?? null;
+              item.ordertax = order.ordertax ?? null;
+              item.ordertip = order.ordertip ?? null;
+              item.ordershipping = order.ordershipping ?? null;
+              item.ordertotal = order.ordertotal ?? null;
+              item.payoutAmount = order.payoutAmount ?? null;
+            }
+          } catch (err) {
+            warn("Failed to hydrate order for history item", item.id, err);
+          }
+        }
+
+        return item;
+      });
+
+      // Run all order fetches in parallel
+      allHistory = await Promise.all(orderFetches);
+
+      // Clear forceReload AFTER successful reload
+      localStorage.removeItem("forceReload_history");
+
+    } catch (err) {
+      mark("FAILED TO LOAD HISTORY: " + err);
+      allHistory = cachedHistory; // fallback
+    }
+
+  } else {
+    mark("NO HISTORY CHANGES FOUND → USING CACHE");
+    allHistory = cachedHistory;
+  }
+
+  // ---------------------------------------------------------
+  // 5. SAVE TO CACHE
+  // ---------------------------------------------------------
+
+  try {
+    localStorage.setItem("cachedHistory", JSON.stringify(allHistory));
+    localStorage.setItem("cachedHistoryTimestamp", nowMs().toString());
+    mark("HISTORY LOADED + CACHE UPDATED");
+  } catch (err) {
+    mark("FAILED TO CACHE HISTORY: " + err);
+  }
+
+  return allHistory;
+}
+
+async function loadLoyaltyForUser(uid) {
+  mark("loadLoyaltyForUser");
+
+  // 1️⃣ Load all users (read-only)
+  await loadAllUsers(uid);
+
+  // 2️⃣ Find THIS user
+  const u = allUsers.find(u => u.id === uid);
+  if (!u) return null;
+
+  // 3️⃣ LoyaltyContext from Firestore (read-only)
+  const lc = u.loyaltyContext || {};
+
+  // 4️⃣ Identity block (read-only)
+  const id = u.identity || {};
+
+  // 5️⃣ FRONTEND STREAK MULTIPLIER CORRECTION (no writes)
+  let streakCount = Number(u.streakCount) || 0;
+  const lastEarned = u.lastEarnedDate ? new Date(u.lastEarnedDate).getTime() : null;
+
+  if (lastEarned) {
+    const windowHours = (allSettings.streakDurationDays ?? 1) * 24;
+    const expiresMs = lastEarned + windowHours * 3600000;
+
+    if (nowMs() >= expiresMs) {
+      streakCount = 0; // frontend-only correction
+    }
+  }
+
+  const streakMultiplier = Math.min(
+    (allSettings.streakMultiplierBase ?? 1) +
+      streakCount * (allSettings.streakMultiplierPerDay ?? 0),
+    allSettings.streakMaxMultiplier ?? 1
+  );
+
+  // 6️⃣ FRONTEND SEASONAL CORRECTION (read-only)
+  const {
+    seasonalActive,
+    seasonalName,
+    seasonalMultiplier
+  } = getSeasonFromSettings(allSettings);
+
+  // 7️⃣ RETURN FINAL OBJECT (NO FIRESTORE WRITES)
+  return {
+    ...u,          // original user fields
+    history,       // loaded separately
+
+    // Identity
+    displayName: userName,
+
+    // Loyalty fields
+    points: u.points ?? u.currentPoints ?? 0,
+    lifetimePoints: u.lifetimePoints ?? 0,
+    referralCode: u.referralCode ?? null,
+
+    // Tier fields (from Firestore)
+    tier: lc.tier,
+    tierKey: lc.tierKey,
+    tierMultiplier: lc.tierMultiplier ?? 1,
+
+    // ⭐ Corrected seasonal + streak (frontend only)
+    seasonalActive,
+    seasonalName,
+    seasonalMultiplier,
+    streakMultiplier,
+
+    // Pass-through metadata
+    calculationVersion: lc.calculationVersion ?? 0,
+    updated: lc.updated || null
+  };
+}
+
+/************************************************************
+ * TIER + REFERRAL RENDERING (USES YOUR EXISTING HELPERS)
+ ************************************************************/
+async function renderTier(currentUser) {
+  mark("renderTier");
+  const tierName = getTierNameFromMultiplier(currentUser.tierMultiplier ?? 1, allSettings);
+  currentTierName = tierName;
+  setTierBadges(currentTierName);
+  await renderTierDropdown(allSettings);
+
+  applyTierVisuals(
+    tierName,
+    currentUser.tierMultiplier ?? 1,
+    allSettings
+  );
+}
+
+
+function renderPoints(currentUser) {
+  if (pointsBalanceEl) {
+    pointsBalanceEl.textContent = (currentUser.points ?? 0).toLocaleString();
+  }
+  if (pointsBalanceHl) {
+    pointsBalanceHl.textContent = (currentUser.lifetimePoints ?? 0).toLocaleString();
+  }
+}
+
+function renderReferral(user) {
+  if (!referralCodeEl) return;
+  if (!user.referralCode) {
+    referralCodeEl.textContent = "No code yet";
+    return;
+  }
+  referralCodeEl.textContent = user.referralCode;
+}
+
+/************************************************************
+ * EXISTING HELPERS (UNCHANGED)
+ ************************************************************/
+function animateDisplayName(name) {
+  mark("animateDisplayName");
+  const el = document.getElementById("userNameSmall");
+  if (!el) return;
+
+  el.textContent = name;
+
+  if (displayNameAnimatedOnce) return;
+  displayNameAnimatedOnce = true;
+
+  el.classList.remove("shimmer");
+  void el.offsetWidth;
+
+  setTimeout(() => {
+    el.classList.add("shimmer");
+  }, 120);
+}
+
+function buildTiersFromSettings(s) {
+  mark("buildTiersFromSettings");
+  return [
+    { name: "PulseSeed", multiplier: s.tierMultiplier_PulseSeed, threshold: 0 },
+    {
+      name: "DriftRunner",
+      multiplier: s.tierMultiplier_ReefDiver,
+      threshold: s.tierThreshold_ReefDiver
+    },
+    {
+      name: "MeshSpirit",
+      multiplier: s.tierMultiplier_ToucanSpirit,
+      threshold: s.tierThreshold_ToucanSpirit
+    },
+    {
+      name: "CoreHeart",
+      multiplier: s.tierMultiplier_VolcanoHeart,
+      threshold: s.tierThreshold_VolcanoHeart
+    },
+    {
+      name: "RealmLegend",
+      multiplier: s.tierMultiplier_HurricaneLegend,
+      threshold: s.tierThreshold_HurricaneLegend
+    }
+  ];
+}
+
+async function renderTierDropdown(settings) {
+  mark("renderTierDropdown");
+  const dropdown = document.getElementById("tierDropdown");
+  if (!dropdown) return;
+
+  dropdown.innerHTML = "";
+
+  const tiers = buildTiersFromSettings(settings);
+
+  tiers
+    .sort((a, b) => a.multiplier - b.multiplier)
+    .forEach(tier => {
+      const div = document.createElement("div");
+      div.className = "tier-option";
+      div.dataset.tier = tier.name;
+
+      if (tier.name === currentTierName) {
+        div.classList.add("current-tier-shimmer");
+      }
+
+      const icon = getTierIcon(tier.name);
+
+      const label = document.createElement("span");
+      label.className = "tier-label";
+      label.textContent = `${icon} ${tier.name} — `;
+
+      const mult = document.createElement("span");
+      mult.textContent = tier.multiplier.toFixed(2) + "×";
+
+      label.appendChild(mult);
+      div.appendChild(label);
+      dropdown.appendChild(div);
+    });
+}
+
+function getTierBadgeURL(tierName) {
+  mark("getTierBadgeURL");
+  const map = {
+    "PulseSeed":
+      "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
+    "DriftRunner":
+      "./_EXPRESSIONS/_PEX/BUILD/DriftRunner.webp.pex",
+    "MeshSpirit":
+      "./_EXPRESSIONS/_PEX/BUILD/MeshSpirit.webp.pex",
+    "CoreHeart":
+      "./_EXPRESSIONS/_PEX/BUILD/CoreHeart.webp.pex",
+    "RealmLegend":
+      "./_EXPRESSIONS/_PEX/BUILD/RealmLegend.webp.pex"
+  };
+
+  return map[tierName];
+}
+
+function setTierBadges(tierName) {
+  mark("setTierBadges");
+  if (!bigTierIcon) {
+    warn("⛔ bigTierIcon missing — DOM not ready yet");
+    return;
+  }
+
+  if (lastRenderedTier === tierName) {
+    return;
+  }
+
+  lastRenderedTier = tierName;
+
+  const badgeURL = getTierBadgeURL(tierName);
+
+  const img = new Image();
+  img.src = badgeURL;
+
+  img.onload = () => {
+    bigTierIcon.innerHTML = `<img src="${badgeURL}" class="tier-icon-big" />`;
+  };
+
+  img.onerror = () => {
+    const fallback = getTierBadgeURL("PulseSeed");
+    warn("⚠️ Badge failed to load, using fallback:", fallback);
+    bigTierIcon.innerHTML = `<img src="${fallback}" class="tier-icon-big" />`;
+  };
+  preloadImage(badgeURL);
+}
+
+function getTierIcon(tierName) {
+  const icons = {
+    "PulseSeed": "🌱",
+    "DriftRunner": "⚡",
+    "MeshSpirit": "🕸️",
+    "CoreHeart": "🔥",
+    "RealmLegend": "🌌"
+  };
+  return icons[tierName] || "🌱";
+}
+
+/************************************************************
+ * REFERRALS + HISTORY HELPERS (UNCHANGED)
+ ************************************************************/
+function normalizeDateAny(input) {
+  if (!input) return null;
+
+  if (input.toDate && typeof input.toDate === "function") {
+    const d = input.toDate();
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  if (input instanceof Date) {
+    const d = new Date(input.getTime()); // clone it
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  if (typeof input === "number") {
+    const d = new Date(input);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  if (typeof input === "string") {
+    const s = input.trim();
+
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    const mdY = /^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/;
+    const mdyMatch = s.match(mdY);
+    if (mdyMatch) {
+      const [_, mm, dd, yyyy] = mdyMatch;
+      const d = new Date(`${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}T00:00:00`);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    const mdY2 = /^(\d{1,2})[-\/](\d{1,2})[-\/](\d{2})$/;
+    const mdy2Match = s.match(mdY2);
+    if (mdy2Match) {
+      const [_, mm, dd, yy] = mdy2Match;
+      const yyyy = Number(yy) < 50 ? `20${yy}` : `19${yy}`;
+      const d = new Date(`${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}T00:00:00`);
+      return isNaN(d.getTime()) ? null : d;
+    }
+  }
+
+  return null;
+}
+
+function toIsoOrNull(d) {
+  const date = normalizeDateAny(d);
+  return date ? date.toISOString() : null;
+}
+
+function toDateOrNull(v) {
+  if (!v) return null;
+  if (v instanceof Date) return v;
+  if (v.toDate) return v.toDate();
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function normalizeHistoryItem(historyDoc, orderDoc = {}) {
+  mark("normalizeHistoryItem");
+  const h = historyDoc || {};
+  const o = orderDoc || {};
+
+  const pick = (hist, order) =>
+    hist !== undefined && hist !== null && hist !== "" ? hist : order;
+
+  const toMs = (v) => {
+    if (!v) return null;
+
+    if (typeof v.toMillis === "function") {
+      return v.toMillis();
+    }
+
+    if (v instanceof Date) {
+      const ms = v.getTime();
+      return isNaN(ms) ? null : ms;
+    }
+
+    if (typeof v === "object" && "_seconds" in v) {
+      return v._seconds * 1000 + Math.floor((v._nanoseconds || 0) / 1e6);
+    }
+
+    if (typeof v === "string") {
+      const cleaned = v
+        .replace(" at ", " ")
+        .replace("UTC", "GMT");
+
+      const ms = Date.parse(cleaned);
+      if (!isNaN(ms)) return ms;
+
+      const fallback = Date.parse(v);
+      return isNaN(fallback) ? null : fallback;
+    }
+
+    if (typeof v === "number") {
+      return v > 0 ? v : null;
+    }
+
+    return null;
+  };
+
+  const ts =
+    toMs(h.ts) ||
+    toMs(h.createdAt) ||
+    toMs(o.deliveredAt) ||
+    toMs(o.orderedAt) ||
+    nowMs();
+
+  const createdAt =
+    toMs(h.createdAt) ||
+    toMs(h.ts) ||
+    toMs(o.createdAt) ||
+    ts;
+
+  const orderedAt =
+    toMs(h.orderedAt) ||
+    toMs(o.orderedAt) ||
+    null;
+
+  const deliveredAt =
+    toMs(h.deliveredAt) ||
+    toMs(o.deliveredAt) ||
+    null;
+
+  let orderLength = pick(h.orderLength, o.orderLength);
+  if (orderLength == null && orderedAt && deliveredAt) {
+    const start = new Date(orderedAt);
+    const end = new Date(deliveredAt);
+    if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+      orderLength = Math.floor((end - start) / 60000);
+    }
+  }
+
+  const orderID = pick(h.orderID, o.orderID);
+  const label = pick(h.label, h.reason) || "Activity";
+  const type = pick(h.type, "earn");
+
+  const amount =
+    typeof h.amount === "number"
+      ? h.amount
+      : typeof h.totalPointsEarned === "number"
+      ? h.totalPointsEarned
+      : typeof o.pointsSnapshot.totalPointsEarned === "number"
+      ? o.pointsSnapshot.totalPointsEarned
+      : 0;
+
+  const snap = o.pointsSnapshot || {};
+
+  const basePoints = pick(h.basePoints, snap.basePoints);
+  const tierMultiplier = pick(h.tierMultiplier, snap.tierMultiplier) ?? 1;
+  const streakMultiplier = pick(h.streakMultiplier, snap.streakMultiplier) ?? 1;
+  const seasonalMultiplier = pick(h.seasonalMultiplier, snap.seasonalMultiplier) ?? 1;
+
+  const tierBonusPoints = pick(h.tierBonusPoints, snap.tierBonusPoints) ?? 0;
+  const streakBonusPoints = pick(h.streakBonusPoints, snap.streakBonusPoints) ?? 0;
+  const seasonalBonusPoints = pick(h.seasonalBonusPoints, snap.seasonalBonusPoints) ?? 0;
+  const fastDeliveryBonus = pick(h.fastDeliveryBonus, snap.fastDeliveryBonus) ?? 0;
+
+  const referralBaseBonus = pick(h.referralBaseBonus, snap.referralBaseBonus) ?? 0;
+  const seasonalReferralBonus = pick(h.seasonalReferralBonus, snap.seasonalReferralBonus) ?? 0;
+
+  const totalPointsEarned =
+    pick(h.totalPointsEarned, snap.totalPointsEarned) ?? amount ?? 0;
+
+  const seasonalName = pick(h.seasonalName, snap.seasonalName) || "";
+  const seasonalActive = pick(h.seasonalActive, snap.seasonalActive) || false;
+
+  const calculationVersion = pick(h.calculationVersion, snap.calculationVersion) ?? 1;
+
+  const orderprice = pick(h.orderprice, o.orderprice ?? o.orderPrice);
+  const ordertotal = pick(h.ordertotal, o.ordertotal ?? o.orderTotal);
+  const itemName = pick(h.itemName, o.itemName);
+
+  return {
+    type,
+    label,
+    amount,
+    orderID,
+    ts,
+    createdAt,
+    orderedAt,
+    deliveredAt,
+    orderLength,
+    orderprice,
+    ordertotal,
+    itemName,
+    basePoints,
+    tierMultiplier,
+    streakMultiplier,
+    seasonalMultiplier,
+    tierBonusPoints,
+    streakBonusPoints,
+    seasonalBonusPoints,
+    fastDeliveryBonus,
+    referralBaseBonus,
+    seasonalReferralBonus,
+    totalPointsEarned,
+    seasonalName,
+    seasonalActive,
+    calculationVersion,
+    order: o
+  };
+}
+
+function getCurrentReferrals() {
+  mark("getCurrentReferrals");
+
+  if (!currentUser || !currentUser.referralCode) {
+    warn("❌ No currentUser or no referralCode", { currentUser });
+    return [];
+  }
+
+  const myCode = currentUser.referralCode;
+  const referrals = allUsers.filter(u =>
+    u.uid !== currentUser.uid &&
+    (u.referredBy || "") === myCode
+  );
+  return referrals.map(ref => {
+    // Deep clone so we never mutate cached data
+    const clone = { ...ref };
+
+    // Normalize dates safely
+    const joinedAtRaw =
+      clone.joinedAt ||
+      clone.createdAt ||
+      null;
+
+    const lastEarnedRaw = clone.lastEarnedDate || null;
+
+    const orders = allHistory
+      .filter(o =>
+        (o.customerEmail || "").toLowerCase() === (clone.email || "").toLowerCase() ||
+        (o.delivererEmail || "").toLowerCase() === (clone.email || "").toLowerCase()
+      )
+      .map(o => JSON.parse(JSON.stringify(o))); // deep clone orders too
+
+    const lastOrderDateRaw =
+      orders[orders.length - 1].deliveredAt ||
+      clone.lastOrderDate ||
+      null;
+
+    const lastActiveRaw =
+      clone.lastEarnedDate ??
+      clone.lastActive ??
+      lastOrderDateRaw ??
+      joinedAtRaw ??
+      null;
+
+    return {
+      ...clone,
+
+      // Always normalized fields
+      lifetimePoints: Number(clone.lifetimePoints ?? 0),
+      earnedForReferrer: Number(clone.earnedForReferrer ?? 0),
+      earnedForYou: Number(clone.earnedForYou ?? 0),
+
+      joinedAt: normalizeDateAny(joinedAtRaw),
+      lastEarnedDate: normalizeDateAny(lastEarnedRaw),
+      lastOrderDate: normalizeDateAny(lastOrderDateRaw),
+      lastActive: normalizeDateAny(lastActiveRaw),
+      orders,
+      totalOrders: Number(clone.totalOrders ?? 0),
+    };
+  });
+}
+
+/************************************************************
+ * UI / INTERACTION WIRING
+ ************************************************************/
+function showToast(message) {
+  if (!toastEl) return;
+  toastEl.textContent = message;
+  toastEl.classList.add("show");
+  setTimeout(() => toastEl.classList.remove("show"), 2200);
+}
+
+function waitForQR(callback) {
+  const container = document.getElementById("qrContainer");
+  if (!container) return;
+
+  const check = () => {
+    const qrImg = container.querySelector("img") || container.querySelector("canvas");
+
+    if (qrImg) {
+      let src;
+
+      if (qrImg.tagName === "IMG" && qrImg.src) {
+        src = qrImg.src;
+      } else if (qrImg.tagName === "CANVAS") {
+        src = qrImg.toDataURL("image/png");
+      }
+
+      if (src) {
+        callback(src);
+        return;
+      }
+    }
+
+    requestAnimationFrame(check);
+  };
+
+  check();
+}
+
+function lazyLoadQR(referralLink) {
+  mark("lazyLoadQR");
+  setTimeout(() => {
+    const container = document.getElementById("qrContainer");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    new QRCode(container, {
+      text: referralLink,
+      width: 90,
+      height: 90,
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    waitForQR((src) => {
+      PulseRealm.__tpLargeQR = src;
+    });
+
+  }, 150);
+}
+
+function openSheet() {
+  historySheet.classList.add("active");
+  sheetBackdrop.classList.add("active");
+
+  historySheet.style.pointerEvents = "none";
+  historyList.style.pointerEvents = "auto";
+}
+
+function closeSheet() {
+  historySheet.classList.remove("active");
+  sheetBackdrop.classList.remove("active");
+
+  historySheet.style.pointerEvents = "auto";
+  historyList.style.pointerEvents = "auto";
+}
+
+function openModal() {
+  modalBackdrop.classList.add("active");
+  redeemModal.classList.add("active");
+}
+
+function closeModal() {
+  modalBackdrop.classList.remove("active");
+  redeemModal.classList.remove("active");
+}
+
+function closeReceipt() {
+  const popup = document.getElementById("receiptPopup");
+  const backdrop = document.getElementById("receiptBackdrop");
+
+  popup.classList.remove("active");
+  backdrop.classList.remove("active");
+}
+
+
+function wireInteractions() {
+  mark("wireInteractions");
+  if (historyBtn) historyBtn.onclick = openSheet;
+  if (sheetCloseBtn) sheetCloseBtn.onclick = closeSheet;
+  if (redeemBtn) redeemBtn.onclick = openRedeemModal;
+  if (redeemCancelBtn) redeemCancelBtn.onclick = closeModal;
+  if (receiptBackdrop) receiptBackdrop.onclick = closeReceiptPopup;
+  if (sheetBackdrop) sheetBackdrop.onclick = closeSheet;
+  if (modalBackdrop) modalBackdrop.onclick = closeModal;
+    // -------------------------------
+    // 8️⃣ Referral sort button
+    // -------------------------------
+    const sortBtn = document.getElementById("referralFilterBtn");
+    if (sortBtn && !sortBtn.__loyaltyClickBound) {
+      sortBtn.__loyaltyClickBound = true;
+      sortBtn.onclick = () => {
+        referralSortMode = nextSortMode(referralSortMode);
+        loadAndRenderReferrals(identity);
+      };
+    }
+
+    // -------------------------------
+    // 🔟 QR + Scanner listeners
+    // -------------------------------
+    const referralCode = currentUser.TPIdentity.referralCode;
+
+    const showLargeQR = document.getElementById("show-large-qr");
+    if (showLargeQR && !showLargeQR.__loyaltyClickBound) {
+      showLargeQR.__loyaltyClickBound = true;
+      showLargeQR.addEventListener("click", () => {
+        if (!referralCode) return;
+        openQRPage(referralBaseUrl + encodeURIComponent(referralCode));
+      });
+    }
+
+    const qr = document.getElementById("qrContainer");
+    if (qr && !qr.__loyaltyClickBound) {
+      qr.__loyaltyClickBound = true;
+      qr.addEventListener("click", (e) => {
+        spawnQRPulse(e.clientX, e.clientY);
+        openTropicScanner();
+      });
+    }
+
+    
+    // -------------------------------
+    // 🔔 PulseRealm.message (scanner / QR)
+    // -------------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+      window.addEventListener("message", (e) => {
+        if (e.origin !== "https://www.pulseworld.net") return;
+
+        const action = e.data.action;
+        if (!action) return;
+
+        switch (action) {
+          case "scannerReady":
+            document.getElementById("tpScannerFrame").classList.add("visible");
+            break;
+
+          case "closeScanner":
+            closeTropicScanner();
+            killAllBackdrops();
+            break;
+
+          case "closeQRView":
+            closeQRPage();
+            killAllBackdrops();
+            break;
+        }
+      });
+    });
+
+    // -------------------------------
+    // EVENT LISTENERS (ONE-TIME)
+    // -------------------------------
+    if (copyCodeBtn && !copyCodeBtn.__loyaltyClickBound) {
+      copyCodeBtn.__loyaltyClickBound = true;
+      copyCodeBtn.addEventListener("click", () => {
+        const code = referralCodeEl.textContent.trim();
+        navigator.clipboard.writeText(code)
+          .then(() => showToast("Referral Code Copied."))
+          .catch(() => showToast("Unable to Copy Code."));
+      });
+    }
+
+    if (shareLinkBtn && !shareLinkBtn.__loyaltyClickBound) {
+      shareLinkBtn.__loyaltyClickBound = true;
+      shareLinkBtn.addEventListener("click", () => {
+        const code = referralCodeEl.textContent.trim();
+        const link = referralBaseUrl + encodeURIComponent(code);
+        if (navigator.share) {
+          navigator.share({
+            title: "Join me on Pulse World!",
+            text: "Use my Referral Link to earn Pulse Points!",
+            url: link
+          }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(link).then(() => {
+            showToast("Referral Link Copied.");
+          });
+        }
+      });
+    }
+
+
+    if (tierBadge && !tierBadge.__loyaltyClickBound) {
+      tierBadge.__loyaltyClickBound = true;
+      tierBadge.addEventListener("click", (e) => {
+        e.stopPropagation();
+        tierDropdown.classList.toggle("show");
+      });
+    }
+
+    if (multiplierInfoBtn && !multiplierInfoBtn.__loyaltyClickBound) {
+      multiplierInfoBtn.__loyaltyClickBound = true;
+      multiplierInfoBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        multiplierDropdown.classList.toggle("show");
+      });
+    }
+
+    if (tierDropdown && !tierDropdown.__loyaltyClickBound) {
+      tierDropdown.__loyaltyClickBound = true;
+      tierDropdown.addEventListener("click", (e) => {
+        e.stopPropagation();
+        tierDropdown.classList.remove("show");
+      });
+    }
+
+    if (multiplierDropdown && !multiplierDropdown.__loyaltyClickBound) {
+      multiplierDropdown.__loyaltyClickBound = true;
+      multiplierDropdown.addEventListener("click", (e) => {
+        e.stopPropagation();
+        multiplierDropdown.classList.remove("show");
+      });
+    }
+
+    if (!document.__loyaltyDropdownGlobalClickBound) {
+      document.__loyaltyDropdownGlobalClickBound = true;
+      document.addEventListener("click", () => {
+        tierDropdown.classList.remove("show");
+        multiplierDropdown.classList.remove("show");
+      });
+    }
+
+    if (!document.__loyaltyVisibilityBound) {
+      document.__loyaltyVisibilityBound = true;
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          setTimeout(async () => await sessionCheck(), 250);
+          mark("✅ VisibilityChange RERAN SESSIONCHECK AND LET THE FUNCTION DO THE LOGIC");
+        }
+      });
+    }
+
+    mark("✅ Loyalty page initialized once");
+}
+
+function getTierNameFromMultiplier(multiplier, settings) {
+  mark("getTierNameFromMultiplier");
+  const tiers = buildTiersFromSettings(settings);
+
+  // Sort once per call, descending
+  tiers.sort((a, b) => b.multiplier - a.multiplier);
+
+  for (const tier of tiers) {
+    if (multiplier >= tier.multiplier) return tier.name;
+  }
+  return "PulseSeed";
+}
+/************************************************************
+ * RENDER LOGIC
+ ************************************************************/
+function applyTierVisuals(tierName, tierMultiplier, settings) {
+  mark("applyTierVisuals");
+  if (!tierLabel || !tierIcon || !tierSub) return;
+
+  tierLabel.textContent = tierName;
+  tierIcon.textContent = getTierIcon(tierName);
+
+  setTierBadges(tierName);
+  
+  tierSub.textContent = `Base Boost ${tierMultiplier.toFixed(2)}×`;
+
+  // Highlight dropdown option (optimized)
+  const options = document.querySelectorAll(".tier-option");
+  for (const opt of options) {
+    opt.classList.toggle("active", opt.dataset.tier === tierName);
+  }
+}
+
+function renderSeasonal(settings) {
+  mark("renderSeasonal");
+  const seasonalRow = document.getElementById("bdSeasonal");
+  const seasonalBadge = document.getElementById("seasonalBadge");
+
+  if (!settings.seasonalActive) {
+    if (seasonalRow) seasonalRow.textContent = "1.00×";
+    if (seasonalBadge) {
+      seasonalBadge.style.display = "none";
+      seasonalBadge.textContent = "";
+    }
+    return;
+  }
+
+  const mult = Number(settings.seasonalMultiplier || 1).toFixed(2) + "×";
+  if (seasonalRow) seasonalRow.textContent = mult;
+
+  if (seasonalBadge) {
+    seasonalBadge.style.display = "inline-flex";
+    seasonalBadge.textContent = settings.seasonalName || "Seasonal Bonus";
+  }
+}
+
+function spawnSeasonalParticles(colors = []) {
+  mark("spawnSeasonalParticles");
+  const container = document.querySelector(".gp-particles");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const count = 14 + Math.floor(Math.random() * 6);
+
+  const frag = document.createDocumentFragment();
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement("div");
+    p.className = "p";
+
+    p.style.background = colors[Math.floor(Math.random() * colors.length)] || "rgba(255,255,255,0.8)";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.top = 80 + Math.random() * 20 + "%";
+    p.style.animationDelay = (Math.random() * 3) + "s";
+
+    frag.appendChild(p);
+  }
+
+  container.appendChild(frag);
+}
+
+
+function applySeasonalVisuals(data) {
+  mark("applySeasonalVisuals");
+  const banner = document.getElementById("seasonalBanner");
+
+  if (!data.seasonalActive) {
+    banner.style.display = "none";
+    banner.className = "seasonal-banner";
+    document.body.className = document.body.className
+      .replace(/season-\S+/g, "")
+      .trim();
+    return;
+  }
+
+  const name = (data.seasonalName || "").toLowerCase();
+  let themeClass = "season-summer";
+  let icon = "";
+  let colors = [];
+
+  if (name.includes("summer")) {
+    themeClass = "season-summer"; icon = "☀️";
+    colors = ["#FFD27F", "#FF9E7D", "#FFF2C2"];
+  } else if (name.includes("winter")) {
+    themeClass = "season-winter"; icon = "❄️";
+    colors = ["#B3E5FF", "#E0F7FF", "#FFFFFF"];
+  } else if (name.includes("spring")) {
+    themeClass = "season-spring"; icon = "🌸";
+    colors = ["#FFB7D5", "#FF8FB8", "#FFFFFF"];
+  } else if (name.includes("autumn") || name.includes("fall")) {
+    themeClass = "season-fall"; icon = "🍂";
+    colors = ["#FFB07C", "#FFD9A0", "#FFEED1"];
+  } else if (name.includes("grand opening")) {
+    themeClass = "season-grand-opening"; icon = "🎁";
+    colors = ["rgba(255, 200, 90, 0.9)", "rgba(0, 255, 200, 0.9)"];
+  }
+
+  const card = document.getElementById("pulseCard");
+  card.className = card.className
+    .replace(/season-\S+/g, "")
+    .trim() + " " + themeClass;
+
+  banner.style.display = "block";
+  banner.className = "seasonal-banner " + themeClass;
+  banner.textContent = `${icon} ${data.seasonalName} — Seasonal Bonus Active!`;
+
+  injectSeasonalLayers();
+  spawnSeasonalParticles(colors);
+}
+
+function renderHistory(history) {
+  mark("renderHistory");
+
+  historyList.innerHTML = "";
+
+  // 1️⃣ Empty state
+  if (history.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "history-empty";
+    empty.textContent = "No Transactions Yet.";
+    historyList.appendChild(empty);
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+
+  for (const raw of history) {
+    const item = {
+      type: raw.type || "",
+      label: raw.label || "",
+      amount: Number(raw.amount) || 0,
+      orderID: raw.orderID || null,
+      ts: raw.ts || new Date(nowMs()).toISOString(),
+      tierMultiplier: raw.tierMultiplier ?? 1,
+      streakMultiplier: raw.streakMultiplier ?? 1,
+      seasonalName: raw.seasonalName ?? "",
+      seasonalMultiplier: raw.seasonalMultiplier ?? 1,
+      seasonalBonusPoints: raw.seasonalBonusPoints ?? 0,
+      referralBaseBonus: raw.referralBaseBonus ?? 0,
+      seasonalReferralBonus: raw.seasonalReferralBonus ?? 0
+    };
+
+    const row = document.createElement("div");
+    row.className = "history-item";
+    row.onclick = () => loadOrderAndOpenReceipt({ ...raw });
+
+    const left = document.createElement("div");
+    left.className = "history-left";
+
+    const icon = document.createElement("div");
+    icon.className = "history-icon";
+
+    if (item.label === "referral_referrer") {
+      icon.textContent = "✨";
+      icon.style.background = "rgba(255,179,71,0.16)";
+    } else if (item.label === "referral_new_user") {
+      icon.textContent = "🎁";
+      icon.style.background = "rgba(255,179,71,0.16)";
+    } else {
+      icon.textContent =
+        item.type === "earn" ? "➕" :
+        item.type === "redeem" ? "💸" : "•";
+
+      icon.style.background =
+        item.type === "earn" ? "rgba(79,245,184,0.16)" :
+        item.type === "redeem" ? "rgba(255,92,122,0.16)" :
+        "rgba(255,255,255,0.08)";
+    }
+
+    const textWrap = document.createElement("div");
+
+    const main = document.createElement("div");
+    main.className = "history-main";
+    main.textContent = formatHistoryLabel(item.type, item.label, item.orderID);
+
+    const sub = document.createElement("div");
+    sub.className = "history-sub";
+    sub.textContent = formatHistoryTimestamp(item.ts);
+
+    textWrap.appendChild(main);
+    textWrap.appendChild(sub);
+
+    left.appendChild(icon);
+    left.appendChild(textWrap);
+
+    const amt = document.createElement("div");
+    amt.className = "history-amount";
+    amt.textContent = (item.amount > 0 ? "+" : "") + item.amount;
+
+    if (item.amount > 0) amt.classList.add("positive");
+    if (item.amount < 0) amt.classList.add("negative");
+
+    row.appendChild(left);
+    row.appendChild(amt);
+    frag.appendChild(row);
+  }
+
+  historyList.appendChild(frag);
+}
+
+const loadOrderAndOpenReceipt = (entry) => {
+  mark("loadOrderAndOpenReceipt");
+  try {
+    const isRedemption =
+      entry.type === "redeem" ||
+      entry.entryType === "redeem" ||
+      entry.category === "redeem";
+
+    if (isRedemption) {
+      return openReceiptPopup(entry);
+    }
+
+    const key = entry.orderID || entry.id;
+    const order = allHistory[key];
+
+    if (!order) {
+      return openReceiptPopup(entry);
+    }
+
+    const ts =
+      order.ts ||
+      entry.ts ||
+      order.createdAt ||
+      entry.createdAt ||
+      null;
+
+    const duration =
+      order.orderLength ??
+      order.durationMinutes ??
+      entry.orderLength ??
+      null;
+
+    const enriched = {
+      ...entry,   // history metadata
+      ...order,   // full order overrides
+
+
+      ts,
+      createdAt: order.createdAt || entry.createdAt || ts,
+      orderedAt: order.orderedAt || entry.orderedAt || null,
+      deliveredAt: order.deliveredAt || entry.deliveredAt || null,
+
+      pointsSnapshot: order.pointsSnapshot || entry.pointsSnapshot || null,
+
+      orderLength: duration,
+      durationMinutes: duration,
+
+      productquantity: order.productquantity ?? entry.productquantity ?? null,
+      orderprice: order.orderprice ?? entry.orderprice ?? null,
+      ordertax: order.ordertax ?? entry.ordertax ?? null,
+      ordertip: order.ordertip ?? entry.ordertip ?? null,
+      ordershipping: order.ordershipping ?? entry.ordershipping ?? null,
+      ordertotal: order.ordertotal ?? entry.ordertotal ?? null,
+      payoutAmount: order.payoutAmount ?? entry.payoutAmount ?? null
+    };
+
+    openReceiptPopup(enriched);
+
+  } catch (err) {
+    error("Error enriching order for receipt:", err);
+    openReceiptPopup(entry);
+  }
+};
+
+function formatHistoryLabel(type, label, orderID) {
+  const order = orderID ? `Order #${orderID}` : "";
+
+  if (label === "referral_referrer") {
+    return order ? `Referral Bonus — ${order}` : "Referral Bonus Earned";
+  }
+
+  if (label === "referral_new_user") {
+    return order ? `Referral New User Bonus — ${order}` : "Referral New User Bonus Earned";
+  }
+
+  if (type === "earn") {
+    return order ? `Earned from ${order}` : "Earned from Order Payment";
+  }
+
+  if (type === "redeem") {
+    return order ? `Redeemed for ${order}` : "Redeemed Points";
+  }
+
+  return order ? `Activity — ${order}` : "Points Activity";
+}
+
+function formatHistoryTimestamp(ts) {
+  if (!ts) return "";
+
+  let date = null;
+
+  if (typeof ts === "object" && ("seconds" in ts || "_seconds" in ts)) {
+    const sec = ts.seconds ?? ts._seconds;
+    date = new Date(sec * 1000);
+  } else if (ts instanceof Date) {
+    date = ts;
+  } else if (typeof ts === "number") {
+    date = new Date(ts);
+  } else if (typeof ts === "string") {
+    const d = new Date(ts);
+    if (!isNaN(d.getTime())) date = d;
+  }
+
+  if (!date || isNaN(date.getTime())) return "";
+
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function populateReceiptOrder(order, userEmail) {
+  mark("populateReceiptOrder");
+  const el = document.getElementById("receiptOrder");
+
+  if (!order) {
+    el.innerHTML = "<div class='order-line'>Order Details Unavailable!?</div>";
+    return;
+  }
+
+  const isCustomer = order.customerEmail === userEmail;
+  const isDeliverer = order.delivererEmail === userEmail;
+
+  const normalizeTS = (ts) => {
+    if (!ts) return null;
+    if (typeof ts.toMillis === "function") return ts.toMillis();
+    if (ts instanceof Date) return ts.getTime();
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? null : d.getTime();
+  };
+
+  const fmt = (n) => {
+    const num = Number(n);
+    return Number.isFinite(num) ? num.toFixed(2) : "0.00";
+  };
+
+  const fmtTS = (ts) => {
+    const ms = normalizeTS(ts);
+    if (!ms) return "—";
+    return formatHistoryTimestamp(ms) || "—";
+  };
+
+  let html = `
+    <div class="order-line"><strong>Order ID:</strong> ${order.orderID}</div>
+    <div class="order-line"><strong>Ordered:</strong> ${fmtTS(order.orderedAt)}</div>
+    <div class="order-line"><strong>Delivered:</strong> ${fmtTS(order.deliveredAt)}</div>
+    <div class="order-line"><strong>Item:</strong> ${order.itemName}</div>
+    <div class="order-line"><strong>Quantity:</strong> ${order.productquantity}</div>
+  `;
+
+  if (isCustomer) {
+    html += `
+      <div class="order-line"><strong>Subtotal:</strong> $${fmt(order.orderprice)}</div>
+      <div class="order-line"><strong>Tax:</strong> $${fmt(order.ordertax)}</div>
+      <div class="order-line"><strong>Tip:</strong> $${fmt(order.ordertip)}</div>
+      <div class="order-line"><strong>Delivery Fee:</strong> $${fmt(order.ordershipping)}</div>
+      ${order.orderdiscount > 0 ? `<div class="order-line"><strong>Discount:</strong> $${fmt(order.orderdiscount)}</div>` : ""}
+      ${order.ordercoupon > 0 ? `<div class="order-line"><strong>Coupon:</strong> $${fmt(order.ordercoupon)}</div>` : ""}
+      <div class="order-line"><strong>Total:</strong> $${fmt(order.ordertotal)}</div>
+    `;
+  }
+
+  if (isDeliverer) {
+    html += `
+      <div class="order-line"><strong>Delivery Tip:</strong> $${fmt(order.ordertip)}</div>
+      <div class="order-line"><strong>Delivery Fee:</strong> $${fmt(order.ordershipping)}</div>
+      <div class="order-line"><strong>Your Payout:</strong> $${fmt(order.payoutAmount)}</div>
+    `;
+  }
+
+  el.innerHTML = html;
+}
+
+function getStreakCountdown(lastEarnedDate, settings) {
+  if (!lastEarnedDate) return "Resets Soon!";
+
+  const windowHours = (settings.streakDurationDays ?? 1) * 24;
+
+  const last = new Date(lastEarnedDate);
+  const now = new Date(nowMs());
+
+  const expires = new Date(last.getTime() + windowHours * 3600000);
+
+  if (now >= expires) return "Expired!";
+
+  const diffMs = expires - now;
+  const diffH = Math.floor(diffMs / 3600000);
+  const diffM = Math.floor((diffMs % 3600000) / 60000);
+
+  if (diffH <= 0 && diffM <= 2) return "Resetting Soon!";
+  if (diffH <= 0) return `${diffM}m Left!`;
+
+  return `${diffH}h ${diffM}m Left!`;
+}
+
+function normalizeDate(input) {
+  if (!input) return null;
+
+  if (typeof input.toDate === "function") {
+    try { return input.toDate(); } catch {}
+  }
+
+  if (typeof input === "object" && ("seconds" in input || "_seconds" in input)) {
+    const sec = input.seconds ?? input._seconds;
+    return new Date(sec * 1000);
+  }
+
+  if (typeof input === "number") {
+    const d = new Date(input);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  if (typeof input === "string") {
+    const d = new Date(input);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  return null;
+}
+
+function renderStreak(loyalty, settings) {
+  mark("renderStreak");
+  const infoIconWrapper = document.getElementById("infoIconWrapper");
+  const sub = document.getElementById("infoSub");
+  const tag = document.getElementById("infoTag");
+  const countdown = document.getElementById("infoCountdown");
+
+  const count = loyalty.streakCount ?? 0;
+  const mult = loyalty.streakMultiplier ?? 1;
+  const lastEarned = normalizeDate(loyalty.lastEarnedDate);
+
+  const lastTier = PulseRealm.__lastStreakTier || null;
+
+  // Reset icons
+  infoIconWrapper.innerHTML = "";
+
+  // Bubble factory
+  const addBubble = (cls, emoji) => {
+    const el = document.createElement("div");
+    el.className = `info-icon ${cls}`;
+    el.textContent = emoji;
+    infoIconWrapper.appendChild(el);
+    return el;
+  };
+
+  // No streak
+  if (count === 0 || !lastEarned) {
+    addBubble("water", "🌊");
+
+    tag.textContent = "No Active Streak!";
+    sub.textContent = "Earn points Today to start your Streak and unlock Bonus Multipliers!";
+
+    countdown.style.display = "none";
+    return;
+  }
+
+  // Tier map (sorted by threshold)
+  const tiers = [
+    { max: 1, cls: "water", emoji: "🌊" },
+    { max: 2, cls: "fire-small", emoji: "🔥" },
+    { max: 4, cls: "fire-medium", emoji: "✨" },
+    { max: 8, cls: "fire-big", emoji: "⚡" },
+    { max: 12, cls: "fire-legendary", emoji: "💥" },
+    { max: Infinity, cls: "fire-eruption", emoji: "🌋" }
+  ];
+
+  const tier = tiers.find(t => count < t.max);
+  const bubbleEl = addBubble(tier.cls, tier.emoji);
+
+  PulseRealm.__lastStreakTier = tier.cls;
+
+  // Burst animation only when tier changes
+  if (lastTier !== tier.cls) {
+    bubbleEl.classList.add("streak-burst");
+
+    const burstClass =
+      tier.cls === "water" ? "burst-water" :
+      tier.cls === "fire-small" ? "burst-small" :
+      tier.cls === "fire-medium" ? "burst-medium" :
+      tier.cls === "fire-big" ? "burst-big" :
+      tier.cls === "fire-legendary" ? "burst-legendary" :
+      "burst-eruption";
+
+    bubbleEl.classList.add(burstClass);
+
+    setTimeout(() => {
+      bubbleEl.classList.remove(
+        "streak-burst",
+        "burst-water",
+        "burst-small",
+        "burst-medium",
+        "burst-big",
+        "burst-legendary",
+        "burst-eruption"
+      );
+    }, 450);
+  }
+
+  // UI text
+  tag.textContent = `Streak Active — Day ${count}!`;
+  sub.textContent = `You’re Earning a ${mult.toFixed(2)}× Streak Bonus. Keep Earning Daily!`;
+
+  // Countdown
+  countdown.style.display = "inline-flex";
+  countdown.textContent = getStreakCountdown(lastEarned, settings);
+}
+
+function normalizeOrderKey(obj) {
+  if (!obj) return null;
+
+  return (
+    obj.orderID ??
+    obj.orderId ??
+    obj.orderid ??
+    obj.id ??
+    null
+  );
+}
+
+function buildFinalItem(normalized, orderDoc, rawItem) {
+  mark("buildFinalItem");
+  const safe = (v, fb) => (v === undefined || v === null ? fb : v);
+
+  const orderID =
+    normalizeOrderKey(normalized) ||
+    normalizeOrderKey(orderDoc);
+
+  const orderLength =
+    normalized.orderLength ??
+    normalized.durationMinutes ??
+    orderDoc.orderLength ??
+    orderDoc.durationMinutes ??
+    null;
+
+  return {
+    ...normalized,
+
+    orderID,
+    orderLength,
+
+    orderedAt:
+      normalized.orderedAt ??
+      orderDoc.orderedAt ??
+      rawItem.orderedAt ??
+      null,
+
+    deliveredAt:
+      normalized.deliveredAt ??
+      orderDoc.deliveredAt ??
+      rawItem.deliveredAt ??
+      null,
+
+    itemName:
+      normalized.itemName ??
+      orderDoc.itemName ??
+      null,
+
+    orderprice: safe(normalized.orderprice, orderDoc.orderprice ?? 0),
+    ordertotal: safe(normalized.ordertotal, orderDoc.ordertotal ?? 0)
+  };
+}
+
+function buildBreakdownHTML(snap) {
+  const safe = (v) => (v == null ? 0 : v);
+  const fmt = (m) => Number(m).toFixed(2) + "×";
+
+  const seasonColors = {
+    "Grand Opening": "#ffd56b",
+    "Summer Sunbeam": "#ffb347",
+    "Winter Frost": "#8fd3f4",
+    "Spring Bloom": "#ff9a9e",
+    "Autumn Ember": "#f6d365"
+  };
+
+  const seasonColor = seasonColors[snap.seasonalName] || "#48D7A5";
+
+  let html = `
+    <b>Base Points:</b> ${safe(snap.basePoints)}<br>
+    <b>Tier Multiplier:</b> ${fmt(snap.tierMultiplier)} (+${safe(snap.tierBonusPoints)})<br>
+    <b>Streak Multiplier:</b> ${fmt(snap.streakMultiplier)} (+${safe(snap.streakBonusPoints)})<br>
+  `;
+
+  if (snap.seasonalActive || snap.seasonalName) {
+    html += `
+      <b><span style="color:${seasonColor}">"${snap.seasonalName}"</span> Multiplier:</b>
+      ${fmt(snap.seasonalMultiplier)} (+${safe(snap.seasonalBonusPoints)})<br>
+    `;
+  }
+
+  if (safe(snap.fastDeliveryBonus) > 0 && safe(snap.delayPenalty) === 0) {
+    html += `<b>Fast Delivery Bonus:</b> +${safe(snap.fastDeliveryBonus)}<br>`;
+  }
+
+  if (safe(snap.delayPenalty) < 0) {
+    html += `
+      <div class="break-row delay-penalty-line">
+        <span>Delivery Delay Penalty:</span>
+        <span>(-${Math.abs(safe(snap.delayPenalty))})</span>
+      </div>
+    `;
+  }
+
+  html += `<br><b>Total Earned:</b> ${safe(snap.totalPointsEarned)}`;
+  return html;
+}
+
+function renderReferralReceipt(item, el, popup, backdrop, sheet) {
+   mark("renderReferralReceipt");
+  const base = item.referralBaseBonus || 0;
+  const seasonal = item.seasonalReferralBonus || 0;
+
+  el.breakdown.innerHTML = `
+    <b>Referral Bonus:</b> +${base}<br>
+    ${seasonal > 0 ? `<b>Seasonal Referral Bonus:</b> +${seasonal}<br>` : ""}
+    <br>
+    <b>Total Earned:</b> ${base + seasonal}
+  `;
+
+  el.timestamp.textContent = "Date: " + formatHistoryTimestamp(item.ts);
+
+  sheet.classList.add("disabled");
+  backdrop.classList.add("active");
+  popup.classList.add("active");
+}
+
+function renderTitleAndAmount(item, el) {
+  mark("renderTitleAndAmount");
+  el.title.textContent = formatHistoryLabel(item.type, item.label, item.orderID);
+
+  const amt = (item.amount > 0 ? "+" : "") + item.amount;
+  el.amount.textContent = `${amt} Pulse Points`;
+
+  el.amount.style.color =
+    item.amount > 0 ? "var(--success)" :
+    item.amount < 0 ? "var(--danger)" :
+    "var(--normal)";
+
+  el.order.textContent = item.orderID ? "Order ID: " + item.orderID : "";
+}
+
+function renderRedeemReceipt(rawItem, el, popup, backdrop, sheet) {
+  mark("renderRedeemReceipt");
+  el.title.textContent = "Points Redeemed";
+  el.amount.textContent = `${rawItem.amount} Pulse Points`;
+  el.amount.style.color = "var(--danger)";
+  el.order.textContent = "";
+
+  el.adjustment.style.display = "none";
+  el.orderLength.style.display = "none";
+
+  el.breakdown.innerHTML = `
+    <b>Points Redeemed:</b> ${rawItem.amount}<br><br>
+    <b>Date:</b> ${formatHistoryTimestamp(rawItem.ts)}
+  `;
+
+  el.timestamp.textContent = "Date: " + formatHistoryTimestamp(rawItem.ts);
+
+  sheet.classList.add("disabled");
+  backdrop.classList.add("active");
+  popup.classList.add("active");
+}
+
+function isReferralEntry(item) {
+  const label = item.label || "";
+  return (
+    label === "referral_referrer" ||
+    label === "referral_new_user" ||
+    label.includes("referral") ||
+    item.type === "referral"
+  );
+}
+
+async function openReceiptPopup(rawItem) {
+  const popup = document.getElementById("receiptPopup");
+  const backdrop = document.getElementById("receiptBackdrop");
+  const sheet = document.querySelector(".sheet");
+
+  const el = {
+    title: document.getElementById("receiptTitle"),
+    amount: document.getElementById("receiptAmount"),
+    order: document.getElementById("receiptOrder"),
+    orderLength: document.getElementById("receiptOrderLength"),
+    adjustment: document.getElementById("receiptAdjustmentBlock"),
+    breakdown: document.getElementById("receiptBreakdown"),
+    timestamp: document.getElementById("receiptTimestamp")
+  };
+
+  // 0. Redemption → fast exit
+  const isRedeem =
+    rawItem.type === "redeem" ||
+    rawItem.entryType === "redeem" ||
+    rawItem.category === "redeem";
+
+  if (isRedeem) {
+    renderRedeemReceipt(rawItem, el, popup, backdrop, sheet);
+    return;
+  }
+
+  // 2. Lookup order
+  const key = normalizeOrderKey(rawItem);
+  const orderDoc = allHistory[key] || null;
+
+  if (!orderDoc) {
+    return showMinimalReceipt(rawItem);
+  }
+
+  // 3. Normalize history item
+  const normalized = normalizeHistoryItem(rawItem, orderDoc);
+
+  // 4. Build final item
+  const item = buildFinalItem(normalized, orderDoc, rawItem);
+
+  // 5. Title + amount
+  renderTitleAndAmount(item, el);
+
+  // 6. Referral receipt → fast exit
+  if (isReferralEntry(item)) {
+    renderReferralReceipt(item, el, popup, backdrop, sheet);
+    return;
+  }
+
+  // 7. Snapshot safety
+  const snap = orderDoc.pointsSnapshot || item.snapshot || null;
+  if (!snap) {
+    return showMinimalReceipt(item);
+  }
+
+  // 8. Delivery time
+  el.orderLength.textContent = formatOrderLength(
+    item.orderLength || snap.durationMinutes
+  );
+  el.adjustment.style.display = snap.delayPenalty < 0 ? "block" : "none";
+
+  // 9. Breakdown
+  el.breakdown.innerHTML = buildBreakdownHTML(snap);
+  el.timestamp.textContent = "Date: " + formatHistoryTimestamp(item.ts);
+
+  // 10. Populate order details + show popup
+  populateReceiptOrder({ ...orderDoc, ...item }, identity.email);
+
+  sheet.classList.add("disabled");
+  backdrop.classList.add("active");
+  popup.classList.add("active");
+}
+
+function hideHistorySheet() {
+  const sheet = document.querySelector(".sheet");
+  if (!sheet) return;
+
+  sheet.dataset.wasActive = sheet.classList.contains("active") ? "1" : "0";
+  sheet.classList.remove("active");
+  sheet.style.pointerEvents = "none";
+  sheet.style.opacity = "0";
+}
+
+function restoreHistorySheet() {
+  const sheet = document.querySelector(".sheet");
+  if (!sheet) return;
+
+  if (sheet.dataset.wasActive === "1") {
+    sheet.classList.add("active");
+    sheet.style.pointerEvents = "auto";
+    sheet.style.opacity = "1";
+  }
+}
+
+async function fetchOrder(userEmail) {
+  mark("fetchOrder");
+  try {
+    if (!userEmail) {
+      error("❌ fetchOrder called without userEmail");
+      return [];
+    }
+
+    // Convert cachedrders object → array
+    const all = Object.values(allHistory);
+
+    // Filter by user involvement
+    const raw = all.filter(o =>
+      o.customerEmail === userEmail ||
+      o.delivererEmail === userEmail
+    );
+
+    // Normalize
+    return raw.map(o => {
+      const orderID =
+        o.orderID ||
+        o.orderId ||
+        o.orderid ||
+        o.id ||
+        null;
+
+      const snapshot =
+        o.pointsSnapshot ||
+        o.points_snapshot ||
+        o.pointsSnap ||
+        null;
+
+      const orderedAt = normalizeDateAny(
+        o.orderedAt || o.ordered_at || o.ordered || o.createdAt || null
+      );
+
+      const deliveredAt = normalizeDateAny(
+        o.deliveredAt || o.delivered_at || o.delivered || null
+      );
+
+      let orderLength = o.orderLength ?? null;
+      if (orderLength == null && orderedAt && deliveredAt) {
+        orderLength = Math.floor((deliveredAt - orderedAt) / 60000);
+      }
+
+      return {
+        ...o,
+
+        orderID,
+        uid: o.uid || o.userID || o.customerUID || null,
+
+        pointsSnapshot: snapshot,
+
+        orderedAt: orderedAt || null,
+        deliveredAt: deliveredAt || null,
+
+        orderLength,
+        durationMinutes: orderLength,
+
+        itemName: o.itemName || o.item_name || null,
+
+        orderprice: Number(o.orderprice || o.orderPrice || 0),
+        ordertotal: Number(o.ordertotal || o.orderTotal || 0)
+      };
+    });
+
+  } catch (err) {
+    error("Error filtering cached orders:", err);
+    return [];
+  }
+}
+
+function showMinimalReceipt(item) {
+  const popup = document.getElementById("receiptPopup");
+  const backdrop = document.getElementById("receiptBackdrop");
+
+  document.getElementById("receiptTitle").textContent =
+    item.label || item.type || "Activity";
+
+  const amtEl = document.getElementById("receiptAmount");
+  const amt = (item.amount > 0 ? "+" : "") + item.amount;
+  amtEl.textContent = `${amt} Pulse Points`;
+
+  if (item.amount > 0) amtEl.style.color = "var(--success)";
+  else if (item.amount < 0) amtEl.style.color = "var(--danger)";
+  else amtEl.style.color = "var(--normal)";
+
+  document.getElementById("receiptOrder").textContent = "";
+  document.getElementById("receiptOrderLength").style.display = "none";
+  document.getElementById("receiptAdjustmentBlock").style.display = "none";
+
+  document.getElementById("receiptBreakdown").innerHTML = `
+    <b>Date:</b> ${formatHistoryTimestamp(item.ts)}<br>
+    <b>Details unavailable:</b> This entry does not contain full order data.
+  `;
+
+  document.getElementById("receiptTimestamp").textContent =
+    "Date: " + formatHistoryTimestamp(item.ts);
+
+  backdrop.classList.add("active");
+  popup.classList.add("active");
+}
+
+async function loadAndRenderReferrals(loyalty) {
+  mark("loadAndRenderReferrals");
+
+  if (!loyalty || !loyalty.referralCode) {
+    mark("No currentLoyalty or referralCode, skipping referrals render");
+    return;
+  }
+  const label = document.getElementById("referralSortLabel");
+  const myCode = String(loyalty.referralCode);
+
+  const referrals = getCurrentReferrals();
+  applyReferralSort(referrals);
+  updateReferralSortLabel();
+  renderReferralList(referrals);
+}
+
+function updateReferralSortLabel() {
+  mark("updateReferralSortLabel");
+  const label = document.getElementById("referralSortLabel");
+  if (!label) return;
+
+  label.textContent =
+    referralSortMode === "lifetime"     ? "Lifetime" :
+    referralSortMode === "earned"       ? "Earned" :
+    referralSortMode === "mostactive"   ? "Most Active" :
+    referralSortMode === "recentactive" ? "Recently Active" :
+    referralSortMode === "newest"       ? "Newest" :
+    referralSortMode === "oldest"       ? "Oldest" :
+    "Lifetime";
+}
+function getJoined(ref) {
+  const raw = ref.joinedAt || ref.createdAt || null;
+  const d = normalizeDateAny(raw);
+  return d ? d.getTime() : 0;
+}
+
+function applyReferralSort(referrals) {
+  mark("applyReferralSort");
+  switch (referralSortMode) {
+    case "lifetime":
+      referrals.sort((a, b) => (b.lifetimePoints ?? 0) - (a.lifetimePoints ?? 0));
+      break;
+
+    case "earned":
+      referrals.sort(
+        (a, b) =>
+          (b.earnedForReferrer ?? b.earnedForYou ?? 0) - (a.earnedForReferrer ?? a.earnedForYou ?? 0)
+      );
+      break;
+    
+    case "mostactive":
+      referrals.sort((a, b) => getTotalOrders(b) - getTotalOrders(a));
+      break;
+
+    case "recentactive":
+      referrals.sort((a, b) => getLastActive(b) - getLastActive(a));
+      break;
+
+    case "newest":
+      referrals.sort((a, b) => getJoined(b) - getJoined(a));
+      break;
+
+    case "oldest":
+      referrals.sort((a, b) => getJoined(a) - getJoined(b));
+      break;
+  }
+}
+
+async function renderUserMultiplier(loyalty) {
+   mark("renderUserMultiplier");
+  // Extract multipliers
+  const tier = Number(loyalty.tierMultiplier) || 1;
+  const streak = Number(loyalty.streakMultiplier) || 1;
+  const seasonal = Number(loyalty.seasonalMultiplier) || 1;
+
+  // Compute total
+  const raw = tier * streak * seasonal;
+  const total = clampMultiplier(raw, allSettings);
+
+  // Update DOM values
+  const rows = [
+    { id: "bdTier", value: tier },
+    { id: "bdStreak", value: streak },
+    { id: "bdSeasonal", value: seasonal },
+    { id: "bdTotal", value: total }
+  ];
+
+  rows.forEach(row => {
+    const el = document.getElementById(row.id);
+    if (!el) return;
+
+    const val = row.value ?? 1;
+    el.textContent = val.toFixed(2) + "×";
+
+    el.classList.remove("multiplier-boost");
+    if (val > 1.00) el.classList.add("multiplier-boost");
+  });
+
+  // 🔥 Update the pill (green but no arrow)
+  const pillValue = document.getElementById("multiplierValue");
+  pillValue.classList.remove("multiplier-boost");
+  if (total > 1.00) pillValue.classList.add("multiplier-boost");
+  pillValue.textContent = total.toFixed(2) + "×";
+
+  return total;
+}
+
+
+async function loadSettings() {
+  mark("loadSettings");
+  // ---------------------------------------------------------
+  // 0. VERSION CHECK (MATCH BUSINESS PAGE)
+  // ---------------------------------------------------------
+  try {
+  const htmlSettingsVersion = PulseRealm.globalCacheVersion.settingsVersion || 1;
+  let localSettingsVersion = Number(localStorage.getItem("settingsCacheVersion") || 1);
+
+  // HTML version newer → force reload
+  if (htmlSettingsVersion > localSettingsVersion) {
+    mark("🟩 HTML SETTINGS VERSION NEWER → FORCE RELOAD");
+    localStorage.setItem("forceReload_settings", "1");
+    localStorage.setItem("settingsCacheVersion", htmlSettingsVersion);
+    mark("SETTINGS CACHE UPDATED");
+    localSettingsVersion = htmlSettingsVersion; // IMPORTANT FIX
+  } else {
+    // HTML is stale or equal → fallback
+    setTimeout(async () => {
+      try {
+        const snap = await getDocs(collection(db, "CACHE_CONTROL"));
+        const doc = snap.docs[0].data() || {};
+        const serverSettingsVersion = doc.settingsVersion || 1;
+        mark("PULLING SETTINGS VERSION FROM SERVER CACHE_CONTROL: Version " + serverSettingsVersion);
+
+        if (serverSettingsVersion !== localSettingsVersion) {
+          localStorage.setItem("forceReload_settings", "1");
+          localStorage.setItem("settingsCacheVersion", serverSettingsVersion);
+          mark("SETTINGS CACHE UPDATED");
+        }
+      } catch (err) {
+        mark("VERSIONCHECK SETTINGS FALLBACK ERROR: " + err);
+      }
+    }, 0);
+  }
+  } catch (err) {
+    mark("VERSIONCHECK FAILED ERROR " + err);
+  }
+  // ---------------------------------------------------------
+  // 1. TTL CHECK
+  // ---------------------------------------------------------
+
+  const raw = localStorage.getItem("cachedSettingsTimestamp");
+  const last = raw && !isNaN(Number(raw)) ? Number(raw) : 0;
+  const age = nowMs() - last;
+  const TTL = 14 * 24 * 60 * 60 * 1000; // 14 days
+  const ageLeft = TTL - age;
+  const formattedAgeLeft = formatMs(ageLeft);
+
+  const cachedSettingsRaw = localStorage.getItem("cachedSettings");
+  const cachedSettings = cachedSettingsRaw ? JSON.parse(cachedSettingsRaw) : {};
+
+  const forceReload = localStorage.getItem("forceReload_settings") === "1";
+
+  // ---------------------------------------------------------
+  // 2. USE CACHE IF VALID
+  // ---------------------------------------------------------
+
+  if (!forceReload && cachedSettings && Object.keys(cachedSettings).length > 0 && age < TTL) {
+    mark("CACHED SETTINGS FOUND → USING CACHE (Age Left: " + formattedAgeLeft + ")");
+    allSettings = cachedSettings;
+    return allSettings;
+  }
+
+  // ---------------------------------------------------------
+  // 3. SEMANTIC INVALIDATION (CHANGES collection)
+  // ---------------------------------------------------------
+
+  async function hasUserChanges() {
+    const q = query(
+      collection(db, "CHANGES"),
+      where("collection", "==", "Settings"),
+      where("processed", "==", false)
+    );
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
+
+  const userChanges = await hasUserChanges();
+
+  // ---------------------------------------------------------
+  // 4. FETCH FRESH SETTINGS IF NEEDED
+  // ---------------------------------------------------------
+
+  if (forceReload || userChanges || Object.keys(cachedSettings).length === 0) {
+    mark("FETCHING FRESH SETTINGS FROM FIREBASE");
+
+    try {
+      const snap = await getDoc(doc(db, "Settings", "global"));
+      const root = snap.exists() ? snap.data() : {};
+      const env = root.environment || {};
+
+      const fullSettings = {
+        enabled: env.enabled ?? true,
+        calculationVersion: root.calculationVersion ?? 26,
+        delayPenalty: root.delayPenalty ?? 15,
+
+        multipliers: env.multipliers ?? {},
+        seasonalActive: env.seasonalActive ?? false,
+        seasonalPeriods: root.seasonalPeriods ?? {},
+        seasonalBonusPoints: env.seasonalBonusPoints ?? 0,
+        seasonalMultiplier: env.seasonalMultiplier ?? 1,
+        seasonalName: env.seasonalName ?? "",
+        seasonalReferralBonus: env.seasonalReferralBonus ?? 15,
+        seasonalReferralBonus_NewUser: env.seasonalReferralBonus_NewUser ?? 50,
+        seasonalReferralBonus_Referrer: env.seasonalReferralBonus_Referrer ?? 25,
+
+        tierMultiplier_PulseSeed: root.tierMultiplier_PulseSeed ?? 1,
+        tierMultiplier_ReefDiver: root.tierMultiplier_ReefDiver ?? 1.07,
+        tierMultiplier_ToucanSpirit: root.tierMultiplier_ToucanSpirit ?? 1.17,
+        tierMultiplier_VolcanoHeart: root.tierMultiplier_VolcanoHeart ?? 1.30,
+        tierMultiplier_HurricaneLegend: root.tierMultiplier_HurricaneLegend ?? 1.50,
+
+        maxTotalMultiplier: root.maxTotalMultiplier ?? 3,
+
+        tierThreshold_ReefDiver: Number(root.tierThreshold_ReefDiver) || 2500,
+        tierThreshold_ToucanSpirit: Number(root.tierThreshold_ToucanSpirit) ?? 5000,
+        tierThreshold_VolcanoHeart: Number(root.tierThreshold_VolcanoHeart) ?? 9000,
+        tierThreshold_HurricaneLegend: Number(root.tierThreshold_HurricaneLegend) ?? 15000,
+
+        referralBaseBonus_NewUser: root.referralBaseBonus_NewUser ?? 25,
+        referralBaseBonus_Referrer: root.referralBaseBonus_Referrer ?? 50,
+        referralEarningRate: root.referralEarningRate ?? 15,
+        referralStreakDurationHours: root.referralStreakDurationHours ?? 6,
+        referralStreakMultiplier: root.referralStreakMultiplier ?? 1.1,
+        seasonalReferralBonus_NewUser: root.seasonalReferralBonus_NewUser ?? 10,
+        seasonalReferralBonus_Referrer: root.seasonalReferralBonus_Referrer ?? 20,
+
+        streakDurationDays: root.streakDurationDays ?? 1,
+        streakMaxMultiplier: root.streakMaxMultiplier ?? 2,
+        streakMultiplierBase: root.streakMultiplierBase ?? 1,
+        streakMultiplierPerDay: root.streakMultiplierPerDay ?? 0.1,
+
+        fastDeliveryBonusEnabled: root.fastDeliveryBonusEnabled ?? false,
+        fastDeliveryBonusMinutes: root.fastDeliveryBonusMinutes ?? 60,
+        fastDeliveryBonusPoints: root.fastDeliveryBonusPoints ?? 15
+      };
+
+      allSettings = fullSettings;
+
+      // Clear forceReload AFTER successful reload
+      localStorage.removeItem("forceReload_settings");
+
+    } catch (err) {
+      mark("FAILED TO LOAD SETTINGS: " + err);
+      allSettings = cachedSettings; // fallback
+    }
+
+  } else {
+    mark("NO SETTINGS CHANGES FOUND → USING CACHE");
+    allSettings = cachedSettings;
+  }
+
+  // ---------------------------------------------------------
+  // 5. SAVE TO CACHE
+  // ---------------------------------------------------------
+
+  try {
+    localStorage.setItem("cachedSettings", JSON.stringify(allSettings));
+    localStorage.setItem("cachedSettingsTimestamp", nowMs().toString());
+    mark("SETTINGS LOADED + CACHE UPDATED");
+  } catch (err) {
+    mark("FAILED TO CACHE SETTINGS: " + err);
+  }
+
+  return allSettings;
+}
+
+function clampMultiplier(value, settings) {
+  const max = Number(settings.maxTotalMultiplier) || 1;
+  return Math.min(value, max);
+}
+
+function buildCurrentUser(identity, loyalty) {
+  const email = identity.email || loyalty.email || null;
+
+  userEmail = email;
+
+  return {
+    // Identity fields
+    uid: identity.uid,
+    email,
+    displayName: userName ?? null,
+    // currentLoyalty fields (MERGED, not overwritten)
+    ...loyalty,
+
+    // Preserve pulsepoints if identity has it
+    pulsepoints:
+      identity.pulsepoints ??
+      loyalty.pulsepoints ??
+      loyalty.points ??
+      0,
+
+    // Keep raw currentLoyalty for debugging
+    loyalty
+  };
+}
+
+async function renderUserData(loyalty) {
+  mark("renderUserData");
+  await animateDisplayName(userName);
+
+  // 8️⃣ Total multiplier
+  const total = await renderUserMultiplier(loyalty);
+  // 9️⃣ Points animation
+  updatePointsUI(loyalty.pulsepoints, true, "current");
+  // 9️⃣ Points animation
+  updatePointsUI(loyalty.lifetimePoints, true, "lifetime");
+
+  await renderStreak(loyalty, allSettings);
+
+  // 7️⃣ Multiplier rows
+  document.getElementById("bdTier").textContent =
+    (loyalty.tierMultiplier ?? 1).toFixed(2) + "×";
+  document.getElementById("bdStreak").textContent =
+    (loyalty.streakMultiplier ?? 1).toFixed(2) + "×";
+  document.getElementById("bdSeasonal").textContent =
+    (loyalty.seasonalMultiplier ?? 1).toFixed(2) + "×";
+  document.getElementById("bdReferral").textContent = "—";
+  // 1️⃣1️⃣ Referral QR
+  const code = loyalty.referralCode;
+
+  if (!code) {
+    referralCodeEl.textContent = "—";
+    requestAnimationFrame(() => {
+      const container = document.getElementById("qrContainer");
+      if (container) {
+        container.innerHTML = "";
+        container.textContent = "No Code";
+      }
+    });
+  } else {
+    referralCodeEl.textContent = code;
+    const container = document.getElementById("qrContainer");
+    if (container) container.innerHTML = "";
+    lazyLoadQR(referralBaseUrl + encodeURIComponent(code));
+  }
+ 
+  // 🔟 Seasonal visuals
+  if (loyalty.seasonalActive) {
+    applySeasonalVisuals(loyalty);
+    renderSeasonal(loyalty);
+  }
+ 
+}
+
+function preloadImage(url) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = resolve;
+    img.onerror = resolve;
+    img.src = url;
+  });
+}
+
+function showTierShimmer() {
+  document.getElementById("bigTierShimmer").style.display = "block";
+}
+
+function hideTierShimmer() {
+  document.getElementById("bigTierShimmer").style.display = "none";
+}
+
+function animatePoints(target) {
+  mark("animatePoints");
+  const currentText = pointsBalanceHl.textContent.replace(/\D/g, "");
+  let current = Number(currentText) || 0;
+
+  if (current >= target) {
+    pointsBalanceHl.textContent = target.toLocaleString() + " pts";
+    return;
+  }
+
+  const step = Math.max(1, Math.floor((target - current) / 40));
+
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      current = target;
+      clearInterval(interval);
+    }
+    pointsBalanceHl.textContent = current.toLocaleString() + " pts";
+  }, 20);
+}
+
+function normalizeReferral(r) {
+  mark("normalizeReferral");
+  const safeDate = (ts) => {
+    if (!ts) return null;
+
+    if (typeof ts.toMillis === "function") {
+      return ts.toMillis();
+    }
+
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? null : d.getTime();
+  };
+
+  return {
+    ...r,
+
+    joinedAt: safeDate(r.joinedAt) || safeDate(r.createdAt) || 0,
+
+    lastActive: safeDate(
+      r.lastActive ||
+      r.lastEarnedDate ||
+      r.lastOrderDate ||
+      r.createdAt ||
+      null
+    ),
+
+    lastEarnedDate: safeDate(r.lastEarnedDate) || null,
+
+    displayName:
+      r.displayName ||
+      r.DisplayName ||
+      r.name ||
+      r.Name ||
+      (r.email ? r.email.split("@")[0] : null) ||
+      (r.Email ? r.Email.split("@")[0] : null) ||
+      "Friend",
+
+    lifetimePoints: Number(r.lifetimePoints ?? r.LifetimePoints ?? 0),
+    earned: Number(r.earnedForReferrer ?? r.earnedForYou ?? 0),
+    totalOrders: Number(r.totalOrders ?? 0)
+  };
+}
+
+function renderReferralList(referrals) {
+  mark("renderReferralList");
+  const container = document.getElementById("referralListContainer");
+  container.innerHTML = "";
+
+  if (!referrals || referrals.length === 0) {
+    container.innerHTML = `<div class="referral-empty">No Referrals Yet</div>`;
+    return;
+  }
+
+  referrals.forEach(r => {
+    // Joined date (already normalized to millis)
+    const joined = r.joinedAt
+      ? new Date(r.joinedAt).toLocaleDateString()
+      : "—";
+
+    // Name resolution
+    const name =
+      r.displayName ||
+      r.DisplayName ||
+      r.name ||
+      r.Name ||
+      (r.Email ? r.Email.split("@")[0] : null) ||
+      (r.email ? r.email.split("@")[0] : null) ||
+      "Friend";
+
+    // Numbers
+    const lifetime = Number(r.lifetimePoints ?? r.LifetimePoints ?? 0);
+    const earned = Number(r.earnedForReferrer ?? r.earnedForYou ?? 0);
+
+    // Last Earned Date (ALREADY normalized in getCurrentReferrals)
+    const earnedDateStr = r.lastEarnedDate
+      ? new Date(r.lastEarnedDate).toLocaleDateString()
+      : "—";
+
+    // Color class + spark
+    let earnColorClass = "";
+    let showSpark = false;
+
+    if (r.lastEarnedDate) {
+      const lastEarnDate = new Date(r.lastEarnedDate);
+      const daysAgo = (nowMs() - lastEarnDate.getTime()) / 86400000;
+
+      if (daysAgo <= 14) {
+        earnColorClass = "last-earn-green";
+        showSpark = true;
+      } else if (daysAgo <= 60) {
+        earnColorClass = "last-earn-normal";
+      } else {
+        earnColorClass = "last-earn-red";
+      }
+    }
+
+    const totalOrders = r.totalOrders ?? 0;
+
+    // Build card
+    const card = document.createElement("div");
+    card.className = "referral-card";
+
+    card.innerHTML = `
+      <div class="referral-row-top">
+        <span class="referral-name">${name} (${totalOrders})</span>
+        <span class="referral-date">Joined — ${joined}</span>
+      </div>
+
+      <div class="referral-row-bottom">
+        <div class="referral-bottom-left">
+          <span class="referral-lifetime">${lifetime} pts</span>
+          <span class="referral-earned">+${earned} earned</span>
+        </div>
+
+        <div class="referral-bottom-right">
+          ${showSpark ? `<div class="referral-spark"></div>` : ``}
+          <span class="referral-earneddate ${earnColorClass}">
+            LastEarn — ${earnedDateStr}
+          </span>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+
+function formatOrderLength(minutes) {
+  if (minutes == null) return "—";
+
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+
+  return h > 0 ? `${h}h ${m}m` : `${m} minutes`;
+}
+
+function injectSeasonalLayers() {
+  mark("INJECTING SEASONAL LAYERS GP-PARTICLES ETC");
+  const card = document.querySelector('.pulse-card');
+  if (!card) return;
+
+  if (!card.querySelector('.gp-particles')) {
+    const particles = document.createElement('div');
+    particles.className = 'seasonal-layer gp-particles';
+    card.appendChild(particles);
+  }
+
+  if (!card.querySelector('.coin-burst')) {
+    const burst = document.createElement('div');
+    burst.className = 'seasonal-layer coin-burst';
+    card.appendChild(burst);
+  }
+}
+
+function normalizeUsers(users) {
+
+  return users.map(u => {
+    const identity = u.identity || {};
+
+    const displayName =
+      identity.displayName ||     // 🔥 highest priority
+      u.displayName ||
+      u.DisplayName ||
+      u.name ||
+      u.Name ||
+      u.email ||
+      u.Email ||
+      "Explorer";
+
+    // Safe timestamp normalizer
+    const normalizeTS = (raw) => {
+      if (!raw) return null;
+
+      // Firestore Timestamp
+      if (raw.toMillis) return raw.toMillis();
+
+      // Firestore _seconds
+      if (typeof raw === "object" && typeof raw._seconds === "number")
+        return raw._seconds * 1000;
+
+      // Already millis
+      if (typeof raw === "number") return raw;
+
+      // ISO or date string
+      const d = new Date(raw);
+      return isNaN(d.getTime()) ? null : d.getTime();
+    };
+
+    return {
+      ...u, // preserve EVERYTHING
+
+      // Identity
+      displayName,
+      email: u.email || u.Email || "",
+      name: u.name || u.Name || "",
+
+      // Loyalty fields
+      lastEarnedDate: normalizeTS(u.lastEarnedDate),
+      lastActive: normalizeTS(u.lastActive),
+      lastOrderDate: normalizeTS(u.lastOrderDate),
+      lifetimePoints: Number(u.lifetimePoints ?? u.LifetimePoints ?? 0),
+      earnedForReferrer: Number(u.earnedForReferrer ?? u.earnedForYou ?? 0),
+
+      // JoinedAt normalization
+      joinedAt: normalizeTS(u.joinedAt ?? u.createdAt ?? null),
+
+      // Referral linkage
+      referredBy: u.referredBy || u.ReferredBy || null
+    };
+  });
+}
+
+// function normalizeUser(u) {
+//   mark("ENTERING NORMALIZE USER FUNCTION");
+//   if (!u || typeof u !== "object") return null;
+
+//   const displayName =
+//     identity.displayName ||     // 🔥 highest priority
+//     u.displayName ||
+//     u.DisplayName ||
+//     u.name ||
+//     u.Name ||
+//     u.email ||
+//     u.Email ||
+//     "Explorer";
+
+//   return {
+//     ...u,
+
+//     // Identity
+//     displayName,
+//     email: u.email || u.Email || "",
+//     name: u.name || u.Name || "",
+
+//     // Loyalty fields
+//     lastEarnedDate: u.lastEarnedDate || null,
+//     lifetimePoints: Number(u.lifetimePoints ?? u.LifetimePoints ?? 0),
+//     earnedForReferrer: Number(u.earnedForReferrer ?? u.earnedForYou ?? 0),
+
+//     // JoinedAt normalization
+//     joinedAt: (() => {
+//       const raw = u.joinedAt || u.createdAt || null;
+
+//       if (raw && typeof raw.toMillis === "function") return raw.toMillis();
+//       if (typeof raw === "number") return raw;
+//       if (raw && typeof raw._seconds === "number") return raw._seconds * 1000;
+
+//       const d = new Date(raw);
+//       return isNaN(d.getTime()) ? null : d.getTime();
+//     })(),
+
+//     // Referral linkage
+//     referredBy: u.referredBy || u.ReferredBy || null
+//   };
+// }
+
+/************************************************************
+ * LOAD ALL USERS (BACKEND, BUT IDENTITY IS MODULAR)
+ ************************************************************/
+
+async function loadAllUsers(uid) {
+  mark("loadAllUsers");
+
+  // ---------------------------------------------------------
+  // 0. VERSION CHECK (MATCH BUSINESS PAGE)
+  // ---------------------------------------------------------
+try {
+  const htmlUsersVersion = PulseRealm.globalCacheVersion.usersVersion || 1;
+  let localUsersVersion = Number(localStorage.getItem("usersCacheVersion") || 1);
+
+  // HTML version newer → force reload
+  if (htmlUsersVersion > localUsersVersion) {
+    localStorage.setItem("forceReload_users", "1");
+    localStorage.setItem("usersCacheVersion", htmlUsersVersion);
+    mark("USERS CACHE UPDATED");
+    localUsersVersion = htmlUsersVersion; // IMPORTANT FIX
+  } else {
+    // HTML is stale or equal → fallback
+    setTimeout(async () => {
+      try {
+        const snap = await getDocs(collection(db, "CACHE_CONTROL"));
+        const doc = snap.docs[0].data() || {};
+        const serverUsersVersion = doc.usersVersion || 1;
+        mark("PULLING USERS VERSION FROM SERVER CACHE_CONTROL: Version " + serverUsersVersion);
+
+        if (serverUsersVersion !== localUsersVersion) {
+          localStorage.setItem("forceReload_users", "1");
+          localStorage.setItem("usersCacheVersion", serverUsersVersion);
+          mark("USERS CACHE UPDATED");
+        }
+      } catch (err) {
+        mark("VERSIONCHECK USERS FALLBACK ERROR: " + err);
+      }
+    }, 0);
+  }
+  } catch (err) {
+    mark("VERSIONCHECK USERS FAILED ERROR " + err);
+  }
+  // ---------------------------------------------------------
+  // 1. TTL CHECK
+  // ---------------------------------------------------------
+
+  const raw = localStorage.getItem("cachedUsersTimestamp");
+  const last = raw && !isNaN(Number(raw)) ? Number(raw) : 0;
+  const age = nowMs() - last;
+  const TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
+  const ageLeft = TTL - age;
+  const formattedAgeLeft = formatMs(ageLeft);
+
+  const cachedUsersRaw = localStorage.getItem("cachedUsers");
+  const cachedUsers = cachedUsersRaw ? JSON.parse(cachedUsersRaw) : [];
+
+  const forceReload = localStorage.getItem("forceReload_users") === "1";
+
+  // ---------------------------------------------------------
+  // 2. USE CACHE IF VALID
+  // ---------------------------------------------------------
+
+  if (!forceReload && Array.isArray(cachedUsers) && cachedUsers.length > 0 && age < TTL) {
+    mark("CACHED USERS FOUND → USING CACHE (Age Left: " + formattedAgeLeft + ")");
+    allUsers = cachedUsers;
+    return allUsers;
+  }
+
+  // ---------------------------------------------------------
+  // 3. SEMANTIC INVALIDATION (CHANGES collection)
+  // ---------------------------------------------------------
+
+  async function hasUserChanges() {
+    const q = query(
+      collection(db, "CHANGES"),
+      where("collection", "==", "Users"),
+      where("processed", "==", false)
+    );
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
+
+  const userChanges = await hasUserChanges();
+
+  // ---------------------------------------------------------
+  // 4. FETCH FRESH USERS IF NEEDED
+  // ---------------------------------------------------------
+
+  if (forceReload || userChanges || cachedUsers.length === 0) {
+    mark("FETCHING FRESH USERS FROM FIREBASE");
+
+    try {
+      const usersSnap = await getDocs(collection(db, "Users"));
+      const rawUsers = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      let users = Array.isArray(rawUsers)
+        ? rawUsers
+        : typeof rawUsers === "object"
+        ? Object.values(rawUsers)
+        : [];
+
+      allUsers = normalizeUsers(users);
+
+      // Clear forceReload AFTER successful reload
+      localStorage.removeItem("forceReload_users");
+
+    } catch (err) {
+      mark("FAILED TO LOAD USERS: " + err);
+      allUsers = cachedUsers; // fallback
+    }
+
+  } else {
+    mark("NO USER CHANGES FOUND → USING CACHE");
+    allUsers = cachedUsers;
+  }
+
+  // ---------------------------------------------------------
+  // 5. SAVE TO CACHE
+  // ---------------------------------------------------------
+
+  try {
+    localStorage.setItem("cachedUsers", JSON.stringify(allUsers));
+    localStorage.setItem("cachedUsersTimestamp", nowMs().toString());
+    mark("USERS LOADED + CACHE UPDATED");
+  } catch (err) {
+    mark("FAILED TO CACHE USERS: " + err);
+  }
+
+  return allUsers;
+}
+
+/************************************************************
+ * currentLoyalty FETCH
+ ************************************************************/
+// async function getAllOrders(userEmail, token) {
+//   mark("getAllOrders");
+
+//   const last = Number(localStorage.getItem("cachedOrdersTimestamp") || 0);
+//   const age = nowMs() - last;
+
+//   // 1️⃣ Use cache if fresh
+//   if (Array.isArray(cachedOrders) && cachedOrders.length > 0 && age < 15 * 60 *1000) {
+//     mark("CACHED ORDERS FOUND! NOT USING FIREBASE TODAY!");
+//     allOrders = cachedOrders;
+//     return;
+//   }
+
+//   mark("ACTUAL ORDERS DATA LOADING, TRYING TO ADD TO CACHE");
+
+//   // 2️⃣ Fetch from backend
+//   const url = `https://us-central1-tropic-pulse.cloudfunctios.net/getAllOrders?email=${encodeURIComponent(userEmail)}`;
+
+//   const res = await fetch(url, {
+//     method: "GET",
+//     headers: { "Authorization": `Bearer ${token}` }
+//   });
+
+//   const json = await res.json();
+
+//   if (!json.success || !Array.isArray(json.orders)) {
+//     mark("⚠️ getAllOrders: backend returned failure or invalid format");
+//     return;
+//   }
+
+//   // 3️⃣ Guarantee array
+//   allOrders = json.orders;
+
+//   // 4️⃣ Save cache + timestamp
+//   localStorage.setItem("cachedOrders", JSON.stringify(allOrders));
+//   localStorage.setItem("cachedOrdersTimestamp", nowMs().toString());
+//   cachedOrders = allOrders;
+
+//   mark("ACTUAL ORDERS DATA LOADED/SORTED, ADDED TO CACHE");
+// }
+
+/************************************************************
+ * REDEEM LOGIC
+ ************************************************************/
+function openRedeemModal() {
+  redeemOptions.innerHTML = "";
+
+  if (currentUser.pulsepoints < 500) {
+    const msg = document.createElement("div");
+    msg.style.fontSize = "12px";
+    msg.style.color = "var(--text-soft)";
+    msg.textContent = "You Need at least 500 points to Redeem.";
+    redeemOptions.appendChild(msg);
+    openModal();
+    return;
+  }
+
+  const maxSteps = Math.floor(currentUser.pulsepoints / 500);
+  const options = [];
+  for (let i = 1; i <= maxSteps; i++) {
+    options.push(i * 500);
+  }
+
+  options.forEach(amount => {
+    const btn = document.createElement("button");
+    btn.className = "modal-option-btn";
+    const dollars = (amount / 100).toFixed(2);
+    btn.innerHTML = `
+      <span>Redeem ${amount.toLocaleString()} points</span>
+      <span>$${dollars}</span>
+    `;
+    btn.onclick = async () => {
+  try {
+    const result = await getHook({
+        type: "redeemPulsePoints",
+        uid: userID,
+        pointsToRedeem: amount
+    });
+
+    if (result.success) {
+      showToast("Redemption Request Submitted!");
+    } else {
+      showToast("Error Submitting Redemption Request.");
+    }
+  } catch (err) {
+    showToast("Network Error.");
+  }
+
+  closeModal();
+};
+redeemOptions.appendChild(btn);
+});
+
+openModal();
+}
+function spawnQRPulse(x, y) {
+  const pulse = document.createElement("div");
+  pulse.className = "qr-tap-pulse";
+  pulse.style.left = `${x}px`;
+  pulse.style.top = `${y}px`;
+  document.body.appendChild(pulse);
+  setTimeout(() => pulse.remove(), 450);
+}
+
+function killAllBackdrops() {
+  const ids = ["sheetBackdrop", "modalBackdrop", "receiptBackdrop"];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove("active");
+      el.removeAttribute("style"); // wipe any leftover inline styles
+    }
+  });
+}
+
+async function loadUserDetails() {
+    mark("loadUserDetails");
+    // currentLoyalty + history
+     
+    currentUser = await loadLoyaltyForUser(identity.uid);
+    // 6️⃣ Streak UI (cached settings)
+    await renderReferral(currentUser);
+    
+    mark("AFTER renderReferral");
+    await renderUserData(currentUser);
+    mark("AFTER renderUserData");
+}
+
+
+function updatePointsUI(points, animate = true, mode = "current") {
+  mark("updatePointsUI");
+  const el =
+    mode === "lifetime"
+      ? document.getElementById("historicalPoints")
+      : document.getElementById("currentPoints");
+
+  if (!el) return;
+
+  let lastRendered =
+    mode === "lifetime" ? lastRenderedLifetime : lastRenderedPoints;
+
+  // FIRST TIME EVER → ALWAYS ANIMATE
+  if (lastRendered === null && animate) {
+    if (mode === "lifetime") lastRenderedLifetime = points;
+    else lastRenderedPoints = points;
+
+    animateCard(0, points, mode);
+    return;
+  }
+
+  // Prevent backward animation
+  if (lastRendered > points) {
+    lastRendered = points;
+  }
+
+  // IF UNCHANGED → DO NOT ANIMATE
+  if (lastRendered === points) {
+    el.textContent = points.toLocaleString() + " pts";
+    return;
+  }
+
+  const startValue = lastRendered ?? 0;
+
+  if (mode === "lifetime") lastRenderedLifetime = points;
+  else lastRenderedPoints = points;
+
+  if (animate) {
+    animateCard(startValue, points, mode);
+  } else {
+    el.textContent = points.toLocaleString() + " pts";
+  }
+}
+
+function animateCard(start, end, mode = "current") {
+  mark("animateCard");
+  const el =
+    mode === "lifetime"
+      ? document.getElementById("historicalPoints")
+      : document.getElementById("currentPoints");
+
+  if (!el) return;
+
+  // Prevent backward animation
+  if (end < start) start = end;
+
+  let current = start;
+  const diff = end - start;
+  const step = Math.max(1, Math.floor(diff / 40));
+
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= end) {
+      current = end;
+      clearInterval(interval);
+    }
+    el.textContent = current.toLocaleString() + " pts";
+  }, 20);
+}
+
+function getTotalOrders(user) {
+  return user.totalOrders ?? 0;
+}
+
+function getLastActive(r) {
+  const raw =
+    r.lastActive ||
+    r.lastEarnedDate ||
+    r.lastOrderDate ||
+    r.joinedAt ||
+    null;
+
+  const d = normalizeDateAny(raw);
+  return d ? d.getTime() : 0;
+}
+
+/************************************************************
+ * DROPDOWN CLICKS SHOULD CLOSE HISTORY LIST *AND* BRIGHTEN PAGE
+ ************************************************************/
+function closeHistoryAndBrighten() {
+   // your existing function
+  closeSheet();         // this is what the backdrop click does
+}
+
+function updateMultiplierDropdown(values) {
+  mark("updateMultiplierDropdown");
+  const rows = [
+    { id: "bdTier", value: values.tier },
+    { id: "bdStreak", value: values.streak },
+    { id: "bdSeasonal", value: values.seasonal },
+    { id: "bdTotal", value: values.total }
+  ];
+
+  rows.forEach(row => {
+    const el = document.getElementById(row.id);
+    if (!el) return;
+
+    const val = row.value ?? 1;
+    el.textContent = val.toFixed(2) + "×";
+
+    // remove old boost class
+    el.classList.remove("multiplier-boost");
+
+    // apply boost only if > 1.00
+    if (val > 1.00) {
+      el.classList.add("multiplier-boost");
+    }
+  });
+}
+
+function nextSortMode(current) {
+  const modes = [
+    "lifetime",
+    "earned",
+    "mostactive",
+    "recentactive",
+    "newest",
+    "oldest"
+  ];
+
+  const idx = modes.indexOf(current);
+  return modes[(idx + 1) % modes.length];
+}
+
+function getSeasonFromSettings(settings) {
+  mark("getSeasonFromSettings");
+  const today = new Date(nowMs());
+  const mmdd = `${String(today.getMonth() + 1).padStart(2, "0")}-${String(
+    today.getDate()
+  ).padStart(2, "0")}`;
+
+  const periods = settings.seasonalPeriods || {};
+
+  const isInRange = (date, start, end) => {
+    // Normal range: start <= end
+    if (start <= end) return date >= start && date <= end;
+
+    // Wrap-around range: e.g. Dec 15 → Jan 10
+    return date >= start || date <= end;
+  };
+
+  for (const key in periods) {
+    const s = periods[key];
+    if (!s.start || !s.end) continue;
+    
+    if (isInRange(mmdd, s.start, s.end)) {
+      return {
+        seasonalActive: true,
+        seasonalName: s.name || "",
+        seasonalMultiplier: Number(s.multiplier) || 1.0
+      };
+    }
+  }
+
+  return {
+    seasonalActive: false,
+    seasonalName: "",
+    seasonalMultiplier: 1.0
+  };
+}
+
+function triggerCoinBurst() {
+  mark("triggerCoinBurst");
+  const burst = pulseCard.querySelector(".coin-burst");
+  burst.innerHTML = "";
+
+  for (let i = 0; i < 10; i++) {
+    const c = document.createElement("div");
+    c.className = "coin";
+    c.style.left = (45 + Math.random() * 10) + "%";
+    c.style.top = (45 + Math.random() * 10) + "%";
+    c.style.animationDelay = (i * 0.05) + "s";
+    burst.appendChild(c);
+  }
+}
+
+
+function openQRPage(referralLink) {
+  const frame = document.getElementById("tpQRFrame");
+  if (!frame) return;
+
+  frame.classList.add("visible");
+  frame.classList.remove("hidden");
+
+  // Safari requires visible before load
+  setTimeout(() => {
+    frame.src =
+      "?impulse=PulseWorldReferralCode&code=" +
+      encodeURIComponent(referralLink);
+  }, 120);
+
+  document.body.style.pointerEvents = "none";
+}
+
+function normalizeSettings(s) {
+  return {
+    ...s,
+    calculationVersion: Number(s.calculationVersion ?? 0),
+    delayPenalty: Number(s.delayPenalty ?? 0),
+    maxTotalMultiplier: Number(s.maxTotalMultiplier ?? 1),
+    seasonalActive: (s.seasonalActive ?? false),
+    tierMultiplier_PulseSeed: Number(s.tierMultiplier_PulseSeed ?? 1),
+    tierMultiplier_ReefDiver: Number(s.tierMultiplier_ReefDiver ?? 1),
+    tierMultiplier_ToucanSpirit: Number(s.tierMultiplier_ToucanSpirit ?? 1),
+    tierMultiplier_VolcanoHeart: Number(s.tierMultiplier_VolcanoHeart ?? 1),
+    tierMultiplier_HurricaneLegend: Number(s.tierMultiplier_HurricaneLegend ?? 1),
+
+    streakDurationDays: Number(s.streakDurationDays ?? 1),
+    streakMaxMultiplier: Number(s.streakMaxMultiplier ?? 2),
+    streakMultiplierBase: Number(s.streakMultiplierBase ?? 1),
+    streakMultiplierPerDay: Number(s.streakMultiplierPerDay ?? 0.1),
+
+    referralBaseBonus_NewUser: Number(s.referralBaseBonus_NewUser ?? 0),
+    referralBaseBonus_Referrer: Number(s.referralBaseBonus_Referrer ?? 0),
+    referralEarningRate: Number(s.referralEarningRate ?? 0),
+    referralStreakDurationHours: Number(s.referralStreakDurationHours ?? 0),
+    referralStreakMultiplier: Number(s.referralStreakMultiplier ?? 1),
+    seasonalReferralBonus_NewUser: Number(s.seasonalReferralBonus_NewUser ?? 0),
+    seasonalReferralBonus_Referrer: Number(s.seasonalReferralBonus_Referrer ?? 0)
+  };
+}
+
+
+function closeReceiptPopup() {
+  const popup = document.getElementById("receiptPopup");
+  const backdrop = document.getElementById("receiptBackdrop");
+
+  popup.classList.remove("disabled", "active");
+  backdrop.classList.remove("active");
+}
+
+function closeQRPage() {
+  const frame = document.getElementById("tpQRFrame");
+  if (!frame) return;
+
+  frame.classList.remove("visible");
+  frame.classList.add("hidden");
+
+  document.body.style.pointerEvents = "auto";
+
+  setTimeout(() => {
+    frame.src = "about:blank";
+  }, 350);
+}
+
+function openTropicScanner() {
+  const f = document.getElementById("tpScannerFrame");
+  
+  if (!f) return;
+
+  if (!f.src) {
+    f.src = "/PulseWorldScanner.txt";
+  }
+
+  f.classList.remove("hidden");
+
+  // If scanner already loaded
+  if (f.contentWindow.TropicPulseScanner) {
+    f.contentPulseRealm.TropicPulseScanner.open();
+    return;
+  }
+
+  const onLoad = () => {
+    f.removeEventListener("load", onLoad);
+    f.contentWindow.TropicPulseScanner.open();
+  };
+
+  f.addEventListener("load", onLoad);
+}
+
+function closeTropicScanner() {
+  const f = document.getElementById("tpScannerFrame");
+  if (!f) return;
+
+  f.classList.remove("visible");
+  f.classList.add("hidden");
+}
+
+
+  function MergedPickASpeech(message, imagePath) {
+    if (!badge || !talk) return;
+
+    const img = badge.querySelector(".pulsepal-image");
+    const DEFAULT_IMAGE = "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex";   // ⭐ your default face
+
+    if (img) {
+      img.src = imagePath;
+      PulseRealm.PulsePalPhoto = imagePath;
+    }
+
+    talk.textContent = message;
+    badge.classList.add("talking");
+
+    // Clear any previous timers so speeches don't overlap
+    if (badge._speechTimer) {
+      clearTimeout(badge._speechTimer);
+    }
+
+    // Hide after 12 seconds AND restore default image
+    badge._speechTimer = setTimeout(() => {
+      badge.classList.remove("talking");
+
+      // ⭐ Restore default face
+      if (img) {
+        img.src = DEFAULT_IMAGE;
+      }
+    }, 8000);
+  }
+
+
+PulseRealm.PickASpeech8 = MergedPickASpeech;
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+  
+  PulseRealm.PickASpeech8(
+    "Hey Guys! This is Rich, you can Earn by helping PulseWorld!  From Loyalty to Earnings and Mentorship, Points Accumulate!",
+    "./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex"
+  );
+
+  // -----------------------------------------
+  // MARKER (CLEAN + SAFE)
+  // -----------------------------------------
+  let lastTime = nowMs();
+  function mark(label, absolute = false) {
+    const now = nowMs();
+    const diff = now - lastTime;
+    console.log(
+      absolute
+        ? `${label}: @${now.toFixed(1)}ms`
+        : `${label}: +${diff.toFixed(1)}ms`
+    );
+    lastTime = now;
+  }
+
+  try {
+    mark("STARTING LOYALTY DOM");
+
+    // -----------------------------------------
+    // 1️⃣ v11 SESSION CHECK (RETURNS IDENTITY)
+    // -----------------------------------------
+    mark("BEFORE SESSION CHECK LOYALTY DOM");
+    const id = await sessionCheck();   // v11: returns canonical identity or null
+    mark("AFTER SESSION CHECK LOYALTY DOM");
+
+    if (!id) return; // redirected to login
+
+    // Expose identity for loyalty page
+    PulseRealm.PulseIdentity = id;
+    const userID = id.uid;
+
+    // -----------------------------------------
+    // 2️⃣ SETTINGS
+    // -----------------------------------------
+    await loadSettings();
+    mark("AFTER SETTINGS LOYALTY DOM");
+
+    // -----------------------------------------
+    // 3️⃣ HISTORY (DETERMINISTIC)
+    // -----------------------------------------
+    const allHistory = await loadHistory(userID);
+    mark("AFTER HISTORY LOYALTY DOM");
+
+    // -----------------------------------------
+    // 4️⃣ USER DETAILS
+    // -----------------------------------------
+    const currentUser = await loadUserDetails(userID);
+    mark("AFTER USERDETAILS LOYALTY DOM");
+
+    // -----------------------------------------
+    // 5️⃣ POINTS + TIER
+    // -----------------------------------------
+    await renderPoints(currentUser);
+    mark("AFTER renderPoints LOYALTY DOM");
+
+    await renderTier(currentUser);
+    mark("AFTER renderTier LOYALTY DOM");
+
+    // -----------------------------------------
+    // 6️⃣ REFERRALS
+    // -----------------------------------------
+    await loadAndRenderReferrals(currentUser);
+    mark("AFTER loadAndRenderReferrals LOYALTY DOM");
+
+    // -----------------------------------------
+    // 7️⃣ HISTORY RENDER
+    // -----------------------------------------
+    await renderHistory(allHistory);
+    mark("AFTER renderHistory LOYALTY DOM");
+
+    // -----------------------------------------
+    // 8️⃣ INTERACTIONS
+    // -----------------------------------------
+    wireInteractions();
+    mark("AFTER INTERACTIONS WIRING");
+  
+    mark("LOYALTY DOM ENDS", true);
+
+  } catch (err) {
+    mark("ERROR ON DOM LOAD " + err);
+  }
+});
+
+  </script>
+</body>
+</html>

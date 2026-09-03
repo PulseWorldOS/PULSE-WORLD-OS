@@ -1,0 +1,9 @@
+{
+  "pos": 120,
+  "dur": 3600,
+  "state": "playing",
+  "playback_rate": 1.0,
+  "buffer_ms": 24000,
+  "bitrate": 3200000,
+  "timestamp": 0
+}

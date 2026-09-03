@@ -1,0 +1,4961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+  <title>Pulse World - Businesses</title>
+
+
+  <style>
+:root {
+  --t-gold: #f5d27a;
+  --t-gold-deep: #b58a3c;
+  --t-bg-dark: #05080c;
+  --t-metal-light: #d9dde4;
+  --t-metal-mid: #9ca3b0;
+  --t-metal-dark: #4b515e;
+  --t-text-main: #f5f7fb;
+  --t-text-subtle: #a7b0c4;
+  --t-card-bg: #070a11;
+}
+  
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100dvh;
+
+  display: flex;
+  justify-content: center;
+
+  background: #000;
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Overlay ONLY — NOT a second background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  /* Optional tint */
+  background: rgba(0,0,0,0.25);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+    
+.business-shell {
+  width: 100%;
+    min-width: 0;
+    min-height: 100%;
+    max-width: 464px;
+  margin: 1px auto 6px auto;
+  position: relative;
+
+  /* Layered tropical glass */
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 153, 0.96) 0%,   /* bright soft yellow */
+    rgba(255, 255, 153, 0.92) 40%,  /* slightly lighter layer */
+    rgba(255, 255, 153, 0.88) 100%  /* deepest translucent yellow */
+  );
+  z-index: 0;
+  border-radius: 18px;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px);
+}
+
+.business-shell::before {
+  width: 100%;
+    min-width: 0;
+    min-height: 100%;
+    max-width: 464px;
+    
+  margin: 1px auto 6px auto;
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-size: contain; /* ← SAFE */
+
+  filter: blur(45px);
+  z-index: 0;
+
+  /* Magical warm shimmer layer */
+  background: radial-gradient(
+    circle at 80% 0%,
+    rgba(255,215,160,0.18),
+    transparent 60%
+  );
+  opacity: 0.55;
+}
+
+
+/* BUSINESS LIST */
+.business-container {
+    min-width: 0;
+    max-width: 100%;
+    min-height: 100%;
+    margin: 0 6px;
+  display: flex;              /* allow vertical stacking */
+  flex-direction: column;     /* image on top, row below */
+  background: #ffff99;
+  box-shadow: 0 7px 22px rgba(0,0,0,0.1);
+  border-radius: 22px;
+}
+/* EVENT CARD — 200px total height */
+.business-card {
+  background: white;
+  flex-direction: column;     /* image on top, row below */
+  position: relative;
+  height: 200px;
+  display: flex;              /* allow vertical stacking */
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.business-card:active {
+  transform: scale(0.97);
+}
+
+/* IMAGE WRAPPER — fixed 120px, scales with card */
+.business-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ffe6c9, #ffd1e3);
+}
+
+/* IMAGE — fills wrapper */
+.business-img,
+.business-lazy-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* contain → cover for better fill */
+  object-position: center 46%; /* shows MOST of the image */
+  opacity: 0;
+  transition: opacity 0.35s ease-in;
+  background: #e0e0e0;
+}
+
+.business-img.loaded,
+.business-lazy-img.loaded {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.business-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2px;
+
+  width: 100%;        /* hard clamp */
+  max-width: 100%;    /* prevents overflow */
+  min-width: 0;       /* CRITICAL: allows children to shrink */
+
+  flex: none;         /* do NOT grow */
+}
+
+/* CATEGORY + SUBCATEGORY ICONS — NO blur, NO fade */
+.cat-lazy-img {
+  opacity: 1;
+  filter: none;
+  transition: none;
+}
+
+.category-pill {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.business-left,
+.business-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  min-width: 0;       /* CRITICAL: allows shrinking */
+  flex-shrink: 1;     /* prevents overflow */
+  max-width: 100%;    /* hard clamp */
+}
+
+.business-title {
+  font-size: 16px;
+  display: flex;
+  font-weight: 600;
+  color: #007f8a;
+  margin-bottom: 3px;
+  white-space: nowrap;      /* never wrap */
+  overflow: hidden;         /* allow slight cutoff */
+  text-overflow: ellipsis;  /* optional: adds "..." */
+  flex-shrink: 1;           /* allow shrinking */
+  min-width: 0;             /* CRITICAL: allows flex shrink */
+}
+
+.business-summary {
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+#stickyFilters::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 45%;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+  
+#stickyFilters {
+  overflow: visible !important;
+  background: linear-gradient(135deg, #0f8f4f 0%, #0a6e3a 100%);
+  color: white;
+  padding: 2px 6px;
+  font-size: 22px;
+  font-weight: 500;
+  border-radius: 14px;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  transform: none !important;
+  top: 0;
+  z-index: 999;
+  display: inline-flex;      /* ← the magic */
+  align-items: center;
+  justify-content: center;   /* ← center the filter row */
+  width: 100%;               
+  height: 45px;               
+  max-height: 45px;            /* ← keeps it full width without stretching */
+  box-sizing: border-box;
+}
+
+.filter-btn {
+  padding: 3px 8px;
+  color: #f5f7fb;
+  font-size: clamp(8px, 8vw, 18px);
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;   /* allows the whole button to shrink */
+  min-width: 0;     /* REQUIRED for children to shrink */
+  gap: clamp(4px, 8vw, 10px);
+  transition: transform 0.1s ease;
+}
+
+
+.edit-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.biz-icon {
+  font-size: 20px;
+  pointer-events: auto !important;
+  
+  cursor: pointer;
+  user-select: none;
+}
+
+.biz-icon:active {
+  transform: scale(0.78);
+  opacity: 0.6;
+}
+
+.action-bubble.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.distance-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 14px;
+  width: auto;        /* ← let it size naturally */
+  max-width: 100px;   /* ← cap it */
+  z-index: 800;
+  transform: none !important;
+  min-width: 0;
+  flex: 0 1 auto;
+
+  padding: 2px;
+  outline: none;
+  background: transparent; /* wrapper handles background */
+  border: 1px solid transparent;
+
+  font-size: clamp(9px, 6vw, 18px);
+  color: #f5f7fb;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  text-align: center;
+  text-align-last: center;
+}
+
+.distance-select option {
+  font-size: clamp(7px, 6vw, 14px);
+}
+
+
+.distance-active .distance-select {
+  outline: none;
+  color: var(--t-gold);
+}
+
+/* Focus glow */
+.distance-select:focus-visible {
+  outline: none;
+}
+
+/* Focus glow */
+.distance-select:focus {
+  outline: none;
+}
+
+.distance-wrapper {
+  position: relative;
+  outline: none;
+  appearance: none;
+  z-index: 999;
+  -webkit-appearance: none;
+  transform: none !important;
+  -moz-appearance: none;
+  border-radius: 14px;
+  color: #f5f7fb;
+  margin-bottom: 1px;
+  gap: 2px;
+  border-top: 2px solid #4D5851;   /* light highlight */
+  border-left: 2px solid #4D5851;  /* light highlight */
+  border-bottom: 2px solid #000;   /* dark shadow */
+  border-right: 2px solid #000;    /* dark shadow */
+  min-width: 0;
+  background: rgba(20, 20, 20, 0.35);
+  padding: 2px;
+  max-width: none;       /* ← remove the 110px choke point */
+  overflow: visible;     /* ← stop clipping */
+  flex: 0 1 auto;
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Custom dropdown arrow */
+.distance-wrapper::after {
+  content: "▾";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 14px;
+  color: #f5f7fb;
+}
+
+
+.distance-wrapper.active {
+  background: #333; /* darker glass */
+  border: 1px solid rgba(255, 215, 130, 0.85);
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+
+.distance-wrapper.distance-active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+.empty-toucan {
+  flex-shrink: 1;
+
+  width: auto;        /* ← let it size naturally */
+  max-width: 160px;   /* ← cap it */
+
+  opacity: 0;
+  margin-bottom: 1px;
+  transition: opacity 0.8s ease;
+  mix-blend-mode: multiply;
+}
+
+.empty-toucan.loaded {
+  opacity: 0.95;
+}
+.exhausted-shimmer {
+  display: block; /* <-- THIS is the fix */
+  font-weight: 700;
+  color: #5a4a2a;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 220, 150, 0.7) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 200%;
+  animation: shimmerMove 2.2s ease-in-out infinite;
+  padding: 3px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  margin-bottom: 14px; /* ensures spacing above image */
+  text-align: center;
+}
+
+@keyframes shimmerMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.action-bubble {
+  position: absolute;
+  width: 100%;
+  min-width: 0;
+  box-shadow: 0 clamp(8px, 2vw, 14px) clamp(10px, 2vw, 24px) rgba(0,0,0,0.25);
+  padding: 10px 0;
+  
+
+  /* FROSTED GLASS */
+  background: rgba(0, 0, 0, 0.44) !important; /* faint veil */
+  backdrop-filter: blur(42px) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.48) !important;
+  border-radius: 14px !important;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .15s ease, transform .15s ease;
+  z-index: 9999;
+}
+
+.action-bubble.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ROWS INSIDE THE BUBBLE */
+.bubble-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 2vw, 10px);
+  padding: clamp(4px, 2vw, 8px) clamp(2px, 2vw, 4px);
+  cursor: pointer;
+  background: rgba(255,255,255,0.35);
+  border-radius: 8px !important;
+  border: 2px solid rgba(0,0,0,0.25) !important;
+  color: #333; /* readable on frosted background */
+  font-weight: 600;
+  font-size: 14px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.bubble-row:hover {
+  background: rgba(255,255,255,0.12) !important;
+  border-color: #ffffff !important;
+}
+
+/* SHIELD */
+.bubble-shield {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.05);
+  z-index: 9998;
+}
+
+.trash-icon {
+  width: 1.375em;
+  height: 1.375em;
+
+  flex-shrink: 1;    /* allow shrinking */
+  pointer-events: none;
+  fill: #777 !important;
+  color: #777 !important;
+}
+
+
+.clear-btn {
+  background: none;
+  margin: 0 3px;
+  z-index: 1025;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+  justify-content: center;
+}
+
+.trash-circle {
+  width: 2em;   /* 30px if font-size = 16px */
+  height: 2em;
+
+  /* Layered tropical glass */
+  background: linear-gradient(
+      145deg,
+      rgba(255,255,255,0.96) 0%,
+      rgba(250,247,240,0.92) 40%,
+      rgba(245,240,230,0.88) 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* subtle shadow to lift it off the green header */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+}
+
+.clear-btn:hover .trash-icon {
+  fill: #555;
+}
+
+.filter-row {
+  flex: 1 1 auto;
+  width: auto;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+
+  min-width: 0; /* ← critical */
+  overflow: visible !important;
+}
+
+/* HEADER BUTTONS */
+.header-create-btn,
+.header-bookmark-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+.header-create-btn {
+  background: linear-gradient(135deg, #00c2ff, #0077ff);
+}
+
+.header-bookmark-btn {
+  background: linear-gradient(135deg, #ffb300, #ff8c00);
+}
+
+.header-create-btn:active,
+.header-bookmark-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+.chip-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  background: #ffff99;
+}
+
+@keyframes pulseOpen {
+  0% { box-shadow: 0 0 0 0 rgba(0,200,0,0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(0,200,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,200,0,0); }
+}
+
+.verified-check {
+  font-size: 18px;
+  font-weight: 900;
+  margin-left: 6px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.rating-pill {
+  background: rgba(255,255,255,0.25);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+
+  display: inline-flex;      /* flex, not inline-block */
+  flex-direction: row;       /* keep star + number in one row */
+  align-items: center;       /* vertical centering */
+  justify-content: center;   /* horizontal centering */
+
+  white-space: nowrap;       /* NEVER wrap */
+  gap: 4px;                  /* spacing between star + number */
+
+  padding: 2px 8px;          /* ensures it grows naturally */
+  margin-left: 6px;
+  backdrop-filter: blur(2px);
+}
+
+.open-pill {
+  background: #d4f8d4;
+  color: #0a7a0a;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 6px;
+  animation: pulseOpen 1.6s infinite ease-in-out;
+}
+
+.closed-pill {
+  background: #ffd4d4;
+  color: #a00000;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+@keyframes pulseOpen {
+  0% { box-shadow: 0 0 0 0 rgba(0,200,0,0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(0,200,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,200,0,0); }
+}
+
+/* Dropdown items */
+.distance-select option {
+  background: #1a1a1a; /* dark dropdown */
+  color: #f5f7fb;
+  padding: 2px;
+  outline: none;
+}
+
+
+#floatingCategoryBubble {
+  position: fixed;
+  bottom: 45px;
+  left: 6px;
+  /* Responsive magic */
+  width: clamp(60px, 22vw, 100px);
+  height: clamp(60px, 22vw, 100px);
+
+  border-radius: 50%;
+  background: #f7e7c6;
+  border: 4px solid rgba(255, 215, 130, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.5s ease;
+  animation: tpBubbleWaveIn 0.85s ease-out forwards;
+  box-shadow: 0 0 6px rgba(255, 215, 130, 0.6);
+}
+
+#floatingCategoryBubble.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+#floatingCategoryBubble img {
+  width: 120%;
+  height: 120%;
+  /* Differs from business to events */
+  margin-bottom: -4px;
+  object-fit: contain;
+}
+
+/* Platinum grey bubble */
+#floatingCategoryBubble.platinum {
+  background: #f7e7c6;   /* soft platinum grey */
+  border: 4px solid #cfcfcf !important;
+  box-shadow: 0 0 6px rgba(180, 180, 180, 0.6) !important;/* Responsive magic */
+}
+
+
+#floatingCategoryBubble.platinum img {
+  width: 110%;
+  height: 110%;
+  margin-bottom: -4px;
+  object-fit: contain;
+}
+
+/* Shimmer overlay */
+#floatingCategoryBubble::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  border-radius: 50%;
+  animation: tpBubbleShimmer 1.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.category-card,
+.subcategory-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #faf7f0; /* parchment base */
+  isolation: isolate;  /* prevents blending with yellow */
+}
+
+.category-card::before,
+.subcategory-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    145deg,
+    rgba(0, 180, 170,0.36) 0%,
+    rgba(250,247,240,0.92) 38%,
+    rgba(0, 180, 170, 0.35) 58%,
+    rgba(245,240,230,0.88) 100%
+  );
+  z-index: 0;
+}
+
+.category-card > *,
+.subcategory-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.empty-wrapper {
+  display: flex;
+  flex-direction: column;   /* ← forces stacking */
+  align-items: center;      /* ← centers both toucan + pill */
+  padding: 20px 12px;
+  text-align: center;
+  min-width: 0;
+}
+
+.empty-pill {
+  min-width: 0;
+  width: auto;
+  margin-top: -8px;
+  background: white;
+  border-radius: 30px;
+  font-size: 15px;
+  color: #444;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.scroll-to-top-btn:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+.scroll-to-top-btn {
+  position: sticky;
+  bottom: 12px;
+  margin: 0 auto;
+  width: 38px;
+  height: 38px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #444;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 50;
+}
+.scroll-up-card:hover {
+  background: rgba(0,0,0,0.05);
+  transform: scale(1.05);
+  transition: 0.15s ease;
+}
+.floating-scroll-up {
+  position: fixed;
+  color: white;
+  
+  bottom: 35px;
+  right: 35px;
+  mix-blend-mode: difference;
+  z-index: 999999; /* ← bump this way up */
+}
+
+.t-hidden {
+  display: none;
+}
+
+.price-badge {
+  position: absolute;
+  right: 8px;
+  letter-spacing: 0.5px;
+  bottom: 4px; /* pulls it slightly below the image edge */
+  background: #000000cc;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  font-size: 16px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+@keyframes diamondPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(0, 255, 200, 0.0));
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 200, 0.35));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(0, 255, 200, 0.0));
+  }
+}
+.price-badge.diamond {
+  animation: diamondPulse 1.8s ease-in-out infinite;
+  font-size: 20px;
+  bottom: 6px; /* pulls it slightly below the image edge */
+}
+
+.header-left,
+.header-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(32px, 15vw, 42px);
+  height: clamp(32px, 15vw, 42px);
+  flex: 0 1 auto;            /* ← prevents stretching */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.header-left {
+  left: 0;
+}
+
+.header-right {
+  right: 0;
+}
+.header {
+  position: relative;
+  z-index: 998;
+}
+/* WRAPPER */
+.t-filter-wrapper {
+  min-width: 0;
+  position: relative;
+  gap: 2px;
+  z-index: 999;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: auto;
+  flex: 0 1 auto;
+  padding: 2px 4px;
+  background: rgba(20, 20, 20, 0.35);
+  border-radius: 14px;
+  max-width: none;        /* ← removes the 110px choke point */
+  overflow: visible;      /* ← allows active state to expand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* FILTER BUTTON */
+.t-filter-btn {
+  position: relative;
+  background: transparent; /* wrapper handles background */
+  padding: 2px 4px;
+  border-radius: 14px;
+  font-size: 14px;
+  color: #f5f7fb;
+  cursor: pointer;
+  display: flex;
+  width: auto;
+  align-items: center;
+  flex: 0 1 auto;   /* allows the whole button to shrink */
+  min-width: 0;     /* REQUIRED for children to shrink */
+  transition: transform 0.1s ease;
+}
+
+.t-filter-btn.active {  
+  font-weight: 600;
+  background: #333; /* darker glass */
+  color: var(--t-gold) !important;
+
+  backdrop-filter: blur(14px);
+  transition: all 0.18s ease-out;
+}
+
+/* BACKDROP */
+.t-filter-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.05);
+  z-index: 1000;
+  mask: radial-gradient(circle at var(--px) var(--py), transparent 0, transparent 160px, black 180px);
+}
+
+/* PANEL */
+.t-filter-panel {
+  position: absolute;
+  top: 35px;
+  right: 0;
+
+  width: max-content;     /* prevents full-width expansion */
+
+  min-width: 0;
+  max-width: 260px !important;
+
+  z-index: 100000;
+
+  /* TRUE DARK GLASS */
+  background: #333 !important;
+  backdrop-filter: blur(42px) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.48) !important;
+  border-radius: 12px !important;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35) !important;
+
+  padding: 4px 0 !important;
+
+  /* ANIMATION */
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.t-filter-panel:not(.t-hidden) {
+  display: block !important;
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 100000;
+}
+
+/* SECTIONS */
+.t-filter-section {
+  padding: 2px 4px !important;
+  min-width: 0;
+  max-width: 260px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.18) !important;
+}
+
+.t-filter-section:last-child {
+  border-bottom: none !important;
+}
+
+/* TITLES */
+.t-filter-title {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 8px;
+  color: #ffffff !important;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 2vw, 10px);
+}
+
+/* TITLES */
+.t-search-title {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 8px;
+  color: #ffffff !important;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 2vw, 10px);
+}
+
+/* OPTIONS WRAP */
+.t-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px !important;
+}
+
+/* OPTION CHIP */
+.t-filter-option {
+  background: rgba(255,255,255,0.12) !important;
+  padding: 4px 5px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  color: #f5f7fb;
+  cursor: pointer;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 3vw, 10px);
+  position: relative;
+  z-index: 1002;
+  min-width: 0; /* allows shrinking */
+  white-space: nowrap; /* prevents wrapping */
+
+}
+
+/* HOVER */
+.t-filter-option:hover {
+  background: rgba(255,255,255,0.22) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+}
+
+/* ACTIVE */
+.t-filter-option.active {
+  background: #d9a441 !important;
+  color: #000 !important;
+  border-color: #f5e2aa !important;
+  font-weight: 600;
+}
+
+/* Hover shimmer */
+.t-filter-btn:focus {
+  outline: none;
+}
+
+.ratingcount-pulse {
+  animation: pulseCount 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseCount {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.ratingcount-pulseover1000 {
+  animation: pulseCountover1000 1.4s infinite ease-in-out;
+}
+
+.ratingcount-pulseover1000 .ratingcount-text {
+  color: #ffd700; /* deep dark gold */
+}
+
+@keyframes pulseCountover1000 {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.fivestar-pulse {
+  animation: pulseFive 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseFive {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.10); }
+  100% { transform: scale(1); }
+}
+.ratingcount-text {
+  font-weight: 700;
+  color: white;
+}
+.fire-1 { color: #ff8a3c; }       /* warm */
+.fire-2 { color: #ff5e00; }       /* strong fire */
+.fire-3 { color: #ff2e00; 
+          animation: infernoPulse 1.3s infinite ease-in-out; } /* inferno */
+
+.ice-1 { color: #8fd3f4; }        /* cold */
+.ice-2 { color: #4fa3d1; }
+.ice-3 { color: #4fa3d1; 
+         animation: icePulse 1.6s infinite ease-in-out; } /* deep freeze */
+
+@keyframes infernoPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes icePulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.75; }
+  100% { transform: scale(1); opacity: 1; }
+}
+/* URGENCY COLORS */
+.urgency-red {
+  background: #ff4d4d;
+  color: white;
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.35);
+}
+
+.urgency-green {
+  background: #2ecc71;
+  color: white;
+  box-shadow: 0 0 6px rgba(46, 204, 113, 0.35);
+}
+
+/* URGENCY PULSE */
+.urgency-pulse {
+  animation: urgencyPulse 1.15s infinite ease-in-out;
+}
+
+@keyframes urgencyPulse {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.15); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.empty-toucan img,
+.empty-toucan svg {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 1;
+}
+
+.header-chip {
+  background: rgba(20, 20, 20, 0.35); /* lighter glass */
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  padding: clamp(2px, 3vw, 4px) clamp(3px, 3vw, 6px);
+}
+
+.header-chip.active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+  backdrop-filter: blur(24px);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+#filterLabel {
+  line-height: 1;
+  display: flex;
+  font-size: clamp(9px, 6vw, 18px);
+  flex: 0 1 auto;   /* allow shrinking */
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: max-content;
+  width: auto;       /* width tied to font-size */
+}
+
+
+.t-funnel {
+  font-size: clamp(10px, 6vw, 20px);
+  line-height: 1;
+
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;     /* allow shrinking */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto;       /* width tied to font-size */
+}
+
+
+
+.t-search-btn.active {
+  background: #333; /* darker glass */
+
+  font-weight: 600;
+  color: var(--t-gold) !important;
+
+  backdrop-filter: blur(14px);
+
+  transition: all 0.18s ease-out;
+}
+/* Focus glow */
+.t-search-btn:focus {
+  outline: none;
+}
+
+.t-search-panel:not(.t-hidden) {
+  display: block !important;
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 100000;
+}
+.t-search-panel {
+  position: absolute;
+  top: 35px;
+  left: 0;        /* align left edges */
+  min-width: 0;
+  width: max-content;     /* prevents full-width expansion */
+  max-width: 260px !important;
+  /* TRUE DARK GLASS */
+  background: #333 !important;
+  backdrop-filter: blur(42px) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.48) !important;
+  border-radius: 12px !important;
+  padding: 4px 0 !important;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35) !important;
+  z-index: 100000;
+  /* ANIMATION */
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.t-search-input-wrap {
+  width: auto;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: rgba(255,255,255,0.12) !important;
+  font-size: 15px;
+  color: #f5f7fb !important;
+}
+
+.t-search-input {
+  width: 100%;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  /* Kill browser defaults */
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent !important;
+  color: #f5f7fb !important;
+
+  border-style: solid;
+  border-width: 1px;
+  padding: 2px 4px; /* or whatever you want */
+  box-sizing: border-box;
+}
+input::placeholder {
+  color: #f5f7fb !important;
+}
+
+
+.t-search-fields {
+  margin-top: 12px;
+}
+
+/* OPTIONS WRAP */
+.t-search-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px !important;
+}
+
+/* OPTION CHIP */
+.t-search-option {
+  background: rgba(255,255,255,0.12) !important;
+  padding: 4px 5px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  color: #f5f7fb;
+  cursor: pointer;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 2vw, 10px);
+  position: relative;
+  z-index: 1002;
+}
+
+/* HOVER */
+.t-search-option:hover {
+  background: rgba(255,255,255,0.22) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+}
+
+/* ACTIVE */
+.t-search-option.active {
+  background: #d9a441 !important;
+  color: #000 !important;
+  border-color: #f5e2aa !important;
+  
+  font-weight: 600;
+}
+
+.t-note {
+  display: block;
+  font-size: 11px;
+  color: var(--t-metal-light);
+  margin-left: 14px;
+}
+
+/* FILTER BUTTON */
+.t-search-btn {
+  background: transparent; /* wrapper handles background */
+  padding: 2px 4px;
+  border-radius: 14px;
+  font-size: 14px;
+  color: #f5f7fb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.1s ease;
+}
+
+
+/* WRAPPER */
+.t-search-wrapper {
+  min-width: 0;
+  position: relative;
+  gap: 2px;
+  z-index: 999;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: auto;
+  flex: 0 1 auto;
+  padding: 2px 4px;
+  background: rgba(20, 20, 20, 0.35);
+  border-radius: 14px;
+  max-width: none;        /* ← removes the 110px choke point */
+  overflow: visible;      /* ← allows active state to expand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+/* BACKDROP */
+.t-search-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.05);
+  z-index: 1000;
+  mask: radial-gradient(circle at var(--px) var(--py), transparent 0, transparent 160px, black 180px);
+}
+
+.t-search-buttons {
+  min-width: 0;
+  position: relative;
+  gap: clamp(10px, 3vw, 25px);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: auto;
+  flex: 0 1 auto;
+  padding: 1px 2px;
+  background: rgba(20, 20, 20, 0.35);
+  border-radius: 12px;
+  max-width: none;        /* ← removes the 110px choke point */
+  overflow: visible;      /* ← allows active state to expand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+#tpSearchGo {
+  background: rgba(255,255,255,0.12);
+  border-radius: 14px;
+  color: #f5f7fb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+  backdrop-filter: blur(14px);
+  padding: 1px 2px;
+}
+
+#tpSearchClear {
+  background: rgba(255,255,255,0.12);
+  border-radius: 14px;
+  color: #f5f7fb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+  backdrop-filter: blur(14px);
+  padding: 1px 2px;
+}
+.t-filter-wrapper.active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+.t-search-wrapper.active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+#searchLabel {
+  line-height: 1;
+  display: flex;
+  font-size: clamp(9px, 6vw, 18px);
+  flex: 0 1 auto;   /* allow shrinking */
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: max-content;
+  width: auto;       /* width tied to font-size */
+}
+
+.t-search-icon {
+  font-size: clamp(10px, 6vw, 20px);
+  line-height: 1;
+
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;     /* allow shrinking */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto;       /* width tied to font-size */
+}
+
+/* Fullscreen overlay */
+#t-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(16px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  opacity: 1;
+  transition: opacity 0.6s ease-out;
+}
+
+/* Logo */
+#t-loading-logo {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  animation: tpShimmer 3.5s ease-in-out infinite;
+}
+
+/* Magical shimmer sweep */
+@keyframes tpShimmer {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(0,255,200,0.45));
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Hidden state */
+#t-loading.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Entrance animation */
+@keyframes tpBubbleWaveIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(20px);
+    filter: drop-shadow(0 0 0 rgba(0,255,200,0));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(0);
+    filter: drop-shadow(0 0 12px rgba(0,255,200,0.35));
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Shimmer sweep */
+@keyframes tpBubbleShimmer {
+  0% {
+    background-position: -100px 0;
+  }
+  100% {
+    background-position: -100px 0;
+  }
+}
+/* WALK — slow side-to-side */
+.walk-pulse {
+  animation: walkStep 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes walkStep {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(3px); }
+}
+
+/* DRIVE — fast side-to-side */
+.drive-pulse {
+  animation: driveShake 0.25s infinite linear;
+}
+
+@keyframes driveShake {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* COMPASS — gentle rotation */
+.compass-pulse {
+  animation: compassPulse 1.2s infinite ease-in-out;
+}
+
+@keyframes compassPulse {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(8deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* FEET — slow up-and-down */
+.feet-pulse {
+  animation: feetStep 1.8s infinite ease-in-out;
+  display: inline-block; /* ensures transform works cleanly */
+}
+
+@keyframes feetStep {
+  0%   { transform: translateY(0px); }
+  25%  { transform: translateY(-3px); }
+  50%  { transform: translateY(0px); }
+  75%  { transform: translateY(3px); }
+  100% { transform: translateY(0px); }
+}
+/* ================= PULSEBAND PANEL ONLY (v7 Extract) ================= */
+
+/* Overlay root */
+#pulseband-overlay {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 80;
+  pointer-events: none; /* panel/badge will re-enable */
+}
+
+/* Bubble badge */
+#pulseband-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffd400 40%, #ff5a5a 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+
+/* Animated bars inside badge */
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.pb-bars span {
+  width: 4px;
+  border-radius: 999px;
+  background: #000;
+  animation: pbBarPulse 1s ease-in-out infinite;
+}
+
+.pb-bars span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.pb-bars span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.pb-bars span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.pb-bars span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+
+@keyframes pbBarPulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.2); }
+}
+
+/* Panel card */
+.pb-card {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  padding: 14px 16px 16px 16px;
+  color: #fff;
+  border: 2px solid #ffd400;
+  pointer-events: auto;
+  transform-origin: bottom right;
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+/* When active */
+.pb-card.pb-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel header */
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.pb-mini-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--tp-yellow-strong);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+}
+
+/* Rows */
+.pb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.pb-row:last-child {
+  border-bottom: none;
+}
+
+.pb-row label {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.pb-hint {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pb-value {
+  font-weight: 600;
+  color: var(--tp-yellow-strong);
+  text-align: right;
+}
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  #pulseband-overlay {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .pb-card {
+    width: 260px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+ 
+<div class="business-shell">
+  
+  <!-- STICKY FILTER HEADER -->
+  <div id="stickyFilters">
+
+    <!-- LEFT BUTTON -->
+    <div class="header-left">
+      <button class="header-bookmark-btn" id="bookmarkHeaderBtn">★</button>
+    </div>
+
+    <!-- CENTER FILTER ROW -->
+    <div class="filter-row">
+      <div class="t-search-wrapper">
+        <button id="tpSearchBtn" class="t-search-btn">
+          <span class="t-search-icon">🔍</span><span id="searchLabel"> Search</span>
+        </button>
+        <div id="tpSearchPanel" class="t-search-panel t-hidden">
+    
+          <!-- Search Input -->
+          <div class="t-search-input-wrap">
+            <input 
+              id="tpSearchInput" 
+              type="text" 
+              placeholder="Search businesses, menus, reviews…" 
+              class="t-search-input"
+            />
+          </div>
+
+          <!-- Search Fields -->
+          <div class="t-search-fields">
+            <div class="t-search-title">Search In</div>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="name" checked />
+              <span>Business Name</span>
+            </label>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="category" checked />
+              <span>Category</span>
+            </label>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="menu" />
+              <span>Menu Items</span>
+            </label>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="description" />
+              <span>Description</span>
+            </label>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="reviews" />
+              <span>Reviews</span>
+              <small class="t-note">May take a bit longer</small>
+            </label>
+          </div>
+          <label class="t-search-buttons">
+            <button id="tpSearchGo" class="t-search-go-btn">🔍 Search</button>
+            <button id="tpSearchClear" class="t-search-clear-btn">❌ Clear</button>
+          </label>
+
+        </div>
+      </div>
+      <button id="allBtn" class="filter-btn header-chip">All</button>
+      <button id="myBtn" class="filter-btn header-chip">My</button>
+      <!-- Trash Button -->
+      <button id="clearFilterBtn" class="clear-btn" style="display:none;">
+        <div class="trash-circle">
+          <svg class="trash-icon" viewBox="0 0 24 24">
+            <rect x="5" y="7" width="14" height="14" rx="2"
+                  stroke="black" stroke-width="2.4" fill="none"/>
+            <path d="M3 7h18" stroke="black" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"
+                  stroke="black" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <line x1="10" y1="11" x2="10" y2="18"
+                  stroke="black" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="14" y1="11" x2="14" y2="18"
+                  stroke="black" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </button>
+      <!-- Distance Filter -->
+      <div class="distance-wrapper" id="distanceFilterWrapper">
+        <select id="distanceFilter" class="distance-select">
+          <option value="">Distance</option>
+          <option value="1">Up to 1 miles</option>
+          <option value="5">Up to 5 miles</option>
+          <option value="10">Up to 10 miles</option>
+          <option value="25">Up to 25 miles</option>
+          <option value="50">Up to 50 miles</option>
+        </select>
+      </div>
+
+      <div class="t-filter-wrapper">
+        <button id="tpFilterBtn" class="t-filter-btn">
+          <span class="t-funnel">🔽</span><span id="filterLabel"> Filter</span>
+        </button>
+
+        <div id="tpFilterPanel" class="t-filter-panel t-hidden">
+
+          <!-- Price Rating -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">💲TP Value Rating</div>
+            <div class="t-filter-options" id="tpPriceRatingOptions">
+              <div class="t-filter-option" data-pricerating="$">💲</div>
+              <div class="t-filter-option" data-pricerating="$$">💲💲</div>
+              <div class="t-filter-option" data-pricerating="$$$">💲💲💲</div>
+              <div class="t-filter-option" data-pricerating="💎">💎</div>
+            </div>
+          </div>
+
+          <!-- Final Score -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">🏆 TP Experience Score</div>
+            <div class="t-filter-options" id="tpFinalScoreOptions">
+              <div class="t-filter-option" data-fscore="high">🤯 Best → Last</div>
+              <div class="t-filter-option" data-fscore="low">🥶 Last → Best</div>
+            </div>
+          </div>
+
+          <!-- Google Rating -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">⭐ Google Rating</div>
+            <div class="t-filter-options" id="tpGoogleRatingOptions">
+              <div class="t-filter-option" data-grating="5">
+                <span style="color:#FFD700;">★★★★★</span>
+              </div>
+
+              <div class="t-filter-option" data-grating="4">
+                <span style="color:#C0C0C0;">★★★★</span>
+              </div>
+
+              <div class="t-filter-option" data-grating="3">
+                <span style="color:#8C6239;">★★★</span>
+              </div>
+
+              <div class="t-filter-option" data-grating="2">
+                <span style="color:#C0392B;">★★</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rating Count -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">📊 Google Rating Count</div>
+            <div class="t-filter-options" id="tpRatingCountOptions">
+              <div class="t-filter-option" data-rcount="high">⬆️ High → Low</div>
+              <div class="t-filter-option" data-rcount="low">⬇️ Low → High</div>
+            </div>
+          </div>
+
+          <!-- Environment -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">🌿 Environment</div>
+            <div class="t-filter-options" id="tpEnvOptions">
+              <div class="t-filter-option" data-env="indoor">🏠 Indoor</div>
+              <div class="t-filter-option" data-env="outdoor">🌴 Outdoor</div>
+              <div class="t-filter-option" data-env="both">🌗 Both</div>
+            </div>
+          </div>
+
+          <!-- Open Now -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">⏱️ Open Now</div>
+            <div class="t-filter-options" id="tpOpenNowOptions">
+              <div class="t-filter-option" data-open="open">🟢 Open</div>
+              <div class="t-filter-option" data-open="closed">🔴 Closed</div>
+              <div class="t-filter-option" data-open="any">⚪ Any</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT BUTTON -->
+    <div class="header-right">
+      <button class="header-create-btn" id="createHeaderBtn">+</button>
+    </div>
+
+  </div>
+
+  <!-- CHIP BELOW FILTER ROW -->
+  <div class="chip-row">
+    <div id="location-chip"
+      style="
+        display:none;
+        padding: 3px 6px;
+        border-radius: 18px;
+        font-weight: 700;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #4a2a00;
+
+        
+        align-items: center;
+        gap: 3px;
+
+        background: linear-gradient(135deg,#f7e7c6 0%,#f3d9a4 40%,#f7e7c6 100%);
+        box-shadow:
+          inset 0 1px 2px rgba(255,255,255,0.55),
+          inset 0 -2px 4px rgba(0,0,0,0.12),
+          0 3px 6px rgba(0,0,0,0.15),
+          0 1px 2px rgba(0,0,0,0.10);
+        backdrop-filter: blur(2px);
+      ">
+      <img id="location-chip-icon-category"
+           style="width:28px;height:28px;display:none;object-fit:contain;">
+      <span id="location-chip-text"></span>
+      <img id="location-chip-icon-subcategory"
+           style="width:28px;height:28px;display:none;object-fit:contain;">
+    </div>
+  </div>
+
+  <!-- BUSINESS LIST -->
+  <div id="businesses" class="business-container">
+    <div class="scroll-to-top-btn" id="scrollToTopBtn">▲</div>
+  </div>
+</div>
+<div id="floatingCategoryBubble" class="hidden">
+  <img id="floatingCategoryIcon" src="" alt="">
+</div>
+<div id="floatingScrollUp" class="floating-scroll-up">▲</div>
+<script type="module">
+const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
+
+
+// -----------------------------------------
+// ⭐ UI STATE (ALLOWED)
+// -----------------------------------------
+let isIdle = true;
+let resizeTimeout = null;
+
+// -----------------------------------------
+// ⭐ MARKER (UI-only)
+// -----------------------------------------
+let lastTime = null;
+function mark(label) {
+  log("[BUSINESS]", label);
+  lastTime = nowMs();
+}
+
+// -----------------------------------------
+// ⭐ PAGE DOOR — TRUST CHECK ONLY
+// -----------------------------------------
+async function sessionCheck() {
+  return PulseRealm.PulseIdentity ?? null;
+}
+
+// -----------------------------------------
+// ⭐ BUSINESS PAGE GLOBALS (UI-only)
+// -----------------------------------------
+let activeSearch = null;
+let activeMy = false;
+let activeAll = false;
+let activeEnv = null;
+let activeOpenNow = null;
+let activeDistance = null;
+let activeFinalScore = null;
+let activeRatingCount = null;
+let activeGoogleRating = null;
+let activePriceRating = null;
+let activeBizCategory = null;
+let activeBizSubcategory = null;
+let activeBizCategoryIcon = null;
+let activeBizSubcategoryIcon = null;
+let currentUserLocation = null;
+let categoriesMode = true;
+
+let currentList = null;
+let showingSaved = false;
+let emptyStateIndex = 0;
+
+// -----------------------------------------
+// ⭐ BUSINESS CATEGORY STORAGE (UI-only)
+// -----------------------------------------
+let bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+let bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+let bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+let bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+
+let allBusinesses = [];
+let savedBusinesses = [];
+let sortPriority = [];
+let filterHistory = [];
+let lastActivatedFilter = null;
+
+// -----------------------------------------
+// ⭐ DOM REFERENCES (UI-only)
+// -----------------------------------------
+const allBtn = document.getElementById("allBtn");
+const myBtn = document.getElementById("myBtn");
+const distancewrapper = document.querySelector(".distance-wrapper");
+const distanceselect = document.querySelector(".distance-select");
+const searchwrapper = document.querySelector(".t-search-wrapper");
+
+const filterwrapper = document.querySelector(".t-filter-wrapper");
+const bookmarkHeaderBtn = document.getElementById("bookmarkHeaderBtn");
+
+const businessesDiv = document.getElementById("businesses");
+const distanceFilter = document.getElementById("distanceFilter");
+const businessshell = document.querySelector(".business-shell");
+const tpFilterBtn = document.getElementById("tpFilterBtn");
+const tpFilterPanel = document.getElementById("tpFilterPanel");
+const filterLabel = document.getElementById("filterLabel");
+
+const searchLabel = document.getElementById("searchLabel");
+const tpSearchBtn = document.getElementById("tpSearchBtn");
+const tpSearchGo = document.getElementById("tpSearchGo");
+const tpSearchClear = document.getElementById("tpSearchClear");
+const tpSearchPanel = document.getElementById("tpSearchPanel");
+const tpSearchInput = document.getElementById("tpSearchInput");
+const floatingCategoryBubble = document.getElementById("floatingCategoryBubble");
+
+// -----------------------------------------
+// ⭐ BADGE CLASSES (UI-only)
+// -----------------------------------------
+const BADGE_CLASSES = [
+  "diamond", "tier-3", "tier-2", "tier-1",
+  "fivestar-pulse",
+  "ratingcount-pulse", "ratingcount-pulseover1000",
+  "fire-3", "fire-2", "fire-1",
+  "ice-1", "ice-2", "ice-3",
+  "env-indoor", "env-outdoor", "env-both",
+  "urgency-red", "urgency-green", "urgency-pulse",
+  "walk-pulse", "drive-pulse"
+];
+
+// -----------------------------------------
+// ⭐ LAZY LOADER (UI-only)
+// -----------------------------------------
+const BusLazyObserver = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+
+    const img = entry.target;
+    const realSrc = img.dataset.src;
+
+    if (realSrc) {
+      img.src = realSrc;
+      img.onload = () => img.classList.add("loaded");
+    }
+
+    observer.unobserve(img);
+  });
+}, {
+  rootMargin: "300px 0px",
+  threshold: 0
+});
+// ============================================================================
+// BUSINESS PAGE — PulseOS v9.3 (UI + Proxy-fed categories)
+// ============================================================================
+
+// -----------------------------------------
+// ⭐ LOCATION HELPERS (UNCHANGED)
+// -----------------------------------------
+function saveLocation(lat, lng) {
+  localStorage.setItem(
+    "lastKnownLocation",
+    JSON.stringify({ lat, lng, ts: nowMs() })
+  );
+}
+
+function getSavedLocation() {
+  try {
+    const raw = localStorage.getItem("lastKnownLocation");
+    if (!raw) return null;
+
+    const obj = JSON.parse(raw);
+    if (!obj.lat || !obj.lng) return null;
+
+    return obj;
+  } catch {
+    return null;
+  }
+}
+
+function normalizeDistanceSymbol(distanceMiles) {
+  if (distanceMiles == null || isNaN(distanceMiles)) return "";
+  if (distanceMiles < 0.15) return "👣";
+  if (distanceMiles < 0.75) return "🚶";
+  if (distanceMiles < 2)    return "🚗";
+  return "🧭";
+}
+
+function normalizePriceSymbol(symbol) {
+  if (!symbol) return "";
+  return symbol.replace(/\$/g, "💲");
+}
+
+function fetchLowAccuracyInBackground(onUpdate) {
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      log("Background low accuracy:", loc);
+      saveLocation(loc.lat, loc.lng);
+      onUpdate(loc);
+    },
+    err => {
+      warn("Background low accuracy failed:", err);
+      setTimeout(() => {
+        navigator.geolocation.getCurrentPosition(
+          pos2 => {
+            const loc2 = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
+            log("Retry low accuracy:", loc2);
+            saveLocation(loc2.lat, loc2.lng);
+            onUpdate(loc2);
+          },
+          err2 => warn("Retry low accuracy failed:", err2),
+          { enableHighAccuracy: false, timeout: 5000 }
+        );
+      }, 2000);
+    },
+    { enableHighAccuracy: false, timeout: 5000 }
+  );
+}
+
+async function getInstantLocationWithBackgroundUpdate(onSignificantChange) {
+  const saved = getSavedLocation();
+
+  if (saved) {
+    log("Using cached location:", saved);
+    setTimeout(() => {
+      fetchLowAccuracyInBackground(newLoc => {
+        const dist = getDistanceMiles(saved, newLoc);
+        if (dist > 50) {
+          log("📍 Significant movement:", dist, "m");
+          onSignificantChange(newLoc);
+        }
+      });
+    }, 0);
+    return saved;
+  }
+
+  return new Promise(resolve => {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        log("Initial low accuracy:", loc);
+        saveLocation(loc.lat, loc.lng);
+        resolve(loc);
+
+        fetchLowAccuracyInBackground(newLoc => {
+          const dist = getDistanceMiles(loc, newLoc);
+          if (dist > 50) onSignificantChange(newLoc);
+        });
+      },
+      err => {
+        warn("Initial low accuracy failed:", err);
+        resolve(null);
+
+        fetchLowAccuracyInBackground(newLoc => {
+          onSignificantChange(newLoc);
+        });
+      },
+      { enableHighAccuracy: false, timeout: 7000 }
+    );
+  });
+}
+
+// -----------------------------------------
+// ⭐ EMPTY STATE IMAGES (UNCHANGED)
+// -----------------------------------------
+const emptyStateImages = [
+  "./_EXPRESSIONS/_PEX/BUILD/Disheveled.png",
+  "./_EXPRESSIONS/_PEX/BUILD/Disheveled2.png",
+  "./_EXPRESSIONS/_PEX/BUILD/Disheveled3.png",
+  "./_EXPRESSIONS/_PEX/BUILD/Disheveled4.png",
+  "./_EXPRESSIONS/_PEX/BUILD/Disheveled5.png",
+  "./_EXPRESSIONS/_PEX/BUILD/Disheveled6.png",
+  "./_EXPRESSIONS/_PEX/BUILD/DisheveledExhausted1.png"
+];
+
+function getNextToucan() {
+  const img = emptyStateImages[emptyStateIndex];
+  emptyStateIndex = (emptyStateIndex + 1) % emptyStateImages.length;
+  return img;
+}
+
+// -----------------------------------------
+// ⭐ FILTER VISIBILITY (UNCHANGED)
+// -----------------------------------------
+function updateBusinessClearFilterVisibility() {
+  const btn = document.getElementById("clearFilterBtn");
+
+  if (
+    activeBizCategory || activeBizSubcategory || activeMy ||
+    activePriceRating || activeRatingCount || activeFinalScore ||
+    activeGoogleRating || activeSearch || activeOpenNow ||
+    activeEnv || activeAll || activeDistance || showingSaved
+  ) {
+    btn.style.display = "inline-block";
+  } else {
+    btn.style.display = "none";
+  }
+}
+
+
+// ============================================================================
+// ⭐ CATEGORY LOADING — PulseOS v9.3 (NO FIRESTORE)
+// ============================================================================
+async function loadBusinessCategories() {
+  // Read categories written by Proxy / Business Embassy
+  bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+  bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+  bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+  bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+
+  // If missing, request refresh from Proxy
+  if (!bizCategories.length || !bizSubcategories.length) {
+    log("Requesting category refresh from Proxy...");
+    await getHook({ type: "refreshBusinessCategories" });
+
+    // Re-read after Proxy writes them
+    bizCategories = JSON.parse(localStorage.getItem("bizCategories") || "[]");
+    bizSubcategories = JSON.parse(localStorage.getItem("bizSubcategories") || "[]");
+    bizCategoryIconMap = JSON.parse(localStorage.getItem("bizCategoryIconMap") || "{}");
+    bizSubcategoryIconMap = JSON.parse(localStorage.getItem("bizSubcategoryIconMap") || "{}");
+  }
+
+  log("Categories loaded:", bizCategories.length, "categories,", bizSubcategories.length, "subcategories");
+}
+
+
+  function showFloatingCategoryIcon(catKey) {
+    const icon = bizCategoryIconMap[catKey];
+    if (!icon) return;
+
+    const bubble = document.getElementById("floatingCategoryBubble");
+
+    // Set icon
+    document.getElementById("floatingCategoryIcon").src = icon;
+
+    // Apply platinum only for Business or Event
+    if (catKey === "businesses") {
+      bubble.classList.remove("platinum");   // keep tropical
+    } else {
+      bubble.classList.add("platinum");      // platinum for all others
+    }
+
+    bubble.classList.remove("hidden");
+  }
+
+  function openBusinessCategory(cat) {
+    openBusinessCategoryOrSubcategory(cat, false);
+  }
+
+  function openBusinessSubcategory(sub) {
+    openBusinessCategoryOrSubcategory(sub, true);
+  }
+
+  function openBusinessCategoryOrSubcategory(key, isSub = false) {
+  scrollToTopSmooth();
+
+  const keyNorm = key.toLowerCase().trim();
+  showFloatingCategoryIcon(keyNorm);
+
+  const source = allBusinesses;
+
+  // ---------------------------------------
+  // SUBCATEGORY MODE
+  // ---------------------------------------
+  if (isSub) {
+    activeBizCategory = null;
+    activeBizSubcategory = key;
+    activeBizSubcategoryIcon =
+      bizSubcategoryIconMap[keyNorm] ||
+      bizSubcategoryIconMap[key] ||
+      null;
+
+    categoriesMode = false;
+
+    // Filter businesses by subcategory
+    const filtered = source.filter(biz =>
+      (biz.subcategories || [])
+        .map(s => s.toLowerCase().trim())
+        .includes(keyNorm)
+    );
+
+    currentList = sortByDistance(filtered);
+    renderBusinesses(currentList, true);
+    updateBusinessChip();
+    updateBusinessClearFilterVisibility();
+    return;
+  }
+
+  // ---------------------------------------
+  // CATEGORY MODE
+  // ---------------------------------------
+  activeBizCategory = key;
+  activeBizSubcategory = null;
+  activeBizCategoryIcon =
+    bizCategoryIconMap[keyNorm] ||
+    bizCategoryIconMap[key] ||
+    null;
+
+  // Check for subcategories under this category
+  const subcats = bizSubcategories.filter(
+    sc => sc.parentCategory === keyNorm
+  );
+
+  if (subcats.length > 0) {
+    categoriesMode = true;
+    currentList = null;
+    renderBusinessSubcategoryCards(subcats, key);
+    updateBusinessChip();
+    updateBusinessClearFilterVisibility();
+    return;
+  }
+
+  // No subcategories → show businesses in this category
+  categoriesMode = false;
+
+  const filtered = source.filter(biz =>
+    (biz.categories || [])
+      .map(s => s.toLowerCase().trim())
+      .includes(keyNorm)
+  );
+
+  currentList = sortByDistance(filtered);
+  renderBusinesses(currentList, true);
+  updateBusinessChip();
+  updateBusinessClearFilterVisibility();
+}
+
+  function renderBusinessCategoryCards() {
+    scrollToTopSmooth();
+    distanceFilter.value = "";
+    filterLabel.textContent = " Filter";
+    searchLabel.textContent = " Search";
+    allBtn.classList.remove("active");
+    bookmarkHeaderBtn.classList.remove("active");
+    myBtn.classList.remove("active");
+    currentList = null;
+    categoriesMode = true;
+    businessesDiv.innerHTML = "";
+
+    bizCategories
+      .filter(cat => cat.category !== "businesses")
+      .forEach(cat => {
+        const card = document.createElement("div");
+        card.className = "category-card";
+        card.style.height = "120px";
+        card.style.cursor = "pointer";
+        card.style.border = "1px solid #000000";
+        card.style.borderRadius = "10px";
+
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "category-img-wrapper";
+        imgWrap.style.width = "100%";
+        imgWrap.style.height = "100%";
+        imgWrap.style.display = "flex";
+        imgWrap.style.alignItems = "center";
+        imgWrap.style.justifyContent = "center";
+        //imgWrap.style.position = "relative";
+
+        const img = document.createElement("img");
+        img.setAttribute("data-src", bizCategoryIconMap[cat.category] || "");
+        img.classList.add("cat-lazy-img");
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "contain";
+        BusLazyObserver.observe(img);
+
+        const label = document.createElement("div");
+        label.textContent = cat.category
+          .replace(/\//g, "-")
+          .split("-")
+          .map(part =>
+            part
+              .split(" ")
+              .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+              .join(" ")
+          )
+          .join(" ");
+        label.style.position = "absolute";
+        label.style.bottom = "6px";
+        label.style.left = "50%";
+        label.style.transform = "translateX(-50%)";
+        label.style.padding = "4px 6px";
+        label.style.borderRadius = "12px";
+        label.style.fontSize = "15px";
+        label.style.fontWeight = "700";
+        label.style.color = "white";
+        label.style.background = "linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35))";
+
+        imgWrap.appendChild(img);
+        imgWrap.appendChild(label);
+        card.appendChild(imgWrap);
+
+        card.onclick = () => openBusinessCategory(cat.category);
+        businessesDiv.style.gap = "3px";
+        businessesDiv.appendChild(card);
+      });
+      businessesDiv.appendChild(createScrollUpCard());
+  }
+
+  function renderBusinessSubcategoryCards(list, parentCat) {
+    scrollToTopSmooth();
+    currentList = null;
+    businessesDiv.innerHTML = "";
+
+    list.forEach(sub => {
+      const card = document.createElement("div");
+      card.className = "subcategory-card";
+      card.style.height = "100px";
+      card.style.cursor = "pointer";
+      card.style.border = "1px solid #000000";
+      card.style.borderRadius = "10px";
+      //card.style.position = "relative";
+      
+      const imgWrap = document.createElement("div");
+      imgWrap.className = "subcategory-img-wrapper";
+      imgWrap.style.width = "100%";
+      imgWrap.style.height = "100%";
+      imgWrap.style.display = "flex";
+      imgWrap.style.alignItems = "center";
+      imgWrap.style.justifyContent = "center";
+      imgWrap.style.gap = "10px";
+      imgWrap.style.marginBottom = "4px";
+
+      const img = document.createElement("img");
+      img.setAttribute("data-src", bizSubcategoryIconMap[sub.category] || "");
+      img.classList.add("cat-lazy-img");
+      img.style.width = "90%";
+      img.style.height = "90%";
+      img.style.objectFit = "contain";
+      img.style.marginTop = "-4px";
+      img.style.marginLeft = "7px";
+      BusLazyObserver.observe(img);
+
+      const label = document.createElement("div");
+      label.textContent = sub.category
+        .replace(/\//g, "-")
+        .split("-")
+        .map(part =>
+          part
+            .split(" ")
+            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ")
+        )
+        .join(" ");
+      label.style.position = "absolute";
+      label.style.bottom = "2px";
+      label.style.minWidth = "80%";
+      label.style.textAlign = "center";
+      label.style.whiteSpace = "nowrap";
+      label.style.left = "50%";
+      label.style.padding = "2px 6px";
+      label.style.transform = "translateX(-50%)";
+      label.style.color = "black";
+      label.style.fontWeight = "700";
+      label.style.fontSize = "12px";
+
+      imgWrap.appendChild(img);
+      imgWrap.appendChild(label);
+      card.appendChild(imgWrap);
+
+      card.onclick = () => openBusinessSubcategory(sub.category);
+      businessesDiv.style.gap = "3px";
+      businessesDiv.appendChild(card);
+    });
+    businessesDiv.appendChild(createScrollUpCard());
+    scrollToTopSmooth();
+  }
+
+  function filterBusinessesByDistance(list, maxMiles) {
+
+  // ❌ remove this line
+  // activeDistance = maxMiles || null;
+
+  // If no distance selected → just sort the incoming list
+  if (!maxMiles) {
+    if (!list) return [];
+    return sortByDistance(list);   // ✔ correct
+  }
+
+  if (!currentUserLocation) {
+    warn("User location not available yet.");
+    return [];
+  }
+
+  const userLat = currentUserLocation.lat;
+  const userLng = currentUserLocation.lng;
+
+  // ⭐ IMPORTANT: filter the *incoming list*, not allBusinesses
+  const filtered = list.filter(biz => {
+    if (!biz.lat || !biz.lng) return false;
+
+    const dist = getDistanceMiles(userLat, userLng, biz.lat, biz.lng);
+    biz.distanceMiles = dist;      // ✔ allowed (ephemeral)
+    return dist <= maxMiles;
+  });
+
+  return sortByDistance(filtered); // ✔ correct
+}
+
+  function getDistanceMiles(lat1, lon1, lat2, lon2) {
+    const R = 3958.8; // Earth radius in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  }
+
+  function showBusinessFilters() {
+    mark("STARTING FILTER/BUTTON SHOWING ACTUAL LOAD");
+    let dropdownWasOpen = false;
+
+    function setMode(mode) {
+      activeAll = (mode === "all");
+      activeMy = (mode === "my");
+      showingSaved = (mode === "saved");
+
+      allBtn.classList.toggle("active", activeAll);
+      myBtn.classList.toggle("active", activeMy);
+      bookmarkHeaderBtn.classList.toggle("active", showingSaved);
+
+      applyTPFilters();
+      updateBusinessChip();
+      updateBusinessClearFilterVisibility();
+    }
+
+    
+    // -----------------------------
+    // CATEGORY CHIP
+    // -----------------------------
+    const locChip = document.getElementById("location-chip");
+    if (!locChip.__clickAdded) {
+      locChip.onclick = () => {
+        if (!activeBizCategory) return;
+        if (activeBizSubcategory) {
+          activeBizSubcategory = null;
+          activeBizSubcategoryIcon = null;
+          openBusinessCategory(activeBizCategory);
+          return;
+        }
+        clearBusinessFilters();
+      };
+      locChip.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // CLEAR FILTER BUTTON
+    // -----------------------------
+    const clearBtn = document.getElementById("clearFilterBtn");
+    if (!clearBtn.__clickAdded) {
+      clearBtn.onclick = () => {
+        scrollToTopSmooth();
+        clearBusinessFilters();
+      };
+      clearBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // BOOKMARK HEADER
+    // -----------------------------
+    if (!bookmarkHeaderBtn.__clickAdded) {
+      bookmarkHeaderBtn.onclick = async () => {
+        if (!showingSaved) await loadSavedBusinesses();
+        setMode("saved");
+      };
+      bookmarkHeaderBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // ALL BUTTON
+    // -----------------------------
+    if (!allBtn.__clickAdded) {
+      allBtn.onclick = () => setMode("all");
+      allBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // MY BUTTON
+    // -----------------------------
+    if (!myBtn.__clickAdded) {
+      myBtn.onclick = () => {
+        if (!userEmail) {
+          const returnTo = encodeURIComponent(window.location.href);
+          window.location.href=`TropicPulseDirectory`;
+          return;
+        }
+        setMode("my");
+      };
+      myBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // CREATE BUSINESS
+    // -----------------------------
+    const createBtn = document.getElementById("createHeaderBtn");
+    if (!createBtn.__clickAdded) {
+      createBtn.onclick = () => {
+        if (!userEmail) {
+          const returnTo = encodeURIComponent(window.location.href);
+          window.location.href =`TropicPulseDirectory`;
+          return;
+        }
+        window.location.href = `TropicPulseEditBusiness`;
+      };
+      createBtn.__clickAdded = true;
+    }
+
+    if (!distanceFilter.__mousedownAdded) {
+      distanceFilter.addEventListener("mousedown", () => {
+        dropdownWasOpen = (document.activeElement === distanceFilter);
+      });
+      distanceFilter.__mousedownAdded = true;
+    }
+
+    if (!distanceFilter.__clickAdded) {
+      distanceFilter.addEventListener("click", () => {
+        if (!activeDistance) {
+          if (dropdownWasOpen) {
+            distancewrapper.classList.remove("active");
+            distanceFilter.blur();
+          } else {
+            distancewrapper.classList.add("active");
+          }
+        }
+      });
+      distanceFilter.__clickAdded = true;
+    }
+    // -----------------------------
+    // DISTANCE FILTER
+    // -----------------------------
+    if (!distanceFilter.__changeAdded) {
+      distanceFilter.addEventListener("change", async (e) => {
+        const miles = Number(e.target.value);
+        activeDistance = miles || null;
+
+        if (activeDistance && activeDistance > 0) {
+          distancewrapper.classList.remove("active");
+          distancewrapper.classList.add("distance-active");
+          lastActivatedFilter = "distance";
+        } else {
+          distancewrapper.classList.remove("distance-active");
+          distancewrapper.classList.remove("active");
+          lastActivatedFilter = null;
+        }
+
+        activeBizCategory = null;
+        activeBizSubcategory = null;
+        activeBizCategoryIcon = null;
+        activeBizSubcategoryIcon = null;
+
+        if (activeDistance && activeDistance > 0) {
+          if (!currentUserLocation.lat || !currentUserLocation.lng) {
+            mark("⏳ Upgrading to high-accuracy for distance filter…");
+
+            const upgraded = await getHighAccuracyLocation();
+
+            if (upgraded) {
+              currentUserLocation = upgraded;
+              log("📍 High-accuracy location acquired:", upgraded);
+            } else {
+              warn("⚠️ Could not get location for distance filter.");
+              return;
+            }
+          }
+        }
+
+        applyTPFilters();
+        updateBusinessChip();
+        updateBusinessClearFilterVisibility();
+      });
+      distanceFilter.__changeAdded = true;
+    }
+
+    // -----------------------------
+    // FILTER PANEL BUTTON
+    // -----------------------------
+    if (!tpFilterBtn.__clickAdded) {
+      tpFilterBtn.addEventListener("click", () => {
+        const isOpen = !tpFilterPanel.classList.contains("t-hidden");
+
+        if (!isOpen) openFilterPanel();
+        else closeFilterPanel();
+      });
+      tpFilterBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // SEARCH PANEL BUTTON
+    // -----------------------------
+    if (!tpSearchBtn.__clickAdded) {
+      tpSearchBtn.addEventListener("click", () => {
+        const isOpen = !tpSearchPanel.classList.contains("t-hidden");
+
+        if (!isOpen) openSearchPanel();
+        else closeSearchPanel();
+      });
+      tpSearchBtn.__clickAdded = true;
+    }
+
+    if (!tpSearchGo.__clickAdded) {
+      tpSearchGo.addEventListener("click", () => {
+        tpSearch = tpSearchInput.value.trim();
+        activeSearch = tpSearch.length > 0 ? tpSearch : null;
+        applyTPFilters();
+      });
+      tpSearchGo.__clickAdded = true;
+    }
+
+    if (!tpSearchClear.__clickAdded) {
+      tpSearchClear.addEventListener("click", () => {
+        activeSearch = null;
+        tpSearch = null;
+        tpSearchInput.value = "";
+
+        const opts = document.querySelectorAll(".t-search-option");
+        opts.forEach((o, i) => {
+          if (i > 1) o.classList.remove("active");
+        });
+
+        applyTPFilters();
+      });
+      tpSearchClear.__clickAdded = true;
+    }
+
+    if (!tpSearchInput.__inputAdded) {
+      tpSearchInput.addEventListener("input", () => {
+        tpSearch = tpSearchInput.value.trim();
+      });
+      tpSearchInput.__inputAdded = true;
+    }
+
+    if (!tpSearchInput.__keydownAdded) {
+      tpSearchInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          tpSearch = tpSearchInput.value.trim();
+          activeSearch = tpSearch.length > 0 ? tpSearch : null;
+          applyTPFilters();
+        }
+      });
+      tpSearchInput.__keydownAdded = true;
+    }
+
+    // -----------------------------
+    // SCROLL LISTENER
+    // -----------------------------
+    const floatingUp = document.getElementById("floatingScrollUp");
+
+    if (!PulseRealm.__scrollUpAdded) {
+      window.addEventListener("scroll", () => {
+        floatingUp.classList.toggle("visible", PulseRealm.scrollY > 300);
+      });
+      PulseRealm.__scrollUpAdded = true;
+    }
+
+    if (!floatingUp.__clickAdded) {
+      floatingUp.onclick = () => {
+        PulseRealm.scrollTo({ top: 0, behavior: "smooth" });
+      };
+      floatingUp.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // OPEN NOW FILTER
+    // -----------------------------
+    document.querySelectorAll("#tpOpenNowOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpOpenNow = null;
+            activeOpenNow = null;
+            opt.classList.remove("active");
+            deactivateFilter("open");
+          } else {
+            tpOpenNow = opt.dataset.open;
+            activeOpenNow = tpOpenNow;
+            activateFilter("open");
+            setActive("#tpOpenNowOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // ENVIRONMENT FILTER
+    // -----------------------------
+    document.querySelectorAll("#tpEnvOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpEnv = null;
+            activeEnv = null;
+            opt.classList.remove("active");
+            deactivateFilter("env");
+          } else {
+            tpEnv = opt.dataset.env;
+            activeEnv = tpEnv;
+            activateFilter("env");
+            setActive("#tpEnvOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // PRICE RATING
+    // -----------------------------
+    document.querySelectorAll("#tpPriceRatingOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpPriceRating = null;
+            activePriceRating = null;
+            opt.classList.remove("active");
+            deactivateFilter("price");
+          } else {
+            tpPriceRating = opt.dataset.pricerating;
+            activePriceRating = tpPriceRating;
+            activateFilter("price");
+            setActive("#tpPriceRatingOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // GOOGLE RATING
+    // -----------------------------
+    document.querySelectorAll("#tpGoogleRatingOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpGoogleRating = null;
+            activeGoogleRating = null;
+            opt.classList.remove("active");
+            deactivateFilter("google");
+          } else {
+            tpGoogleRating = opt.dataset.grating;
+            activeGoogleRating = tpGoogleRating;
+            activateFilter("google");
+            setActive("#tpGoogleRatingOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // RATING COUNT
+    // -----------------------------
+    document.querySelectorAll("#tpRatingCountOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpRatingCount = null;
+            activeRatingCount = null;
+            opt.classList.remove("active");
+            deactivateFilter("count");
+          } else {
+            activeRatingCount = opt.dataset.rcount;
+            activateFilter("count");
+            setActive("#tpRatingCountOptions", opt);
+            setRatingCountSort(opt.dataset.rcount);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // FINAL SCORE
+    // -----------------------------
+    document.querySelectorAll("#tpFinalScoreOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpFinalScore = null;
+            activeFinalScore = null;
+            opt.classList.remove("active");
+            deactivateFilter("final");
+          } else {
+            activeFinalScore = opt.dataset.fscore;
+            activateFilter("final");
+            setActive("#tpFinalScoreOptions", opt);
+            setFinalScoreSort(opt.dataset.fscore);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+    // -----------------------------------------
+  // ⭐ PREVENT DUPLICATE LISTENERS
+  // -----------------------------------------
+  
+    // ⭐ 1. Restore state on load (runs ONCE)
+    window.addEventListener("load", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        PulseRealm.isIdle = true;
+        
+      } else {
+        PulseRealm.isIdle = false; // active by default
+        
+      }
+
+      
+    });
+
+    // ⭐ 2. Badge toggle listener
+    document.getElementById("pb-mini-badge").addEventListener("click", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        // Turn ON
+        localStorage.removeItem("pulseband_disabled");
+        PulseRealm.isIdle = false;
+        
+      } else {
+        // Turn OFF
+        localStorage.setItem("pulseband_disabled", "1");
+        PulseRealm.isIdle = true;
+        
+      }
+
+      
+    });
+  
+    mark("STARTING FILTER/BUTTON ACTUAL FINISHED FINALLY");
+  }
+
+  function sortByDistance(list) {
+  mark("ACTUAL sortByDistance LOADING");
+
+  const userLat = currentUserLocation.lat;
+  const userLng = currentUserLocation.lng;
+
+  if (!userLat || !userLng) {
+    warn("[sortByDistance] No user location → returning unsorted list");
+    return list;
+  }
+
+  // 1️⃣ Precompute distances once
+  const withDist = list.map(b => ({
+    ref: b,
+    dist: (b.lat && b.lng)
+      ? getDistanceMiles(userLat, userLng, b.lat, b.lng)
+      : Infinity
+  }));
+
+  // 2️⃣ Sort by distance
+  withDist.sort((a, b) => a.dist - b.dist);
+
+  // 3️⃣ Return original objects in sorted order
+  const sorted = withDist.map(x => x.ref);
+
+  mark("ACTUAL sortByDistance DATA LOADED");
+  return sorted;
+}
+
+  function googleRatingToStars(rating, forcedTier = null) {
+  const tier = forcedTier ?? Math.floor(Number(rating) || 0);
+  return "★".repeat(Math.max(0, tier));
+}
+
+  function colorStars(stars, rating, forcedTier = null) {
+  const colors = {
+    5: "#FFD700", // Gold
+    4: "#C0C0C0", // Silver
+    3: "#8C6239", // Pearl
+    2: "#C0392B"  // Bronze
+  };
+
+  // 1️⃣ Forced tier coloring
+  if (forcedTier !== null) {
+    return `<span style="color:${colors[forcedTier]};">${stars}</span>`;
+  }
+
+  // 2️⃣ Actual rating coloring
+  let color = "#CD7F32"; // default bronze-ish
+
+  if (rating >= 4.7) color = colors[5];
+  else if (rating >= 4.0) color = colors[4];
+  else if (rating >= 3.0) color = colors[3];
+  else if (rating >= 2.0) color = colors[2];
+
+  return `<span style="color:${color};">${stars}</span>`;
+}
+
+
+function recalcAllDistances() {
+  if (!currentUserLocation) return;
+
+  // Update distances
+  for (const b of allBusinesses) {
+    if (b.lat && b.lng) {
+      b.distanceMiles = getDistanceMiles(
+        currentUserLocation.lat,
+        currentUserLocation.lng,
+        b.lat,
+        b.lng
+      );
+    } else {
+      b.distanceMiles = null;
+    }
+  }
+
+  // Sort a copy
+  currentList = [...allBusinesses].sort((a, b) => {
+    if (a.distanceMiles == null) return 1;
+    if (b.distanceMiles == null) return -1;
+    return a.distanceMiles - b.distanceMiles;
+  });
+}
+async function loadBusinesses() {
+  try {
+    mark("BUSINESSES: REQUESTING FROM CACHE MANAGER");
+
+    // 1️⃣ Pull canonical list from PulseBusinessCacheManager
+    const list = await PulseBusCacheManager.getBusinesses();
+
+    if (!Array.isArray(list) || list.length === 0) {
+      error("❌ PulseBusCacheManager returned empty list");
+      allBusinesses = [];
+      currentList = [];
+      return;
+    }
+
+    // 2️⃣ Set canonical working list
+    allBusinesses = list;
+    currentList = [...allBusinesses];
+
+    // 3️⃣ Recalculate distances (if location already known)
+    if (currentUserLocation) {
+      recalcAllDistances();
+    }
+
+    mark("BUSINESSES: LOADED FROM CACHE MANAGER");
+
+  } catch (err) {
+    error("❌ Failed to load BUSINESSES:", err);
+  }
+}
+
+async function loadSavedBusinesses() {
+  // ⭐ v9.3 identity — no globals
+  const id = await identity();
+  const email = id.email;
+  if (!email) return;
+
+  // 1️⃣ Pull saved IDs from PulseBusCacheManager
+  const savedIDs = await PulseBusCacheManager.getSavedBusinessIDs(email);
+
+  // 2️⃣ Filter from canonical list
+  const list = allBusinesses.filter(b => savedIDs.includes(b.id));
+
+  // 3️⃣ Recalculate distances
+  if (currentUserLocation) {
+    for (const b of list) {
+      if (b.lat && b.lng) {
+        b.distanceMiles = getDistanceMiles(
+          currentUserLocation.lat,
+          currentUserLocation.lng,
+          b.lat,
+          b.lng
+        );
+      } else {
+        b.distanceMiles = null;
+      }
+    }
+  }
+
+  // 4️⃣ Sort a copy
+  savedBusinesses = [...list].sort((a, b) => {
+    if (a.distanceMiles == null) return 1;
+    if (b.distanceMiles == null) return -1;
+    return a.distanceMiles - b.distanceMiles;
+  });
+}
+
+
+  function getOpeningHoursRange(biz, dayIndex, todayName) {
+  let raw = null;
+
+  // openingHours as OBJECT: { Sunday: "7 AM–9 PM" }
+  if (biz.openingHours && typeof biz.openingHours === "object" && !Array.isArray(biz.openingHours)) {
+    raw = biz.openingHours[todayName];
+  }
+
+  // openingHours as ARRAY: ["Sunday: 7 AM–9 PM", ...]
+  if (!raw && Array.isArray(biz.openingHours)) {
+    raw = biz.openingHours[dayIndex];
+  }
+
+  // openingHours as STRING: "Sunday: 7 AM–9 PM"
+  if (!raw && typeof biz.openingHours === "string") {
+    raw = biz.openingHours;
+  }
+
+  if (!raw || !raw.includes("–")) return null;
+
+  // Remove "Sunday:" prefix if present
+  const cleaned = raw.replace(/.*:/, "").trim();
+
+  const [openStr, closeStr] = cleaned.split("–").map(s => s.trim());
+  return { openStr, closeStr };
+}
+
+  function getWeeklyHoursRange(biz, dayIndex, todayName) {
+  let raw = null;
+
+  // weeklyHours as OBJECT: { Sunday: "7 AM–9 PM" }
+  if (biz.weeklyHours && typeof biz.weeklyHours === "object" && !Array.isArray(biz.weeklyHours)) {
+    raw = biz.weeklyHours[todayName];
+  }
+
+  // weeklyHours as ARRAY: ["Sunday: 7 AM–9 PM", ...]
+  if (!raw && Array.isArray(biz.weeklyHours)) {
+    raw = biz.weeklyHours[dayIndex];
+  }
+
+  // weeklyHours as STRING: "Sunday: 7 AM–9 PM"
+  if (!raw && typeof biz.weeklyHours === "string") {
+    raw = biz.weeklyHours;
+  }
+
+  if (!raw || !raw.includes("–")) return null;
+
+  // Remove "Sunday:" prefix if present
+  const cleaned = raw.replace(/.*:/, "").trim();
+
+  const [openStr, closeStr] = cleaned.split("–").map(s => s.trim());
+  return { openStr, closeStr };
+}
+
+  function getOpeningTimeMinutes(biz) {
+  const now = new Date(nowMs());
+  const dayIndex = now.getDay();
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const todayName = dayNames[dayIndex];
+
+  let openStr = null;
+
+  // PRIMARY: hours[]
+  if (biz.hours && Array.isArray(biz.hours)) {
+    const todayString = biz.hours[dayIndex];
+    if (todayString && todayString.includes(":")) {
+      const parts = todayString.split(":");
+      const hoursPart = parts[1].trim();
+      if (hoursPart && hoursPart.includes("–")) {
+        openStr = hoursPart.split("–")[0].trim();
+      }
+    }
+  }
+
+  // FALLBACK: weeklyHours (all formats)
+  if (!openStr) {
+    const wk = getWeeklyHoursRange(biz, dayIndex, todayName);
+    if (wk) openStr = wk.openStr;
+  }
+
+  // FALLBACK: weeklyHours (all formats)
+  if (!openStr) {
+    const wk = getOpeningHoursRange(biz, dayIndex, todayName);
+    if (wk) openStr = wk.openStr;
+  }
+  if (!openStr) return null;
+
+  function parseTime(t) {
+    t = t.replace(/\u202F|\u00A0/g, " ");
+    const match = t.match(/(\d+)(?::(\d+))?\s*(AM|PM)/i);
+    if (!match) return null;
+
+    let hour = parseInt(match[1], 10);
+    const minute = match[2] ? parseInt(match[2], 10) : 0;
+    const ampm = match[3].toUpperCase();
+
+    if (ampm === "PM" && hour !== 12) hour += 12;
+    if (ampm === "AM" && hour === 12) hour = 0;
+
+    return hour * 60 + minute;
+  }
+
+  return parseTime(openStr);
+}
+
+function getMinutesUntilClose(biz) {
+  const now = new Date(nowMs()); 
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+
+  const closeMin = getClosingTimeMinutes(biz);
+  const openMin = getOpeningTimeMinutes(biz);
+
+  // If no hours → treat as unknown
+  if (closeMin == null || openMin == null) return 999999;
+
+  // Normal same‑day closing (e.g., 7 AM–9 PM)
+  if (closeMin >= openMin) {
+    if (nowMin <= closeMin) {
+      return closeMin - nowMin;
+    }
+    // Already past closing → next day
+    return (24 * 60 - nowMin) + closeMin;
+  }
+
+  // Overnight hours (e.g., 7 PM–2 AM)
+  // CloseMin < openMin means close is after midnight
+  if (nowMin <= closeMin) {
+    return closeMin - nowMin;
+  }
+
+  // If we're past openMin but before midnight, closing is next day
+  return (24 * 60 - nowMin) + closeMin;
+}
+
+function getUrgencyBadge(biz) {
+  const isOpen = isBusinessOpenNow(biz);
+
+  // Reset flags
+  biz.isClosingSoon = false;
+  biz.isOpeningSoon = false;
+
+  if (isOpen === true) {
+    const mins = getMinutesUntilClose(biz);
+
+    if (mins < 45) {
+      biz.isClosingSoon = true;
+      return "⏰"; // closing soon
+    }
+
+    return "🟢"; // open, not urgent
+  }
+
+  if (isOpen === false) {
+    const mins = getMinutesUntilOpen(biz);
+
+    if (mins < 20) {
+      biz.isOpeningSoon = true;
+      return "⏳"; // opening soon
+    }
+
+    return "🔴"; // closed, not urgent
+  }
+
+  return null; // unknown hours
+}
+
+function formatCompactTime(mins) {
+  if (mins < 60) return `${mins}m`;
+  const h = Math.round(mins / 60);
+  return `${h}h`;
+}
+
+  function openBusiness(id) {
+    window.location.href = `?impulse=TropicPulseBusinessDetail&id=${encodeURIComponent(id)}`;
+  }
+
+  function getMinutesUntilOpen(biz) {
+    const now = new Date(nowMs()); 
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+
+    const openMin = getOpeningTimeMinutes(biz);
+    if (openMin == null) return 999999;
+
+    // If opening later today
+    if (openMin >= nowMin) {
+      return openMin - nowMin;
+    }
+
+    // Otherwise, opening next day
+    return (24 * 60 - nowMin) + openMin;
+  }
+
+  function formatLabel(str) {
+    if (!str) return "";
+    return str
+      .replace(/-/g, " ")                     // hyphens → spaces
+      .split(" ")                             // split into words
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");                             // rejoin
+  }
+
+  function updateBusinessChip() {
+    const chip = document.getElementById("location-chip");
+    const chipText = document.getElementById("location-chip-text");
+    const catIcon = document.getElementById("location-chip-icon-category");
+    const subIcon = document.getElementById("location-chip-icon-subcategory");
+
+    if (!activeBizCategory) {
+      chip.style.display = "none";
+      chipText.textContent = "";
+      catIcon.style.display = "none";
+      subIcon.style.display = "none";
+      return;
+    }
+
+    chip.style.display = "inline-flex";
+
+    chipText.textContent = activeBizSubcategory
+      ? `${formatLabel(activeBizCategory)} › ${formatLabel(activeBizSubcategory)}`
+      : formatLabel(activeBizCategory);
+
+    if (activeBizCategoryIcon) {
+      catIcon.src = activeBizCategoryIcon;
+      catIcon.style.display = "block";
+    } else {
+      catIcon.style.display = "none";
+    }
+
+    if (activeBizSubcategory && activeBizSubcategoryIcon) {
+      subIcon.src = activeBizSubcategoryIcon;
+      subIcon.style.display = "block";
+    } else {
+      subIcon.style.display = "none";
+    }
+  }
+
+  function closeAllPanels(except = null) {
+    if (except !== "search") closeSearchPanel();
+    if (except !== "filter") closeFilterPanel();
+  }
+
+  function isBusinessOpenNow(biz) {
+    const now = new Date(nowMs()); 
+    const dayIndex = now.getDay();
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const todayName = dayNames[dayIndex];
+
+    let openStr = null;
+    let closeStr = null;
+
+    // -------------------------------
+    // NORMALIZER (your rules)
+    // -------------------------------
+    function normalize(str) {
+      if (!str || typeof str !== "string") return null;
+
+      const s = str.toLowerCase();
+
+      // Open 24 hours
+      if (s.includes("24") && s.includes("hour")) {
+        return { open: "12 AM", close: "11:59 PM" };
+      }
+
+      // Closed all day (Closed, Temporarily closed, Closed today, etc.)
+      if (s.includes("close")) {
+        return { closedAllDay: true };
+      }
+
+      // By appointment / unknown
+      if (s.includes("appointment")) {
+        return null;
+      }
+
+      // Must contain a dash
+      if (!str.includes("–")) return null;
+
+      // If multiple ranges, take the first
+      const firstRange = str.split(",")[0].trim();
+
+      const [o, c] = firstRange.split("–").map(s => s.trim());
+      if (!o || !c) return null;
+
+      return { open: o, close: c };
+    }
+
+    // -------------------------------
+    // 1. PRIMARY: hours[]
+    // -------------------------------
+    if (biz.hours && Array.isArray(biz.hours)) {
+      const todayString = biz.hours[dayIndex];
+      if (todayString && todayString.includes(":")) {
+        const parts = todayString.split(":");
+        const hoursPart = parts[1].trim();
+
+        const norm = normalize(hoursPart);
+        if (norm) {
+          if (norm.closedAllDay) return false;
+          openStr = norm.open;
+          closeStr = norm.close;
+        }
+      }
+    }
+    // -------------------------------
+    // 2. FALLBACK: weeklyHours
+    // -------------------------------
+    // FALLBACK: weeklyHours (supports object, array, string)
+    if (!openStr || !closeStr) {
+      let raw = null;
+
+      // weeklyHours as OBJECT: { Sunday: "7 AM–9 PM" }
+      if (biz.weeklyHours && typeof biz.weeklyHours === "object" && !Array.isArray(biz.weeklyHours)) {
+        raw = biz.weeklyHours[todayName];
+      }
+
+      // weeklyHours as ARRAY: ["Sunday: 7 AM–9 PM", ...]
+      if (!raw && Array.isArray(biz.weeklyHours)) {
+        raw = biz.weeklyHours[dayIndex]; // "Sunday: 7 AM–9 PM"
+      }
+
+      // weeklyHours as STRING: "Sunday: 7 AM–9 PM"
+      if (!raw && typeof biz.weeklyHours === "string") {
+        raw = biz.weeklyHours;
+      }
+
+      if (raw && raw.includes("–")) {
+        const parts = raw.split("–");
+        openStr = parts[0].replace(/.*:/, "").trim(); // remove "Sunday:"
+        closeStr = parts[1].trim();
+      }
+    }
+
+    // ----------------------------------------------------
+    // FINAL FALLBACK: openingHours{} map
+    // ----------------------------------------------------
+    if (!openStr || !closeStr) {
+      let raw = null;
+
+      // openingHours as OBJECT: { Sunday: "7 AM–9 PM" }
+      if (biz.openingHours && typeof biz.openingHours === "object" && !Array.isArray(biz.openingHours)) {
+        raw = biz.openingHours[todayName];
+      }
+
+      // openingHours as ARRAY: ["Sunday: 7 AM–9 PM", ...]
+      if (!raw && Array.isArray(biz.openingHours)) {
+        raw = biz.openingHours[dayIndex]; // "Sunday: 7 AM–9 PM"
+      }
+
+      // openingHours as STRING: "Sunday: 7 AM–9 PM"
+      if (!raw && typeof biz.openingHours === "string") {
+        raw = biz.openingHours;
+      }
+
+      if (raw && raw.includes("–")) {
+        const parts = raw.split("–");
+        openStr = parts[0].replace(/.*:/, "").trim(); // remove "Sunday:"
+        closeStr = parts[1].trim();
+      }
+    }
+
+    const ALWAYS_OPEN_CATEGORIES = [
+      "hotel-lodging", "landmarks-cultural sites", "property"
+    ];
+
+    // If no hours but category is always-open → treat as 24 hours
+    if (!openStr && !closeStr) {
+      const cats = biz.categories || [];
+      const isAlwaysOpen = cats.some(c => ALWAYS_OPEN_CATEGORIES.includes(c));
+
+      if (isAlwaysOpen) {
+        // 24 hours → open all day
+        openStr = "12 AM";
+        closeStr = "11:59 PM";
+      }
+    }
+
+    // -------------------------------
+    // If still no valid hours → unknown
+    // -------------------------------
+    if (!openStr || !closeStr) return null;
+
+    // -------------------------------
+    // Your original parser (untouched)
+    // -------------------------------
+    function parseTime(t) {
+      t = t.replace(/\u202F|\u00A0/g, " ");
+      const match = t.match(/(\d+)(?::(\d+))?\s*(AM|PM)/i);
+      if (!match) return null;
+
+      let hour = parseInt(match[1], 10);
+      const minute = match[2] ? parseInt(match[2], 10) : 0;
+      const ampm = match[3].toUpperCase();
+
+      if (ampm === "PM" && hour !== 12) hour += 12;
+      if (ampm === "AM" && hour === 12) hour = 0;
+
+      return hour * 60 + minute;
+    }
+
+    const openMin = parseTime(openStr);
+    const closeMin = parseTime(closeStr);
+    if (openMin == null || closeMin == null) return null;
+
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+
+    // Overnight support (untouched)
+    if (closeMin < openMin) {
+      return nowMin >= openMin || nowMin <= closeMin;
+    }
+
+    return nowMin >= openMin && nowMin <= closeMin;
+  }
+
+  function truncateName(name, limit) {
+    if (!name) return "";
+
+    // Remove location noise FIRST
+    let cleaned = name
+      .replace(/san pedro, belize/gi, "")
+      .replace(/san pedro belize/gi, "")
+      .trim();
+
+    // Apply truncation
+    return cleaned.length > limit
+      ? cleaned.substring(0, limit) + ""
+      : cleaned;
+  }
+
+  function normalizeRatingCountSymbol(count) {
+    const safe = Number(count) || 0;
+    return `<span class="ratingcount-text">${safe}</span>`;
+  }
+  
+
+  function normalizeFinalScoreSymbol(score) {
+    const s = Number(score) || 0;
+
+    if (s < 3) return "🤯";             // inferno
+    if (s < 5.01) return "🔥🔥";           // strong fire
+    if (s < 5.99) return "🔥";             // warm
+    if (s < 7.01) return "😐";             // neutral (choose your icon)
+    if (s < 9) return "❄️";                // cold
+    if (s < 11) return "❄️❄️";             // ice ice
+    return "🥶";                           // chilling
+  }
+  
+  function normalizeEnvironmentSymbol(env) {
+    if (env === "indoor" || env == null || env === "") return "🏠";
+    if (env === "outdoor") return "🌴";
+    return "🌗"; // true both
+  }
+
+  function activateFilter(name) {
+    // Remove if already in history (avoid duplicates)
+    filterHistory = filterHistory.filter(f => f !== name);
+    // Push to top
+    filterHistory.push(name);
+
+    lastActivatedFilter = name;
+    if (name === "search") {
+      searchwrapper.classList.add("active");
+      tpSearchBtn.classList.add("active");
+      searchLabel.textContent =
+        name ? name[0].toUpperCase() + name.slice(1) : " Search";
+    } else if (name === "distance") {
+      distancewrapper.classList.add("distance-active");
+    } else {
+      filterwrapper.classList.add("active");
+      tpFilterBtn.classList.add("active");
+      filterLabel.textContent =
+        name ? name[0].toUpperCase() + name.slice(1) : " Filter";
+    }
+  }
+
+  function deactivateFilter(name) {
+    filterHistory = filterHistory.filter(f => f !== name);
+    lastActivatedFilter = filterHistory.at(-1) || null;
+    if (!lastActivatedFilter) {
+      if (name === "search") {
+        searchLabel.textContent = " Search";
+      } else if (name === "distance") {
+        distanceFilter.value = "";
+      } else {
+        filterLabel.textContent = " Filter";
+      }
+    } else {
+      if (name === "search") {
+        searchLabel.textContent =
+        lastActivatedFilter ? lastActivatedFilter[0].toUpperCase() + lastActivatedFilter.slice(1) : " Search";
+      } else if (name === "distance") {
+        distancewrapper.classList.remove("distance-active");
+      } else {
+        filterLabel.textContent =
+        lastActivatedFilter ? lastActivatedFilter[0].toUpperCase() + lastActivatedFilter.slice(1) : " Filter";
+      }
+    }
+  }
+
+  /* RENDER */
+  function renderBusinesses(list, isDistanceFilter = false) {
+    mark("⏳ RENDERING BUSINESSES LIST");
+    scrollToTopSmooth();
+    businessesDiv.innerHTML = "";
+    
+    if (!list || list.length === 0) {
+      let img = getNextToucan();
+
+      // DISTANCE FILTER EMPTY STATE
+      if (isDistanceFilter && currentUserLocation) {
+
+        const sanPedroLat = 17.9214;
+        const sanPedroLng = -87.9611;
+
+        const milesAway = getDistanceMiles(
+          currentUserLocation.lat,
+          currentUserLocation.lng,
+          sanPedroLat,
+          sanPedroLng
+        ).toFixed(1);
+
+        const isExhausted = img.includes("DisheveledExhausted1");
+
+        businessesDiv.innerHTML = `
+          <div class="empty-wrapper">
+
+            ${isExhausted ? `
+              <p class="exhausted-shimmer" style="font-size:15px; margin-bottom:8px;">
+                He’s Exhausted from Too Many Tries lol!
+              </p>
+            ` : ""}
+
+            <img id="emptyToucan" src="${img}" class="empty-toucan" /><br>
+
+            <div class="empty-pill">No Businesses Found within this Distance!<br>
+              You are about <strong>${milesAway} Miles</strong> from San Pedro, Belize.
+            </div>
+          </div>
+        `;
+
+        requestAnimationFrame(() => {
+          document.getElementById("emptyToucan").classList.add("loaded");
+        });
+
+        return;
+      }
+
+      // DEFAULT EMPTY STATE
+      businessesDiv.innerHTML = `
+        <div class="empty-wrapper">
+          <img id="emptyToucan" src="${img}" class="empty-toucan" /><br>
+          <div class="empty-pill">No Businesses Found!</div>
+        </div>
+      `;
+
+      requestAnimationFrame(() => {
+        document.getElementById("emptyToucan").classList.add("loaded");
+      });
+
+      return;
+    }
+
+    // NORMAL RENDERING
+    list.forEach(b => {
+      let realImg = b.mainPhotoURL;
+
+      const card = document.createElement("div");
+      card.className = "business-card";
+      card.onclick = () => openBusiness(b.id);
+
+      const imgWrapper = document.createElement("div");
+      imgWrapper.className = "business-img-wrapper";
+
+      const imgEl = document.createElement("img");
+
+      // Always show fallback immediately
+      imgEl.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+
+      // Lazy loader will replace it if realImg exists
+      imgEl.dataset.src = realImg;
+
+      imgEl.className = "business-lazy-img";
+      imgEl.loading = "lazy";
+
+      // ⭐ ADD THIS — SAME BEHAVIOR AS DETAILS PAGE
+      imgEl.onerror = () => {
+        imgEl.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+      };
+
+
+      BusLazyObserver.observe(imgEl);
+
+      imgWrapper.appendChild(imgEl);
+
+      /* NAME + ICON ROW */
+      const row = document.createElement("div");
+      row.className = "business-row";
+
+      const left = document.createElement("div");
+      left.className = "business-left";
+    
+      const title = document.createElement("div");
+      title.className = "business-title";
+
+      const right = document.createElement("div");
+      right.className = "business-right";
+
+      let truncateTitleLimit = 32;
+      const isOpen = isBusinessOpenNow(b);
+
+      title.textContent = truncateName(b.busname, truncateTitleLimit);
+      
+      left.appendChild(title);
+
+      // VERIFIED CHECKMARK
+      if (b.placeId && (b.rating && b.ratingCount >= 5)) {
+        const check = document.createElement("span");
+        check.classList.add("verified-check");
+
+        if (b.rating >= 4.7 && b.ratingCount >= 50) {
+          check.textContent = "✓";
+          check.style.color = "#C9A227";
+          check.style.filter = "drop-shadow(0 0 4px rgba(255,215,0,0.6))";
+        } else if (b.rating >= 4.3 && b.ratingCount >= 10) {
+          check.textContent = "✓";
+          check.style.color = "#8E8E93";
+          check.style.filter = "drop-shadow(0 0 4px rgba(192,192,192,0.6))";
+        } else if (b.rating >= 4.0 && b.ratingCount >= 5) {
+          check.textContent = "✓";
+          check.style.color = "#8C6239";
+          check.style.filter = "drop-shadow(0 0 4px rgba(205,127,50,0.6))";
+        }
+
+        left.appendChild(check);
+      } 
+
+      // RATING PILL
+      if (b.rating && b.ratingCount >= 1) {
+        const ratingPill = document.createElement("div");
+        ratingPill.className = "rating-pill";
+
+        const ratingValue = b.rating.toFixed(1);
+
+        if (b.rating >= 4.7) {
+          ratingPill.innerHTML = `<span style="color:#C9A227;">★</span> ${ratingValue}`;
+          ratingPill.style.color = "#C9A227";
+        } else if (b.rating >= 4.0) {
+          ratingPill.innerHTML = `<span style="color:#8E8E93;">★</span> ${ratingValue}`;
+          ratingPill.style.color = "#8E8E93";
+        } else if (b.rating >= 3.0) {
+          ratingPill.innerHTML = `<span style="color:#8C6239;">★</span> ${ratingValue}`;
+          ratingPill.style.color = "#8C6239";
+        } else {
+          ratingPill.innerHTML = `<span style="color:#C0392B;">★</span> ${ratingValue}`;
+          ratingPill.style.color = "#C0392B";
+        }
+
+        left.appendChild(ratingPill);
+      }
+
+      // OPEN/CLOSED PILL
+      if (isOpen === true) {
+        const openPill = document.createElement("div");
+        openPill.className = "open-pill";
+        openPill.textContent = "OPEN";
+        left.appendChild(openPill);
+      } else if (isOpen === false) {
+        const closedPill = document.createElement("div");
+        closedPill.className = "closed-pill";
+        closedPill.textContent = "CLOSED";
+        left.appendChild(closedPill);
+      }
+
+      /* CALL BUTTON */
+      const callBtn = document.createElement("span");
+      callBtn.className = "biz-icon";
+      callBtn.textContent = "📞";
+      callBtn.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        showActionBubble([
+          { label: b.phones[0] || "No number", icon: "📞", action: () => window.location.href = `tel:${b.phones[0]}` }
+        ], e);
+      };
+      right.appendChild(callBtn);
+
+      /* WHATSAPP BUTTON */
+      if (b.whatsapp && b.whatsapp[0]) {
+        const waBtn = document.createElement("span");
+        waBtn.className = "biz-icon";
+        waBtn.textContent = "🟢";
+        waBtn.onclick = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+
+          const wa = b.whatsapp[0];
+          showActionBubble([
+            { label: wa, icon: "🟢", action: () => window.location.href = `https://wa.me/${wa.replace(/\+/g, "")}` }
+          ], e);
+        };
+        right.appendChild(waBtn);
+      }
+
+      /* MORE BUTTON */
+      const moreBtn = document.createElement("span");
+      moreBtn.className = "biz-icon";
+      moreBtn.textContent = "⋯";
+      moreBtn.onclick = (e) => {
+        e.stopPropagation();
+
+        showActionBubble([
+          { label: "Share", icon: "🔗", action: () => alert("Share coming soon!") },
+          { label: "Rate", icon: "⭐", action: () => alert("Rating coming soon!") }
+        ], e);
+      };
+      right.appendChild(moreBtn);
+
+      const priceBadge = document.createElement("div");
+      priceBadge.className = "price-badge";
+
+      let symbol;
+
+      // ----------------------------------------------------
+      // NORMAL SYMBOLS (based on lastActivatedFilter)
+      // ----------------------------------------------------
+      switch (lastActivatedFilter) {
+
+        case "price":
+          symbol = normalizePriceSymbol(b.priceRating);
+          break;
+
+        case "google":
+          const tier = Number(activeGoogleRating);
+          const rawStars = googleRatingToStars(b.rating, tier);
+          symbol = colorStars(rawStars, b.rating, tier);
+          break;
+
+        case "count":
+          symbol = normalizeRatingCountSymbol(b.ratingCount);
+          break;
+
+        case "final":
+          symbol = normalizeFinalScoreSymbol(b.priceFinalScore);
+          break;
+
+        case "env":
+          symbol = normalizeEnvironmentSymbol(b.environment);
+          break;
+
+        case "open":
+          symbol = getUrgencyBadge(b); // ONLY here
+          break;
+
+        default:
+          symbol = normalizeDistanceSymbol(b.distanceMiles);
+          break;
+      }
+      
+      // ----------------------------------------------------
+      // Remove only dynamic classes
+      // ----------------------------------------------------
+      priceBadge.classList.remove(...BADGE_CLASSES);
+
+      // ----------------------------------------------------
+      // NORMAL SYMBOLS
+      // ----------------------------------------------------
+      priceBadge.innerHTML = symbol;
+      // ----------------------------------------------------
+      // Apply class based on LAST ACTIVATED FILTER
+      // ----------------------------------------------------
+      switch (lastActivatedFilter) {
+
+        case "price":
+          if (b.priceRating === "💎") priceBadge.classList.add("diamond");
+          else if (b.priceRating === "💲💲💲") priceBadge.classList.add("tier-3");
+          else if (b.priceRating === "💲💲") priceBadge.classList.add("tier-2");
+          else if (b.priceRating === "💲") priceBadge.classList.add("tier-1");
+          break;
+
+        case "google":
+          if (Number(b.rating) === 5) {
+            priceBadge.classList.add("fivestar-pulse");
+          }
+          break;
+
+        case "count":
+          const count = Number(b.ratingCount);
+          if (count >= 1000) priceBadge.classList.add("ratingcount-pulseover1000");
+          else if (count >= 200) priceBadge.classList.add("ratingcount-pulse");
+          break;
+
+        case "final":
+          const score = Number(b.priceFinalScore) || 0;
+          if (score < 3) priceBadge.classList.add("fire-3");
+          else if (score < 5.01) priceBadge.classList.add("fire-2");
+          else if (score < 5.99) priceBadge.classList.add("fire-1");
+          else if (score < 9) priceBadge.classList.add("ice-1");
+          else if (score < 11) priceBadge.classList.add("ice-2");
+          else priceBadge.classList.add("ice-3");
+          break;
+
+        case "env":
+          if (b.environment === "indoor") priceBadge.classList.add("env-indoor");
+          else if (b.environment === "outdoor") priceBadge.classList.add("env-outdoor");
+          else priceBadge.classList.add("env-both");
+          break;
+
+        case "open":
+          if (symbol === "⏰") priceBadge.classList.add("urgency-red", "urgency-pulse");
+          if (symbol === "⏳") priceBadge.classList.add("urgency-green", "urgency-pulse");
+          break;
+
+        default:
+          if (symbol === "👣") priceBadge.classList.add("feet-pulse");     // NEW
+          if (symbol === "🚶") priceBadge.classList.add("walk-pulse");
+          if (symbol === "🚗") priceBadge.classList.add("drive-pulse");
+          if (symbol === "🧭") priceBadge.classList.add("compass-pulse");
+          break;
+      }
+
+      imgWrapper.appendChild(priceBadge);
+      /* OWNER EDIT BADGE */
+      const isOwner =
+        userEmail &&
+        (
+          (Array.isArray(b.emails) && b.emails.some(e => (e || "").toLowerCase() === userEmail.toLowerCase())) ||
+          (b.primaryEmail && b.primaryEmail.toLowerCase() === userEmail.toLowerCase())
+        );
+
+      if (isOwner) {
+        const editBtn = document.createElement("div");
+        editBtn.className = "edit-badge";
+        editBtn.innerHTML = "✏️";
+        editBtn.onclick = (e) => {
+          e.stopPropagation();
+          window.location.href = `TropicPulseEditBusiness&id=${encodeURIComponent(b.id)}`;
+        };
+        imgWrapper.appendChild(editBtn);
+      }
+      row.appendChild(left);
+      row.appendChild(right);
+      card.appendChild(imgWrapper);
+      card.appendChild(row);
+      
+      businessesDiv.style.gap = "8px";
+      businessesDiv.appendChild(card);
+    });
+
+    businessesDiv.appendChild(createScrollUpCard());
+    mark("⏳ FINSHED RENDERING BUSINESSES LIST");
+  }
+
+  function clearBusinessFilters() {
+    activeBizCategory = null;
+    activeBizCategoryIcon = null;
+    activeBizSubcategory = null;
+    activeBizSubcategoryIcon = null;
+    activeDistance = null;
+    activeAll = false;
+    activeMy = false;
+    activePriceRating = null;
+    activeRatingCount = null;
+    activeGoogleRating = null;
+    activeFinalScore = null;
+    activeSearch = null;
+    tpSearch = null;
+    activeEnv = null;
+    tpPriceRating = null;
+    tpRatingCount = null;
+    tpGoogleRating = null;
+    tpRatingCount = null;
+    tpFinalScore = null;
+    tpOpenNow = null;
+    tpEnv = null;
+    activeOpenNow = null;
+    showingSaved = false;
+    setInActiveAll();
+    closeAllPanels();
+    // ⭐ NEW: Clear filter history
+    filterHistory = [];
+
+    // ⭐ NEW: Reset last activated filter
+    lastActivatedFilter = null;
+    filterLabel.textContent = " Filter";
+    searchLabel.textContent = " Search";
+    distanceFilter.value = "";
+    tpFilterBtn.classList.remove("active");   // <-- IMPORTANT
+    tpSearchBtn.classList.remove("active");   // <-- IMPORTANT
+    filterwrapper.classList.remove("active");
+    searchwrapper.classList.remove("active");
+    distancewrapper.classList.remove("active");
+    distancewrapper.classList.remove("distance-active");
+    myBtn.classList.remove("active");
+    allBtn.classList.remove("active");
+    bookmarkHeaderBtn.classList.remove("active");
+    currentList = null; // nothing rendered
+    
+    renderBusinessCategoryCards();
+    showFloatingCategoryIcon("businesses");
+    updateBusinessChip();
+    updateBusinessClearFilterVisibility();
+  }
+
+  function getClosingTimeMinutes(biz) {
+  const now = new Date(nowMs());
+  const dayIndex = now.getDay();
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const todayName = dayNames[dayIndex];
+
+  let closeStr = null;
+
+  // PRIMARY: hours[]
+  if (biz.hours && Array.isArray(biz.hours)) {
+    const todayString = biz.hours[dayIndex];
+    if (todayString && todayString.includes(":")) {
+      const parts = todayString.split(":");
+      const hoursPart = parts[1].trim();
+      if (hoursPart && hoursPart.includes("–")) {
+        closeStr = hoursPart.split("–")[1].trim();
+      }
+    }
+  }
+
+  // FALLBACK: weeklyHours (all formats)
+  if (!closeStr) {
+    const wk = getWeeklyHoursRange(biz, dayIndex, todayName);
+    if (wk) closeStr = wk.closeStr;
+  }
+
+  // FALLBACK: openingHours (all formats)
+  if (!closeStr) {
+    const wk = getOpeningHoursRange(biz, dayIndex, todayName);
+    if (wk) closeStr = wk.closeStr;
+  }
+
+  if (!closeStr) return 99999;
+
+  function parseTime(t) {
+    t = t.replace(/\u202F|\u00A0/g, " ");
+    const match = t.match(/(\d+)(?::(\d+))?\s*(AM|PM)/i);
+    if (!match) return null;
+
+    let hour = parseInt(match[1], 10);
+    const minute = match[2] ? parseInt(match[2], 10) : 0;
+    const ampm = match[3].toUpperCase();
+
+    if (ampm === "PM" && hour !== 12) hour += 12;
+    if (ampm === "AM" && hour === 12) hour = 0;
+
+    return hour * 60 + minute;
+  }
+
+  const closeMin = parseTime(closeStr);
+  return closeMin == null ? 99999 : closeMin;
+}
+
+  function createScrollUpCard() {
+    const card = document.createElement("div");
+    card.className = "scroll-up-card";
+    card.style.height = "30px";
+    card.style.cursor = "pointer";
+    card.style.border = "1px solid #000000";
+    card.style.borderRadius = "10px";
+    card.style.display = "flex";
+    card.style.alignItems = "center";
+    card.style.justifyContent = "center";
+    card.style.fontSize = "28px";
+    card.style.fontWeight = "700";
+    card.textContent = "▲";
+
+    card.onclick = () => {
+        PulseRealm.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    };
+
+    return card;
+  }
+
+  function punchBackdropHole(shell, panel, backdrop) {
+    if (!shell || !panel || !backdrop) return;
+
+    // Ensure shell is the stacking context
+    shell.style.position = "relative";
+    shell.style.zIndex = "1";
+
+    // Append backdrop + panel into the shell
+    if (!backdrop.parentElement) shell.appendChild(backdrop);
+    if (!panel.parentElement) shell.appendChild(panel);
+
+    // Ensure correct layering
+    backdrop.style.position = "absolute";
+    backdrop.style.inset = "0";
+    backdrop.style.zIndex = "100";
+
+    panel.style.position = "absolute";
+    panel.style.zIndex = "200";
+
+    // Wait for layout before measuring
+    requestAnimationFrame(() => {
+      const rect = panel.getBoundingClientRect();
+
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      backdrop.style.setProperty("--px", `${cx}px`);
+      backdrop.style.setProperty("--py", `${cy}px`);
+    });
+  }
+
+  //----------------------------
+  // CLOSE PANEL
+  // -----------------------------
+  function closeSearchPanel(e) {
+    tpSearchPanel.classList.add("t-hidden");
+    if (!activeSearch) {
+      tpSearchBtn.classList.remove("active");
+      searchwrapper.classList.remove("active");
+    }
+    
+    const backdrop = document.getElementById("tpSearchBackdrop");
+    if (backdrop) {
+      backdrop.remove();
+    }
+  }
+
+
+  // -----------------------------
+  // OPEN PANEL
+  // -----------------------------
+  function openSearchPanel() {
+    closeAllPanels("search");
+    
+    tpSearchPanel.classList.remove("t-hidden");
+    tpSearchBtn.classList.add("active");
+    searchwrapper.classList.add("active");
+    
+    const backdrop = document.createElement("div");
+    backdrop.id = "tpSearchBackdrop";
+    backdrop.className = "t-search-backdrop";
+    punchBackdropHole(businessshell, tpSearchPanel, backdrop);
+
+    backdrop.onclick = (e) => {
+      e.stopPropagation();
+      closeSearchPanel(e);
+    };
+  }
+
+
+  // -----------------------------
+  // CLOSE PANEL
+  // -----------------------------
+  function closeFilterPanel(e) {
+    tpFilterPanel.classList.add("t-hidden");
+    if (!lastActivatedFilter) {
+      tpFilterBtn.classList.remove("active");
+      filterwrapper.classList.remove("active");
+    }
+    const backdrop = document.getElementById("tpFilterBackdrop");
+    if (backdrop) {
+      backdrop.remove();
+    }
+  }
+
+
+
+  // -----------------------------
+  // OPEN PANEL
+  // -----------------------------
+  function openFilterPanel() {
+    closeAllPanels("filter");
+
+    tpFilterPanel.classList.remove("t-hidden");
+    tpFilterBtn.classList.add("active");
+    filterwrapper.classList.add("active");
+
+    const backdrop = document.createElement("div");
+    backdrop.id = "tpFilterBackdrop";
+    backdrop.className = "t-filter-backdrop";
+    punchBackdropHole(businessshell, tpFilterPanel, backdrop);
+
+    backdrop.onclick = (e) => {
+      e.stopPropagation();
+      closeFilterPanel(e);
+    };
+  }
+
+  function updateSearchFilterWrapper() {
+    const anyActive = activeSearch;
+
+    if (anyActive) {
+      activateFilter("search");     // ⭐ NEW
+    } else {
+      deactivateFilter("search");     // ⭐ NEW
+    }
+  }
+
+  // -----------------------------
+  // ACTIVE STATE HELPERS
+  // -----------------------------
+  function setActive(selector, selected) {
+    document.querySelectorAll(selector + " .t-filter-option").forEach(o => {
+      o.classList.remove("active");
+    });
+    selected.classList.add("active");
+  }
+
+  function setSearchActive(selector, selected) {
+    document.querySelectorAll(selector + " .t-search-option").forEach(o => {
+      o.classList.remove("active");
+    });
+    selected.classList.add("active");
+  }
+
+  function setInActiveAll() {
+
+    // Remove active class from ALL UI buttons
+    document.querySelectorAll(".t-filter-option").forEach(o => {
+      o.classList.remove("active");
+    });
+
+    // Remove active class from ALL UI buttons
+    document.querySelectorAll(".t-search-option").forEach((o, i) => {
+      if (i > 2) o.classList.remove("active");
+    });
+
+    // 2. Remove active wrapper styling
+    document.querySelector(".distance-wrapper")
+      .classList.remove("distance-active");
+
+    // 2. Remove active wrapper styling
+    document.querySelector(".distance-wrapper")
+      .classList.remove("active");
+
+    // 2. Remove active wrapper styling
+    document.querySelector(".t-search-wrapper")
+      .classList.remove("active");
+
+      // 2. Remove active wrapper styling
+    document.querySelector(".t-filter-wrapper")
+      .classList.remove("active");
+
+      // 2. Remove active wrapper styling
+    document.querySelector(".t-search-btn")
+      .classList.remove("active");
+
+      // 2. Remove active wrapper styling
+    document.querySelector(".t-filter-btn")
+      .classList.remove("active");
+
+    
+    tpSearchInput.value = "";
+    
+
+    // Reset ALL filter variables
+    tpEnv = null;
+    tpOpenNow = null;
+    tpPriceRating = null;
+    tpGoogleRating = null;
+    tpRatingCount = null;
+    tpFinalScore = null;
+    activeDistance = null;
+    activeOpenNow = null;
+    tpSearch = null;
+    activeSearch = null;
+    // Reset internal active mirrors
+    activeEnv = null;
+    activePriceRating = null;
+    activeGoogleRating = null;
+    activeRatingCount = null;
+    activeFinalScore = null;
+
+  }
+
+  function noFiltersActive(except = null) {
+    return !(
+      (except !== "open"   && activeOpenNow)      ||
+      (except !== "price"  && activePriceRating)  ||
+      (except !== "google" && activeGoogleRating) ||
+      (except !== "count"  && activeRatingCount)  ||
+      (except !== "final"  && activeFinalScore)   ||
+      (except !== "env"    && activeEnv)          ||
+      (except !== "distance"  && activeDistance)  ||
+      (except !== "search"  && activeSearch)   ||
+      (except !== "all"  && activeAll)   ||
+      (except !== "my"  && activeMy)   ||
+      (except !== "saved"    && showingSaved)
+    );
+  }
+
+  function noTPFiltersActive(except = null) {
+    return !(
+      (except !== "open"   && activeOpenNow)      ||
+      (except !== "price"  && activePriceRating)  ||
+      (except !== "google" && activeGoogleRating) ||
+      (except !== "count"  && activeRatingCount)  ||
+      (except !== "final"  && activeFinalScore)   ||
+      (except !== "env"    && activeEnv)
+    );
+  }
+
+  function urgencySort(a, b, mode) {
+    const A = getUrgencyBadge(a);
+    const B = getUrgencyBadge(b);
+
+    // OPEN MODE
+    if (mode === "open") {
+      const orderOpen = {
+        "⏰": 1, // closing soon
+        "🟢": 2, // open normal
+        "⏳": 3, // opening soon
+        "🔴": 4, // closed normal
+        null: 5
+      };
+      return orderOpen[A] - orderOpen[B];
+    }
+
+    // CLOSED MODE
+    if (mode === "closed") {
+      const orderClosed = {
+        "⏳": 1, // opening soon
+        "🔴": 2, // closed normal
+        "🟢": 3, // open normal
+        "⏰": 4, // closing soon
+        null: 5
+      };
+      return orderClosed[A] - orderClosed[B];
+    }
+
+    // ANY MODE
+    const orderAny = {
+      "⏰": 1, // closing soon
+      "🟢": 2, // open normal
+      "⏳": 3, // opening soon
+      "🔴": 4, // closed normal
+      null: 5
+    };
+
+    return orderAny[A] - orderAny[B];
+  }
+
+  function setRatingCountSort(dir) {
+    tpRatingCount = dir;
+    activeRatingCount = tpRatingCount;
+
+    // Update priority
+    sortPriority = sortPriority.filter(s => s !== "ratingCount");
+    sortPriority.push("ratingCount");
+
+    applyTPFilters();
+  }
+
+  function setFinalScoreSort(dir) {
+    tpFinalScore = dir;
+    activeFinalScore = tpFinalScore;
+    // Update priority
+    sortPriority = sortPriority.filter(s => s !== "final");
+    sortPriority.push("final");
+
+    applyTPFilters();
+  }
+
+  function normalizeHoursString(str) {
+  if (!str || typeof str !== "string") return null;
+
+  const s = str.toLowerCase();
+
+  // Open 24 hours
+  if (s.includes("24") && s.includes("hour")) {
+    return { open: "12 AM", close: "11:59 PM" };
+  }
+
+  // Closed all day (Closed, Temporarily closed, Closed today, etc.)
+  if (s.includes("close")) {
+    return { closedAllDay: true };
+  }
+
+  // By appointment / unknown
+  if (s.includes("appointment")) {
+    return null;
+  }
+
+  // Must contain a dash to be a valid range
+  if (!str.includes("–")) {
+    return null;
+  }
+
+  // If multiple ranges, take the first
+  const firstRange = str.split(",")[0].trim();
+
+  const [o, c] = firstRange.split("–").map(s => s.trim());
+  if (!o || !c) return null;
+
+  return { open: o, close: c };
+}
+
+function runTropicPulseSearch(list, query, fields) {
+  const q = query.toLowerCase();
+
+  return list.filter(b => {
+    return fields.some(field => {
+
+      // NAME
+      if (field === "name") {
+        return (b.busname || "").toLowerCase().includes(q);
+      }
+
+      // CATEGORIES ARRAY
+      if (field === "category") {
+        return (b.categories || [])
+          .some(cat => (cat || "").toLowerCase().includes(q));
+      }
+
+      // SUBCATEGORIES ARRAY
+      if (field === "subcategory") {
+        return (b.subcategories || [])
+          .some(sub => (sub || "").toLowerCase().includes(q));
+      }
+
+      // DESCRIPTION + SUMMARY
+      if (field === "description") {
+        const description = (b.description || "").toLowerCase();
+        const summary     = (b.summary || "").toLowerCase();
+        return description.includes(q) || summary.includes(q);
+      }
+
+      // MENU TEXT (OCR + extracted)
+      if (field === "menu") {
+        const text = (b.menu || "").toLowerCase();
+        const url  = (b.menuUrl || "").toLowerCase();
+        return text.includes(q) || url.includes(q);
+      }
+
+      // REVIEWS
+      if (field === "reviews") {
+        return (b.reviews || [])
+          .some(r => (r.text || "").toLowerCase().includes(q));
+      }
+
+      return false;
+    });
+  });
+}
+
+function getSelectedSearchFields() {
+  return [...document.querySelectorAll(".t-search-option input:checked")]
+    .map(i => i.dataset.field);
+}
+
+
+  function applyTPFilters() {
+    let baseList;
+
+    if (activeMy) {
+      baseList = allBusinesses.filter(b => {
+        if (Array.isArray(b.emails) && b.emails.includes(userEmail)) {
+          return true;
+        }
+        return b.primaryEmail === userEmail;
+      });
+    } else if (showingSaved) {
+      baseList = savedBusinesses || []; // whatever you loaded
+    } else {
+      baseList = allBusinesses;
+    }
+
+    let filtered = [...baseList];
+
+    // ----------------------------------------------------
+    // SEARCH FILTER (runs FIRST)
+    // ----------------------------------------------------
+    if (activeSearch) {
+      const fields = getSelectedSearchFields();
+      filtered = runTropicPulseSearch(filtered, activeSearch, fields);
+    }
+
+    // ----------------------------------------------------
+    // DISTANCE FILTER
+    // ----------------------------------------------------
+    if (activeDistance) {
+      
+      filtered = filterBusinessesByDistance(filtered, activeDistance);
+    }
+
+    // ----------------------------------------------------
+    // PRICE RATING
+    // ----------------------------------------------------
+    if (activePriceRating) {
+      filtered = filtered.filter(b => String(b.priceRating) === String(activePriceRating));
+
+      if (noTPFiltersActive("price")) {
+        filtered.sort((a, b) => Number(b.priceFinalScore) - Number(a.priceFinalScore));
+      }
+    }
+
+    // ----------------------------------------------------
+    // OPEN NOW
+    // ----------------------------------------------------
+    if (activeOpenNow) {
+
+      filtered = filtered.filter(b => {
+        const isOpen = isBusinessOpenNow(b);
+
+        if (tpOpenNow === "open") return isOpen === true;
+        if (tpOpenNow === "closed") return isOpen === false;
+        if (tpOpenNow === "any") return isOpen !== null;
+
+        return true;
+      });
+
+      if (noTPFiltersActive("open")) {
+        filtered.sort((a, b) => urgencySort(a, b, tpOpenNow));
+      }
+    }
+
+    // ----------------------------------------------------
+    // GOOGLE RATING
+    // ----------------------------------------------------
+    if (activeGoogleRating) {
+
+      const tier = Number(activeGoogleRating);
+
+      filtered = filtered.filter(b => {
+        const r = Number(b.rating);
+        if (isNaN(r)) return false;
+
+        if (tier === 5) return r >= 4.7;
+        if (tier === 4) return r >= 4.0 && r < 4.7;
+        if (tier === 3) return r >= 3.0 && r < 4.0;
+        if (tier === 2) return r >= 2.0 && r < 3.0;
+
+        return false;
+      });
+
+      if (noTPFiltersActive("google")) {
+        filtered.sort((a, b) => Number(b.rating) - Number(a.rating));
+      }
+    }
+
+    // ----------------------------------------------------
+    // FINAL SCORE + RATING COUNT SORT
+    // ----------------------------------------------------
+    if (activeFinalScore || activeRatingCount) {
+      if (activeFinalScore) {
+        activeFinalScore = tpFinalScore;
+        activeRatingCount = null;
+      } else if (activeRatingCount) {
+        activeFinalScore = null;
+        activeRatingCount = tpRatingCount;
+      } else {
+        activeFinalScore = null;
+        activeRatingCount = null;
+      }
+
+      filtered.sort((a, b) => {
+        for (const key of sortPriority) {
+          if (key === "final" && tpFinalScore) {
+            const fa = Number(a.priceFinalScore) || 0;
+            const fb = Number(b.priceFinalScore) || 0;
+
+            if (fa !== fb) {
+              return tpFinalScore === "high" ? fa - fb : fb - fa;
+            }
+          }
+
+          if (key === "ratingCount" && tpRatingCount) {
+            const ra = Number(a.ratingCount) || 0;
+            const rb = Number(b.ratingCount) || 0;
+
+            if (ra !== rb) {
+              return tpRatingCount === "high" ? rb - ra : ra - rb;
+            }
+          }
+        }
+
+        return 0;
+      });
+    }
+
+    // ----------------------------------------------------
+    // ENVIRONMENT
+    // ----------------------------------------------------
+    if (activeEnv) {
+      filtered = filtered.filter(b => {
+        const env = b.environment || detectEnvironment(b);
+        b.environment = env;
+
+        if (tpEnv === "both") return true;
+        if (tpEnv === "indoor") {
+          return env === "indoor" || env === "both" || env == null || env === "";
+        }
+        if (tpEnv === "outdoor") return env === "outdoor";
+
+        return true;
+      });
+
+      if (noTPFiltersActive("env")) {
+        filtered.sort((a, b) => a.busname.localeCompare(b.busname));
+      }
+    }
+
+    // ----------------------------------------------------
+    // NO FILTERS ACTIVE → SHOW CATEGORY CARDS
+    // ----------------------------------------------------
+    if (noFiltersActive()) {
+      clearBusinessFilters();
+      return;
+    }
+
+    // ----------------------------------------------------
+    // FINALIZE
+    // ----------------------------------------------------
+    log("🎉 Final filtered count:", filtered.length);
+
+    currentList = filtered;
+
+    if (activeDistance) {
+      renderBusinesses(currentList, true);
+    } else {
+      renderBusinesses(currentList);
+    }
+    updateBusinessChip();
+    updateBusinessClearFilterVisibility();
+  }
+
+  async function detectEnvironment(b) {
+  const text = (
+    (b.description || "") + " " +
+    (b.summary || "") + " " +
+    (b.busname || "") + " " +
+    (b.address || "") + " " +
+    (b.locationName || "") + " " +
+    (b.placeName || "") + " " +
+    (b.businessName || "")
+  ).toLowerCase();
+
+  const outdoorHints = [
+    "beach", "beachfront", "dock", "pier",
+    "snorkel", "snorkeling", "diving",
+    "fishing", "charter", "boat", "sailing", "catamaran",
+    "parasail", "jet ski", "jetski", "kayak",
+    "open air", "patio", "rooftop",
+    "pool party", "beach party", "sunset cruise",
+    "sunset sail", "full moon party", "secret beach"
+  ];
+
+  const isOutdoor = outdoorHints.some(h => text.includes(h));
+
+  b.environment = isOutdoor ? "outdoor" : "indoor";
+  return b.environment;
+}
+
+
+  function showActionBubble(options, anchorEvent) {
+    // Remove existing bubble + shield
+    const existing = document.querySelector(".action-bubble");
+    if (existing) existing.remove();
+
+    const existingShield = document.querySelector(".bubble-shield");
+    if (existingShield) existingShield.remove();
+
+    // Create shield
+    const shield = document.createElement("div");
+    shield.className = "bubble-shield";
+    document.body.appendChild(shield);
+
+    // Create bubble
+    const bubble = document.createElement("div");
+    bubble.className = "action-bubble";
+
+    options.forEach(opt => {
+      const row = document.createElement("div");
+      row.className = "bubble-row";
+
+      const icon = document.createElement("span");
+      icon.textContent = opt.icon;
+
+      const label = document.createElement("span");
+      label.textContent = opt.label;
+
+      row.appendChild(icon);
+      row.appendChild(label);
+
+      row.onclick = () => {
+        opt.action();
+        bubble.remove();
+        shield.remove();
+      };
+
+      bubble.appendChild(row);
+    });
+
+    document.body.appendChild(bubble);
+
+    const rect = anchorEvent.target.getBoundingClientRect();
+    const bubbleWidth = 130;
+    const bubbleHeight = options.length * 50 + 20;
+
+    const pageX = rect.left + PulseRealm.scrollX;
+    const pageY = rect.top + PulseRealm.scrollY;
+
+    // Ideal position (to the left of the button)
+    let left = pageX - bubbleWidth - 10;
+
+    // Clamp so it never goes off-screen
+    const minLeft = 10; // padding from left edge
+    const maxLeft = window.innerWidth - bubbleWidth - 10;
+
+    left = Math.max(minLeft, Math.min(left, maxLeft));
+
+    bubble.style.left = `${left}px`;
+    bubble.style.top = `${pageY - bubbleHeight + 20}px`;
+
+    // Animate in
+    setTimeout(() => bubble.classList.add("show"), 10);
+
+    // Clicking shield closes bubble
+    shield.onclick = () => {
+      bubble.remove();
+      shield.remove();
+    };
+  }
+function refreshDistances() {
+  if (!currentUserLocation) {
+    mark("⏳ No location yet → skip distance refresh");
+    return;
+  }
+
+  if (!currentList || currentList.length === 0) {
+    mark("⚠️ No currentList to sort");
+    return;
+  }
+
+  mark("📍 Recalculating all distances + resorting");
+
+  // 1. Update distances
+  for (const b of allBusinesses) {
+    if (b.lat && b.lng) {
+      b.distanceMiles = getDistanceMiles(
+        currentUserLocation.lat,
+        currentUserLocation.lng,
+        b.lat,
+        b.lng
+      );
+    } else {
+      b.distanceMiles = null;
+    }
+  }
+
+  // 2. Sort
+  allBusinesses.sort((a, b) => {
+    if (a.distanceMiles == null) return 1;
+    if (b.distanceMiles == null) return -1;
+    return a.distanceMiles - b.distanceMiles;
+  });
+
+  // 3. Update currentList
+  currentList = [...allBusinesses];
+
+  // 4. Render
+  renderBusinesses(currentList, true);
+
+  // 5. Update UI chips
+  updateBusinessChip();
+  updateBusinessClearFilterVisibility();
+}
+
+function scrollToTopSmooth() {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      PulseRealm.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+
+// ---------------------------------
+// OPTIONAL: WAKE SESSION ON DEMAND
+// ---------------------------------
+async function runWakeUpHeartbeat() {
+  // ❗ v9.3: DO NOT re-run sessionCheck here
+  // It already runs at bootstrap and on visibilitychange.
+  return;
+}
+// -----------------------------
+// BUSINESSES BOOTSTRAP — v11 CLEAN
+// -----------------------------
+(async () => {
+  
+function nowMs() {
+  return PulseRealm.PulseNOW ?? performance.now();
+}
+
+const log = PulseRealm.PulseLog ?? console.log;
+  // -----------------------------------------
+  // MARKER (CLEAN + SAFE)
+  // -----------------------------------------
+  let lastTime = nowMs();
+  function mark(label, absolute = false) {
+    const now = nowMs();
+    const diff = now - lastTime;
+    log(
+      absolute
+        ? `${label}: @${now.toFixed(1)}ms`
+        : `${label}: +${diff.toFixed(1)}ms`
+    );
+    lastTime = now;
+  }
+
+  // -----------------------------------------
+  // VISIBILITY → SESSIONCHECK (ONE-SHOT)
+  // -----------------------------------------
+  if (!document.__businessesVisibilityBound) {
+    document.__businessesVisibilityBound = true;
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        setTimeout(async () => await sessionCheck(), 250);
+        mark("VisibilityChange → sessionCheck()");
+      }
+    });
+  }
+
+  mark("BUSINESSES DOM STARTS");
+
+  // -----------------------------------------
+  // 1️⃣ v11 SESSION CHECK (ONE-TIME)
+  // -----------------------------------------
+  mark("BUSINESSES: sessionCheck()");
+  const id = await sessionCheck();
+  if (!id) return; // redirected to login
+  mark("BUSINESSES: sessionCheck() COMPLETE");
+
+  // -----------------------------------------
+  // 2️⃣ LOAD BUSINESSES (ONE-TIME)
+  // -----------------------------------------
+  mark("BUSINESSES: loadBusinesses()");
+  await loadBusinesses();
+  mark("BUSINESSES: BUSINESSES LOADED");
+
+  // -----------------------------------------
+  // 3️⃣ LOCATION ENGINE (ONE-TIME)
+  // -----------------------------------------
+  currentUserLocation = await getInstantLocationWithBackgroundUpdate(newLoc => {
+    currentUserLocation = newLoc;
+    mark("SETTING CURRENT LOCATION IF AVAILABLE");
+    refreshDistances(); // distance-only update
+  });
+
+  mark("BUSINESSES LOCATION READY");
+
+  // -----------------------------------------
+  // 4️⃣ HEARTBEAT INIT (ONE-TIME)
+  // -----------------------------------------
+  await runWakeUpHeartbeat();
+  mark("BUSINESSES HEARTBEAT STARTED");
+
+  // -----------------------------------------
+  // 5️⃣ LOAD CATEGORIES (ONE-TIME)
+  // -----------------------------------------
+  await loadBusinessCategories();
+  mark("BUSINESSES CATEGORIES LOADED");
+
+  // -----------------------------------------
+  // 6️⃣ DISTANCES + RENDER (ONE-TIME)
+// -----------------------------------------
+  refreshDistances();
+  mark("BUSINESSES DISTANCES REFRESHED");
+
+  renderBusinessCategoryCards();
+  mark("BUSINESSES CATEGORY CARDS RENDERED");
+
+  showBusinessFilters();
+  mark("BUSINESSES FILTERS LOADED");
+
+  // -----------------------------------------
+  // ⭐ NO TIMERS. NO INTERVALS. NO LOOPS.
+// -----------------------------------------
+
+
+
+  showFloatingCategoryIcon("businesses");
+  mark("showFloatingCategoryIcon LOADED");
+
+  mark("BUSINESSES DOM ENDS", true);
+})();
+
+</script>
+
+
+</body>
+</html>

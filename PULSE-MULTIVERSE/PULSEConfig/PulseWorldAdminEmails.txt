@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldModalHeader.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebula.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldHeroBanner.webp.pex" type="image/webp"/>
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-OS/PulseOSLongTermMemory.js">
+<title>Pulse World OS — Email Admin</title>
+
+
+  <style>
+    /* ============================================================
+       ROOT VARIABLES
+       ============================================================ */
+    :root {
+      --pw-green: #00ffa8;
+      --pw-green-dark: #00c47f;
+      --pw-blue: #00e5ff;
+      --pw-purple: #7e57c2;
+      --pw-bg: #0b0e12;
+      --pw-card: #111418;
+      --pw-border: rgba(255,255,255,0.08);
+      --pw-glow: 0 0 18px rgba(0,255,200,0.35);
+      --pw-glow-blue: 0 0 18px rgba(0,229,255,0.35);
+      --pw-glow-purple: 0 0 18px rgba(126,87,194,0.35);
+      --pw-glow-anim: 0 0 22px rgba(0,255,200,0.45);
+    }
+
+    /* ============================================================
+       GLOBAL ANIMATIONS
+       ============================================================ */
+    @keyframes nebulaDrift {
+      0%   { background-position: center 0px; }
+      50%  { background-position: center 60px; }
+      100% { background-position: center 0px; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow:
+          0 0 24px rgba(0, 255, 200, 0.45),
+          inset 0 0 18px rgba(0, 229, 255, 0.35);
+      }
+      50% {
+        box-shadow:
+          0 0 36px rgba(0, 255, 200, 0.65),
+          inset 0 0 28px rgba(0, 229, 255, 0.55);
+      }
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.9; filter: brightness(1); }
+      50%      { opacity: 1; filter: brightness(1.3); }
+    }
+
+    @keyframes pulseQuiver {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.01); }
+    }
+
+    /* ============================================================
+       WRAPPER
+       ============================================================ */
+    #admin-wrapper {
+      width: 100%;
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 20px;
+      animation: pulseQuiver 12s infinite ease-in-out;
+    }
+
+    /* ============================================================
+       HERO BANNER
+       ============================================================ */
+    #admin-hero {
+      width: 100%;
+      height: 200px;
+      border-radius: 18px;
+      background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldHeroBanner.webp.pex");
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 20px;
+      animation:
+        pulseGlow 4s infinite ease-in-out,
+        pulseQuiver 8s infinite ease-in-out;
+    }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    #admin-header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: starTwinkle 6s infinite ease-in-out;
+    }
+
+    #admin-header h1 {
+      margin: 10px 0 0 0;
+      font-size: 2.4rem;
+      font-weight: 700;
+      text-shadow: var(--pw-glow);
+    }
+
+    .subtitle {
+      opacity: 0.7;
+      font-size: 1rem;
+    }
+
+    /* ============================================================
+       BADGES
+       ============================================================ */
+    #admin-badge {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .badge-card {
+      background: var(--pw-card);
+      padding: 18px 26px;
+      border-radius: 14px;
+      border: 1px solid var(--pw-border);
+      box-shadow: var(--pw-glow-purple);
+      text-align: center;
+      min-width: 160px;
+      animation: pulseQuiver 10s infinite ease-in-out;
+    }
+
+    .badge-title {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .badge-value {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 6px;
+      color: var(--pw-blue);
+      text-shadow: var(--pw-glow-blue);
+      animation: starTwinkle 5s infinite ease-in-out;
+    }
+
+    /* ============================================================
+       MAIN CARD
+       ============================================================ */
+    #admin-card {
+      background: var(--pw-card);
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 0 22px rgba(0,0,0,0.45);
+      border: 1px solid var(--pw-border);
+      backdrop-filter: blur(6px);
+      animation: pulseGlow 8s infinite ease-in-out;
+    }
+
+    .field-block {
+      margin-bottom: 22px;
+    }
+
+    .field-block label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--pw-border);
+      background: #0f1216;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--pw-green);
+      box-shadow: var(--pw-glow);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    #sendEmailBtn {
+      width: 100%;
+      padding: 16px;
+      background: var(--pw-green);
+      color: black;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: 0.2s;
+      box-shadow: var(--pw-glow);
+      animation: pulseQuiver 6s infinite ease-in-out;
+    }
+
+    #sendEmailBtn:hover {
+      background: var(--pw-green-dark);
+      box-shadow: var(--pw-glow-anim);
+    }
+
+    #log {
+      margin-top: 30px;
+      background: #0f1216;
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid var(--pw-border);
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+
+    /* ============================================================
+       SIDE PANELS
+       ============================================================ */
+    
+    /* ============================================================
+       MODAL
+       ============================================================ */
+    #modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      animation: fadeIn 0.4s ease;
+    }
+
+    #modal {
+      background: var(--pw-card);
+      width: 95%;
+      max-width: 650px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--pw-border);
+      box-shadow: var(--pw-glow-purple);
+      animation: pulseQuiver 8s infinite ease-in-out;
+    }
+
+    #modal-header {
+      padding: 16px;
+      background: #14171c;
+      border-bottom: 1px solid var(--pw-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #modal-header img {
+      width: 140px;
+      filter: drop-shadow(var(--pw-glow-blue));
+      animation: starTwinkle 5s infinite ease-in-out;
+    }
+
+    #modal-body {
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    #modal-close {
+      background: #d9534f;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #modal-close:hover {
+      background: #c64542;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MAIN WRAPPER -->
+  <div id="admin-wrapper">
+
+    <!-- HERO -->
+    <div id="admin-hero"></div>
+
+    <!-- HEADER -->
+    <header id="admin-header">
+      <h1>Pulse World Admin Emails Control Center</h1>
+      <p class="subtitle">Pulse World OS • Universal Admin System</p>
+    </header>
+
+    <!-- ADMIN BADGE ROW -->
+    <div id="admin-badge">
+      <div class="badge-card">
+        <div class="badge-title">Templates Loaded</div>
+        <div class="badge-value" id="badge-templates">0</div>
+      </div>
+
+      <div class="badge-card">
+        <div class="badge-title">Users Loaded</div>
+        <div class="badge-value" id="badge-users">0</div>
+      </div>
+
+      <div class="badge-card">
+        <div class="badge-title">System Uptime</div>
+        <div class="badge-value" id="badge-uptime">0s</div>
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <section id="admin-card">
+
+      <!-- USER SELECT -->
+      <div class="field-block">
+        <label>Select User</label>
+        <select id="userSelect"></select>
+      </div>
+
+      <!-- TEMPLATE SELECT -->
+      <div class="field-block">
+        <label>Email Template</label>
+        <select id="templateSelect"></select>
+      </div>
+
+      <!-- SUBJECT -->
+      <div class="field-block">
+        <label>Subject</label>
+        <input id="subjectInput" placeholder="Enter subject...">
+      </div>
+
+      <!-- PAYLOAD -->
+      <div class="field-block">
+        <label>Payload JSON</label>
+        <textarea id="payloadInput" placeholder="{ }"></textarea>
+      </div>
+
+      <!-- SEND BUTTON -->
+      <button id="sendEmailBtn">
+        Send Email
+      </button>
+
+      <!-- LOG OUTPUT -->
+      <div id="log"></div>
+
+    </section>
+
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal-bg">
+    <div id="modal">
+      <div id="modal-header">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldModalHeader.webp.pex">
+        <button id="modal-close">Close</button>
+      </div>
+      <div id="modal-body">
+        <h3>Email Preview</h3>
+        <div id="preview-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+
+   // ============================================================
+// Pulse World OS — ADMIN EMAIL PAGE LOGIC (v32 Cosmic Sync)
+// ============================================================
+import {emailTemplates} from "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-OS/PulseOSLongTermMemory.js";
+import {sendEmailAlert} from "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PulseWorldEmailAlert-v20.js";
+import {db} from "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PulseWorldFirebaseGenome-v30.js";
+// --- DOM HOOKS -----------------------------------------------
+const userSelect      = document.getElementById("userSelect");
+const templateSelect  = document.getElementById("templateSelect");
+const subjectInput    = document.getElementById("subjectInput");
+const payloadInput    = document.getElementById("payloadInput");
+const sendEmailBtn    = document.getElementById("sendEmailBtn");
+const logEl           = document.getElementById("log");
+
+const badgeTemplates  = document.getElementById("badge-templates");
+const badgeUsers      = document.getElementById("badge-users");
+const badgeUptime     = document.getElementById("badge-uptime");
+
+const modalBg         = document.getElementById("modal-bg");
+const modalClose      = document.getElementById("modal-close");
+const previewContent  = document.getElementById("preview-content");
+
+ safeLog("Pulse World Admin Center - Emails, is Online!");
+// ============================================================
+// UPTIME COUNTER (UI badge sync)
+// ============================================================
+
+
+// --- STATE ---------------------------------------------------
+let usersCache        = [];
+let templatesCache    = [];
+let selectedUser      = null;
+let selectedTemplate  = null;
+let uptimeSeconds     = 0;
+
+
+setInterval(() => {
+  uptimeSeconds++;
+  badgeUptime.textContent = uptimeSeconds + "s";
+}, 1000);
+// ============================================================
+// COSMIC LOGGING (UI‑Synced)
+// ============================================================
+
+function safeLog(msg, data) {
+  const time = new Date().toLocaleTimeString();
+  const line = `[${time}] ${msg}${data ? " " + JSON.stringify(data) : ""}\n`;
+
+  // prepend for cosmic "live feed" effect
+  logEl.textContent = line + logEl.textContent;
+
+  console.log("%c🧠🌐 PULSE BOOT AI v32.0 — [Pulse‑World Admin]", "color:#00e5ff;font-weight:bold;", msg, data || "");
+}
+
+// ============================================================
+// MODAL CONTROL (Synced with new animations)
+// ============================================================
+
+function showModal(contentHtml) {
+  previewContent.innerHTML = contentHtml || "<em>No preview available</em>";
+  modalBg.style.display = "flex";
+
+  // cosmic fade‑in
+  modalBg.style.opacity = "0";
+  requestAnimationFrame(() => {
+    modalBg.style.transition = "opacity 0.35s ease";
+    modalBg.style.opacity = "1";
+  });
+}
+
+function hideModal() {
+  modalBg.style.transition = "opacity 0.35s ease";
+  modalBg.style.opacity = "0";
+  setTimeout(() => {
+    modalBg.style.display = "none";
+  }, 350);
+}
+
+// ============================================================
+// BUTTON LOADING STATE (matches glowing UI)
+// ============================================================
+
+function setLoading(isLoading) {
+  if (isLoading) {
+    sendEmailBtn.disabled = true;
+    sendEmailBtn.textContent = "Sending…";
+    sendEmailBtn.style.opacity = "0.6";
+    sendEmailBtn.style.filter = "brightness(0.7)";
+  } else {
+    sendEmailBtn.disabled = false;
+    sendEmailBtn.textContent = "Send Email";
+    sendEmailBtn.style.opacity = "1";
+    sendEmailBtn.style.filter = "brightness(1)";
+  }
+}
+
+// ============================================================
+// DB + CACHE ACCESSORS
+// ============================================================
+
+function getPulseDB() {
+  return PulseRealm.PulseFirebaseDB || PulseRealm.PulseDB || PulseRealm.PulseWorldDB || null;
+}
+
+function getCache() {
+  return PulseRealm.PulseUserCache || PulseRealm.PulseWorldUserCache || null;
+}
+
+// ============================================================
+// LOAD USERS
+// ============================================================
+
+async function loadUsers() {
+  try {
+    const cache = getCache();
+
+    // Try cache first
+    if (cache.get) {
+      const cached = await cache.get("adminEmailUsers");
+      if (cached && Array.isArray(cached)) {
+        usersCache = cached;
+        populateUserSelect();
+        badgeUsers.textContent = cached.length;
+        safeLog("Loaded users from cache", { count: cached.length });
+        return;
+      }
+    }
+
+    // DB fallback
+    const db = await getPulseDB();
+    if (!db || !db.getCollection) {
+      safeLog("No PulseDB available — using empty user list");
+      usersCache = [];
+      populateUserSelect();
+      badgeUsers.textContent = "0";
+      return;
+    }
+
+    const usersCol = db.getCollection("Users");
+    const snapshot = await usersCol.getAll();
+    usersCache = Array.isArray(snapshot) ? snapshot : [];
+
+    if (cache.set) {
+      cache.set("adminEmailUsers", usersCache, { ttlMs: 5 * 60 * 1000 });
+    }
+
+    populateUserSelect();
+    badgeUsers.textContent = usersCache.length;
+    safeLog("Loaded users from DB", { count: usersCache.length });
+
+  } catch (err) {
+    safeLog("Failed to load users", { error: String(err) });
+    usersCache = [];
+    populateUserSelect();
+    badgeUsers.textContent = "0";
+  }
+}
+
+function populateUserSelect() {
+  userSelect.innerHTML = "";
+
+  if (!usersCache.length) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "No User Identities Found";
+    userSelect.appendChild(opt);
+    return;
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Select a User Identity…";
+  userSelect.appendChild(placeholder);
+
+  usersCache.forEach((u) => {
+    const opt = document.createElement("option");
+    opt.value = u.id || u.uid || u.email || "";
+    opt.textContent = u.email || u.name || u.id || "Unknown User";
+    opt.dataset.email = u.email || "";
+    opt.dataset.name = u.name || "";
+    userSelect.appendChild(opt);
+  });
+}
+
+// ============================================================
+// LOAD TEMPLATES
+// ============================================================
+
+function loadTemplates() {
+  templatesCache = [];
+
+  Object.keys(emailTemplates).forEach((key) => {
+    const tpl = emailTemplates[key];
+
+    if (typeof tpl === "object") {
+      templatesCache.push({
+        id: key,
+        label: key.replace(/([A-Z])/g, " $1").trim(),
+        template: tpl
+      });
+    }
+  });
+
+  populateTemplateSelect();
+  badgeTemplates.textContent = templatesCache.length;
+  safeLog("Loaded templates", { count: templatesCache.length });
+}
+
+function populateTemplateSelect() {
+  templateSelect.innerHTML = "";
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Select Email Template…";
+  templateSelect.appendChild(placeholder);
+
+  templatesCache.forEach((t) => {
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = t.label;
+    templateSelect.appendChild(opt);
+  });
+}
+
+// ============================================================
+// BUILD EMAIL PAYLOAD
+// ============================================================
+
+function buildEmailPayload() {
+  if (!selectedUser || !selectedTemplate) {
+    throw new Error("User and template must be selected");
+  }
+
+  const templateEntry = templatesCache.find((t) => t.id === selectedTemplate);
+  if (!templateEntry) throw new Error("Template not found");
+
+  const tpl = templateEntry.template;
+
+  const userEmail = selectedUser.email || selectedUser.id || "";
+  const userName  = selectedUser.name || selectedUser.email || "Friend";
+
+  const payload = {
+    email: userEmail,
+    name: userName,
+    user: selectedUser,
+    rawPayload: null,
+    templateId: selectedTemplate
+  };
+
+  const rawText = payloadInput.value.trim();
+  if (rawText) {
+    try {
+      payload.rawPayload = JSON.parse(rawText);
+    } catch (err) {
+      safeLog("Payload JSON parse error", { error: String(err) });
+    }
+  }
+
+  const subject =
+    subjectInput.value ||
+    (typeof tpl.subject === "function" ? tpl.subject(payload) : tpl.subject);
+
+  const html =
+    typeof tpl.html === "function" ? tpl.html(payload) : tpl.html;
+
+  const text =
+    typeof tpl.text === "function" ? tpl.text(payload) : tpl.text || "";
+
+  return {
+    email: userEmail,
+    subject,
+    html,
+    text,
+    meta: payload,
+    templateId: selectedTemplate
+  };
+}
+
+// ============================================================
+// PREVIEW EMAIL
+// ============================================================
+
+function handlePreview() {
+  try {
+    const payload = buildEmailPayload();
+
+    const previewHtml = `
+      <div style="font-family:system-ui; color:#E8F8FF;">
+        <h2 style="margin-top:0;">Preview: ${escapeHtml(payload.subject)}</h2>
+        <p><strong>To:</strong> ${escapeHtml(payload.email)}</p>
+        <p><strong>Template:</strong> ${escapeHtml(payload.templateId)}</p>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.15);margin:12px 0;">
+        <div>${payload.html}</div>
+      </div>
+    `;
+
+    showModal(previewHtml);
+    safeLog("Preview generated", { to: payload.email, template: payload.templateId });
+
+  } catch (err) {
+    safeLog("Failed to build preview", { error: String(err) });
+  }
+}
+
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// ============================================================
+// SEND EMAIL
+// ============================================================
+
+async function handleSend() {
+  try {
+    setLoading(true);
+    const payload = buildEmailPayload();
+
+    const result = await sendEmailAlert(payload.templateId, payload);
+
+    safeLog("Email sent", { to: payload.email, template: payload.templateId, result });
+
+  } catch (err) {
+    safeLog("Failed to send email", { error: String(err) });
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ============================================================
+// EVENT WIRING
+// ============================================================
+
+userSelect.addEventListener("change", () => {
+  const val = userSelect.value;
+  const found = usersCache.find(
+    (u) => u.id === val || u.uid === val || u.email === val
+  );
+  selectedUser = found || null;
+  safeLog("Selected user", { id: val });
+});
+
+templateSelect.addEventListener("change", () => {
+  selectedTemplate = templateSelect.value || null;
+  safeLog("Selected template", { id: selectedTemplate });
+});
+
+sendEmailBtn.addEventListener("click", handleSend);
+templateSelect.addEventListener("dblclick", handlePreview);
+
+modalClose.addEventListener("click", hideModal);
+modalBg.addEventListener("click", (e) => {
+  if (e.target === modalBg) hideModal();
+});
+
+// ============================================================
+// INIT
+// ============================================================
+
+async function initAdminEmail() {
+  try {
+    safeLog("Initializing Email Admin…");
+    loadTemplates();
+    await loadUsers();
+    safeLog("Email Admin ready");
+  } catch (err) {
+    safeLog("Failed to initialize admin email page", { error: String(err) });
+  }
+}
+
+initAdminEmail();
+
+const badge2 = document.getElementById("pulsepal-badge");
+const talk2 = document.getElementById("pulsepal-talk");
+
+function pulsepalSpeak(message) {
+  talk2.textContent = message;
+  badge2.classList.add("talking");
+  setTimeout(() => badge2.classList.remove("talking"), 10000); // hides after 3s
+}
+
+pulsepalSpeak("The Admin Email Sender is your communication command deck — every alert, every notice, every automated system message originates here. Your Notification Domain is your broadcast authority — your delivery routes, your templates, your system‑wide reach across users and environments.");
+PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+
+  </script>
+</body>
+</html>

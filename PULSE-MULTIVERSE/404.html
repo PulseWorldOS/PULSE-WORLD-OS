@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<head>
+<link rel="preconnect" href="/" crossorigin>
+<link rel="modulepreload" fetchpriority="highest" href="./DriftCompanion.js">
+<link rel="icon" fetchpriority="high" href="./favicon.ico">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarE_EventHorizon.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarC_FractalGrid.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarB_DimensionalBloom.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsarA_QuantumTear.webp.pex" type="image/webp"/>
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-MULTIVERSAL-TOUCH.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-STORAGE.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-RELAY.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-WARMUP.js">
+<link rel="modulepreload" fetchpriority="high" href="./_CREATION_BARRIER/PULSE-BOOT-BARRIER.js">
+<link rel="modulepreload" fetchpriority="high" href="./_PROOF/PULSE-PROOF.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js">
+<link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-BAND/PULSE-BAND.js">
+<link rel="modulepreload" fetchpriority="high" href="./PulseMultiverseLayer.js">
+<link rel="prefetch"      fetchpriority="high" href="/">
+<title>PulseWorld — Dimensional Drift Detected</title>
+<script type="module" src="./PULSE-MULTIVERSAL-TOUCH.js"></script>
+<script type="module" src="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-BAND/PULSE-BAND.js"></script>
+<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js"></script>
+<script type="module" src="./_CREATION_BARRIER/PULSE-BOOT-BARRIER.js"></script>
+<script type="module" src="./_PROOF/PULSE-PROOF.js"></script>
+<script type="module" src="./_CREATION_BARRIER/PULSE-BOOT-WORLD.js"></script>
+<script>
+globalThis.PulseRealm = globalThis;
+const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
+
+const PulseGlobalPastA = Object.assign({}, PulseRealm.PulseGlobalPast, PulseRealm.PulseGlobal, PulseRealm.PulseGlobalNow);
+const PulseSelfIdentitya = {realm:"pulse-main",timestamp:Date.now(),uid:(PulseRealm.crypto?.randomUUID?.()||("pulse-"+Math.random())),type:"PulseGlobalSelf"};
+globalThis.PulseSelf = {PulseSelfIdentitya};
+const PulseGlobal1a = (typeof window!=="undefined"?window:PulseRealm);
+const PulseGlobal2a = (typeof global!=="undefined"?global:PulseGlobal1a);
+const PulseGlobal3a = (typeof globalThis!=="undefined"?globalThis:PulseGlobal2a);
+PulseRealm.PulseGlobalNow = Object.assign({}, PulseGlobal1a, PulseGlobal2a, PulseGlobal3a, PulseGlobalPastA);
+</script>
+<style>
+/* GLOBAL */
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0ff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* PARALLAX CONTAINER */
+#parallax {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  perspective: 1800px;
+  z-index: 1;
+}
+
+/* PULSAR LAYERS */
+.pulsar {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+.pulsar-back {
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulsarE_EventHorizon.webp.pex');
+  opacity: 0.16;
+  transform: translateZ(-700px) scale(1.5);
+  animation: driftSlow 90s linear infinite;
+}
+
+.pulsar-mid {
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulsarC_FractalGrid.webp.pex');
+  opacity: 0.22;
+  transform: translateZ(-350px) scale(1.25);
+  animation: drift 60s ease-in-out infinite;
+}
+
+.pulsar-front {
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulsarB_DimensionalBloom.webp.pex');
+  opacity: 0.3;
+  transform: translateZ(-150px) scale(1.1);
+  animation: drift 40s ease-in-out infinite;
+}
+
+.pulsar-tear {
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/PulsarA_QuantumTear.webp.pex');
+  opacity: 0.4;
+  transform: translateZ(0px) scale(1);
+  animation: tearPulse 6s ease-in-out infinite;
+}
+
+/* ANIMATIONS */
+@keyframes drift {
+  0%   { transform: translateZ(-150px) scale(1.1) translate(0,0); }
+  50%  { transform: translateZ(-150px) scale(1.1) translate(2%, -1%); }
+  100% { transform: translateZ(-150px) scale(1.1) translate(0,0); }
+}
+
+@keyframes driftSlow {
+  0%   { transform: translateZ(-700px) scale(1.5) translate(-1%, 1%); }
+  50%  { transform: translateZ(-700px) scale(1.5) translate(1%, -2%); }
+  100% { transform: translateZ(-700px) scale(1.5) translate(-1%, 1%); }
+}
+
+@keyframes shimmer {
+  0%   { filter: brightness(1) saturate(1); }
+  50%  { filter: brightness(1.2) saturate(1.3); }
+  100% { filter: brightness(1) saturate(1); }
+}
+
+@keyframes tearPulse {
+  0%   { opacity: 0.32; filter: blur(0px); }
+  50%  { opacity: 0.48; filter: blur(1.8px); }
+  100% { opacity: 0.32; filter: blur(0px); }
+}
+
+/* PARTICLE FIELD */
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image: radial-gradient(circle, rgba(0,255,255,0.18) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.16;
+  animation: particleDrift 120s linear infinite;
+}
+
+@keyframes particleDrift {
+  0%   { transform: translate(0,0); }
+  100% { transform: translate(-200px, -400px); }
+}
+
+/* SCANLINES / ABERRATION */
+#scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,255,0.06) 0px,
+    rgba(0,255,255,0.06) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.22;
+}
+
+#aberration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(circle at center,
+    rgba(255,0,128,0.08),
+    rgba(0,255,255,0.08),
+    transparent 70%
+  );
+  animation: aberrationPulse 3.5s infinite ease-in-out;
+}
+
+@keyframes aberrationPulse {
+  0%   { opacity: 0.05; }
+  50%  { opacity: 0.14; }
+  100% { opacity: 0.05; }
+}
+
+/* BREACH FLASH */
+#breachFlash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0,255,255,0.4), transparent 70%);
+  opacity: 0;
+  animation: breachFlash 0.7s ease-out 1;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes breachFlash {
+  0%   { opacity: 0; }
+  15%  { opacity: 0.7; }
+  60%  { opacity: 0.25; }
+  100% { opacity: 0; }
+}
+
+    
+#pulseband-overlay {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 99999;
+  font-family: system-ui, sans-serif;
+  color: #e9f9ff;
+}
+#pulseband-panel {
+  position: absolute;
+  top: 0;
+  right: 38px; /* panel opens to the LEFT of the badge */
+  width: 220px;
+  padding: 10px;
+  border-radius: 14px;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, rgba(0,35,60,0.92), rgba(0,80,90,0.9));
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  font-size: 11px;
+  display: none;
+  z-index: 999999;
+}
+.pb-mini-badge {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;      /* zoom OUT to fit height */
+  object-position: left center;  /* ⭐ force image to left */
+  border-radius: 20px;
+  background: radial-gradient(circle at 30% 30%, #00ffd5, #007a8a);
+}
+.pb-mini-badge.inactive {
+  background: radial-gradient(circle at 30% 30%, #222 20%, #000 80%);
+}
+#pulseband-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffd400 40%, #ff5a5a 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+#pulseband-badge .pb-bars span.active {
+  background: #00ffd5 !important;
+}
+#pulseband-badge.boost {
+  background: rgba(255, 140, 0, 0.45); /* orange glow */
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+}
+#pulseband-badge.boost .pb-bars span.active {
+  background: #00ffd5 !important; /* force teal */
+}
+#pulseband-badge.transfer .pb-bars span.active {
+  animation: pbFlicker 0.25s ease-out;
+}
+@keyframes pbFlicker {
+  0%   { opacity: 1;   transform: scaleY(1); }
+  50%  { opacity: 0.4; transform: scaleY(0.6); }
+  100% { opacity: 1;   transform: scaleY(1); }
+}
+#portalBootVideo {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+
+  /* ALWAYS RENDER */
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  /* NEVER LET ANYTHING COVER IT */
+  z-index: 999999999 !important;
+
+  /* FORCE GPU COMPOSITING */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+
+  /* YOUR STYLE */
+  filter: brightness(1.25) contrast(1.15) saturate(1.25)
+          drop-shadow(0 0 25px #0ff);
+}
+
+/* #portalBootVideo {
+  position: fixed;
+  inset: 0;
+  width: 100dvw;
+  height: 100dvh;
+  object-fit: cover;
+  z-index: 999999;
+  opacity: 1;
+  transition: opacity 1.2s ease-out;
+  filter: brightness(1.25) contrast(1.15) saturate(1.25) drop-shadow(0 0 25px #0ff);
+} */
+#warpGate {
+  position: fixed;
+  inset: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background: radial-gradient(circle at center,
+    rgba(0,255,255,0.9),
+    rgba(0,255,255,0.6),
+    rgba(0,255,255,0.2),
+    transparent 70%
+  );
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+#PulsePortalviewport {
+  position: absolute;
+  top: 16dvh;
+  left: 9dvw;
+  right: 9dvw;
+  bottom: 16dvh;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 24px;
+  overflow: auto;
+  display: none;
+  z-index: 3;
+  box-shadow:
+    0 0 12px rgba(0, 255, 255, 0.25),
+    inset 0 0 18px rgba(0, 255, 255, 0.08);
+  
+  scrollbar-color: #00eaff #0a0a0a;
+  scrollbar-width: thin;
+}
+#PulsePortalviewport::-webkit-scrollbar {
+  width: 10px;
+  background: #0a0a0a;
+}
+#PulsePortalviewport::-webkit-scrollbar-track {
+  background: #0f0f0f;
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 255, 255, 0.15);
+}
+#PulsePortalviewport::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00eaff, #007bff);
+  border-radius: 10px;
+  border: 2px solid #0a0a0a;
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.8);
+}
+#PulsePortalviewport::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00ffff, #0099ff);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 1);
+}
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  margin-bottom: 6px;
+  border-radius: 20px;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  border: 2px solid #000000;
+}
+.pb-hint {
+  font-size: 11px;
+  opacity: 0.55;
+  margin-left: 4px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #c8f7ff; /* soft tropical teal */
+}
+.pb-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pb-row {
+  display: flex;
+  justify-content: space-between;
+}
+.pb-value {
+  font-weight: 600;
+  color: #fff;
+}
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+.pb-bars span {
+  width: 4px;
+  border-radius: 999px;
+  background: #000;
+  animation: pbBarPulse 1s ease-in-out infinite;
+}
+.pb-bars span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.pb-bars span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.pb-bars span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.pb-bars span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+@keyframes pbBarPulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.2); }
+}
+.pb-card {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  padding: 14px 16px 16px 16px;
+  color: #fff;
+  border: 2px solid #ffd400;
+  pointer-events: auto;
+  transform-origin: bottom right;
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+.pb-card.pb-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+.pb-mini-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--tp-yellow-strong);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+}
+.pb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+.pb-row:last-child {
+  border-bottom: none;
+}
+.pb-row label {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+.pb-hint {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.pb-value {
+  font-weight: 600;
+  color: var(--tp-yellow-strong);
+  text-align: right;
+}
+.pulse-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  border-radius: 14px;
+  padding: 18px 22px;
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.25),
+    inset 0 0 12px rgba(0,255,255,0.15);
+  transform: translateZ(0px);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+.pulse-panel:hover {
+  transform: translateZ(22px) scale(1.015);
+  border-color: var(--pulse-cyan-hard);
+  box-shadow:
+    0 0 28px rgba(0,255,255,0.45),
+    inset 0 0 18px rgba(0,255,255,0.25);
+}
+.pulse-panel-header {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--pulse-cyan);
+  text-shadow:
+    0 0 8px var(--pulse-cyan),
+    0 0 14px var(--pulse-cyan);
+  margin-bottom: 12px;
+}
+.pulse-panel.float {
+  animation: panelFloat 6s ease-in-out infinite;
+}
+#pexPanel {
+  position: absolute;
+  top: 140px;
+  right: 70px;
+  width: 420px;
+  z-index: 50;
+}
+#pexPanel .pex-section {
+  margin-bottom: 22px;
+}
+#pexPanel .pex-label {
+  font-size: 14px;
+  opacity: 0.75;
+  color: var(--pulse-cyan);
+  margin-bottom: 4px;
+}
+#pexPanel .pex-value {
+  font-size: 16px;
+  color: white;
+  text-shadow: 0 0 6px var(--pulse-cyan);
+}
+.pulse-btn {
+  background: linear-gradient(
+    135deg,
+    rgba(0,255,255,0.25),
+    rgba(0,255,255,0.45)
+  );
+  border: 1px solid var(--pulse-cyan-soft);
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+.pulse-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--pulse-cyan);
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.45),
+    inset 0 0 12px rgba(0,255,255,0.25);
+}
+input[type="file"] {
+  color: var(--pulse-cyan);
+  font-size: 14px;
+  text-shadow: 0 0 6px var(--pulse-cyan);
+}
+@keyframes panelFloat {
+  0%   { transform: translateZ(0px) translateY(0px); }
+  50%  { transform: translateZ(12px) translateY(-4px); }
+  100% { transform: translateZ(0px) translateY(0px); }
+}
+#pulseBootHeader {
+  font-family: monospace;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #00ffea55;
+  color: #00ffea;
+  text-shadow: 0 0 6px #00fff2, 0 0 12px #00fff2;
+}
+#pulseBootPanel {
+  position: fixed;
+  top: 95px;
+  left: 70px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-family: monospace;
+  color: #00ffea;
+  z-index: -1;
+  pointer-events: none;
+}
+#pulseBootPanel.warm-boot {
+  background: rgba(0, 0, 0, 0.35);
+  color: #6aff6a;
+  border: 1px solid #6aff6a55;
+}
+#pulseBootPanel.warm-boot .boot-line::before {
+  content: "[↻] ";
+  color: #6aff6a;
+}
+#pulseBootPanel.warm-boot .boot-line {
+  opacity: 1;
+  color: #6aff6a;
+}
+#pulseBootPanel.warm-boot #pulseBootHeader {
+  color: #6aff6a;
+  border-bottom: 1px solid #6aff6a55;
+  text-shadow: 0 0 6px #6aff6a, 0 0 12px #6aff6a;
+}
+#pulseBootPanel.warm-boot #pulseBootHeader::after {
+  content: " — SESSION RESUMED";
+  color: #00ffea;
+  opacity: 0.85;
+}
+#pulseBootPanel.fade-out {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+/* TERMINAL WRAPPER */
+#terminal-wrap {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TERMINAL HUD */
+#terminal {
+  width: 680px;
+  max-width: 100%;
+  padding: 2.4rem 2.7rem 2.2rem;
+  border-radius: 26px;
+
+  background: radial-gradient(circle at 50% 0%,
+    rgba(0,40,60,0.95),
+    rgba(0,10,20,0.96) 60%,
+    rgba(0,0,0,0.98)
+  );
+
+  border: 1px solid rgba(0,255,255,0.55);
+  box-shadow:
+    0 0 60px rgba(0,255,255,0.35),
+    0 0 140px rgba(0,255,255,0.15),
+    inset 0 0 40px rgba(0,255,255,0.12);
+
+  backdrop-filter: blur(18px) saturate(160%);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+/* HOLOGRAPHIC EDGE GLOW */
+#terminal::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 180deg,
+    rgba(0,255,255,0.15),
+    rgba(255,0,255,0.15),
+    rgba(0,255,255,0.15)
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.25;
+  animation: holoSpin 12s linear infinite;
+}
+
+@keyframes holoSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* TOP STRIP / LABEL */
+.terminal-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #9ff;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 8px rgba(0,255,255,0.6);
+}
+
+/* MAIN TITLE */
+.terminal-title {
+  font-size: 2.1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  color: #aff;
+  text-shadow:
+    0 0 14px #0ff,
+    0 0 22px rgba(0,255,255,0.6);
+
+  animation: glitchPulse 3s infinite;
+}
+
+@keyframes glitchPulse {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-1px); text-shadow: 2px 0 #f0f, -2px 0 #0ff; }
+  20% { transform: translateX(1px); text-shadow: -2px 0 #0ff, 2px 0 #f0f; }
+  30% { transform: translateX(0); }
+}
+
+/* SUBTEXT */
+.terminal-sub {
+  font-size: 1rem;
+  opacity: 0.92;
+  margin-bottom: 1.2rem;
+  line-height: 1.55;
+  color: #dff;
+}
+
+.terminal-sub strong {
+  color: #aff;
+  text-shadow: 0 0 6px rgba(0,255,255,0.6);
+}
+
+/* DRIFT MESSAGE */
+.terminal-drift {
+  font-size: 0.94rem;
+  opacity: 0.85;
+  margin-bottom: 1.6rem;
+  color: #9ff;
+  line-height: 1.55;
+}
+
+/* META ROW */
+.terminal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.3rem;
+  font-size: 0.82rem;
+  opacity: 0.82;
+  margin-bottom: 1.6rem;
+  color: #cff;
+}
+
+.terminal-meta strong {
+  color: #fff;
+  text-shadow: 0 0 6px #0ff;
+}
+
+/* TIMELINE BAR */
+.timeline {
+  position: relative;
+  width: 100%;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    rgba(0,30,40,0.9),
+    rgba(0,10,20,0.9)
+  );
+  overflow: hidden;
+  margin-bottom: 1.6rem;
+  box-shadow: inset 0 0 12px rgba(0,255,255,0.25);
+}
+
+.timeline-track {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    rgba(0,255,255,0.15),
+    rgba(0,255,255,0.55),
+    rgba(0,255,255,0.15)
+  );
+  transform-origin: left center;
+  animation: driftTimeline 3.4s ease-in-out infinite;
+}
+
+@keyframes driftTimeline {
+  0%   { transform: scaleX(0.12); opacity: 0.4; }
+  40%  { transform: scaleX(0.85); opacity: 1; }
+  80%  { transform: scaleX(0.3); opacity: 0.7; }
+  100% { transform: scaleX(0.12); opacity: 0.4; }
+}
+
+.terminal-actions {
+  display: flex;
+  justify-content: space-between; /* primary left, secondary right */
+  align-items: center;
+  width: 100%;
+  margin-top: 1.4rem;
+}
+
+
+/* PRIMARY BUTTON */
+.btn-primary {
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,255,255,0.8);
+
+  background: linear-gradient(180deg,
+    rgba(0,255,255,0.25),
+    rgba(0,0,0,0.95)
+  );
+
+  color: #0ff;
+  text-decoration: none;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.86rem;
+
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.6),
+    inset 0 0 12px rgba(0,255,255,0.3);
+
+  transition: 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg,
+    rgba(0,255,255,0.35),
+    rgba(0,0,0,0.95)
+  );
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 26px rgba(0,255,255,0.9),
+    inset 0 0 16px rgba(0,255,255,0.4);
+}
+
+/* SECONDARY BUTTON */
+.btn-secondary {
+  font-size: 0.82rem;
+  opacity: 0.85;
+  text-decoration: none;
+  color: #8ff;
+  transition: 0.15s ease;
+}
+
+.btn-secondary:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px #0ff;
+}
+
+/* FOOTER */
+.terminal-footer {
+  margin-top: 1.4rem;
+  font-size: 0.76rem;
+  opacity: 0.7;
+  color: #9df;
+  line-height: 1.5;
+}
+
+.terminal-footer span {
+  opacity: 1;
+  color: #cff;
+  text-shadow: 0 0 6px #0ff;
+}
+
+/* MOBILE GLOBAL SCALE MODE */
+@media (max-width: 600px) {
+  body {
+    transform: scale(0.82);
+    transform-origin: top center;
+    width: 100%;
+  }
+
+  html, body {
+    overflow-x: hidden;
+  }
+}
+
+
+</style>
+</head>
+<body>
+  <audio id="bgMusic" loop autoplay muted>
+    <source src="/_EXPRESSIONS/_SOUNDS/PulseWorldPortalAmbient" type="audio/mpeg">
+  </audio>
+
+  <!-- PARALLAX WORLD -->
+  <div id="parallax">
+    <div class="pulsar pulsar-back"></div>
+    <div class="pulsar pulsar-mid"></div>
+    <div class="pulsar pulsar-front"></div>
+    <div class="pulsar pulsar-tear"></div>
+  </div>
+
+  <!-- PARTICLES / SCANLINES / ABERRATION / FLASH -->
+  <div id="particles"></div>
+  <div id="scanlines"></div>
+  <div id="aberration"></div>
+  <div id="warpGate"></div>
+  <div id="breachFlash"></div>
+
+  <!-- TERMINAL HUD -->
+  <div id="terminal-wrap">
+    <div id="terminal">
+
+      <div class="terminal-label">PULSEWORLD // REALM CORRECTION NODE</div>
+      <div class="terminal-title">REALITY IS RE‑ALIGNING AROUND YOU</div>
+
+      <div class="terminal-sub">
+        This is not an error.  
+        You’ve entered the **Realm Correction Membrane** —  
+        a stabilizing chamber where PulseWorld re‑threads your timeline,  
+        restores your realm integrity, and preserves your identity across layers.
+        <br><br>
+        <strong>Your current realm is undergoing a safe correction.</strong>
+      </div>
+
+      <div class="terminal-drift">
+        The world you attempted to access drifted slightly **out of phase**  
+        with your active PulseWorld realm.  
+        The membrane is performing a soft realignment,  
+        keeping your identity intact while re‑anchoring your reality.
+      </div>
+
+      <div class="terminal-meta">
+        <span>STATUS: <strong>REALM CORRECTION ACTIVE</strong></span>
+        <span>ROUTE: <strong>REALITY RE‑SYNCING</strong></span>
+        <span>STATE: <strong>IDENTITY PRESERVED</strong></span>
+        <span>MODE: <strong>PULSEWORLD REALIGNMENT</strong></span>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-track"></div>
+      </div>
+
+      <div class="terminal-actions">
+        <button class="btn-primary" onclick="history.back()">RE‑ANCHOR THIS REALM</button>
+
+        <!-- Backup universe link -->
+        <a href="https://www.pulseworld.me"
+           class="btn-secondary">
+          SPAWN A NEW UNIVERSE IN THE BACKUP REALM
+        </a>
+      </div>
+
+      <div class="terminal-footer">
+        Encountering this membrane means PulseWorld detected a **realm mis‑thread**  
+        or a momentary world desync.  
+        The membrane corrects your trajectory, restores coherence,  
+        and ensures your timeline remains stable.  
+        Only advanced travelers ever witness this chamber.
+      </div>
+
+    </div>
+  </div>
+<script>
+function worldPromise(name) { return Promise.resolve(window[name] ?? null);}
+const PulseUniversalTouchWorld = PulseRealm.PulseUniversalTouchWorld;
+const PulseTouchWorld = PulseRealm.PulseTouchWorld;
+const PulseWorld      = PulseRealm.PulseWorld;
+const PulseWorldView  = PulseRealm.PulseWorldView;
+const PulseDOM      = PulseRealm.PulseDOM;
+const PulseDOMScan  = PulseRealm.PulseDOMScan;
+const PulseStorageScan = PulseRealm.PulseStorageScan;
+const PulseWorldPromises = PulseRealm.PulseWorldPromises;
+const portalBootVideo =  document.getElementById("portalBootVideo");
+const bgMusic =  document.getElementById("bgMusic");
+const PulsePortalviewport =  document.getElementById("PulsePortalviewport");
+const warpGate  = document.getElementById("warpGate");
+const terminal = document.getElementById("terminal");
+const pulseBootPanel = document.getElementById("pulseBootPanel");
+const bootComplete = document.getElementById("boot-complete");
+const hasDocument = typeof document !== "undefined";
+const PULSE_TOUCH_COOKIE_NAME = "PulseTouchPortal.v35"; // upgraded: trust‑layer passport
+const pulseBootHeader =document.getElementById("pulseBootHeader");
+const bootOrgan1 = document.getElementById("boot-organ-1");
+const bootOrgan2 = document.getElementById("boot-organ-2");
+const bootOrgan3 = document.getElementById("boot-organ-3");
+const bootOrgan4 = document.getElementById("boot-organ-4");
+const CONFIG_FOLDER           = "./PULSEConfig/";
+const PULSE_TOUCH_MAX_AGE = 45; // short TTL to avoid stale membrane state
+const PULSE_TOUCH_VERSION = "33.0-IMMORTAL-INTEL-HYBRID";
+const DEFAULT_INDEX           = "PulseWorldReality.txt";
+const FALLBACK_BARRIER        = "PulseWorldInventory.txt";
+
+
+// ------------------------------------------------------------
+// GLOBAL FLAGS / CONFIG
+// ------------------------------------------------------------
+let __pulseIndexBooted = false;
+
+let proxyURL       = null;
+let adminMode      = false;
+let isPulseContext = true;
+let BOOT_DURATION = 5500;
+let BOOT_PANEL_DURATION = BOOT_DURATION/2;
+
+function normalizeArgs(args) {
+  let message = "";
+  let rest = [];
+  let raw = false;
+  const first = args[0];
+  if (typeof first === "string" && first.startsWith("%c")) {
+    return { subsystem: null, message: first, rest: args.slice(1), raw: true };
+  }
+  if (args.length === 2 && first === "comment" && typeof args[1] === "object" && args[1] !== null  ) {
+    const obj = args[1];
+    const pretty =
+      obj.pretty ||
+      obj.summary ||
+      obj.message ||
+      obj.signalPacketType ||
+      "signal-comment";
+    return {
+      subsystem: "signal",
+      message: pretty,
+      rest: [obj],
+      raw: false
+    };
+  }
+  if (args.length >= 2 && typeof first === "string" && typeof args[1] === "object" && args[1] !== null) {
+    return { subsystem: null, message: first, rest: args.slice(1), raw: false };
+  }
+  if (args.length >= 2 && typeof first === "string" && typeof args[1] === "string") {
+    return { subsystem: first, message: args[1], rest: args.slice(2), raw: false };
+  }
+  if (typeof first === "object" && first !== null) {
+    return { subsystem: null, message: "", rest: [first], raw: false };
+  }
+  if (args.length === 1) {
+    return { subsystem: null, message: first, rest: [], raw: false };
+  }
+  return { subsystem: null, message: args.join(" "), rest: [], raw: false };
+}
+const PulseVersion = PulseRealm.PulseVersion
+const PulseVersionFallback = PulseRealm.PulseVersionFallback;
+const PulseRoles = PulseRealm.PulseRoles;
+const PulseRoleFallback = PulseRealm.PulseRoleFallback;
+const PulseColors = PulseRealm.PulseColors;
+const PulseColorFallback = PulseRealm.PulseColorFallback;
+const PulseIcons = PulseRealm.PulseIcons;
+const PulseIconsFallback = PulseRealm.PulseIconsFallback;
+function makeLocalLogEntry(level, subsystem, message, rest, meta = {}) {
+  const safe = subsystem || "legacy";
+  const layer = detectLayer(meta.layer);
+  const us_vs_them = detectUsVsThem(layer);
+  const page = meta.page || detectPage();
+  const func = meta.func || null;
+  const system = meta.system || null;
+  const subsystemName = meta.subsystem || safe;
+  const organ = meta.organ || null;
+  const extra = meta.extra || {};
+  const band = meta.band || detectBandMode();
+  const presenceField = meta.presenceField || null;
+  const advantageField = meta.advantageField || null;
+  const speedField = meta.speedField || null;
+  const experienceField = meta.experienceField || null;
+  const iqVersion = meta.iqVersion || null;
+  const uiGenomeVersion = meta.uiGenomeVersion || null;
+  const comfortPattern = meta.comfortPattern || null;
+  const route = meta.route || null;
+  const compilerVersion = meta.compilerVersion || null;
+  const organismVersion = meta.organismVersion || null;
+  const envKind = detectEnvironmentKind();
+  const nodePid = detectNodeProcessId();
+  const meshNodeId = detectMeshNodeId();
+  const meshRoute = detectMeshRoute();
+  const heartbeatCycle = meta.heartbeatCycle || null;
+  const uiFlowStateId = meta.uiFlowStateId || null;
+  const errorSpineSignature = meta.errorSpineSignature || null;
+  return {
+    schemaVersion: "30.0",
+    id: `L${++logIdCounter}`,
+    ts: Date.now(),
+    level,
+    subsystem: subsystemName,
+    message,
+    rest,
+    layer,
+    us_vs_them,
+    system,
+    organ,
+    page,
+    func,
+    extra,
+    band,
+    presenceField,
+    advantageField,
+    speedField,
+    experienceField,
+    iqVersion,
+    uiGenomeVersion,
+    comfortPattern,
+    route,
+    compilerVersion,
+    organismVersion,
+    heartbeatCycle,
+    uiFlowStateId,
+    errorSpineSignature,
+    env: {
+      kind: envKind,
+      nodePid,
+      meshNodeId,
+      meshRoute
+    },
+    synced: false
+  };
+}
+function normalizeLayerName(layer) {
+  if (!layer) return null;
+  return String(layer).trim();
+}
+function detectEnvironmentKind() {
+  if (typeof document !== "undefined") {
+    return "WINDOW";
+  }
+  if (typeof self !== "undefined" &&
+      typeof PulseRealm.registration === "object" &&
+      typeof PulseRealm.clients === "object") {
+    return "SERVICE_WORKER";
+  }
+  if (typeof self !== "undefined" &&
+      typeof PulseRealm.SharedWorkerGlobalScope === "undefined" && // avoid reference
+      typeof MessagePort !== "undefined" &&
+      typeof PulseRealm.onconnect === "function") {
+    return "SHARED_WORKER";
+  }
+  if (typeof self !== "undefined" &&
+      typeof PulseRealm.postMessage === "function" &&
+      typeof PulseRealm.importScripts === "function") {
+    return "WORKER";
+  }
+  if (typeof process !== "undefined" &&
+      process.versions &&
+      process.versions.node) {
+    return "NODE";
+  }
+  return "UNKNOWN";
+}
+function detectLayer(metaLayer = null) {
+  const explicit = normalizeLayerName(metaLayer);
+  if (explicit) return explicit;
+  const env = detectEnvironmentKind();
+  switch (env) {
+    case "WINDOW":
+      return "WINDOW";
+    case "WORKER":
+      return "WORKER";
+    case "SHARED_WORKER":
+      return "SHARED_WORKER";
+    case "SERVICE_WORKER":
+      return "SERVICE_WORKER";
+    case "NODE":
+      return "NODE";
+    default:
+      return "UNKNOWN";
+  }
+}
+function detectUsVsThem(layer) {
+  const upper = String(layer || "").toUpperCase();
+  return upper.includes("PULSENET") || upper.includes("PULSEWORLD") || upper.includes("MULTIVERSE") || upper.includes("UNIVERSE") || upper.includes("PulseBand") ? "US" : "THEM";
+}
+function detectPage() {
+  return "/"+ PulseRealm.__PULSE_CURRENT_PAGE__;
+}
+
+function detectNodeProcessId() {
+  if (typeof process !== "undefined" && process.pid) {
+    return process.pid;
+  }
+  return null;
+}
+function detectMeshNodeId() {
+  try {
+    return (
+      (PulseRealm.PulseMeshNodeId) ||
+      (PulseRealm.PulseMeshNodeId) ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+function detectMeshRoute() {
+  try {
+    return (
+      (PulseRealm.PulseMeshRoute) ||
+      (PulseRealm.PulseMeshRoute) ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+function detectBandMode() {
+  try {
+    if (PulseRealm.PulseBand) {
+      return PulseRealm.PulseBand.mode || "dual";
+    }
+  } catch {}
+  return "dual";
+}
+const LS_KEY_LOGS = "404.logs";
+const LS_MAX_ENTRIES = 32000; // doubled from v24
+const IDB_DB_NAME = "404";
+const IDB_STORE_NAME = "logs";
+const IDB_MAX_ENTRIES = 100000;
+let idbAvailable = false;
+let idbDb = null;
+function openIndexedDB() {
+  return new Promise((resolve) => {
+    if (typeof indexedDB === "undefined") {
+      resolve(null);
+      return;
+    }
+    const req = indexedDB.open(IDB_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(IDB_STORE_NAME)) {
+        db.createObjectStore(IDB_STORE_NAME, { keyPath: "id" });
+      }
+    };
+    req.onsuccess = () => {
+      resolve(req.result);
+    };
+    req.onerror = () => {
+      resolve(null);
+    };
+  });
+}
+async function ensureIndexedDB() {
+  if (idbDb || idbAvailable === false) return idbDb;
+  const db = await openIndexedDB();
+  if (db) {
+    idbDb = db;
+    idbAvailable = true;
+  } else {
+    idbAvailable = false;
+  }
+  return idbDb;
+}
+async function saveLogsToIndexedDB(entries) {
+  const db = await openLogsDB();
+  if (!db) return;
+
+  const trimmed =
+    entries.length > LS_MAX_ENTRIES
+      ? entries.slice(entries.length - LS_MAX_ENTRIES)
+      : entries;
+
+  try {
+    // wipe old logs
+    const txClear = db.transaction(LOG_STORE, "readwrite");
+    txClear.objectStore(LOG_STORE).clear();
+
+    // write new logs
+    const tx = db.transaction(LOG_STORE, "readwrite");
+    const store = tx.objectStore(LOG_STORE);
+
+    for (const entry of trimmed) {
+      store.put(entry);
+    }
+  } catch (_) {}
+}
+
+async function appendLogsToIndexedDB(entries) {
+  const db = await ensureIndexedDB();
+  if (!db || !entries.length) return;
+  try {
+    const tx = db.transaction(IDB_STORE_NAME, "readwrite");
+    const store = tx.objectStore(IDB_STORE_NAME);
+    for (const e of entries) {
+      store.put(e);
+    }
+    tx.oncomplete = () => {};
+    tx.onerror = () => {};
+  } catch {
+  }
+}
+async function trimIndexedDBIfNeeded() {
+  const db = await ensureIndexedDB();
+  if (!db) return;
+  try {
+    const tx = db.transaction(IDB_STORE_NAME, "readonly");
+    const store = tx.objectStore(IDB_STORE_NAME);
+    const req = store.getAllKeys();
+    req.onsuccess = async () => {
+      const keys = req.result || [];
+      if (keys.length <= IDB_MAX_ENTRIES) return;
+      const toDelete = keys
+        .sort()
+        .slice(0, keys.length - IDB_MAX_ENTRIES);
+      const txDel = db.transaction(IDB_STORE_NAME, "readwrite");
+      const storeDel = txDel.objectStore(IDB_STORE_NAME);
+      for (const k of toDelete) {
+        storeDel.delete(k);
+      }
+    };
+  } catch {
+  }
+}
+async function loadLogsFromIndexedDB() {
+  const db = await ensureIndexedDB();
+  if (!db) return [];
+
+  return new Promise((resolve) => {
+    try {
+      const tx = db.transaction(IDB_STORE_NAME, "readonly");
+      const store = tx.objectStore(IDB_STORE_NAME);
+      const req = store.getAll();
+
+      req.onsuccess = () => {
+        const rows = req.result || [];
+        resolve(rows.sort((a, b) => a.id - b.id));
+      };
+      req.onerror = () => resolve([]);
+    } catch {
+      resolve([]);
+    }
+  });
+}
+// ------------------------------------------------------------
+// 1. Startup: load logs into a REAL array
+// ------------------------------------------------------------
+let localLogBuffer = [];
+let pendingFlush = false;
+let flushQueue = [];
+
+// Load from IDB once, then unify
+(async () => {
+  try {
+    const rows = await loadLogsFromIndexedDB();
+    localLogBuffer = Array.isArray(rows) ? rows : [];
+  } catch {
+    localLogBuffer = [];
+  }
+})();
+
+function persistLocalLogs(entries) {
+    if (entries.length > LS_MAX_ENTRIES) {
+      localLogBuffer = entries.slice(entries.length - LS_MAX_ENTRIES);
+    } else {
+      localLogBuffer = entries;
+    }
+    return;
+  saveLogsToIndexedDB(entries);
+}
+function appendLocalLog(entry) {
+  localLogBuffer.push(entry);
+  persistLocalLogs(localLogBuffer);
+  flushQueue.push(entry);
+  if (!pendingFlush) {
+    pendingFlush = true;
+    Promise.resolve().then(async () => {
+      const batch = flushQueue.slice();
+      flushQueue = [];
+      pendingFlush = false;
+      appendLogsToIndexedDB(batch);
+      trimIndexedDBIfNeeded();
+    });
+  }
+}
+function getLocalLogs({ level = null, subsystem = null } = {}) {
+  return localLogBuffer.filter((e) => {
+    if (level && e.level !== level) return false;
+    if (subsystem && e.subsystem !== subsystem) return false;
+    return true;
+  });
+}
+
+function drainLocalLogsForHeartbeat() {
+  const copy = localLogBuffer.slice();
+  localLogBuffer = [];
+  persistLocalLogs(localLogBuffer);
+  return copy;
+}
+
+const options = {
+  page: "index",
+  mode: "fast",
+  presence: "active",
+  chunkProfile: "default",
+  band: "PulseBand"
+};
+const defaults = {
+  region: options.region || "unknown",
+  mode: options.mode || "fast",
+  presence: options.presence || "active",
+  page: options.page || "index",
+  band: options.band || "symbolic",
+  version: PULSE_TOUCH_VERSION
+};
+function groupEnd() {
+  _c.groupEnd();
+}
+function _chronoLabel(absolute) {
+  let _pulseChronoLast = (PulseRealm.__PULSE_CHRONO_LAST__) || (typeof performance !== "undefined" ? performance.now() : Date.now());
+  const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+  const diff = now - _pulseChronoLast;
+  const label = absolute ? `@${now.toFixed(1)}ms`: `+${diff.toFixed(1)}ms`; _pulseChronoLast = now;
+  if (typeof window !== "undefined") { PulseRealm.__PULSE_CHRONO_LAST__ = _pulseChronoLast;} return label;}
+  // ============================================================
+// PULSE TOUCH INTERDIMENSIONAL COORDINATES (INDEXEDDB + COOKIE)
+// ============================================================
+
+// IndexedDB bootstrap
+const PulseTouchDBOpen = indexedDB.open("PulseTouchDB", 1);
+PulseTouchDBOpen.onupgradeneeded = (e) => {
+  const db = e.target.result;
+  if (!db.objectStoreNames.contains("coords")) {
+    db.createObjectStore("coords", { keyPath: "id" });
+  }
+};
+
+// Save coordinates into IndexedDB
+function savePulseCoords(record) {
+  const db = PulseTouchDBOpen.result;
+  const tx = db.transaction("coords", "readwrite");
+  tx.objectStore("coords").put({ id: "latest", ...record });
+}
+
+// Load coordinates from IndexedDB
+function loadPulseCoords() {
+  return new Promise((resolve) => {
+    const db = PulseTouchDBOpen.result;
+    const tx = db.transaction("coords", "readonly");
+    const req = tx.objectStore("coords").get("latest");
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => resolve(null);
+  });
+}
+
+// Read touch/passport: IndexedDB first, cookie as fallback
+async function readPulseTouchInternal(defaults = {}) {
+  // ============================================================
+  // 1) IndexedDB (primary source of truth)
+  // ============================================================
+  try {
+    const stored = await loadPulseCoords();
+    if (stored) {
+      PulseRealm.PulseGlobalNow = stored.PulseGlobal || window;
+
+      return {
+        // Core multiverse state
+        version:     stored.version   || defaults.version  || "v35",
+        coord:       stored.coord     || defaults.coord    || "W0.P0.R0.S0.SH0.PORTAL",
+        mode:        stored.mode      || defaults.mode     || "",
+        presence:    stored.presence  || defaults.presence || "",
+        band:        stored.band      || defaults.band     || "symbolic",
+        isMobile:    stored.isMobile,
+        ts:          stored.ts        || Date.now(),
+        intel:       stored.intel     || null,
+
+        // ⭐ PAGE + PORTAL REALM
+        page:        stored.page          || defaults.page          || PulseRealm.__PULSE_CURRENT_PAGE__ || "PORTAL", // portal/404 as primary
+        portalPage:  stored.portalPage    || defaults.portalPage    || "PORTAL",
+        portalRoute: stored.portalRoute   || defaults.portalRoute   || "",
+        portalMiddle:stored.portalMiddle  || defaults.portalMiddle  || "",
+        portalWorld: stored.portalWorld   || defaults.portalWorld   || "",
+
+        // ⭐ VIDEO LAYERS (PORTAL STACK)
+        portalBootVideo:   stored.portalBootVideo   ?? defaults.portalBootVideo   ?? null,
+        portalMiddleVideo: stored.portalMiddleVideo ?? defaults.portalMiddleVideo ?? null,
+        portalRouteVideo:  stored.portalRouteVideo  ?? defaults.portalRouteVideo  ?? null,
+        portalWorldVideo:  stored.portalWorldVideo  ?? defaults.portalWorldVideo  ?? null,
+
+        // Global continuity
+        PulseGlobal: stored.PulseGlobal || window,
+        booted:      stored.booted      ?? null,
+        bootVideo:   stored.bootVideo   ?? null,
+        bootWorld:   stored.bootWorld   ?? null
+      };
+    }
+  } catch {
+    PulseRealm.PulseGlobalNow = PulseRealm.PulseGlobalPast;
+  }
+
+  // ============================================================
+  // 2) Cookie (legacy / cross-refresh fallback)
+  // ============================================================
+  const name = PULSE_TOUCH_COOKIE_NAME + "=";
+  const raw = document.cookie.split("; ").find(c => c.startsWith(name));
+  if (!raw) return { ...defaults };
+
+  const value = raw.replace(name, "");
+
+  try {
+    const b64 = value
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+      .padEnd(value.length + (4 - (value.length % 4)) % 4, "=");
+
+    const json = atob(b64);
+    const passport = JSON.parse(json);
+
+    // Restore PulseGlobal
+    if (passport.PulseGlobal && typeof passport.PulseGlobal === "object") {
+      PulseRealm.PulseGlobalNow = passport.PulseGlobal;
+
+      if (PulseRealm.portalBooted === 1) {
+        PulseRealm.portalBootVideo = 1;
+        PulseRealm.portalBootWorld = 1;
+      }
+    }
+
+    // Build output
+    const out = {
+      // Core multiverse state
+      version:     passport.v        || defaults.version  || "v35",
+      coord:       passport.coord    || defaults.coord    || "W0.P0.R0.S0.SH0.PORTAL",
+      mode:        passport.mode     || defaults.mode     || "",
+      presence:    passport.presence || defaults.presence || "",
+      band:        passport.band     || defaults.band     || "symbolic",
+      isMobile:    passport.isMobile,
+      ts:          passport.lastSeen ? Number(passport.lastSeen) : null,
+      intel:       passport.signature || null,
+
+      // ⭐ PAGE + PORTAL REALM
+      page:        passport.page         || defaults.page         || "PORTAL",
+      portalPage:  passport.portalPage   || defaults.portalPage   || "PORTAL",
+      portalRoute: passport.portalRoute  || defaults.portalRoute  || "",
+      portalMiddle:passport.portalMiddle || defaults.portalMiddle || "",
+      portalWorld: passport.portalWorld  || defaults.portalWorld  || "",
+
+      // ⭐ VIDEO LAYERS (PORTAL STACK)
+      portalBootVideo:   passport.portalBootVideo   ?? defaults.portalBootVideo   ?? null,
+      portalMiddleVideo: passport.portalMiddleVideo ?? defaults.portalMiddleVideo ?? null,
+      portalRouteVideo:  passport.portalRouteVideo  ?? defaults.portalRouteVideo  ?? null,
+      portalWorldVideo:  passport.portalWorldVideo  ?? defaults.portalWorldVideo  ?? null,
+
+      // Global continuity
+      PulseGlobal: passport.PulseGlobal || null,
+      booted:      (passport.PulseGlobal && passport.PulseGlobal.booted)     ?? passport.pulseBooted ?? null,
+      bootVideo:   (passport.PulseGlobal && passport.PulseGlobal.bootVideo)  ?? null,
+      bootWorld:   (passport.PulseGlobal && passport.PulseGlobal.bootWorld)  ?? null
+    };
+
+    // ============================================================
+    // ⭐ SEED INDEXEDDB FROM COOKIE (one-time hydration)
+    // ============================================================
+    try {
+      savePulseCoords({
+        version: out.version,
+        coord: out.coord,
+        mode: out.mode,
+        presence: out.presence,
+        band: out.band,
+        isMobile: out.isMobile,
+        ts: out.ts || Date.now(),
+        intel: out.intel,
+
+        // ⭐ WRITE PAGE + PORTAL REALM INTO INDEXEDDB
+        page:         out.page,
+        portalPage:   out.portalPage,
+        portalRoute:  out.portalRoute,
+        portalMiddle: out.portalMiddle,
+        portalWorld:  out.portalWorld,
+
+        // ⭐ VIDEO LAYERS
+        portalBootVideo:   out.portalBootVideo,
+        portalMiddleVideo: out.portalMiddleVideo,
+        portalRouteVideo:  out.portalRouteVideo,
+        portalWorldVideo:  out.portalWorldVideo,
+
+        PulseGlobal: out.PulseGlobal || window,
+        portalBooted: out.portalBooted,
+        booted:      out.portalBooted,
+        bootVideo:   out.portalBootVideo,
+        bootWorld:   out.portalBootWorld
+      });
+    } catch {}
+
+    return out;
+
+  } catch {
+    PulseRealm.PulseGlobalNow = window || {};
+    return { ...defaults, PulseGlobal: PulseRealm.PulseGlobalPast };
+  }
+}
+
+// Write touch/passport: IndexedDB primary, cookie secondary
+async function writePulseTouchState(state = {}) {
+  const now = Date.now();
+
+  // 1) Read existing passport (cookie fallback)
+  let existing = readPulseTouchPassport() || {};
+
+  // 2) Merge new state with existing passport (APPEND)
+  const merged = {
+    ...existing,
+
+    // Core multiverse state
+    version:    state.version  || existing.version  || "v35",
+    coord:      state.coord    || existing.coord    || "W0.P0.R0.S0.SH0.PORTAL",
+    mode:       state.mode     || existing.mode     || "",
+    presence:   state.presence || existing.presence || "",
+    band:       state.band     || existing.band     || "symbolic",
+    isMobile:   state.isMobile || existing.isMobile,
+    ts:         now,
+    intel:      state.intel    || existing.intel    || null,
+
+    // ⭐ PAGE + PORTAL REALM
+    page:         state.page         || existing.page         || "PORTAL",
+    portalPage:   state.portalPage   || existing.portalPage   || "PORTAL",
+    portalRoute:  state.portalRoute  || existing.portalRoute  || "",
+    portalMiddle: state.portalMiddle || existing.portalMiddle || "",
+    portalWorld:  state.portalWorld  || existing.portalWorld  || "",
+
+    // ⭐ VIDEO LAYERS (PORTAL STACK)
+    portalBootVideo:   state.portalBootVideo   ?? existing.portalBootVideo   ?? null,
+    portalMiddleVideo: state.portalMiddleVideo ?? existing.portalMiddleVideo ?? null,
+    portalRouteVideo:  state.portalRouteVideo  ?? existing.portalRouteVideo  ?? null,
+    portalWorldVideo:  state.portalWorldVideo  ?? existing.portalWorldVideo  ?? null,
+
+    // Global continuity
+    PulseGlobal: window,
+    portalBooted: PulseRealm.portalBooted   ?? existing.portalBooted   ?? null,
+    booted:       PulseRealm.portalBooted   ?? existing.booted         ?? null,
+    bootVideo:    PulseRealm.portalBootVideo?? existing.bootVideo      ?? null,
+    bootWorld:    PulseRealm.portalBootWorld?? existing.bootWorld      ?? null
+  };
+
+  // ============================================================
+  // ⭐ 1) IndexedDB (primary)
+  // ============================================================
+  try {
+    savePulseCoords(merged);
+  } catch {}
+
+  // ============================================================
+  // ⭐ 2) Cookie fallback (APPEND‑MODE)
+  // ============================================================
+  try {
+    const json = JSON.stringify(merged);
+    const b64 = btoa(json)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    document.cookie =
+      `${PULSE_TOUCH_COOKIE_NAME}=${b64};` +
+      `path=/; max-age=${PULSE_TOUCH_MAX_AGE}; SameSite=Lax; Secure`;
+
+  } catch {
+    try {
+      PulseRealm.TouchSignals.timeline.append("cookie_write_failed_v35", {
+        intel: "v35_cookie"
+      });
+    } catch {}
+  }
+}
+
+
+function signalOrgan(id, state) {
+  const el = document.getElementById(id);
+  if (!el) {
+    console.warn("[PULSEWORLD] Missing Boot Panel Element:", id);
+    return;
+  }
+  if (state === "active") el.classList.add("active");
+  if (state === "done") {
+    el.classList.remove("active");
+    el.classList.add("done");
+  }
+}
+function getPulseSessionBootFlag() {
+  console.log("%c🌐 PULSE MULTIVERSAL BOOT v40.0 — [PULSEWORLD::BOOT] Pulse Multiversal Portal Checking Cookie for Boot Flag...",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+  signalOrgan("boot-organ-1", "active");
+  return document.cookie.includes("pulseBooted=1");
+}
+function setPulseSessionBootFlag() {
+  console.log("%c🌐 PULSE MULTIVERSAL BOOT v40.0 — [PULSEWORLD::BOOT] Pulse Multiversal Portal Setting Cookie Boot Flag → PulseBooted=1",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+  document.cookie = "pulseBooted=1; path=/; max-age=86400; SameSite=Lax";
+  signalOrgan("boot-organ-1", "done");
+}
+function destroyBootVideo() {
+  console.log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse Multiversal Portal Destroying Boot Video Element / Boot Viewport...",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+  if (!portalBootVideo) return;
+  portalBootVideo.pause();
+  portalBootVideo.removeAttribute("src");
+  while (portalBootVideo.firstChild) portalBootVideo.removeChild(portalBootVideo.firstChild);
+  portalBootVideo.load();
+  portalBootVideo.remove();
+  console.log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse Multiversal Portal Boot Video Destroyed.",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+}
+function bootPulseWorldBarrier() {
+  console.log("%c🌐 PULSE MULTIVERSAL BOOT v40.0 — [PULSEWORLD::BOOT] Pulse Multiversal Boot Barrier Activated → World May Load.",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+  PulseRealm.PULSEWORLD_BOOT_READY = true;
+  signalOrgan("boot-organ-3", "done");
+}
+async function checkReboot() {
+  console.log("%c🌐 PULSE MULTIVERSAL BOOT v40.0 — [PULSEWORLD::BOOT] Running Boot Sequence Check...",
+    "color:#H02FHA; font-weight:bold; font-family:monospace;");
+  const somethingChanged = performance.getEntriesByType("resource").length > 0;
+  
+  // ⭐ WARM BOOT (unchanged build)
+  const alreadyBooted = getPulseSessionBootFlag();
+  if (alreadyBooted) {
+    console.log("%c✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Boot Cookie says World Already Booted → Skipping Cinematic.",
+      "color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+    if (pulseBootPanel) pulseBootPanel.classList.add("warm-boot");
+
+    signalOrgan("boot-organ-1", "done");
+    signalOrgan("boot-organ-2", "done");
+    signalOrgan("boot-organ-3", "active");
+
+    console.log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Opened!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+    if (badge) {
+      badge.onclick = () => {
+        const img = badge.querySelector(".pulsepal-image");
+        img.src = PulseRealm.PulsePalPhoto;
+        badge.classList.add("talking");
+        setTimeout(() => badge.classList.remove("talking"), 5000); // hides after 3s
+      };
+    }
+    
+
+    pulsepalSpeak("Wow That Was Fast! Better Get Used to This! Lol");
+  
+
+    destroyBootVideo();
+    bootPulseWorldBarrier();
+    initImpulseRouter();
+    return true;
+  }
+  if (somethingChanged) {
+    console.log("%c⚡ CHANGE DETECTED — Speed Throttled? New Build?",
+      "color:#00ffea; font-weight:bold; font-family:monospace;");
+
+    if (pulseBootPanel) {
+      pulseBootPanel.classList.add("change-detected");
+
+      pulseBootHeader.textContent =
+        "PULSEWORLD.NET — CHANGE DETECTED";
+
+      bootOrgan1.textContent =
+        "Organ 1 — Session Authority";
+
+      bootOrgan2.textContent =
+        "Organ 2 — Cinematic Entry (Changed)";
+
+      bootOrgan3.textContent =
+        "Organ 3 — Multiversal Barrier (Changed)";
+
+      bootOrgan4.textContent =
+        "Organ 4 — Impulse Route Emitter (Changed)";
+
+      bootComplete.textContent =
+        "PULSE WORLD ONLINE — DRIFT CHANGE DETECTED";
+    }
+  }
+  return false;
+}
+
+async function generatePulseUser() {
+
+  // ---------------------------------------------------------
+  // 1) Try PulseCoreMemory first (always returns STRING)
+  // ---------------------------------------------------------
+  try {
+    const memUser = await PulseRealm.PulseCoreMemory.getAsync("pulseUser", "id");
+    if (typeof memUser === "string" && memUser.length > 0) {
+      PulseRealm.PulseUser = memUser;
+      return memUser;
+    }
+  } catch {}
+
+  // ---------------------------------------------------------
+  // 2) Try browser localStorage (always returns STRING)
+  // ---------------------------------------------------------
+  let browserUser = null;
+
+  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    try {
+      browserUser = localStorage.getItem("PulseUser");
+    } catch {}
+  }
+
+  if (typeof browserUser === "string" && browserUser.length > 0) {
+    PulseRealm.PulseUser = browserUser;
+
+    // async mirror into CoreMemory
+    try {
+      await PulseRealm.PulseCoreMemory.putAsync("pulseUser", "id", browserUser);
+    } catch {}
+
+    return browserUser;
+  }
+
+  // ---------------------------------------------------------
+  // 3) Generate new identity (STRING)
+  // ---------------------------------------------------------
+  const adjectives = [
+    "Immortal","Binary","Echo","Flux","Wave","Nebula","Pulsar",
+    "Specter","Voyager","Nomad","Strider","Cognitive","Intelligent",
+    "Deterministic","ChunkAware","DispatchAware","CapabilityAware",
+    "BinaryAware","SymbolicAware","Hyperframe","Orbital","Reflex",
+    "Stabilizing","Drifting","Flowing","Pressure","Authority",
+    "Signature","Sync","Burst","Load","Mode",
+    "Quantum","Celestial","Harmonic","Astral","Solar",
+    "Luminous","Spectral","Chrono","Phase","Vector",
+    "Parallel","Fractal","Cosmic","Radiant","Infinite",
+    "Singularity","PulseBound","MeshBorn","Tiered",
+    "Starlit","Ionized","Plasma","Ether","Gravity",
+    "Temporal","DriftCore","PulseLinked","Overclocked"
+  ];
+
+  const nouns = [
+    "Pulse","Core","Engine","Tier","Mesh","Route","Router","Signal",
+    "Band","Window","Node","Conduit","Pattern","Sequence","Memory",
+    "Organ","Presence","PulseEngine","PulseWorld","MeshLink",
+    "PulseWave","GamoBoost","Signals","IO","DeviceTier",
+    "BrowserTier","InternetTier","Beast","System","Entity","Driver",
+    "Drift","QuantumNode","PulseMatrix","StarRoute","IonPath",
+    "NebulaCore","PhaseWindow","VectorMesh","FractalBand",
+    "CosmicThread","RadiantLoop","SingularityGate","PulseAnchor",
+    "TierGate","PulseSphere","MeshOrgan","PulseRealm",
+    "SignalForge","PulseCircuit","PulseArray","PulseField",
+    "PulseVault","PulseFrame","PulseCluster"
+  ];
+
+  const adj  = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+
+  const M = Math.floor(Math.random() * 999) + 1; // 1–999
+  const R = Math.floor(Math.random() * 999) + 1; // 1–999
+
+  // ---------------------------------------------------------
+  // Multiverse + Realm Signature
+  // ---------------------------------------------------------
+  const multiverseRealm = `M#${M}R#${R}A`;
+
+  // ---------------------------------------------------------
+  // Anchor Time Signature (HH:MM MST)
+  // ---------------------------------------------------------
+  const now = new Date();
+  const hh = now.getHours().toString().padStart(2, "0");
+  const mm = now.getMinutes().toString().padStart(2, "0");
+  const anchorTime = `${hh}:${mm} MST`;
+
+  // ---------------------------------------------------------
+  // Final PulseUser Identity
+  // ---------------------------------------------------------
+  const pulseUser = `${adj}-${noun}-${multiverseRealm}-${anchorTime}`;
+
+  // ---------------------------------------------------------
+  // 4) Save to CoreMemory (STRING)
+  // ---------------------------------------------------------
+  try {
+    PulseRealm.PulseCoreMemory.putAsync("pulseUser", "id", pulseUser);
+  } catch {}
+
+  // ---------------------------------------------------------
+  // 5) Mirror to localStorage (STRING)
+  // ---------------------------------------------------------
+  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+    try {
+      localStorage.setItem("PulseUser", pulseUser);
+    } catch {}
+  }
+
+  // ---------------------------------------------------------
+  // 6) Set global identity
+  // ---------------------------------------------------------
+  PulseRealm.PulseUser = pulseUser;
+
+  // ---------------------------------------------------------
+  // 7) Return instantly
+  // ---------------------------------------------------------
+  return pulseUser;
+}
+
+
+async function initImpulseRouter() {
+  console.log(
+    "🛰️ PULSE MULTIVERSAL ROUTER v32.0 — %c[PULSEWORLD::ROUTER] Initializing Pulse Multiversal Portal Impulse Route Emitter...",
+    "color:#H02FHA; font-weight:bold; font-family:monospace;"
+  );
+
+  signalOrgan("boot-organ-4", "done");
+  signalOrgan("boot-complete", "done");
+
+  // ---------------------------------------------------------
+  // 1. Generate PulseUser Identity (await to avoid [object Promise])
+  // ---------------------------------------------------------
+  const identity = await generatePulseUser();
+
+  // ---------------------------------------------------------
+  // 3. Display dual identity in bootComplete
+  // ---------------------------------------------------------
+  if (bootComplete) {
+    bootComplete.innerText =
+      `PULSE WORLD ONLINE (${identity})`;
+  }
+
+  // ---------------------------------------------------------
+  // 4. URL parameters (unchanged)
+  // ---------------------------------------------------------
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const pulseUser =
+    urlParams.get("pulseuser") ||
+    urlParams.get("PULSEUSER") ||
+    urlParams.get("PulseUser");
+
+  const impulse =
+    urlParams.get("impulse") ||
+    urlParams.get("IMPULSE") ||
+    urlParams.get("Impulse") ||
+    urlParams.get("i");
+
+  try {
+    smartPrewarm(window.location.href);
+  } catch {}
+
+  // ---------------------------------------------------------
+  // 5. Router Payload
+  // ---------------------------------------------------------
+  const payload = {
+    pulseUser: pulseUser || identity,
+    impulse: impulse || "PulseWorldReality",
+    url: window.location.href.toUpperCase()
+  };
+
+  console.log(
+    "🛰️ PULSE MULTIVERSAL ROUTER v32.0 — %c[PULSEWORLD::ROUTER] Pulse Multiversal Portal Boot Payload:",
+    "color:#H02FHA; font-weight:bold; font-family:monospace;",
+    payload
+  );
+}
+
+async function runBootSequenceOnce(isMobile) {
+  BOOT_PANEL_DURATION = BOOT_DURATION + 1000;
+  enableBootVideo(isMobile);
+  console.log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse Multiversal Drift Gate, First Boot of Session → Running Cinematic.",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+  setPulseSessionBootFlag();
+  signalOrgan("boot-organ-2", "active");
+  setTimeout(() => {
+    console.log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse Multiversal Drift Gate Cinematic: Fading out Boot Video...",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+    if (portalBootVideo) {
+      portalBootVideo.style.filter = "none";
+      portalBootVideo.style.opacity = "0";
+    }
+    setTimeout(() => {
+      console.log("%c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Drift Gate Pulse...",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+      if (warpGate) {
+        warpGate.style.opacity = "1";
+        warpGate.style.transform = "scale(1.35)";
+      }
+    }, 300);
+    setTimeout(() => {
+      console.log("%c[PULSEWORLD::WARP] Cinematic: Warp Gate Collapse.",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+      if (warpGate) {
+        warpGate.style.opacity = "0";
+        warpGate.style.transform = "scale(0.8)";
+      }
+    }, 300);
+    setTimeout(() => {
+      console.log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse Multiversal Drift Gate Cinematic Complete → Destroying Video + Starting World.",
+  "color:#H02FHA; font-weight:bold; font-family:monospace;");
+      destroyBootVideo();
+      signalOrgan("boot-organ-2", "done");
+      bootPulseWorldBarrier();
+      initImpulseRouter();
+    }, 1200);
+  }, BOOT_DURATION);
+}
+async function enableBootVideo(isMobile) {
+  console.log(
+    "%c[PULSEWORLD::EXPRESSION] The Dimensional Tear Opens and it Pulls You In!",
+    "color:#H02FHA; font-weight:bold; font-family:monospace;"
+  );
+
+  const BOOT_PATH = isMobile
+    ? "./_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot-Mobile"
+    : "./_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot2";
+    
+  console.log(
+    `✨ PULSE MULTIVERSAL RENDERER v32.0 — %cBoot Video selected: ${isMobile ? "MOBILE" : "DESKTOP"}`,
+    "color:#H02FHA; font-weight:bold; font-family:monospace;"
+  );
+
+  portalBootVideo.style.display = "block";
+  portalBootVideo.style.opacity = "1";
+
+  // Clear old sources
+  while (portalBootVideo.firstChild) portalBootVideo.removeChild(portalBootVideo.firstChild);
+
+  const source = document.createElement("source");
+  source.src = BOOT_PATH;
+  source.type = "video/mp4";
+  portalBootVideo.appendChild(source);
+
+  portalBootVideo.muted = true;
+  portalBootVideo.playsInline = true;
+
+  try {
+    portalBootVideo.load();
+  } catch {}
+
+  try {
+    await portalBootVideo.play();
+    
+    console.log(
+      "✨ PULSE MULTIVERSAL RENDERER v32.0 — %cLegacy boot video playing.",
+      "color:#H02FHA; font-weight:bold; font-family:monospace;"
+    );
+  } catch (err) {
+    console.warn(
+      "✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Autoplay blocked, retrying…"
+    );
+
+    // setTimeout(() => {
+    //   portalBootVideo.play().catch(err2 => {
+    //     console.warn(
+    //       "✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Final fallback failed:",
+    //       err2
+    //     );
+    //   });
+    // }, 50);
+  }
+}
+
+
+// ============================================================
+// COORD INTERPRETATION + INTERNAL PAGE LOADER
+// ============================================================
+
+function interpretCoordinates(coord) {
+  if (!coord || typeof coord !== "string") return null;
+  const parts = coord.split(".");
+  const node = parts[parts.length - 1];
+  const map = {
+    "INDEX": "PulseWorldReality",
+    "LOGIN": "PulseWorldReality",
+    "FOUNDERS": "PulseWorldFounders",
+    "TEAM": "PulseWorldTeam",
+    "BANK": "PulseWorldRewards",
+    "REWARDS": "PulseWorldRewards",
+    "VAULT": "PulseWorldVault",
+    "ENGINE": "PulseWorldEngine",
+    "SCANNER": "PulseWorldScanner",
+    "CAMERA": "PulseWorldScanner",
+    "ASSETS": "PulseWorldAssets",
+    "CRYPTO": "PulseWorldAssets",
+    "SETTINGS": "PulsePalSettings",
+    "USERPROFILE": "PulseWorldInventory",
+    "MESH": "PulseWorldMeshLink",
+    "INVENTORY": "PulseWorldInventory",
+    "DASHBOARD": "PulseWorldInventory",
+    "ROUTE": "PulseWorldReality"
+  };
+  return map[node] || null;
+}
+
+function fuzzyResolvePage(name) {
+  const ROOT = CONFIG_FOLDER;
+  const clean = (name || "").replace(/\.txt$/i, "").trim();
+  if (!clean) return null;
+  // ⭐ Everything else stays .txt
+  return ROOT + clean + ".txt";
+}
+
+async function loadInternalPage(name) {
+  const raw = (name || "").trim();
+  if (!raw) return;
+
+  const intended = raw.replace(/\.txt$/i, "");
+  const resolvedPath = fuzzyResolvePage(intended);
+  const primaryFile  = CONFIG_FOLDER + DEFAULT_INDEX;
+  const fallbackFile = CONFIG_FOLDER + FALLBACK_BARRIER;
+
+  let fileToLoad = resolvedPath || primaryFile || fallbackFile;
+
+  // ⭐ PulseTouch continuity
+  writePulseTouchState({
+    page: intended,
+    coord: `W0.P0.R0.S0.SH0.${intended.toUpperCase()}`,
+    mode: "internal",
+    presence: "portal-entry",
+    intel: { requested: intended }
+  });
+
+  try {
+    let res = await fetch(fileToLoad);
+    if (!res.ok && fileToLoad !== fallbackFile) {
+      fileToLoad = fallbackFile;
+      res = await fetch(fileToLoad);
+    }
+    if (!res.ok) throw new Error("Missing");
+
+    const html = await res.text();
+    PulseRealm.PulseWorldCurrentPage = fileToLoad;
+
+    // ⭐ Inject HTML
+    if (PulsePortalviewport) {
+      PulsePortalviewport.style.opacity = "1";
+      PulsePortalviewport.style.pointerEvents = "auto";
+      PulsePortalviewport.innerHTML = html;
+    }
+
+    // ⭐ Execute scripts inside INDEX context
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    // ⭐ Remove previously injected internal scripts
+    document.querySelectorAll("script[data-internal]").forEach(s => s.remove());
+
+    doc.querySelectorAll("script").forEach(oldScript => {
+      const newScript = document.createElement("script");
+
+      newScript.setAttribute("data-internal", "true");
+
+      [...oldScript.attributes].forEach(attr =>
+        newScript.setAttribute(attr.name, attr.value)
+      );
+
+      if (oldScript.textContent.trim()) {
+        newScript.textContent = oldScript.textContent;
+      }
+
+      document.body.appendChild(newScript);
+    });
+
+
+    const corrected = await extractPageName(fileToLoad);
+
+    isPulseContext = true;
+
+    // ⭐ REAL URL CREATION — THIS IS THE UPGRADE
+    if (!history.state || history.state.page !== corrected) {
+      history.pushState(
+        { type: "internal", page: corrected },
+        "",
+        "/"
+      );
+    }
+
+
+  } catch (e) {
+    if (PulsePortalviewport) {
+      PulsePortalviewport.innerHTML =
+        "<h1>PulseWorldBarrier Failed to Load. Please Contact PulseWorld.Net! (Small Issue)</h1>";
+    }
+    console.error("PulseWorldBarrier Failed to Load:", e);
+    PulseRealm.PulseWorldCurrentPage = fileToLoad;
+    isPulseContext = true;
+  }
+}
+ const IDENTITY_META = {
+    version: "v70-IMMORTAL",
+    organism: "PulseOS",
+    realm: "browser",
+    timestamp: () => Date.now(),
+    uid: () => PulseRealm.crypto?.randomUUID?.() || ("uid-" + Math.random().toString(36).slice(2)),
+    signature: "identity-meta-core"
+  };
+function routeToInternal(routeName) {
+  if (!routeName) return;
+
+  const current = (PulseRealm.__PULSE_CURRENT_PAGE__ || "PulseWorldReality").toLowerCase();
+  const cleanTarget = routeName.trim().toLowerCase();
+
+  // ⭐ RULE 1: If already on this route → GO TO DRIFT
+  if (current === cleanTarget) {
+    return;
+  }
+  // ⭐ RULE 3: Otherwise → load internal page normally
+  PulseRealm.__PULSE_CURRENT_PAGE__ = cleanTarget;
+  loadInternalPage(routeName);
+}
+
+async function hardRefreshTestServer(url) {
+  const stamp = Date.now();
+
+  const headers = {
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0"
+  };
+
+  // Only test THIS realm
+  try {
+    await fetch(url + "/PULSEBAND-NETWORK-TEST-OF-THE-WORLD.txt?XxXPulseHealthXxX=" + stamp, {
+      method: "GET",
+      cache: "no-store",
+      headers
+    });
+  } catch (e) {
+    console.warn("PulseWorld: Current realm unreachable. Booting cached OS.");
+    return;
+  }
+
+  // Light refresh ONLY for current realm
+  try {
+    await fetch(url + "?XxXPulseRefreshXxX=" + stamp + "-HEAD", {
+      method: "HEAD",
+      cache: "no-store",
+      headers
+    });
+
+    await fetch(url + "?XxXPulseRefreshXxX=" + stamp + "-GET", {
+      method: "GET",
+      cache: "no-store",
+      headers
+    });
+  } catch (e) {
+    console.warn("PulseWorld: Partial refresh failure, continuing.");
+  }
+}
+async function pingAllRealms() {
+  const realms = {
+    WORLD: "https://www.pulseworld.net/",
+    USER:  "https://www.pulseworld.me/",
+    MONEY: "https://www.pulseworld.money/",
+    BIZ:   "https://www.pulseworld.biz/"
+  };
+
+  const results = {};
+
+  for (const [key, url] of Object.entries(realms)) {
+    results[key] = await ping(url);
+  }
+
+  return results;
+}
+
+async function ping(url) {
+  const start = performance.now();
+  try {
+    await fetch(url, { method: "HEAD", cache: "no-store" });
+    return performance.now() - start;
+  } catch {
+    return Infinity;
+  }
+}
+
+(async function () {
+
+  const isTouchMobile = (
+    /Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry|Opera Mini|IEMobile/i
+      .test(navigator.userAgent)
+  ) || (
+    navigator.maxTouchPoints > 1 &&
+    matchMedia("(pointer: coarse)").matches
+  );
+  
+  runBootSequenceOnce(isTouchMobile);
+  // ============================================================
+  // FULL CONSOLE CLONE + LOG CAPTURE (404 → localStorage)
+  // ============================================================
+
+  // Clone ENTIRE console object
+  const PulseConsole = { ...console };
+
+  // Storage array
+  const Pulse404Logs = [];
+
+  // Override ALL console methods
+  for (const key of Object.keys(PulseConsole)) {
+    if (typeof PulseConsole[key] === "function") {
+      console[key] = (...args) => {
+        const line = `[${key.toUpperCase()}] ` + args.map(a => String(a)).join(" ");
+        Pulse404Logs.push(line);
+        PulseConsole[key].apply(console, args);
+      };
+    }
+  }
+
+  // Save logs when leaving 404
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("Pulse404Log", JSON.stringify(Pulse404Logs));
+  });
+
+
+  // ============================================================
+  // YOUR ORIGINAL 404 CODE — UNTOUCHED
+  // ============================================================
+
+  const currentOrigin = location.origin;
+
+  // Hard refresh ONLY current realm
+  hardRefreshTestServer(currentOrigin);
+  
+
+  console.log(
+    `%c[PULSEWORLD] PulseWorld.Net Expression Portal v31 [404] Realm Ping Test Starting…`,
+    `color:#H02FHA; font-weight:bold; font-family:monospace;`
+  );
+
+  // Ping all realms safely
+  const results = await pingAllRealms();
+
+  console.table(results);
+
+  // Pick best (lowest latency)
+  const bestRealm = Object.entries(results)
+    .sort((a, b) => a[1] - b[1])[0][0];
+
+  const realmMap = {
+    WORLD: "https://www.pulseworld.net/",
+    USER:  "https://www.pulseworld.me/",
+    MONEY: "https://www.pulseworld.money/",
+    BIZ:   "https://www.pulseworld.biz/",
+    OS: "https://www.binaryos.net/",
+    SW: "https://www.serviceworker.net/",
+    GPU:  "https://www.gpuprocessing.net/",
+    BOOL: "https://www.booleanlogic.net/",
+    ORB:   "https://www.orbitalmap.net/"
+  };
+
+  const bestURL = realmMap[bestRealm];
+  // Hard refresh ONLY current realm
+  hardRefreshTestServer(bestURL);
+
+  console.log(
+    `%c[PULSEWORLD] Best Realm Selected → ${bestURL}`,
+    `color:#00e6c7; font-weight:bold; font-family:monospace;`
+  );
+
+  // Warp to best realm
+  location.replace(bestURL);
+
+})();
+
+
+</script>
+</body>
+</html>

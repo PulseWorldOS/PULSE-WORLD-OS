@@ -1,0 +1,10 @@
+{
+  "name": "pulseworld-functions",
+  "type": "module",
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "stripe": "^16.0.0"
+  }
+}

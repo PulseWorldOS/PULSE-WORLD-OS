@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<head>
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/ToucanGeneral.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/FrustratedLogo.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/Mysterious.webp.pex" type="image/webp"/>
+<title>Pulse World Scanner</title>
+
+<!-- End Meta Pixel Code -->
+<style>
+/* ——————————————————————————————————————————————
+   GLOBAL RESET
+—————————————————————————————————————————————— */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+/* ——————————————————————————————————————————————
+   ROOT CONTAINER (HIDDEN UNTIL .open())
+—————————————————————————————————————————————— */
+#t-scanner-root {
+  opacity: 1;
+  pointer-events: none;
+  display: block; /* always block */
+  transition: opacity 200ms ease;
+  max-width: 100dvw;
+}
+/* ——————————————————————————————————————————————
+   TOP BAR
+—————————————————————————————————————————————— */
+.t-top-bar {
+  position: absolute;
+  top: 16px; left: 16px; right: 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 4;
+  top: 10px;
+  left: 10px;
+}
+
+.t-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  z-index: 1;
+  animation: t-dim-breathe 4s ease-in-out infinite;
+}
+
+.t-profile-ring {
+  width: 75px; height: 75px; border-radius: 999px;
+  background: radial-gradient(circle at 30% 0, #ffe9b5, #c28b3b);
+  padding: 2px; display: flex; align-items: center; justify-content: center;
+}
+
+.t-profile-photo {
+  width: 100%; height: 100%; border-radius: 999px;
+  background: linear-gradient(135deg, #0f766e, #22c55e);
+}
+
+
+/* ——————————————————————————————————————————————
+   VALID SCAN OVERLAY
+—————————————————————————————————————————————— */
+.t-valid-burst {
+  position: absolute; top: 40%; left: 50%;
+  width: 260px; height: 260px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,230,180,0.9), transparent);
+  filter: blur(8px); opacity: 0;
+  animation: t-burst-in 420ms ease-out forwards;
+}
+
+@keyframes t-burst-in {
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.7); }
+  100% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+}
+
+.t-valid-card {
+  width: 100%; max-width: 420px;
+  background: #fdfcf9;
+  border-radius: 18px;
+  border: 1px solid rgba(148,132,110,0.35);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.35);
+  padding: 18px;
+  animation: t-card-rise 260ms ease-out forwards;
+}
+
+@keyframes t-card-rise {
+  0%   { transform: translateY(24px); opacity: 0; }
+  50%   { transform: translateY(12px); opacity: 0.5; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ——————————————————————————————————————————————
+   NON‑TROPIC FALLBACK
+—————————————————————————————————————————————— */
+
+.t-fallback-glow {
+  position: absolute; bottom: 0;
+  width: 80%; height: 180px; border-radius: 999px;
+  background: radial-gradient(circle at 50% 0,
+    rgba(0,180,170,0.35),
+    rgba(255,215,160,0.18),
+    transparent);
+  filter: blur(8px);
+}
+
+.t-fallback-card {
+  width: 100%; max-width: 420px;
+  background: #fdfcf9;
+  border-radius: 18px;
+  border: 1px solid rgba(148,132,110,0.35);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.35);
+  padding: 16px;
+  animation: t-card-rise 220ms ease-out forwards;
+}
+
+.t-learn-more-btn {
+  margin-top: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 12px;
+  background: #f3f0ea;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.t-gold-spark { color: #fbbf24; }
+
+#t-fallback-unfold {
+  margin-top: 10px; padding-top: 8px;
+  border-top: 1px solid rgba(148,132,110,0.25);
+  display: none; flex-direction: column; gap: 6px;
+}
+
+.t-pill-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148,132,110,0.55);
+  background: #f2efec;
+  box-shadow: 0 2px 4px rgba(15,23,42,0.12);
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ——————————————————————————————————————————————
+   UNREADABLE
+—————————————————————————————————————————————— */
+
+.t-unreadable-card {
+  width: 100%; max-width: 420px;
+  background: #fdfcf9;
+  border-radius: 18px;
+  border: 1px solid rgba(148,132,110,0.35);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.35);
+  padding: 14px 16px;
+  animation: t-card-rise 180ms ease-out forwards;
+}
+
+#t-video {
+  opacity: 0;
+  background: #000;
+  object-fit: fill; /* or contain, depending on your preference */
+}
+
+#t-video::-webkit-media-controls {
+  display: none !important;
+  object-fit: fill; /* or contain, depending on your preference */
+}
+
+/* ——————————————————————————————————————————————
+   FIX 2: STRONG GLOBAL DIM + BLUR
+—————————————————————————————————————————————— */
+
+@keyframes t-dim-breathe {
+  0%, 100% { background: rgba(0, 40, 40, 0.50); }
+  50%      { background: rgba(0, 40, 40, 0.60); }
+}
+
+/* ——————————————————————————————————————————————
+   FIX 3: MAGICAL CUTOUT AROUND SCAN BOX
+—————————————————————————————————————————————— */
+.t-cutout {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  /* ❌ REMOVE blur — this is the problem */
+  /* backdrop-filter: blur(40px); */
+  /* -webkit-backdrop-filter: blur(40px); */
+
+  /* ✔ ONLY mask */
+  mask: radial-gradient(
+    circle at center,
+    transparent 0%,
+    transparent 32%,
+    black 40%
+  );
+}
+
+/* ——————————————————————————————————————————————
+   OVERLAY BLUR
+—————————————————————————————————————————————— */
+#t-valid-overlay,
+#t-fallback-root,
+#t-unreadable-root {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(40px);
+}
+
+/* ——————————————————————————————————————————————
+   MAGICAL TAP RIPPLE ON CAMERA WINDOW
+—————————————————————————————————————————————— */
+.t-tap-ripple {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(0,255,220,0.55) 0%,
+    rgba(0,200,180,0.35) 40%,
+    rgba(0,150,140,0.0) 70%
+  );
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  animation: tpTapRipple 450ms ease-out forwards;
+  z-index: 99999;
+}
+
+@keyframes tpTapRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.9;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.25);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Center the overlay container */
+#t-valid-overlay,
+#t-fallback-root,
+#t-unreadable-root {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  width: auto;
+  height: auto;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Make the card size naturally */
+.t-valid-card,
+.t-fallback-card,
+.t-unreadable-card {
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  max-width: 320px;      /* prevents stretching */
+  width: max-content;    /* prevents squishing */
+  text-align: left;      /* ensures text aligns normally */
+}
+
+.t-close-btn {
+  position: fixed;
+  width: 2.3dvw;
+  height: 3.3dvh;
+  padding: 0;
+  top: 18dvh;
+  right: 18.4dvw;
+  z-index: 9999999999;
+  pointer-events: auto !important;
+  font-weight: 900;
+  font-size: 28px;
+  border: none; background: rgba(15,23,42,0.7);
+  color: red; border-radius: 999px;
+  padding: 6px 10px; font-size: 14px; cursor: pointer;
+}
+
+
+</style>
+</head>
+
+<body>
+<div id="t-scanner-root">
+<div class="t-bg"></div>
+<div class="t-cutout"></div>
+  <!-- Camera -->
+  <div class="t-scan-frame">
+    <div class="t-scan-frame-inner"></div>
+    <div class="t-camera-window">
+        <video id="t-video" autoplay playsinline></video>
+    </div>
+</div>
+  
+  <!-- Top bar -->
+  <div class="t-top-bar">
+    <button class="t-close-btn" onclick="PulseRealm.TropicPulseScanner.close()">✕</button>
+  </div>
+
+  <!-- VALID -->
+  <div id="t-valid-overlay">
+    <div class="t-valid-burst"></div>
+    <div class="t-valid-card">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+        <div class="t-valid-icon">✨</div>
+        <div>
+          <div style="font-weight:600;font-size:15px;">Pulse World QR Recognized!</div>
+          <div style="font-size:13px;color:#4b5563;">Magic Unlocked. Rewards are Ready!</div>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(148,132,110,0.25);">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:4px;">
+          <span style="color:#6b7280;">Reward</span><span style="font-weight:500;">+120 points</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:4px;">
+          <span style="color:#6b7280;">Location</span><span style="font-weight:500;">San Pedro • Beachfront</span>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;">
+        <button class="t-primary-btn" onclick="PulseRealm.TropicPulseScanner.close()">Claim Reward</button>
+        <button class="t-secondary-link" onclick="PulseRealm.TropicPulseScanner.close()">View All Rewards</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NON‑TROPIC -->
+  <div id="t-fallback-root">
+  <div class="t-fallback-glow"></div>
+  <div class="t-fallback-card">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+      <div class="t-fallback-icon">🌱</div>
+      <div>
+        <div style="font-size:15px;font-weight:600;">Hmm.. not part of Pulse World just yet!</div>
+        <div style="font-size:13px;color:#4b5563;margin-top:2px;">Here’s what you can do Next.</div>
+      </div>
+    </div>
+
+    <button id="t-learn-more-btn" class="t-learn-more-btn">
+      <span>Learn more</span><span class="t-gold-spark">✦</span>
+    </button>
+
+    <div id="t-fallback-unfold">
+      <button class="t-pill-btn" onclick="PulseRealm.TropicPulseScanner.reset()">Try Scanning Again!?</button>
+      <button class="t-pill-btn">What is Pulse World?</button>
+      <button class="t-pill-btn">Unlock Rewards in the Pulse World World!</button>
+    </div>
+  </div>
+</div>
+
+  <!-- UNREADABLE -->
+  <div id="t-unreadable-root">
+  <div class="t-unreadable-card">
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="t-unreadable-icon">📷</div>
+      <div>
+        <div style="font-size:14px;font-weight:600;">Hmm… I couldn’t Read that One!?</div>
+        <div style="font-size:13px;color:#4b5563;margin-top:4px;">Try holding steady or adjusting the angle!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+PulseRealm._2_DOM_START = performance.now();
+
+cameraBtn.style.display = "flex";
+
+async function requestBestCamera() {
+  const constraintsList = [
+    { video: { facingMode: "environment", width: 3840, height: 2160 } },
+    { video: { facingMode: "environment", width: 1920, height: 1080 } },
+    { video: { facingMode: "environment", width: 1280, height: 720 } },
+    { video: { facingMode: "environment" } }
+  ];
+
+  for (const c of constraintsList) {
+    try {
+      const s = await navigator.mediaDevices.getUserMedia(c);
+      const track = s.getVideoTracks()[0];
+      PulseRealm.GetUserMediaTrack = track;
+      log("Camera started with:", track.getSettings());
+      return s;
+    } catch (err) {
+      warn("Failed constraints:", c, err);
+    }
+  }
+
+  throw new Error("No camera available");
+}
+
+requestBestCamera();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+
+// ------------------------------------------------------
+// Pulse World SCANNER CORE (Camera + QR + Bubbles)
+// ------------------------------------------------------
+let scannerIsOpen = false;
+let video = null;
+let stream = null;
+let scanLoop = null;
+
+let lastActivity = Date.now();
+const INACTIVITY_THRESHOLD = 8000; // 8s idle → bubble
+
+// Your QR scanner variables
+let qrCanvas = document.createElement("canvas");
+let qrCtx = qrCanvas.getContext("2d", { willReadFrequently: true });
+let inactivityInterval = null;
+
+// Small helpers for visibility
+function show(el) {
+  if (!el) return;
+  el.style.opacity = "1";
+  el.style.pointerEvents = "auto";
+  if (el) el.style.display = "block";
+}
+
+function hide(el) {
+  if (!el) return;
+  el.style.opacity = "0";
+  el.style.pointerEvents = "none";
+  if (el) el.style.display = "none";
+}
+
+PulseRealm.TropicPulseBubbleController = (() => {
+  let state = "idle";
+  let lastMessage = "";
+
+  function speak(msg) {
+    if (msg !== lastMessage) {
+      pulsepalSpeak(msg);
+      lastMessage = msg;
+    }
+  }
+
+  function setState(newState) {
+    state = newState;
+
+    const messages = {
+      idle: "I'm here if you need me 🌴",
+      active: "Ready when you are ✨",
+      scanned: "Magic Unlocked! ✨",
+      sleep: "Going quiet… 🌙"
+    };
+
+    speak(messages[newState] || "");
+  }
+
+  return {
+    init: () => startCamera(),
+    idle: () => setState("idle"),
+    active: () => setState("active"),
+    scanned: () => setState("scanned"),
+    sleep: () => setState("sleep")
+  };
+})();
+
+PulseRealm.TropicPulseScanner = {
+  open() {
+    cameraBtn.style.display = "none";
+    scannerIsOpen = true;
+
+    const root = document.getElementById("t-scanner-root");
+    root.style.opacity = "1";
+    root.style.pointerEvents = "auto";
+
+    window.parent?.postMessage?.({ action: "scannerReady" }, "*");
+
+    this.reset();
+    startInactivityWatcher();
+
+    const greetings = [
+      "Welcome to Pulse World’s Gateway! ✨",
+      "Ready to unlock some magic? 🌴",
+      "Let’s see what this QR reveals… 🔮",
+      "Your journey continues… ✦"
+    ];
+
+    showProfileBubble(greetings[Math.floor(Math.random() * greetings.length)]);
+    PulseRealm.TropicPulseBubbleController.active();
+  },
+
+  close() {
+    scannerIsOpen = false;
+
+    showProfileBubble("See you soon, explorer! 🌴");
+    PulseRealm.TropicPulseBubbleController.sleep();
+
+    stopInactivityWatcher();
+    stopCamera();
+
+    const root = document.getElementById("t-scanner-root");
+    root.style.opacity = "0";
+    root.style.pointerEvents = "none";
+
+    window.parent?.postMessage?.({ action: "closeScanner" }, "*");
+    loadInternalPage("PulseWorldBank");
+  },
+
+  reset() {
+    
+    ["t-valid-overlay", "t-fallback-root", "t-unreadable-root", "t-fallback-unfold"]
+      .forEach(id => hide(document.getElementById(id)));
+
+    PulseRealm.TropicPulseBubbleController.idle();
+
+    if (scannerIsOpen) {
+      const track = stream?.getVideoTracks?.()[0];
+      if (!track || track.readyState !== "live") startCamera();
+    }
+  },
+
+  handleScan(type) {
+    const bubbleMap = {
+      tropic: "Magic Unlocked! ✨",
+      nonTropic: "Not a Pulse World QR 🌴",
+      unreadable: "I couldn’t read that one… Try Again!?"
+    };
+
+    showProfileBubble(bubbleMap[type]);
+    PulseRealm.TropicPulseBubbleController.scanned();
+
+    if (type === "tropic") show(document.getElementById("t-valid-overlay"));
+    if (type === "nonTropic") show(document.getElementById("t-fallback-root"));
+    if (type === "unreadable") {
+      const unreadable = document.getElementById("t-unreadable-root");
+      show(unreadable);
+      setTimeout(() => hide(unreadable), 2500);
+    }
+  }
+};
+
+cameraBtn.onclick = () => {
+  PulseRealm.TropicPulseBubbleController.init();
+  PulseRealm.TropicPulseScanner.open();
+  
+  pulsepalSpeak("This is the Pulse World Scanner! A World of Refferals and QR Codes and a Place to Create your Avatar!");
+  cameraBtn.style.display = "none";
+};
+
+async function startCamera() {
+  video = document.getElementById("t-video");
+  if (!video) return warn("No #t-video element found");
+  
+  // Create QR canvas if missing
+  qrCanvas = document.getElementById("t-qr-canvas") || (() => {
+    const c = document.createElement("canvas");
+    c.id = "t-qr-canvas";
+    c.style.display = "none";
+    document.body.appendChild(c);
+    return c;
+  })();
+
+  qrCtx = qrCanvas.getContext("2d");
+
+  try {
+    stream = await requestBestCamera();
+  } catch (err) {
+    warn("Camera request failed:", err);
+    showProfileBubble("Camera not available. Try another device?");
+    return;
+  }
+
+  const track = stream.getVideoTracks()[0];
+  const settings = track.getSettings();
+
+  // 🔥 MATCH CANVAS TO REAL CAMERA RESOLUTION
+  qrCanvas.width = settings.width;
+  qrCanvas.height = settings.height;
+
+  video.srcObject = stream;
+
+  video.onloadedmetadata = () => {
+    video.play();
+    video.style.opacity = "1";
+  };
+
+  video.onplaying = () => {
+    const cutout = document.querySelector(".t-cutout");
+    if (cutout) cutout.style.opacity = "1";
+  };
+
+  // 🔥 TAP TO AUTOFOCUS (REAL DEVICES)
+  const cameraWindow = document.querySelector(".t-camera-window");
+  if (cameraWindow) {
+    cameraWindow.addEventListener("click", async (e) => {
+      if (!stream) return;
+
+      spawnTapRipple(e.clientX, e.clientY);
+
+      const track = stream.getVideoTracks()[0];
+      const caps = track.getCapabilities?.() || {};
+
+      if (caps.focusMode?.includes("continuous")) {
+        try {
+          await track.applyConstraints({ advanced: [{ focusMode: "continuous" }] });
+          return log("Autofocus refreshed");
+        } catch (e) {
+          warn("Autofocus failed", e);
+        }
+      }
+
+      try {
+        await track.applyConstraints({ advanced: [{}] });
+        log("Fallback refocus applied");
+      } catch (e) {
+        warn("Fallback refocus failed", e);
+      }
+    });
+  }
+
+  scanLoop = requestAnimationFrame(tick);
+}
+
+function showProfileBubble(message) {
+  // Use your unified speech engine
+  MergedPickASpeech(message, "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex");
+  lastActivity = Date.now();
+}
+
+
+function startInactivityWatcher() {
+  stopInactivityWatcher();
+
+  inactivityInterval = setInterval(() => {
+    const now = Date.now();
+    const diff = now - lastActivity;
+
+    const bubbleScanningMessages = [
+      "Hold Steady… I’m Looking 👀",
+      "Let me get a closer look… ✦",
+      "Almost There… the Magic is Forming… ✨",
+      "I’m Reading the Vibes… 🌴",
+      "Just a little closer… I can feel it… 🔮",
+      "Scanning the Moment… Stay Right There…",
+      "Something’s Shimmering… Give me a sec… ✨",
+      "I’m following the Glow… Hold Still…",
+      "The Gateway is Tuning in… 🌺",
+      "Let me Focus… this one Feels Interesting…"
+    ];
+
+    if (diff > INACTIVITY_THRESHOLD) {
+      const msg =
+        bubbleScanningMessages[
+          Math.floor(Math.random() * bubbleScanningMessages.length)
+        ];
+      showProfileBubble(msg);
+      PulseRealm.TropicPulseBubbleController.active();
+      lastActivity = now;
+
+      const chance = Math.random();
+      if (chance < 0.15) {
+        setTimeout(() => {
+          showProfileBubble("Scanning again… 🔄");
+          PulseRealm.TropicPulseBubbleController.active();
+          PulseRealm.TropicPulseScanner.reset();
+        }, 1200);
+      }
+    }
+  }, 1000);
+}
+
+function stopInactivityWatcher() {
+  if (inactivityInterval) {
+    clearInterval(inactivityInterval);
+    inactivityInterval = null;
+  }
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach((t) => t.stop());
+    stream = null;
+  }
+
+  if (video) {
+    video.srcObject = null;
+    video.style.opacity = "0";
+  }
+
+  if (scanLoop) {
+    cancelAnimationFrame(scanLoop);
+    scanLoop = null;
+  }
+}
+
+function isProbablyQR(text) {
+  const badPatterns = /[^a-zA-Z0-9:/?=._-]/g;
+  const weird = (text.match(badPatterns) || []).length;
+  return weird < text.length * 0.2;
+}
+
+function tick() {
+  if (!video || video.readyState !== video.HAVE_ENOUGH_DATA) {
+    scanLoop = requestAnimationFrame(tick);
+    return;
+  }
+
+  if (!qrCanvas || !qrCtx) {
+    scanLoop = requestAnimationFrame(tick);
+    return;
+  }
+
+  qrCanvas.width = video.videoWidth;
+  qrCanvas.height = video.videoHeight;
+
+  qrCtx.drawImage(video, 0, 0, qrCanvas.width, qrCanvas.height);
+
+  const imageData = qrCtx.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
+  const code = jsQR(imageData.data, qrCanvas.width, qrCanvas.height, {
+    inversionAttempts: "dontInvert"
+  });
+
+  if (code) {
+    const text = code.data;
+
+    if (!text || text.length < 6 || !isProbablyQR(text)) {
+      PulseRealm.TropicPulseScanner.handleScan("unreadable");
+      scanLoop = requestAnimationFrame(tick);
+      return;
+    }
+
+    if (text.toLowerCase().includes("tropicpulse")) {
+      PulseRealm.TropicPulseScanner.handleScan("tropic");
+    } else {
+      PulseRealm.TropicPulseScanner.handleScan("nonTropic");
+    }
+
+    stopCamera();
+    return;
+  }
+
+  scanLoop = requestAnimationFrame(tick);
+}
+
+
+/* Learn More → Unfold */
+document.getElementById("t-learn-more-btn").onclick = () => {
+  show(document.getElementById("t-fallback-unfold"));
+};
+
+function spawnTapRipple(x, y) {
+  const ripple = document.createElement("div");
+  ripple.className = "t-tap-ripple";
+  ripple.style.left = `${x}px`;
+  ripple.style.top = `${y}px`;
+
+  document.getElementById("t-scanner-root").appendChild(ripple);
+
+  setTimeout(() => ripple.remove(), 500);
+}
+
+window.disableScannerInteractions = function () {
+  document.querySelectorAll("*").forEach((el) => {
+    el.style.pointerEvents = "none";
+  });
+};
+
+
+PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+
+</script>
+
+</body>
+</html>

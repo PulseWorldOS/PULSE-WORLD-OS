@@ -1,0 +1,107 @@
+{
+  "manifest_version": 3,
+  "name": "PulseWorld OS",
+  "short_name": "PulseWorld",
+  "description": "PulseWorld — Temporal OS, Unified Internet, Adaptive Routing, Immortal Runtime.",
+  "version": "12.1.0",
+
+  "icons": {
+    "16": "PulseWorldSplash512.png",
+    "32": "PulseWorldSplash512.png",
+    "48": "PulseWorldSplash512.png",
+    "128": "PulseWorldSplash512.png",
+    "256": "PulseWorldSplash512.png"
+  },
+
+  "action": {
+    "default_title": "PulseWorld OS",
+    "default_popup": "PBPopup.html",
+    "default_icon": "PulseWorldSplash512.png"
+  },
+
+  "background": {
+    "service_worker": "PBCompanion.js",
+    "type": "module"
+  },
+
+  "options_ui": {
+    "page": "PBSettings.html",
+    "open_in_tab": true
+  },
+
+  "chrome_url_overrides": {
+    "newtab": "PBFrontPage.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["PBContent.js"],
+      "run_at": "document_start"
+    }
+  ],
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting",
+    "webNavigation",
+    "activeTab",
+    "notifications",
+    "declarativeNetRequest"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "pulseworld_rules",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+
+  "commands": {
+    "open_pulseworld": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+P"
+      },
+      "description": "Open PulseWorld OS"
+    },
+    "pulse_accelerate_tab": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L"
+      },
+      "description": "Force‑accelerate current tab"
+    }
+  },
+
+  "web_accessible_resources": [
+  {
+    "resources": [
+      "PulseWorldOSLogo.png",
+      "PulseWorldSplash512.png",
+      "android-chrome-192x192.png",
+      "PulseWorldNebulaMid.png",
+      "PulseEngine2.png",
+      "PBRouter.js",
+      "PBAccelerator.js",
+      "PBDevOverlay.js",
+      "PBDevTools.js",
+      "PBInterceptor.js",
+      "PBNavigator.js",
+      "PBRealmBridge.js",
+      "PBSettings.js"
+    ],
+    "matches": ["<all_urls>"]
+  }
+],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}

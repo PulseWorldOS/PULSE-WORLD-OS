@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Rebuild Maps + Hours (Serper + Safe Merge + Clean Logging)</title>
+  <style>
+    body{font-family:Arial;padding:20px;background:#f5f5f5}
+    #log{white-space:pre-wrap;background:#111;color:#0f0;padding:12px;height:480px;overflow:auto;border-radius:6px;font-size:13px;line-height:1.35}
+    button{padding:10px 16px;font-size:14px;cursor:pointer;margin-right:10px}
+  </style>
+</head>
+<body>
+  <h3>Rebuild ALL Maps + Hours (Serper + Safe Merge + Clean Logging)</h3>
+
+  <button id="run">Run</button>
+  <button id="stop" style="background:#c00;color:#fff">STOP</button>
+
+  <!-- NEW: Resume from index -->
+  <div style="margin-top:10px;margin-bottom:10px;">
+    Start at index:
+    <input id="startIndex" type="number" value="800" style="width:80px">
+  </div>
+
+  <div id="log"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    
+
+    const logEl = document.getElementById("log");
+    const btnRun = document.getElementById("run");
+    const btnStop = document.getElementById("stop");
+
+    let STOP_REQUESTED = false;
+
+    btnStop.onclick = () => {
+      STOP_REQUESTED = true;
+      log("🛑 STOP REQUESTED — finishing current business...", "warn");
+    };
+
+    function log(msg, type = "info") {
+      const c =
+        type === "error" ? "#ff4444" :
+        type === "warn"  ? "#ffbb33" :
+                           "#00ff66"; // SUCCESS GREEN
+
+      logEl.innerHTML += `<div style="color:${c}">${msg}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // ---------------- HELPERS ----------------
+    function cleanVenueString(biz) {
+      const addr = biz.resolvedAddress || biz.address || biz.location || "";
+      const name = biz.resolvedName || biz.busname || "";
+      let v = name.trim();
+      if (!v || v.length < 3) v = addr.trim();
+      if (!v) v = "San Pedro Belize";
+      return v;
+    }
+
+    // ---- PHONE NORMALIZATION ----
+    function normalizePhone(p) {
+      if (!p) return null;
+
+      let digits = p.replace(/\D+/g, "");
+
+      if (digits.length === 7) return "+501" + digits;
+      if (digits.startsWith("501") && digits.length === 10) return "+" + digits;
+      if (digits.length === 10) return "+1" + digits;
+      if (digits.length > 10) return "+" + digits;
+
+      return "+" + digits;
+    }
+
+    function mergePhones(existing, incoming) {
+      const arr = Array.isArray(existing) ? [...existing] : [];
+      const cleanIncoming = normalizePhone(incoming);
+      if (!cleanIncoming) return arr;
+
+      const normalizedExisting = arr.map(p => normalizePhone(p));
+
+      if (!normalizedExisting.includes(cleanIncoming)) {
+        arr.push(cleanIncoming);
+      }
+
+      return arr;
+    }
+
+    function mergeArray(existing, incoming) {
+      const arr = Array.isArray(existing) ? [...existing] : [];
+      if (incoming && !arr.includes(incoming)) arr.push(incoming);
+      return arr;
+    }
+
+    const SERPER_KEY = "153ce3ab51c1dfaceb830fb09e2642fa7c5e5551";
+
+    // ---------------- SERPER FETCH ----------------
+    async function fetchSerperData(biz) {
+      const q = cleanVenueString(biz);
+      let url = `https://google.serper.dev/maps?q=${encodeURIComponent(q)}&apiKey=${SERPER_KEY}`;
+
+      if (typeof biz.lat === "number" && typeof biz.lng === "number") {
+        const ll = `@${biz.lat},${biz.lng},17z`;
+        url += `&ll=${encodeURIComponent(ll)}`;
+      }
+
+      log(`   🌐 Fetching Serper data...`);
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          log(`   ❌ Serper HTTP ${res.status}`, "error");
+          return null;
+        }
+
+        const json = await res.json();
+        const place = json.places.[0];
+        if (!place) {
+          log(`   ⚠️ No Serper match`, "warn");
+          return null;
+        }
+
+        log(`   ✅ Serper match: ${place.title}`);
+
+        const weeklyHours = place.openingHours || null;
+        const hoursText = place.hours || null;
+        const openState = place.open_state || null;
+
+        let openNow = null;
+        if (typeof openState === "string") {
+          if (/open/i.test(openState) && !/close/i.test(openState)) openNow = true;
+          if (/close/i.test(openState) && !/open/i.test(openState)) openNow = false;
+        } else if (typeof hoursText === "string") {
+          if (/open/i.test(hoursText) && /close/i.test(hoursText)) openNow = true;
+        }
+
+        return {
+          weeklyHours,
+          hoursText,
+          openNow,
+          website: place.website || null,
+          phoneNumber: place.phoneNumber || null,
+          menu: place.menu || null,
+          rating: place.rating ?? null,
+          ratingCount: place.ratingCount ?? null,
+          types: place.types || [],
+          placeId: place.placeId || null,
+          cid: place.cid || null,
+          fid: place.fid || null,
+          thumbnailUrl: place.thumbnailUrl || null
+        };
+      } catch (err) {
+        log(`   ❌ Serper error: ${err.message}`, "error");
+        return null;
+      }
+    }
+
+    // ---------------- MAP GENERATION ----------------
+    async function generateMapIfNeeded(biz, id) {
+      if (biz.mapImageUrl && biz.mapsWebUrl && biz.placeId) {
+        log(`   🗺️ Map exists — skipping`);
+        return {
+          placeId: biz.placeId,
+          mapImageUrl: biz.mapImageUrl,
+          mapsWebUrl: biz.mapsWebUrl
+        };
+      }
+
+      const cleanAddress = cleanVenueString(biz);
+      const url =
+        `https://us-central1-tropic-pulse.cloudfunctions.net/generateMap` +
+        `?venue=${encodeURIComponent(cleanAddress)}` +
+        `&businessID=${encodeURIComponent(id)}`;
+
+      log(`   🗺️ Generating map...`);
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          log(`   ❌ generateMap HTTP ${res.status}`, "error");
+          return {
+            placeId: biz.placeId || null,
+            mapImageUrl: biz.mapImageUrl || null,
+            mapsWebUrl: biz.mapsWebUrl || null
+          };
+        }
+
+        const json = await res.json();
+        if (!json || !json.success) {
+          log(`   ⚠️ generateMap returned invalid`, "warn");
+          return {
+            placeId: biz.placeId || null,
+            mapImageUrl: biz.mapImageUrl || null,
+            mapsWebUrl: biz.mapsWebUrl || null
+          };
+        }
+
+        log(`   ✅ Map generated`);
+
+        return {
+          placeId: json.placeId || biz.placeId || null,
+          mapImageUrl: json.mapImageUrl || biz.mapImageUrl || null,
+          mapsWebUrl: json.mapsWebUrl || biz.mapsWebUrl || null
+        };
+      } catch (err) {
+        log(`   ❌ generateMap error: ${err.message}`, "error");
+        return {
+          placeId: biz.placeId || null,
+          mapImageUrl: biz.mapImageUrl || null,
+          mapsWebUrl: biz.mapsWebUrl || null
+        };
+      }
+    }
+
+    // ---------------- MAIN RUNNER ----------------
+    async function runForAllBusinesses() {
+      STOP_REQUESTED = false;
+      btnRun.disabled = true;
+      log("🚀 Starting rebuild...\n");
+
+      const snap = await db.collection("Businesses").get();
+      log(`📦 Found ${snap.size} businesses.\n`);
+
+      const startAt = parseInt(document.getElementById("startIndex").value || "1");
+
+      let i = 0;
+
+      for (const doc of snap.docs) {
+        if (STOP_REQUESTED) break;
+
+        i++;
+
+        if (i < startAt) {
+          log(`⏭️ Skipping ${i} (before start index)`);
+          continue;
+        }
+
+        const id = doc.id;
+        const biz = doc.data() || {};
+
+        log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+        log(`📍 ${i}/${snap.size} — ${id}`);
+        log(`🏪 ${biz.resolvedName || biz.busname || "Unknown"}`);
+
+        const mapData = await generateMapIfNeeded(biz, id);
+
+        const serper = await fetchSerperData(biz);
+        if (!serper) {
+          log(`   ⚠️ Serper failed — saving map only`, "warn");
+          await db.collection("Businesses").doc(id).set({
+            placeId: mapData.placeId,
+            mapImageUrl: mapData.mapImageUrl,
+            mapsWebUrl: mapData.mapsWebUrl
+          }, { merge: true });
+          continue;
+        }
+
+        const hoursArray = serper.weeklyHours
+          ? Object.entries(serper.weeklyHours).map(([day, val]) => `${day}: ${val}`)
+          : null;
+
+        const mergedPhones = mergePhones(biz.phones, serper.phoneNumber);
+        const mergedWebsites = mergeArray(biz.websites, serper.website);
+        const mergedTypes = Array.from(new Set([..(biz.googleTypes || []), ...(serper.types || [])]));
+
+        log(`   📞 Phones: ${JSON.stringify(mergedPhones)}`);
+        log(`   🌐 Websites: ${JSON.stringify(mergedWebsites)}`);
+        log(`   🏷️ Types: ${JSON.stringify(mergedTypes)}`);
+
+        const update = {
+          placeId: serper.placeId || mapData.placeId || biz.placeId || null,
+          mapImageUrl: mapData.mapImageUrl || biz.mapImageUrl || null,
+          mapsWebUrl: mapData.mapsWebUrl || biz.mapsWebUrl || null,
+
+          openNow: serper.openNow,
+          hours: hoursArray,
+          weeklyHours: serper.weeklyHours || null,
+          hoursText: serper.hoursText || null,
+          hoursSource: "serper",
+          hoursLastUpdatedAt: new Date(),
+
+          phones: mergedPhones,
+          websites: mergedWebsites,
+
+          menuUrl: serper.menu || biz.menuUrl || null,
+          rating: serper.rating ?? biz.rating ?? null,
+          ratingCount: serper.ratingCount ?? biz.ratingCount ?? null,
+          googleTypes: mergedTypes,
+          googleCid: serper.cid || biz.googleCid || null,
+          googleFid: serper.fid || biz.googleFid || null,
+          googleThumbnailUrl: serper.thumbnailUrl || biz.googleThumbnailUrl || null
+        };
+
+        log(`   💾 Saving to Firestore...`);
+        await db.collection("Businesses").doc(id).set(update, { merge: true });
+
+        log(`   ✅ DONE`);
+      }
+
+      log("\n🎉 COMPLETE — All businesses processed.");
+      btnRun.disabled = false;
+    }
+
+    btnRun.addEventListener("click", runForAllBusinesses);
+  </script>
+</body>
+</html>

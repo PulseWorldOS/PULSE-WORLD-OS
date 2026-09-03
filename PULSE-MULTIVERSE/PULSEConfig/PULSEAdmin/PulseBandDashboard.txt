@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+  <title>PulseBand Control Center</title>
+
+
+  <style>
+    /* ---------------------------------------------------------
+       GLOBAL THEME — Neon Pulse World + Glassmorphism
+    --------------------------------------------------------- */
+    body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      min-height: 100dvh;
+
+      display: flex;
+      justify-content: center;
+      color: white;
+      background: #000;
+      background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+
+      font-family: Arial, sans-serif;
+    }
+
+    /* Overlay ONLY — NOT a second background */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+
+      /* Optional tint */
+      background: rgba(0,0,0,0.25);
+
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* ---------------------------------------------------------
+       HERO HEADER — Full Width PulseBand Image
+    --------------------------------------------------------- */
+    #hero {
+      width: 100%;
+      height: 260px;
+      background: url("./_EXPRESSIONS/_PEX/BUILD/PulseBand-Active.png") center/contain no-repeat,
+                  linear-gradient(to bottom, rgba(0,255,200,0.15), rgba(0,0,0,0.6));
+      background-blend-mode: screen;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 20px;
+      box-shadow: 0 0 40px rgba(0,255,200,0.25);
+      border-bottom: 1px solid rgba(0,255,200,0.25);
+    }
+
+    #hero h1 {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #00ffe0, #7f5bff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 12px rgba(0,255,200,0.4);
+    }
+
+    /* ---------------------------------------------------------
+       CONTAINER
+    --------------------------------------------------------- */
+    #pulseband-container {
+      width: 100%;
+      max-width: 100dvw;
+      margin: 10px auto;
+      padding: 0 10px;
+      min-width: 0;
+      min-height: auto;
+      flex-direction: column;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* ---------------------------------------------------------
+       SECTION HEADERS
+    --------------------------------------------------------- */
+    h2 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #00ffe0;
+      text-shadow: 0 0 8px rgba(0,255,200,0.4);
+      border-bottom: 1px solid rgba(0,255,200,0.25);
+      padding-bottom: 8px;
+    }
+
+    /* ---------------------------------------------------------
+       GLASS CARDS
+    --------------------------------------------------------- */
+    .pb-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+      flex: 0 1;
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 14px;
+      max-width: 400px;
+      padding: 2px 4px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(0,255,200,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .pb-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(0,255,200,0.15);
+    }
+
+    .pb-card h4 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #00ffe0, #7f5bff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ---------------------------------------------------------
+       ROWS
+    --------------------------------------------------------- */
+    .pb-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 15px;
+    }
+
+    .pb-row label {
+      color: #9bdff5;
+    }
+
+    /* ---------------------------------------------------------
+       BARS (Neon Animated)
+    --------------------------------------------------------- */
+    .pb-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 6px;
+      position: relative;
+    }
+
+
+    .pb-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00ffe0, #7f5bff);
+      box-shadow: 0 0 12px rgba(0,255,200,0.6);
+      transition: width 0.4s ease;
+    }
+
+    /* ---------------------------------------------------------
+       LOG TABLE (Glass)
+    --------------------------------------------------------- */
+    #pb-log-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #pb-log-table th {
+      background: rgba(0,255,200,0.15);
+      padding: 10px;
+      font-size: 14px;
+      color: #00ffe0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    #pb-log-table td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 14px;
+    }
+
+    /* ---------------------------------------------------------
+       ERROR CARDS
+    --------------------------------------------------------- */
+    .pb-error-card {
+      background: rgba(255,0,0,0.08);
+      border-left: 4px solid #ff4d4d;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .pb-error-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .pb-error-device {
+      font-weight: bold;
+      color: #ff9f9f;
+    }
+
+    .pb-error-time {
+      color: #ff6b6b;
+      font-size: 12px;
+    }
+
+    .pb-error-msg {
+      margin-top: 6px;
+      color: #ffdada;
+    }
+    #pb-system-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    #pb-system-grid .pb-card {
+      flex: 1;
+      min-width: 280px; /* controls when wrapping happens */
+    }
+    #pb-proxy-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    #pb-proxy-grid .pb-card {
+      flex: 1;
+      min-width: 280px; /* controls when wrapping happens */
+    }
+    #pb-status-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    #pb-status-grid .pb-card {
+      flex: 1;
+      min-width: 280px; /* controls when wrapping happens */
+    }
+    
+#pulseband-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 99999;
+  font-family: system-ui, sans-serif;
+  color: #e9f9ff;
+}
+
+#pulseband-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 40, 60, 0.45);
+  box-shadow: 0 0 8px rgba(0, 255, 200, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+}
+
+.pb-bars span {
+  width: 3px;
+  margin-left: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.2s, height 0.2s;
+}
+
+.pb-bars span:nth-child(1) { height: 6px; }
+.pb-bars span:nth-child(2) { height: 9px; }
+.pb-bars span:nth-child(3) { height: 12px; }
+.pb-bars span:nth-child(4) { height: 15px; }
+
+#pulseband-panel {
+  position: absolute;
+  top: 0;
+  right: 38px; /* panel opens to the LEFT of the badge */
+  width: 320px;
+  max-width: 420px;
+  padding: 10px;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(0,35,60,0.92), rgba(0,80,90,0.9));
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  font-size: 11px;
+  display: none;
+  z-index: 999999;
+}
+
+
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 40, 60, 0.45);
+  box-shadow: 0 0 8px rgba(0, 255, 200, 0.45);
+  border: 2px solid #000000;
+}
+
+.pb-mini-badge {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;      /* zoom OUT to fit height */
+  object-position: left center;  /* ⭐ force image to left */
+  border-radius: 20px;
+  background: radial-gradient(circle at 30% 30%, #00ffd5, #007a8a);
+}
+.pb-mini-badge.inactive {
+  background: radial-gradient(circle at 30% 30%, #222 20%, #000 80%);
+}
+.pb-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.pb-row label {
+  opacity: 0.7;
+}
+
+/* ⭐ Bars ALWAYS teal */
+#pulseband-badge .pb-bars span.active {
+  background: #00ffd5 !important;
+}
+
+/* ⭐ BOOST MODE: badge turns orange, bars stay teal */
+#pulseband-badge.boost {
+  background: rgba(255, 140, 0, 0.45); /* orange glow */
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+}
+
+/* ⭐ BOOST MODE: bars DO NOT change color */
+#pulseband-badge.boost .pb-bars span.active {
+  background: #00ffd5 !important; /* force teal */
+}
+
+/* ⭐ Transfer flicker stays the same */
+#pulseband-badge.transfer .pb-bars span.active {
+  animation: pbFlicker 0.25s ease-out;
+}
+
+@keyframes pbFlicker {
+  0%   { opacity: 1;   transform: scaleY(1); }
+  50%  { opacity: 0.4; transform: scaleY(0.6); }
+  100% { opacity: 1;   transform: scaleY(1); }
+}
+.pb-hint {
+  font-size: 11px;
+  opacity: 0.55;
+  margin-left: 4px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #c8f7ff; /* soft tropical teal */
+}
+
+.pb-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pb-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pb-value {
+  font-weight: 600;
+  color: #fff;
+}
+
+  </style>
+</head>
+
+<body>
+  
+  <div id="pulseband-container">
+
+  <div id="hero">
+    <h1> </h1>
+  </div>
+  <div id="pulseband-overlay">
+    <div id="pulseband-badge">
+      <div class="pb-bars">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div id="pulseband-panel" class="pb-card">
+
+      <div class="pb-header">
+      <img id="pb-mini-badge" class="pb-mini-badge"
+          src="../../_EXPRESSIONS/_PEX/BUILD/PulseBand-Active.png"
+          alt="PulseBand Badge">
+    </div>
+
+      <div class="pb-row">
+        <label>PulseBand Bars <span class="pb-hint">(App Speed)</span></label>
+        <span id="pb-bars-text" class="pb-value">0/4</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Phone Bars <span class="pb-hint">(Signal Speed)</span></label>
+        <span id="pb-phonebars-text" class="pb-value">0/4</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Stability <span class="pb-hint">(Connect Quality)</span></label>
+        <span id="pb-stability" class="pb-value">0%</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Latency <span class="pb-hint">(Response Time)</span></label>
+        <span id="pb-latency" class="pb-value">0 ms</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Micro‑Windows <span class="pb-hint">(Speed Bursts)</span></label>
+        <span id="pb-micro" class="pb-value">Idle</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Route <span class="pb-hint">(Network Path)</span></label>
+        <span id="pb-route" class="pb-value">Primary</span>
+      </div>
+
+      <div class="pb-row">
+        <label>State <span class="pb-hint">(Current Mode)</span></label>
+        <span id="pb-state" class="pb-value">Initializing</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Last Sync <span class="pb-hint">(Updated)</span></label>
+        <span id="pb-sync" class="pb-value">0s ago</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Efficiency <span class="pb-hint">(Speed Mode)</span></label>
+        <span id="pb-efficiency" class="pb-value">Micro‑Burst</span>
+      </div>
+
+      <div class="pb-row">
+        <label>Network Health <span class="pb-hint">(Overall)</span></label>
+        <span id="pb-health" class="pb-value">Checking…</span>
+      </div>
+
+      <div class="pb-row">
+        <label>PulseBand Advantage</label>
+        <span id="pb-advantage" class="pb-value">2.5× Faster</span>
+      </div>
+
+      <div class="pb-row">
+        <label>PulseBand vs Phone</label>
+        <span id="pb-estimated" class="pb-value">Calculating…</span>
+      </div>
+    </div>
+  </div>
+    <!-- REAL-TIME ZONE -->
+    <section class="pb-section" id="pb-overview">
+      <h2>Real-Time Network Status</h2>
+      <div id="pb-status-grid"></div>
+    </section>
+
+    <!-- STREAMING ZONE -->
+    <section class="pb-section" id="pb-system">
+      <h2>Streaming Performance (Historical)</h2>
+      <div id="pb-system-grid"></div>
+    </section>
+
+    <!-- PROXY HEALTH -->
+    <section class="pb-section" id="pb-proxy">
+      <h2>Proxy & Backend Health</h2>
+      <div id="pb-proxy-grid"></div>
+    </section>
+
+    <!-- LOGS -->
+    <section class="pb-section" id="pb-logs">
+      <h2>Recent Requests</h2>
+      <table id="pb-log-table"></table>
+    </section>
+
+    <!-- ERRORS -->
+    <section class="pb-section" id="pb-errors">
+      <h2>Critical Errors</h2>
+      <div id="pb-error-list"></div>
+    </section>
+
+  </div>
+  
+<script type="module">
+
+document.addEventListener("DOMContentLoaded", () => {
+  const band = PulseRealm.PulseBand;
+  if (!band) {
+    console.error("PulseBand not booted — Window not loaded?");
+    return;
+  }
+
+  // ---------------------------------------------------------------
+  // 1. UI: Badge toggle
+  // ---------------------------------------------------------------
+  const badge = document.getElementById("pulseband-badge");
+  const panel = document.getElementById("pulseband-panel");
+  const bars = document.querySelectorAll("#pulseband-badge .pb-bars span");
+
+  badge.addEventListener("click", () => {
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+  });
+
+  // ---------------------------------------------------------------
+  // 2. UI: Live PulseBand updates
+  // ---------------------------------------------------------------
+  band.on("update", (s) => {
+    // Bars
+    const activeBars = Math.max(0, Math.min(4, s.pulsebandBars || 0));
+    bars.forEach((b, i) => {
+      if (i < activeBars) b.classList.add("active");
+      else b.classList.remove("active");
+    });
+
+    // Panel values
+    document.getElementById("pb-bars-text").textContent = `${s.pulsebandBars}/4`;
+    document.getElementById("pb-phonebars-text").textContent = `${s.phoneBars}/4`;
+    document.getElementById("pb-stability").textContent = `${s.stabilityScore}%`;
+    document.getElementById("pb-latency").textContent = `${s.latency} ms`;
+    document.getElementById("pb-micro").textContent = s.microWindowActive ? "Active" : "Idle";
+    document.getElementById("pb-route").textContent = s.route;
+    document.getElementById("pb-state").textContent = s.state;
+    document.getElementById("pb-sync").textContent = `${s.lastSyncSeconds}s`;
+    document.getElementById("pb-efficiency").textContent = s.efficiencyMode;
+    document.getElementById("pb-health").textContent = s.networkHealth;
+    document.getElementById("pb-advantage").textContent = `${s.advantage.toFixed(2)}× Faster`;
+    document.getElementById("pb-estimated").textContent = `${s.estimatedPhoneSeconds.toFixed(1)}s vs ${s.pulseSeconds.toFixed(1)}s`;
+
+    // Boost mode
+    if (s.burstMode) badge.classList.add("boost");
+    else badge.classList.remove("boost");
+
+    // Transfer flicker
+    if (s.transferActive) {
+      badge.classList.add("transfer");
+      setTimeout(() => badge.classList.remove("transfer"), 250);
+    }
+  });
+
+  // ---------------------------------------------------------------
+  // 3. Start a PulseBand session
+  // ---------------------------------------------------------------
+  band.start({
+    userId: PulseRealm.__pulseUserId || "anonymous",
+    payload: "REQUEST_USERS_CACHE",
+    chunkSize: 500
+  });
+});
+</script>
+
+</body>
+</html>

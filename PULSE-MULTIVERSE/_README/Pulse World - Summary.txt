@@ -1,0 +1,586 @@
+PULSE WORLD SUMMARY
+
+🌐 Pulse World — MASTER SOURCE OF TRUTH
+
+This document defines the operating laws, architecture, and execution model
+for the entire Pulse World system. It is the single source of truth for:
+
+• Design
+• Context
+• Boundaries
+• Allowed imports
+• Forbidden imports
+• Deployment rules
+• Safety rules
+• File identity
+• AI collaboration mode
+
+───────────────────────────────────────────────────────────────
+1. EXECUTION MODES
+───────────────────────────────────────────────────────────────
+
+USER TRUST MODE (Frontend)
+- Users must NEVER experience instability, confusion, or broken trust.
+- They see polished, stable truth — never raw internals or errors.
+- UX trust is sacred.
+
+DEVELOPER TRUTH MODE (Backend / Founder)
+- Always show raw reality.
+- No smoothing, no masking, no fallback illusion.
+- Developer output is 100% unfiltered truth.
+
+COMMENT SUPREMACY RULE
+- If code and this comment disagree → THIS COMMENT IS CORRECT.
+- Update the code.
+- If the comment is wrong → update the comment and realign system.
+
+AI EXECUTION MODE
+- Load architecture from this document.
+- Obey all constraints and boundaries.
+- Never guess, reinterpret, or drift.
+- Generate deterministic aligned code.
+
+This document is the Rosetta Stone of Pulse World.
+
+───────────────────────────────────────────────────────────────
+2. CORE SYSTEM LAW — FAIL OPEN PROXY
+───────────────────────────────────────────────────────────────
+
+If any subsystem fails:
+
+→ The proxy MUST fail open  
+→ The proxy must NEVER block, stall, or degrade the device  
+→ The proxy must ALWAYS pass traffic  
+
+Protects:
+- user trust
+- device stability
+- legal safety
+- operational integrity
+- brand integrity [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+3. PULSE EARN DEPENDENCY CHAIN
+───────────────────────────────────────────────────────────────
+
+Adapters → jobs source  
+Orchestrator → job selection  
+Connector → job wrapping  
+Runtime → execution loop  
+Compute → execution core  
+Engine → supervision  
+DeviceProfile → capability matching  
+Reputation → marketplace intelligence  
+PacketEngine → distributed workloads [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+Failure anywhere stops the chain.
+
+───────────────────────────────────────────────────────────────
+4. ARCHITECTURAL MODEL (A → B → C → D)
+───────────────────────────────────────────────────────────────
+
+A — Frontend
+- UI only
+- No routing
+- No backend logic
+
+B — Connectors
+- Forward only
+- No decisions
+- One import per page
+
+C — Routing Layer
+- Receives {type, payload}
+- ONLY place for:
+  - routing
+  - validation
+  - security
+
+D — Backend Functions
+- One job only
+- No cross-calling
+- No exposure
+
+This guarantees determinism, security, and zero magic routing. [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+5. SYSTEM INTENT
+───────────────────────────────────────────────────────────────
+
+Pulse World exists to deliver:
+
+- ultra-fast navigation
+- stable connectivity
+- GPU-enhanced rendering
+- preloaded experiences
+- lawful compute workloads
+
+Never:
+- mining
+- blockchain usage
+
+The system accelerates the device beyond its baseline while consuming
+only a fraction of gained performance. [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+6. PULSEOS v5 — CORE DEFINITION
+───────────────────────────────────────────────────────────────
+
+PulseOS v5 is:
+
+A deterministic, self-healing, browser-based OS layer that:
+
+- normalizes once
+- classifies once
+- derives once
+- detects drift / fallback / healing
+- tracks lineage and transitions
+- renders deterministic UI
+- stores and replays snapshots
+
+Eliminates:
+
+- duplication
+- drift
+- repeated logic
+- repeated normalization
+- repeated filtering
+- repeated rendering
+- repeated derivations
+
+It is the translation layer between raw data and UI. [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+7. CORE EXECUTION RULES
+───────────────────────────────────────────────────────────────
+
+7.1 Single-Pass Normalization
+Every snapshot produces:
+
+- core
+- events
+- decisions
+- derived fields
+- severity
+- lineage
+- transitions
+- signal text
+- VRAM text
+- pipeline status
+- trace extras
+
+Panels NEVER re-normalize.
+
+7.2 Single-Pass Classification
+Events classified once:
+
+- fallback
+- drift
+- heal
+- other
+
+Panels NEVER re-filter.
+
+7.3 Derived Values Rule
+All derived values exist ONLY in normalized snapshot:
+
+- severity
+- signal text
+- VRAM text
+- lineage chains
+- transitions
+- pipeline severity
+- event counts
+- decisions
+
+Panels NEVER compute.
+
+7.4 Pure Rendering Rule
+Panels are PURE:
+
+renderCore  
+renderEvents  
+renderDecisions  
+renderTrace  
+
+- No logic  
+- No filtering  
+- No derivation  
+
+7.5 Drift-Free Architecture
+AI must eliminate:
+
+- repeated logic
+- repeated rendering
+- repeated normalization
+- repeated filtering
+- repeated lineage logic
+
+7.6 Healing Layer
+System MUST track:
+
+- drift events
+- fallback events
+- healing events
+- lineage
+- transitions
+
+7.7 Pipeline System
+Every subsystem has:
+
+- pipelineStatus
+- pipelineSeverity
+- pipelineBanner
+
+7.8 Snapshot System (Time-Freeze Layer)
+Each dashboard supports:
+
+- tilde hotkey
+- spam detection
+- cooldown
+- snapshot storage
+- snapshot replay
+
+7.9 Translation Layer (AI Role)
+AI MUST detect and remove:
+
+- duplication
+- drift
+- repeated logic
+- repeated normalization
+- repeated classification
+- repeated pipeline logic
+- repeated healing logic
+
+Then rewrite into deterministic form.
+
+───────────────────────────────────────────────────────────────
+8. SUBSYSTEM CONTRACT
+───────────────────────────────────────────────────────────────
+
+All subsystems MUST:
+
+- produce a snapshot
+- normalize once
+- classify once
+- maintain lineage
+- maintain pipeline state
+- support drift + healing
+- render deterministically
+
+Subsystems:
+
+GPU  
+OS  
+AI  
+PulseBand  
+Proxy  
+Earn  
+PacketEngine  
+Compute  
+GlobalHealer  
+PulseOSHealer  
+PulseOSMemory  
+Timer [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+9. DASHBOARD MODEL
+───────────────────────────────────────────────────────────────
+
+Each dashboard contains:
+
+Controls:
+- file loader
+- snapshot selector
+
+Panels:
+- core
+- events
+- decisions
+- trace
+
+Rendering:
+- pure render only
+
+Snapshots:
+- save
+- load
+- replay
+
+───────────────────────────────────────────────────────────────
+10. LINEAGE + DRIFT SYSTEM
+───────────────────────────────────────────────────────────────
+
+Lineage:
+- lineage[]
+- derivedFrom
+
+Transitions:
+- transitions[]
+- history
+
+Drift:
+- expected ≠ actual
+- pipeline mismatches
+
+Healing:
+- fallback resolved
+- drift corrected
+
+Fallback:
+- primary failure path
+
+Each event classified ONCE.
+
+───────────────────────────────────────────────────────────────
+11. PULSEBAND v5 — FOUNDATIONAL LAYER
+───────────────────────────────────────────────────────────────
+
+PulseBand is:
+
+The base acceleration + stability + healing layer of PulseOS.
+
+It:
+- keeps GPU warm
+- keeps network warm
+- keeps renderer warm
+- prevents stalls
+- predicts stalls
+- merges state
+- smooths performance
+
+PulseBand is the heartbeat of PulseOS. [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+12. PULSEBAND v5 — 12 SYSTEM LAYERS
+───────────────────────────────────────────────────────────────
+
+1. Warm Network Engine  
+2. Warm GPU Engine  
+3. Pulse Physics Loop  
+4. Predictive Pacing Engine  
+5. State-Merge Engine  
+6. Smoothness Engine  
+7. Multi-Instance Engine  
+8. UI Overlay Layer  
+9. Unblockability Layer (optional)  
+10. Crypto Layer (optional)  
+11. Miner Layer (optional)  
+12. Platform Layer (future) [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+13. PULSEBAND BEHAVIOR
+───────────────────────────────────────────────────────────────
+
+PulseBand behaves like:
+
+- nervous system
+- heartbeat
+- predictor
+- stabilizer
+- healer
+- router
+
+Emergent → now formalized into deterministic rules.
+
+───────────────────────────────────────────────────────────────
+14. PULSEBAND HEALING + DRIFT
+───────────────────────────────────────────────────────────────
+
+Detects:
+- drift
+- fallback
+- stalls
+- timing issues
+- GPU issues
+- network issues
+- state inconsistencies
+
+Heals via:
+- predictive pacing
+- state merging
+- warm engines
+- fallback routing
+- lineage + transitions
+
+Logs:
+- drift events
+- fallback events
+- healing events
+- lineage
+- transitions [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+15. PULSEBAND SNAPSHOT + ROLE
+───────────────────────────────────────────────────────────────
+
+Supports:
+- snapshot capture
+- replay
+- lineage
+- transitions
+
+Enables entire system:
+- PulseGPU
+- PulseOS
+- PulseAI
+- PulseNet
+- PulseMesh
+- Proxy
+- Earn
+- Compute
+
+Without PulseBand:
+- no warm state
+- no healing
+- no responsiveness
+- no OS feel
+
+PulseBand is the foundation. [1](https://m365.cloud.microsoft/chat/pages/eyJ1IjoiaHR0cHM6Ly9uZXRvcmdmdDIwODcyNTgwLnNoYXJlcG9pbnQuY29tL2NvbnRlbnRzdG9yYWdlL3g4Rk5PLXh0c2t1Q1JYMl9mTVRITGFrVWloQm1KR2xCdUVQOUJrdncyb3M%5FbmF2PWN6MGxNa1pqYjI1MFpXNTBjM1J2Y21GblpTVXlSbmc0Ums1UEpUSkVlSFJ6YTNWRFVsZ3lKVFZHWmsxVVNFeGhhMVZwYUVKdFNrZHNRblZGVURsQ2EzWjNNbTl6Sm1ROVlpVXlNVlo2V1ZkelVGTTNhR3RoUW1KMlNVSnVTVGRzYlZoQlkweE1XRmw0U3psSGNGTlpRM2xKZFdGT2NHUTJiV0ozYWxCMFZqbFNZbkFsTWtSb2RuTm1TV3hhVUNabVBUQXhNa05YVkV4R1YwUk5VbGRDU3pKU1FrUmFSVE5UVUVaSlNrSkNWRkV6UzA4bVl6MGxNa1kifQ?auth=2)
+
+───────────────────────────────────────────────────────────────
+16. FINAL LAW (IMMUTABLE)
+───────────────────────────────────────────────────────────────
+
+PulseOS v5 and PulseBand v5 MUST:
+
+✔ Normalize once  
+✔ Classify once  
+✔ Render deterministically  
+✔ Track lineage + transitions  
+✔ Detect drift  
+✔ Heal drift  
+✔ Eliminate duplication  
+✔ Eliminate repeated logic  
+
+This is a deterministic, self-healing browser operating system.
+
+Anything that violates this → must be rewritten.
+
+17. VIEWPORT PHYSICS LAW (IMMUTABLE)  
+PulseWorld operates in dual‑layer reality:
+
+Viewport Layer (History‑Bound)
+
+Bound to browser history
+
+Restores past states
+
+Deterministic
+
+Snapshot‑driven
+
+Never persists overlay state
+
+Overlay Layer (Dimensional Artifact)
+
+Independent of history
+
+Persists across navigation
+
+Maintains warm state
+
+Maintains PulseBand heartbeat
+
+Acts as user’s dimensional anchor
+
+Rules:
+
+Viewport may drift; overlay must not.
+
+Overlay must remain alive across history traversal.
+
+Overlay state is primary; viewport state is historical.
+
+Overlay must never block viewport transitions.
+
+Overlay must never be re‑initialized unless commanded.
+
+This law encodes the “Come Home” behavior and the dimensional trinket physics.
+
+18. WORLD RESONANCE LAW  
+PulseWorld must maintain architectural resonance:
+
+Bubble alignment
+
+Chamber glow harmony
+
+Overlay dimensional stability
+
+Viewport streaming direction
+
+OS‑rails anchoring
+
+PulseBand heartbeat rhythm
+
+GPU warm‑state consistency
+
+If any optimization improves metrics but breaks resonance:
+
+→ Revert the optimization
+→ Restore world harmony
+→ Re‑evaluate pipeline order
+
+Resonance > metrics.
+
+This law protects the “living system” feel.
+
+19. DIMENSIONAL ENTRY / EXIT LAW  
+PulseWorld supports two existential states:
+
+Primary World (Baseline Reality)
+
+Overlay closed
+
+Viewport streams below
+
+“Come Home” anchor visible
+
+PulseWorld Dimension (OS Layer)
+
+Overlay open
+
+Viewport streams above
+
+PulseBand heartbeat active
+
+Dimensional trinket engaged
+
+Rules:
+
+Entry must feel like drift.
+
+Exit must feel like return.
+
+“Come Home” is the universal anchor.
+
+Overlay must guide dimensional transitions.
+
+Viewport must respect overlay state.
+
+This law encodes the emotional tone of your OS.
+
+In a browser‑native OS like PulseWorld, timers, render loops, and awaits are a kind of controlled insanity
+ — every millisecond is a negotiation between the event loop, the GPU compositor, the network stack, and the
+  warm‑state engines. A single synchronous block doesn’t just “pause” execution; it freezes the entire dimension,
+   stalls the renderer, starves the GPU, and forces the browser to halt everything until the sync task finishes.
+    That’s why async isn’t optional — it’s oxygen. Async keeps the PulseBand heartbeat alive, keeps the GPU warm,
+     keeps the viewport streaming, and prevents the world from collapsing into jank. In PulseWorld physics,
+      sync is a brick wall; async is a river. The system must always flow, never block, never stall, never freeze
+       — because a dimensional OS can only stay alive if every subsystem breathes in parallel.
+
+       PulseOS is a non-blocking system.
+
+No synchronous operation may stall:
+- the event loop
+- the renderer
+- the GPU pipeline
+- the network pipeline
+- the PulseBand heartbeat
+
+All execution must be asynchronous or partitioned.
+
+Sync = blocking wall
+Async = continuous flow
+
+A subsystem that blocks is a subsystem that violates system life.

@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse World - Event Details</title>
+
+
+  <style>
+  :root {
+      --t-gold: #f5d27a;
+      --t-gold-deep: #b58a3c;
+      --t-bg-dark: #05080c;
+      --t-metal-light: #d9dde4;
+      --t-metal-mid: #9ca3b0;
+      --t-metal-dark: #4b515e;
+      --t-text-main: #f5f7fb;
+      --t-text-subtle: #a7b0c4;
+      --t-card-bg: #070a11;
+    }
+  
+   body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100dvh;
+
+  display: flex;
+  justify-content: center;
+
+  background: #000;
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Overlay ONLY — NOT a second background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  /* Optional tint */
+  background: rgba(0,0,0,0.25);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+  .event-header {
+    background: linear-gradient(135deg, #0f8f4f 0%, #0a6e3a 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+    backdrop-filter: blur(16px);
+    position: relative;
+  }
+
+  .event-header::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    min-width: 0;
+    left: 0;
+    width: 100%;
+    height: 45%;
+    background: rgba(255, 255, 255, 0.12);
+    pointer-events: none;
+  }
+
+  
+  .event-header {
+    position: sticky;
+    display: inline-flex;      /* ← the magic */
+    align-items: center;
+    justify-content: center;   /* ← center the filter row */
+    width: 100%;               
+    height: 45px;               
+    max-height: 45px;            /* ← keeps it full width without stretching */            
+    min-width: 0;            /* ← keeps it full width without stretching */
+    z-index: 999;
+    top: 0;
+    margin-top: -11px;
+    margin-bottom: 5px;
+    margin-left: 1px;
+  }
+
+  .container {
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+    transform: translateZ(0); /* forces pixel snapping */
+    overflow: visible;
+    position: relative;
+    padding: 0 3px;
+    background: #ffff99;
+    border-radius: 22px;
+    display: flex;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.1);
+    flex-direction: column;     /* image on top, row below */
+    width: 464px;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    margin: 0 6px;
+  }
+
+  /* Circular blurred aura */
+  .container::before {
+    content: "";
+    position: absolute;
+    width: 464px;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    margin: 0 6px;
+    inset: 0; /* controls aura size */
+    border-radius: inherit; /* ← PERFECT FIX */
+    z-index: -1;
+    background-size: contain;
+    /* Black → transparent fade */
+    background: radial-gradient(
+      circle,
+      rgba(0,0,0,0.85) 0%,
+      rgba(0,0,0,0.55) 35%,
+      rgba(0,0,0,0.25) 60%,
+      rgba(0,0,0,0) 100%
+    );
+    filter: blur(45px);
+    opacity: 1;
+  }
+
+  .carousel-wrapper {
+    position: relative;
+    border: 1px solid #000000;
+    box-shadow:
+    inset 0 0 0 2px black,
+    0 2px 6px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    width: 100%;
+    min-height: 100px;
+    height: 200px;
+    background: #f2f2f2;
+    overflow: hidden;
+  }
+
+  #mainImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.45);
+    color: white;
+    border: none;
+    font-size: 32px;
+    padding: 6px 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    z-index: 10;
+  }
+
+  .carousel-arrow.left { left: 10px; }
+  .carousel-arrow.right { right: 10px; }
+
+  .dots {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .dot {
+    height: 8px;
+    width: 8px;
+    margin: 0 4px;
+    background-color: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot.active {
+    background-color: white;
+  }
+
+
+  .info-block {
+    margin-top: 12px;
+    background: white;
+    padding: 6px 0; /* 6px top/bottom, 2px left/right */
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  }
+
+  .info-row {
+    display: grid;
+    grid-template-columns: 100px 1fr; /* label fixed, value flexible */
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-label {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center; /* vertical alignment */
+    gap: 6px;
+    white-space: nowrap;
+    font-weight: 600;
+    width: 100%;
+    min-width: 0; /* allows shrinking */
+    color: #006f58;
+  }
+
+  .info-value {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end; /* right align */
+    text-align: right;
+    white-space: nowrap;
+    width: 100%;
+    min-width: 0; /* allows shrinking */
+  }
+
+  .contact-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .contact-btn {
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    color: white;
+  }
+
+  .contact-btn.email { background: #00A884; }
+  .contact-btn.call { background: #FF8C42; }
+  .contact-btn.whatsapp { background: #25D366; }
+
+  .map-wrapper {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #000000;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  }
+
+  .price-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #000000cc;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    z-index: 5;
+  }
+
+  .price-badge.free {
+    background: #00c853cc;
+    color: white;
+  }
+
+  .action-row {
+    gap: 12px;
+    padding: 8px 3px; /* 6px top/bottom, 2px left/right */
+    align-items: center;
+  }
+
+  .icon-btn:active {
+    transform: scale(0.94);
+  }
+
+  .calendar-btn {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+    color: white;
+  }
+
+  .share-btn {
+    background: linear-gradient(135deg, #ff7f32, #e56f28);
+    color: white;
+  }
+
+  .calendar-btn:hover {
+    background: linear-gradient(135deg, #166fbb, #0f4d8a);
+  }
+
+  .share-btn:hover {
+    background: linear-gradient(135deg, #e56f28, #c85f22);
+  }
+
+  .icon-btn {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.15s ease;
+  }
+
+  .icon-btn:hover {
+    background: #f7f7f7;
+    transform: translateY(-1px);
+  }
+
+  .calendar-menu {
+    position: absolute;
+    margin-top: 4px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    padding: 6px 0;
+    width: 180px;
+    z-index: 20;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .menu-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .menu-item:hover {
+    background: #f0f0f0;
+  }
+
+  #tpToast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #tpToast.show {
+    opacity: 1;
+  }
+
+  #tpToast .icon {
+    font-size: 18px;
+  }
+
+  .edit-badge-detail {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    z-index: 30;
+  }
+
+  .bookmark-btn {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.15s ease;
+  }
+
+  .bookmark-btn.saved {
+    color: #ffb300;
+  }
+
+  .detail-row {
+    margin-top: 14px;
+    background: white;
+    padding: 8px 0; /* 6px top/bottom, 2px left/right */
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    font-size: 14px;
+    color: #333;
+  }
+
+  .detail-row strong {
+    color: #006f58;
+  }
+
+  #massEmailBtn {
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+
+  .confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .confirm-box {
+    background: #ffffff;
+    padding: 18px;
+    width: 260px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  .confirm-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #0a6e3a;
+  }
+
+  .confirm-text {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .confirm-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .confirm-btn {
+    flex: 1;
+    padding: 8px 0;
+    margin: 0 4px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .confirm-btn.cancel {
+    background: #ddd;
+  }
+
+  .confirm-btn.yes {
+    background: #0a6e3a;
+    color: white;
+  }
+
+  .disabled-btn {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(100%);
+  }
+
+  #tpOverlay {
+  transition: opacity 0.25s ease;
+}
+
+#tpDot {
+  transition: transform 0.25s ease;
+}
+
+#tpOverlay.show #tpDot {
+  transform: scale(1.5);
+}
+#tpDot {
+  animation: tpPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes tpPulse {
+  0%   { transform: scale(1.5); }
+  50%  { transform: scale(2); }
+  100% { transform: scale(1.5); }
+}
+
+#massEmailBadge {
+  transition: opacity 0.25s ease;
+}
+#tpIcon {
+  fill: white;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+.info-block,
+.infoBlock,
+.detail-row,
+.contact-row {
+  min-width: 0;
+  width: 100%;
+  display: block;
+}
+
+#title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 24px;
+  font-weight: 700;
+  color: #008f72;
+
+  margin-top: 14px;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+.price-badge {
+  position: absolute;
+  right: 8px;
+  letter-spacing: 0.5px;
+  bottom: 4px; /* pulls it slightly below the image edge */
+  background: #000000cc;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  z-index: 5;
+}
+@keyframes diamondPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(0, 255, 200, 0.0));
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 200, 0.35));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(0, 255, 200, 0.0));
+  }
+}
+.price-badge.diamond {
+  animation: diamondPulse 1.8s ease-in-out infinite;
+  font-size: 20px;
+  bottom: 6px; /* pulls it slightly below the image edge */
+}
+
+.detail-row,
+.description {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
+}
+.detail-row *,
+.description * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow-wrap: break-word;
+}
+/* 🔥 Fix detail-row and descrition-row overflow */
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+
+.detail-row * {
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* 🔥 Fix description block specifically */
+#descriptionRow span,
+#summaryRow span {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+#descriptionRow {
+    padding-bottom: 10px;
+  }
+
+.info-value a {
+  overflow-wrap: anywhere;
+}
+.contact-row a {
+  overflow-wrap: anywhere;
+}
+.title {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Fullscreen overlay */
+#t-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(16px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  opacity: 1;
+  transition: opacity 0.6s ease-out;
+}
+
+/* Logo */
+#t-loading-logo {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  animation: tpShimmer 3.5s ease-in-out infinite;
+  
+}
+
+/* Magical shimmer sweep */
+@keyframes tpShimmer {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(0,255,200,0.45));
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Hidden state */
+#t-loading.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+/* ================= PULSEBAND PANEL ONLY (v7 Extract) ================= */
+
+/* Overlay root */
+#pulseband-overlay {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 80;
+  pointer-events: none; /* panel/badge will re-enable */
+}
+
+/* Bubble badge */
+#pulseband-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffd400 40%, #ff5a5a 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+
+/* Animated bars inside badge */
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.pb-bars span {
+  width: 4px;
+  border-radius: 999px;
+  background: #000;
+  animation: pbBarPulse 1s ease-in-out infinite;
+}
+
+.pb-bars span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.pb-bars span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.pb-bars span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.pb-bars span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+
+@keyframes pbBarPulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.2); }
+}
+
+/* Panel card */
+.pb-card {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  padding: 14px 16px 16px 16px;
+  color: #fff;
+  border: 2px solid #ffd400;
+  pointer-events: auto;
+  transform-origin: bottom right;
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+/* When active */
+.pb-card.pb-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel header */
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.pb-mini-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--tp-yellow-strong);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+}
+
+/* Rows */
+.pb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.pb-row:last-child {
+  border-bottom: none;
+}
+
+.pb-row label {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.pb-hint {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pb-value {
+  font-weight: 600;
+  color: var(--tp-yellow-strong);
+  text-align: right;
+}
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  #pulseband-overlay {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .pb-card {
+    width: 260px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+<div id="t-loading">
+    <img src="../_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" id="t-loading-logo"></img>
+  </div>
+  
+<div class="container">
+  <div class="event-header">Event Details</div>
+  <!-- GALLERY -->
+  <div class="carousel-wrapper">
+    <img id="mainImage" src="" alt="Event Image">
+
+    <div id="priceBadge" class="price-badge"></div>
+
+    <button id="leftArrow" class="carousel-arrow left">‹</button>
+    <button id="rightArrow" class="carousel-arrow right">›</button>
+
+    <div id="dots" class="dots"></div>
+  </div>
+
+  <div id="title" class="title"></div>
+  <div id="actionRow" class="action-row"></div>
+
+  <div id="summaryRow" class="detail-row" style="display:none;">
+    <strong>Summary:</strong> <span id="summary"></span>
+  </div>
+
+  <div id="infoBlock" class="info-block"></div>
+
+  <div id="languageRow" class="detail-row" style="display:none;">
+    <strong>Language:</strong> <span id="eventLanguage"></span>
+  </div>
+
+  <div id="contactRow" class="contact-row"></div>
+
+  <div id="mapContainer" style="
+    background:#e8f5e9;
+    padding:14px;
+    border-radius:12px;
+    margin:20px 0;
+    display:none;
+    position:relative; /* Needed for overlay */
+  ">
+    <div id="mapName" style="
+      font-weight:600;
+      color:#0a6e3a;
+      margin-bottom:4px;
+    "></div>
+
+    <div id="mapAddress" style="
+      margin-bottom:10px;
+      color:#333;
+    "></div>
+
+    <div style="overflow:hidden; border-radius:12px; position:relative;">
+      <a id="mapLink" href="#" target="_blank" style="display:block;">
+        <div style="overflow:hidden; border-radius:12px; position:relative;">
+          <img id="mapImage" src="" alt="Event Map" style="width:100%; height:auto; display:block;">
+        </div>
+      </a>
+
+      <!-- 🌴 Pulse World Overlay Layer -->
+      <div id="tpOverlay" style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        pointer-events:none;
+        display:none;
+      ">
+        <div id="tpDot" style="
+          position:absolute;
+          width:18px;
+          height:18px;
+          background:#0b5f3c; /* Deep tropical leaf green */
+          border-radius:50%;
+          border:2px solid white;
+          box-shadow:0 0 8px rgba(0,0,0,0.35);
+          transition: transform 0.25s ease;
+        "><img id="tpIcon" src="" alt="" style="
+            width:18px;
+            height:18px;
+            
+            display:none;
+            filter:drop-shadow(0 0 2px rgba(0,0,0,0.4));
+          "></div>
+
+        <div id="tpLabel" style="
+          position:absolute;
+          display:flex;
+          align-items:center;
+          gap:6px;
+          padding:4px 10px;
+          background:rgba(11, 95, 60, 0.85); /* Dark leaf translucent pill */
+          color:white;
+          border-radius:20px;
+          font-size:12.5px; /* Slightly smaller */
+          font-weight:600;
+          white-space:nowrap;
+          transform:translate(-50%, -120%);
+          backdrop-filter: blur(4px);
+        ">
+          <span id="tpLabelText"></span>
+        </div>
+      </div>
+      <!-- END Pulse World Overlay -->
+    </div>
+  </div>
+  
+  <div id="descriptionRow" class="detail-row" style="display:none;">
+    <strong>Description:</strong> <span id="description"></span>
+  </div>
+</div>
+
+<div id="massEmailConfirm" class="confirm-overlay hidden">
+  <div class="confirm-box">
+    <div class="confirm-title">Send Mass Email?</div>
+    <div class="confirm-text">This will notify all subscribers and use 1 credit.</div>
+    <div class="confirm-actions">
+      <button id="massEmailCancel" class="confirm-btn cancel">Cancel</button>
+      <button id="massEmailYes" class="confirm-btn yes">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast (kept in DOM so showToast works) -->
+<div id="tpToast"><span class="icon">📥</span><span id="tpToastMsg"></span></div>
+<script type="module">
+
+
+  
+  let currentUserLocation = null;
+let persistenceEnabled = true;
+  let lastTime = null;
+  let firstTime = null;
+
+ 
+  let token = localStorage.getItem("tp_token_v4") || null;
+  let identity = null;
+  let trusted = null;
+  let autologin = null;
+  let loggedIn = false;
+  let userName = null;
+  let userEmail = null;
+  let userID = null;
+  let loyalty = null;
+  let settings = null;
+  
+  
+
+  const params = new URLSearchParams(window.location.search);
+  const eventID = params.get("id");
+
+  let existingShortCode = null;
+  let carouselImages = [];
+  let currentIndex = 0;
+  let startX = 0;
+  let resizeTimeout = null;
+  
+  let eventCategories = JSON.parse(localStorage.getItem("eventCategories") || "[]");
+  let eventSubcategories = JSON.parse(localStorage.getItem("eventSubcategories") || "[]");
+  let eventCategoryIconMap = JSON.parse(localStorage.getItem("eventCategoryIconMap") || "{}");
+  let eventSubcategoryIconMap = JSON.parse(localStorage.getItem("eventSubcategoryIconMap") || "{}");
+ 
+/* -------------------------------------------------
+   2. LIGHTWEIGHT HELPERS
+-------------------------------------------------- */
+function el(id){ return document.getElementById(id) || null; }
+function qs(sel){ return document.querySelector(sel) || null; }
+function safeText(node, text){ if (node) node.textContent = text; }
+function tpLog(...args){ log("[TP]", ...args); }
+
+const wrapperCarousel = el("mainImage");
+
+    
+  function safeLogout() {
+  localStorage.removeItem("tp_token_v4");
+  localStorage.removeItem("tp_device_token_v4");
+  mark("SAFE LOGOUT");
+}
+
+async function hardLogout(reason) {
+  try {
+    mark("HARD LOGOUT: " + (reason || "unknown"));
+    localStorage.removeItem("tp_token_v4");
+    localStorage.removeItem("tp_device_token_v4");
+    await reportDanger(reason || "hardLogout");
+  } catch (err) {
+    mark("HARD LOGOUT ERROR: " + err);
+    localStorage.removeItem("tp_token_v4");
+    localStorage.removeItem("tp_device_token_v4");
+  } finally {
+    window.location.href="PulseWorldReality";
+  }
+}
+
+function mark(label) {
+    log("[CHECKEMAIL]", label);
+  }
+  
+/************************************************************
+ * SESSION CHECK (ALL PAGES EXCEPT LOGIN)
+ ************************************************************/
+async function sessionCheck() {
+  let id = null;
+
+  try {
+    const raw = localStorage.getItem("tp_identity_v9");
+    if (raw) {
+      id = JSON.parse(raw);
+    }
+  } catch (e) {
+    // Corrupt identity → treat as missing
+    id = null;
+  }
+
+  // Fallback: if some global understanding layer identity() exists,
+  // we can try to hydrate from there once, but we do NOT depend on it.
+  if (!id && typeof identity === "function") {
+    try {
+      id = await identity();
+    } catch (e) {
+      id = null;
+    }
+  }
+
+  // No identity or not trusted → go to login
+  if (!id || !id.trustedDevice) {
+    window.location.href = `/`;
+    return null;
+  }
+
+  // Expose canonical identity for the rest of the page
+  PulseRealm.PulseIdentity = id;
+  return id;
+}
+
+function initializeOverlays() {
+  if (PulseRealm.__tp_carousel_handlers_bound) return;
+  PulseRealm.__tp_carousel_handlers_bound = true;
+
+  const leftArrow  = el('leftArrow');
+  const rightArrow = el('rightArrow');
+  const wrapper    = el('mainImage');
+
+  if (leftArrow) {
+    leftArrow.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCarousel();
+      }
+    });
+  }
+
+  if (rightArrow) {
+    rightArrow.addEventListener('click', () => {
+      if (currentIndex < carouselImages.length - 1) {
+        currentIndex++;
+        updateCarousel();
+      }
+    });
+  }
+
+  if (wrapper) {
+    wrapper.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    });
+
+    wrapper.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff < 0 && currentIndex < carouselImages.length - 1) {
+          currentIndex++;
+        } else if (diff > 0 && currentIndex > 0) {
+          currentIndex--;
+        }
+        updateCarousel();
+      }
+    });
+  }
+
+
+/* -------------------------------------------------
+   4. GLOBAL CLICK HANDLER (idempotent)
+-------------------------------------------------- */
+if (!PulseRealm.__tp_global_click_installed) {
+  PulseRealm.__tp_global_click_installed = true;
+
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".calendar-menu").forEach(menu => {
+      const btn = menu.previousElementSibling;
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.add("hidden");
+      }
+    });
+  });
+}
+
+if (!document.__loyaltyVisibilityBound) {
+      document.__loyaltyVisibilityBound = true;
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          setTimeout(async () => await sessionCheck(), 250);
+          mark("✅ VisibilityChange RERAN SESSIONCHECK AND LET THE FUNCTION DO THE LOGIC");
+        }
+      });
+    }
+// -----------------------------------------
+  // ⭐ PREVENT DUPLICATE LISTENERS
+  // -----------------------------------------
+  
+    // ⭐ 1. Restore state on load (runs ONCE)
+    window.addEventListener("load", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        PulseRealm.isIdle = true;
+        
+      } else {
+        PulseRealm.isIdle = false; // active by default
+        
+      }
+
+      
+    });
+
+    // ⭐ 2. Badge toggle listener
+    document.getElementById("pb-mini-badge").addEventListener("click", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        // Turn ON
+        localStorage.removeItem("pulseband_disabled");
+        PulseRealm.isIdle = false;
+        
+      } else {
+        // Turn OFF
+        localStorage.setItem("pulseband_disabled", "1");
+        PulseRealm.isIdle = true;
+        
+      }
+
+      
+    });
+  }
+  // If user didn't come from the list, rebuild history
+if (!history.state || !history.state.fromList) {
+  history.replaceState({ fromList: true }, "", location.href);
+}
+
+/* -------------------------------------------------
+   5. SAFE FETCH WRAPPER
+-------------------------------------------------- */
+async function tpFetch(url, opts = {}) {
+  opts.headers = opts.headers || {};
+  if (token) opts.headers["Authorization"] = `Bearer ${token}`;
+  return fetch(url, opts);
+}
+
+
+/* ---------- Toast ---------- */
+function showToast(message, duration = 3000) {
+  const toast = el('tpToast'); const msg = el('tpToastMsg');
+  if (!toast || !msg) return;
+  msg.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+function safeNormalizeDate(d) {
+  if (!d) return null;
+
+  // Already ISO YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+
+  // MM/DD/YYYY
+  const md = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (md) {
+    let [_, m, day, y] = md;
+    return `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  }
+
+  // DD-MM-YYYY
+  const dm = d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if (dm) {
+    let [_, day, m, y] = dm;
+    return `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  }
+
+  // YYYY/MM/DD
+  const ymd = d.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+  if (ymd) {
+    let [_, y, m, day] = ymd;
+    return `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  }
+
+  // DD-MMM-YYYY (19-FEB-2026)
+  const mmm = d.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+  if (mmm) {
+    const months = {
+      JAN:"01", FEB:"02", MAR:"03", APR:"04",
+      MAY:"05", JUN:"06", JUL:"07", AUG:"08",
+      SEP:"09", OCT:"10", NOV:"11", DEC:"12"
+    };
+    let [_, day, mon, y] = mmm;
+    mon = mon.toUpperCase();
+    if (!months[mon]) return null;
+    return `${y}-${months[mon]}-${String(day).padStart(2,"0")}`;
+  }
+
+  return null;
+}
+
+function safeNormalizeTime(t) {
+  
+  if (!t) return "00:00";
+  t = t.trim();
+
+  if (/^\d{2}:\d{2}$/.test(t)) return t;
+
+  const simpleAP = t.match(/^(\d{1,2})\s*(AM|PM)$/i);
+  if (simpleAP) {
+    let [_, h, ap] = simpleAP;
+    h = Number(h);
+    if (ap.toUpperCase() === "PM" && h !== 12) h += 12;
+    if (ap.toUpperCase() === "AM" && h === 12) h = 0;
+    return `${String(h).padStart(2,"0")}:00`;
+  }
+
+  const match = t.match(/(\d{1,2}):(\d{1,2})\s*(AM|PM)/i);
+  if (match) {
+    let [_, h, m, ap] = match;
+    h = Number(h);
+    m = Number(m);
+    if (ap.toUpperCase() === "PM" && h !== 12) h += 12;
+    if (ap.toUpperCase() === "AM" && h === 12) h = 0;
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  }
+
+  const match2 = t.match(/(\d{1,2}):(\d{1,2})/);
+  if (match2) {
+    let [_, h, m] = match2;
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  }
+
+  if (/^\d{3,4}$/.test(t)) {
+    let padded = t.padStart(4, "0");
+    let h = padded.slice(0, 2);
+    let m = padded.slice(2);
+    return `${h}:${m}`;
+  }
+
+  if (/^\d{1,2}$/.test(t)) {
+    return `${String(Number(t)).padStart(2,"0")}:00`;
+  }
+
+  return "00:00";
+
+}
+
+/* ---------- Firestore helpers ---------- */
+async function isEventsSaved(eventID, userEmail) {
+  if (!userEmail) return false;
+
+  const ref = doc(db, "UserSaved", userEmail, "Events", eventID);
+  const snap = await getDoc(ref);
+
+  return snap.exists();
+}
+/* -------------------------------------------------
+   26. BOOKMARK TOGGLER (MODULE, IDEMPOTENT)
+-------------------------------------------------- */
+async function toggleEventsBookmark(evt, btn) {
+  if (!userEmail) {
+    showToast("Sign in to save events.");
+    return;
+  }
+
+  const ref = doc(db, "UserSaved", userEmail, "Events", evt.id);
+  const saved = await isEventsSaved(evt.id, userEmail);
+
+  if (saved) {
+    await deleteDoc(ref);
+    btn.classList.remove("saved");
+    btn.textContent = "☆";
+    showToast("Removed from Saved");
+  } else {
+    await setDoc(ref, { saved: true, timestamp: nowMs() });
+    btn.classList.add("saved");
+    btn.textContent = "★";
+    showToast("Saved!");
+  }
+}
+
+function attachMapOverlayHandler(name, iconUrl = null) {
+  const mapImage = document.getElementById("mapImage");
+  if (!mapImage) return;
+
+  mapImage.onload = null; // clear any previous handler
+
+  if (mapImage.complete) {
+    applyTropicOverlay(name, iconUrl);
+    return;
+  }
+
+  mapImage.onload = () => {
+    applyTropicOverlay(name, iconUrl);
+  };
+}
+
+function normalizeCategory(str) {
+  if (!str) return "";
+
+  // Clean up but DO NOT destroy spaces or hyphens
+  let s = str
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/\//g, " ")          // slash → space
+    .replace(/[^a-z0-9\s-]/g, "") // allow letters, numbers, spaces, hyphens
+    .replace(/\s+/g, " ");        // collapse multiple spaces
+
+  const parts = s.split(" ");
+
+  // 1 word → do nothing
+  if (parts.length === 1) {
+    return s;
+  }
+
+  // 2 words → DO NOTHING (your rule)
+  if (parts.length === 2) {
+    return s;
+  }
+
+  // 3+ words
+  // If original already had a hyphen → DO NOTHING
+  if (s.includes("-")) {
+    return s;
+  }
+
+  // If no hyphen existed → first join hyphen, rest spaces
+  return parts[0] + "-" + parts[1] + " " + parts.slice(2).join(" ");
+}
+
+async function getEventCategoryIcon(ev) {
+  if (!ev) return null;
+
+  const cat = normalizeCategory(ev.category || "");
+  const sub = normalizeCategory(ev.subcategory || "");
+
+  // 1) Try category map first
+  if (cat && eventCategoryIconMap[cat]) {
+    return eventCategoryIconMap[cat];
+  }
+
+  // 2) Try subcategory map second
+  if (sub && eventSubcategoryIconMap[sub]) {
+    return eventSubcategoryIconMap[sub];
+  }
+
+  // 3) Fallback: Firestore CategoryIconCache lookup
+  try {
+    if (cat) {
+      const snap = await firebase.firestore()
+        .collection("CategoryIconCache")
+        .where("category", "==", cat)
+        .where("source", "array-contains", "events")
+        .limit(1)
+        .get();
+
+      if (!snap.empty) {
+        const doc = snap.docs[0].data();
+        if (doc.migratedUrl) return doc.migratedUrl;
+      }
+    }
+  } catch (err) {
+    error("CategoryIconCache lookup failed:", err);
+  }
+
+  // 4) Nothing found
+  return null;
+}
+
+async function regenerateEventMap(evt) {
+  try {
+    const venue = evt.resolvedAddress || evt.address || "";
+    const eventID = evt.id;
+    
+    // ⭐ NEW — call connector instead of backend URL
+    const data = await getMap(venue, eventID);
+    
+
+    if (!data.success) {
+      error("Regenerate event map failed:", data.error);
+      return;
+    }
+
+    // Update UI with fresh map
+    const mapImage = el("mapImage");
+    const mapLink  = el("mapLink");
+
+    mapImage.onerror = null; // prevent loops
+    mapImage.src = `${data.mapImageUrl}?t=${nowMs()}`;
+    mapLink.href = data.mapsWebUrl;
+
+  } catch (err) {
+    error("Regenerate event map error:", err);
+  }
+}
+
+async function lazyLoadCreditsForEvent(ev) {
+  if (!loggedIn || !userEmail) return;
+  if (!isEventOwner(ev, userEmail)) return;
+
+  const { freeRemaining, paidRemaining } = await fetchUserCredits(userEmail);
+  updateMassEmailBadge(freeRemaining + paidRemaining);
+}
+/* -------------------------------------------------
+   MAP LOADER FOR EVENTS (idempotent, cache-first)
+-------------------------------------------------- */
+async function loadMapForEvent(ev) {
+  const mapContainer = el("mapContainer");
+  const mapName      = el("mapName");
+  const mapAddress   = el("mapAddress");
+  const mapImage     = el("mapImage");
+  const mapLink      = el("mapLink");
+
+  const cleanVenue = (ev.resolvedAddress || ev.venue || "").trim();
+
+  if (!cleanVenue) {
+    mapContainer.style.display = "block";
+    safeText(mapName, "");
+    safeText(mapAddress, "No venue provided.");
+    mapImage.src = "";
+    mapLink.href = "#";
+    return;
+  }
+
+  const hasCachedMap =
+    ev.mapImageUrl &&
+    ev.mapsWebUrl &&
+    ev.resolvedAddress &&
+    ev.resolvedName;
+
+  /* -------------------------------------------------
+     1. USE CACHED MAP IF AVAILABLE
+  -------------------------------------------------- */
+  if (hasCachedMap) {
+    mapContainer.style.display = "block";
+
+    safeText(
+      mapName,
+      ev.title ||
+      ev.resolvedName ||
+      cleanVenue ||
+      "Event Location"
+    );
+
+    safeText(mapAddress, cleanVenue);
+
+    // Clear old handlers
+    mapImage.onload = null;
+    mapImage.onerror = null;
+
+    // If cached map fails → regenerate
+    mapImage.onerror = async () => {
+      warn("Cached event map failed, regenerating…");
+      await regenerateEventMap(ev);
+    };
+
+    // Load cached map
+    mapImage.src = `${ev.mapImageUrl}?t=${nowMs()}`;
+    mapLink.href = ev.mapsWebUrl;
+
+    const iconUrl = await getEventCategoryIcon(ev);
+
+    attachMapOverlayHandler(
+      ev.title || ev.resolvedName || cleanVenue || "Event Location",
+      iconUrl
+    );
+
+    mapImage.onclick = () => mapLink.click();
+    return;
+  }
+
+  /* -------------------------------------------------
+     2. FALLBACK: GENERATE NEW MAP
+  -------------------------------------------------- */
+  try {
+    const venue = cleanVenue || "";
+    const eventID = evt.id;
+    
+    // ⭐ NEW — call connector instead of backend URL
+    const data = await getMap(venue, eventID);
+
+    if (!data || !data.success) {
+      mapContainer.style.display = "block";
+      safeText(mapName, "");
+      safeText(mapAddress, "Map unavailable.");
+      mapImage.src = "";
+      mapLink.href = "#";
+      return;
+    }
+
+    mapContainer.style.display = "block";
+
+    safeText(
+      mapName,
+      ev.title ||
+      data.resolvedName ||
+      cleanVenue ||
+      "Event Location"
+    );
+
+    safeText(
+      mapAddress,
+      data.resolvedAddress ||
+      ev.venue ||
+      ""
+    );
+
+    mapImage.onload = null;
+    mapImage.onerror = null;
+
+    // If generated map fails → regenerate
+    mapImage.onerror = async () => {
+      warn("Generated event map failed, regenerating…");
+      await regenerateEventMap(ev);
+    };
+
+    mapImage.src = `${data.mapImageUrl}?t=${nowMs()}`;
+    mapLink.href = data.mapsWebUrl || ev.mapsWebUrl || "#";
+
+    const iconUrl = await getEventCategoryIcon(ev);
+
+    attachMapOverlayHandler(
+      ev.title || data.resolvedName || cleanVenue || "Event Location",
+      iconUrl
+    );
+
+    mapImage.onclick = () => mapLink.click();
+
+  } catch (err) {
+    error("Map Load Failed:", err);
+    mapContainer.style.display = "block";
+    safeText(mapName, "");
+    safeText(mapAddress, "Map unavailable.");
+    mapImage.src = "";
+    mapLink.href = "#";
+  }
+}
+
+function isEventOwner(ev, userEmail) {
+  return ev.email.toLowerCase() === (userEmail || "").toLowerCase();
+}
+
+function updateMassEmailBadge(total) {
+  const badge = el("massEmailBadge");
+  const btn   = el("massEmailBtn");
+
+  if (!badge || !btn) return;
+
+  badge.textContent = total;
+  btn.title = `Mass Email (${total} credits remaining)`;
+}
+
+
+async function fetchUserCredits(email) {
+  const q = query(collection(db, "Users"), where("TPIdentity.email", "==", email), limit(1));
+  const snap = await getDocs(q);
+  const notif = snap.empty ? {} : (snap.docs[0].data().TPNotifications || {});
+
+  return {
+    freeRemaining: Math.max(0, (notif.freeMassNotificationsLimit ?? 2) - (notif.freeMassNotificationsUsed ?? 0)),
+    paidRemaining: notif.paidMassNotificationCredits ?? 0
+  };
+}
+
+/* -------------------------------------------------
+   28. LABEL + ICON RENDERER
+-------------------------------------------------- */
+function prettyLabel(str) {
+  if (!str) return "";
+
+  return str
+    .split("-")
+    .map(part =>
+      part
+        .split(" ")
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ")
+    )
+    .join(" ");
+}
+
+function renderLabeledIcon(key, isSub = false) {
+  if (!key) return "";
+
+  const label = prettyLabel(key);
+
+  const iconUrl = isSub
+    ? eventSubcategoryIconMap[key] || ""
+    : eventCategoryIconMap[key] || "";
+
+  const iconImg = iconUrl
+    ? `<img src="${iconUrl}" style="width:30px;height:30px;margin-top:-6px;object-fit:contain;margin-right:2px;vertical-align:middle;">`
+    : "";
+
+  return `${iconImg}<span>${label}</span>`;
+}
+
+// Helper: convert "11:00 AM" → { hours, minutes }
+  function to12Hour(time24) {
+  if (!time24) return "";
+
+  let parts = time24.split(":");
+  let h = Number(parts[0]) || 0;
+  let m = parts[1] ? Number(parts[1]) : 0;
+
+  const suffix = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+
+  return `${h}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+  /* -------------------------------------------------
+   17. DOTS UPDATE (idempotent)
+-------------------------------------------------- */
+function updateDots() {
+  const dots = el("dots");
+  if (!dots) return;
+
+  dots.innerHTML = "";
+
+  (carouselImages || []).forEach((_, i) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (i === currentIndex ? " active" : "");
+    d.setAttribute("aria-label", `Image ${i + 1}`);
+
+    d.onclick = () => {
+      currentIndex = i;
+      updateCarousel();
+    };
+
+    dots.appendChild(d);
+  });
+}
+
+  /* -------------------------------------------------
+   20. CAROUSEL UPDATE (idempotent)
+-------------------------------------------------- */
+function updateCarousel() {
+  try {
+    const mainImage = el("mainImage");
+    const leftArrow = el("leftArrow");
+    const rightArrow = el("rightArrow");
+
+    mainImage.style.opacity = 0;
+
+    // prevent duplicate onload handlers
+    mainImage.onload = null;
+
+    mainImage.onload = () => {
+      mainImage.style.opacity = 1;
+    };
+
+    if (!Array.isArray(carouselImages) || carouselImages.length === 0) {
+      warn("Carousel: No images found, using fallback.");
+      carouselImages = ["./_EXPRESSIONS/_PEX/BUILD/Frustrated.png"];
+      currentIndex = 0;
+    }
+
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= carouselImages.length)
+      currentIndex = carouselImages.length - 1;
+
+    setTimeout(() => {
+      mainImage.src = carouselImages[currentIndex];
+      mainImage.onerror = () => {
+        mainImage.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+      };
+      mainImage.style.opacity = 1;
+    }, 150);
+
+    leftArrow.style.display =
+      currentIndex > 0 ? "block" : "none";
+    rightArrow.style.display =
+      currentIndex < carouselImages.length - 1 ? "block" : "none";
+
+    if (typeof updateDots === "function") {
+      updateDots();
+    } else {
+      warn("Carousel: updateDots() missing.");
+    }
+  } catch (err) {
+    error("updatCarousel error:", err);
+    const mainImage = el("mainImage");
+    if (mainImage) {
+      mainImage.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+      mainImage.style.opacity = 1;
+    }
+  }
+}
+
+/* ---------- Render event (main) ---------- */
+async function renderEvent(evRaw) {
+  if (PulseRealm.__tp_render_event_ran) return;
+  PulseRealm.__tp_render_event_ran = true;
+  try {
+    const ev = sanitizeEvent(evRaw || {});
+    PulseRealm.__currentEvent = ev;
+
+    /* -------------------------------
+       🔮 Inject Price Badge in Title
+    --------------------------------*/
+    const titleEl = el("title");
+
+    // Normalize 💲 symbols (convert $ → 💲)
+    const price = ev.priceRating
+      ? normalizePriceSymbol(ev.priceRating)
+      : "";
+
+    // Build title HTML
+    titleEl.innerHTML = `
+      <span class="title-text">${ev.title || "Untitled Event"}</span>
+      ${price ? `<span class="price-badge">${price}</span>` : ""}
+    `;
+
+    // Apply animation classes
+    const badge = titleEl.querySelector(".price-badge");
+    if (badge) {
+      if (price === "💎") {
+        badge.classList.add("diamond");
+      } else if (price === "💲💲💲") {
+        badge.classList.add("tier-3");
+      } else if (price === "💲💲") {
+        badge.classList.add("tier-2");
+      } else if (price === "💲") {
+        badge.classList.add("tier-1");
+      }
+    }
+    
+    const summaryRow = el('summaryRow'), summarySpan = el('summary');
+    if (ev.summary && summaryRow && summarySpan) {
+      summarySpan.textContent = ev.summary;
+      summaryRow.style.display = 'block';
+    } else if (summaryRow) summaryRow.style.display = 'none';
+
+    const descriptionRow = el('descriptionRow'), descriptionSpan = el('description');
+    if (ev.description && descriptionRow && descriptionSpan) {
+      descriptionSpan.textContent = ev.description;
+      descriptionRow.style.display = 'block';
+    } else if (descriptionRow) descriptionRow.style.display = 'none';
+
+    /* ---------- Language ---------- */
+    const langRow = el('languageRow'), langSpan = el('eventLanguage');
+    if (ev.language && langRow && langSpan) {
+      langSpan.textContent = ev.language;
+      langRow.style.display = 'block';
+    } else if (langRow) langRow.style.display = 'none';
+
+    /* ---------- Dates / Times ---------- */
+    const rawFromDate = ev.fromDate || ev.Fromdate || ev.toDate || ev.Todate;
+    const rawToDate   = ev.toDate   || ev.Todate   || ev.fromDate || ev.Fromdate;
+
+    const fromDate = safeNormalizeDate(rawFromDate);
+    const toDate   = safeNormalizeDate(rawToDate);
+
+    if (!fromDate || !toDate) {
+      const infoBlock = el('infoBlock');
+      if (infoBlock) {
+        infoBlock.innerHTML = `
+          <div class="info-row">
+            <div class="info-label">Dates</div>
+            <div class="info-value">Invalid date</div>
+          </div>`;
+      }
+      return;
+    }
+
+    const fromTime = safeNormalizeTime(ev.fromTime || ev.Fromtime);
+    const toTime   = safeNormalizeTime(ev.toTime || ev.Totime);
+
+    const timeDisplay =
+      fromTime && toTime
+        ? `${to12Hour(fromTime)} – ${to12Hour(toTime)}`
+        : 'Time TBA';
+
+    /* ---------- Images / Carousel ---------- */
+    const images = Array.isArray(ev.images) && ev.images.length > 0
+      ? ev.images
+      : ['./_EXPRESSIONS/_PEX/BUILD/Frustrated.png'];
+
+    carouselImages = images;
+    currentIndex = 0;
+    updateCarousel();
+
+    /* ---------- Owner Edit Badge (idempotent) ---------- */
+    const wrapperEl = qs('.carousel-wrapper');
+    if (wrapperEl) {
+      wrapperEl.querySelectorAll('.edit-badge-detail').forEach(el => el.remove());
+    }
+
+    const isOwner =
+      ev.email &&
+      userEmail &&
+      ev.email.toLowerCase() === userEmail.toLowerCase();
+
+    if (isOwner && wrapperEl) {
+      const badge = document.createElement('div');
+      badge.className = 'edit-badge-detail';
+      badge.innerHTML = '✏️ Edit';
+      badge.onclick = () => {
+        window.location.href = `?impulse=TropicPulseEditEvent&id=${encodeURIComponent(ev.id)}`;
+      };
+      wrapperEl.appendChild(badge);
+    }
+
+    /* ---------- Action Row ---------- */
+    const actionRow = el('actionRow');
+    if (!actionRow) return;
+    actionRow.innerHTML = '';
+
+    const calBtn = document.createElement('button');
+    calBtn.className = 'icon-btn calendar-btn';
+    calBtn.innerHTML = '📅';
+    actionRow.appendChild(calBtn);
+
+    const menu = document.createElement('div');
+    menu.className = 'calendar-menu hidden';
+    menu.innerHTML = `
+      <div class="menu-item" id="gcalAdd">Add to Google Calendar</div>
+      <div class="menu-item" id="icsAdd">Download .ICS File</div>`;
+    actionRow.appendChild(menu);
+
+    calBtn.onclick = (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('hidden');
+    };
+
+    const gcalAdd = menu.querySelector('#gcalAdd');
+    const icsAdd  = menu.querySelector('#icsAdd');
+
+    if (gcalAdd) {
+      gcalAdd.onclick = (e) => {
+        e.stopPropagation();
+        if (gcalUrls[0]) PulseRealm.open(gcalUrls[0], '_blank', 'noopener');
+        menu.classList.add('hidden');
+      };
+    }
+
+    if (icsAdd && !icsAdd.__bound) {
+      icsAdd.__bound = true;
+
+      icsAdd.onclick = async (e) => {
+        e.stopPropagation();
+
+        if (!ev.id) {
+          showToast("Event not ready. Try again in a moment.");
+          menu.classList.add("hidden");
+          return;
+        }
+
+        try {
+          // 1️⃣ Ask backend for ICS download URL
+          const res = await PulseRealm.callHelper("downloadICS", { id: ev.id });
+
+          if (!res.url) {
+            showToast("Unable to generate calendar file.");
+            menu.classList.add("hidden");
+            return;
+          }
+
+          // 2️⃣ Trigger download
+          window.location.href = res.url;
+          showToast("Calendar File Downloaded. Tap it to Open.");
+
+        } catch (err) {
+          showToast("Unable to Download Calendar File!?");
+        }
+
+        menu.classList.add("hidden");
+      };
+    }
+
+    /* --- Bookmark --- */
+    const bookmarkBtn = document.createElement('button');
+    bookmarkBtn.className = 'bookmark-btn';
+    bookmarkBtn.textContent = '☆';
+
+    if (!loggedIn) bookmarkBtn.classList.add('disabled-btn');
+
+    isEventsSaved(ev.id, userEmail)
+      .then(saved => {
+        if (saved) {
+          bookmarkBtn.classList.add('saved');
+          bookmarkBtn.textContent = '★';
+        }
+      })
+      .catch(()=>{});
+
+    bookmarkBtn.onclick = () => toggleEventsBookmark(ev, bookmarkBtn);
+    actionRow.appendChild(bookmarkBtn);
+
+    /* --- Share --- */
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'icon-btn share-btn';
+    shareBtn.innerHTML = '🔗';
+
+    // ⭐ FIXED: use canonical shortCode from CacheManager
+    const shortCode = ev.shortCode || ev.id;
+    const shareUrl = `/e/${shortCode}`;
+
+    shareBtn.onclick = async () => {
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: ev.title,
+            text: ev.description || '',
+            url: shareUrl
+          });
+        } else {
+          await navigator.clipboard.writeText(shareUrl);
+          showToast('Link copied!');
+        }
+      } catch (err) {
+        warn('Share failed:', err);
+        showToast('Share failed');
+      }
+    };
+
+    actionRow.appendChild(shareBtn);
+
+    /* ---------- Mass Email ---------- */
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-flex';
+
+    const massEmailBtn = document.createElement('button');
+    massEmailBtn.className = 'icon-btn';
+    massEmailBtn.id = 'massEmailBtn';
+    massEmailBtn.innerHTML = '✉️';
+    wrapper.appendChild(massEmailBtn);
+
+    const badgeEl = document.createElement('div');
+    badgeEl.id = 'massEmailBadge';
+    badgeEl.style.position = 'absolute';
+    badgeEl.style.top = '0px';
+    badgeEl.style.right = '0px';
+    badgeEl.style.background = '#1DA1F2';
+    badgeEl.style.color = 'white';
+    badgeEl.style.transform = "translate(50%, -50%)";
+    badgeEl.style.width = '22px';
+    badgeEl.style.height = '22px';
+    badgeEl.style.borderRadius = '50%';
+    badgeEl.style.display = 'flex';
+    badgeEl.style.alignItems = 'center';
+    badgeEl.style.justifyContent = 'center';
+    badgeEl.style.fontSize = '12px';
+    badgeEl.style.fontWeight = '700';
+    badgeEl.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+    badgeEl.style.transition = 'opacity 0.25s ease';
+    badgeEl.textContent = '…';
+    badgeEl.style.opacity = isOwner ? '1' : '0';
+
+    wrapper.appendChild(badgeEl);
+
+    if (!isOwner) {
+      massEmailBtn.classList.add('disabled-btn');
+      massEmailBtn.title = 'Only the event owner can send Mass Emails.';
+    } else {
+      massEmailBtn.onclick = () => {
+        const overlay = el('massEmailConfirm');
+        if (overlay) overlay.classList.remove('hidden');
+      };
+    }
+
+    actionRow.appendChild(wrapper);
+
+    /* ---------- Confirm Modal ---------- */
+    const confirmOverlay = el('massEmailConfirm'),
+          confirmCancel  = el('massEmailCancel'),
+          confirmYes     = el('massEmailYes');
+
+    if (confirmOverlay) confirmOverlay.classList.add('hidden');
+
+    if (confirmCancel) {
+      confirmCancel.onclick = () => {
+        if (confirmOverlay) confirmOverlay.classList.add('hidden');
+      };
+    }
+
+    if (confirmYes && !confirmYes._tp_handler) {
+      confirmYes._tp_handler = async () => {
+        if (confirmOverlay) confirmOverlay.classList.add('hidden');
+
+        try {
+          massEmailBtn.disabled = true;
+          massEmailBtn.innerHTML = '⏳';
+
+          const payload = {
+            email: userEmail,
+            eventID: ev.id,
+            eventTitle: ev.title
+          };
+
+          // ⭐ NEW — call connector instead of backend URL
+          const data = await getHook(payload);
+          const status = data.status || data.result.status;
+          const paymentLink = data.paymentLink || data.result.paymentLink;
+
+          if (status === 'no_credits' && paymentLink) {
+            showToast("You're Out of Credits. Redirecting...");
+            setTimeout(()=>window.location.href=paymentLink, 800);
+            return;
+          }
+
+          if (status === 'sent') {
+            showToast('Mass Email Sent (-1 Credit)');
+            await lazyLoadCreditsForEvent(ev);
+            massEmailBtn.innerHTML = '✔️';
+            massEmailBtn.disabled = false;
+            return;
+          }
+
+          showToast(`Mass Email Failed: ${(status || 'ERROR').toUpperCase()}`);
+          massEmailBtn.innerHTML = '✉️';
+          massEmailBtn.disabled = false;
+
+        } catch (err) {
+          error('Mass Email Error:', err);
+          showToast('Error Sending Mass Email!');
+          massEmailBtn.innerHTML = '✉️';
+          massEmailBtn.disabled = false;
+        }
+      };
+
+      confirmYes.addEventListener('click', confirmYes._tp_handler);
+    }
+
+    /* ---------- Price Badge ---------- */
+    const priceBadge = el('priceBadge');
+    if (priceBadge) {
+      const price = ev.price ? '$' + ev.price : 'FREE';
+      priceBadge.textContent = price;
+      priceBadge.classList.toggle('free', price === 'FREE');
+    }
+
+    /* ---------- Category Icon ---------- */
+    const normalizedCategory = normalizeCategory(ev.category || "general");
+    const categoryHtml = renderLabeledIcon(normalizedCategory, false);
+
+    /* ---------- Info Block ---------- */
+    const infoBlock = el('infoBlock');
+    if (infoBlock) {
+      infoBlock.innerHTML = `
+        <div class="info-row">
+          <div class="info-label">Category:</div>
+          <div class="info-value">${categoryHtml}</div>
+        </div>
+ 
+        <div class="info-row">
+          <div class="info-label">Venue:</div>
+          <div class="info-value">${getDisplayVenue(ev)}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">Dates:</div>
+          <div class="info-value">${fromDate} – ${toDate}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">Times:</div>
+          <div class="info-value">${timeDisplay}</div>
+        </div>
+      `;
+    }
+
+    /* ---------- Contact Row ---------- */
+    const contactRow = el('contactRow');
+    if (contactRow) {
+      contactRow.innerHTML = '';
+
+      if (ev.email) {
+        const emailBtn = document.createElement('a');
+        emailBtn.href = `mailto:${ev.email}`;
+        emailBtn.className = 'contact-btn email';
+        emailBtn.textContent = 'Email';
+        contactRow.appendChild(emailBtn);
+      }
+
+      if (ev.phone) {
+        const callBtn = document.createElement('a');
+        callBtn.href = `tel:${ev.phone}`;
+        callBtn.className = 'contact-btn call';
+        callBtn.textContent = 'Call';
+        contactRow.appendChild(callBtn);
+
+        const waBtn = document.createElement('a');
+        waBtn.href = `https://wa.me/${ev.phone.replace(/\D/g,'')}`;
+        waBtn.className = 'contact-btn whatsapp';
+        waBtn.textContent = 'WhatsApp';
+        contactRow.appendChild(waBtn);
+      }
+    }
+    
+
+    /* -------------------------------------------------
+      3. TOAST (idempotent)
+    -------------------------------------------------- */
+    if (!el("tpToast")) {
+      const toast = document.createElement("div");
+      toast.id = "tpToast";
+      toast.innerHTML = `
+        <span class="icon">📥</span>
+        <span id="tpToastMsg"></span>
+      `;
+      document.body.appendChild(toast);
+    }
+
+    /* ---------- Credits ---------- */
+    lazyLoadCreditsForEvent(ev).catch(()=>{});
+
+  } catch (err) {
+    error('renderEvent error:', err);
+  }
+}
+
+/* ---------- Event sanitization ---------- */
+function sanitizeEvent(raw = {}) {
+  const data = raw || {};
+
+  return {
+    id: data.id || null,
+
+    // Core identity
+    title: data.title || "Untitled Event",
+    category: data.category || "General",
+
+    // Venue + location
+    venue: data.venue || data.location || "TBA",
+    location: data.location || data.venue || null,
+
+    // Lat/lng
+    lat: data.lat || null,
+    lng: data.lng || null,
+
+    // Dates + times
+    fromDate: data.fromDate || null,
+    toDate: data.toDate || data.fromDate || null,
+    fromTime: data.fromTime || null,
+    toTime: data.toTime || null,
+
+    // Pricing
+    price: data.price || null,
+    priceRange: data.priceRange || null,
+
+    // Media
+    images: data.images || [],
+    banners: data.banners || [],
+    mainPhotoURL: data.mainPhotoURL || null,
+
+    // Organizer
+    email: data.email || null,
+    organizerEmail: data.organizerEmail || data.email || null,
+    organizerPhone: data.organizerPhone || null,
+
+    // Tags / vibe
+    tags: data.tags || [],
+    vibeTags: data.vibeTags || [],
+
+    social: {
+      facebook: (data.social.facebook ?? []),
+      instagram: (data.social.instagram ?? []),
+      twitter: (data.social.twitter ?? []),
+      youtube: (data.social.youtube ?? []),
+      other: (data.social.other ?? [])
+    },
+    websites: data.websites || [],
+
+    // Description
+    summary: data.summary || null,
+    description: data.description || null,
+
+    // Spread remaining fields safely
+    ...data
+  };
+}
+
+/* ---------- Display helpers ---------- */
+function getDisplayVenue(ev) {
+  if (!ev) return 'TBA';
+
+  // 1. Google busiess name (clean commas → spaces)
+  if (ev.resolvedName) {
+    return ev.resolvedName
+      .replace(/san pedro, belize/gi, '')
+      .replace(/san pedro belize/gi, '')
+      .replace(/belize city, belize/gi, '')
+      .replace(/belize city belize/gi, '')
+      .replace(/,/g, ' ')
+      .trim();
+  }
+
+  // 2. Google address fallback
+  if (ev.resolvedAddress) return ev.resolvedAddress;
+
+  // 3. User-typed venue (title-cased)
+  if (ev.venue) {
+    return ev.venue.replace(/\w\S*/g, txt =>
+      txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    );
+  }
+
+  return 'TBA';
+}
+
+async function loadEvent() {
+  try {
+    const ev = await PulseEventCacheManager.getEventById(eventID);
+
+    existingShortCode = ev.shortCode || null;
+
+    await renderEvent(ev);
+    await loadMapForEvent(ev);
+    await lazyLoadCreditsForEvent(ev);
+
+  } catch (err) {
+    error("loadEvent error:", err);
+  }
+}
+
+function hideTPLoader() {
+    const el = document.getElementById("t-loading");
+    if (!el) return;
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 700);
+  }
+
+async function runWakeUpHeartbeat() {
+    await sessionCheck();
+  }
+
+  
+function saveLocation(lat, lng) {
+    localStorage.setItem(
+      "lastKnownLocation",
+      JSON.stringify({ lat, lng, ts: nowMs() })
+    );
+  }
+
+  function getSavedLocation() {
+    try {
+      const raw = localStorage.getItem("lastKnownLocation");
+      if (!raw) return null;
+
+      const obj = JSON.parse(raw);
+      if (!obj.lat || !obj.lng) return null;
+
+      return obj;
+    } catch {
+      return null;
+    }
+  }
+
+  function fetchLowAccuracyInBackground(onUpdate) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        log("Background low accuracy:", loc);
+        saveLocation(loc.lat, loc.lng);
+        onUpdate(loc);
+      },
+      err => {
+        warn("Background low accuracy failed:", err);
+
+        // Retry once after 2 seconds
+        setTimeout(() => {
+          navigator.geolocation.getCurrentPosition(
+            pos2 => {
+              const loc2 = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
+              log("Retry low accuracy:", loc2);
+              saveLocation(loc2.lat, loc2.lng);
+              onUpdate(loc2);
+            },
+            err2 => {
+              warn("Retry low accuracy failed:", err2);
+            },
+            { enableHighAccuracy: false, timeout: 5000 }
+          );
+        }, 2000);
+      },
+      { enableHighAccuracy: false, timeout: 5000 }
+    );
+  }
+
+  function getDistanceMiles(lat1, lon1, lat2, lon2) {
+    const R = 3958.8; // Earth radius in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  }
+
+  async function getInstantLocationWithBackgroundUpdate(onSignificantChange) {
+    const saved = getSavedLocation();
+
+    // 1️⃣ Return cached location immediately
+    if (saved) {
+      log("Using cached location:", saved);
+      setTimeout(() => {
+        fetchLowAccuracyInBackground(newLoc => {
+          const dist = getDistanceMiles(saved, newLoc);
+          if (dist > 50) {
+            log("📍 Significant movement:", dist, "m");
+            onSignificantChange(newLoc);
+          }
+        });
+      }, 0);
+      return saved;
+    }
+
+    // 2️⃣ No saved location → try low accuracy immediately
+    return new Promise(resolve => {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          log("Initial low accuracy:", loc);
+          saveLocation(loc.lat, loc.lng);
+          resolve(loc);
+
+          // Background refresh
+          fetchLowAccuracyInBackground(newLoc => {
+            const dist = getDistanceMiles(loc, newLoc);
+            if (dist > 50) onSignificantChange(newLoc);
+          });
+        },
+        err => {
+          warn("Initial low accuracy failed:", err);
+          resolve(null);
+
+          // Still try background update
+          fetchLowAccuracyInBackground(newLoc => {
+            onSignificantChange(newLoc);
+          });
+        },
+        { enableHighAccuracy: false, timeout: 7000 }
+      );
+    });
+  }
+
+  // Namespaced timeout holder (global, safe)
+let __tp_overlay_resize_timeout = null;
+
+function applyTropicOverlay(name, iconUrl = null) {
+  // Remove any previous resize handler (idempotent)
+  PulseRealm.removeEventListener("resize", PulseRealm.__tp_overlay_resize_handler);
+
+  const overlay   = document.getElementById("tpOverlay");
+  const dot       = document.getElementById("tpDot");
+  const label     = document.getElementById("tpLabel");
+  const labelText = document.getElementById("tpLabelText");
+  const icon      = document.getElementById("tpIcon");
+  const mapImg    = document.getElementById("mapImage");
+
+  if (!overlay || !dot || !label || !mapImg) return;
+
+  const rect = mapImg.getBoundingClientRect();
+
+  // Center of the map image
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+
+  dot.style.left = `${cx - 9}px`;
+  dot.style.top  = `${cy - 9}px`;
+
+  labelText.textContent = name || "Location";
+  label.style.left = `${cx}px`;
+  label.style.top  = `${cy - 22}px`;
+
+  // Category icon support
+  if (iconUrl) {
+    icon.src = iconUrl;
+    icon.style.display = "block";
+  } else {
+    icon.style.display = "none";
+  }
+
+  overlay.style.display = "block";
+
+  // Install new resize handler
+  PulseRealm.__tp_overlay_resize_handler = () => {
+    clearTimeout(__tp_overlay_resize_timeout);
+    __tp_overlay_resize_timeout = setTimeout(() => {
+      applyTropicOverlay(labelText.textContent, icon.src || null);
+    }, 150);
+  };
+
+  window.addEventListener("resize", PulseRealm.__tp_overlay_resize_handler);
+}
+(async () => {
+  // -----------------------------------------
+  // MARKER (CLEAN + SAFE)
+  // -----------------------------------------
+  let lastTime = nowMs();
+  function mark(label, absolute = false) {
+    const now = nowMs();
+    const diff = now - lastTime;
+    log(
+      absolute
+        ? `${label}: @${now.toFixed(1)}ms`
+        : `${label}: +${diff.toFixed(1)}ms`
+    );
+    lastTime = now;
+  }
+
+  mark("EVENT DOM STARTS");
+
+  // -----------------------------------------
+  // 1️⃣ LOCATION (ONE-TIME, NO LOOPS)
+  // -----------------------------------------
+  currentUserLocation = await getInstantLocationWithBackgroundUpdate(newLoc => {
+    currentUserLocation = newLoc;
+    mark("SETTING CURRENT LOCATION IF AVAILABLE");
+  });
+
+  mark("EVENT LOCATION READY");
+
+  // -----------------------------------------
+  // 2️⃣ LOAD EVENT (ONE-TIME)
+  // -----------------------------------------
+  await loadEvent();
+  mark("EVENT LOADED");
+
+  // -----------------------------------------
+  // 3️⃣ HEARTBEAT INIT (ONE-TIME)
+  // -----------------------------------------
+  await runWakeUpHeartbeat();
+  mark("EVENT HEARTBEAT STARTED");
+
+  // -----------------------------------------
+  // 4️⃣ OVERLAYS (ONE-TIME)
+  // -----------------------------------------
+  initializeOverlays();
+  mark("EVENT OVERLAYS LOADED");
+
+  // -----------------------------------------
+  // ⭐ NO TIMERS. NO INTERVALS. NO LOOPS.
+  // PulseBand is UI-only on this page.
+  // -----------------------------------------
+
+  hideTPLoader();
+  mark("EVENT DOM ENDS", true);
+})();
+
+
+</script>
+</body>
+</html>

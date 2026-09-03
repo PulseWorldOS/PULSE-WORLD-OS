@@ -1,0 +1,705 @@
+
+async function PulseWorldLogin() {
+  "use strict";
+
+  console.log("%c[PULSEWORLD LOGIN] 1/2 — Booting Login Runtime…",
+    "color:#00e5ff;font-weight:bold;font-family:monospace");
+
+  const statusEl = document.getElementById("stripeStatus");
+
+  statusEl.textContent = "Checking Status…";
+
+  const statusID = PulseRealm.PulseBank;
+  if (!statusID || statusID === "Unknown Stripe ID") {
+    statusEl.textContent = "Needs Tethered";
+  } else {
+    statusEl.textContent = "Connected ✔";
+  }
+
+  // FULL NAME
+  document.getElementById("fullName").value =
+    PulseRealm.PulseIdentity.userName || "";
+
+  // DISPLAY NAME
+  document.getElementById("displayNameInput").value =
+    PulseRealm.PulseUser || "";
+
+  // EMAIL
+  document.getElementById("email").value =
+    PulseRealm.PulseIdentity.userEmail || `youremail@domain.com`;
+
+  // PHONE
+  document.getElementById("phone").value =
+    PulseRealm.Phone || "";
+
+  // PULSE POINTS
+  document.getElementById("pulsePointsDisplay").textContent =
+    `Pulse Points: ${PulseRealm.PulseIdentity.PulsePoints || 0}`;
+    
+  // ==========================================================================
+  // BOOT
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Initializing constants and UI bindings…",
+    "color:#00e5ff;font-family:monospace");
+
+  const PAGE = "PulseWorldReality";
+  const CACHE_TIMEOUT = 200;
+
+
+  const qs = id => document.getElementById(id);
+
+  const UI = {
+    authMsg: qs("authMsg"),
+    pinSection: qs("pinSection"),
+    emailSection: qs("emailSection"),
+    rememberSection: qs("rememberSection"),
+    pinInput: qs("pinInput"),
+    emailInput: qs("emailInput"),
+    deviceInput: qs("deviceInput"),
+    sendBtn: qs("sendBtn"),
+    verifyBtn: qs("verifyBtn"),
+    aliasInput: qs("aliasInput")
+  };
+
+  console.log("%c[PULSEWORLD LOGIN] UI elements mapped.",
+    "color:#00e5ff;font-family:monospace");
+
+  const params = new URLSearchParams(location.search);
+
+  const returnTo =
+    params.get("returnTo") ||
+    "PulseWorldInventory";
+
+  const displayNameParam =
+    params.get("user") ||
+    params.get("displayName");
+
+  const UserCache =
+    PulseRealm.PulseWorldUserCache ||
+    PulseRealm.GlobalUserCache ||
+    PulseRealm.PulseUserCache ||
+    null;
+
+  console.log("%c[PULSEWORLD LOGIN] URL params + UserCache resolved.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // LOGGER
+  // ==========================================================================
+
+  let lastTick = performance.now();
+
+  const log = (type, msg) => {
+    const now = performance.now();
+    const delta = (now - lastTick).toFixed(1);
+    lastTick = now;
+
+    console.log(`%c[PULSEWORLD LOGIN] ${msg} +${delta}ms`,
+      "color:#26C6DA;font-family:monospace;font-weight:bold");
+  };
+
+  console.log("%c[PULSEWORLD LOGIN] Logger initialized.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // QUICK BOOT FX
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Running quick boot FX…",
+    "color:#00e5ff;font-family:monospace");
+
+  if (UI.aliasInput) {
+    UI.aliasInput.textContent =
+      await PulseRealm.GeneratePulseUser();
+    console.log("%c[PULSEWORLD LOGIN] Alias generated.",
+      "color:#00e5ff;font-family:monospace");
+  }
+
+  // ==========================================================================
+  // SESSION STORE
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Initializing IndexedDB session store…",
+    "color:#00e5ff;font-family:monospace");
+
+  const DB = (() => {
+
+    const NAME = "PulseWorldBarrierDB";
+    const STORE = "session";
+
+    const open = () =>
+      new Promise((resolve, reject) => {
+
+        const req = indexedDB.open(NAME, 1);
+
+        req.onupgradeneeded = e => {
+          const db = e.target.result;
+
+          if (!db.objectStoreNames.contains(STORE)) {
+            db.createObjectStore(STORE, {
+              keyPath: "key"
+            });
+          }
+        };
+
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+
+      });
+
+    async function get(key) {
+
+      try {
+
+        const db = await open();
+
+        return await new Promise(resolve => {
+
+          const req =
+            db.transaction(STORE)
+              .objectStore(STORE)
+              .get(key);
+
+          req.onsuccess =
+            () => resolve(req.result?.value ?? null);
+
+          req.onerror =
+            () => resolve(null);
+
+        });
+
+      } catch {
+        return null;
+      }
+
+    }
+
+    async function set(key, value) {
+
+      try {
+
+        const db = await open();
+
+        return await new Promise(resolve => {
+
+          const tx =
+            db.transaction(STORE, "readwrite");
+
+          tx.objectStore(STORE).put({
+            key,
+            value
+          });
+
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+
+        });
+
+      } catch {
+        return false;
+      }
+
+    }
+
+    async function remove(key) {
+
+      try {
+
+        const db = await open();
+
+        return await new Promise(resolve => {
+
+          const tx =
+            db.transaction(STORE, "readwrite");
+
+          tx.objectStore(STORE).delete(key);
+
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+
+        });
+
+      } catch {
+        return false;
+      }
+
+    }
+
+    return { get, set, remove };
+
+  })();
+
+  console.log("%c[PULSEWORLD LOGIN] IndexedDB session store ready.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // SESSION
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Preparing session handlers…",
+    "color:#00e5ff;font-family:monospace");
+
+  const Session = {
+
+    async get() {
+
+      const userId =
+        await DB.get("userId");
+
+      const sessionHash =
+        await DB.get("sessionHash");
+
+      return userId && sessionHash
+        ? { userId, sessionHash }
+        : null;
+    },
+
+    async set(userId, sessionHash) {
+
+      await DB.set("userId", userId);
+      await DB.set("sessionHash", sessionHash);
+
+    },
+
+    async clear() {
+
+      await DB.remove("userId");
+      await DB.remove("sessionHash");
+
+      localStorage.removeItem(
+        "pulseworld_user_id_v1"
+      );
+
+      localStorage.removeItem(
+        "pulseworld_session_hash_v1"
+      );
+
+    }
+
+  };
+
+  console.log("%c[PULSEWORLD LOGIN] Session handlers ready.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // UI
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Preparing UI state machine…",
+    "color:#00e5ff;font-family:monospace");
+
+  const UIState = {
+
+    login() {
+
+      UI.emailSection &&
+        (UI.emailSection.style.display = "block");
+
+      UI.rememberSection &&
+        (UI.rememberSection.style.display = "block");
+
+      UI.pinSection &&
+        (UI.pinSection.style.display = "none");
+
+      UI.authMsg &&
+        (UI.authMsg.style.display = "none");
+
+    },
+
+    pin() {
+
+      UI.emailSection &&
+        (UI.emailSection.style.display = "none");
+
+      UI.rememberSection &&
+        (UI.rememberSection.style.display = "none");
+
+      UI.pinSection &&
+        (UI.pinSection.style.display = "block");
+
+    },
+
+    message(msg, success = false) {
+
+      if (!UI.authMsg) return;
+
+      UI.authMsg.className =
+        success
+          ? "pw-msg success"
+          : "pw-msg error";
+
+      UI.authMsg.textContent = msg;
+      UI.authMsg.style.display = "block";
+
+    }
+
+  };
+
+  console.log("%c[PULSEWORLD LOGIN] UI state machine ready.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // IDENTITY
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Preparing identity handler…",
+    "color:#00e5ff;font-family:monospace");
+
+  const setIdentity = user => {
+
+    PulseRealm.PulseIdentity = {
+      ...(user.identity || {}),
+      roles: user.roles || {},
+      loyalty: user.loyalty || {},
+      security: user.security || {},
+      presence: user.presence || {}
+    };
+
+  };
+
+  console.log("%c[PULSEWORLD LOGIN] Identity handler ready.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // USER RESOLVE
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Preparing user resolver…",
+    "color:#00e5ff;font-family:monospace");
+
+  async function getUser(userId) {
+
+    if (!UserCache?.get) return null;
+
+    return Promise.race([
+      UserCache.get(userId),
+      new Promise(r =>
+        setTimeout(() => r(null), CACHE_TIMEOUT)
+      )
+    ]);
+
+  }
+
+  console.log("%c[PULSEWORLD LOGIN] User resolver ready.",
+    "color:#00e5ff;font-family:monospace");
+
+  // ==========================================================================
+  // TRUST ROUTE
+  // ==========================================================================
+
+  if (displayNameParam) {
+
+    console.log("%c[PULSEWORLD LOGIN] Trustlink detected — redirecting…",
+      "color:#00e5ff;font-family:monospace");
+
+    PulseRealm.PulseIdentity = {
+      displayName: displayNameParam,
+      source: "param",
+      mode: "trustlink"
+    };
+
+    try {
+      await UserCache?.initSession?.();
+    } catch {}
+
+    location.href =
+      `PulseWorldSkills?user=${encodeURIComponent(displayNameParam)}`;
+
+    return;
+  }
+
+  // ==========================================================================
+  // SESSION BOOTSTRAP
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Checking for existing session…",
+    "color:#00e5ff;font-family:monospace");
+
+  try {
+
+    const session = await Session.get();
+
+    if (session) {
+
+      console.log("%c[PULSEWORLD LOGIN] Session found — validating…",
+        "color:#00e5ff;font-family:monospace");
+
+      const user =
+        await getUser(session.userId);
+
+      const hash =
+        user?.security?.sessionHash ||
+        user?.security?.sessionToken;
+
+      if (
+        user &&
+        user.identity?.status === "active" &&
+        hash === session.sessionHash
+      ) {
+
+        console.log("%c[PULSEWORLD LOGIN] Session validated — restoring identity…",
+          "color:#00e5ff;font-family:monospace");
+
+        setIdentity(user);
+
+        log("log", "SESSION RESTORED");
+
+        location.href = returnTo;
+        return;
+      }
+
+      console.log("%c[PULSEWORLD LOGIN] Session invalid — clearing…",
+        "color:#00e5ff;font-family:monospace");
+
+      await Session.clear();
+
+    }
+
+  } catch (err) {
+
+    console.error(
+      "[SESSION BOOT ERROR]",
+      err
+    );
+
+  }
+
+  // ==========================================================================
+  // BIND EVENTS
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Binding UI events…",
+    "color:#00e5ff;font-family:monospace");
+
+  UIState.login();
+
+  UI.sendBtn?.addEventListener("click", async () => {
+
+    console.log("%c[PULSEWORLD LOGIN] SEND PIN clicked.",
+      "color:#00e5ff;font-family:monospace");
+
+    const email =
+      UI.emailInput.value
+        .trim()
+        .toLowerCase();
+
+    if (!email.includes("@")) {
+      console.log("%c[PULSEWORLD LOGIN] Invalid email.",
+        "color:#ff5252;font-family:monospace");
+      UIState.message("Invalid email.");
+      return;
+    }
+
+    try {
+
+      console.log("%c[PULSEWORLD LOGIN] Requesting PIN from server…",
+        "color:#00e5ff;font-family:monospace");
+
+      const r =
+        await PulseRealm.getHook(
+          "sendPin",
+          {
+            email,
+            purpose: "login"
+          }
+        );
+
+      if (!r?.success) {
+        console.log("%c[PULSEWORLD LOGIN] PIN send failed.",
+          "color:#ff5252;font-family:monospace");
+        UIState.message(
+          r?.message ||
+          "Could not send PIN."
+        );
+        return;
+      }
+
+      console.log("%c[PULSEWORLD LOGIN] PIN sent successfully.",
+        "color:#00e5ff;font-family:monospace");
+
+      UIState.message(
+        "PIN Sent!",
+        true
+      );
+
+      UIState.pin();
+
+      UI.pinInput?.focus();
+
+    } catch (err) {
+
+      console.log("%c[PULSEWORLD LOGIN] PIN send error.",
+        "color:#ff5252;font-family:monospace");
+
+      UIState.message(
+        err.message || "PIN Error"
+      );
+
+    }
+
+  });
+
+  UI.verifyBtn?.addEventListener("click", async () => {
+
+    console.log("%c[PULSEWORLD LOGIN] VERIFY PIN clicked.",
+      "color:#00e5ff;font-family:monospace");
+
+    const email =
+      UI.emailInput.value
+        .trim()
+        .toLowerCase();
+
+    const pin =
+      UI.pinInput.value
+        .trim();
+
+    if (pin.length !== 6) {
+
+      console.log("%c[PULSEWORLD LOGIN] PIN length invalid.",
+        "color:#ff5252;font-family:monospace");
+
+      UIState.message(
+        "PIN must be 6 digits."
+      );
+
+      return;
+    }
+
+    try {
+
+      console.log("%c[PULSEWORLD LOGIN] Verifying PIN with server…",
+        "color:#00e5ff;font-family:monospace");
+
+      const r =
+        await PulseRealm.getHook(
+          "verifyPin",
+          {
+            email,
+            pin,
+            purpose: "login"
+          }
+        );
+
+      if (!r?.success) {
+
+        console.log("%c[PULSEWORLD LOGIN] PIN verification failed.",
+          "color:#ff5252;font-family:monospace");
+
+        UIState.message(
+          r?.message ||
+          "Invalid PIN."
+        );
+
+        return;
+      }
+
+      console.log("%c[PULSEWORLD LOGIN] PIN verified — restoring session…",
+        "color:#00e5ff;font-family:monospace");
+
+      const user =
+        r.user || {};
+
+      const userId =
+        r.userId ||
+        user.identity?.userId;
+
+      const sessionHash =
+        r.sessionHash ||
+        user.security?.sessionHash;
+
+      await Session.set(
+        userId,
+        sessionHash
+      );
+
+      userId &&
+        (await UserCache?.put?.(
+          userId,
+          user
+        ));
+
+      setIdentity(
+        user.identity
+          ? user
+          : { identity: { userId, email } }
+      );
+
+      console.log("%c[PULSEWORLD LOGIN] Login complete — redirecting…",
+        "color:#00e5ff;font-family:monospace");
+
+      location.href = returnTo;
+
+    } catch (err) {
+
+      console.log("%c[PULSEWORLD LOGIN] Verification error.",
+        "color:#ff5252;font-family:monospace");
+
+      UIState.message(
+        err.message ||
+        "Verification error."
+      );
+
+    }
+
+  });
+
+  // ==========================================================================
+  // GATELORE
+  // ==========================================================================
+
+  console.log("%c[PULSEWORLD LOGIN] Applying GateLore steps…",
+    "color:#00e5ff;font-family:monospace");
+
+  PulseRealm.PulseGateLore?.steps?.forEach(step => {
+
+    setTimeout(() => {
+
+      step.urlBinary &&
+        history.replaceState(
+          {},
+          "",
+          step.urlBinary
+        );
+
+      const header =
+        qs("portalHeader");
+
+      if (header) {
+
+        if (step.headerText) {
+          header.textContent =
+            step.headerText;
+        }
+
+        if (step.headerAppend) {
+          header.textContent +=
+            step.headerAppend;
+        }
+
+      }
+
+    }, step.delayMs || 0);
+
+  });
+
+  log("log", "BOOT COMPLETE");
+
+  // Generate ONCE
+  const driftID = PulseRealm.DriftSignature;
+
+  // Fill device input + preview
+  UI.deviceInput.value = driftID;
+  document.getElementById('prevDevice').textContent = driftID;
+
+  // Alias live preview
+  UI.aliasInput.addEventListener('input', () => {
+    document.getElementById('prevAlias').textContent = UI.aliasInput.value || "_";
+  });
+
+  // Email live preview
+  UI.emailInput.addEventListener('input', () => {
+    document.getElementById('prevEmail').textContent = UI.emailInput.value || "_";
+  });
+
+};

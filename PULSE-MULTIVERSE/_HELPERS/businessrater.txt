@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Business Sweep</title>
+  <style>
+    body { background:#111; color:#eee; font-family:Arial; padding:20px; }
+    #log { height:900px; overflow-y:auto; background:#000; padding:10px; border:1px solid #333; }
+    button { padding:10px 20px; margin:10px 0; }
+  </style>
+</head>
+<body>
+
+<h2>Business Sweep</h2>
+
+<br>
+<button id="run">Run Sweep</button>
+<button id="stop">Stop</button>
+
+<button id="dupes">Find Duplicate Place IDs</button>
+<button id="fixPlaceIds">Fix Bad Place IDs</button>
+<button id="fixNumericPlaceIdsBtn">Fix Numeric PlaceIds</button>
+<button id="mergeExact">Merge Exact Lat/Lng Duplicates</button>
+<button id="purge">Purge Deprecated Fields</button>
+
+<div id="log"></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+  
+
+  const logEl = document.getElementById("log");
+  const btnRun = document.getElementById("run");
+  const btnStop = document.getElementById("stop");
+
+  let STOP_REQUESTED = false;
+
+  function requestStop() {
+    STOP_REQUESTED = true;
+    log("🛑 STOP REQUESTED — finishing current item...", "warn");
+  }
+
+  function clearStop() {
+    STOP_REQUESTED = false;
+  }
+  
+  btnStop.onclick = requestStop;
+
+  function log(msg, type = "info") {
+    const c =
+      type === "error" ? "#ff4444" :
+      type === "warn"  ? "#ffbb33" :
+                         "#00ff66";
+    logEl.innerHTML += `<div style="color:${c}">${msg}</div>`;
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  const SERPER_KEY = "d093c38c45df9fadc2bedb5d289c2e979dc8e4ac";
+
+  
+    // ---------- CATEGORY POINTS (Belize-aware) ----------
+  const CATEGORY_POINTS = {
+    // ⭐ PRIMARY FOOD & DRINK CATEGORIES (actual price signals)
+    "food": 4,               // general food places
+    "drinks": 4,             // cafes, bars, beverage spots
+    "bar-restaurant": 3,     // sit-down dining
+    "alcoholic": 2,          // bars, lounges
+    "non-alcoholic": 1,      // juice bars, coffee shops
+    "desserts": 2,           // ice cream, bakeries, custard shops
+
+    // ⭐ SUBCATEGORIES (0) — EXCEPT SEAFOOD
+    // These are descriptive only, NOT price signals.
+    "seafood": 0,            // outlier: genuinely more expensive in Belize
+    "groceries": 2,
+    "barbecue": 0,
+    "breakfast": 0,
+    "burgers": 0,
+    "chicken": 0,
+    "chinese": 0,
+    "pizza": 0,
+    "sandwiches": 0,
+    "thai": 1,
+    "indian": 1,
+    "italian": 0,
+
+    
+    "home-essentials": 6,
+    "apparel": 7,
+    "jewelry": 8,
+    "electronics": 6,
+    "tobacco-vapes": 6,
+    "adult": 6,
+
+    // ⭐ SERVICES (unchanged)
+    "animal-pet services": 5,
+    "beauty-spa": 7,
+    "massage": 6,
+    "health-medical": 6,
+    "pharmacy": 6,
+    "atm-banks": 0,
+
+    // ⭐ TOURISM & EXPERIENCES (unchanged)
+    "adventures-excursions": 7,
+    "transportation": 7,
+    "hotel-lodging": 6,
+    "landmarks-cultural sites": 2,
+    "music": 5,
+    "gaming-tournament": 4,
+    "gas": 5
+  };
+  
+
+  // ---------- REVIEW KEYWORDS ----------
+  const LUXURY_KEYWORDS = [
+    "fine dining", "high-end", "highest-end", "highest end", "top luxury", "luxury",
+    "exclusive", "premium", "gourmet", "tasting menu", "wine pairing",
+    "special occasion", "sommelier"
+  ];
+
+  const EXPENSIVE_KEYWORDS = [
+    "expensive", "pricey", "overpriced", "costly", "not cheap",
+    "over priced", "over-priced", "costs too much"
+  ];
+
+  const VALUE_KEYWORDS = [
+    "cheap", "affordable", "good value", "budget", "inexpensive", "generous", "hostel", "savings"
+  ];
+
+  // ---------- PRICE/VALUE SENTIMENT (word before price/prices/value) ----------
+  // ---------------------------------------------
+  //  PRICE SENTIMENT (Balanced, Weighted Version)
+  // ---------------------------------------------
+  const PRICE_SENTIMENT = {
+    // STRONG NEGATIVE (weight 2)
+    "overpriced": { base: +3, weight: 2 },
+    "insane": { base: +3, weight: 1 },
+    "crazy": { base: +3, weight: 1 },
+    "ridiculous": { base: +3, weight: 2 },
+    "horrible": { base: +3, weight: 2 },
+    "terrible": { base: +3, weight: 2 },
+
+    // MEDIUM NEGATIVE (weight 1)
+    "pricey": { base: +1, weight: 1 },
+    "steep": { base: +2, weight: 1 },
+    "costly": { base: +1, weight: 1 },
+    "expensive": { base: +2, weight: 1 },
+    "tourist": { base: +2, weight: 1 },
+
+    // WEAK NEGATIVE (weight 0.5)
+    "higher": { base: +2, weight: 0.5 },
+
+    // STRONG VALUE (weight 2)
+    "unbeatable": { base: -2, weight: 1 },
+    "incredible": { base: -2, weight: 2 },
+    "fantastic": { base: -2, weight: 1 },
+    "excellent": { base: -2, weight: 1 },
+
+    // MEDIUM VALUE (weight 1)
+    "affordable": { base: -1, weight: 1 },
+    "exceptional": { base: -1, weight: 1 },
+    "incredible": { base: -1, weight: 1 },
+    "cheap": { base: -1, weight: 1 },
+    "budget": { base: -1, weight: 1 },
+    "low": { base: -1, weight: 1 },
+    "fair": { base: -1, weight: 1 },
+    "fairly": { base: -1, weight: 1 },
+    "reasonable": { base: -1, weight: 1 },
+    "reasonably": { base: -1, weight: 1 },
+    "competitive": { base: -1, weight: 1 },
+    "competitively": { base: -1, weight: 1 },
+
+    // WEAK VALUE (weight 0.5) — these should NOT drag a business down
+    "good": { base: 0, weight: 0.5 },
+    "great": { base: 0, weight: 0.5 },
+    "nice": { base: 0, weight: 0.5 },
+    "solid": { base: 0, weight: 0.5 },
+    "decent": { base: 0, weight: 0.5 }
+  };
+
+function finalScoreToPrice(score) {
+  if (score >= 12) return "💎";   // diamond
+  if (score >= 9) return "$$$";   // expensive
+  if (score >= 5) return "$$";    // mid-range
+  return "$";                     // everything else
+}
+
+  
+function extractReviewText(r) {
+  const text =
+    r.text ||
+    r.snippet ||
+    r.description ||
+    r.reviewText ||
+    r.comment ||
+    r.review ||
+    r.content ||
+    r.body ||
+    (r.snippet && r.snippet.text) ||
+    (r.review && r.review.text) ||
+    "";
+
+  return String(text).toLowerCase();
+}
+
+
+// -------------------------------------------------------
+//  NEW SENTIMENT ENGINE — Weighted, Normalized, Clamped
+// -------------------------------------------------------
+function scorePriceAndValueModifiers(text, logFn = null) {
+  // Normalize text once
+  const cleaned = text.toLowerCase().replace(/[^a-z\s]/g, "");
+  const words = cleaned.split(/\s+/).filter(Boolean);
+
+  let allHits = [];
+
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i];
+
+    // Trigger words
+    if (w === "price" || w === "priced" || w === "prices" || w === "value") {
+      const prev1 = words[i - 1];
+      const prev2 = words[i - 2];
+      const prev3 = words[i - 3];
+      const prev4 = words[i - 4];
+
+      const candidates = [prev4, prev3, prev2, prev1].filter(Boolean);
+
+      for (const c of candidates) {
+        // FIXED: must check for undefined, not truthiness
+        if (PRICE_SENTIMENT[c] !== undefined) {
+          const { base, weight } = PRICE_SENTIMENT[c];
+          const weighted = base * weight;
+
+          allHits.push({ word: c, base, weight, weighted });
+
+          if (STOP_REQUESTED) return 0;
+          break;
+        }
+      }
+    }
+  }
+
+  // No hits → no score
+  if (allHits.length === 0) return 0;
+
+  // Sum weighted values
+  const rawTotal = allHits.reduce((sum, h) => sum + h.weighted, 0);
+
+  // Logging
+  if (logFn) {
+    const hitStrings = allHits.map(
+      h => `${h.word} (${h.base > 0 ? "+" : ""}${h.base} × ${h.weight} = ${h.weighted})`
+    );
+    logFn(`   🏷️ Sentiment hits (this review): ${hitStrings.join(", ")}`);
+    logFn(`   🧮 Sentiment score (this review): ${rawTotal.toFixed(2)}`);
+  }
+
+  return rawTotal;
+}
+
+function googlePriceToPoints(level) {
+  if (!level) return 0;
+  if (level === "$") return 4;
+  if (level === "$$") return 7;
+  if (level === "$$$") return 9;
+  return 0;
+}
+
+  // Convert Serper priceLevel → your system
+  // NOTE: Google/Serper only returns $, $$, $$$
+  // Diamond is ALWAYS decided by us, never from Google.
+  function mapGooglePrice(priceLevel) {
+    if (!priceLevel) return null;
+
+    if (priceLevel === "$") return "$";
+    if (priceLevel === "$$") return "$$";
+    if (priceLevel === "$$$") return "$$$";
+
+    return null;
+  }
+
+  // Scan reviews for luxury/expensive/value signals
+  function computeReviewScore(reviews = [], business, logFn = null) {
+  if (STOP_REQUESTED) return 0;
+
+  let score = 0;
+  let luxHits = [];
+  let expHits = [];
+  let valueHits = [];
+
+  for (const r of reviews) {
+    if (STOP_REQUESTED) return 0;
+
+    const text = extractReviewText(r);
+
+    // ⭐ Track hits PER REVIEW (correct)
+    const reviewHitSet = new Set();
+
+    // ---------- LUXURY KEYWORDS ----------
+    for (const k of LUXURY_KEYWORDS) {
+      if (text.includes(k) && !reviewHitSet.has(k)) {
+        score += 2;
+        luxHits.push(k);
+        reviewHitSet.add(k);
+      }
+    }
+
+    // ---------- EXPENSIVE KEYWORDS ----------
+    for (const k of EXPENSIVE_KEYWORDS) {
+      if (text.includes(k) && !reviewHitSet.has(k)) {
+        score += 1;
+        expHits.push(k);
+        reviewHitSet.add(k);
+      }
+    }
+
+    // ---------- VALUE KEYWORDS ----------
+    for (const k of VALUE_KEYWORDS) {
+      if (text.includes(k) && !reviewHitSet.has(k)) {
+        score -= 1;
+        valueHits.push(k);
+        reviewHitSet.add(k);
+      }
+    }
+
+    // ---------- CHEF LOGIC ----------
+    if (text.includes("chef") && !reviewHitSet.has("chef")) {
+      if (isLuxuryCategory(business)) {
+        score += 2;
+        luxHits.push("chef (luxury context)");
+      } else {
+        if (logFn) logFn(`   👨‍🍳 'chef' ignored (non-luxury category)`);
+      }
+      reviewHitSet.add("chef");
+    }
+
+    // ---------- PRICE/VALUE SENTIMENT ----------
+    const sentimentScore = scorePriceAndValueModifiers(text, logFn);
+    if (sentimentScore !== 0 && logFn) {
+      logFn(`   🎯 Sentiment modifiers: ${sentimentScore > 0 ? "+" : ""}${sentimentScore}`);
+    }
+    score += sentimentScore;
+  }
+
+  // ---------- LOGGING ----------
+  if (logFn) {
+    logFn(`🔍 Review Scan → Score: ${score}`);
+    if (luxHits.length) logFn(`   💎 Luxury hits: ${luxHits.join(", ")}`);
+    if (expHits.length) logFn(`   💰 Expensive hits: ${expHits.join(", ")}`);
+    if (valueHits.length) logFn(`   💵 Value hits: ${valueHits.join(", ")}`);
+  }
+  if (score >= 4) {score = 4}
+  if (score < -4) {score = -4}
+  return score;
+}
+
+  function categoryDefault(business, logFn = null) {
+    const score = computeCategoryScore(business, logFn);
+    const price = categoryScoreToPrice(score);
+
+    if (logFn) logFn(`📂 Category fallback → ${price}`);
+
+    return price;
+  }
+
+  function categoryScoreToPrice(score) {
+    if (score >= 12) return "💎";   // luxury
+    if (score >= 9) return "$$$";  // expensive
+    if (score >= 5) return "$$";   // mid
+    return "$";                    // fallback
+  }
+
+  function computeCategoryScore(business, logFn = null) {
+    let score = 0;
+    let hits = [];
+
+    const fields = [];
+    
+
+    if (Array.isArray(business.categories)) fields.push(...business.categories);
+    if (Array.isArray(business.subcategories)) fields.push(...business.subcategories);
+    if (Array.isArray(business.types)) fields.push(...business.types);
+
+    const normalized = fields.map(f => String(f).toLowerCase());
+    let normalizedFiltered = [...normalized];
+
+    // Normalize subcategories safely
+    const subs = (business.subcategories || []).map(s => String(s).toLowerCase());
+
+    // ⭐ SPECIAL RULE: If ONLY food category + ONLY chicken subcategory → +2 points
+    const hasOnlyFood =
+      Array.isArray(business.categories) &&
+      business.categories.length === 1 &&
+      String(business.categories[0]).toLowerCase() === "food";
+    const hasOnlyChickenChineseBBQSub = (subs.includes("chicken") || subs.includes("chinese") || subs.includes("barbecue"));
+    
+    const hasExcursions = normalized.includes("adventures-excursions") || normalized.includes("transportation");
+    const hasGroceries = subs.includes("groceries");
+    const hasBreakfast = subs.includes("breakfast");
+    const hasDesserts = subs.includes("desserts");
+    const hasElectronics = normalized.includes("electronics");
+    const hasItalian = subs.length === 1 && normalized.includes("italian");
+    const hasHotel = normalized.includes("hotel-lodging");
+    const hasBarRestaurant = subs.includes("bar-restaurant");
+    const hasAlcoholic = subs.includes("alcoholic");
+    // ⭐ SPECIAL RULE: If ONLY food category + ONLY chinese subcategory → +3 points
+    
+
+    if (hasOnlyFood && hasOnlyChickenChineseBBQSub && !hasBarRestaurant && !hasDesserts) {
+      score += 2;
+      if (subs.includes("chinese")) {
+        score +=1;
+      }
+      if (logFn) logFn(`   🍗 +2 (food-only + chicken/chinese/bbq subcategory)`);
+    }
+
+    if (hasOnlyFood && hasItalian) {
+      score += 2;
+      if (logFn) logFn(`   🍗 +2 (food-only + italian subcategory)`);
+    }
+
+    // ⭐ SPECIAL RULE: bar-restaurant should NOT count if hotel-lodging is present
+    if (hasHotel && hasBarRestaurant) {
+      normalizedFiltered = normalizedFiltered.filter(f => f !== "bar-restaurant");
+      if (logFn) logFn(`   🍽️ bar-restaurant ignored (hotel-lodging present)`);
+    }
+
+    
+    if (hasGroceries && hasDesserts) {
+      normalizedFiltered = normalizedFiltered.filter(f => f !== "desserts");
+      if (logFn) logFn(`   🍽️ bar-restaurant ignored (hotel-lodging present)`);
+    }
+    if (hasGroceries && hasElectronics) {
+      normalizedFiltered = normalizedFiltered.filter(f => f !== "electronics");
+      if (logFn) logFn(`   🍽️ bar-restaurant ignored (hotel-lodging present)`);
+    }
+    // ⭐ OR/OR/OR CLUSTERS — ONLY PICK THE BIGGEST
+    
+    const TOURISM = ["food", "drinks", "adventures-excursions", "transportation", "tobacco-vapes",  "hotel-lodging", "beauty-spa", "massage"];
+    const RETAIL = ["apparel", "jewelry", "electronics", "home-essentials","adult"];
+    const MEDICAL = ["health-medical", "pharmacy"];
+
+    let retailScore = 0;
+    let medicalScore = 0;
+    let tourismScore = 0;
+
+    // For logging cluster candidates
+    let clusterCandidates = {
+      retail: [],
+      medical: [],
+      tourism: []
+    };
+
+    // ⭐ First pass: evaluate cluster candidates
+    for (const field of normalizedFiltered) {
+      if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+      const pts = CATEGORY_POINTS[field];
+      if (pts === undefined) continue;
+
+      if (RETAIL.includes(field)) {
+        clusterCandidates.retail.push(`${field} (+${pts})`);
+        if (pts > retailScore) retailScore = pts;
+        continue;
+      }
+
+      if (MEDICAL.includes(field)) {
+        clusterCandidates.medical.push(`${field} (+${pts})`);
+        if (pts > medicalScore) medicalScore = pts;
+        continue;
+      }
+
+      if (TOURISM.includes(field)) {
+        clusterCandidates.tourism.push(`${field} (+${pts})`);
+        if (pts > tourismScore) tourismScore = pts;
+        continue;
+      }
+
+      // Normal category scoring (non-cluster)
+      score += pts;
+      hits.push(`${field} (+${pts})`);
+    }
+
+    if (retailScore > 0) {
+      score += retailScore;
+      hits.push(`retail cluster winner (+${retailScore})`);
+    }
+
+    if (medicalScore > 0) {
+      score += medicalScore;
+      hits.push(`medical/pharmacy cluster winner (+${medicalScore})`);
+    }
+
+    if (tourismScore > 0) {
+      score += tourismScore;
+      hits.push(`tourism cluster winner (+${tourismScore})`);
+    }
+
+    // ⭐ Subcategories DO NOT affect price — except seafood
+    if (Array.isArray(business.subcategories)) {
+      for (const sub of business.subcategories) {
+        if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+        const key = String(sub).toLowerCase();
+        if (key === "seafood") {
+          score += 1;
+          hits.push("seafood (+1)");
+        }
+      }
+    }
+
+    // ⭐ NAME-BASED ADJUSTMENTS (Hostel / Resort)
+    const name = (business.busname || business.name || "").toLowerCase();
+    let hasResortorClub = false;
+    if (name.includes("hostel")) {
+      score -= 3;
+      hits.push("hostel adjustment (-3)");
+      if (logFn) logFn(`   🏨 Hostel detected → -3 points`);
+    }
+
+    if (name.includes("spa")) {
+      score += 1;
+      hits.push("spa adjustment (+1)");
+      if (logFn) logFn(`   🏨 spa detected → +1 points`);
+    }
+
+    if (name.includes("nightclub")) {
+      score += 1;
+      hits.push("nightclub adjustment (+1)");
+      if (logFn) logFn(`   🏨 nightclub detected → +1 points`);
+    }
+
+    if (name.includes("beach club") && hasResortorClub === false) {
+      score += 3;
+      hits.push("beach club adjustment (+3)");
+      if (logFn) logFn(`   🏝️ beach club detected → +3 points`);
+      hasResortorClub = true;
+    }
+
+    if (name.includes("suites") && hasResortorClub === false) {
+      score += 1;
+      hits.push("suites adjustment (+1)");
+      if (logFn) logFn(`   🏝️ suites detected → +1 point`);
+      hasResortorClub = true;
+    }
+
+    if (name.includes("budget")) {
+      score -= 2;
+      hits.push("budget adjustment (-2)");
+      if (logFn) logFn(`   🏝️ budget detected → -2 points`);
+    }
+
+    if (
+      name.includes("b & b") ||
+      name.includes("bed and breakfast") ||
+      name.includes("bed & breakfast")
+    ) {
+      score -= 2;
+      hits.push("b & b adjustment (-2)");
+      if (logFn) logFn(`   🏡 B&B detected → -2 points`);
+    }
+
+     // ⭐ RESORT INFERENCE: hotel-lodging + adventures/excursions
+    if (hasHotel && hasExcursions && hasResortorClub === false) {
+      if (hasAlcoholic) {
+        score += 1;
+        hits.push("resorthasAlcoholic inference (+1)");
+        if (logFn) logFn(`   🏝️ ResorthasAlcoholic inference: hotel + excursions → +1 points`);
+      }else{
+        score += 2;
+        hits.push("resort inference (+2)");
+        if (logFn) logFn(`   🏝️ Resort inference: hotel + excursions → +2 points`);
+      }
+      hasResortorClub = true;
+    }
+
+    if (name.includes("resort") && hasResortorClub === false) {
+      score += 2;
+      hits.push("resort adjustment (+2)");
+      if (logFn) logFn(`   🏝️ Resort detected → +2 points`);
+      hasResortorClub = true;
+    }
+
+    if (hasOnlyFood && hasBreakfast && score < 6) {
+      score += 2;
+      if (logFn) logFn(`   🍗 +2 (food-only + only breakfast subcategory)`);
+    }
+
+    if (hasDesserts && score >= 9) {
+      score -= 3;
+      if (logFn) logFn(`   🍗 -3 (hasDesserts >9 subcategory)`);
+    }
+    if (hasAlcoholic && hasBarRestaurant && score >= 8) {
+      score -= 2;
+      if (logFn) logFn(`   🍗 -2 (hasAlcoholic + bar-restaurant subcategory)`);
+    }
+    // ⭐ LOGGING — FULL BREAKDOWN
+    if (logFn) {
+      logFn(`📂 CATEGORY DEBUG`);
+      logFn(`   Raw fields: ${normalized.join(", ")}`);
+
+      
+      if (clusterCandidates.retail.length)
+        logFn(`   🛍️ Retail candidates: ${clusterCandidates.retail.join(", ")}`);
+      
+      if (clusterCandidates.medical.length)
+        logFn(`   🏥 Medical/Pharmacy candidates: ${clusterCandidates.medical.join(", ")}`);
+      if (clusterCandidates.tourism.length)
+        logFn(`   ✈️ Tourism candidates: ${clusterCandidates.tourism.join(", ")}`);
+
+      logFn(`   🏆 Cluster winners:`);
+      
+      if (retailScore) logFn(`      • Retail → +${retailScore}`);
+      
+      if (medicalScore) logFn(`      • Medical/Pharmacy → +${medicalScore}`);
+      if (tourismScore) logFn(`      • Tourism → +${tourismScore}`);
+
+      logFn(`   🧮 Final Category Score: ${score}`);
+      logFn(`   🏷️ Hits: ${hits.join(", ")}`);
+    }
+    
+    return score;
+  }
+
+  function isLuxuryCategory(business, logFn = null) {
+    const score = computeCategoryScore(business);
+    if (logFn) logFn(`📂 Luxury category check → score ${score}`);
+    return score >= 6; // threshold for luxury
+  }
+
+  function googlePriceTarget(level) {
+    if (!level) return null;
+
+    if (level === "$") return 4;
+    if (level === "$$") return 6;
+    if (level === "$$$") return 9;
+
+    return null;
+  }
+
+  function googleCorrection(categoryScore, googleLevel) {
+    const target = googlePriceTarget(googleLevel);
+    if (target === null) return 0;
+
+    // correction force (0.5 = medium strength)
+    const correction = (target - categoryScore) * .75;
+
+    return correction;
+  }
+
+  // Main price rating function
+  function computePriceRating(business, details, logFn = null) {
+    const priceLevel = details.priceLevel || null;
+    const reviews = details.reviews || [];
+
+    const categoryScore = computeCategoryScore(business, logFn);
+    const reviewScore = computeReviewScore(reviews, business, logFn);
+    const googleAdjust = googleCorrection(categoryScore, priceLevel);
+
+    if (logFn) {
+      logFn(`----------------------------------------`);
+      logFn(`💲 PRICE RATING ENGINE START`);
+      logFn(`Google priceLevel: ${priceLevel || "none"}`);
+      logFn(`📂 Category Score: ${categoryScore}`);
+      categoryDefault(business,logFn);
+      logFn(`📝 Review Score: ${reviewScore}`);
+      logFn(`Google correction: ${googleAdjust.toFixed(2)}${priceLevel}`);
+    }
+
+    const CATEGORY_WEIGHT = 1.0;
+    const REVIEW_WEIGHT = 0.8;
+
+    const priceFinalScore =
+      categoryScore * CATEGORY_WEIGHT +
+      reviewScore * REVIEW_WEIGHT +
+      googleAdjust;
+
+    const priceRating = finalScoreToPrice(priceFinalScore);
+
+    if (logFn) {
+      logFn(`🧮 Final Score: ${priceFinalScore.toFixed(2)}`);
+      logFn(`🏁 Final PriceRating: ${priceRating}`);
+    }
+
+    // ⭐ RETURN BOTH
+    return {
+      priceRating,
+      priceFinalScore,
+      priceLevel
+    };
+  }
+
+  function normalizePhone(num) {
+    if (!num) return null;
+
+    // Remove spaces, dashes, parentheses
+    let cleaned = num.replace(/[\s\-()]/g, "");
+
+    // Fix double prefixes like +1+1 or +501+501
+    cleaned = cleaned.replace(/^\+1\+?1/, "+1");
+    cleaned = cleaned.replace(/^\+501\+?501/, "+501");
+
+    // Fix raw double prefixes like 150115 or 501501
+    cleaned = cleaned.replace(/^1?1(\d{10})$/, "+1$1");
+    cleaned = cleaned.replace(/^501501(\d{7})$/, "+501$1");
+
+    // If already normalized correctly, return as-is
+    if (/^\+501\d{7}$/.test(cleaned)) return cleaned;
+    if (/^\+1\d{10}$/.test(cleaned)) return cleaned;
+
+    // Remove leading +
+    cleaned = cleaned.replace(/^\+/, "");
+
+    // Belize (7 digits)
+    if (/^501?\d{7}$/.test(cleaned)) {
+      cleaned = cleaned.replace(/^501/, "");
+      return `+501${cleaned}`;
+    }
+
+    // US (10 digits)
+    if (/^1?\d{10}$/.test(cleaned)) {
+      cleaned = cleaned.replace(/^1/, "");
+      return `+1${cleaned}`;
+    }
+
+    return null;
+  }
+
+  function mergePhones(existingPhones, newPhone) {
+    const normalized = normalizePhone(newPhone);
+    if (!normalized) return existingPhones;
+
+    const cleanedExisting = existingPhones
+      .map(p => normalizePhone(p))
+      .filter(Boolean);
+
+    if (cleanedExisting.includes(normalized)) {
+      return cleanedExisting;
+    }
+
+    return [...cleanedExisting, normalized];
+  }
+
+  function fixMenuUrl(value) {
+    if (!value) return null;
+    if (Array.isArray(value)) return value.join("").trim();
+    return value;
+  }
+
+  // ---------------- SERPER LOOKUP ----------------
+  async function fetchPlaceDetails(placeId) {
+    const url = `https://google.serper.dev/maps?placeId=${placeId}&apiKey=${SERPER_KEY}`;
+
+    log(`🌐 Fetching details for placeId: ${placeId}`);
+
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: { "X-API-KEY": SERPER_KEY }
+      });
+
+      if (!res.ok) {
+        log(`❌ Serper HTTP ${res.status}`, "error");
+        return null;
+      }
+
+      const json = await res.json();
+
+      if (!json.places || json.places.length === 0) {
+        log("❌ No place details returned", "error");
+        return null;
+      }
+
+      return json.places[0];
+    } catch (err) {
+      log(`❌ Serper error: ${err.message}`, "error");
+      return null;
+    }
+  }
+
+  async function purgeDeprecatedFields() {
+  const snapshot = await db.collection("Businesses").get();
+  const total = snapshot.size;
+
+  log(`🧹 Starting purge of deprecated fields for <b>${total}</b> businesses...`);
+
+  let count = 0;
+
+  for (const doc of snapshot.docs) {
+    const id = doc.id;
+    if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+    await db.collection("Businesses").doc(id).update({
+      categoryIcons: firebase.firestore.FieldValue.delete(),
+      subcategoryIcons: firebase.firestore.FieldValue.delete(),
+      openNow: firebase.firestore.FieldValue.delete()
+    });
+
+    count++;
+    if (count % 25 === 0) {
+      log(`   ✔ Cleaned ${count}/${total}`);
+    }
+  }
+
+  log(`🎉 Purge complete — cleaned ${count} businesses.`);
+}
+
+  async function mergeExactLatLngDuplicates() {
+  const snapshot = await db.collection("Businesses").get();
+  const map = new Map();
+
+  for (const doc of snapshot.docs) {
+    if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+    const b = { id: doc.id, ...doc.data() };
+    const key = `${b.lat},${b.lng}`;
+
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(b);
+  }
+
+  const clusters = [...map.entries()].filter(([k, arr]) => arr.length > 1);
+
+  for (const [key, arr] of clusters) {
+    if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+    log(`\n📌 Checking ${arr.length} businesses at ${key}`);
+
+    const byPlaceId = new Map();
+    for (const b of arr) {
+      if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+      const pid = b.placeId || "NO_PLACE_ID";
+      if (!byPlaceId.has(pid)) byPlaceId.set(pid, []);
+      byPlaceId.get(pid).push(b);
+    }
+
+    for (const [pid, group] of byPlaceId.entries()) {
+      if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+      if (group.length < 2) continue;
+      
+
+      log(`   🔍 placeId ${pid} has ${group.length} entries`);
+
+      const names = group.map(b => normalizeName(b.busname));
+      const allSimilar = names.every(n =>
+        names[0].includes(n) || n.includes(names[0])
+      );
+
+      if (!allSimilar) {
+        log(`   ⚠️ Names differ — NOT merging this placeId group`);
+        continue;
+      }
+
+      const primary = group.sort((a, b) =>
+        (b.description.length || 0) - (a.description.length || 0)
+      )[0];
+
+      const merged = {
+        categories: new Set(primary.categories || []),
+        subcategories: new Set(primary.subcategories || []),
+        emails: new Set(primary.emails || []),
+        phones: new Set(primary.phones || []),
+        websites: new Set(primary.websites || []),
+        social: new Set(primary.social || [])
+      };
+
+      for (const b of group) {
+        if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+        if (b.id === primary.id) continue;
+
+        (b.categories || []).forEach(x => merged.categories.add(x));
+        (b.subcategories || []).forEach(x => merged.subcategories.add(x));
+        (b.emails || []).forEach(x => merged.emails.add(x));
+        (b.phones || []).forEach(x => merged.phones.add(x));
+        (b.websites || []).forEach(x => merged.websites.add(x));
+        (b.social || []).forEach(x => merged.social.add(x));
+      }
+
+      await db.collection("Businesses").doc(primary.id).update({
+        categories: [...merged.categories],
+        subcategories: [...merged.subcategories],
+        emails: [...merged.emails],
+        phones: [...merged.phones],
+        websites: [...merged.websites],
+        social: [...merged.social],
+        duplicateCount: group.length - 1
+      });
+
+      for (const b of group) {
+        if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+        if (b.id !== primary.id) {
+          log(`   🗑️ Deleting duplicate: ${b.busname}`);
+          await db.collection("Businesses").doc(b.id).delete();
+        }
+      }
+    }
+  }
+}
+
+  function stringSimilarity(a, b) {
+  if (!a || !b) return 0;
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+
+  // Simple but effective similarity score
+  let matches = 0;
+  const len = Math.min(a.length, b.length);
+
+  for (let i = 0; i < len; i++) {
+    if (a[i] === b[i]) matches++;
+  }
+
+  return matches / len;
+}
+function extractBusiness(doc) {
+  const b = doc.data();
+  return {
+    id: doc.id,
+    name: b.busname || b.name || b.businessName || null,
+    lat: b.lat,
+    lng: b.lng,
+    listing_id: b.listing_id,
+    placeId: b.placeId || "NO_PLACE_ID"
+  };
+}
+
+function normalizeName(name) {
+  if (!name) return "";
+  return name
+    .toLowerCase()
+    .replace(/^the\s+/, "")       // remove leading "the"
+    .replace(/[^a-z0-9\s]/g, "")  // remove punctuation
+    .replace(/\s+/g, " ")         // collapse spaces
+    .trim();
+}
+
+function distanceMeters(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat/2)**2 +
+    Math.cos(lat1*Math.PI/180) *
+    Math.cos(lat2*Math.PI/180) *
+    Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+async function verifyPlaceAtLocation(name, lat, lng, placeId) {
+  const targetName = normalizeName(name);
+
+  // -----------------------------------------
+  // 0️⃣ Basic sanity checks (prevent wasted calls)
+  // -----------------------------------------
+  if (!lat || !lng) return null;
+  if (!targetName || targetName.length < 3) return null;
+
+  const inBelizeBox = (lat, lng) =>
+    lat > 15 && lat < 19 && lng > -89.5 && lng < -87;
+
+  if (!inBelizeBox(lat, lng)) return null;
+
+  // -----------------------------------------
+  // 1️⃣ Already a real Google placeId → STOP
+  // -----------------------------------------
+  if (placeId && !/^\d+$/.test(placeId)) {
+    return placeId;
+  }
+
+  // -----------------------------------------
+  // 2️⃣ CID lookup (ONLY if numeric)
+  // -----------------------------------------
+  if (placeId && /^\d+$/.test(placeId)) {
+    try {
+      const cidUrl =
+        `https://google.serper.dev/maps` +
+        `?cid=${placeId}` +
+        `&ll=@${lat},${lng}`;
+
+      const cidRes = await fetch(cidUrl, {
+        method: "GET",
+        headers: { "X-API-KEY": SERPER_KEY }
+      });
+
+      if (cidRes.ok) {
+        const cidJson = await cidRes.json();
+        const p = cidJson.places.[0];
+
+        if (p.placeId) {
+          return p.placeId; // SUCCESS → STOP
+        }
+      }
+    } catch (err) {
+      log(`❌ Serper /maps CID lookup error: ${err.message}`, "error");
+    }
+  }
+
+  // -----------------------------------------
+  // 3️⃣ PendingBusinesses (free, local)
+  // -----------------------------------------
+  const pending = await findPlaceIdFromPending({ name, lat, lng });
+  if (pending) return pending;
+
+  // -----------------------------------------
+  // 4️⃣ LAST RESORT: Name + lat/lng lookup
+  // -----------------------------------------
+  try {
+    const mapsUrl =
+      `https://google.serper.dev/maps` +
+      `?q=${encodeURIComponent(name)}` +
+      `&ll=@${lat},${lng}` +
+      `&gl=bz`;
+
+    const res = await fetch(mapsUrl, {
+      method: "GET",
+      headers: { "X-API-KEY": SERPER_KEY }
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+
+      if (json.places.length) {
+        for (const p of json.places) {
+          const pName = normalizeName(p.title || p.name || "");
+          const plat = p.lat;
+          const plng = p.lng;
+
+          if (!inBelizeBox(plat, plng)) continue;
+
+          if (plat && plng) {
+            const d = distanceMeters(lat, lng, plat, plng);
+            if (d > 500) continue;
+          }
+
+          if (pName.includes(targetName) || targetName.includes(pName)) {
+            return p.placeId || null;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    log(`❌ Serper /maps error: ${err.message}`, "error");
+  }
+
+  return null;
+}
+
+async function findPlaceIdFromPending(b) {
+  const cid = b.placeId; // the numeric CID we want to resolve
+  if (!cid) return null;
+
+  const snap = await db.collection("PendingBusinesses").get();
+
+  for (const doc of snap.docs) {
+    const p = { id: doc.id, ...doc.data() };
+
+    // Check ALL possible CID fields
+    const matches =
+      p.cid === cid ||
+      p.fid === cid ||
+      p.placeId === cid ||
+      p.raw.cid === cid ||
+      p.raw.fid === cid ||
+      p.raw.placeId === cid ||
+      p.raw.googlePlaceId === cid ||
+      p.raw.google_place_id === cid ||
+      p.raw.place_id === cid;
+
+    if (!matches) continue;
+
+    // Return the REAL placeId from this PendingBusiness
+    return (
+      p.placeId ||
+      p.raw.placeId ||
+      p.raw.googlePlaceId ||
+      p.raw.google_place_id ||
+      p.raw.place_id ||
+      null
+    );
+  }
+
+  return null;
+}
+
+function buildDuplicateClusters(snapshot) {
+  const map = new Map();
+
+  for (const doc of snapshot.docs) {
+    const b = extractBusiness(doc);
+    if (!map.has(b.placeId)) map.set(b.placeId, []);
+    map.get(b.placeId).push(b);
+  }
+
+  // Only placeIds with more than one business
+  let duplicates = [...map.entries()].filter(([pid, arr]) => arr.length > 1);
+
+  // Sort clusters by lat/lng for stable output
+  duplicates.sort(([, arrA], [, arrB]) => {
+    const a = arrA[0];
+    const b = arrB[0];
+
+    if (a.lat !== b.lat) return a.lat - b.lat;
+    if (a.lng !== b.lng) return a.lng - b.lng;
+    return a.placeId.localeCompare(b.placeId);
+  });
+
+  return duplicates;
+}
+
+  async function fixDuplicatePlaceIds() {
+  clearStop();
+
+  const snapshot = await db.collection("Businesses").get();
+  const duplicates = buildDuplicateClusters(snapshot);
+
+  log(`🛠 Starting fix for ${duplicates.length} duplicate clusters...`);
+
+  for (const [pid, arr] of duplicates) {
+    if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+    log(`\n📌 Checking cluster: ${pid} (${arr.length} entries)`);
+
+    for (const b of arr) {
+      if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+      log(`   🔎 Verifying ${b.name} @ ${b.lat}, ${b.lng}`);
+
+      let correct = await verifyPlaceAtLocation(b.name, b.lat, b.lng);
+
+      if (!correct) {
+        log(`   ⚠️ No valid placeId from Serper for ${b.name}, checking PendingBusinesses...`);
+        correct = await findPlaceIdFromPending(b);
+      }
+
+      if (!correct) {
+        log(`   ❌ No valid placeId found for ${b.name} — SKIPPING`);
+        continue;
+      }
+
+      if (correct === b.placeId) {
+        log(`   ✅ ${b.name} already has correct placeId`);
+        continue;
+      }
+
+      log(`   🔧 Updating ${b.name} → ${correct}`);
+      await db.collection("Businesses").doc(b.id).update({ placeId: correct });
+    }
+  }
+
+  log("\n✅ Sweep complete — only duplicate clusters processed.");
+}
+
+async function fixNumericPlaceIds() {
+  clearStop();
+
+  const snapshot = await db.collection("Businesses").get();
+  let count = 0;
+
+  log("🔍 Fixing ONLY numeric (CID) placeIds...");
+
+  for (const doc of snapshot.docs) {
+    if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+    const b = extractBusiness(doc);
+    const isCID = /^\d+$/.test(b.placeId);
+
+    if (!isCID) continue;
+
+    log(`\n⚠️ CID detected for: ${b.name} (${b.placeId})`);
+
+    let correct = await verifyPlaceAtLocation(b.name, b.lat, b.lng, b.placeId);
+
+    if (!correct) {
+      log(`   ⚠️ No valid placeId from Serper for ${b.name}, checking PendingBusinesses...`);
+      correct = await findPlaceIdFromPending(b);
+    }
+
+    if (!correct) {
+      log(`   ❌ No valid placeId found for ${b.name} — SKIPPING`);
+      continue;
+    }
+
+    log(`   🔧 Replacing CID with real placeId → ${correct}`);
+
+    await db.collection("Businesses").doc(b.id).update({
+      placeId: correct
+    });
+
+    count++;
+  }
+
+  log(`\n✅ Numeric placeId sweep complete — fixed ${count} businesses.`);
+}
+
+  async function listDuplicatePlaceIds() {
+  const snapshot = await db.collection("Businesses").get();
+  const duplicates = buildDuplicateClusters(snapshot);
+
+  log("🔍 Duplicate Place IDs (sorted by lat/lng):");
+
+  // ---------------------------
+  // 1️⃣ DUPLICATE PLACEIDS
+  // ---------------------------
+  for (const [pid, arr] of duplicates) {
+    if (STOP_REQUESTED) return null;  // if you must return, return a safe value
+
+    const isCID = /^\d+$/.test(pid);
+    const isMissing = pid === "NO_PLACE_ID";
+    const isInvalid = !pid.startsWith("ChI");
+
+    let status = "🟢 VALID";
+    if (isCID) status = "🔴 BAD (CID)";
+    else if (isMissing) status = "🔴 MISSING";
+    else if (isInvalid) status = "🟠 SUSPICIOUS";
+
+    log(`\n📌 placeId: ${pid} (${arr.length} entries) — ${status}`);
+
+    arr.sort((a, b) => {
+      if (a.lat !== b.lat) return a.lat - b.lat;
+      if (a.lng !== b.lng) return a.lng - b.lng;
+      return (a.name || "").localeCompare(b.name || "");
+    });
+
+    arr.forEach(b => {
+      log(`   • ${b.name} | ${b.lat}, ${b.lng} | listing_id: ${b.listing_id}`);
+    });
+  }
+
+  log(`\n✅ Total duplicate clusters: ${duplicates.length}`);
+
+  // ---------------------------
+  // 2️⃣ NUMERIC PLACEIDS (CID LIST)
+  // ---------------------------
+  log("\n🔍 Numeric (CID) Place IDs:");
+
+  for (const doc of snapshot.docs) {
+    const b = extractBusiness(doc);
+    const isCID = /^\d+$/.test(b.placeId);
+
+    if (isCID) {
+      log(`   • ${b.name} | ${b.placeId} | ${b.lat}, ${b.lng}`);
+    }
+  }
+
+  log("\n✅ CID list complete.");
+}
+
+  function getBusinessName(b) {
+  return (
+    b.busname ||
+    b.name ||
+    b.businessName ||
+    b.title ||
+    b.listing_name ||
+    null
+  );
+}
+
+  async function fetchPlaceReviews(placeId) {
+    const url = `https://google.serper.dev/reviews?placeId=${placeId}&gl=bz&apiKey=${SERPER_KEY}`;
+
+    try {
+      const res = await fetch(url, { method: "GET", redirect: "follow" });
+
+      if (!res.ok) {
+        log(`❌ Serper Reviews HTTP ${res.status}`, "error");
+        return [];
+      }
+
+      const json = await res.json();
+
+      if (!json.reviews || json.reviews.length === 0) {
+        log("ℹ️ No reviews returned", "warn");
+        return [];
+      }
+
+      return json.reviews;
+    } catch (err) {
+      log(`❌ Serper Reviews error: ${err.message}`, "error");
+      return [];
+    }
+  }
+
+   async function runSweep() {
+    STOP_REQUESTED = false;
+    btnRun.disabled = true;
+
+    log(`\n🚀 <span style="color:#00eaff;font-weight:bold">STARTING HIGH-SCORE RECHECK SWEEP</span>`);
+
+    const snapshot = await db.collection("Businesses").get();
+    const total = snapshot.size;
+
+    log(`📦 Found <b>${total}</b> businesses in database.`);
+
+    const startIndex = 0;   // keep if you still want it
+    let index = 0;
+
+    for (const doc of snapshot.docs) {
+      if (STOP_REQUESTED) return;
+
+      // Skip until startIndex
+      if (index < startIndex) {
+        index++;
+        continue;
+      }
+
+      const business = doc.data();
+      const id = doc.id;
+      const placeId = business.placeId;
+
+      // ⭐ Only process businesses with FinalScore > 9
+      if (!business.priceFinalScore || business.priceFinalScore < 6) {
+        index++;
+        continue;
+      }
+
+      let changed = false;
+
+      const details = await fetchPlaceDetails(placeId);
+
+      if (!details) {
+        log(`❌ Details scrape failed for ${business.busname}`);
+        index++;
+        continue;
+      }
+
+      let realPlaceId = null;
+      // 0. If placeId is already real, skip verification entirely
+      if (business.placeId && !/^\d+$/.test(business.placeId)) {
+        realPlaceId = business.placeId;
+      } else {
+        // Only verify if it's numeric
+        realPlaceId = await verifyPlaceAtLocation(
+          business.busname,
+          business.lat,
+          business.lng,
+          business.placeId
+        );
+      }
+
+      // UPDATE IMMEDIATELY — BEFORE ANYTHING ELSE
+      if (realPlaceId && realPlaceId !== business.placeId) {
+        business.placeId = realPlaceId;   // <-- THIS MUST HAPPEN NOW
+        details.placeId = realPlaceId;
+        changed = true;
+      }
+
+      // 1. NOW fetch reviews using the REAL placeId
+      const reviews = await fetchPlaceReviews(business.placeId);
+      details.reviews = reviews;
+
+      const { priceRating, priceFinalScore, priceLevel } =
+    computePriceRating(business, details, log);
+
+      details.priceRating = priceRating;
+      changed = true;
+      
+      details.priceFinalScore = priceFinalScore;
+      changed = true;
+      
+      log(`   ✅ Final Score: ${priceFinalScore}`);
+
+      details.priceLevel = priceLevel;
+      changed = true;
+      log(`📦 Found PriceLevel: <b>${details.priceLevel}</b>`);
+
+      // 2. MENU URL
+      if (details.menu) {
+        const fixedMenu = fixMenuUrl(details.menu);
+        if (fixedMenu && business.menuUrl !== fixedMenu) {
+          details.menuUrl = fixedMenu;
+          changed = true;
+        }
+      }
+
+      // 3. PHONES
+      if (details.phoneNumber) {
+        const existingPhones = Array.isArray(business.phones) ? business.phones : [];
+        const merged = mergePhones(existingPhones, details.phoneNumber);
+
+        if (JSON.stringify(merged) !== JSON.stringify(existingPhones)) {
+          details.phones = merged;
+          changed = true;
+        }
+      }
+
+      // 4. WEEKLY HOURS
+      if (details.openingHours) {
+        if (JSON.stringify(business.weeklyHours) !== JSON.stringify(details.openingHours)) {
+          details.weeklyHours = details.openingHours;
+          changed = true;
+        }
+      }
+
+      // 5. HOURS CLEANUP
+      if (Array.isArray(business.hours) && business.hours.length > 7) {
+        details.hours = business.hours.slice(0, 7);
+        changed = true;
+      }
+
+      // 6. HOURS EMPTY
+      if (Array.isArray(business.hours) && business.hours.length === 0) {
+        if (details.openingHours) {
+          const arr = Object.entries(details.openingHours).map(
+            ([day, hours]) => `${day}: ${hours}`
+          );
+          details.hours = arr;
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        log(`   💾 Updating business...`);
+        await doc.ref.update(details);
+        log("   ✅ Updated");
+      } else {
+        log("   ✔ No changes needed");
+      }
+
+      index++; // ⭐ Move to next business
+    }
+
+    log("\n🎉 <span style='color:#00ff66;font-weight:bold'>ENRICHMENT COMPLETE</span>");
+    btnRun.disabled = false;
+  }
+
+  document.getElementById("fixNumericPlaceIdsBtn").onclick = () => {
+    fixNumericPlaceIds();
+  };
+  document.getElementById("dupes").addEventListener("click", listDuplicatePlaceIds);
+
+  document.getElementById("fixPlaceIds").addEventListener("click", fixDuplicatePlaceIds);
+
+  document.getElementById("mergeExact").addEventListener("click", mergeExactLatLngDuplicates);
+
+  document.getElementById("purge").addEventListener("click", purgeDeprecatedFields);
+  btnRun.addEventListener("click", runSweep);
+</script>
+
+</body>
+</html>

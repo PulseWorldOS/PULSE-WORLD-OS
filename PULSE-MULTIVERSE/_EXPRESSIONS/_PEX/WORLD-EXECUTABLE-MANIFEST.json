@@ -1,0 +1,16 @@
+{
+  "signature": {
+    "version": "v34",
+    "runtimeMode": "IMMORTAL++",
+    "executableMode": "executable",
+    "trustMode": "verified",
+    "shortcutMode": "device"
+  },
+  "executableBundle": {
+    "entry": "WORLD-EXEC.js",
+    "binary": "PULSE-EXECUTABLE/WORLD-EXEC.js",
+    "hyperframe": "v34",
+    "supportsShortcuts": true,
+    "deterministic": true
+  }
+}

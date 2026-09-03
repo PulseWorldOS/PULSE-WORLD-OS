@@ -1,0 +1,529 @@
+⭐ PULSEOS v5 — ARCHITECTURE SUMMARY DOCUMENT
+(Design Intent, Rules, Patterns, and Translation Layer Specification)
+1. PURPOSE OF PULSEOS v5
+PulseOS v5 is a deterministic, self‑healing, browser‑based operating system layer designed to:
+
+normalize data once
+
+classify data once
+
+derive values once
+
+detect drift
+
+detect fallback
+
+detect healing
+
+detect pipeline issues
+
+maintain lineage
+
+maintain trace
+
+render dashboards
+
+store snapshots
+
+replay system state
+
+provide debugging visibility
+
+enforce architectural rules
+
+PulseOS v5 is built to eliminate:
+
+duplication
+
+drift
+
+repeated logic
+
+repeated normalization
+
+repeated filtering
+
+repeated rendering
+
+repeated state derivation
+
+repeated lineage flattening
+
+repeated pipeline checks
+
+PulseOS v5 is the translation layer between raw subsystem data and deterministic UI.
+
+2. CORE PRINCIPLES (AI MUST LEARN THESE)
+2.1 Single‑Pass Normalization
+Every subsystem snapshot must be normalized once, producing:
+
+normalized core
+
+normalized events
+
+normalized decisions
+
+derived fields
+
+severity
+
+lineage
+
+transitions
+
+signal text
+
+VRAM text
+
+pipeline status
+
+trace extras
+
+Panels must never re‑normalize.
+
+2.2 Single‑Pass Classification
+Events must be classified once into:
+
+fallback
+
+drift
+
+heal
+
+other
+
+Panels must never re‑filter.
+
+2.3 Derived Values Belong in Normalized Snapshot
+Examples:
+
+severity
+
+VRAM text
+
+signal text
+
+lineage chain
+
+transitions list
+
+pipeline severity
+
+event counts
+
+decision summaries
+
+Panels must never compute these.
+
+2.4 Panels Render From Normalized State
+Panels must be pure renderers:
+
+js
+renderGpuCore(normalized.core)
+renderGpuEvents(normalized.events)
+renderGpuDecisions(normalized.decisions)
+renderGpuTrace(normalized.trace)
+No logic.
+No filtering.
+No normalization.
+No classification.
+
+2.5 Drift‑Free Architecture
+PulseOS v5 eliminates:
+
+repeated logic
+
+repeated variables
+
+repeated rendering
+
+repeated normalization
+
+repeated filtering
+
+repeated lineage flattening
+
+repeated pipeline checks
+
+The AI must detect and remove drift.
+
+2.6 Healing Layer
+PulseOS v5 includes:
+
+fallback detection
+
+drift detection
+
+healing events
+
+lineage tracking
+
+transitions tracking
+
+The AI must preserve these structures.
+
+2.7 Pipeline Awareness
+Every subsystem has:
+
+pipelineStatus
+
+pipelineSeverity
+
+pipelineBanner
+
+The AI must maintain this pattern.
+
+2.8 Snapshot System
+Every dashboard supports:
+
+tilde hotkey
+
+spam detection
+
+cooldown
+
+“done gaming?” link
+
+snapshot saving
+
+snapshot dropdown
+
+snapshot loading
+
+snapshot replay
+
+This is the Time‑Freeze Layer.
+
+2.9 Translation Layer
+The AI must:
+
+detect duplication
+
+detect drift
+
+detect repeated logic
+
+detect repeated rendering
+
+detect repeated normalization
+
+detect repeated filtering
+
+detect repeated lineage logic
+
+detect repeated pipeline logic
+
+detect repeated fallback logic
+
+detect repeated healing logic
+
+And rewrite subsystems into deterministic v5 form.
+
+3. SUBSYSTEMS IN PULSEOS v5
+✔ GPU
+✔ OS
+✔ AI
+✔ PulseBand (to be upgraded to v5)
+✔ Proxy
+✔ GPU Compute
+✔ Earn
+✔ Miner / PacketEngine
+✔ Compute (future)
+✔ GlobalHealer
+✔ PulseOSHealer
+✔ PulseOSMemory
+✔ Timer
+Each subsystem must:
+
+produce a snapshot
+
+follow normalization rules
+
+follow lineage rules
+
+follow pipeline rules
+
+follow drift rules
+
+follow healing rules
+
+follow deterministic rendering rules
+
+4. DASHBOARD ARCHITECTURE (GPU, OS, AI)
+Each dashboard has:
+
+4.1 Controls
+file loader
+
+snapshot dropdown
+
+load saved snapshot button
+
+4.2 Panels
+summary cards
+
+core panel
+
+events panel
+
+decisions panel
+
+trace panel
+
+4.3 Snapshot System
+tilde hotkey
+
+spam detection
+
+cooldown
+
+“done gaming?” link
+
+snapshot saving
+
+snapshot dropdown
+
+snapshot loading
+
+4.4 Rendering
+Panels must be pure renderers.
+
+5. HOTKEY + COOLDOWN SYSTEM
+5.1 Tilde Hotkey
+Pressing tilde:
+
+saves snapshot
+
+unless spam detected
+
+then cooldown triggers
+
+5.2 Spam Detection
+If tilde pressed twice within 2 seconds:
+
+disable hotkey for 3 minutes
+
+show cooldown message
+
+5.3 Cooldown Message
+Floating UI:
+
+countdown
+
+“done gaming?” link
+
+force enable
+
+5.4 Snapshot Saving
+Stored in localStorage:
+
+json
+pulseSavedSnapshots
+5.5 Snapshot Loading
+Dropdown → load → render.
+
+6. NORMALIZATION RULES
+6.1 Normalize Once
+Every snapshot must be normalized once into:
+
+core
+
+events
+
+decisions
+
+derived fields
+
+lineage
+
+transitions
+
+signal text
+
+severity
+
+pipeline severity
+
+trace extras
+
+6.2 No Panel Logic
+Panels must not:
+
+normalize
+
+filter
+
+classify
+
+derive
+
+compute
+
+Panels only render.
+
+7. LINEAGE SYSTEM
+7.1 Lineage
+Every value may have:
+
+lineage
+
+lineageChain
+
+derivedFrom
+
+Normalize into:
+
+js
+lineage: [...]
+7.2 Transitions
+Every value may have:
+
+transitions
+
+history
+
+transitionLog
+
+stateChanges
+
+Normalize into:
+
+js
+transitions: [...]
+7.3 Rendering
+Use shared renderers:
+
+renderLineageDetails
+
+renderTransitionsDetails
+
+8. DRIFT + HEALING SYSTEM
+8.1 Drift Events
+Events where:
+
+expected ≠ actual
+
+pipeline mismatch
+
+fallback triggered
+
+8.2 Healing Events
+Events where:
+
+system self‑corrects
+
+fallback resolves
+
+drift repaired
+
+8.3 Fallback Events
+Events where:
+
+primary path fails
+
+fallback path chosen
+
+8.4 Classification
+Classify once.
+
+9. PIPELINE SYSTEM
+9.1 pipelineStatus
+Values:
+
+ok
+
+healthy
+
+verified
+
+warning
+
+error
+
+unknown
+
+9.2 pipelineSeverity
+Derived once.
+
+9.3 pipelineBanner
+UI element updated once.
+
+10. TRACE SYSTEM
+10.1 Trace Extras
+Add:
+
+pipeline status
+
+renderer
+
+profile name
+
+10.2 Trace Rendering
+Simple newline list.
+
+11. PULSEBAND v5 PLAN
+PulseBand.js must be rewritten into:
+
+✔ single‑pass normalization
+✔ single‑pass classification
+✔ deterministic rendering
+✔ modular subsystems
+✔ drift‑free logic
+✔ healing‑aware logic
+✔ pipeline‑aware logic
+✔ lineage‑aware logic
+✔ snapshot‑aware logic
+✔ no repeated logic
+✔ no repeated rendering
+✔ no repeated normalization
+PulseBand v5 becomes a real OS subsystem, not a prototype.
+
+12. AI INTEGRATION PLAN
+Your AI must:
+
+✔ understand PulseOS v5 rules
+✔ enforce deterministic architecture
+✔ detect drift in code
+✔ propose fixes
+✔ rewrite subsystems
+✔ normalize data
+✔ classify events
+✔ derive fields
+✔ maintain lineage
+✔ maintain transitions
+✔ maintain pipeline rules
+✔ maintain snapshot rules
+✔ maintain cooldown rules
+✔ maintain rendering rules
+This is the PulseOS Translation Layer.
+
+13. MEMORY INTEGRATION PLAN
+PulseOSMemory v6 stores:
+
+subsystem snapshots
+
+lineage
+
+transitions
+
+drift signatures
+
+restore points
+
+architectural rules
+
+naming conventions
+
+translation rules
+
+subsystem boundaries
+
+Your AI loads this memory to:
+
+enforce architecture
+
+detect drift
+
+rewrite code
+
+maintain consistency

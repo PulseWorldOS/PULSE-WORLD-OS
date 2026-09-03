@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+<title>Pulse OS Dashboard — System Control Room</title>\
+
+
+  <style>
+/* GLOBAL */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+    color: #e5e7eb;
+}
+
+/* HEADER */
+header {
+    backdrop-filter: blur(14px);
+    background: linear-gradient(90deg, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    border-bottom: 1px solid rgba(148,163,184,0.4);
+    padding: 18px 28px 12px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+header img {
+    height: 52px;
+    filter: drop-shadow(0 0 10px rgba(56,189,248,0.9));
+}
+
+h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #f9fafb;
+    text-shadow: 0 0 12px rgba(56,189,248,0.7);
+}
+
+/* PIPELINE BANNER */
+.pipeline-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.5);
+    background: radial-gradient(circle at left, rgba(34,197,94,0.18), rgba(15,23,42,0.95));
+    color: #d1fae5;
+}
+
+.pipeline-banner.warning {
+    background: radial-gradient(circle at left, rgba(234,179,8,0.18), rgba(15,23,42,0.95));
+    color: #fef9c3;
+    border-color: rgba(234,179,8,0.7);
+}
+
+.pipeline-banner.error {
+    background: radial-gradient(circle at left, rgba(239,68,68,0.18), rgba(15,23,42,0.95));
+    color: #fee2e2;
+    border-color: rgba(239,68,68,0.7);
+}
+
+.pipeline-label {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+.pipeline-status-text {
+    opacity: 0.9;
+}
+
+/* LAYOUT */
+.container {
+    padding: 26px;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+/* CONTROLS */
+.controls {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+button {
+    background: linear-gradient(135deg, #22d3ee, #3b82f6);
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.6);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 26px rgba(37,99,235,0.8);
+}
+
+input[type="file"] {
+    padding: 9px 12px;
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(148,163,184,0.6);
+    border-radius: 999px;
+    color: #e5e7eb;
+    font-size: 13px;
+}
+
+/* SUMMARY CARDS */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.card {
+    width: 260px;
+    padding: 18px 18px 16px 18px;
+    border-radius: 18px;
+    background: radial-gradient(circle at top left, rgba(56,189,248,0.18), rgba(15,23,42,0.96));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+    transition: 0.25s ease;
+    border: 1px solid rgba(148,163,184,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -40%;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(56,189,248,0.35), transparent 70%);
+    opacity: 0.7;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+}
+
+.card.ok { border-left: 5px solid #22c55e; }
+.card.warning { border-left: 5px solid #eab308; }
+.card.error { border-left: 5px solid #ef4444; }
+
+.card h3 {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    color: #f9fafb;
+}
+
+.card p {
+    margin: 0;
+    font-size: 13px;
+    color: #cbd5f5;
+}
+
+/* PANELS */
+.panel {
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+    padding: 20px 22px;
+    border-radius: 18px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.8);
+    border: 1px solid rgba(148,163,184,0.5);
+    margin-bottom: 24px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #e5e7eb;
+}
+
+/* SUBSYSTEMS GRID */
+.subsystems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+}
+
+.subsystem-card {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: radial-gradient(circle at top left, rgba(30,64,175,0.6), rgba(15,23,42,0.96));
+    border: 1px solid rgba(129,140,248,0.7);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+    font-size: 13px;
+}
+
+.subsystem-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.subsystem-name {
+    font-weight: 600;
+}
+
+.subsystem-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.7);
+}
+
+.subsystem-badge.ok { color: #22c55e; border-color: rgba(34,197,94,0.7); }
+.subsystem-badge.warning { color: #eab308; border-color: rgba(234,179,8,0.7); }
+.subsystem-badge.error { color: #ef4444; border-color: rgba(239,68,68,0.7); }
+
+/* EVENTS LIST */
+.event-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(55,65,81,0.8);
+    font-size: 13px;
+}
+
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.event-type {
+    font-weight: 700;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+
+.event-type.heal { color: #22c55e; }
+.event-type.drift { color: #f97373; }
+.event-type.fallback { color: #eab308; }
+
+/* DECISIONS */
+.decision-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(55,65,81,0.8);
+    font-size: 13px;
+}
+
+.decision-item:last-child {
+    border-bottom: none;
+}
+
+.decision-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.decision-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.7);
+    color: #cbd5f5;
+}
+
+/* TRACE */
+.trace-box {
+    background: #020617;
+    color: #22c55e;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: "Consolas", "Fira Code", monospace;
+    white-space: pre-wrap;
+    max-height: 260px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.9);
+    border: 1px solid rgba(34,197,94,0.4);
+    font-size: 12px;
+}
+
+/* DETAILS (native) */
+details {
+    margin-top: 4px;
+}
+
+details summary {
+    list-style: none;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+details summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 10px;
+    transform: translateY(-1px);
+    color: #93c5fd;
+}
+
+details[open] summary::before {
+    content: "▾";
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-main">
+        <img src="../../_EXPRESSIONS/_PEX/BUILD/PulseBand-Active.png" alt="Pulse Logo" />
+        <h1>PULSE OS — SYSTEM CONTROL ROOM</h1>
+    </div>
+    <div id="pipelineBanner" class="pipeline-banner">
+        <span class="pipeline-label">PIPELINE</span>
+        <span class="pipeline-status-text" id="pipelineBannerText">
+            Awaiting snapshot…
+        </span>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="controls">
+        <input type="file" id="osSnapshotFile" accept="application/json" />
+        <button onclick="loadSnapshot()">Load Pulse OS Snapshot</button>
+
+        <select id="osSnapshotDropdown" 
+                style="padding:8px 12px;border-radius:8px;background:#0f172a;color:#e5e7eb;border:1px solid #475569;">
+            <option value="">Saved Snapshots</option>
+        </select>
+
+        <button onclick="loadSavedOsSnapshot()">Load Saved Snapshot</button>
+    </div>
+
+
+    <div id="summaryCards" class="cards"></div>
+
+    <div class="panel">
+        <h2>Subsystem Health</h2>
+        <div id="subsystemsGrid" class="subsystems-grid"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Healing, Drift & Fallback Events</h2>
+        <div id="eventsList"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Routing & Supervisor Decisions</h2>
+        <div id="decisionsList"></div>
+    </div>
+
+    <div class="panel">
+        <h2>OS Trace</h2>
+        <div id="traceBox" class="trace-box"></div>
+    </div>
+
+</div>
+
+<!-- Backend Connector Layer -->
+<script type="module">
+
+// Boot
+// -----------------------------------------------------------
+
+const mesh = PulseMesh();
+const senses = createPulseSenses(mesh);
+const entryNodeId = "root";
+
+document.addEventListener("DOMContentLoaded", () => {
+    refreshAwareness();
+    // Optional auto-refresh:
+    // setInterval(refreshAwareness, 5000);
+});
+
+// -----------------------------------------------------------
+// Core Refresh
+// -----------------------------------------------------------
+
+async function refreshAwareness() {
+    try {
+        const awareness = senses.forAwarenessPage(entryNodeId, { source: "awareness_dashboard" });
+        const snapshot = senses.snapshot(entryNodeId, { source: "awareness_dashboard" });
+
+        renderPipelineBanner(awareness);
+        renderSummaryCards(awareness);
+        renderEnvironmentPanel(awareness);
+        renderHormonesAuraMeshPanel(awareness);
+        renderNarrativePanel(awareness);
+        renderTrace(snapshot, awareness);
+
+    } catch (err) {
+        error("[AwarenessDashboard] Refresh failed:", err);
+        setPipelineBanner("error", "Awareness pipeline error — see ");
+    }
+}
+
+// -----------------------------------------------------------
+// Pipeline Banner
+// -----------------------------------------------------------
+
+function renderPipelineBanner(aware) {
+    const perf = aware.performance.percent ?? 100;
+    let mode = "ok";
+    let text = `Awareness stable at ${perf.toFixed(1)}% performance.`;
+
+    if (perf < 85) {
+        mode = "warning";
+        text = `Awareness under load — ${perf.toFixed(1)}% performance.`;
+    }
+    if (perf < 70) {
+        mode = "error";
+        text = `Awareness degraded — ${perf.toFixed(1)}% performance.`;
+    }
+
+    setPipelineBanner(mode, text);
+}
+
+function setPipelineBanner(mode, text) {
+    const banner = document.getElementById("pipelineBanner");
+    const label = document.getElementById("pipelineBannerText");
+    if (!banner || !label) return;
+
+    banner.classList.remove("warning", "error");
+    if (mode === "warning") banner.classList.add("warning");
+    if (mode === "error") banner.classList.add("error");
+
+    label.textContent = text;
+}
+
+// -----------------------------------------------------------
+// Summary Cards
+// -----------------------------------------------------------
+
+function renderSummaryCards(aware) {
+    const container = document.getElementById("summaryCards");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const perf = aware.performance.percent ?? 100;
+    const perfHint = aware.performance.hint ?? "mixed_state";
+    const stability = aware.stability.value ?? 1;
+    const drift = aware.drift.value ?? 0;
+
+    const cards = [
+        {
+            title: "Performance",
+            value: `${perf.toFixed(1)}%`,
+            hint: perfHint.replace(/_/g, " "),
+            status: perf >= 95 ? "ok" : perf >= 85 ? "warning" : "error",
+        },
+        {
+            title: "Stability",
+            value: stability.toFixed(2),
+            hint: aware.stability.label ?? "Internal Stability",
+            status: stability >= 0.85 ? "ok" : stability >= 0.6 ? "warning" : "error",
+        },
+        {
+            title: "Drift Pressure",
+            value: drift.toFixed(2),
+            hint: aware.drift.label ?? "Drift Pressure",
+            status: drift <= 0.25 ? "ok" : drift <= 0.4 ? "warning" : "error",
+        },
+    ];
+
+    cards.forEach(card => {
+        const el = document.createElement("div");
+        el.className = `card ${card.status}`;
+        el.innerHTML = `
+            <h3>${card.title}</h3>
+            <p><strong>${card.value}</strong></p>
+            <p>${card.hint}</p>
+        `;
+        container.appendChild(el);
+    });
+}
+
+// -----------------------------------------------------------
+// Environment Panel
+// -----------------------------------------------------------
+
+function renderEnvironmentPanel(aware) {
+    const grid = document.getElementById("subsystemsGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    const env = aware.environment ?? {};
+    const items = [
+        env.friction,
+        env.noise,
+        env.load_wave,
+        env.external_heat,
+        env.external_storm,
+        env.external_signal,
+    ].filter(Boolean);
+
+    items.forEach(item => {
+        const value = item.value ?? 0;
+        const label = item.label ?? "Metric";
+        const status = value <= 0.3 ? "ok" : value <= 0.6 ? "warning" : "error";
+
+        const card = document.createElement("div");
+        card.className = "subsystem-card";
+        card.innerHTML = `
+            <div class="subsystem-header">
+                <span class="subsystem-name">${label}</span>
+                <span class="subsystem-badge ${status}">
+                    ${value.toFixed(2)}
+                </span>
+            </div>
+            <div><small>Environment metric — internal/external conditions.</small></div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// -----------------------------------------------------------
+// Hormones / Aura / Mesh Panel
+// -----------------------------------------------------------
+
+function renderHormonesAuraMeshPanel(aware) {
+    const list = document.getElementById("decisionsList");
+    if (!list) return;
+    list.innerHTML = "";
+
+    const hormones = aware.hormones ?? {};
+    const aura = aware.aura ?? {};
+    const mesh = aware.mesh ?? {};
+
+    const items = [
+        {
+            title: "Hormone Modulation",
+            badge: `${hormones.modulation_events ?? 0} events`,
+            body: `Boosts: ${hormones.boosts ?? 0}, Damps: ${hormones.damps ?? 0}.`,
+        },
+        {
+            title: "Aura Activity",
+            badge: `${aura.loops ?? 0} loops / ${aura.syncs ?? 0} syncs`,
+            body: "Aura loop / sync activity.",
+        },
+        {
+            title: "Mesh Routing",
+            badge: `${mesh.hops ?? 0} hops (avg ${mesh.avg_hops ?? 0})`,
+            body: "Neural routing distance / mesh health.",
+        },
+    ];
+
+    items.forEach(item => {
+        const el = document.createElement("div");
+        el.className = "decision-item";
+        el.innerHTML = `
+            <div class="decision-header">
+                <span>${item.title}</span>
+                <span class="decision-badge">${item.badge}</span>
+            </div>
+            <div><small>${item.body}</small></div>
+        `;
+        list.appendChild(el);
+    });
+}
+
+// -----------------------------------------------------------
+// Narrative Panel
+// -----------------------------------------------------------
+
+function renderNarrativePanel(aware) {
+    const list = document.getElementById("eventsList");
+    if (!list) return;
+    list.innerHTML = "";
+
+    const narrative = aware.narrative ?? aware.narrative_for_you ?? "";
+    const lines = typeof narrative === "string" ? [narrative] : [];
+
+    lines.forEach(text => {
+        const el = document.createElement("div");
+        el.className = "event-item";
+        el.innerHTML = `
+            <span class="event-type heal">AWARENESS</span>
+            <span>${text}</span>
+        `;
+        list.appendChild(el);
+    });
+}
+
+// -----------------------------------------------------------
+// Trace Panel
+// -----------------------------------------------------------
+
+function renderTrace(snapshot, aware) {
+    const box = document.getElementById("traceBox");
+    if (!box) return;
+
+    const aiView = {
+        performance_percent: aware.performance.percent ?? 100,
+        stability: aware.stability.value ?? 1,
+        drift_pressure: aware.drift.value ?? 0,
+        environment: aware.environment ?? {},
+        safety: aware.safety ?? {},
+        hormones: aware.hormones ?? {},
+        aura: aware.aura ?? {},
+        mesh: aware.mesh ?? {},
+    };
+
+    const payload = {
+        snapshot,
+        ai_view: aiView,
+    };
+
+    box.textContent = JSON.stringify(payload, null, 2);
+}
+</script>
+
+</body>
+</html>

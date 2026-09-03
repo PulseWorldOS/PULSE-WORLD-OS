@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>⭐ PulseOS v5 Architecture Specification</title>
+
+<style>
+
+:root{
+    --bg:#050913;
+    --bg2:#0a1120;
+    --panel:#0f172a;
+    --panel2:#111c34;
+    --border:#1f2f4f;
+
+    --text:#eef4ff;
+    --muted:#9eb0d8;
+
+    --cyan:#00e5ff;
+    --green:#00ff9d;
+    --gold:#ffd166;
+    --purple:#8b5cf6;
+    --red:#ff6b6b;
+
+    --shadow:0 15px 50px rgba(0,0,0,.35);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at top,#132449 0%,#050913 60%);
+    line-height:1.7;
+}
+
+.hero{
+    min-height:80vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:80px 24px;
+}
+
+.hero-inner{
+    max-width:1200px;
+}
+
+.badge{
+    display:inline-block;
+    padding:10px 18px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;
+    background:rgba(255,255,255,.04);
+    color:var(--cyan);
+    font-weight:700;
+    margin-bottom:30px;
+}
+
+.hero h1{
+    font-size:clamp(3rem,8vw,6rem);
+    font-weight:900;
+    line-height:1;
+    margin-bottom:20px;
+
+    background:
+        linear-gradient(
+        90deg,
+        var(--cyan),
+        var(--green),
+        var(--gold));
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    max-width:900px;
+    margin:auto;
+    color:var(--muted);
+    font-size:1.15rem;
+}
+
+.container{
+    width:min(1500px,95%);
+    margin:auto;
+}
+
+.section{
+    margin-bottom:80px;
+}
+
+.section-title{
+    font-size:2rem;
+    color:var(--gold);
+    margin-bottom:10px;
+}
+
+.section-sub{
+    color:var(--muted);
+    margin-bottom:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+    gap:24px;
+}
+
+.card{
+    background:rgba(15,23,42,.92);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:28px;
+    box-shadow:var(--shadow);
+    transition:.25s ease;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    border-color:var(--cyan);
+}
+
+.card h3{
+    color:var(--cyan);
+    margin-bottom:15px;
+    font-size:1.2rem;
+}
+
+.card p{
+    color:var(--muted);
+}
+
+.card ul{
+    margin-top:15px;
+    padding-left:20px;
+}
+
+.card li{
+    margin:6px 0;
+}
+
+.architecture{
+    background:rgba(15,23,42,.96);
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:40px;
+    text-align:center;
+    box-shadow:var(--shadow);
+}
+
+.architecture pre{
+    color:var(--green);
+    font-size:1rem;
+    overflow:auto;
+}
+
+.rule{
+    border-left:4px solid var(--cyan);
+    padding-left:18px;
+    margin:16px 0;
+}
+
+.check{
+    color:var(--green);
+    font-weight:700;
+}
+
+.warning{
+    color:var(--gold);
+}
+
+.footer{
+    margin-top:120px;
+    margin-bottom:80px;
+}
+
+.footer-card{
+    text-align:center;
+    padding:50px;
+    border-radius:25px;
+    background:
+    linear-gradient(
+        135deg,
+        rgba(0,229,255,.08),
+        rgba(0,255,157,.08)
+    );
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.footer-card h2{
+    font-size:2rem;
+    margin-bottom:15px;
+}
+
+.footer-card p{
+    color:var(--muted);
+}
+
+.code{
+    background:#07101f;
+    padding:18px;
+    border-radius:14px;
+    margin-top:14px;
+    overflow:auto;
+    color:#92ffcb;
+}
+
+</style>
+</head>
+<body>
+
+<section class="hero">
+
+    <div class="hero-inner">
+
+        <div class="badge">
+            ⭐ PULSEOS v5 • ARCHITECTURE SUMMARY DOCUMENT
+        </div>
+
+        <h1>PulseOS v5</h1>
+
+        <p>
+            A deterministic, self-healing operating system architecture,
+            designed to normalize once, classify once, derive once,
+            render deterministically, eliminate drift, preserve lineage,
+            maintain traceability, and act as the translation layer
+            between raw subsystem state and deterministic UI.
+        </p>
+
+    </div>
+
+</section>
+
+<div class="container">
+
+<!-- ===================================================== -->
+<!-- PURPOSE -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">1. Purpose of PulseOS v5</h2>
+
+<div class="card">
+
+<h3>Mission</h3>
+
+<p>
+PulseOS v5 is a browser-based operating system layer responsible for
+normalization, classification, derivation, healing, replay, traceability,
+debugging visibility, architectural enforcement, and deterministic rendering.
+</p>
+
+<ul>
+<li>Normalize data once</li>
+<li>Classify data once</li>
+<li>Derive values once</li>
+<li>Detect drift</li>
+<li>Detect fallback</li>
+<li>Detect healing</li>
+<li>Detect pipeline issues</li>
+<li>Maintain lineage</li>
+<li>Maintain trace</li>
+<li>Render dashboards</li>
+<li>Store snapshots</li>
+<li>Replay state</li>
+<li>Provide debugging visibility</li>
+<li>Enforce architectural rules</li>
+</ul>
+
+<br>
+
+<h3>PulseOS Eliminates</h3>
+
+<ul>
+<li>Duplication</li>
+<li>Drift</li>
+<li>Repeated logic</li>
+<li>Repeated normalization</li>
+<li>Repeated filtering</li>
+<li>Repeated rendering</li>
+<li>Repeated state derivation</li>
+<li>Repeated lineage flattening</li>
+<li>Repeated pipeline checks</li>
+</ul>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- CORE PRINCIPLES -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">2. Core Principles</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>2.1 Single-Pass Normalization</h3>
+
+<p>Every subsystem snapshot must be normalized exactly once.</p>
+
+<ul>
+<li>Normalized Core</li>
+<li>Normalized Events</li>
+<li>Normalized Decisions</li>
+<li>Derived Fields</li>
+<li>Severity</li>
+<li>Lineage</li>
+<li>Transitions</li>
+<li>Signal Text</li>
+<li>VRAM Text</li>
+<li>Pipeline Status</li>
+<li>Trace Extras</li>
+</ul>
+
+<p class="check">Panels never re-normalize.</p>
+
+</div>
+
+<div class="card">
+
+<h3>2.2 Single-Pass Classification</h3>
+
+<ul>
+<li>Fallback</li>
+<li>Drift</li>
+<li>Heal</li>
+<li>Other</li>
+</ul>
+
+<p class="check">Panels never re-filter.</p>
+
+</div>
+
+<div class="card">
+
+<h3>2.3 Derived Values</h3>
+
+<ul>
+<li>Severity</li>
+<li>VRAM Text</li>
+<li>Signal Text</li>
+<li>Lineage Chain</li>
+<li>Transition Lists</li>
+<li>Pipeline Severity</li>
+<li>Event Counts</li>
+<li>Decision Summaries</li>
+</ul>
+
+<p class="check">Derived once. Never recomputed by panels.</p>
+
+</div>
+
+<div class="card">
+
+<h3>2.4 Pure Renderers</h3>
+
+<div class="code">
+renderGpuCore(normalized.core)<br>
+renderGpuEvents(normalized.events)<br>
+renderGpuDecisions(normalized.decisions)<br>
+renderGpuTrace(normalized.trace)
+</div>
+
+<div class="rule">
+No logic.<br>
+No filtering.<br>
+No normalization.<br>
+No classification.
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>2.5 Drift-Free Architecture</h3>
+
+<ul>
+<li>Remove repeated logic</li>
+<li>Remove repeated variables</li>
+<li>Remove repeated rendering</li>
+<li>Remove repeated normalization</li>
+<li>Remove repeated filtering</li>
+<li>Remove repeated lineage handling</li>
+<li>Remove repeated pipeline checks</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>2.6 Healing Layer</h3>
+
+<ul>
+<li>Fallback Detection</li>
+<li>Drift Detection</li>
+<li>Healing Events</li>
+<li>Lineage Tracking</li>
+<li>Transition Tracking</li>
+</ul>
+
+<p>These structures must always be preserved.</p>
+
+</div>
+
+<div class="card">
+
+<h3>2.7 Pipeline Awareness</h3>
+
+<ul>
+<li>pipelineStatus</li>
+<li>pipelineSeverity</li>
+<li>pipelineBanner</li>
+</ul>
+
+<p>The pattern is mandatory across all subsystems.</p>
+
+</div>
+
+<div class="card">
+
+<h3>2.8 Snapshot System</h3>
+
+<ul>
+<li>Tilde Hotkey</li>
+<li>Spam Detection</li>
+<li>Cooldown</li>
+<li>Done Gaming Link</li>
+<li>Snapshot Saving</li>
+<li>Snapshot Dropdown</li>
+<li>Snapshot Loading</li>
+<li>Snapshot Replay</li>
+</ul>
+
+<p class="warning">This is the Time-Freeze Layer.</p>
+
+</div>
+
+<div class="card">
+
+<h3>2.9 Translation Layer</h3>
+
+<ul>
+<li>Detect Duplication</li>
+<li>Detect Drift</li>
+<li>Detect Repeated Logic</li>
+<li>Detect Repeated Rendering</li>
+<li>Detect Repeated Normalization</li>
+<li>Detect Repeated Filtering</li>
+<li>Detect Repeated Lineage Logic</li>
+<li>Detect Repeated Pipeline Logic</li>
+<li>Detect Repeated Fallback Logic</li>
+<li>Detect Repeated Healing Logic</li>
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- FLOW -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">PulseOS Translation Flow</h2>
+
+<div class="architecture">
+
+<pre>
+RAW SNAPSHOT
+      │
+      ▼
+NORMALIZATION
+      │
+      ▼
+CLASSIFICATION
+      │
+      ▼
+DERIVED VALUES
+      │
+      ▼
+PIPELINE ANALYSIS
+      │
+      ▼
+LINEAGE TRACKING
+      │
+      ▼
+TRANSITION TRACKING
+      │
+      ▼
+NORMALIZED STATE
+      │
+      ▼
+PURE RENDERERS
+      │
+      ▼
+DETERMINISTIC UI
+</pre>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- SUBSYSTEMS -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">3. PulseOS v5 Subsystems</h2>
+
+<div class="grid">
+
+<div class="card"><h3>GPU</h3></div>
+<div class="card"><h3>OS</h3></div>
+<div class="card"><h3>AI</h3></div>
+<div class="card"><h3>PulseBand</h3></div>
+<div class="card"><h3>Proxy</h3></div>
+<div class="card"><h3>GPU Compute</h3></div>
+<div class="card"><h3>Earn</h3></div>
+<div class="card"><h3>Miner / PacketEngine</h3></div>
+<div class="card"><h3>Compute (Future)</h3></div>
+<div class="card"><h3>GlobalHealer</h3></div>
+<div class="card"><h3>PulseOSHealer</h3></div>
+<div class="card"><h3>PulseOSMemory</h3></div>
+<div class="card"><h3>Timer</h3></div>
+
+</div>
+
+<div class="card" style="margin-top:25px">
+
+<h3>Every Subsystem Must</h3>
+
+<ul>
+<li>Produce a snapshot</li>
+<li>Follow normalization rules</li>
+<li>Follow lineage rules</li>
+<li>Follow pipeline rules</li>
+<li>Follow drift rules</li>
+<li>Follow healing rules</li>
+<li>Follow deterministic rendering rules</li>
+</ul>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- DASHBOARD -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">4. Dashboard Architecture</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>4.1 Controls</h3>
+
+<ul>
+<li>File Loader</li>
+<li>Snapshot Dropdown</li>
+<li>Load Saved Snapshot</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>4.2 Panels</h3>
+
+<ul>
+<li>Summary Cards</li>
+<li>Core Panel</li>
+<li>Events Panel</li>
+<li>Decisions Panel</li>
+<li>Trace Panel</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>4.3 Snapshot Layer</h3>
+
+<ul>
+<li>Tilde Hotkey</li>
+<li>Spam Detection</li>
+<li>Cooldown</li>
+<li>Done Gaming Link</li>
+<li>Snapshot Save</li>
+<li>Snapshot Load</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>4.4 Rendering</h3>
+
+<p>
+Panels are render-only components.
+No normalization, filtering,
+classification, or derivation allowed.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- HOTKEY -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">5. Hotkey + Cooldown System</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>5.1 Tilde Hotkey</h3>
+<ul>
+<li>Saves Snapshot</li>
+<li>Triggers Time-Freeze Layer</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>5.2 Spam Detection</h3>
+<ul>
+<li>Two presses within 2s</li>
+<li>Disable hotkey for 3 minutes</li>
+<li>Show cooldown UI</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>5.3 Cooldown UI</h3>
+<ul>
+<li>Countdown</li>
+<li>Done Gaming Link</li>
+<li>Force Enable</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>5.4 Snapshot Storage</h3>
+<div class="code">
+localStorage<br>
+pulseSavedSnapshots
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- LINEAGE -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">6-7. Normalization + Lineage Systems</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Normalize Once</h3>
+
+<ul>
+<li>Core</li>
+<li>Events</li>
+<li>Decisions</li>
+<li>Derived Fields</li>
+<li>Lineage</li>
+<li>Transitions</li>
+<li>Signal Text</li>
+<li>Severity</li>
+<li>Pipeline Severity</li>
+<li>Trace Extras</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>No Panel Logic</h3>
+
+<ul>
+<li>No Normalize</li>
+<li>No Filter</li>
+<li>No Classify</li>
+<li>No Derive</li>
+<li>No Compute</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Lineage</h3>
+
+<div class="code">
+lineage: [...]
+</div>
+
+<ul>
+<li>lineage</li>
+<li>lineageChain</li>
+<li>derivedFrom</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Transitions</h3>
+
+<div class="code">
+transitions: [...]
+</div>
+
+<ul>
+<li>history</li>
+<li>transitionLog</li>
+<li>stateChanges</li>
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- DRIFT -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">8. Drift + Healing System</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Drift Events</h3>
+
+<ul>
+<li>Expected ≠ Actual</li>
+<li>Pipeline Mismatch</li>
+<li>Fallback Triggered</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Healing Events</h3>
+
+<ul>
+<li>Self Correction</li>
+<li>Fallback Resolution</li>
+<li>Drift Repair</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Fallback Events</h3>
+
+<ul>
+<li>Primary Path Fails</li>
+<li>Fallback Path Activated</li>
+<li>Recovery Tracked</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Classification</h3>
+
+<ul>
+<li>Fallback</li>
+<li>Drift</li>
+<li>Heal</li>
+<li>Other</li>
+</ul>
+
+<p>Classify exactly once.</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- PIPELINE -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">9-10. Pipeline + Trace System</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Pipeline Status Values</h3>
+
+<ul>
+<li>ok</li>
+<li>healthy</li>
+<li>verified</li>
+<li>warning</li>
+<li>error</li>
+<li>unknown</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Pipeline Metadata</h3>
+
+<ul>
+<li>pipelineStatus</li>
+<li>pipelineSeverity</li>
+<li>pipelineBanner</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Trace Extras</h3>
+
+<ul>
+<li>Pipeline Status</li>
+<li>Renderer</li>
+<li>Profile Name</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Trace Rendering</h3>
+
+<p>
+Simple deterministic newline rendering.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- PULSEBAND -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">11. PulseBand v5 Rewrite Plan</h2>
+
+<div class="card">
+
+<ul>
+<li>✅ Single-Pass Normalization</li>
+<li>✅ Single-Pass Classification</li>
+<li>✅ Deterministic Rendering</li>
+<li>✅ Modular Subsystems</li>
+<li>✅ Drift-Free Logic</li>
+<li>✅ Healing-Aware Logic</li>
+<li>✅ Pipeline-Aware Logic</li>
+<li>✅ Lineage-Aware Logic</li>
+<li>✅ Snapshot-Aware Logic</li>
+<li>✅ No Repeated Logic</li>
+<li>✅ No Repeated Rendering</li>
+<li>✅ No Repeated Normalization</li>
+</ul>
+
+<p style="margin-top:18px">
+PulseBand v5 becomes a full operating-system subsystem rather
+than a prototype implementation.
+</p>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- AI -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">12. AI Integration Plan</h2>
+
+<div class="card">
+
+<ul>
+<li>✅ Understand PulseOS Rules</li>
+<li>✅ Enforce Deterministic Architecture</li>
+<li>✅ Detect Drift</li>
+<li>✅ Propose Fixes</li>
+<li>✅ Rewrite Subsystems</li>
+<li>✅ Normalize Data</li>
+<li>✅ Classify Events</li>
+<li>✅ Derive Fields</li>
+<li>✅ Maintain Lineage</li>
+<li>✅ Maintain Transitions</li>
+<li>✅ Maintain Pipeline Rules</li>
+<li>✅ Maintain Snapshot Rules</li>
+<li>✅ Maintain Cooldown Rules</li>
+<li>✅ Maintain Rendering Rules</li>
+</ul>
+
+<h3 style="margin-top:20px">
+PulseOS Translation Layer
+</h3>
+
+<p>
+The AI functions as the architectural enforcement and translation
+engine responsible for preserving deterministic system behavior.
+</p>
+
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- MEMORY -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+<h2 class="section-title">13. Memory Integration Plan</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>PulseOSMemory v6 Stores</h3>
+
+<ul>
+<li>Subsystem Snapshots</li>
+<li>Lineage</li>
+<li>Transitions</li>
+<li>Drift Signatures</li>
+<li>Restore Points</li>
+<li>Architectural Rules</li>
+<li>Naming Conventions</li>
+<li>Translation Rules</li>
+<li>Subsystem Boundaries</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>AI Uses Memory To</h3>
+
+<ul>
+<li>Enforce Architecture</li>
+<li>Detect Drift</li>
+<li>Rewrite Code</li>
+<li>Maintain Consistency</li>
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<div class="footer">
+
+<div class="footer-card">
+
+<h2>PulseOS v5</h2>
+
+<p>
+Normalize Once • Classify Once • Derive Once • Render Deterministically
+</p>
+
+<br>
+
+<p>
+Translation Layer • Healing Layer • Snapshot Layer • Trace Layer • Memory Layer
+</p>
+
+<br>
+
+<p>
+Deterministic Architecture Through Architectural Discipline
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="prefetch" fetchpriority="high" href="/">
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseCacheStore.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseCache.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseCacheFiles" type="video/mp4">
+<title>Pulse World OS — History</title>
+<style>
+
+/* SECTION CONTAINER */
+.section {
+  position: relative;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: var(--tp-max-width);
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* BACKGROUND IMAGE */
+.pulse-history-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.pulse-history-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(4px) brightness(0.6);
+}
+
+/* PANELS */
+.pulse-panel {
+  background: rgba(18, 24, 38, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* TITLES */
+.section-title,
+.pulse-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #e8efff;
+}
+
+/* SUBTITLES */
+.section-subtitle {
+  font-size: 0.95rem;
+  line-height: 1.45rem;
+  color: #9fb0c9;
+  margin-bottom: 10px;
+}
+
+/* MAIN IMAGE */
+.history-main-image-wrap {
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.history-main-image {
+  border-radius: 40px;
+  width: 160px;
+  height: auto;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* STATS GRID */
+.history-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.history-stat {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.history-stat-label {
+  font-size: 0.8rem;
+  color: #8fa0b8;
+}
+
+.history-stat-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #e8efff;
+}
+
+/* HISTORY LIST */
+.history-list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 14px 18px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.history-entry:hover {
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.history-entry-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-page-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #e8efff;
+}
+
+.history-page-date {
+  font-size: 0.8rem;
+  color: #8fa0b8;
+}
+
+.history-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-load-time,
+.history-pulse-sync {
+  font-size: 0.8rem;
+  color: #9fb0c9;
+}
+
+.pulse-btnA {
+  background: #3a7bff;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.pulse-btnA:hover {
+  background: #5a8cff;
+  transform: translateY(-1px);
+}
+
+.pulse-btnB {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8efff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.pulse-btnB:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+/* DETAIL PANEL */
+.history-detail-content {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-detail-row {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.history-detail-row span:first-child {
+  color: #8fa0b8;
+}
+
+/* CONTROLS */
+.history-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+</style>
+
+</head>
+
+<body>
+<video id="historyVideo" src="./_EXPRESSIONS/_VIDEOS/PulseCacheFiles" autoplay muted playsinline style="display:block;" aria-label="History Video"></video>
+
+<section class="section" id="pulse-history">
+  <div class="container">
+
+    <!-- BACKGROUND IMAGE (not body, not bg-core) -->
+    <div class="pulse-history-bg">
+      <img src="./_EXPRESSIONS/_PEX/BUILD/PulseCacheStore.webp.pex" 
+           alt="Pulse History Background" 
+           class="pulse-history-bg-img">
+    </div>
+
+    <!-- MAIN HEADER PANEL -->
+    <div class="pulse-panel history-header">
+      <div class="history-main-image-wrap">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseCache.webp.pex" 
+             alt="Pulse History" 
+             class="history-main-image">
+      </div>
+
+      <h2 class="section-title">Pulse World OS — Navigation History</h2>
+
+      <p class="section-subtitle">
+        PulseHistory is your sovereign navigation timeline inside PulseWorld — a private, device‑local record of every page, 
+        route, and world‑layer you’ve visited. Unlike browser history, PulseHistory captures timing, physics, GPU behavior, 
+        sync stability, and world‑state continuity, giving you a complete picture of how your device moves through PulseWorld.
+      </p>
+
+      <p class="section-subtitle" style="color:#8fa0b8;font-size:0.9rem;">
+        This history belongs to you. It works offline, syncs when online, and forms the foundation for world restoration, 
+        continuity, diagnostics, and performance tuning across your entire PulseWorld experience.
+      </p>
+    </div>
+
+
+    <!-- GLOBAL STATS PANEL -->
+    <div class="pulse-panel history-stats-panel">
+      <h3 class="pulse-title">PulseHistory Overview</h3>
+      <p style="font-size:14px;color:#8fa0b8;">
+        A summary of your entire navigation timeline stored locally on this device.
+      </p>
+
+      <div class="history-stats-grid">
+
+        <div class="history-stat">
+          <span class="history-stat-label">Total Entries</span>
+          <span class="history-stat-value" id="historyTotalEntries">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">Pulse Avg Load</span>
+          <span class="history-stat-value" id="historyAvgLoadTime">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">Fastest Page</span>
+          <span class="history-stat-value" id="historyFastestPage">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">Slowest Page</span>
+          <span class="history-stat-value" id="historySlowestPage">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">Average Pulse Sync</span>
+          <span class="history-stat-value" id="historyAvgPulseSync">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">World Avg Load</span>
+          <span class="history-stat-value" id="historyWorldAvgLoadTime">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">GPU Participation</span>
+          <span class="history-stat-value" id="historyGpuParticipation">—</span>
+        </div>
+
+        <div class="history-stat">
+          <span class="history-stat-label">Total Saved Time</span>
+          <span class="history-stat-value" id="historySavedTime">—</span>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- HISTORY LIST PANEL (THE PANEL YOU ASKED FOR) -->
+    <div class="pulse-panel history-list-panel">
+      <h3 class="pulse-title">Your PulseHistory Timeline</h3>
+      <p style="font-size:14px;color:#8fa0b8;">
+        Every entry below represents a moment in your PulseWorld journey.  
+        Click any entry to inspect details or jump directly back to that page.
+      </p>
+
+      <div id="pulseHistoryList" class="history-list">
+        <!-- JS will populate entries here -->
+        <!-- Example:
+        <div class="history-entry">
+          <div class="history-entry-left">
+            <span class="history-page-name">/castle/overview</span>
+            <span class="history-page-date">Aug 21, 2026 — 9:14 PM</span>
+          </div>
+          <div class="history-entry-right">
+            <span class="history-load-time">Load Time: 42ms</span>
+            <span class="history-pulse-sync">Pulse Sync: 98.2%</span>
+            <button class="btn pulse-btnA history-jump-btn" data-index="12">Open</button>
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+
+
+    <!-- HISTORY DETAIL PANEL -->
+    <div class="pulse-panel history-detail-panel" id="pulseHistoryDetail">
+      <h3 class="pulse-title">History Entry Details</h3>
+      <p style="font-size:14px;color:#8fa0b8;">
+        Select an entry from your timeline to view its full profile.
+      </p>
+
+      <div id="historyDetailContent" class="history-detail-content">
+        <!-- JS will populate details here -->
+        <!-- Example:
+        <div class="history-detail-row"><span>Page:</span> /castle/overview</div>
+        <div class="history-detail-row"><span>Date:</span> Aug 21, 2026 — 9:14 PM</div>
+        <div class="history-detail-row"><span>Index:</span> 12</div>
+        <div class="history-detail-row"><span>Load Duration:</span> 42ms</div>
+        <div class="history-detail-row"><span>Pulse Sync:</span> 98.2%</div>
+        <div class="history-detail-row"><span>Network Route:</span> Direct Mesh</div>
+        <div class="history-detail-row"><span>Environment:</span> GPU‑Native</div>
+        <div class="history-detail-row"><span>World Layer:</span> Castle / Tier 2</div>
+        <div class="history-detail-row"><span>Session ID:</span> PW‑SESSION‑A1‑042</div>
+        -->
+      </div>
+    </div>
+
+
+    <!-- HISTORY CONTROL PANEL -->
+    <div class="pulse-panel history-control-panel">
+      <h3 class="pulse-title">History Tools & Controls</h3>
+      <p style="font-size:14px;color:#8fa0b8;">
+        Manage your PulseHistory using the tools below.
+      </p>
+
+      <div class="history-controls">
+        <button class="btn pulse-btnB" id="historyExportBtn">Export PulseHistory</button>
+        <button class="btn pulse-btnB" id="historyAnalyzeBtn">Analyze Performance</button>
+        <button class="btn pulse-btnB" id="historyClearBtn">Clear Local History</button>
+      </div>
+
+      <p style="font-size:12px;color:#8fa0b8;margin-top:8px;">
+        Clearing history removes local records from this device only.  
+        Exporting creates a file you can keep or share.  
+        Analysis uses your data to help you — never to track you.
+      </p>
+    </div>
+
+
+    <!-- EXPLANATION PANEL -->
+    <div class="pulse-panel history-explainer-panel">
+      <h3 class="pulse-title">Why PulseHistory Is Revolutionary</h3>
+
+      <p style="font-size:14px;color:#8fa0b8;">
+        Browser history only knows URLs. It doesn’t understand timing, physics, GPU behavior, world layers, or continuity.  
+        PulseHistory does. It captures the real story of how your device interacts with PulseWorld — every load, every sync,  
+        every drift, every recovery.
+      </p>
+
+      <p style="font-size:14px;color:#8fa0b8;margin-top:6px;">
+        This gives you power: the ability to revisit worlds exactly as you left them, diagnose performance issues,  
+        understand your device’s strengths, and maintain continuity across offline and online sessions.
+      </p>
+
+      <p style="font-size:14px;color:#8fa0b8;margin-top:6px;">
+        Most importantly, PulseHistory is sovereign. It belongs to you, not your browser.  
+        It exists to improve your worlds — not to profile your browsing.
+      </p>
+    </div>
+
+  </div>
+</section>
+<script>
+
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+// ---------------------------------------------------------
+// PulseHistory Renderer
+// ---------------------------------------------------------
+
+function renderPulseHistory() {
+  const hist = PulseRealm.PulseHistory || { stack: [], index: -1 };
+  const listEl = document.getElementById("pulseHistoryList");
+  const detailEl = document.getElementById("historyDetailContent");
+
+  const entries = hist.stack || [];
+
+  const total = entries.length;
+  document.getElementById("historyTotalEntries").textContent = total;
+
+  if (total === 0) {
+    document.getElementById("historyWorldAvgLoadTime").textContent = "~2.00s";
+    document.getElementById("historyAvgLoadTime").textContent = "—";
+    document.getElementById("historyFastestPage").textContent = "—";
+    document.getElementById("historySlowestPage").textContent = "—";
+    document.getElementById("historyAvgPulseSync").textContent = "—";
+    document.getElementById("historyGpuParticipation").textContent = "—";
+    document.getElementById("historySavedTime").textContent = "—";
+    return;
+  }
+
+  let totalTiming = 0;
+  let fastest = entries[0];
+  let slowest = entries[0];
+
+  entries.forEach(e => {
+    let timingEnvelope = e.timing ?? 300;
+    totalTiming += timingEnvelope;
+    if (timingEnvelope < fastest.timing && timingEnvelope >= 10 && fastest.timing >= 10 && timingEnvelope != 300) fastest = e;
+    if (timingEnvelope > slowest.timing) slowest = e;
+  });
+  const avgTiming = (totalTiming / total);
+  const savedTiming = 2 - (avgTiming/1000);
+  const savedpercent = (savedTiming / 2)*100;
+
+  document.getElementById("historyWorldAvgLoadTime").textContent = "~2.00s";
+  document.getElementById("historyAvgLoadTime").textContent = `${avgTiming.toFixed(2)} ms`;
+  document.getElementById("historyFastestPage").textContent = fastest.page;
+  document.getElementById("historySlowestPage").textContent = slowest.page;
+  document.getElementById("historyAvgPulseSync").textContent = `100%`;
+  document.getElementById("historyGpuParticipation").textContent = `~5%`;
+  document.getElementById("historySavedTime").textContent = `${savedpercent.toFixed(2)}%`;
+
+  listEl.innerHTML = "";
+
+  entries.forEach((entry, index) => {
+    const div = document.createElement("div");
+    div.className = "history-entry";
+    div.dataset.index = index;
+    
+    const syncValue = entry.disableSW ? "45%" : "100%";
+    div.innerHTML = `
+      <div class="history-entry-left">
+        <span class="history-page-name">${entry.page}</span>
+        <span class="history-page-date">${entry.time}</span>
+      </div>
+
+      <div class="history-entry-right">
+        <span class="history-load-time">Load Duration: ${(entry.timing).toFixed(2)} ms</span>
+        <span class="history-pulse-sync">Pulse Sync: ${syncValue}</span>
+        <button class="btn pulse-btnA history-jump-btn" data-index="${index}">Details</button>
+      </div>
+    `;
+    
+    div.addEventListener("click", () => showHistoryDetail(index));
+    listEl.appendChild(div);
+  });
+
+  function showHistoryDetail(i) {
+    const e = entries[i];
+    
+    const syncValue = e.disableSW ? "45%" : "100%";
+    detailEl.innerHTML = `
+      <div class="history-detail-row"><span>Page:</span> ${e.page}</div>
+      <div class="history-detail-row"><span>Date:</span> ${e.time}</div>
+      <div class="history-detail-row"><span>Index:</span> ${i}</div>
+      <div class="history-detail-row"><span>Load Duration:</span> ${(e.timing).toFixed(2)} ms</div>
+      <div class="history-detail-row"><span>Approx. View Duration:</span> ${(e.timeSpent).toFixed(2)} ms</div>
+      <div class="history-detail-row"><span>Pulse Sync:</span> ${syncValue}</div>
+      <div class="history-detail-row"><span>Environment:</span> Pulse World</div>
+      <div class="history-detail-row"><span>World Layer:</span> PulseBrowser</div>
+      <div class="history-detail-row"><span>Session ID:</span> ${e.signature}</div>
+    `;
+  }
+
+  document.getElementById("historyExportBtn").onclick = () => {
+    const blob = new Blob([JSON.stringify(hist, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "PulseHistory.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  document.getElementById("historyAnalyzeBtn").onclick = () => {
+    alert("PulseHistory Analysis coming soon — GPU timing, sync drift, world continuity, and load physics.");
+  };
+
+  document.getElementById("historyClearBtn").onclick = () => {
+    if (!confirm("Clear local PulseHistory? This cannot be undone.")) return;
+    localStorage.removeItem("pulseHistory");
+    PulseRealm.PulseHistory = { stack: [], index: -1 };
+    renderPulseHistory();
+  };
+}
+
+historyVideo = document.getElementById("historyVideo");
+
+(async () => {
+  historyVideo.style.display = PulseRealm.VideoDisabled;
+  setInterval(() => {
+   
+    timerX = timerX + 1;
+    if (timerX >= 6) {
+      historyVideo.style.display = "none";
+      timerX = 0;
+    }
+  }, 1000);
+
+  if (historyVideo) {
+    historyVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Bank Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        historyVideo.pause();
+        historyVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("historyVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      historyVideo.style.opacity = "0";
+      historyVideo.style.display = "none";
+    };
+  }
+
+  // Run on load
+  renderPulseHistory();
+  
+  // ---------------------------------------------------------
+  // VIEWPORT
+  // ---------------------------------------------------------
+  PulseRealm.__LOAD_END = performance.now();
+  console.log(
+    `✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,
+    "color:#H02FHA; font-weight:bold; font-family:monospace;"
+  );
+})();
+
+</script>
+
+</body>
+</html>

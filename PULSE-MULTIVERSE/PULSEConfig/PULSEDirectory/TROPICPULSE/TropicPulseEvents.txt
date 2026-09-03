@@ -1,0 +1,4240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no">
+  <title>Pulse World - Events</title>
+
+
+  <style>
+:root {
+  --t-gold: #f5d27a;
+  --t-gold-deep: #b58a3c;
+  --t-bg-dark: #05080c;
+  --t-metal-light: #d9dde4;
+  --t-metal-mid: #9ca3b0;
+  --t-metal-dark: #4b515e;
+  --t-text-main: #f5f7fb;
+  --t-text-subtle: #a7b0c4;
+  --t-card-bg: #070a11;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100dvh;
+
+  display: flex;
+  justify-content: center;
+
+  background: #000;
+  background-image: url('./_EXPRESSIONS/_PEX/BUILD/Mysterious.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Overlay ONLY — NOT a second background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  /* Optional tint */
+  background: rgba(0,0,0,0.25);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+    
+.events-shell {
+  width: 100%;
+    min-width: 0;
+    min-height: 100%;
+    max-width: 464px;
+  margin: 1px auto 6px auto;
+
+  /* Layered tropical glass */
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 153, 0.96) 0%,   /* bright soft yellow */
+    rgba(255, 255, 153, 0.92) 40%,  /* slightly lighter layer */
+    rgba(255, 255, 153, 0.88) 100%  /* deepest translucent yellow */
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 0;
+  /* Premium shape */
+  border-radius: 18px;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px);
+
+  /* Subtle inner glow for premium feel */
+  position: relative;
+}
+
+.events-shell::before {
+  content: "";
+  z-index: 0;
+  width: 100%;
+    min-width: 0;
+    min-height: 100%;
+    max-width: 464px;
+  position: absolute;
+  border-radius: inherit;
+  inset: 0; /* controls aura size */
+
+  filter: blur(45px);
+  pointer-events: none;
+  background-size: contain; /* ← SAFE */
+  /* Magical warm shimmer layer */
+  background: radial-gradient(
+    circle at 80% 0%,
+    rgba(255,215,160,0.18),
+    transparent 60%
+  );
+  opacity: 0.55;
+}
+
+/* EVENTS */
+.events-container {
+  min-width: 0;
+    max-width: 100%;
+    min-height: 100%;
+    margin: 0 6px;
+  background: #ffff99;
+  display: flex;              /* allow vertical stacking */
+  flex-direction: column;     /* image on top, row below */
+  box-shadow: 0 7px 22px rgba(0,0,0,0.1);
+  border-radius: 22px;
+}
+/* EVENT CARD — 200px total height */
+.event-card {
+  background: white;
+  position: relative;
+  height: 250px;
+  display: flex;              /* allow vertical stacking */
+  flex-direction: column;     /* image on top, row below */
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.event-card:active {
+  transform: scale(0.97);
+}
+
+/* IMAGE WRAPPER — fixed 120px, scales with card */
+.event-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 176px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ffe6c9, #ffd1e3);
+}
+
+/* IMAGE — fills wrapper */
+.event-img,
+.event-lazy-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;          /* contain → cover for better fill */
+  opacity: 0;
+  transition: opacity 0.35s ease-in;
+  background: #e0e0e0;
+}
+
+.event-img.loaded,
+.event-lazy-img.loaded {
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* CATEGORY + SUBCATEGORY ICONS — NO blur, NO fade */
+.cat-lazy-img {
+  opacity: 1;
+  filter: none;
+  transition: none;
+}
+
+.price-badge {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  background: #000000cc;
+  color: #fff;
+  padding: 4px 8px;
+  font-weight: 700;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(4px);
+  font-size: 16px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+
+.price-badge.free {
+  background: #00c853cc;
+  color: white;
+  font-size: 18px;
+}
+
+/* INFO ROW — takes remaining space (80px) */
+.event-row {
+  flex: 1;                    /* fills leftover space */
+  padding: 0px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.event-title {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  color: #008f72;
+  margin-bottom: 2px;
+  letter-spacing: 0.3px;
+}
+
+.event-info {
+  font-size: 14px;
+  color: #2f2f2f;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 6px;
+  width: 100%;
+}
+
+.event-info b {
+  font-size: 14px;
+  font-weight: 600;
+  color: #006f58;
+  white-space: nowrap; /* keeps "Category:" from wrapping */
+  display: flex;
+}
+
+.event-category {
+  white-space: nowrap; /* keeps "Category:" from wrapping */
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 4px;
+}
+
+.event-venue {
+  white-space: nowrap; /* keeps "Category:" from wrapping */
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 4px;
+}
+.event-when {
+  white-space: nowrap; /* keeps "Category:" from wrapping */
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 4px;
+}
+
+.event-cat-icon {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+  vertical-align: middle;
+  align-items: right;
+  margin-right: 4px;
+}
+
+#stickyFilters::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 45%;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+#stickyFilters {
+  overflow: visible !important;
+  background: linear-gradient(135deg, #0f8f4f 0%, #0a6e3a 100%);
+  color: white;
+  padding: 2px 6px;
+  font-size: 22px;
+  transform: none !important;
+  font-weight: 500;
+  border-radius: 10px;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: inline-flex;      /* ← the magic */
+  align-items: center;
+  justify-content: center;   /* ← center the filter row */
+  width: 100%;               
+  height: 45px;               
+  max-height: 45px;            /* ← keeps it full width without stretching */
+  box-sizing: border-box;
+}
+
+
+.filter-btn {
+  padding: 3px 8px;
+  color: #f5f7fb;
+  font-size: clamp(8px, 8vw, 18px);
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;   /* allows the whole button to shrink */
+  min-width: 0;     /* REQUIRED for children to shrink */
+  gap: clamp(4px, 8vw, 10px);
+  transition: transform 0.1s ease;
+}
+
+.edit-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+/* HEADER BUTTONS */
+.header-create-btn,
+.header-bookmark-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+.header-create-btn {
+  background: linear-gradient(135deg, #00c2ff, #0077ff);
+}
+
+.header-bookmark-btn {
+  background: linear-gradient(135deg, #ffb300, #ff8c00);
+}
+
+.header-create-btn:active,
+.header-bookmark-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+.trash-icon {
+  width: 1.375em;
+  height: 1.375em;
+
+  flex-shrink: 1;    /* allow shrinking */
+  pointer-events: none;
+  fill: #777 !important;
+  color: #777 !important;
+}
+
+.clear-btn {
+  background: none;
+  z-index: 1025;
+  border: none;
+  margin: 0 3px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+  justify-content: center;
+}
+
+.trash-circle {
+  width: 2em;   /* 30px if font-size = 16px */
+  height: 2em;
+
+  /* Layered tropical glass */
+  background: linear-gradient(
+      145deg,
+      rgba(255,255,255,0.96) 0%,
+      rgba(250,247,240,0.92) 40%,
+      rgba(245,240,230,0.88) 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* subtle shadow to lift it off the green header */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+}
+
+.clear-btn:hover .trash-icon {
+  fill: #555;
+}
+
+.t-hidden {
+  display: none;
+}
+
+.filter-row {
+  flex: 1 1 auto;
+  width: auto;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 0; /* ← critical */
+  overflow: visible !important;
+  gap: 3px;
+}
+
+
+#floatingCategoryBubble {
+  position: fixed;
+  bottom: 45px;
+  left: 6px;
+  /* Responsive magic */
+  width: clamp(60px, 22vw, 100px);
+  height: clamp(60px, 22vw, 100px);
+
+  border-radius: 50%;
+  background: #f7e7c6;
+  border: 4px solid rgba(255, 215, 130, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.55s ease;
+  animation: tpBubbleWaveIn 0.55s ease-out forwards;
+  box-shadow: 0 0 6px rgba(255, 215, 130, 0.6);
+}
+
+#floatingCategoryBubble.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#floatingCategoryBubble img {
+  width: 115%;
+  height: 115%;
+  /* Differs from business to events */
+  object-fit: contain;
+}
+
+/* Platinum grey bubble */
+#floatingCategoryBubble.platinum {
+  background: #f7e7c6;   /* soft platinum grey */
+  border: 4px solid #cfcfcf !important;
+  box-shadow: 0 0 6px rgba(180, 180, 180, 0.6) !important;/* Responsive magic */
+}
+
+#floatingCategoryBubble.platinum img {
+  width: 110%;
+  height: 110%;
+  /* Differs from business to events */
+  margin-bottom: -3px;
+  object-fit: contain;
+}
+
+
+/* Shimmer overlay */
+#floatingCategoryBubble::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  border-radius: 50%;
+  animation: tpBubbleShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Optional click flash */
+.date-display-btn:active {
+  filter: brightness(1.15);
+}
+
+.date-display-btn:focus {
+  background: #333;
+}
+
+.category-card,
+.subcategory-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #faf7f0; /* parchment base */
+  isolation: isolate;  /* prevents green blending */
+}
+
+/* Your EXACT event gradient (45deg) */
+.category-card::before,
+.subcategory-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 180, 170,0.36) 0%,
+    rgba(250,247,240,0.92) 38%,
+    rgba(0, 180, 170, 0.35) 58%,
+    rgba(245,240,230,0.88) 100%
+  );
+  z-index: 0;
+}
+
+/* Ensure content sits above gradient */
+.category-card > *,
+.subcategory-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.chip-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: #ffff99;
+}
+
+.empty-toucan {
+  flex-shrink: 1;
+
+  width: auto;        /* ← let it size naturally */
+  max-width: 160px;   /* ← cap it */
+
+  opacity: 0;
+  margin-bottom: 1px;
+  transition: opacity 0.8s ease;
+  mix-blend-mode: multiply;
+}
+
+.empty-toucan.loaded {
+  opacity: 0.95;
+}
+
+.empty-wrapper {
+  display: flex;
+  flex-direction: column;   /* ← forces stacking */
+  align-items: center;      /* ← centers both toucan + pill */
+  padding: 20px 12px;
+  text-align: center;
+  min-width: 0;
+}
+
+.empty-toucan img,
+.empty-toucan svg {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 1;
+}
+.empty-pill {
+  min-width: 0;
+  width: auto;
+  margin-top: -8px;
+  background: white;
+  border-radius: 30px;
+  font-size: 15px;
+  color: #444;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.scroll-to-top-btn {
+  position: sticky;
+  bottom: 12px;
+  margin: 0 auto;
+  width: 38px;
+  height: 38px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #444;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 50;
+}
+.scroll-up-card:hover {
+  background: rgba(0,0,0,0.05);
+  transform: scale(1.05);
+  transition: 0.15s ease;
+}
+.floating-scroll-up {
+  position: fixed;
+  
+  bottom: 35px;
+  color: white;
+  right: 35px;
+  mix-blend-mode: difference;
+  z-index: 999999; /* ← bump this way up */
+}
+
+.price-badge.tier-3 {
+  animation: diamondPulse 1.8s ease-in-out infinite;
+  font-size: 16px;
+  bottom: 4px; /* pulls it slightly below the image edge */
+}
+
+
+@keyframes diamondPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(0, 255, 200, 0.0));
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 200, 0.35));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(0, 255, 200, 0.0));
+  }
+}
+.header-left,
+.header-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(21px, 22vw, 42px);
+  height: clamp(21px, 22vw, 42px);
+  flex: 0 1 auto;            /* ← prevents stretching */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.header-left {
+  left: 0;
+}
+
+.header-right {
+  right: 0;
+}
+.header {
+  position: relative;
+  z-index: 998;
+}
+/* WRAPPER */
+.t-filter-wrapper {
+  min-width: 0;
+  z-index: 999;
+  position: relative;
+  gap: 2px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: auto;
+  flex: 0 1 auto;
+  padding: 2px;
+  background: rgba(20, 20, 20, 0.35);
+  border-radius: 14px;
+  max-width: none;        /* ← removes the 110px choke point */
+  overflow: visible;      /* ← allows active state to expand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* FILTER BUTTON */
+.t-filter-btn {
+  position: relative;
+  background: transparent; /* wrapper handles background */
+  padding: 2px 4px;
+  border-radius: 14px;
+  font-size: 14px;
+  color: #f5f7fb;
+  cursor: pointer;
+  display: flex;
+  width: auto;
+  align-items: center;
+  flex: 0 1 auto;   /* allows the whole button to shrink */
+  min-width: 0;     /* REQUIRED for children to shrink */
+  transition: transform 0.1s ease;
+}
+
+.t-filter-btn.active {
+  font-weight: 600;
+  background: #333; /* darker glass */
+  color: var(--t-gold) !important;
+
+  
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.18s ease-out;
+}
+
+/* BACKDROP */
+.t-filter-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.05);
+  z-index: 1000;
+  mask: radial-gradient(circle at var(--px) var(--py), transparent 0, transparent 160px, black 180px);
+}
+
+/* PANEL */
+.t-filter-panel {
+  position: absolute;
+  top: 35px;
+  right: 0;
+
+  width: max-content;     /* prevents full-width expansion */
+
+  min-width: 0;
+  max-width: 260px !important;
+
+  z-index: 100000;
+
+  /* TRUE DARK GLASS */
+  background: #333 !important;
+  backdrop-filter: blur(42px) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.48) !important;
+  border-radius: 12px !important;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35) !important;
+
+  padding: 4px 0 !important;
+
+  /* ANIMATION */
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.t-filter-panel:not(.t-hidden) {
+  display: block !important;
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 100000;
+}
+
+.t-hidden {
+  display: none;
+}
+
+/* SECTIONS */
+.t-filter-section {
+  padding: 4px 8px !important;
+  min-width: 0;
+  max-width: 260px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.18) !important;
+}
+
+.t-filter-section:last-child {
+  border-bottom: none !important;
+}
+
+/* TITLES */
+.t-filter-title {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 8px;
+  color: #ffffff !important;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 2vw, 10px);
+}
+
+.t-search-title {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.75;
+  margin-bottom: 8px;
+  color: #ffffff !important;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 2vw, 10px);
+}
+
+/* OPTIONS WRAP */
+.t-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px !important;
+}
+
+/* OPTION CHIP */
+.t-filter-option {
+  background: rgba(255,255,255,0.12) !important;
+  padding: 4px 5px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  color: #f5f7fb;
+  cursor: pointer;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 3vw, 10px);
+  position: relative;
+  z-index: 1002;
+  min-width: 0; /* allows shrinking */
+  white-space: nowrap; /* prevents wrapping */
+}
+
+/* HOVER */
+.t-filter-option:hover {
+  background: rgba(255,255,255,0.22) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+}
+
+/* ACTIVE */
+.t-filter-option.active {
+  background: #d9a441 !important;
+  color: #000 !important;
+  font-weight: 600;
+  border-color: #f5e2aa !important;
+}
+
+/* Hover shimmer */
+.t-filter-btn:focus {
+  outline: none;
+}
+
+/* WRAPPER — flexible, unclipped, premium glass */
+.calendar-wrapper {
+  position: relative;
+  outline: none;
+  appearance: none;
+  transform: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 14px;
+  color: #f5f7fb;
+  gap: 2px;
+  margin-bottom: 1px;
+  min-width: 0;
+  background: rgba(20, 20, 20, 0.35);
+  border-top: 2px solid #4D5851;   /* light highlight */
+  border-left: 2px solid #4D5851;  /* light highlight */
+  border-bottom: 1px solid #000;   /* dark shadow */
+  border-right: 2px solid #000;    /* dark shadow */
+  padding: 4px 2px;
+  max-width: none;       /* ← remove the 110px choke point */
+  overflow: visible;     /* ← stop clipping */
+  width: auto;
+  flex: 0 1 auto;
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+
+.calendar-input {
+  position: relative;
+  opacity: 0;
+  width: 0;       /* <-- zero-size input */
+  transform: none !important;
+  height: 0;
+  pointer-events: none;
+  top: 17px;
+  left: 0;
+  z-index: -1;          /* <-- hide behind everything */
+  border: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.calendar-input:focus {
+  outline: none;
+}
+
+.calendar-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(40%) sepia(80%) saturate(400%) hue-rotate(120deg);
+}
+
+.calendar-label {
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+}
+
+.calendar-input::-webkit-datetime-edit-month-field,
+.calendar-input::-webkit-datetime-edit-day-field {
+  padding: 0 2px;
+}
+
+.calendar-input::-webkit-datetime-edit-year-field {
+  display: none;
+}
+
+.calendar-wrapper.active {
+  background: rgba(20, 20, 20, 0.35);
+  border: 1px solid rgba(255, 215, 130, 0.85);
+  box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.22),
+      0 8px 18px rgba(0, 0, 0, 0.18);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+
+.calendar-wrapper.date-active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+/* BASE BUTTON — unified, premium, responsive */
+.date-display-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  transition: all 0.25s ease;
+  -moz-appearance: none;
+  border-radius: 18px;
+  width: auto;        /* ← let it size naturally */
+  max-width: none;       /* ← remove the 110px choke point */
+  z-index: 12;
+  display: flex;
+  box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.22),
+      0 8px 18px rgba(0, 0, 0, 0.18);
+  min-width: 0;
+  flex: 0 1 auto;
+  backdrop-filter: blur(14px);
+  padding: 2px;
+  outline: none;
+  background: transparent; /* wrapper handles background */
+  position: relative;
+  font-size: clamp(9px, 6vw, 18px);
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  text-align: center;
+  text-align-last: center;
+}
+
+/* ICON INSIDE BUTTON — scales with text */
+.date-display-btn img {
+  height: 1em;   /* ← icon scales with text */
+  width: auto;
+  object-fit: contain;
+}
+
+/* ACTIVE STATE — gold border, dark glaze */
+.date-display-btn.active {
+  color: var(--t-gold) !important;
+  font-weight: 600;
+  background: #333 !important;
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transition: all 0.18s ease-out;
+  border: 2px solid #d4af37 !important;
+}
+
+/* FOCUS GLOW — premium gold highlight */
+.date-display-btn:focus {
+  background: #333;
+}
+
+/* CLICK FLASH */
+.date-display-btn:active {
+  filter: brightness(1.15);
+}
+
+
+.header-chip {
+  background: rgba(20, 20, 20, 0.35); /* lighter glass */
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  padding: clamp(2px, 3vw, 4px) clamp(3px, 3vw, 6px);
+}
+
+.header-chip.active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+  backdrop-filter: blur(24px);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+#dateLabel {
+  line-height: 1;
+  display: flex;
+  font-size: clamp(8px, 6vw, 16px);
+  flex: 0 1 auto;   /* allow shrinking */
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: max-content;
+  width: auto;       /* width tied to font-size */
+  align-items: center;
+  justify-content: center; /* ← stop centering the select */
+}
+
+#filterLabel {
+  line-height: 1;
+  display: flex;
+  font-size: clamp(9px, 6vw, 18px);
+  flex: 0 1 auto;   /* allow shrinking */
+  width: auto;       /* width tied to font-size */
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: max-content;
+}
+
+.date-icon {
+  font-size: clamp(9px, 6vw, 18px);
+  line-height: 1;
+
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;     /* allow shrinking */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto;       /* width tied to font-size */
+}
+
+.t-funnel {
+  font-size: clamp(10px, 6vw, 20px);
+  line-height: 1;
+
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;     /* allow shrinking */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto;       /* width tied to font-size */
+}
+
+
+.t-search-btn.active {
+  background: #333; /* darker glass */
+
+  font-weight: 600;
+  color: var(--t-gold) !important;
+
+  backdrop-filter: blur(14px);
+
+  transition: all 0.18s ease-out;
+}
+/* Focus glow */
+.t-search-btn:focus {
+  outline: none;
+}
+
+.t-search-panel:not(.t-hidden) {
+  display: block !important;
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 100000;
+}
+.t-search-panel {
+  position: absolute;
+  top: 35px;
+  left: 0;        /* align left edges */
+  min-width: 0;
+  width: max-content;     /* prevents full-width expansion */
+  max-width: 260px !important;
+  /* TRUE DARK GLASS */
+  background: #333 !important;
+  backdrop-filter: blur(42px) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.48) !important;
+  border-radius: 12px !important;
+  padding: 4px 0 !important;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.30),
+    0 12px 28px rgba(0,0,0,0.32),
+    inset 0 0 0 1px rgba(255,255,255,0.35) !important;
+  z-index: 100000;
+  /* ANIMATION */
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.t-search-input-wrap {
+  width: auto;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: rgba(255,255,255,0.12) !important;
+  font-size: 15px;
+  color: #f5f7fb !important;
+}
+
+.t-search-input {
+  width: 100%;
+  min-width: 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  /* Kill browser defaults */
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent !important;
+  color: #f5f7fb !important;
+
+  border-style: solid;
+  border-width: 1px;
+  padding: 2px 4px; /* or whatever you want */
+  box-sizing: border-box;
+}
+input::placeholder {
+  color: #f5f7fb !important;
+}
+
+
+.t-search-fields {
+  margin-top: 12px;
+}
+
+/* OPTIONS WRAP */
+.t-search-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px !important;
+}
+
+/* OPTION CHIP */
+.t-search-option {
+  background: rgba(255,255,255,0.12) !important;
+  padding: 4px 5px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  color: #f5f7fb;
+  cursor: pointer;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 2vw, 10px);
+  position: relative;
+  z-index: 1002;
+}
+
+/* HOVER */
+.t-search-option:hover {
+  background: rgba(255,255,255,0.22) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+}
+
+/* ACTIVE */
+.t-search-option.active {
+  background: #d9a441 !important;
+  color: #000 !important;
+  border-color: #f5e2aa !important;
+  
+  font-weight: 600;
+}
+
+
+/* FILTER BUTTON */
+.t-search-btn {
+  background: transparent; /* wrapper handles background */
+  padding: 2px 4px;
+  border-radius: 14px;
+  font-size: 14px;
+  color: #f5f7fb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.1s ease;
+}
+
+
+/* WRAPPER */
+.t-search-wrapper {
+  min-width: 0;
+  position: relative;
+  gap: 2px;
+  z-index: 999;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: auto;
+  flex: 0 1 auto;
+  padding: 2px 4px;
+  background: rgba(20, 20, 20, 0.35);
+  border-radius: 14px;
+  max-width: none;        /* ← removes the 110px choke point */
+  overflow: visible;      /* ← allows active state to expand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+/* BACKDROP */
+.t-search-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.05);
+  z-index: 1000;
+  mask: radial-gradient(circle at var(--px) var(--py), transparent 0, transparent 160px, black 180px);
+}
+
+.t-search-buttons {
+  min-width: 0;
+  position: relative;
+  gap: clamp(10px, 3vw, 20px);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: auto;
+  flex: 0 1 auto;
+  padding: 1px 2px;
+  background: rgba(20, 20, 20, 0.35);
+  border-radius: 12px;
+  max-width: none;        /* ← removes the 110px choke point */
+  overflow: visible;      /* ← allows active state to expand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+#tpSearchGo {
+  background: rgba(255,255,255,0.12);
+  border-radius: 14px;
+  color: #f5f7fb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+  backdrop-filter: blur(14px);
+  padding: 1px 2px;
+}
+
+#tpSearchClear {
+  background: rgba(255,255,255,0.12);
+  border-radius: 14px;
+  color: #f5f7fb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+  backdrop-filter: blur(14px);
+  padding: 1px 2px;
+}
+.t-filter-wrapper.active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+.t-search-wrapper.active {
+  background: #333; /* darker glass */
+  border: 2px solid rgba(255, 215, 130, 0.85);
+  color: var(--t-gold);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.25),
+    inset 0 0 4px rgba(255,255,255,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+
+  transform: translateY(-1px);
+  transition: all 0.18s ease-out;
+  font-weight: 600;
+}
+
+#searchLabel {
+  line-height: 1;
+  display: flex;
+  font-size: clamp(9px, 6vw, 18px);
+  flex: 0 1 auto;   /* allow shrinking */
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: max-content;
+  width: auto;       /* width tied to font-size */
+}
+
+.t-search-icon {
+  font-size: clamp(10px, 6vw, 20px);
+  line-height: 1;
+
+  flex: 0 1 auto;   /* allow shrinking */
+  min-width: 0;     /* allow shrinking */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: auto;       /* width tied to font-size */
+}
+
+/* Fullscreen overlay */
+#t-loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(16px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  opacity: 1;
+  transition: opacity 0.6s ease-out;
+}
+
+/* Logo */
+#t-loading-logo {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  animation: tpShimmer 3.5s ease-in-out infinite;
+}
+
+/* Magical shimmer sweep */
+@keyframes tpShimmer {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(0,255,200,0.45));
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Hidden state */
+#t-loading.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Entrance animation */
+@keyframes tpBubbleWaveIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(20px);
+    filter: drop-shadow(0 0 0 rgba(0,255,200,0));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(0);
+    filter: drop-shadow(0 0 12px rgba(0,255,200,0.35));
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 4px rgba(0,255,200,0.2));
+  }
+}
+
+/* Shimmer sweep */
+@keyframes tpBubbleShimmer {
+  0% {
+    background-position: -100px 0;
+  }
+  100% {
+    background-position: -100px 0;
+  }
+}
+/* ================= PULSEBAND PANEL ONLY (v7 Extract) ================= */
+
+/* Overlay root */
+#pulseband-overlay {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 80;
+  pointer-events: none; /* panel/badge will re-enable */
+}
+
+/* Bubble badge */
+#pulseband-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffd400 40%, #ff5a5a 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+
+/* Animated bars inside badge */
+.pb-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.pb-bars span {
+  width: 4px;
+  border-radius: 999px;
+  background: #000;
+  animation: pbBarPulse 1s ease-in-out infinite;
+}
+
+.pb-bars span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.pb-bars span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.pb-bars span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.pb-bars span:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+
+@keyframes pbBarPulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.2); }
+}
+
+/* Panel card */
+.pb-card {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  padding: 14px 16px 16px 16px;
+  color: #fff;
+  border: 2px solid #ffd400;
+  pointer-events: auto;
+  transform-origin: bottom right;
+  transform: translateY(12px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+/* When active */
+.pb-card.pb-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel header */
+.pb-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.pb-mini-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--tp-yellow-strong);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6);
+}
+
+/* Rows */
+.pb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.pb-row:last-child {
+  border-bottom: none;
+}
+
+.pb-row label {
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.pb-hint {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pb-value {
+  font-weight: 600;
+  color: var(--tp-yellow-strong);
+  text-align: right;
+}
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  #pulseband-overlay {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .pb-card {
+    width: 260px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+  <div id="t-loading">
+    <img src="../_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo2.png" id="t-loading-logo"></img>
+  </div>
+  
+<div class="events-shell">
+  <!-- STICKY FILTER HEADER -->
+  <div id="stickyFilters">
+    <!-- LEFT BUTTON -->
+    <div class="header-left">
+      <button class="header-bookmark-btn" id="bookmarkHeaderBtn">★</button>
+    </div>
+    
+    <!-- CENTER FILTER ROW -->
+    <div class="filter-row">
+      <div class="t-search-wrapper">
+        <button id="tpSearchBtn" class="t-search-btn">
+          <span class="t-search-icon">🔍</span><span id="searchLabel"> Search</span>
+        </button>
+        <div id="tpSearchPanel" class="t-search-panel t-hidden">
+    
+          <!-- Search Input -->
+          <div class="t-search-input-wrap">
+            <input 
+              id="tpSearchInput" 
+              type="text" 
+              placeholder="Search Events…" 
+              class="t-search-input"
+            />
+          </div>
+
+          <!-- Search Fields -->
+          <div class="t-search-fields">
+            <div class="t-search-title">Search In</div>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="title" checked />
+              <span>Event Title</span>
+            </label>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="category" checked />
+              <span>Category</span>
+            </label>
+
+            <label class="t-search-option">
+              <input type="checkbox" data-field="description" />
+              <span>Description</span>
+            </label>
+
+          </div>
+          <label class="t-search-buttons">
+            <button id="tpSearchGo" class="t-search-go-btn">🔍 Search</button>
+            <button id="tpSearchClear" class="t-search-clear-btn">❌ Clear</button>
+          </label>
+
+        </div>
+      </div>
+      <button id="allBtn" class="filter-btn header-chip">All</button>
+      <button id="myBtn" class="filter-btn header-chip">My</button>
+      <button id="clearFilterBtn" class="clear-btn" style="display:none;">
+        <div class="trash-circle">
+          <svg class="trash-icon" viewBox="0 0 24 24">
+            <!-- Can body -->
+            <rect x="5" y="7" width="14" height="14" rx="2"
+                  stroke="black" stroke-width="2.4" fill="none"/>
+            <!-- Lid bar -->
+            <path d="M3 7h18" stroke="black" stroke-width="2.4" stroke-linecap="round"/>
+            <!-- Lid top -->
+            <path d="M9 7V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"
+                  stroke="black" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <!-- Slats -->
+            <line x1="10" y1="11" x2="10" y2="18" stroke="black" stroke-width="2.4" stroke-linecap="round"/>
+            <line x1="14" y1="11" x2="14" y2="18" stroke="black" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="calendar-wrapper">
+        <input type="date" id="dateFilter" class="calendar-input">
+        <div id="dateDisplay" class="date-display-btn">
+          <span class="date-icon">📅</span>
+          <span id="dateLabel">Any Date</span>
+        </div>
+      </div>
+      
+      <div class="t-filter-wrapper">
+        <button id="tpFilterBtn" class="t-filter-btn">
+          <span class="t-funnel">🔽</span><span id="filterLabel">Filter</span>
+        </button>
+        <div id="tpFilterPanel" class="t-filter-panel t-hidden">
+          <!-- Distance -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">🚶 Distance</div>
+            <div class="t-filter-options" id="tpDistanceOptions">
+              <div class="t-filter-option" data-distance="walk">🚶 Walking</div>
+              <div class="t-filter-option" data-distance="close">📍 Close</div>
+              <div class="t-filter-option" data-distance="island">🏝️ Island</div>
+            </div>
+          </div>
+          <!-- Price -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">💵 Price</div>
+            <div class="t-filter-options" id="tpPriceOptions">
+              <div class="t-filter-option" data-price="free">🆓 Free</div>
+              <div class="t-filter-option" data-price="$">💲</div>
+              <div class="t-filter-option" data-price="$$">💲💲</div>
+              <div class="t-filter-option" data-price="$$$">💲💲💲</div>
+            </div>
+          </div>
+          <!-- Indoor / Outdoor -->
+          <div class="t-filter-section">
+            <div class="t-filter-title">🌿 Environment</div>
+            <div class="t-filter-options" id="tpEnvOptions">
+              <div class="t-filter-option" data-env="indoor">🏠 Indoor</div>
+              <div class="t-filter-option" data-env="outdoor">🌴 Outdoor</div>
+              <div class="t-filter-option" data-env="both">🌗 Both</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT BUTTON -->
+    <div class="header-right">
+      <button class="header-create-btn" id="createHeaderBtn">+</button>
+    </div>
+  </div>
+  <!-- LOCATION CHIP -->
+  <div class="chip-row">
+    <div id="location-chip"
+        style="
+          display:none;
+          padding: 3px 6px;
+          border-radius: 18px;
+          font-weight: 700;
+          font-size: 18px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: #4a2a00;
+
+          
+          align-items: center;
+          gap: 3px;
+
+          background: linear-gradient(135deg,#f7e7c6 0%,#f3d9a4 40%,#f7e7c6 100%);
+          box-shadow:
+            inset 0 1px 2px rgba(255,255,255,0.55),
+            inset 0 -2px 4px rgba(0,0,0,0.12),
+            0 3px 6px rgba(0,0,0,0.15),
+            0 1px 2px rgba(0,0,0,0.10);
+          backdrop-filter: blur(2px);
+        ">
+        <img id="location-chip-icon-category"
+            style="width:28px;height:28px;display:none;object-fit:contain;">
+
+        <span id="location-chip-text"></span>
+
+        <img id="location-chip-icon-subcategory"
+            style="width:28px;height:28px;display:none;object-fit:contain;">
+    </div>
+  </div>
+  <!-- EVENTS LIST -->
+  <div id="events" class="events-container">
+    <div class="scroll-to-top-btn" id="scrollToTopBtn">▲</div>
+  </div>
+</div>
+<div id="floatingCategoryBubble" class="hidden">
+  <img id="floatingCategoryIcon" src="" alt="">
+</div>
+<div id="floatingScrollUp" class="floating-scroll-up">▲</div>
+<script type="module">
+
+
+  
+  let persistenceEnabled = true;
+  let lastTime = null;
+  let firstTime = null;
+
+  const allBtn = document.getElementById("allBtn");
+  const myBtn = document.getElementById("myBtn");
+  const eventsDiv = document.getElementById("events");
+  const dateFilter = document.getElementById("dateFilter");
+  const dateLabel = document.getElementById("dateLabel");
+  const dateBtn = document.getElementById("dateDisplay");
+  
+  const calendarWrapper = document.querySelector(".calendar-wrapper");
+  const filterwrapper = document.querySelector(".t-filter-wrapper");
+  const eventsshell = document.querySelector(".events-shell");
+  const tpFilterBtn = document.getElementById("tpFilterBtn");
+  const tpFilterPanel = document.getElementById("tpFilterPanel");
+  const filterLabel = document.getElementById("filterLabel");
+  const bookmarkHeaderBtn = document.getElementById("bookmarkHeaderBtn");
+  const searchwrapper = document.querySelector(".t-search-wrapper");
+  const searchLabel = document.getElementById("searchLabel");
+  const tpSearchBtn = document.getElementById("tpSearchBtn");
+  const tpSearchGo = document.getElementById("tpSearchGo");
+  const tpSearchClear = document.getElementById("tpSearchClear");
+  const tpSearchPanel = document.getElementById("tpSearchPanel");
+  const tpSearchInput = document.getElementById("tpSearchInput");
+  const floatingCategoryBubble= document.getElementById("floatingCategoryBubble");
+  
+  let token = localStorage.getItem("tp_token_v4") || null;
+  let identity = null;
+  let trusted = null;
+  let autologin = null;
+  let loggedIn = false;
+  let userName = null;
+  let userEmail = null;
+  let userID = null;
+  let loyalty = null;
+  let settings = null;
+
+  
+  let resizeTimeout;
+  let datePickerOpen = false;
+  let dateChangeFired = false;
+  let tpSearch = null;
+  let activeSearch = null;
+  let currentUserLocation = null;
+  let tpDistance = null;
+  let activeDistance = null;
+  let activePrice = null;
+  let activeEnv = null;
+  let tpPrice = null;
+  let tpEnv = null;
+  let lastActivatedFilter = null;
+  let categoriesMode = true;
+  let currentList = null;
+  let sortPriority = [];
+  let filterHistory = [];
+  /* ---------------------------------------------------
+   EVENT CATEGORIES FIRST (half-height cards)
+  ----------------------------------------------------*/
+  
+  let eventCategories = JSON.parse(localStorage.getItem("eventCategories") || "[]");
+  let eventSubcategories = JSON.parse(localStorage.getItem("eventSubcategories") || "[]");
+  let eventCategoryIconMap = JSON.parse(localStorage.getItem("eventCategoryIconMap") || "{}");
+  let eventSubcategoryIconMap = JSON.parse(localStorage.getItem("eventSubcategoryIconMap") || "{}");
+  let allEvents = [];
+  let savedEvents = [];
+  let activeCategory = null;
+  let activeSubcategory = null;
+  let activeCategoryIcon = null;
+  let activeSubcategoryIcon = null;
+  let activeDate = null;
+  let activeMy = false;
+  let activeAll = false;
+  let showingSaved = false;
+  let emptyStateIndex = 0;
+
+  
+  const EventLazyObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+
+      const img = entry.target;
+      const realSrc = img.dataset.src;
+
+      if (realSrc) {
+        img.src = realSrc;
+        img.onload = () => img.classList.add("loaded");
+      }
+
+      observer.unobserve(img);
+    });
+  }, {
+    rootMargin: "300px 0px",
+    threshold: 0
+  });
+  
+  const emptyStateImages = [
+    "./_EXPRESSIONS/_PEX/BUILD/Disheveled.png",
+    "./_EXPRESSIONS/_PEX/BUILD/Disheveled2.png",
+    "./_EXPRESSIONS/_PEX/BUILD/Disheveled3.png",
+    "./_EXPRESSIONS/_PEX/BUILD/Disheveled4.png",
+    "./_EXPRESSIONS/_PEX/BUILD/Disheveled5.png",
+    "./_EXPRESSIONS/_PEX/BUILD/Disheveled6.png",
+    "./_EXPRESSIONS/_PEX/BUILD/DisheveledExhausted1.png"
+  ];
+
+  
+  function safeLogout() {
+  localStorage.removeItem("tp_token_v4");
+  localStorage.removeItem("tp_device_token_v4");
+  mark("SAFE LOGOUT");
+}
+
+async function hardLogout(reason) {
+  try {
+    mark("HARD LOGOUT: " + (reason || "unknown"));
+    localStorage.removeItem("tp_token_v4");
+    localStorage.removeItem("tp_device_token_v4");
+    await reportDanger(reason || "hardLogout");
+  } catch (err) {
+    mark("HARD LOGOUT ERROR: " + err);
+    localStorage.removeItem("tp_token_v4");
+    localStorage.removeItem("tp_device_token_v4");
+  } finally {
+    window.location.href="PulseWorldReality";
+  }
+}
+
+function mark(label) {
+    log("[CHECKEMAIL]", label);
+  }
+ 
+/************************************************************
+ * SESSION CHECK (ALL PAGES EXCEPT LOGIN)
+ ************************************************************/
+async function sessionCheck() {
+  let id = null;
+
+  try {
+    const raw = localStorage.getItem("tp_identity_v9");
+    if (raw) {
+      id = JSON.parse(raw);
+    }
+  } catch (e) {
+    // Corrupt identity → treat as missing
+    id = null;
+  }
+
+  // Fallback: if some global understanding layer identity() exists,
+  // we can try to hydrate from there once, but we do NOT depend on it.
+  if (!id && typeof identity === "function") {
+    try {
+      id = await identity();
+    } catch (e) {
+      id = null;
+    }
+  }
+
+  // No identity or not trusted → go to login
+  if (!id || !id.trustedDevice) {
+    window.location.href = `/`;
+    return null;
+  }
+
+  // Expose canonical identity for the rest of the page
+  PulseRealm.PulseIdentity = id;
+  return id;
+}
+
+  function normalizePriceSymbol(symbol) {
+    if (!symbol) return "";
+
+    // Convert $$$ → 💲💲💲
+    return symbol.replace(/\$/g, "💲");
+  }
+
+  function saveLocation(lat, lng) {
+    localStorage.setItem(
+      "lastKnownLocation",
+      JSON.stringify({ lat, lng, ts: nowMs() })
+    );
+  }
+
+  function getSavedLocation() {
+    try {
+      const raw = localStorage.getItem("lastKnownLocation");
+      if (!raw) return null;
+
+      const obj = JSON.parse(raw);
+      if (!obj.lat || !obj.lng) return null;
+
+      return obj;
+    } catch {
+      return null;
+    }
+  }
+
+  function fetchLowAccuracyInBackground(onUpdate) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        log("Background low accuracy:", loc);
+        saveLocation(loc.lat, loc.lng);
+        onUpdate(loc);
+      },
+      err => {
+        warn("Background low accuracy failed:", err);
+
+        // Retry once after 2 seconds
+        setTimeout(() => {
+          navigator.geolocation.getCurrentPosition(
+            pos2 => {
+              const loc2 = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
+              log("Retry low accuracy:", loc2);
+              saveLocation(loc2.lat, loc2.lng);
+              onUpdate(loc2);
+            },
+            err2 => {
+              warn("Retry low accuracy failed:", err2);
+            },
+            { enableHighAccuracy: false, timeout: 5000 }
+          );
+        }, 2000);
+      },
+      { enableHighAccuracy: false, timeout: 5000 }
+    );
+  }
+
+  function getNextToucan() {
+    const img = emptyStateImages[emptyStateIndex];
+    emptyStateIndex = (emptyStateIndex + 1) % emptyStateImages.length;
+    return img;
+  }
+
+  async function getInstantLocationWithBackgroundUpdate(onSignificantChange) {
+    const saved = getSavedLocation();
+
+    // 1️⃣ Return cached location immediately
+    if (saved) {
+      log("Using cached location:", saved);
+      setTimeout(() => {
+        fetchLowAccuracyInBackground(newLoc => {
+          const dist = getDistanceMiles(saved, newLoc);
+          if (dist > 50) {
+            log("📍 Significant movement:", dist, "m");
+            onSignificantChange(newLoc);
+          }
+        });
+      }, 0);
+      return saved;
+    }
+
+    // 2️⃣ No saved location → try low accuracy immediately
+    return new Promise(resolve => {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          log("Initial low accuracy:", loc);
+          saveLocation(loc.lat, loc.lng);
+          resolve(loc);
+
+          // Background refresh
+          fetchLowAccuracyInBackground(newLoc => {
+            const dist = getDistanceMiles(loc, newLoc);
+            if (dist > 50) onSignificantChange(newLoc);
+          });
+        },
+        err => {
+          warn("Initial low accuracy failed:", err);
+          resolve(null);
+
+          // Still try background update
+          fetchLowAccuracyInBackground(newLoc => {
+            onSignificantChange(newLoc);
+          });
+        },
+        { enableHighAccuracy: false, timeout: 7000 }
+      );
+    });
+  }
+
+  function sortEventsByDistance(list) {
+  const userLat = currentUserLocation.lat;
+  const userLng = currentUserLocation.lng;
+
+  if (!userLat || !userLng) {
+    warn("[sortEventsByDistance] No user location → returning unsorted list");
+    return list;
+  }
+
+  const withDist = list.map(evt => {
+    const lat = normalizeLatLng(evt.lat);
+    const lng = normalizeLatLng(evt.lng);
+
+    return {
+      ref: evt,
+      dist: (lat !== null && lng !== null)
+        ? getDistanceMiles(userLat, userLng, lat, lng)
+        : Infinity
+    };
+  });
+
+  withDist.sort((a, b) => a.dist - b.dist);
+
+  return withDist.map(x => x.ref);
+}
+
+  
+function getDistanceMiles(lat1, lon1, lat2, lon2) {
+  const R = 3958.8; // Earth radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+}
+
+function filterEventsByDistance(list, maxMiles) {
+  if (!maxMiles) {
+    return list ? sortEventsByDistance(list) : [];
+  }
+
+  if (!currentUserLocation) {
+    warn("User location not available yet.");
+    return [];
+  }
+
+  const userLat = currentUserLocation.lat;
+  const userLng = currentUserLocation.lng;
+
+  const filtered = list.filter(evt => {
+    if (!evt.lat || !evt.lng) return false;
+
+    const dist = getDistanceMiles(userLat, userLng, evt.lat, evt.lng);
+
+    // Do NOT mutate evt — store distance separately
+    evt._tempDistance = dist;
+
+    return dist <= maxMiles;
+  });
+
+  const sorted = filtered.sort((a, b) => a._tempDistance - b._tempDistance);
+
+  // Clean up temp field
+  sorted.forEach(evt => delete evt._tempDistance);
+
+  return sorted;
+}
+
+function hideTPLoader() {
+  const el = document.getElementById("t-loading");
+  if (!el) return;
+  el.classList.add("hide");
+  setTimeout(() => el.remove(), 700);
+}
+async function loadEventCategories() {
+  mark("EVENT CATEGORIES: START");
+
+  // -----------------------------------------
+  // 1. Try localStorage cache
+  // -----------------------------------------
+  const cachedCategories     = localStorage.getItem("eventCategories");
+  const cachedSubcategories  = localStorage.getItem("eventSubcategories");
+  const cachedCatMap         = localStorage.getItem("eventCategoryIconMap");
+  const cachedSubMap         = localStorage.getItem("eventSubcategoryIconMap");
+
+  const hasCategories =
+    cachedCategories && cachedCategories !== "[]" &&
+    cachedSubcategories && cachedSubcategories !== "[]";
+
+  const hasMaps =
+    cachedCatMap && cachedCatMap !== "{}" &&
+    cachedSubMap && cachedSubMap !== "{}";
+
+  if (hasCategories && hasMaps) {
+    mark("EVENT CATEGORIES: Loaded from cache");
+
+    eventCategories        = JSON.parse(cachedCategories);
+    eventSubcategories     = JSON.parse(cachedSubcategories);
+    eventCategoryIconMap   = JSON.parse(cachedCatMap);
+    eventSubcategoryIconMap= JSON.parse(cachedSubMap);
+
+    return;
+  }
+
+  // -----------------------------------------
+  // 2. Cache missing → fetch from Firestore
+  // -----------------------------------------
+  mark("EVENT CATEGORIES: Fetching from Firestore");
+
+  const q = query(
+    collection(db, "CategoryIconCache"),
+    where("source", "array-contains", "events")
+  );
+
+  const snap = await getDocs(q);
+
+  eventCategories = [];
+  eventSubcategories = [];
+  eventCategoryIconMap = {};
+  eventSubcategoryIconMap = {};
+
+  snap.forEach(doc => {
+    const data = doc.data() || {};
+
+    const category = (data.category || "").toLowerCase().trim();
+    const icon     = data.migratedUrl || data.icon || null;
+    const isSub    = data.subcategory === true;
+    const parent   = data.parentCategory
+      ? data.parentCategory.toLowerCase().trim()
+      : null;
+
+    const entry = { category, icon, subcategory: isSub, parentCategory: parent };
+
+    if (isSub) {
+      eventSubcategories.push(entry);
+      if (icon) eventSubcategoryIconMap[category] = icon;
+    } else {
+      eventCategories.push(entry);
+      if (icon) eventCategoryIconMap[category] = icon;
+    }
+  });
+
+  // -----------------------------------------
+  // 3. Sort for UI
+  // -----------------------------------------
+  eventCategories.sort((a, b) => a.category.localeCompare(b.category));
+  eventSubcategories.sort((a, b) => a.category.localeCompare(b.category));
+
+  // -----------------------------------------
+  // 4. Save to localStorage
+  // -----------------------------------------
+  localStorage.setItem("eventCategories", JSON.stringify(eventCategories));
+  localStorage.setItem("eventSubcategories", JSON.stringify(eventSubcategories));
+  localStorage.setItem("eventCategoryIconMap", JSON.stringify(eventCategoryIconMap));
+  localStorage.setItem("eventSubcategoryIconMap", JSON.stringify(eventSubcategoryIconMap));
+
+  mark("EVENT CATEGORIES: Saved to cache");
+}
+
+function showFloatingCategoryIcon(catKey) {
+  const icon = eventCategoryIconMap[catKey];
+  if (!icon) return;
+
+  const bubble = document.getElementById("floatingCategoryBubble");
+
+  // Set icon
+  document.getElementById("floatingCategoryIcon").src = icon;
+
+  // 🌴 Everything EXCEPT events = platinum
+  if (catKey === "events") {
+    bubble.classList.remove("platinum");   // keep tropical
+  } else {
+    bubble.classList.add("platinum");      // platinum for all others
+  }
+
+  bubble.classList.remove("hidden");
+}
+
+function isWithinThisWeek(d) {
+  const now = new Date(nowMs());
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const dow = today.getDay();
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() + mondayOffset);
+
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+
+  return d >= weekStart && d <= weekEnd;
+}
+
+function getWeekendLabel(d) {
+  const now = new Date(nowMs());
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  // This week's Saturday/Sunday
+  const thisSat = new Date(today);
+  thisSat.setDate(today.getDate() - today.getDay() + 6);
+  const thisSun = new Date(thisSat);
+  thisSun.setDate(thisSat.getDate() + 1);
+
+  // Last weekend
+  const lastSat = new Date(thisSat);
+  lastSat.setDate(thisSat.getDate() - 7);
+  const lastSun = new Date(lastSat);
+  lastSun.setDate(lastSat.getDate() + 1);
+
+  // Next weekend
+  const nextSat = new Date(thisSat);
+  nextSat.setDate(thisSat.getDate() + 7);
+  const nextSun = new Date(nextSat);
+  nextSun.setDate(nextSat.getDate() + 1);
+
+  if (d >= lastSat && d <= lastSun) return "Last Wknd";
+  if (d >= thisSat && d <= thisSun) return "This Wknd";
+  if (d >= nextSat && d <= nextSun) return "Next Wknd";
+
+  return null;
+}
+
+function parseLocalDate(dateStr) {
+  if (!dateStr) return null;
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d); // ALWAYS local midnight
+}
+
+function formatFriendlyDate(dateStr) {
+  if (!dateStr) return "";
+  const now = new Date(nowMs());
+  const d = parseLocalDate(dateStr);
+  
+  // Normalize today to midnight
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const dDay = d.toDateString();
+  const tDay = today.toDateString();
+  const tmDay = tomorrow.toDateString();
+  const yDay = yesterday.toDateString();
+
+  // Today / Tomorrow / Yesterday
+  if (dDay === tDay) return "Today";
+  if (dDay === tmDay) return "Tomorrow";
+  if (dDay === yDay) return "Yesterday";
+
+  // Weekend logic (Last / This / Next)
+  const weekendLabel = getWeekendLabel(d);
+  if (weekendLabel) return weekendLabel;
+
+  // Weekday name if within this week (Mon, Tue, Wed…)
+  if (isWithinThisWeek(d)) {
+    return d.toLocaleDateString("en-US", { weekday: "short" });
+  }
+
+  // Default: Mar 18
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric"
+  });
+}
+
+function updateClearFilterVisibility() {
+  const btn = document.getElementById("clearFilterBtn");
+
+  if (activeCategory || activeSubcategory || activeDate || activeMy || activeSearch || activePrice || activeEnv || activeAll || showingSaved || activeDistance) {
+    btn.style.display = "inline-block";
+  } else {
+    btn.style.display = "none";
+  }
+}
+
+function openCategory(cat) {
+  openCategoryOrSubcategory(cat, false);
+}
+
+function openSubcategory(subcat) {
+  openCategoryOrSubcategory(subcat, true);
+}
+
+function openCategoryOrSubcategory(key, isSub = false) {
+  scrollToTopSmooth();
+
+  const keyNorm = key.toLowerCase().trim();
+  showFloatingCategoryIcon(keyNorm);
+
+  const source = allEvents;
+
+  // ---------------------------------------
+  // SUBCATEGORY MODE
+  // ---------------------------------------
+  if (isSub) {
+    activeCategory = null;
+    activeSubcategory = key;
+    activeSubcategoryIcon =
+      eventSubcategoryIconMap[keyNorm] ||
+      eventSubcategoryIconMap[key] ||
+      null;
+
+    categoriesMode = false;
+
+    const filtered = source.filter(evt => {
+    // Normalize array verson
+    const arr = Array.isArray(evt.subcategories)
+      ? evt.subcategories.map(s => s.toLowerCase().trim())
+      : [];
+
+    const hasArrayMatch = arr.includes(keyNorm);
+
+    // Normalize string verson
+    const hasStringMatch =
+      typeof evt.subcategory === "string" &&
+      evt.subcategory.toLowerCase().trim() === keyNorm;
+
+    return hasArrayMatch || hasStringMatch;
+  });
+
+    currentList = sortEventsByDistance(filtered);
+    renderEvents(currentList);
+    updateLocationChip();
+    updateClearFilterVisibility();
+    return;
+  }
+
+  // ---------------------------------------
+  // CATEGORY MODE
+  // ---------------------------------------
+  activeCategory = key;
+  activeSubcategory = null;
+  activeCategoryIcon =
+    eventCategoryIconMap[keyNorm] ||
+    eventCategoryIconMap[key] ||
+    null;
+
+  // Check for subcategories under this category
+  const subcats = eventSubcategories.filter(
+    sc => sc.parentCategory === keyNorm
+  );
+
+  if (subcats.length > 0) {
+    categoriesMode = true;
+    currentList = null;
+    renderEventsubCategoryCards(subcats, key);
+    updateLocationChip();
+    updateClearFilterVisibility();
+    return;
+  }
+
+  // No subcategories → show businesses in this category
+  categoriesMode = false;
+
+  const filtered = source.filter(evt => {
+    const cats = evt.categories || [];
+    const hasArrayMatch = cats
+      .map(s => s.toLowerCase().trim())
+      .includes(keyNorm);
+
+    const hasStringMatch =
+      typeof evt.category === "string" &&
+      evt.category.toLowerCase().trim() === keyNorm;
+
+    return hasArrayMatch || hasStringMatch;
+  });
+
+  currentList = sortEventsByDistance(filtered);
+  renderEvents(currentList);
+  updateLocationChip();
+  updateClearFilterVisibility();
+}
+
+
+/* Render category cards */
+function renderEventCategoryCards() {
+  scrollToTopSmooth();
+  dateFilter.value = "";
+  dateLabel.textContent = "Any Date"; // reset label
+  searchLabel.textContent = " Search";
+  filterLabel.textContent = " Filter";
+  allBtn.classList.remove("active");
+  myBtn.classList.remove("active");
+  bookmarkHeaderBtn.classList.remove("active");
+  currentList = null;
+  categoriesMode = true;
+  eventsDiv.innerHTML = "";
+
+  eventCategories
+    .filter(cat => cat.category !== "events")
+    .forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "category-card";
+      card.style.height = "120px";
+      card.style.cursor = "pointer";
+      card.style.border = "1px solid #000000";
+      card.style.borderRadius = "10px";
+
+      const imgWrap = document.createElement("div");
+      imgWrap.className = "category-img-wrapper";
+      imgWrap.style.width = "100%";
+      imgWrap.style.height = "100%";
+      imgWrap.style.display = "flex";
+      imgWrap.style.alignItems = "center";
+      imgWrap.style.justifyContent = "center";
+
+      const img = document.createElement("img");
+      img.setAttribute("data-src", eventCategoryIconMap[cat.category] || "");
+      img.classList.add("cat-lazy-img");
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.objectFit = "contain";
+
+      EventLazyObserver.observe(img);
+
+      const label = document.createElement("div");
+      label.textContent = cat.category
+        .replace(/\//g, "-")                // convert slashes to hyphens
+        .split("-")                         // split on hyphens ONLY
+        .map(part =>
+          part
+            .split(" ")                     // then split on spaces
+            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ")
+        )
+        .join(" ");                         // rejoin with hyphens
+
+      label.style.position = "absolute";
+      label.style.bottom = "6px";
+      label.style.left = "50%";
+      label.style.transform = "translateX(-50%)";
+      label.style.padding = "4px 6px";
+      label.style.borderRadius = "12px";
+      label.style.fontSize = "15px";
+      label.style.fontWeight = "700";
+      label.style.color = "white";
+      label.style.background =
+        "linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35))";
+
+      imgWrap.appendChild(img);
+      imgWrap.appendChild(label);
+      card.appendChild(imgWrap);
+
+      card.onclick = () => openCategory(cat.category);
+      eventsDiv.style.gap = "3px";
+      eventsDiv.appendChild(card);
+    });
+    eventsDiv.appendChild(createScrollUpCard());
+}
+
+function renderEventsubCategoryCards(list, parentCat) {
+  scrollToTopSmooth();
+  currentList = null;
+  eventsDiv.innerHTML = "";
+
+  list.forEach(sub => {
+    const card = document.createElement("div");
+    card.className = "subcategory-card";
+    card.style.height = "100px";
+    card.style.cursor = "pointer";
+    card.style.border = "1px solid #000000";
+    card.style.borderRadius = "10px";
+
+    const imgWrap = document.createElement("div");
+    imgWrap.className = "subcategory-img-wrapper";
+    imgWrap.style.width = "100%";
+    imgWrap.style.height = "100%";
+    imgWrap.style.display = "flex";
+    imgWrap.style.alignItems = "center";
+    imgWrap.style.justifyContent = "center";
+    imgWrap.style.gap = "10px";
+    imgWrap.style.marginBottom = "4px";
+
+    const img = document.createElement("img");
+    img.setAttribute("data-src", eventSubcategoryIconMap[sub.category] || "");
+    img.classList.add("cat-lazy-img");
+    img.style.width = "90%";
+    img.style.height = "90%";
+    img.style.objectFit = "contain";
+    img.style.marginTop = "-4px";
+    img.style.marginLeft = "7px";
+    EventLazyObserver.observe(img);
+
+    const label = document.createElement("div");
+    label.textContent = sub.category
+      .replace(/\//g, "-")                // convert slashes to hyphens
+      .split("-")                         // split on hyphens ONLY
+      .map(part =>
+        part
+          .split(" ")                     // then split on spaces
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ")
+      )
+      .join(" ");     
+    label.style.position = "absolute";
+    label.style.bottom = "2px";
+    label.style.minWidth = "80%";
+    label.style.textAlign = "center";
+    label.style.whiteSpace = "nowrap";
+    label.style.left = "50%";
+    label.style.padding = "2px 6px";
+    label.style.transform = "translateX(-50%)";
+    label.style.color = "black";
+    label.style.fontWeight = "700";
+    label.style.fontSize = "12px";
+
+    imgWrap.appendChild(img);
+    imgWrap.appendChild(label);
+    card.appendChild(imgWrap);
+
+    card.onclick = () => openSubcategory(sub.category);
+    eventsDiv.style.gap = "3px";
+    eventsDiv.appendChild(card);
+  });
+  eventsDiv.appendChild(createScrollUpCard());
+  scrollToTopSmooth();
+}
+
+async function loadEvents() {
+  try {
+    mark("EVENTS: REQUESTING FROM CACHE MANAGER");
+
+    // 1️⃣ Pull canonical list from PulseEventCacheManager
+    const list = await PulseEventCacheManager.getEvents();
+
+    if (!Array.isArray(list) || list.length === 0) {
+      error("❌ PulseEventCacheManager returned empty list");
+      allEvents = [];
+      currentList = [];
+      return;
+    }
+
+    // 2️⃣ Set canonical working list
+    allEvents = list;
+    currentList = [...allEvents];
+
+    // 3️⃣ Recalculate distances (if location already known)
+    if (currentUserLocation) {
+      recalcEventDistances();
+    }
+
+    mark("EVENTS: LOADED FROM CACHE MANAGER");
+
+  } catch (err) {
+    error("❌ Failed to load EVENTS:", err);
+  }
+}
+
+function recalcEventDistances() {
+  if (!currentUserLocation) return;
+
+  for (const ev of allEvents) {
+    if (ev.lat && ev.lng) {
+      ev.distanceMiles = getDistanceMiles(
+        currentUserLocation.lat,
+        currentUserLocation.lng,
+        ev.lat,
+        ev.lng
+      );
+    } else {
+      ev.distanceMiles = null;
+    }
+  }
+
+  currentList = sortEventsByDistance(allEvents);
+}
+
+function initDateFilter() {
+  activeDate = null;
+  dateFilter.value = "";           // force empty
+  dateLabel.textContent = "Any Date";
+  updateClearFilterVisibility();   // hide trashcan
+}
+
+function normalizeDate(d) {
+  if (!d) return null;
+
+  // Already ISO YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+
+  // MM/DD/YYYY
+  const md = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (md) {
+    let [_, m, day, y] = md;
+    return `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  }
+
+  // DD-MM-YYYY
+  const dm = d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if (dm) {
+    let [_, day, m, y] = dm;
+    return `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  }
+
+  // YYYY/MM/DD
+  const ymd = d.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+  if (ymd) {
+    let [_, y, m, day] = ymd;
+    return `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  }
+
+  // DD-MMM-YYYY (19-FEB-2026)
+  const mmm = d.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+  if (mmm) {
+    const months = {
+      JAN:"01", FEB:"02", MAR:"03", APR:"04",
+      MAY:"05", JUN:"06", JUL:"07", AUG:"08",
+      SEP:"09", OCT:"10", NOV:"11", DEC:"12"
+    };
+    let [_, day, mon, y] = mmm;
+    mon = mon.toUpperCase();
+    if (!months[mon]) return null;
+    return `${y}-${months[mon]}-${String(day).padStart(2,"0")}`;
+  }
+
+  return null;
+}
+
+function normalizeTime(t) {
+  if (!t) return "00:00";
+  if (/^\d{2}:\d{2}$/.test(t)) return t;
+  return "00:00";
+}
+
+async function loadSavedEvents() {
+  if (!userEmail) return;
+
+  const snap = await getDocs(collection(db, "UserSaved", userEmail, "Events"));
+  const savedIDs = snap.docs.map(ev => ev.id);
+
+  // Store them globally so applyPFilter() can use them
+  savedEvents = allEvents.filter(ev => savedIDs.includes(ev.id));
+}
+
+function isFreePrice(value) {
+  // ❗ If there's no price, it's NOT free
+  if (value === null || value === undefined) return false;
+
+  const v = String(value).trim().toLowerCase();
+
+  if (v === "") return true;
+  if (v === "0" || v === "0.0" || v === "0.00") return true;
+
+  const cleaned = v.replace(/[^a-z0-9 ]/g, "").trim();
+
+  const freeWords = [
+    "free",
+    "no cost",
+    "nocost",
+    "gratis",
+    "complimentary",
+    "free entry",
+    "free admission",
+    "free for locals",
+    "free for everyone"
+  ];
+  if (freeWords.some(w => cleaned.includes(w))) return true;
+
+  if (/^(bz\$|bzd|\$)?0(\.0+)?$/.test(cleaned)) return true;
+
+  return false;
+}
+
+  // Helper: convert "11-MAR-2026" → Date object
+  function parseDate(d) {
+    // Format: DD-MMM-YYYY
+    const [day, mon, year] = d.split("-");
+    return new Date(`${mon} ${day}, ${year}`);
+  }
+
+  // Helper: convert "11:00 AM" → { hours, minutes }
+  function parseTime(t) {
+    const [time, modifier] = t.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    return { hours, minutes };
+  }
+
+function getClosestUpcomingEvent(allEvents) {
+  const now = nowMs();
+
+
+  // Build a list of ALL daily occurrences
+  const occurrences = [];
+
+  for (const evt of allEvents) {
+    const startDate = parseDate(evt.fromDate);
+    const endDate = parseDate(evt.toDate);
+
+    const fromT = parseTime(evt.fromTime);
+    const toT = parseTime(evt.toTime);
+
+    // Loop each day from start → end
+    for (
+      let d = new Date(startDate);
+      d <= endDate;
+      d.setDate(d.getDate() + 1)
+    ) {
+      const dayStart = new Date(d);
+      dayStart.setHours(fromT.hours, fromT.minutes, 0, 0);
+
+      const dayEnd = new Date(d);
+      dayEnd.setHours(toT.hours, toT.minutes, 0, 0);
+
+      // Only future occurrences matter
+      if (dayEnd.getTime() > now) {
+        occurrences.push({
+          event: evt,
+          startDateTime: dayStart.getTime(),
+          endDateTime: dayEnd.getTime()
+        });
+      }
+    }
+  }
+
+  // Sort by soonest start time
+  occurrences.sort((a, b) => a.startDateTime - b.startDateTime);
+
+  return occurrences[0] || null;
+}
+
+function getTimeUntil(startTime) {
+  const now = nowMs();
+  const diff = startTime - now;
+
+  const mins = Math.floor(diff / 60000);
+  const hrs = Math.floor(mins / 60);
+  const days = Math.floor(hrs / 24);
+
+  if (days > 0) return `${days} day${days > 1 ? "s" : ""}`;
+  if (hrs > 0) return `${hrs} hour${hrs > 1 ? "s" : ""}`;
+  return `${mins} minute${mins > 1 ? "s" : ""}`;
+}
+
+function renderEvents(list, isDateFilter = false) {
+  mark("⏳ RENDERING EVENTS LIST");
+  scrollToTopSmooth();
+  eventsDiv.innerHTML = "";
+
+  if (!list || list.length === 0) {
+    let img = getNextToucan();
+
+    // DATE FILTER EMPTY STATE
+    if (isDateFilter) {
+      const isExhausted = img.includes("DisheveledExhausted1");
+
+      // Find closest upcoming event
+      const closest = getClosestUpcomingEvent(allEvents);
+
+      let extraMessage = "";
+
+      if (closest) {
+        const evt = closest.event; // <-- FIX: extract the event object
+
+        const start = new Date(closest.startDateTime);
+        const timeUntil = getTimeUntil(start.getTime());
+
+        const day = start.toLocaleDateString("en-US", { weekday: "long" });
+        const date = start.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric"
+        });
+        const time = start.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit"
+        });
+
+        const title = evt.title || "Upcoming Event";
+        const venue = evt.venue || evt.location || "Location TBA";
+        const img = evt.mainPhotoURL || null;
+
+        extraMessage = `
+          <div class="empty-pill" style="margin-top:12px; padding:14px; text-align:center;">
+            
+            <div style="font-size:14px; opacity:0.8; margin-bottom:6px;">
+              The next event is coming up soon
+            </div>
+
+            <div style="font-weight:600; font-size:16px; margin-bottom:4px;">
+              ${title}
+            </div>
+
+            <div style="font-size:14px; margin-bottom:8px;">
+              at <strong>${venue}</strong>
+            </div>
+
+            <div style="font-size:14px; margin-bottom:8px;">
+              <strong>${day}</strong>, ${date} at <strong>${time}</strong>
+            </div>
+
+            <div style="font-size:14px; margin-bottom:10px;">
+              Starts in <strong>${timeUntil}</strong>
+            </div>
+
+            ${
+              img
+                ? `<img src="${img}" style="width:100%; max-height:120px; object-fit:cover; border-radius:8px; margin-top:6px;" />`
+                : ""
+            }
+          </div>
+        `;
+      }
+
+      eventsDiv.innerHTML = `
+        <div class="empty-wrapper">
+
+          ${isExhausted ? `
+            <p class="exhausted-shimmer" style="font-size:15px; margin-bottom:8px;">
+              He’s Exhausted from Too Many Tries lol!
+            </p>
+          ` : ""}
+
+          <img id="emptyToucan" src="${img}" class="empty-toucan" /><br>
+
+          <div class="empty-pill">No Events Found with this Time!</div>
+
+          ${extraMessage}
+        </div>
+      `;
+
+      requestAnimationFrame(() => {
+        document.getElementById("emptyToucan").classList.add("loaded");
+      });
+
+      return;
+    }
+
+    // DEFAULT EMPTY STATE
+    eventsDiv.innerHTML = `
+      <div class="empty-wrapper">
+        <img id="emptyToucan" src="${img}" class="empty-toucan" /><br>
+        <div class="empty-pill">No Events Found!</div>
+      </div>
+    `;
+    requestAnimationFrame(() => {
+      document.getElementById("emptyToucan").classList.add("loaded");
+    });
+
+    return;
+  }
+  
+
+  list.forEach(ev => {
+    const img =
+      ev.mainPhotoURL ||
+      (ev.images.length > 0 ? ev.images[0] : null) ||
+      "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+
+    let price;
+
+    if (isFreePrice(ev.price)) {
+      price = "FREE";
+    } else if (ev.priceRating) {
+      // Use the new unified system
+      price = normalizePriceSymbol(ev.priceRating);
+    } else {
+      // Fallback to old numeric price
+      price = "$" + ev.price;
+    }
+
+    const card = document.createElement("div");
+    card.className = "event-card";
+    card.onclick = () => openEvent(ev.id);
+
+    const fromD = normalizeDate(ev.fromDate) || ev.fromDate || "TBA";
+    const toD   = normalizeDate(ev.toDate)   || ev.toDate   || fromD;
+
+    const fromT = ev.fromTime || "";
+    const toT   = ev.toTime   || "";
+
+    const timeRange = (fromT || toT) ? `(${fromT} – ${toT})` : "";
+    // Resolve category name (array or string)
+    const catRaw = Array.isArray(ev.categories)
+      ? ev.categories[0]
+      : ev.category || "General";
+
+    const catNorm = catRaw.toLowerCase().trim();
+
+    // Resolve icon (array or string)
+    let catIcon = null;
+
+    // Capitalized label
+    const catLabelText = ev.category
+      .replace(/\//g, "-")                // convert slashes to hyphens
+      .split("-")                         // split on hyphens ONLY
+      .map(part =>
+        part
+          .split(" ")                     // then split on spaces
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ")
+      )
+      .join(" ");   
+
+    // 3) Fallback to global map
+    if (eventCategoryIconMap[ev.category]) {
+      catIcon = eventCategoryIconMap[ev.category.toLowerCase().trim()];
+    } else {
+      catIcon = null;
+    }
+
+    const catLabel = `<span class="event-cat-label">${catLabelText}</span>`;
+
+    // Build icon HTML
+    const catIconHtml = catIcon
+      ? `<img src="${catIcon}" class="event-cat-icon">`
+      : "";
+
+    card.innerHTML = `
+      <div class="event-img-wrapper">
+        <img data-src="${img}" class="event-lazy-img" alt="Event Image"/>
+        <div class="price-badge ${price === 'FREE' ? 'free' : ''}">${price}</div>
+      </div>
+
+      <div class="event-row">
+        <div class="event-title">${ev.title || "Untitled Event"}</div>
+
+        <div class="event-info">
+          <b>Category:</b>
+          <div class="event-category">${catIconHtml}${catLabel}</div>
+        </div>
+
+        <div class="event-info">
+          <b>Venue:</b>
+          <div class="event-venue">${ev.venue || "TBA"}</div>
+        </div>
+        <div class="event-info">
+          <b>When:</b> 
+          <div class="event-when">${fromD} – ${toD} ${timeRange}</div>
+        </div>
+      </div>
+    `;
+    
+    const imgWrapper = card.querySelector(".event-img-wrapper");
+    const imgEl = card.querySelector(".event-lazy-img");
+    imgEl.dataset.src = img;
+    imgEl.loading = "lazy";
+    // ⭐ ADD THIS — SAME BEHAVIOR AS DETAILS PAGE
+    imgEl.onerror = () => {
+      imgEl.src = "./_EXPRESSIONS/_PEX/BUILD/Frustrated.png";
+    };
+    EventLazyObserver.observe(imgEl);
+    
+    const priceBadge = card.querySelector(".price-badge");
+    priceBadge.classList.remove(
+      "diamond", "tier-3", "tier-2", "tier-1"
+    );
+    
+    if (price === "💎") {
+      priceBadge.classList.add("diamond");
+    } else if (price === "💲💲💲") {
+      priceBadge.classList.add("tier-3");
+    } else if (price === "💲💲") {
+      priceBadge.classList.add("tier-2");
+    } else if (price === "💲") {
+      priceBadge.classList.add("tier-1");
+    }
+
+    imgWrapper.appendChild(priceBadge);
+    // Add edit button if user owns event
+
+    if (userEmail && ev.email === userEmail) {
+      const editBtn = document.createElement("div");
+      editBtn.className = "edit-badge";
+      editBtn.innerHTML = "✏️";
+      editBtn.onclick = (e) => {
+        e.stopPropagation();
+        window.location.href = `?impulse=TropicPulseEditEvent&id=${encodeURIComponent(ev.id)}`;
+      };
+      
+      imgWrapper.appendChild(editBtn);
+    }
+
+    eventsDiv.style.gap = "8px";
+    eventsDiv.appendChild(card);
+  });
+
+  eventsDiv.appendChild(createScrollUpCard());
+  mark("⏳ FINSHED RENDERING EVENTS LIST");
+}
+
+// ⭐ OPEN EVENT
+function openEvent(id) {
+  window.location.href = `TropicPulseEventDetail?id=${encodeURIComponent(id)}`;
+}
+
+function handleDateChange(value, list = null) {
+  const raw = value;
+
+  const isCleared = raw === "" || raw === null;
+
+  if (isCleared) {
+    activeDate = null;
+    dateFilter.value = "";
+    lastActivatedFilter = null;
+
+    calendarWrapper.classList.remove("active", "date-active");
+
+    renderEventCategoryCards();
+    updateLocationChip();
+    updateClearFilterVisibility();
+    return;
+  }
+
+  // Reset category filters
+  activeCategory = null;
+  activeSubcategory = null;
+  activeCategoryIcon = null;
+  activeSubcategoryIcon = null;
+
+  lastActivatedFilter = "date";
+
+  // Normalize
+  const [y, m, d] = raw.split("-").map(Number);
+  activeDate = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+
+  dateLabel.textContent = formatFriendlyDate(activeDate);
+
+  // Apply filter
+  const baseList = list || allEvents;
+  const filtered = applyDateFilter(baseList);
+
+  currentList = filtered;
+  renderEvents(currentList);
+  updateLocationChip();
+  updateClearFilterVisibility();
+
+  return filtered;
+}
+
+  // ⭐ DATE FILTER LOGIC
+  function applyDateFilter(list) {
+  const selected = dateFilter.value;
+  if (!selected) return list;
+
+  const selectedStart = new Date(selected + "T00:00:00");
+  const selectedEnd   = new Date(selected + "T23:59:59");
+
+  const filtered = list.filter(ev => {
+    const rawFromDate = ev.fromDate || selected;
+    const rawToDate   = ev.toDate   || rawFromDate;
+
+    const fromDate = normalizeDate(rawFromDate);
+    const toDate   = normalizeDate(rawToDate);
+
+    const fromTime = normalizeTime(ev.fromTime);
+    const toTime   = normalizeTime(ev.toTime);
+
+    const start = new Date(`${fromDate}T${fromTime}`);
+    let end     = new Date(`${toDate}T${toTime}`);
+
+    if (isNaN(start) || isNaN(end)) return false;
+    if (end < start) end = start;
+
+    return start <= selectedEnd && end >= selectedStart;
+  });
+
+  if (noFiltersActive("date")) {
+    filtered.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  return filtered;
+}
+
+  function createScrollUpCard() {
+    const card = document.createElement("div");
+    card.className = "scroll-up-card";
+    card.style.height = "30px";
+    card.style.cursor = "pointer";
+    card.style.border = "1px solid #000000";
+    card.style.borderRadius = "10px";
+    card.style.display = "flex";
+    card.style.alignItems = "center";
+    card.style.justifyContent = "center";
+    card.style.fontSize = "28px";
+    card.style.fontWeight = "700";
+    card.textContent = "▲";
+
+    card.onclick = () => {
+        PulseRealm.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    };
+
+    return card;
+  }
+
+  function closeAllPanels(except = null) {
+    if (except !== "search") closeSearchPanel();
+    if (except !== "filter") closeFilterPanel();
+  }
+
+function clearFilters() {
+  // Reset all filter state
+  activeCategory = null;
+  activeSubcategory = null;
+  activeCategoryIcon = null;
+  activeSubcategoryIcon = null;
+  activeDistance = null;
+  activeDate = null;
+  activeMy = false;
+  activeAll = false;
+  activeSearch = null;
+  dateChangeFired = false;
+  datePickerOpen = false;
+  tpSearch = null;
+  showingSaved = false;
+  activePrice = null;
+  activeEnv = null;
+  tpEnv = null;
+  tpPrice = null;
+  tpDistance = null;
+  setInActiveAll();
+  closeAllPanels();
+  filterHistory = [];
+  // --- FULL DATE RESET ---
+  lastActivatedFilter = null;
+  filterLabel.textContent = "Filter";
+  searchLabel.textContent = " Search";
+  dateFilter.value = "";
+  dateLabel.textContent = "Any Date"; // reset label
+  dateBtn.classList.remove("active");   // <-- IMPORTANT
+  tpFilterBtn.classList.remove("active");   // <-- IMPORTANT
+  tpSearchBtn.classList.remove("active");   // <-- IMPORTANT
+  filterwrapper.classList.remove("active");
+  searchwrapper.classList.remove("active");
+  calendarWrapper.classList.remove("active");   // <-- IMPORTANT
+  calendarWrapper.classList.remove("date-active");   // <-- IMPORTANT
+  // Reset button states
+  myBtn.classList.remove("active");
+  allBtn.classList.remove("active");
+  bookmarkHeaderBtn.classList.remove("active");
+  currentList = null; // nothing rendered
+  // DO NOT call handleDteChange() here — it reactivates the button
+  // Instead directly reset the event list:
+  renderEventCategoryCards();
+  showFloatingCategoryIcon("events");
+  updateLocationChip();
+  updateClearFilterVisibility();
+}
+
+function punchBackdropHole(shell, panel, backdrop) {
+  if (!shell || !panel || !backdrop) return;
+
+  // Ensure shell is the stacking context
+  shell.style.position = "relative";
+  shell.style.zIndex = "1";
+
+  // Append backdrop + panel into the shell
+  if (!backdrop.parentElement) shell.appendChild(backdrop);
+  if (!panel.parentElement) shell.appendChild(panel);
+
+  // Ensure correct layering
+  backdrop.style.position = "absolute";
+  backdrop.style.inset = "0";
+  backdrop.style.zIndex = "100";
+
+  panel.style.position = "absolute";
+  panel.style.zIndex = "200";
+
+  // Wait for layout before measuring
+  requestAnimationFrame(() => {
+    const rect = panel.getBoundingClientRect();
+
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    backdrop.style.setProperty("--px", `${cx}px`);
+    backdrop.style.setProperty("--py", `${cy}px`);
+  });
+}
+
+  //----------------------------
+  // CLOSE PANEL
+  // -----------------------------
+  function closeSearchPanel(e) {
+    tpSearchPanel.classList.add("t-hidden");
+    if (!activeSearch) {
+      tpSearchBtn.classList.remove("active");
+      searchwrapper.classList.remove("active");
+    }
+    
+    const backdrop = document.getElementById("tpSearchBackdrop");
+    if (backdrop) {
+      backdrop.remove();
+    }
+  }
+
+  function setSearchActive(selector, selected) {
+    document.querySelectorAll(selector + " .t-search-option").forEach(o => {
+      o.classList.remove("active");
+    });
+    selected.classList.add("active");
+  }
+
+
+  // -----------------------------
+  // OPEN PANEL
+  // -----------------------------
+  function openSearchPanel() {
+    closeAllPanels("search");
+    
+
+    tpSearchPanel.classList.remove("t-hidden");
+    tpSearchBtn.classList.add("active");
+    searchwrapper.classList.add("active");
+    
+    const backdrop = document.createElement("div");
+    backdrop.id = "tpSearchBackdrop";
+    backdrop.className = "t-search-backdrop";
+    punchBackdropHole(eventsshell, tpSearchPanel, backdrop);
+
+    backdrop.onclick = (e) => {
+      e.stopPropagation();
+      closeSearchPanel(e);
+    };
+  }
+
+  // -----------------------------
+  // CLOSE PANEL
+  // -----------------------------
+  function closeFilterPanel(e) {
+    tpFilterPanel.classList.add("t-hidden");
+    if (!lastActivatedFilter) {
+      tpFilterBtn.classList.remove("active");
+      filterwrapper.classList.remove("active");
+    }
+    const backdrop = document.getElementById("tpFilterBackdrop");
+    if (backdrop) {
+      backdrop.remove();
+    }
+  }
+
+
+  // -----------------------------
+  // OPEN PANEL
+  // -----------------------------
+  function openFilterPanel() {
+    closeAllPanels("filter");
+    
+    tpFilterPanel.classList.remove("t-hidden");
+    tpFilterBtn.classList.add("active");
+    filterwrapper.classList.add("active");
+    const backdrop = document.createElement("div");
+    backdrop.id = "tpFilterBackdrop";
+    backdrop.className = "t-filter-backdrop";
+    punchBackdropHole(eventsshell, tpFilterPanel, backdrop);
+
+    backdrop.onclick = (e) => {
+      e.stopPropagation();
+      closeFilterPanel(e);
+    };
+  }  
+
+  function activateFilter(name) {
+    // Remove if already in history (avoid duplicates)
+    filterHistory = filterHistory.filter(f => f !== name);
+    filterHistory.push(name);
+
+    lastActivatedFilter = name;
+    if (name === "search") {
+      searchwrapper.classList.add("active");
+      tpSearchBtn.classList.add("active");
+      searchLabel.textContent =
+        name ? name[0].toUpperCase() + name.slice(1) : " Search";
+    } else if (name === "date") {
+      calendarWrapper.classList.add("date-active");
+      dateLabel.textContent = name ? name[0].toUpperCase() + name.slice(1) : formatFriendlyDate(activeDate);
+    } else {
+      filterwrapper.classList.add("active");
+      tpFilterBtn.classList.add("active");
+      filterLabel.textContent =
+        name ? name[0].toUpperCase() + name.slice(1) : " Filter";
+    }
+  }
+
+  function deactivateFilter(name) {
+    filterHistory = filterHistory.filter(f => f !== name);
+    lastActivatedFilter = filterHistory.at(-1) || null;
+    if (!lastActivatedFilter) {
+      if (name === "search") {
+        searchLabel.textContent = " Search";
+      } else if (name === "date") {
+        dateLabel.textContent = "Any Date";
+      } else {
+        filterLabel.textContent = " Filter";
+      }
+    } else {
+      if (name === "search") {
+        searchLabel.textContent =
+        lastActivatedFilter ? lastActivatedFilter[0].toUpperCase() + lastActivatedFilter.slice(1) : " Search";
+      } else if (name === "date") {
+        calendarWrapper.classList.remove("date-active");
+        dateLabel.textContent = lastActivatedFilter ? lastActivatedFilter[0].toUpperCase() + lastActivatedFilter.slice(1) : formatFriendlyDate(activeDate);
+      } else {
+        filterLabel.textContent =
+        lastActivatedFilter ? lastActivatedFilter[0].toUpperCase() + lastActivatedFilter.slice(1) : " Filter";
+      }
+    }
+  }
+  
+  // Highlight selected
+  function setActive(selector, selected) {
+    document.querySelectorAll(selector + " .t-filter-option").forEach(o => {
+      o.classList.remove("active");
+    });
+    selected.classList.add("active");
+  }
+
+  function setInActiveAll() {
+    // Remove active class from ALL UI buttons
+    document.querySelectorAll(".t-filter-option").forEach(o => {
+      o.classList.remove("active");
+    });
+    
+    // 2. Remove active wrapper styling
+    document.querySelector(".t-filter-wrapper")
+      .classList.remove("active");
+    // 2. Remove active wrapper styling
+    document.querySelector(".t-filter-btn")
+      .classList.remove("active");    
+
+    // Remove active class from ALL UI buttons
+    document.querySelectorAll(".t-search-option").forEach((o, i) => {
+      if (i > 1) o.classList.remove("active");
+    });
+
+    // 2. Remove active wrapper styling
+    document.querySelector(".t-search-wrapper")
+      .classList.remove("active");
+
+     // 2. Remove active wrapper styling
+    document.querySelector(".t-search-btn")
+      .classList.remove("active");
+
+    tpSearchInput.value = "";
+
+    // Reset ALL filter variables
+    tpEnv = null;
+    tpPrice = null;
+    tpDistance = null;
+    tpSearch = null;
+    activeSearch = null;
+    activeDate = null;
+    activeDistance = null;
+    activePrice = null;
+    activeEnv = null;
+
+  }
+
+  function updateSearchFilterWrapper() {
+  const anyActive = activeSearch;
+
+  if (anyActive) {
+    activateFilter("search");     // ⭐ NEW
+  } else {
+    deactivateFilter("search");     // ⭐ NEW
+  }
+}
+
+  function getSelectedSearchFields() {
+  return [...document.querySelectorAll(".t-search-option input:checked")]
+    .map(i => i.dataset.field);
+}
+
+  function showEventFilters() {
+    let dropdownWasOpen = false;
+
+    function setEventMode(mode) {
+      activeAll = (mode === "all");
+      activeMy = (mode === "my");
+      showingSaved = (mode === "saved");
+
+      allBtn.classList.toggle("active", activeAll);
+      myBtn.classList.toggle("active", activeMy);
+      bookmarkHeaderBtn.classList.toggle("active", showingSaved);
+
+      applyTPFilters();
+      updateLocationChip();
+      updateClearFilterVisibility();
+    }
+
+    // -----------------------------
+    // CREATE EVENT BUTTON
+    // -----------------------------
+    const createBtn = document.getElementById("createHeaderBtn");
+    if (!createBtn.__clickAdded) {
+      createBtn.onclick = () => {
+        if (!userEmail) {
+          const returnTo = encodeURIComponent(window.location.href);
+          window.location.href=`TropicPulseEvents`;
+          return;
+        }
+        window.location.href = `?impulse=TropicPulseEditEvent`;
+      };
+      createBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // LOCATION CHIP
+    // -----------------------------
+    const locChip = document.getElementById("location-chip");
+    if (!locChip.__clickAdded) {
+      locChip.addEventListener("click", () => {
+        handleChipClick();
+      });
+      locChip.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // ALL BUTTON
+    // -----------------------------
+    if (!allBtn.__clickAdded) {
+      allBtn.onclick = () => setEventMode("all");
+      allBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // MY BUTTON
+    // -----------------------------
+    if (!myBtn.__clickAdded) {
+      myBtn.onclick = () => {
+        if (!userEmail) {
+          const returnTo = encodeURIComponent(window.location.href);
+          window.location.href=`TropicPulseEvents`;
+          return;
+        }
+        setEventMode("my");
+      };
+      myBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // SAVED BUTTON
+    // -----------------------------
+    if (!bookmarkHeaderBtn.__clickAdded) {
+      bookmarkHeaderBtn.onclick = async () => {
+        if (!showingSaved) await loadSavedEvents();
+        setEventMode("saved");
+      };
+      bookmarkHeaderBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // CLEAR FILTER BUTTON
+    // -----------------------------
+    const clearBtn = document.getElementById("clearFilterBtn");
+    if (!clearBtn.__clickAdded) {
+      clearBtn.onclick = () => {
+        scrollToTopSmooth();
+        clearFilters();
+      };
+      clearBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // FILTER PANEL BUTTON
+    // -----------------------------
+    if (!tpFilterBtn.__clickAdded) {
+      tpFilterBtn.addEventListener("click", () => {
+        const isOpen = !tpFilterPanel.classList.contains("t-hidden");
+
+        if (!isOpen) openFilterPanel();
+        else closeFilterPanel();
+      });
+      tpFilterBtn.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // DATE BUTTON
+    // -----------------------------
+    if (!dateBtn.__clickAdded) {
+      dateBtn.addEventListener("click", () => {
+        if (!datePickerOpen) {
+          datePickerOpen = true;
+          calendarWrapper.classList.add("active");
+          dateFilter.focus();
+          dateFilter.showPicker();
+        } else {
+          calendarWrapper.classList.remove("active");
+          datePickerOpen = false;
+          dateFilter.blur();
+        }
+      });
+      dateBtn.__clickAdded = true;
+    }
+
+    // CHANGE
+    dateFilter.addEventListener("change", (e) => {
+      datePickerOpen = false;
+      dateChangeFired = true;        // mark that change happened
+      activeDate = dateFilter.value;
+      if (activeDate) {
+        activateFilter("date");
+      } else {
+        deactivateFilter("date");
+      }
+      applyTPFilters();
+      // reset after a tick so future interactions work normally
+      setTimeout(() => dateChangeFired = false, 0);
+    });
+
+    // -----------------------------
+    // DATE FILTER BLUR
+    // -----------------------------
+    if (!dateFilter.__blurAdded) {
+      dateFilter.addEventListener("blur", (e) => {
+        // Ignore blur caused by showPicker()
+        if (datePickerOpen) {
+          log("blur → picker opening, ignore");
+          return;
+        }
+
+        calendarWrapper.classList.remove("active");
+
+        if (!dateFilter.value) {
+          datePickerOpen = false;
+          activeDate = null;
+          applyTPFilters();
+        } else {
+          log("blur → value unchanged or same date, closing picker");
+          datePickerOpen = false;
+        }
+      });
+      dateFilter.__blurAdded = true;
+    }
+
+    // -----------------------------
+    // DATE FILTER BEFOREINPUT
+    // -----------------------------
+    if (!dateFilter.__beforeInputAdded) {
+      dateFilter.addEventListener("beforeinput", (e) => {
+        if (e.inputType === "deleteContentBackward") {
+          dateFilter.value = "";
+          applyTPFilters();
+        }
+      });
+      dateFilter.__beforeInputAdded = true;
+    }
+
+    // -----------------------------
+    // SEARCH PANEL BUTTON
+    // -----------------------------
+    if (!tpSearchBtn.__clickAdded) {
+      tpSearchBtn.addEventListener("click", () => {
+        const isOpen = !tpSearchPanel.classList.contains("t-hidden");
+
+        if (!isOpen) openSearchPanel();
+        else closeSearchPanel();
+      });
+      tpSearchBtn.__clickAdded = true;
+    }
+
+    if (!tpSearchGo.__clickAdded) {
+      tpSearchGo.addEventListener("click", () => {
+        tpSearch = tpSearchInput.value.trim();
+        activeSearch = tpSearch.length > 0 ? tpSearch : null;
+        applyTPFilters();
+      });
+      tpSearchGo.__clickAdded = true;
+    }
+
+    if (!tpSearchClear.__clickAdded) {
+      tpSearchClear.addEventListener("click", () => {
+        activeSearch = null;
+        tpSearch = null;
+        tpSearchInput.value = "";
+
+        const opts = document.querySelectorAll(".t-search-option");
+        opts.forEach((o, i) => {
+          if (i > 1) o.classList.remove("active");
+        });
+
+        applyTPFilters();
+      });
+      tpSearchClear.__clickAdded = true;
+    }
+
+    if (!tpSearchInput.__inputAdded) {
+      tpSearchInput.addEventListener("input", () => {
+        tpSearch = tpSearchInput.value.trim();
+      });
+      tpSearchInput.__inputAdded = true;
+    }
+
+    if (!tpSearchInput.__keydownAdded) {
+      tpSearchInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          tpSearch = tpSearchInput.value.trim();
+          activeSearch = tpSearch.length > 0 ? tpSearch : null;
+          applyTPFilters();
+        }
+      });
+      tpSearchInput.__keydownAdded = true;
+    }
+
+    // -----------------------------
+    // SCROLL LISTENER
+    // -----------------------------
+    const floatingUp = document.getElementById("floatingScrollUp");
+
+    if (!PulseRealm.__scrollUpAdded) {
+      window.addEventListener("scroll", () => {
+        floatingUp.classList.toggle("visible", PulseRealm.scrollY > 300);
+      });
+      PulseRealm.__scrollUpAdded = true;
+    }
+
+    if (!floatingUp.__clickAdded) {
+      floatingUp.onclick = () => {
+        PulseRealm.scrollTo({ top: 0, behavior: "smooth" });
+      };
+      floatingUp.__clickAdded = true;
+    }
+
+    // -----------------------------
+    // DISTANCE OPTIONS
+    // -----------------------------
+    document.querySelectorAll("#tpDistanceOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpDistance = null;
+            activeDistance = null;
+            opt.classList.remove("active");
+            deactivateFilter("distance");
+          } else {
+            tpDistance = opt.dataset.distance;
+            activeDistance = tpDistance;
+            activateFilter("distance");
+            setActive("#tpDistanceOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // PRICE OPTIONS
+    // -----------------------------
+    document.querySelectorAll("#tpPriceOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpPrice = null;
+            activePrice = null;
+            opt.classList.remove("active");
+            deactivateFilter("price");
+          } else {
+            tpPrice = opt.dataset.price;
+            activePrice = tpPrice;
+            activateFilter("price");
+            setActive("#tpPriceOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+
+    // -----------------------------
+    // ENVIRONMENT OPTIONS
+    // -----------------------------
+    document.querySelectorAll("#tpEnvOptions .t-filter-option").forEach(opt => {
+      if (!opt.__clickAdded) {
+        opt.addEventListener("click", () => {
+          const alreadyActive = opt.classList.contains("active");
+
+          if (alreadyActive) {
+            tpEnv = null;
+            activeEnv = null;
+            opt.classList.remove("active");
+            deactivateFilter("env");
+          } else {
+            tpEnv = opt.dataset.env;
+            activeEnv = tpEnv;
+            activateFilter("env");
+            setActive("#tpEnvOptions", opt);
+          }
+
+          applyTPFilters();
+        });
+        opt.__clickAdded = true;
+      }
+    });
+    // -----------------------------------------
+  // ⭐ PREVENT DUPLICATE LISTENERS
+  // -----------------------------------------
+  
+    // ⭐ 1. Restore state on load (runs ONCE)
+    window.addEventListener("load", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        PulseRealm.isIdle = true;
+        
+      } else {
+        PulseRealm.isIdle = false; // active by default
+        
+      }
+
+      
+    });
+
+    // ⭐ 2. Badge toggle listener
+    document.getElementById("pb-mini-badge").addEventListener("click", () => {
+      const inactiveFlag = localStorage.getItem("pulseband_disabled") === "1";
+      const disabled = (PulseRealm.isIdle === true && inactiveFlag === true);
+
+      if (disabled) {
+        // Turn ON
+        localStorage.removeItem("pulseband_disabled");
+        PulseRealm.isIdle = false;
+        
+      } else {
+        // Turn OFF
+        localStorage.setItem("pulseband_disabled", "1");
+        PulseRealm.isIdle = true;
+        
+      }
+
+      
+    });
+  
+  }
+
+  function isFree(ev) {
+    if (ev.price === 0) return true;                 // numeric zero
+    if (ev.price === "0") return true;               // string zero
+    if (ev.price === "") return true;                // empty string
+    if (!ev.price) return true;                      // null/undefined/empty
+    if (typeof ev.price === "string" && ev.price.trim().toLowerCase() === "free") return true;
+
+    return false;
+  }
+
+  const DISTANCE_BUCKETS = {
+    walk: 0.5,     // within half a mile
+    close: 2,      // within 2 miles
+    island: 25     // whole island
+  };
+async function detectEnvironment(ev) {
+  // Build text from ALL event fields
+  const text = (
+    (ev.description || "") + " " +
+    (ev.summary || "") + " " +
+    (ev.title || "") + " " +
+    (ev.venue || "") + " " +
+    (ev.locationName || "") + " " +
+    (ev.address || "") + " " +
+    (ev.placeName || "") + " " +
+    (ev.businessName || "") + " " +
+    (ev.hostName || "")
+  ).toLowerCase();
+
+  // Outdoor keywords
+  const outdoorHints = [
+    "beach", "beachfront", "dock", "pier",
+    "snorkel", "snorkeling", "diving",
+    "fishing", "charter", "boat", "sailing", "catamaran",
+    "parasail", "jet ski", "jetski", "kayak",
+    "open air", "patio", "rooftop",
+    "pool party", "beach party", "sunset cruise",
+    "sunset sail", "full moon party", "secret beach"
+  ];
+
+  const isOutdoor = outdoorHints.some(h => text.includes(h));
+
+  // ⭐ Correct event logic:
+  // Outdoor is the only differentiator.
+  // Otherwise → default to BOTH.
+  const env = isOutdoor ? "outdoor" : "both";
+
+  ev.environment = env;
+  return env;
+}
+
+  async function attachPriceRatingsToEvents() {
+    for (let ev of allEvents) {
+      const rating = await computeEventPriceRating(ev);
+      ev.priceRating = rating;
+    }
+  }
+
+  async function computeEventPriceRating(ev) {
+
+    // FREE always wins
+    if (isFree(ev)) {
+      return "free";
+    }
+
+    const p = parseFloat(ev.price);
+
+    if (!isNaN(p)) {
+      let derived;
+      if (p <= 10) derived = "$";
+      else if (p <= 30) derived = "$$";
+      else derived = "$$$";
+      return derived;
+    }
+
+    return null;
+  }
+
+  function noFiltersActive(except = null) {
+    return !(
+      (except !== "price"  && activePrice)  ||
+      (except !== "distance"  && activeDistance)  ||
+      (except !== "env"    && activeEnv) ||
+      (except !== "date"  && activeDate)   ||
+      (except !== "search"  && activeSearch)   ||
+      (except !== "all"  && activeAll)   ||
+      (except !== "my"  && activeMy)   ||
+      (except !== "saved"    && showingSaved)
+    );
+  }
+  
+  function noTPFiltersActive(except = null) {
+    return !(
+      (except !== "price"   && activePrice)      ||
+      (except !== "distance"  && activeDistance)  ||
+      (except !== "env" && activeEnv)
+    );
+  }
+
+  function runTropicPulseSearch(list, query, fields) {
+    const q = query.toLowerCase();
+
+    return list.filter(ev => {
+      return fields.some(field => {
+
+        // NAME
+        if (field === "title") {
+          return (ev.title || "").toLowerCase().includes(q);
+        }
+
+        // CATEGORIES ARRAY
+        if (field === "category") {
+          const category = (ev.category || "").toLowerCase();
+          const subcategory     = (ev.subcategory || "").toLowerCase();
+          return category.includes(q) || subcategory.includes(q);
+        }
+
+        // DESCRIPTION + SUMMARY
+        if (field === "description") {
+          const description = (ev.description || "").toLowerCase();
+          const summary     = (ev.summary || "").toLowerCase();
+          return description.includes(q) || summary.includes(q);
+        }
+        return false;
+      });
+    });
+  }
+
+  function getBusinessByPlaceId(placeId) {
+  if (!placeId) return null;
+  return allBusinesses.find(b => b.placeId === placeId) || null;
+}
+
+  function applyTPFilters() {
+  let baseList;
+
+  if (activeMy) {
+    baseList = allEvents.filter(ev => ev.email === userEmail);
+  } else if (showingSaved) {
+    baseList = savedEvents || [];
+  } else {
+    baseList = allEvents;
+  }
+
+  let filtered = [...baseList];
+
+  // 1️⃣ SEARCH
+  if (activeSearch) {
+    const fields = getSelectedSearchFields();
+    filtered = runTropicPulseSearch(filtered, activeSearch, fields);
+  }
+
+  // 2️⃣ DATE
+  if (activeDate) {
+    filtered = handleDateChange(activeDate, filtered);
+  }
+
+  // ⭐ 3️⃣ BUSINESS INHERITANCE (NEW)
+  filtered = filtered.map(ev => {
+    if (!ev.placeId) return ev;
+
+    const biz = getBusinessByPlaceId(ev.placeId);
+    if (!biz) return ev;
+
+    if (!ev.lat && biz.lat) {
+      ev.lat = biz.lat;
+      ev.lng = biz.lng;
+    }
+
+    if (!ev.environment && biz.environment) {
+      ev.environment = biz.environment;
+    }
+
+    if (!ev.priceRating && biz.priceRating) {
+      ev.priceRating = biz.priceRating;
+    }
+
+    if (!ev.category && biz.category) {
+      ev.category = biz.category;
+    }
+
+    return ev;
+  });
+
+  // 4️⃣ DISTANCE
+  if (activeDistance) {
+    let maxMiles = typeof activeDistance === "number"
+      ? activeDistance
+      : DISTANCE_BUCKETS[activeDistance];
+
+    if (maxMiles != null) {
+      filtered = filterEventsByDistance(filtered, maxMiles);
+    }
+  }
+
+  // 5️⃣ PRICE
+  if (activePrice) {
+    if (tpPrice === "free") {
+      filtered = filtered.filter(ev => isFreePrice(ev.price));
+    } else {
+      filtered = filtered.filter(ev => {
+        const p = parseFloat(ev.price);
+        if (isNaN(p)) return false;
+
+        if (tpPrice === "$") return p > 0 && p <= 10;
+        if (tpPrice === "$$") return p > 10 && p <= 30;
+        if (tpPrice === "$$$") return p > 30;
+
+        return false;
+      });
+    }
+
+    if (noTPFiltersActive("price")) {
+      filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
+    }
+  }
+
+  // 6️⃣ ENVIRONMENT
+  if (activeEnv) {
+    filtered = filtered.filter(ev => {
+      let env = ev.environment || detectEnvironment(ev);
+      if (!env) env = "both";
+      ev.environment = env;
+
+      if (tpEnv === "both") return true;
+      if (tpEnv === "indoor") return env === "indoor" || env === "both";
+      if (tpEnv === "outdoor") return env === "outdoor";
+
+      return true;
+    });
+
+    if (noTPFiltersActive("env")) {
+      filtered.sort((a, b) => a.title.localeCompare(b.title));
+    }
+  }
+
+  // 7️⃣ NO FILTERS → CATEGORY CARDS
+  if (noFiltersActive()) {
+    clearFilters();
+    return;
+  }
+
+  // 8️⃣ FINALIZE
+  currentList = filtered;
+
+  if (activeDate) {
+    renderEvents(currentList, true);
+  } else {
+    renderEvents(currentList);
+  }
+
+  updateLocationChip();
+  updateClearFilterVisibility();
+}
+
+
+  function formatLabel(str) {
+    if (!str) return "";
+    return str
+      .replace(/-/g, " ")                     // hyphens → spaces
+      .split(" ")                             // split into words
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");                             // rejoin
+  }
+
+  function handleChipClick() {
+    if (!activeCategory) return;
+
+    if (activeSubcategory) {
+      activeSubcategory = null;
+      activeSubcategoryIcon = null;
+
+      // Re-open the category view
+      openCategory(activeCategory);
+      return;
+    }
+    clearFilters();
+  }
+  
+  function updateLocationChip() {
+    const chip = document.getElementById("location-chip");
+    const chipText = document.getElementById("location-chip-text");
+    const catIcon = document.getElementById("location-chip-icon-category");
+    const subIcon = document.getElementById("location-chip-icon-subcategory");
+
+    if (!chip) return;
+
+    // No category → hide chip completely
+    if (!activeCategory) {
+      chip.style.display = "none";
+      chipText.textContent = "";
+      catIcon.style.display = "none";
+      subIcon.style.display = "none";
+      return;
+    }
+
+    // Show chip
+    chip.style.display = "inline-flex";
+
+    chipText.textContent = activeSubcategory
+      ? `${formatLabel(activeCategory)} › ${formatLabel(activeSubcategory)}`
+      : formatLabel(activeCategory);
+
+    // Category icon
+    if (activeCategoryIcon) {
+      catIcon.src = activeCategoryIcon;
+      catIcon.style.display = "block";
+    } else {
+      catIcon.style.display = "none";
+    }
+
+    // Subcategory icon
+    if (activeSubcategory && activeSubcategoryIcon) {
+      subIcon.src = activeSubcategoryIcon;
+      subIcon.style.display = "block";
+    } else {
+      subIcon.style.display = "none";
+    }
+  }
+
+  function normalizeLatLng(value) {
+    if (value === null || value === undefined) return null;
+    const num = parseFloat(value);
+    return isNaN(num) ? null : num;
+  }
+  function refreshEventDistances() {
+  if (!currentUserLocation) {
+    mark("⏳ No location yet → skip event distance refresh");
+    return;
+  }
+
+  if (!currentList || currentList.length === 0) {
+    mark("⚠️ No currentList to sort");
+    return;
+  }
+
+  mark("📍 Recalculating event distances + resorting");
+
+  // 1. Update all distanceMiles values
+  allEvents.forEach(ev => {
+    if (ev.lat && ev.lng) {
+      ev.distanceMiles = getDistanceMiles(
+        currentUserLocation.lat,
+        currentUserLocation.lng,
+        ev.lat,
+        ev.lng
+      );
+    } else {
+      ev.distanceMiles = null;
+    }
+  });
+
+  // 2. Resort the list
+  allEvents = sortEventsByDistance(allEvents);
+
+  // 3. Update currentList reference
+  currentList = allEvents;
+
+  // 4. Re-render UI (respect date filter)
+  if (activeDate) {
+    renderEvents(currentList, true);
+  } else {
+    renderEvents(currentList);
+  }
+
+  // 5. Update chips / filters
+  updateLocationChip();
+  updateClearFilterVisibility();
+}
+
+  function scrollToTopSmooth() {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      PulseRealm.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+  
+  async function runWakeUpHeartbeat() {
+    await sessionCheck();
+  }
+(async () => {
+  // -----------------------------------------
+  // MARKER
+  // -----------------------------------------
+  let lastTime = nowMs();
+  function mark(label, absolute = false) {
+    const now = nowMs();
+    const diff = now - lastTime;
+    log(
+      absolute
+        ? `${label}: @${now.toFixed(1)}ms`
+        : `${label}: +${diff.toFixed(1)}ms`
+    );
+    lastTime = now;
+  }
+
+  mark("EVENTS DOM STARTS");
+  scrollToTopSmooth();
+
+  // -----------------------------------------
+  // 1️⃣ GET LOCATION (ONE-TIME, NO LOOPS)
+  // -----------------------------------------
+  currentUserLocation = await getInstantLocationWithBackgroundUpdate(newLoc => {
+    currentUserLocation = newLoc;
+    mark("SETTING CURRENT LOCATION IF AVAILABLE");
+    refreshEventDistances(); // distance sort only
+  });
+
+  // -----------------------------------------
+  // 2️⃣ VISIBILITY → SESSIONCHECK (NO LOOPS)
+  // -----------------------------------------
+  if (!document.__eventsVisibilityBound) {
+    document.__eventsVisibilityBound = true;
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        setTimeout(async () => await sessionCheck(), 250);
+        mark("VisibilityChange → sessionCheck()");
+      }
+    });
+  }
+
+  mark("EVENTS LOCATION READY");
+
+  // -----------------------------------------
+  // 3️⃣ LOAD EVENTS (ONE-TIME)
+  // -----------------------------------------
+  await loadEvents();
+  mark("EVENTS LOADED");
+
+  // -----------------------------------------
+  // 4️⃣ HEARTBEAT (ONE-TIME INIT ONLY)
+  // -----------------------------------------
+  await runWakeUpHeartbeat();
+  mark("EVENTS HEARTBEAT STARTED");
+
+  // -----------------------------------------
+  // 5️⃣ DATE FILTER INIT
+  // -----------------------------------------
+  initDateFilter();
+  mark("EVENTS DATE FILTER INITIALIZED");
+
+  // -----------------------------------------
+  // 6️⃣ LOAD CATEGORIES
+  // -----------------------------------------
+  await loadEventCategories();
+  mark("EVENTS CATEGORIES LOADED");
+
+  // -----------------------------------------
+  // 7️⃣ DISTANCES (ONE-TIME)
+  // -----------------------------------------
+  refreshEventDistances();
+  mark("EVENTS DISTANCES REFRESHED");
+
+  // -----------------------------------------
+  // 8️⃣ RENDER CATEGORY CARDS
+  // -----------------------------------------
+  renderEventCategoryCards();
+  mark("EVENTS CATEGORY CARDS RENDERED");
+
+  // -----------------------------------------
+  // 9️⃣ SHOW FILTERS
+  // -----------------------------------------
+  showEventFilters();
+  mark("EVENTS FILTERS/BUTTONS LOADED");
+
+  // -----------------------------------------
+  // 🔥 NO TIMERS. NO INTERVALS. NO LOOPS.
+  // PulseBand is UI-only on this page.
+  // -----------------------------------------
+
+  hideTPLoader();
+
+  showFloatingCategoryIcon("events");
+  mark("showFloatingCategoryIcon LOADED");
+
+  mark("EVENTS DOM ENDS", true);
+})();
+
+</script>
+
+</body>
+</html>
