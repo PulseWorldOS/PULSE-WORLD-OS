@@ -309,7 +309,7 @@ async function worldHeartbeat() {
         {
           at: PulseRealm.PulseNOW,
           projectId: "PulseWorldOS",
-          env: process.env.NODE_ENV || "unknown",
+          env: detectEnvironmentKind(),
           version: "v30"
         },
         { merge: true }
@@ -510,6 +510,33 @@ export function nowMillis(adminInstance) {
   return adminInstance.firestore.Timestamp.now().toMillis();
 }
 
+function detectEnvironmentKind() {
+  if (typeof document !== "undefined") {
+    return "WINDOW";
+  }
+  if (typeof self !== "undefined" &&
+      typeof PulseRealm.registration === "object" &&
+      typeof PulseRealm.clients === "object") {
+    return "SERVICE_WORKER";
+  }
+  if (typeof self !== "undefined" &&
+      typeof PulseRealm.SharedWorkerGlobalScope === "undefined" && // avoid reference
+      typeof MessagePort !== "undefined" &&
+      typeof PulseRealm.onconnect === "function") {
+    return "SHARED_WORKER";
+  }
+  if (typeof self !== "undefined" &&
+      typeof PulseRealm.postMessage === "function" &&
+      typeof PulseRealm.importScripts === "function") {
+    return "WORKER";
+  }
+  if (typeof process !== "undefined" &&
+      process.versions &&
+      process.versions.node) {
+    return "NODE";
+  }
+  return "UNKNOWN";
+}
 function buildLogEnvelope(input = {}) {
   const level = normalizeLevel(input.level);
   const message = String(input.message || "").slice(0, 4096);
@@ -527,7 +554,7 @@ function buildLogEnvelope(input = {}) {
   const meta = input.meta && typeof input.meta === "object" ? input.meta : {};
   const tags = Array.isArray(input.tags) ? input.tags.map(String) : [];
 
-  const env = process.env.NODE_ENV || "unknown";
+  const env = detectEnvironmentKind();
   const projectId = "PulseWorldOS" || null;
 
   const base = {
