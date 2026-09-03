@@ -86,14 +86,56 @@ async function processCommands(commands = []) {
 }
 
 // ============================================================================
-//  NETLIFY HANDLER — receives commands OR raw SQL
+//  NEW: GET ALL TABLES
+// ============================================================================
+
+async function getAllTables() {
+  const { data, error } = await supabase.rpc("raw_sql", {
+    query: `
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public'
+    `
+  });
+
+  if (error) throw error;
+  return data;
+}
+
+// ============================================================================
+//  NEW: GET ALL ROWS FROM A TABLE
+// ============================================================================
+
+async function getTableRows(table) {
+  const { data, error } = await supabase.from(table).select("*");
+  if (error) throw error;
+  return data;
+}
+
+// ============================================================================
+//  NEW: GET SINGLE DOC BY ID
+// ============================================================================
+
+async function getDoc(table, id) {
+  const { data, error } = await supabase
+    .from(table)
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error && error.code !== "PGRST116") throw error;
+  return data || null;
+}
+
+// ============================================================================
+//  NETLIFY HANDLER — receives commands OR raw SQL OR pulls
 // ============================================================================
 
 export async function handler(event) {
   try {
     const body = JSON.parse(event.body || "{}");
 
-    // ⭐ If browser sent commands → process them
+    // ⭐ COMMANDS
     if (body.commands) {
       const results = await processCommands(body.commands);
 
@@ -107,7 +149,7 @@ export async function handler(event) {
       };
     }
 
-    // ⭐ If browser sent raw SQL → run it
+    // ⭐ RAW SQL
     if (body.query) {
       const data = await runPulseQuery(body.query, body.params);
 
@@ -121,12 +163,56 @@ export async function handler(event) {
       };
     }
 
-    // ⭐ Nothing provided
+    // ⭐ GET ALL TABLES
+    if (body.getAllTables) {
+      const tables = await getAllTables();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          mode: "getAllTables",
+          tables
+        })
+      };
+    }
+
+    // ⭐ GET ALL ROWS FROM TABLE
+    if (body.getTableRows) {
+      const rows = await getTableRows(body.getTableRows);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          mode: "getTableRows",
+          table: body.getTableRows,
+          rows
+        })
+      };
+    }
+
+    // ⭐ GET DOC BY ID
+    if (body.getDoc) {
+      const { table, id } = body.getDoc;
+      const doc = await getDoc(table, id);
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          mode: "getDoc",
+          table,
+          id,
+          doc
+        })
+      };
+    }
+
+    // ⭐ NOTHING PROVIDED
     return {
       statusCode: 400,
       body: JSON.stringify({
         ok: false,
-        error: "No commands or SQL provided."
+        error: "No commands, SQL, or pull request provided."
       })
     };
 

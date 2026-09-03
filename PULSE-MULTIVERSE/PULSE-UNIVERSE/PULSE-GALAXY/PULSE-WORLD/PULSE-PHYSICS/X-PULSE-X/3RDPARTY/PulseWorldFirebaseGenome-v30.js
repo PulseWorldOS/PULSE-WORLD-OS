@@ -25,15 +25,34 @@ const Timestamp = PulseRealm.PulseNOW;
 //  FAKE SUPABASE BROWSER ADAPTER
 //  “Captures all commands and sends them to server SQL when syncing”
 // ============================================================================
+// ============================================================================
+//  PULSEWORLD FAKE SUPABASE (Browser)
+//  - Writes are queued locally
+//  - Reads are fetched from server SQL
+//  - Browser-safe, no env vars
+// ============================================================================
 
 // ⭐ Local command queue (browser memory)
 const PulseSupabaseQueue = [];
 
-// ⭐ Fake Supabase client (browser-safe)
+// ⭐ Helper: call server SQL
+async function callServer(payload) {
+  const response = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+
+  return await response.json();
+}
+
+// ============================================================================
+//  FAKE SUPABASE CLIENT (Browser)
+// ============================================================================
+
 export const supabase = {
-  // Fake .from() API
   from(table) {
     return {
+      // ⭐ INSERT → queue only
       insert: (data) => {
         PulseSupabaseQueue.push({
           type: "insert",
@@ -43,6 +62,7 @@ export const supabase = {
         return { data: null, error: null };
       },
 
+      // ⭐ UPDATE → queue only
       update: (data) => ({
         eq: (idField, idValue) => {
           PulseSupabaseQueue.push({
@@ -56,22 +76,47 @@ export const supabase = {
         }
       }),
 
+      // ⭐ SELECT → REAL READ from server
       select: () => ({
-        eq: () => ({
-          single: async () => ({
-            data: null,
-            error: null
-          })
-        }),
-        limit: () => ({
-          data: null,
-          error: null
-        })
+        eq: async (field, value) => {
+          const result = await callServer({
+            query: `SELECT * FROM ${table} WHERE ${field} = $1`,
+            params: { p1: value }
+          });
+
+          return {
+            data: result.data || null,
+            error: result.error || null
+          };
+        },
+
+        limit: async (n) => {
+          const result = await callServer({
+            query: `SELECT * FROM ${table} LIMIT ${n}`
+          });
+
+          return {
+            data: result.data || null,
+            error: result.error || null
+          };
+        },
+
+        // ⭐ SELECT ALL
+        all: async () => {
+          const result = await callServer({
+            query: `SELECT * FROM ${table}`
+          });
+
+          return {
+            data: result.data || null,
+            error: result.error || null
+          };
+        }
       })
     };
   },
 
-  // Fake RPC
+  // ⭐ RPC → queue only
   rpc(name, params) {
     PulseSupabaseQueue.push({
       type: "rpc",
@@ -79,11 +124,16 @@ export const supabase = {
       params
     });
     return { data: null, error: null };
+  },
+
+  // ⭐ RAW SQL → REAL READ
+  sql(query, params = {}) {
+    return callServer({ query, params });
   }
 };
 
 // ============================================================================
-//  Collection Wrapper (Firebase-like)
+//  FIREBASE-LIKE COLLECTION WRAPPER
 // ============================================================================
 
 class SupabaseCollection {
@@ -91,7 +141,7 @@ class SupabaseCollection {
     this.table = table;
   }
 
-  // ⭐ Add a row (Firebase: collection.add)
+  // ⭐ Add → queue only
   async add(data) {
     PulseSupabaseQueue.push({
       type: "insert",
@@ -102,10 +152,10 @@ class SupabaseCollection {
     return { id: "local-" + Date.now() };
   }
 
-  // ⭐ Document wrapper (Firebase: collection.doc(id))
+  // ⭐ Document wrapper
   doc(id) {
     return {
-      // Firebase: doc.set()
+      // ⭐ Set → queue only
       set: async (data) => {
         PulseSupabaseQueue.push({
           type: "update",
@@ -115,52 +165,77 @@ class SupabaseCollection {
         });
       },
 
-      // Firebase: doc.get() — fake
-      get: async () => ({
-        empty: true,
-        exists: false,
-        data: () => ({})
-      })
+      // ⭐ Get → REAL READ
+      get: async () => {
+        const result = await callServer({
+          query: `SELECT * FROM ${this.table} WHERE id = $1`,
+          params: { p1: id }
+        });
+
+        const row = result.data?.[0] || null;
+
+        return {
+          empty: !row,
+          exists: !!row,
+          data: () => row || {}
+        };
+      }
     };
   }
 
-  // ⭐ Firebase: collection.limit(n)
+  // ⭐ Limit
   limit(n) {
     this._limit = n;
     return this;
   }
 
-  // ⭐ Firebase: collection.get() — fake
+  // ⭐ Get → REAL READ
   async get() {
+    const query = this._limit
+      ? `SELECT * FROM ${this.table} LIMIT ${this._limit}`
+      : `SELECT * FROM ${this.table}`;
+
+    const result = await callServer({ query });
+
+    const rows = result.data || [];
+
     return {
-      empty: true,
-      docs: []
+      empty: rows.length === 0,
+      docs: rows.map((row) => ({
+        id: row.id,
+        data: () => row
+      }))
     };
   }
 }
 
 // ============================================================================
-//  Exported DB API (Firebase-like)
+//  EXPORT DB API
 // ============================================================================
 
 export const db = {
   collection: (table) => new SupabaseCollection(table),
 
-  // Firebase: listCollections() — fake
-  listCollections: async () => [],
+  // ⭐ REAL listCollections()
+  listCollections: async () => {
+    const result = await callServer({
+      query: `
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+      `
+    });
+
+    return result.data?.map((r) => r.table_name) || [];
+  },
 
   // ⭐ Push queued commands to server SQL
   sync: async () => {
     console.log("🔄 Syncing queued Supabase commands to server…");
 
-    const response = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
-      method: "POST",
-      body: JSON.stringify({
-        commands: PulseSupabaseQueue
-      })
+    const result = await callServer({
+      commands: PulseSupabaseQueue
     });
-
-    const result = await response.json();
 
     if (result.ok) {
       console.log("✅ Supabase sync complete.");
@@ -171,9 +246,8 @@ export const db = {
   }
 };
 
-// Attach to PulseRealm for compatibility
+// Attach to PulseRealm
 PulseRealm.PulseFirebaseDB = db;
-
 
 
 
