@@ -6,7 +6,7 @@
 <link rel="prefetch" fetchpriority="high" href="/">
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldModalHeader.webp.pex" type="image/webp"/>
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldNebula.webp.pex" type="image/webp"/>
-<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldHeroBanner.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldAdmin.webp.pex" type="image/webp"/>
 <link rel="modulepreload" fetchpriority="high" href="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-OS/PulseOSLongTermMemory.js">
 <title>Pulse World OS — Email Admin</title>
 
@@ -79,7 +79,7 @@
       width: 100%;
       height: 200px;
       border-radius: 18px;
-      background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldHeroBanner.webp.pex");
+      background-image: url("./_EXPRESSIONS/_PEX/BUILD/PulseWorldAdmin.webp.pex");
       background-size: cover;
       background-position: center;
       margin-bottom: 20px;
