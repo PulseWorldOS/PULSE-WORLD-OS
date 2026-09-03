@@ -141,8 +141,8 @@ function fadeHUD() {
   const wrap = document.getElementById("pulsebrowser-dev-overlay");
   if (!body) return;
   if (!wrap) return;
-  wrap.style.display = "none";
-  body.style.display = "none";
+  wrap.style.opacity = "0";
+  body.style.opacity = "0";
 }
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
