@@ -538,13 +538,13 @@ async function loadUsers() {
   }
 }
 
-function populateUserSelect() {
+async function populateUserSelect() {
   userSelect.innerHTML = "";
 
   if (!usersCache.length) {
     const opt = document.createElement("option");
-    opt.value = "";
-    opt.textContent = "No User Identities Found";
+    opt.value = PulseRealm.PulseIdentity.email;
+    opt.textContent = PulseRealm.PulseIdentity.email;
     userSelect.appendChild(opt);
     return;
   }
@@ -563,6 +563,7 @@ function populateUserSelect() {
     userSelect.appendChild(opt);
   });
 }
+
 
 // ============================================================
 // LOAD TEMPLATES
