@@ -424,7 +424,7 @@ founderVideo = document.getElementById("founderVideo");
   if (founderVideo) {
     founderVideo.onclick = async () => {
       console.log(
-        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Founders Video SKIPPED by user.",
+        "✨ PULSE MULTIVERSAL RENDERER v34.0 — %c[PULSEWORLD::EXPRESSION] Founders Video SKIPPED by user.",
         "color:#H02FHA; font-weight:bold; font-family:monospace;"
       );
 

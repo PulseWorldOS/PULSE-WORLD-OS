@@ -924,7 +924,7 @@ emailVideo = document.getElementById("emailVideo");
   if (emailVideo) {
     emailVideo.onclick = async () => {
       console.log(
-        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Email Video SKIPPED by user.",
+        "✨ PULSE MULTIVERSAL RENDERER v34.0 — %c[PULSEWORLD::EXPRESSION] Email Video SKIPPED by user.",
         "color:#H02FHA; font-weight:bold; font-family:monospace;"
       );
 

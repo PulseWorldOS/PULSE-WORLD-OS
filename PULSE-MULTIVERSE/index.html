@@ -6627,7 +6627,7 @@ function loadVideoPath() {
 
 async function enableBootVideo(isMobile) {
   console.log(
-    "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Boot video starting…",
+    "✨ PULSE MULTIVERSAL RENDERER v34.0 — %c[PULSEWORLD::EXPRESSION] Boot video starting…",
     "color:#H02FHA; font-weight:bold; font-family:monospace;"
   );
   
@@ -6705,7 +6705,7 @@ async function enableBootVideo(isMobile) {
   // -----------------------------------------------------
  
   console.log(
-    `✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Boot Video selected: ${isMobile ? "MOBILE" : "DESKTOP"} (MP4)`,
+    `✨ PULSE MULTIVERSAL RENDERER v34.0 — %c[PULSEWORLD::EXPRESSION] Boot Video selected: ${isMobile ? "MOBILE" : "DESKTOP"} (MP4)`,
     "color:#H02FHA; font-weight:bold; font-family:monospace;"
   );
 
@@ -6722,7 +6722,7 @@ async function enableBootVideo(isMobile) {
       });
 
       console.log(
-        "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] World BootVideo Succeeded.",
+        "✨ PULSE MULTIVERSAL RENDERER v34.0 — %c[PULSEWORLD::EXPRESSION] World BootVideo Succeeded.",
         "color:#H02FHA; font-weight:bold; font-family:monospace;"
       );
 
@@ -6730,7 +6730,7 @@ async function enableBootVideo(isMobile) {
     }
   } catch (err) {
     console.warn(
-      "✨ PULSE MULTIVERSAL RENDERER v32.1 — [PULSEWORLD::EXPRESSION] World BootVideo Failed:",
+      "✨ PULSE MULTIVERSAL RENDERER v34.0 — [PULSEWORLD::EXPRESSION] World BootVideo Failed:",
       err
     );
   }
@@ -6739,12 +6739,12 @@ async function enableBootVideo(isMobile) {
   // 3) LEGACY FALLBACK (ONLY IF WORLD FAILED)
   // -----------------------------------------------------
   console.warn(
-    "✨ PULSE MULTIVERSAL RENDERER v32.1 — [PULSEWORLD::EXPRESSION] Using Legacy Boot Video Fallback."
+    "✨ PULSE MULTIVERSAL RENDERER v34.0 — [PULSEWORLD::EXPRESSION] Using Legacy Boot Video Fallback."
   );
 
   if (!bootVideo) {
     console.warn(
-      "✨ PULSE MULTIVERSAL RENDERER v32.1 — [PULSEWORLD::EXPRESSION] No #bootVideo element found."
+      "✨ PULSE MULTIVERSAL RENDERER v34.0 — [PULSEWORLD::EXPRESSION] No #bootVideo element found."
     );
     return;
   }
@@ -6770,12 +6770,12 @@ async function enableBootVideo(isMobile) {
   try {
     await bootVideo.play();
     console.log(
-      "✨ PULSE MULTIVERSAL RENDERER v32.1 — %c[PULSEWORLD::EXPRESSION] Legacy Boot Video Playing.",
+      "✨ PULSE MULTIVERSAL RENDERER v34.0 — %c[PULSEWORLD::EXPRESSION] Legacy Boot Video Playing.",
       "color:#H02FHA; font-weight:bold; font-family:monospace;"
     );
   } catch (err) {
     console.warn(
-      "✨ PULSE MULTIVERSAL RENDERER v32.1 — [PULSEWORLD::EXPRESSION] Autoplay Blocked, Retrying…"
+      "✨ PULSE MULTIVERSAL RENDERER v34.0 — [PULSEWORLD::EXPRESSION] Autoplay Blocked, Retrying…"
     );
   }
 }
