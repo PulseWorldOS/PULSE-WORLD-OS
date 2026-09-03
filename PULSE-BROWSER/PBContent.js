@@ -132,11 +132,14 @@ function injectHUD() {
 
   updateHUD();
   setInterval(updateHUD, 1500);
-  setInterval(fadeHUD, 3500);
+  setInterval(fadeHUD, 4500);
 }
 function fadeHUD() {
   const body = document.getElementById("pb-hud-body");
+  const wrap = document.getElementById("pulsebrowser-dev-overlay");
   if (!body) return;
+  if (!wrap) return;
+  wrap.style.display = "none";
   body.style.display = "none";
 }
 function updateHUD() {
