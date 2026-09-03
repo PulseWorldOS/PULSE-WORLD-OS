@@ -155,7 +155,6 @@ class SupabaseCollection {
   // ⭐ Document wrapper
   doc(id) {
     return {
-      // ⭐ Set → queue only
       set: async (data) => {
         PulseSupabaseQueue.push({
           type: "update",
@@ -165,7 +164,6 @@ class SupabaseCollection {
         });
       },
 
-      // ⭐ Get → REAL READ
       get: async () => {
         const result = await callServer({
           query: `SELECT * FROM ${this.table} WHERE id = $1`,
@@ -207,7 +205,42 @@ class SupabaseCollection {
       }))
     };
   }
+
+  // ⭐ NEW: Find → REAL READ with WHERE filters
+  async find(queryObj = {}) {
+    const whereClauses = [];
+    const params = {};
+
+    let paramIndex = 1;
+
+    for (const [field, value] of Object.entries(queryObj)) {
+      const paramName = `p${paramIndex}`;
+      whereClauses.push(`${field} = $${paramIndex}`);
+      params[paramName] = value;
+      paramIndex++;
+    }
+
+    const whereSQL = whereClauses.length
+      ? `WHERE ${whereClauses.join(" AND ")}`
+      : "";
+
+    const result = await callServer({
+      query: `SELECT * FROM ${this.table} ${whereSQL}`,
+      params
+    });
+
+    const rows = result.data || [];
+
+    return {
+      empty: rows.length === 0,
+      docs: rows.map((row) => ({
+        id: row.id,
+        data: () => row
+      }))
+    };
+  }
 }
+
 
 // ============================================================================
 //  EXPORT DB API
