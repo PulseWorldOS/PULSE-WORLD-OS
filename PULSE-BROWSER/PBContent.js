@@ -120,6 +120,8 @@ function injectHUD() {
     z-index: 999999999;
     pointer-events: none;
     backdrop-filter: blur(4px);
+    transform: translateY(10px) !important;
+    transition: opacity 300ms ease, transform 300ms ease;
   `;
   
   wrap.innerHTML = `
