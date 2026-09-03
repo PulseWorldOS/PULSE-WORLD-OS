@@ -209,51 +209,6 @@ export function onCall(handler) {
 }
 
 
-// ============================================================================
-//  CONFIG VALIDATION — IMMORTAL SAFETY
-// ============================================================================
-(function validateConfigV30(cfg) {
-  const missing = [];
-  for (const key of [
-    "apiKey",
-    "authDomain",
-    "projectId",
-    "storageBucket",
-    "messagingSenderId",
-    "appId"
-  ]) {
-    if (!cfg[key] || String(cfg[key]).startsWith("FOUNDER_INSERT_")) {
-      missing.push(key);
-    }
-  }
-  if (missing.length) {
-    console.warn(
-      `[PulseWorldFirebaseGenome v30] ⚠️ Missing/Placeholder Firebase Config Keys: ${missing.join(
-        ", "
-      )}`
-    );
-  } else {
-    console.log(
-      `[PulseWorldFirebaseGenome v30] Firebase Config Looks Complete for ProjectId=${cfg.projectId}`
-    );
-  }
-})(firebaseConfigV30);
-
-// // ============================================================================
-// //  IMMORTAL INITIALIZATION — SINGLE INSTANCE ONLY
-// // ============================================================================
-
-// export const db = {
-//   root: `https://firestore.googleapis.com/v1/projects/${firebaseConfigV30.projectId}/databases/(default)/documents`,
-
-//   collection(path) {
-//     return {
-//       path,
-//       doc: (id) => ({ path: `${path}/${id}` })
-//     };
-//   }
-// };
-
 // No storage bucket — use memory or FILES instead
 export const PulseMemory = {};
 
@@ -353,7 +308,7 @@ async function worldHeartbeat() {
       .set(
         {
           at: PulseRealm.PulseNOW,
-          projectId: firebaseConfigV30.projectId,
+          projectId: "PulseWorldOS",
           env: process.env.NODE_ENV || "unknown",
           version: "v30"
         },
@@ -378,13 +333,13 @@ async function checkWorldDataHealth() {
         {
           lastCheckAt: now,
           nodeEnv: process.env.NODE_ENV || "unknown",
-          projectId: firebaseConfigV30.projectId,
+          projectId: "PulseWorldOS",
           version: "v30"
         },
         { merge: true }
       );
 
-    return { ok: true, projectId: firebaseConfigV30.projectId, version: "v30" };
+    return { ok: true, projectId: "PulseWorldOS", version: "v30" };
   } catch (err) {
     console.warn("[WorldHealth v30] Failed:", err);
     return { ok: false, error: String(err), version: "v30" };
@@ -573,7 +528,7 @@ function buildLogEnvelope(input = {}) {
   const tags = Array.isArray(input.tags) ? input.tags.map(String) : [];
 
   const env = process.env.NODE_ENV || "unknown";
-  const projectId = process.env.FIREBASE_PROJECT_ID || null;
+  const projectId = "PulseWorldOS" || null;
 
   const base = {
     level,

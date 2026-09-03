@@ -196,6 +196,10 @@ async function checkPersistentStorage(skip) {
 
   const used = estimate.usage;
   const quota = estimate.quota;
+  
+  // Convert to MB (1024 * 1024)
+  const usedMB = (used / (1024 * 1024)).toFixed(2);
+  const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
   const percent = ((used / quota) * 100).toFixed(2);
 
   console.log("PulseWorld Cache Storage:");
@@ -205,10 +209,6 @@ async function checkPersistentStorage(skip) {
 
   const isPersistent = await navigator.storage.persisted();
   console.log("Persistent Granted:", isPersistent);
-
-  // Convert to MB (1024 * 1024)
-  const usedMB = (used / (1024 * 1024)).toFixed(2);
-  const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
 
   PulseRealm.PulseCacheStore = usedMB + " MB/" + quotaGB + " GB";
   PulseRealm.PulseCacheUsed = percent + "%";
