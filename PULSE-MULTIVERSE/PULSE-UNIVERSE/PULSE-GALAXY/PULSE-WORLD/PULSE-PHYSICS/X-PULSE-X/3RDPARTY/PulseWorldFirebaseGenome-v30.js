@@ -34,6 +34,8 @@ const Timestamp = PulseRealm.PulseNOW;
 
 // ⭐ Local command queue (browser memory)
 const PulseSupabaseQueue = [];
+PulseRealm.PulseSupabaseQueue = PulseSupabaseQueue;
+
 
 // ⭐ Helper: call server SQL
 async function callServer(payload) {
