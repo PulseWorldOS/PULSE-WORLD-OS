@@ -323,7 +323,7 @@
 
       <!-- USER SELECT -->
       <div class="field-block">
-        <label>Select User</label>
+        <label>Admin Identity</label>
         <select id="userSelect"></select>
       </div>
 
@@ -331,6 +331,18 @@
       <div class="field-block">
         <label>Email Template</label>
         <select id="templateSelect"></select>
+      </div>
+
+      <!-- USER SELECT -->
+      <div class="field-block">
+        <label>To Which User?</label>
+        <select id="userSelect"></select>
+      </div>
+
+      <!-- CC FIELD -->
+      <div class="field-block">
+        <label>CC</label>
+        <input id="ccInput" placeholder="cc@example.com">
       </div>
 
       <!-- SUBJECT -->
@@ -763,7 +775,8 @@ async function initAdminEmail() {
 setInterval(() => {
   uptimeSeconds++;
   badgeUptime.textContent = uptimeSeconds + "s";
-}, 1000);
+  console.log(PulseRealm.PulseFirebaseDB);
+}, 3000);
 
 initAdminEmail();
 
