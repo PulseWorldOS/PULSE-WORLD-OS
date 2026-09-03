@@ -23,7 +23,10 @@ const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 async function sql(query, params = {}) {
   const response = await fetch("/.netlify/functions/PULSE-SERVER-SQL.js", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Accept": "application/json, text/plain, */*",
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ query, params })
   });
 

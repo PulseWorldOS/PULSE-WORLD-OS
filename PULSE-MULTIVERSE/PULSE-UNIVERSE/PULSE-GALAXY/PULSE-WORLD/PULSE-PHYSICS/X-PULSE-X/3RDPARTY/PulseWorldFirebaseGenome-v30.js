@@ -41,6 +41,10 @@ PulseRealm.PulseSupabaseQueue = PulseSupabaseQueue;
 async function callServer(payload) {
   const response = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
     method: "POST",
+    headers: {
+      "Accept": "application/json, text/plain, */*",
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify(payload)
   });
 
