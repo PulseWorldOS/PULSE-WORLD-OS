@@ -100,6 +100,7 @@ function injectHUD() {
     console.warn("PulseBrowser HUD Disabled on Streaming Site:", location.hostname);
     const flag = document.getElementById("pulseworld-flag");
     flag.textContent = "PulseBrowser OS Active [HUD Offline]";
+    HudOffline === true;
     return;
   }
 
