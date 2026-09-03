@@ -17,39 +17,151 @@ import { PulseWorldExpressMiddleLayer } from "./PULSE-WORLD-TRANSPORT.js";
 const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 
 const Timestamp = PulseRealm.PulseNOW;
-
 // ============================================================================
-//  SQL MIGRATION ADAPTER (STUBBED FOR PEX COMPATIBILITY)
+//  SUPABASE MIGRATION ADAPTER (FIREBASE-COMPATIBLE API)
+//  “Drop-in replacement for PulseFirebaseDB using Supabase tables”
 // ============================================================================
-export const firebaseConfigV30 = {
-  apiKey: "SQL_MIGRATION_PENDING",
-  projectId: "tropic-pulse-sql"
-};
 
-const app = { name: "Pulse-SQL-Adapter" };
+import { createClient } from "@supabase/supabase-js";
 
-class SQLCollection {
-  constructor(path) { this.path = path; }
-  async add(data) {
-    console.log(`[SQL Adapter] Insert into ${this.path}`, data);
-    return { id: "sql-" + Date.now() };
+// ⭐ Create Supabase client using Netlify extension variables
+export const supabase = createClient(
+  process.env.SUPABASE_DATABASE_URL,
+  process.env.PulseWorld_SUPABASE_ANON_KEY
+);
+
+// ⭐ Auto‑check connection on startup
+(async () => {
+  try {
+    // Try a simple query — lightweight and safe
+    const { data, error } = await supabase.from("pg_catalog.pg_tables").select("tablename").limit(1);
+
+    if (error) {
+      console.error("❌ Supabase connection FAILED:", error.message);
+    } else {
+      console.log("✅ Connected to Supabase successfully.");
+    }
+  } catch (err) {
+    console.error("❌ Supabase connection FAILED:", err.message);
   }
+})();
+
+
+// ============================================================================
+//  Collection Wrapper (Firebase-like)
+// ============================================================================
+
+class SupabaseCollection {
+  constructor(table) {
+    this.table = table;
+  }
+
+  // ⭐ Add a row (Firebase: collection.add)
+  async add(data) {
+    const { data: inserted, error } = await supabase
+      .from(this.table)
+      .insert(data)
+      .select()
+      .single();
+
+    if (error) {
+      console.error(`[Supabase Adapter] Insert error in ${this.table}`, error);
+      throw error;
+    }
+
+    return { id: inserted.id };
+  }
+
+  // ⭐ Document wrapper (Firebase: collection.doc(id))
   doc(id) {
     return {
-      set: async (data, opts) => console.log(`[SQL Adapter] Set doc ${this.path}/${id}`, data),
-      get: async () => ({ empty: true, exists: false, data: () => ({}) })
+      // Firebase: doc.set()
+      set: async (data) => {
+        const { error } = await supabase
+          .from(this.table)
+          .update(data)
+          .eq("id", id);
+
+        if (error) {
+          console.error(`[Supabase Adapter] Set error ${this.table}/${id}`, error);
+          throw error;
+        }
+      },
+
+      // Firebase: doc.get()
+      get: async () => {
+        const { data: row, error } = await supabase
+          .from(this.table)
+          .select("*")
+          .eq("id", id)
+          .single();
+
+        if (error && error.code !== "PGRST116") {
+          console.error(`[Supabase Adapter] Get error ${this.table}/${id}`, error);
+          throw error;
+        }
+
+        return {
+          empty: !row,
+          exists: !!row,
+          data: () => row || {}
+        };
+      }
     };
   }
-  limit(n) { return this; }
-  async get() { return { empty: true, docs: [] }; }
+
+  // ⭐ Firebase: collection.limit(n)
+  limit(n) {
+    this._limit = n;
+    return this;
+  }
+
+  // ⭐ Firebase: collection.get()
+  async get() {
+    let query = supabase.from(this.table).select("*");
+
+    if (this._limit) query = query.limit(this._limit);
+
+    const { data: rows, error } = await query;
+
+    if (error) {
+      console.error(`[Supabase Adapter] Get error in ${this.table}`, error);
+      throw error;
+    }
+
+    return {
+      empty: rows.length === 0,
+      docs: rows.map((row) => ({
+        id: row.id,
+        data: () => row
+      }))
+    };
+  }
 }
 
+// ============================================================================
+//  Exported DB API (Firebase-like)
+// ============================================================================
+
 export const db = {
-  collection: (path) => new SQLCollection(path),
-  listCollections: async () => []
+  collection: (table) => new SupabaseCollection(table),
+
+  // Firebase: listCollections()
+  listCollections: async () => {
+    const { data, error } = await supabase.rpc("list_tables");
+
+    if (error) {
+      console.error("[Supabase Adapter] listCollections error", error);
+      return [];
+    }
+
+    return data || [];
+  }
 };
 
+// Attach to PulseRealm for compatibility
 PulseRealm.PulseFirebaseDB = db;
+
 
 
 export function onRequest(config, handler) {
