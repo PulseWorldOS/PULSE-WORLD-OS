@@ -120,8 +120,6 @@ function injectHUD() {
     z-index: 999999999;
     pointer-events: none;
     backdrop-filter: blur(4px);
-    transform: translateY(10px) !important;
-    transition: opacity 300ms ease, transform 300ms ease;
   `;
   
   wrap.innerHTML = `
@@ -134,15 +132,15 @@ function injectHUD() {
 
   updateHUD();
   setInterval(updateHUD, 1500);
-  setInterval(fadeHUD, 4500);
+  setInterval(fadeHUD, 5500);
 }
 function fadeHUD() {
   const body = document.getElementById("pb-hud-body");
   const wrap = document.getElementById("pulsebrowser-dev-overlay");
   if (!body) return;
   if (!wrap) return;
-  wrap.style.opacity = "0";
-  body.style.opacity = "0";
+  wrap.style.display = "none";
+  body.style.display = "none";
 }
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
