@@ -21,31 +21,66 @@ const Timestamp = PulseRealm.PulseNOW;
 //  SUPABASE MIGRATION ADAPTER (FIREBASE-COMPATIBLE API)
 //  “Drop-in replacement for PulseFirebaseDB using Supabase tables”
 // ============================================================================
+// ============================================================================
+//  FAKE SUPABASE BROWSER ADAPTER
+//  “Captures all commands and sends them to server SQL when syncing”
+// ============================================================================
 
-import { createClient } from "@supabase/supabase-js";
+// ⭐ Local command queue (browser memory)
+const PulseSupabaseQueue = [];
 
-// ⭐ Create Supabase client using Netlify extension variables
-export const supabase = createClient(
-  process.env.SUPABASE_DATABASE_URL,
-  process.env.PulseWorld_SUPABASE_ANON_KEY
-);
+// ⭐ Fake Supabase client (browser-safe)
+export const supabase = {
+  // Fake .from() API
+  from(table) {
+    return {
+      insert: (data) => {
+        PulseSupabaseQueue.push({
+          type: "insert",
+          table,
+          data
+        });
+        return { data: null, error: null };
+      },
 
-// ⭐ Auto‑check connection on startup
-(async () => {
-  try {
-    // Try a simple query — lightweight and safe
-    const { data, error } = await supabase.from("pg_catalog.pg_tables").select("tablename").limit(1);
+      update: (data) => ({
+        eq: (idField, idValue) => {
+          PulseSupabaseQueue.push({
+            type: "update",
+            table,
+            idField,
+            idValue,
+            data
+          });
+          return { data: null, error: null };
+        }
+      }),
 
-    if (error) {
-      console.error("❌ Supabase connection FAILED:", error.message);
-    } else {
-      console.log("✅ Connected to Supabase successfully.");
-    }
-  } catch (err) {
-    console.error("❌ Supabase connection FAILED:", err.message);
+      select: () => ({
+        eq: () => ({
+          single: async () => ({
+            data: null,
+            error: null
+          })
+        }),
+        limit: () => ({
+          data: null,
+          error: null
+        })
+      })
+    };
+  },
+
+  // Fake RPC
+  rpc(name, params) {
+    PulseSupabaseQueue.push({
+      type: "rpc",
+      name,
+      params
+    });
+    return { data: null, error: null };
   }
-})();
-
+};
 
 // ============================================================================
 //  Collection Wrapper (Firebase-like)
@@ -58,18 +93,13 @@ class SupabaseCollection {
 
   // ⭐ Add a row (Firebase: collection.add)
   async add(data) {
-    const { data: inserted, error } = await supabase
-      .from(this.table)
-      .insert(data)
-      .select()
-      .single();
+    PulseSupabaseQueue.push({
+      type: "insert",
+      table: this.table,
+      data
+    });
 
-    if (error) {
-      console.error(`[Supabase Adapter] Insert error in ${this.table}`, error);
-      throw error;
-    }
-
-    return { id: inserted.id };
+    return { id: "local-" + Date.now() };
   }
 
   // ⭐ Document wrapper (Firebase: collection.doc(id))
@@ -77,36 +107,20 @@ class SupabaseCollection {
     return {
       // Firebase: doc.set()
       set: async (data) => {
-        const { error } = await supabase
-          .from(this.table)
-          .update(data)
-          .eq("id", id);
-
-        if (error) {
-          console.error(`[Supabase Adapter] Set error ${this.table}/${id}`, error);
-          throw error;
-        }
+        PulseSupabaseQueue.push({
+          type: "update",
+          table: this.table,
+          id,
+          data
+        });
       },
 
-      // Firebase: doc.get()
-      get: async () => {
-        const { data: row, error } = await supabase
-          .from(this.table)
-          .select("*")
-          .eq("id", id)
-          .single();
-
-        if (error && error.code !== "PGRST116") {
-          console.error(`[Supabase Adapter] Get error ${this.table}/${id}`, error);
-          throw error;
-        }
-
-        return {
-          empty: !row,
-          exists: !!row,
-          data: () => row || {}
-        };
-      }
+      // Firebase: doc.get() — fake
+      get: async () => ({
+        empty: true,
+        exists: false,
+        data: () => ({})
+      })
     };
   }
 
@@ -116,25 +130,11 @@ class SupabaseCollection {
     return this;
   }
 
-  // ⭐ Firebase: collection.get()
+  // ⭐ Firebase: collection.get() — fake
   async get() {
-    let query = supabase.from(this.table).select("*");
-
-    if (this._limit) query = query.limit(this._limit);
-
-    const { data: rows, error } = await query;
-
-    if (error) {
-      console.error(`[Supabase Adapter] Get error in ${this.table}`, error);
-      throw error;
-    }
-
     return {
-      empty: rows.length === 0,
-      docs: rows.map((row) => ({
-        id: row.id,
-        data: () => row
-      }))
+      empty: true,
+      docs: []
     };
   }
 }
@@ -146,21 +146,34 @@ class SupabaseCollection {
 export const db = {
   collection: (table) => new SupabaseCollection(table),
 
-  // Firebase: listCollections()
-  listCollections: async () => {
-    const { data, error } = await supabase.rpc("list_tables");
+  // Firebase: listCollections() — fake
+  listCollections: async () => [],
 
-    if (error) {
-      console.error("[Supabase Adapter] listCollections error", error);
-      return [];
+  // ⭐ Push queued commands to server SQL
+  sync: async () => {
+    console.log("🔄 Syncing queued Supabase commands to server…");
+
+    const response = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+      method: "POST",
+      body: JSON.stringify({
+        commands: PulseSupabaseQueue
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.ok) {
+      console.log("✅ Supabase sync complete.");
+      PulseSupabaseQueue.length = 0;
+    } else {
+      console.error("❌ Supabase sync failed:", result.error);
     }
-
-    return data || [];
   }
 };
 
 // Attach to PulseRealm for compatibility
 PulseRealm.PulseFirebaseDB = db;
+
 
 
 
