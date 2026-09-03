@@ -274,7 +274,6 @@ self.addEventListener('install', event => {
 
       const cache = await caches.open(NEW_CACHE);
 
-      await navigator.serviceWorker.register("/DriftCompanion.js");
       // ⭐ Now safe to clone again
       await cache.put('/index.html', res.clone());
 
