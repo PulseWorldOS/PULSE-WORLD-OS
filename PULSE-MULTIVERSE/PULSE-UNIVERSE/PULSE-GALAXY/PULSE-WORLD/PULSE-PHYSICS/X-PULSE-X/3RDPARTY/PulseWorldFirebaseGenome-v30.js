@@ -332,7 +332,7 @@ async function checkWorldDataHealth() {
       .set(
         {
           lastCheckAt: now,
-          nodeEnv: process.env.NODE_ENV || "unknown",
+          nodeEnv: detectEnvironmentKind(),
           projectId: "PulseWorldOS",
           version: "v30"
         },
