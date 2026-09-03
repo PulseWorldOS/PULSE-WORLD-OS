@@ -132,8 +132,13 @@ function injectHUD() {
 
   updateHUD();
   setInterval(updateHUD, 1500);
+  setInterval(fadeHUD, 3500);
 }
-
+function fadeHUD() {
+  const body = document.getElementById("pb-hud-body");
+  if (!body) return;
+  body.style.display = "none";
+}
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
   if (!body) return;
