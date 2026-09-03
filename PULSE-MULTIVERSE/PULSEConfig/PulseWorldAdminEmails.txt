@@ -486,50 +486,55 @@ function getCache() {
 // ============================================================
 // LOAD USERS
 // ============================================================
-
 async function loadUsers() {
   try {
-    const cache = getCache();
+    const identityId = PulseRealm.PulseIdentity;
 
-    // Try cache first
-    if (cache.get) {
-      const cached = await cache.get("adminEmailUsers");
-      if (cached && Array.isArray(cached)) {
-        usersCache = cached;
-        populateUserSelect();
-        badgeUsers.textContent = cached.length;
-        safeLog("Loaded users from cache", { count: cached.length });
-        return;
-      }
-    }
-
-    // DB fallback
-    const db = await getPulseDB();
-    if (!db || !db.getCollection) {
-      safeLog("No PulseDB available — using empty user list");
+    // If no bank ID exists, fallback to single identity
+    if (!identityId) {
+      safeLog("No PulseIdentity — using local identity only");
       usersCache = [];
-      populateUserSelect();
-      badgeUsers.textContent = "0";
+      await populateUserSelect();
+      badgeUsers.textContent = "1";
       return;
     }
 
-    const usersCol = db.getCollection("Users");
-    const snapshot = await usersCol.getAll();
-    usersCache = Array.isArray(snapshot) ? snapshot : [];
-
-    if (cache.set) {
-      cache.set("adminEmailUsers", usersCache, { ttlMs: 5 * 60 * 1000 });
+    // Try PulseDB
+    const db = await getPulseDB();
+    if (!db || !db.getCollection) {
+      safeLog("No PulseDB available — using local identity only");
+      usersCache = [];
+      await populateUserSelect();
+      badgeUsers.textContent = "1";
+      return;
     }
 
-    populateUserSelect();
+    // Query identities belonging to this bank ID
+    const identitiesCol = db.getCollection("UserIdentities");
+    const snapshot = await identitiesCol.find({ identityId });
+
+    // Normalize
+    usersCache = Array.isArray(snapshot) ? snapshot : [];
+
+    // If no identities found, fallback to single identity
+    if (!usersCache.length) {
+      safeLog("No identities found for PulseIdentity — using local identity only");
+      usersCache = [];
+      await populateUserSelect();
+      badgeUsers.textContent = "1";
+      return;
+    }
+
+    // Populate dropdown
+    await populateUserSelect();
     badgeUsers.textContent = usersCache.length;
-    safeLog("Loaded users from DB", { count: usersCache.length });
+    safeLog("Loaded identities for PulseIdentity", { count: usersCache.length });
 
   } catch (err) {
-    safeLog("Failed to load users", { error: String(err) });
+    safeLog("Failed to load identities", { error: String(err) });
     usersCache = [];
-    populateUserSelect();
-    badgeUsers.textContent = "0";
+    await populateUserSelect();
+    badgeUsers.textContent = "1";
   }
 }
 
