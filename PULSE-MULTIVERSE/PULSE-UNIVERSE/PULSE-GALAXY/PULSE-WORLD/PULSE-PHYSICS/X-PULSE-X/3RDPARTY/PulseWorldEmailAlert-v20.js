@@ -3245,20 +3245,6 @@ export async function sendCustomAlert(emailType, payload = {}) {
   return _send(emailType, payload);
 }
 
-// ============================================================================
-//  EXPORT
-// ============================================================================
-
-export const PulseWorldEmailAlert = {
-  sendErrorAlert,
-  sendCriticalAlert,
-  sendFallbackAlert,
-  sendCustomAlert,
-  EmailAlertIcons,
-  EmailAlertSeverity,
-  sendEmailAlert
-};
-
 export default PulseWorldEmailAlert;
 
 function normalizePhone(raw, row, coords = {}) {
@@ -3496,6 +3482,20 @@ export async function handler(event, context) {
   }
 }
 
+// ============================================================================
+//  EXPORT
+// ============================================================================
+
+export const PulseWorldEmailAlert = {
+  sendErrorAlert,
+  sendCriticalAlert,
+  sendFallbackAlert,
+  sendCustomAlert,
+  EmailAlertIcons,
+  EmailAlertSeverity,
+  sendEmailAlert
+};
+
 PulseRealm.WorldEmailAlert = {
   handler,
   _send,
@@ -3505,3 +3505,5 @@ PulseRealm.WorldEmailAlert = {
   createOrGetStripeAccount,
   checkOrCreateStripeAccount
 }
+PulseRealm.PulseWorldEmailAlert = PulseWorldEmailAlert;
+PulseRealm.PulseWorldSendAlertEmail = sendEmailAlert;

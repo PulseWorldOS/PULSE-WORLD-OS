@@ -3,11 +3,10 @@
 // IMMORTAL SYNC — SIGNAL + FINALITY + WORLDPORT + REGISTRY (ESM + DYNAMIC IMPORTS, PURE RELATIVE)
 import { createEmailTransport,PulseWorldEmailAlert } from "../X-PULSE-X/3RDPARTY/PulseWorldEmailAlert-v20.js";
 import { getStripe } from "../X-PULSE-X/3RDPARTY/PULSE-WORLD-BANK.js";
-import { db, checkWorldDataHealth } from "../X-PULSE-X/3RDPARTY/PulseWorldFirebaseGenome-v30.js";
+import { db, checkWorldDataHealth,PulseWorldFirebaseGenome } from "../X-PULSE-X/3RDPARTY/PulseWorldFirebaseGenome-v30.js";
 import { PulseWorldExpressMiddleLayer } from "../X-PULSE-X/3RDPARTY/PULSE-WORLD-TRANSPORT.js";
 import { PulseWorldCompiler } from "../X-PULSE-X/3RDPARTY/PULSE-WORLD-COMPILER.js";
 import { PulseWorldBank_v31 as PulseWorldBank } from "../X-PULSE-X/3RDPARTY/PULSE-WORLD-BANK.js";
-import { PulseWorldFirebaseGenome } from "../X-PULSE-X/3RDPARTY/PulseWorldFirebaseGenome-v30.js";
 import { buildSMSImmortalEnvelope as PulseWorldSMSAlert } from "../../PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PulseWorldSMSAlert-v30.js";
 import { fs,path } from "../../PULSE-WORLD-PATH.js";
 

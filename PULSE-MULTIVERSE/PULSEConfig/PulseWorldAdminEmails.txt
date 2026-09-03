@@ -383,9 +383,9 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
    // ============================================================
 // Pulse World OS — ADMIN EMAIL PAGE LOGIC (v32 Cosmic Sync)
 // ============================================================
-import {emailTemplates} from "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-OS/PulseOSLongTermMemory.js";
-import {sendEmailAlert} from "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PulseWorldEmailAlert-v20.js";
-import {db} from "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PulseWorldFirebaseGenome-v30.js";
+
+
+
 // --- DOM HOOKS -----------------------------------------------
 const userSelect      = document.getElementById("userSelect");
 const templateSelect  = document.getElementById("templateSelect");
@@ -571,8 +571,8 @@ function populateUserSelect() {
 function loadTemplates() {
   templatesCache = [];
 
-  Object.keys(emailTemplates).forEach((key) => {
-    const tpl = emailTemplates[key];
+  Object.keys(PulseRealm.EmailTemplates).forEach((key) => {
+    const tpl = PulseRealm.EmailTemplates[key];
 
     if (typeof tpl === "object") {
       templatesCache.push({
@@ -700,7 +700,7 @@ async function handleSend() {
     setLoading(true);
     const payload = buildEmailPayload();
 
-    const result = await sendEmailAlert(payload.templateId, payload);
+    const result = await PulseRealm.PulseWorldSendAlertEmail(payload.templateId, payload);
 
     safeLog("Email sent", { to: payload.email, template: payload.templateId, result });
 
