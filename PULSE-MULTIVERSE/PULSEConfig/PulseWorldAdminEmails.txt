@@ -500,8 +500,9 @@ async function loadUsers() {
     }
 
     // Try PulseDB
-    const db = await getPulseDB();
-    if (!db || !db.getCollection) {
+    
+    
+    if (!PulseRealm.PulseFirebaseDB) {
       safeLog("No PulseDB available — using local identity only");
       usersCache = [];
       await populateUserSelect();
@@ -510,7 +511,7 @@ async function loadUsers() {
     }
 
     // Query identities belonging to this bank ID
-    const identitiesCol = db.getCollection("UserIdentities");
+    const identitiesCol = PulseRealm.PulseFirebaseDB.collection("UserIdentities").get();
     const snapshot = await identitiesCol.find({ identityId });
 
     // Normalize
