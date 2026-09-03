@@ -415,11 +415,6 @@ let selectedUser      = null;
 let selectedTemplate  = null;
 let uptimeSeconds     = 0;
 
-
-setInterval(() => {
-  uptimeSeconds++;
-  badgeUptime.textContent = uptimeSeconds + "s";
-}, 1000);
 // ============================================================
 // COSMIC LOGGING (UI‑Synced)
 // ============================================================
@@ -568,20 +563,23 @@ function populateUserSelect() {
 // LOAD TEMPLATES
 // ============================================================
 
+
 function loadTemplates() {
   templatesCache = [];
 
-  Object.keys(PulseRealm.EmailTemplates).forEach((key) => {
-    const tpl = PulseRealm.EmailTemplates[key];
+  Object.keys(PulseRealm.EmailTemplates)
+    .sort((a, b) => a.localeCompare(b))   // ⭐ alphabetize keys
+    .forEach((key) => {
+      const tpl = PulseRealm.EmailTemplates[key];
 
-    if (typeof tpl === "object") {
-      templatesCache.push({
-        id: key,
-        label: key.replace(/([A-Z])/g, " $1").trim(),
-        template: tpl
-      });
-    }
-  });
+      if (typeof tpl === "object") {
+        templatesCache.push({
+          id: key,
+          label: key.replace(/([A-Z])/g, " $1").trim(),
+          template: tpl
+        });
+      }
+    });
 
   populateTemplateSelect();
   badgeTemplates.textContent = templatesCache.length;
@@ -752,6 +750,13 @@ async function initAdminEmail() {
   }
 }
 
+
+(async () => {
+setInterval(() => {
+  uptimeSeconds++;
+  badgeUptime.textContent = uptimeSeconds + "s";
+}, 1000);
+
 initAdminEmail();
 
 const badge2 = document.getElementById("pulsepal-badge");
@@ -766,7 +771,7 @@ function pulsepalSpeak(message) {
 pulsepalSpeak("The Admin Email Sender is your communication command deck — every alert, every notice, every automated system message originates here. Your Notification Domain is your broadcast authority — your delivery routes, your templates, your system‑wide reach across users and environments.");
 PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
-
+})();
 
   </script>
 </body>
