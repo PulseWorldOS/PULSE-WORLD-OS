@@ -655,26 +655,14 @@ async function emitReflexSenseReport(context = {}) {
 
 async function sessionCheck() {
   try {
-    const Core = getCoreMemory();
-    let id = null;
-
-    // Prefer coreMemory identity if present
-    try {
-      if (Core && typeof Core.getRouteSnapshot === "function") {
-        const snap = Core.getRouteSnapshot("identity.v30");
-        if (snap && snap.identity) {
-          id = snap.identity;
-        }
-      }
-    } catch {}
+   
 
       if (!PulseRealm.PulseWorld) PulseRealm.PulseWorld = {};
-      PulseRealm.PulseIdentity = id || null;
     
 
-    if (!id || !id.trustedDevice) {
+    if (!PulseRealm.PulseIdentity) {
       logProtector("SESSIONCHECK_UNTRUSTED", {
-        trustedDevice: id.trustedDevice || false
+        trustedDevice: false
       });
       return null;
     }

@@ -774,7 +774,6 @@ async function initAdminEmail() {
 setInterval(() => {
   uptimeSeconds++;
   badgeUptime.textContent = uptimeSeconds + "s";
-  console.log(PulseRealm.PulseIdentity);
 }, 3000);
 
 initAdminEmail();
