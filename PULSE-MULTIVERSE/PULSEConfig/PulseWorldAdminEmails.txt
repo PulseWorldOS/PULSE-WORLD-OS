@@ -531,7 +531,7 @@ async function loadUsers() {
     // If no identities found, fallback to single identity
     if (!usersCache.length) {
       safeLog("No identities found for PulseIdentity — using local identity only");
-      safeLog(PulseRealm.PulseIdentity.stripeLogin);
+      console.log(PulseRealm.PulseIdentity.stripeLogin);
       usersCache = [];
       await populateUserSelect();
       badgeUsers.textContent = "1";

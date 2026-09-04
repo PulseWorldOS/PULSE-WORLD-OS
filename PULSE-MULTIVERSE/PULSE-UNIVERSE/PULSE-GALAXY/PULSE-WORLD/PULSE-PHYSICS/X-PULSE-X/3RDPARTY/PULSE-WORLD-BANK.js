@@ -1471,3 +1471,5 @@ PulseRealm.WorldBank = {
   Stripe
 }
 PulseRealm.PulseWorldBank = PulseWorldBank_v31;
+
+PulseRealm.PulseBankURL = "https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00";
