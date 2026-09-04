@@ -522,7 +522,7 @@ async function loadUsers() {
     }
 
     // Query identities belonging to this bank ID
-    const identitiesCol = PulseRealm.PulseFirebaseDB.collection("PulseIdentity");
+    const identitiesCol = PulseRealm.PulseFirebaseDB.collection("PulseIdentity").get();
     const snapshot = await identitiesCol.find({ identityId });
 
     // Normalize
