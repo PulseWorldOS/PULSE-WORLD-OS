@@ -3,6 +3,14 @@
 import nodemailer from "nodemailer";
 
 export async function handler(event, context) {
+  // Handle OPTIONS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ ok: true })
+    };
+  }
   try {
     // ------------------------------------------------------------
     // Parse incoming POST body

@@ -132,6 +132,14 @@ async function getDoc(table, id) {
 // ============================================================================
 
 export async function handler(event) {
+  // Handle OPTIONS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ ok: true })
+    };
+  }
   try {
     const body = JSON.parse(event.body || "{}");
 
