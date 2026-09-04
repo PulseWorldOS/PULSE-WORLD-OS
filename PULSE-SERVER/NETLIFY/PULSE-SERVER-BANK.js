@@ -246,6 +246,8 @@ export async function savePulseWorldIdentity(payload) {
 
     PulseRealm.PulseBankID           = payload.stripeAccountID || null;
     PulseRealm.PulseBank             = payload.stripeAccountID || "Unknown Stripe ID";
+    PulseRealm.PulseBankMonitor = `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`;
+    PulseRealm.PulseBankURL = `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`;
 
     PulseRealm.PulseDetailsSubmitted = payload.detailsSubmitted || false;
     PulseRealm.PulseChargesEnabled   = payload.chargesEnabled || false;
@@ -273,7 +275,7 @@ export async function savePulseWorldIdentity(payload) {
       pulseRole: PulseRealm.PulseWorldRole || "Entrepreneur",
 
       bank: PulseRealm.PulseBank || "Unknown Stripe ID",
-      bankURL: PulseRealm.PulseBankMonitor || "https://www.pulseworld.net/?Impulse=PulseWorldBank",
+      bankURL: PulseRealm.PulseBankMonitor || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
       stripeLogin: PulseRealm.PulseBankURL || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
       tokenID: PulseRealm.PulseBankID || null,
       assetsWallet: PulseRealm.PulseAssets || null,
