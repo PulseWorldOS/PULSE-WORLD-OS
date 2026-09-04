@@ -20856,7 +20856,7 @@ export const redeemPulsePoints = onRequest(
 //         return res.json({
 //           success: true,
 //           status: "connected",
-//           dashboardLink: `https://dashboard.stripe.com/connect/accounts/${acct.id}`
+//           dashboardLink: `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00connect/accounts/${acct.id}`
 //         });
 //       }
 

@@ -212,6 +212,7 @@ function logError(...args) {
  * • Updates existing Stripe account OR creates a new one.
  * • Persists Stripe account ID + payout config back to Firestore.
  */
+
 export async function checkOrCreateStripeAccount(email, country) {
   logInfo("checkOrCreateStripeAccount: START");
 
