@@ -2216,6 +2216,8 @@ async function loadInternalPage(name) {
     PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad.replace(CONFIG_FOLDER,"").replace(".txt","");
     internalSelect.value = PulseRealm.__PULSE_CURRENT_PAGE__;
     
+    window.location.href = `#${PulseRealm.__PULSE_CURRENT_PAGE__}` 
+    
     // ⭐ If page includes "admin"
     if (PulseRealm.__PULSE_CURRENT_PAGE__.includes("Admin")) {
       PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseWorldReality";
@@ -2276,8 +2278,6 @@ async function loadInternalPage(name) {
 
     isPulseContext = true;
     savePageToCookie();
-
-    window.location.href = `#${PulseRealm.__PULSE_CURRENT_PAGE__}` 
 
     const H = PulseRealm.PulseHistory;
 
