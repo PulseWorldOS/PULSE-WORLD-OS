@@ -853,8 +853,7 @@ async function loadPulseIdentity() {
 setInterval(() => {
   uptimeSeconds++;
   badgeUptime.textContent = uptimeSeconds + "s";
-  console.log(usersCache.length);
-}, 3000);
+}, 1000);
 
   await loadPulseIdentity();
 initAdminEmail();
