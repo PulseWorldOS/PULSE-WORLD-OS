@@ -504,6 +504,7 @@ async function loadUsers() {
     // If no bank ID exists, fallback to single identity
     if (!identityId) {
       safeLog("No Pulse Tether — using local identity only");
+      safeLog("Please Click Here to Create Tether:" + PulseRealm.PulseBankURL);
       usersCache = [];
       await populateUserSelect();
       badgeUsers.textContent = "1";
@@ -531,6 +532,7 @@ async function loadUsers() {
     // If no identities found, fallback to single identity
     if (!usersCache.length) {
       safeLog("No Pulse Tether found — using local identity only");
+      safeLog("Please Click Here to Create Tether:" + PulseRealm.PulseBankURL);
       usersCache = [];
       await populateUserSelect();
       badgeUsers.textContent = "1";
@@ -768,17 +770,93 @@ async function initAdminEmail() {
     safeLog("Failed to initialize admin email page", { error: String(err) });
   }
 }
+async function save () {
+  console.log("[PulseIdentity] Building identity snapshot…");
 
+  identity = {
+    id: `world-${Math.random().toString(36).slice(2)}`,
+    createdAt: PulseRealm.PulseNOW,
+    tier: "temporal-os",
+
+    name: stripTimestamp(PulseRealm.PulseUser) ?? "Unknown Pulse User",
+    email: PulseRealm.PulseEmail ?? `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`,
+    userEmail: PulseRealm.PulseUserEmail ?? "YourEmail@Domain.com",
+    userName: PulseRealm.PulseUserName ?? "Aldwyn",
+    phone: PulseRealm.PulsePhone ?? "(555) 555-5555",
+    country: PulseRealm.PulseCountry ?? "US",
+
+    role: PulseRealm.PulseRole ?? "User",
+    pulseRole: PulseRealm.PulseWorldRole ?? "Entrepreneur",
+
+    bank: PulseRealm.PulseBank ?? "Unknown Stripe ID",
+    bankURL: PulseRealm.PulseBankMonitor || "https://www.pulseworld.net/?Impulse=PulseWorldBank",
+    stripeLogin: PulseRealm.PulseBankURL || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
+    tokenID: PulseRealm.PulseBankID || null,
+    assetsWallet: PulseRealm.PulseAssets || null,
+
+    drift: PulseRealm.DriftSignature ?? PulseRealm.GenerateDriftSignature,
+    device: PulseRealm.PulseTrustedDevice ?? true,
+
+    photoURL: PulseRealm.PulsePhoto,
+    aliasPhotoURL: PulseRealm.PulseAliasPhoto,
+    bizphotoURL: PulseRealm.PulseBizPhoto,
+    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto,
+
+    PulsePoints: PulseRealm.PulsePoints || 0,
+    PulseLoyalty: PulseRealm.PulseTierPhoto ?? "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
+  };
+
+  console.log("[PulseIdentity] Saving identity:", identity);
+  localStorage.setItem("PulseIdentity", JSON.stringify(identity));
+
+}
+async function loadPulseIdentity() {
+  try {
+    
+    await save(); // your original identity creation
+    console.log("[PulseIdentity] Identity created via save()");
+    const raw = localStorage.getItem("PulseIdentity");
+    const data = raw ? JSON.parse(raw) : null;
+
+    // ⭐ CLEAN, REPEATABLE, NON-SPAMMY LOG BLOCK
+    console.log(
+      "%c[PULSEWORLD::IDENTITY] Autosave\n" +
+      `   Status: refreshed\n` +
+      `   Identity: ${data ? "loaded" : "missing"}\n` +
+      `   Photos: refreshed`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+
+    // Apply identity
+    if (data) {
+      PulseRealm.PulseIdentity = data;
+    }
+
+    
+    await save(); // your original identity creation
+
+  } catch (err) {
+    console.error(
+      "%c⚠️ [PulseIdentity] loadPulseIdentity() FAILED:",
+      "color:#f55; font-weight:bold; font-size:13px;",
+      err
+    );
+
+    console.log(
+      "%c🛡️ [PulseIdentity] Fallback identity preserved.",
+      "color:#fa0; font-size:12px;"
+    );
+  }
+}
 
 (async () => {
 setInterval(() => {
   uptimeSeconds++;
   badgeUptime.textContent = uptimeSeconds + "s";
-  console.log(PulseRealm.PulseIdentity.stripeLogin);
-  console.log(PulseRealm.PulseBankURL);
   console.log(usersCache.length);
 }, 3000);
 
+  await loadPulseIdentity();
 initAdminEmail();
 
 const badge2 = document.getElementById("pulsepal-badge");
