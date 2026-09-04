@@ -569,8 +569,8 @@ async function populateUserSelect() {
 
   usersCache.forEach((u) => {
     const opt = document.createElement("option");
-    opt.value = u.id ?? u.uid ?? u.email ?? PulseRealm.PulseIdentity.email ?? "";
-    opt.textContent = u.email ?? u.name ?? u.id ?? "Pulse User";
+    opt.value = u.id ?? u.uid ?? u.email ?? PulseRealm.PulseIdentity.email;
+    opt.textContent = u.email ?? u.name ?? u.id ?? PulseRealm.PulseIdentity.email ?? "Unknown Pulse User";
     opt.dataset.email = u.email ?? "";
     opt.dataset.name = u.name ?? "";
     userSelect.appendChild(opt);
