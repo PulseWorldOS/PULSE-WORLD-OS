@@ -3715,6 +3715,7 @@ if (adminBtn && adminPanel) {
   adminBtn.onclick = () => {
     adminPanel.style.display =
       adminPanel.style.display === "block" ? "none" : "block";
+      PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseWorldDomain";
   };
 }
 
