@@ -131,6 +131,13 @@ async function getDoc(table, id) {
 //  NETLIFY HANDLER — receives commands OR raw SQL OR pulls
 // ============================================================================
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, x-pulse-mode",
+  "Content-Type": "application/json; charset=utf-8"
+};
+
 export async function handler(event) {
   // Handle OPTIONS preflight
   if (event.httpMethod === "OPTIONS") {
