@@ -563,16 +563,16 @@ async function populateUserSelect() {
   }
 
   const placeholder = document.createElement("option");
-  placeholder.value = "";
+  placeholder.value = PulseRealm.PulseIdentity.email ?? "";
   placeholder.textContent = "Select a User Identity…";
   userSelect.appendChild(placeholder);
 
   usersCache.forEach((u) => {
     const opt = document.createElement("option");
-    opt.value = u.id || u.uid || u.email || "";
-    opt.textContent = u.email || u.name || u.id || "Unknown User";
-    opt.dataset.email = u.email || "";
-    opt.dataset.name = u.name || "";
+    opt.value = u.id ?? u.uid ?? u.email ?? PulseRealm.PulseIdentity.email ?? "";
+    opt.textContent = u.email ?? u.name ?? u.id ?? "Pulse User";
+    opt.dataset.email = u.email ?? "";
+    opt.dataset.name = u.name ?? "";
     userSelect.appendChild(opt);
   });
 }
