@@ -533,7 +533,6 @@ async function loadUsers() {
     // If no bank ID exists, fallback to single identity
     if (!identityId) {
       safeLog("No Pulse Tether — using local identity only");
-      safeLog("Please Click Here to Create Tether:" + PulseRealm.PulseBankURL);
       usersCache = [];
       await populateUserSelect();
       badgeUsers.textContent = "1";
