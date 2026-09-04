@@ -499,7 +499,7 @@ function getCache() {
 // ============================================================
 async function loadUsers() {
   try {
-    const identityId = PulseRealm.PulseIdentity;
+    const identityId = PulseRealm.PulseBank;
 
     // If no bank ID exists, fallback to single identity
     if (!identityId) {

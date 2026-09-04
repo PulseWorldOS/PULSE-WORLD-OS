@@ -274,7 +274,7 @@ export async function savePulseWorldIdentity(payload) {
 
       bank: PulseRealm.PulseBank || "Unknown Stripe ID",
       bankURL: PulseRealm.PulseBankURL || "https://www.pulseworld.net/?Impulse=PulseWorldBank",
-      stripeLogin: `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
+      stripeLogin: PulseRealm.PulseBankURL || `https://dashboard.stripe.com/`,
       tokenID: PulseRealm.PulseBankID || null,
       assetsWallet: PulseRealm.PulseAssets || null,
 
