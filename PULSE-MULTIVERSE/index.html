@@ -3715,7 +3715,6 @@ if (adminBtn && adminPanel) {
   adminBtn.onclick = () => {
     adminPanel.style.display =
       adminPanel.style.display === "block" ? "none" : "block";
-      PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseWorldDomain";
   };
 }
 
@@ -7927,6 +7926,11 @@ function restorePageFromCookie() {
 
 function savePageToCookie() {
   const page = PulseRealm.__PULSE_CURRENT_PAGE__ || "PulseWorldReality";
+  
+  // ⭐ If page includes "admin"
+  if (page.includes("admin")) {
+    page = "PulseWorldReality";
+  }
   const scrollY = viewport?.scrollTop || 0;
 
   const data = { page, viewportScrollY: scrollY };
