@@ -47,7 +47,8 @@ self.addEventListener("install", event => {
     "PBFrontPage.html",
     "PBPopup.html",
     "PBSettings.html",
-    "PBCompanion.js"
+    "PBCompanion.js",
+    "PulseWorldOSMarketplace-White.png"
   ];
 
 
