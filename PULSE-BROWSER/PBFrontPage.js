@@ -23,6 +23,12 @@ document.getElementById("videos").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
   window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945&sxsrf=APpeQnuWOgRcMsUytLVkUMU_oHzKtkSHyw%3A1788824889059&ei=OU2fao2bA7TVkPIP4qfi4AI&ved=2ahUKEwjNm8-A1N2WAxW0KkQIHeKTGCwQ4dUDegQIBRAM&uact=5&oq=canva&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLXZpZGVvIgVjYW52YTIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwA0iuAVAAWABwAXgBkAEAmAEAoAEAqgEAsAEAuAEDyAEAmAIBoAICmAMA4gMEGAAgXeIDBBgAIF7iAwQYACBf4gMEGAAgYOIDBBgAIGHiAwQYACBiiAYBkAYIkgcBMaAHALIHALgHAMIHAzAuMcgHAYAIAQ&sclient=gws-wiz-modeless-video";
 });
+
+document.getElementById("text").addEventListener("click", (event) => {
+  const text = document.getElementById("searchengineTextbox").innerText.trim();
+  window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text);
+});
+
 document.getElementById("searchengineTextbox").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault(); // stops newline insertion
