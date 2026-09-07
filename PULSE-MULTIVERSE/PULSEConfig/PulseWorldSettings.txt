@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PulseWorld Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #050509;
+      color: #e6e6e6;
+      font-family: Arial, sans-serif;
+    }
+
+    .pw-settings-page {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 30px;
+      background: #0d0d0f;
+      color: #e6e6e6;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
+
+    .pw-title {
+      font-size: 36px;
+      margin-bottom: 10px;
+      color: #4af;
+    }
+
+    .pw-subtitle {
+      font-size: 18px;
+      margin-bottom: 30px;
+      color: #aaa;
+    }
+
+    .pw-section {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    .pw-section h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #ddd;
+    }
+
+    .pw-label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-size: 18px;
+      color: #ccc;
+    }
+
+    .pw-input,
+    .pw-select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 2px solid #333;
+      background: #1a1a1d;
+      color: #eee;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    .pw-input:focus,
+    .pw-select:focus {
+      border-color: #4af;
+      box-shadow: 0 0 10px rgba(68,170,255,0.4);
+    }
+
+    .pw-note {
+      font-size: 14px;
+      color: #888;
+      margin-top: -5px;
+    }
+
+    .pw-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 10px;
+    }
+
+    .pw-list li {
+      background: #1a1a1d;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #333;
+    }
+
+    /* Switches */
+    .pw-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 32px;
+      margin-right: 10px;
+    }
+
+    .pw-switch input {
+      display: none;
+    }
+
+    .pw-slider {
+      position: absolute;
+      cursor: pointer;
+      background-color: #444;
+      border-radius: 32px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: .3s;
+    }
+
+    .pw-slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 4px;
+      bottom: 4px;
+      background-color: #ccc;
+      border-radius: 50%;
+      transition: .3s;
+    }
+
+    .pw-switch input:checked + .pw-slider {
+      background-color: #4af;
+    }
+
+    .pw-switch input:checked + .pw-slider:before {
+      transform: translateX(28px);
+    }
+
+    .pw-switch-label {
+      font-size: 18px;
+      vertical-align: middle;
+    }
+
+    .storage-stats {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="pw-settings-page">
+
+    <h1 class="pw-title">🌐 PulseWorld Settings</h1>
+    <p class="pw-subtitle">
+      Configure your identity, email, banking, business, files, storage, public access, and programmatic permissions.
+    </p>
+
+    <!-- EMAIL SETTINGS -->
+    <section class="pw-section">
+      <h2>📧 Email Settings</h2>
+
+      <label class="pw-label">Email Mode</label>
+      <select id="emailMode" class="pw-select">
+        <option value="internal">Use Internal PulseMail</option>
+        <option value="external">Use External Email Provider</option>
+      </select>
+
+      <label class="pw-label">External Email Link</label>
+      <input id="externalEmailLink" class="pw-input" placeholder="https://mail.google.com/" />
+      <p class="pw-note">
+        When using Internal PulseMail, this external link is kept as a backup. When using External mode, this URL is used directly.
+      </p>
+    </section>
+
+    <!-- BANKING SETTINGS -->
+    <section class="pw-section">
+      <h2>🏦 Banking Settings</h2>
+
+      <label class="pw-label">Banking Mode</label>
+      <select id="bankMode" class="pw-select">
+        <option value="internal">Use Internal PulseBank</option>
+        <option value="external">Use External Banking Provider</option>
+      </select>
+
+      <label class="pw-label">External Bank Link</label>
+      <input id="externalBankLink" class="pw-input" placeholder="https://yourbank.com/login" />
+      <p class="pw-note">
+        When using Internal PulseBank, this external link is kept as a backup. When using External mode, this URL is used directly.
+      </p>
+    </section>
+
+    <!-- BUSINESS SETTINGS -->
+    <section class="pw-section">
+      <h2>🏢 Business Settings</h2>
+
+      <label class="pw-label">Business Page Link</label>
+      <input id="businessLink" class="pw-input" placeholder="https://yourbusiness.com/" />
+
+      <label class="pw-label">Files / Cloud Link</label>
+      <input id="filesLink" class="pw-input" placeholder="https://yourfiles.com/" />
+      <p class="pw-note">
+        These links represent your external business presence and file storage capabilities.
+      </p>
+    </section>
+
+    <!-- FILE CACHE / STORAGE -->
+    <section class="pw-section">
+      <h2>🗂️ Storage & Cached Files</h2>
+      <p class="pw-note">Overview of storage usage and cached entries used by PulseBrowser and PulseWorld.</p>
+
+      <div id="storageStats" class="storage-stats">
+        Storage usage: (loading...)
+      </div>
+
+      <p class="pw-note" style="margin-top: 15px;">
+        Cached entries detected in the current environment:
+      </p>
+
+      <ul id="cacheList" class="pw-list">
+        <li>Loading cache info...</li>
+      </ul>
+
+      <p class="pw-note">
+        In the future, this section can show user-added pages and files, with controls to manage and publish them.
+      </p>
+    </section>
+
+    <!-- PUBLIC ACCESS -->
+    <section class="pw-section">
+      <h2>🌍 Public Access</h2>
+
+      <label class="pw-switch">
+        <input type="checkbox" id="goPublicToggle">
+        <span class="pw-slider"></span>
+      </label>
+      <span class="pw-switch-label">Enable Public PulseWorld Profile</span>
+
+      <p class="pw-note">
+        When enabled, your public link becomes accessible to others. Internal services can still operate privately while this is active.
+      </p>
+
+      <label class="pw-label">Public Profile Link</label>
+      <input id="publicLink" class="pw-input" placeholder="https://pulseworld.net/yourname" />
+    </section>
+
+    <!-- PROGRAMMATIC PERMISSIONS -->
+    <section class="pw-section">
+      <h2>⚙️ Programmatic Permissions</h2>
+
+      <label class="pw-switch">
+        <input type="checkbox" id="programmaticEmail">
+        <span class="pw-slider"></span>
+      </label>
+      <span class="pw-switch-label">Allow Programmatic Email</span>
+
+      <br><br>
+
+      <label class="pw-switch">
+        <input type="checkbox" id="programmaticBanking">
+        <span class="pw-slider"></span>
+      </label>
+      <span class="pw-switch-label">Allow Programmatic Banking</span>
+
+      <p class="pw-note">
+        These permissions allow automated, programmatic actions for your email and banking services, using either internal or external providers as configured above.
+      </p>
+    </section>
+
+  </div>
+
+  <script>
+    // Simple modular settings storage using localStorage.
+    const SETTINGS_KEY = "pulseworldSettings";
+
+    function loadSettings() {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      let settings = {};
+      try {
+        settings = raw ? JSON.parse(raw) : {};
+      } catch {
+        settings = {};
+      }
+
+      // Email
+      document.getElementById("emailMode").value =
+        settings.emailMode || "internal";
+      document.getElementById("externalEmailLink").value =
+        settings.externalEmailLink || "";
+
+      // Banking
+      document.getElementById("bankMode").value =
+        settings.bankMode || "internal";
+      document.getElementById("externalBankLink").value =
+        settings.externalBankLink || "";
+
+      // Business
+      document.getElementById("businessLink").value =
+        settings.businessLink || "";
+      document.getElementById("filesLink").value =
+        settings.filesLink || "";
+
+      // Public
+      document.getElementById("goPublicToggle").checked =
+        !!settings.goPublicEnabled;
+      document.getElementById("publicLink").value =
+        settings.publicLink || "";
+
+      // Programmatic
+      document.getElementById("programmaticEmail").checked =
+        !!settings.programmaticEmail;
+      document.getElementById("programmaticBanking").checked =
+        !!settings.programmaticBanking;
+    }
+
+    function saveSettings() {
+      const settings = {
+        emailMode: document.getElementById("emailMode").value,
+        externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
+
+        bankMode: document.getElementById("bankMode").value,
+        externalBankLink: document.getElementById("externalBankLink").value.trim(),
+
+        businessLink: document.getElementById("businessLink").value.trim(),
+        filesLink: document.getElementById("filesLink").value.trim(),
+
+        goPublicEnabled: document.getElementById("goPublicToggle").checked,
+        publicLink: document.getElementById("publicLink").value.trim(),
+
+        programmaticEmail: document.getElementById("programmaticEmail").checked,
+        programmaticBanking: document.getElementById("programmaticBanking").checked
+      };
+
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    }
+
+    async function loadStorageEstimate() {
+      const statsEl = document.getElementById("storageStats");
+      if (!navigator.storage || !navigator.storage.estimate) {
+        statsEl.textContent = "Storage usage: not supported in this environment.";
+        return;
+      }
+
+      try {
+        const estimate = await navigator.storage.estimate();
+        const usedBytes = estimate.usage || 0;
+        const quotaBytes = estimate.quota || 0;
+
+        const usedMB = (usedBytes / (1024 * 1024)).toFixed(2);
+        const quotaMB = (quotaBytes / (1024 * 1024)).toFixed(2);
+
+        statsEl.textContent =
+          "Storage usage: " + usedMB + " MB used out of " + quotaMB + " MB available.";
+      } catch (e) {
+        statsEl.textContent = "Storage usage: error reading estimate.";
+      }
+    }
+
+    async function loadCacheList() {
+      const listEl = document.getElementById("cacheList");
+
+      if (!("caches" in window)) {
+        listEl.innerHTML = "<li>Cache API not available.</li>";
+        return;
+      }
+
+      try {
+        const cacheNames = await caches.keys();
+        if (cacheNames.length === 0) {
+          listEl.innerHTML = "<li>No cached files detected.</li>";
+          return;
+        }
+
+        listEl.innerHTML = "";
+        for (const name of cacheNames) {
+          const cache = await caches.open(name);
+          const requests = await cache.keys();
+
+          if (requests.length === 0) continue;
+
+          const groupLi = document.createElement("li");
+          groupLi.textContent = "Cache: " + name;
+          listEl.appendChild(groupLi);
+
+          for (const req of requests) {
+            const itemLi = document.createElement("li");
+            itemLi.textContent = "• " + req.url;
+            listEl.appendChild(itemLi);
+          }
+        }
+      } catch (e) {
+        listEl.innerHTML = "<li>Error reading cache.</li>";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadSettings();
+      loadStorageEstimate();
+      loadCacheList();
+
+      // Wire all inputs to save on change.
+      const idsToWatch = [
+        "emailMode",
+        "externalEmailLink",
+        "bankMode",
+        "externalBankLink",
+        "businessLink",
+        "filesLink",
+        "goPublicToggle",
+        "publicLink",
+        "programmaticEmail",
+        "programmaticBanking"
+      ];
+
+      idsToWatch.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const eventName =
+          el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";
+        el.addEventListener(eventName, saveSettings);
+      });
+    });
+  </script>
+
+</body>
+</html>
