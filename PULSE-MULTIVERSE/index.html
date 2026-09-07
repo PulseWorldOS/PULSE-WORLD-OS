@@ -1055,6 +1055,11 @@ let isTouchMobile = false;
     "🛰️ PULSE MULTIVERSAL ROUTER v32.0 — %c[PULSEWORLD::Route] Selecting Initial Pulse World Route...",
     "color:#H02FHA; font-weight:bold; font-family:monospace;"
   );
+    
+  // ⭐ NEW: Hash-based routing (no navigation event)
+  const hashRoute = window.location.hash
+    ? window.location.hash.replace("#", "").trim()
+    : "";
 
   // ---------------------------------------------------------
   // 1. URL parameters
@@ -1073,44 +1078,39 @@ let isTouchMobile = false;
     urlParams.get("i");
 
   if (impulse) {
-    const defaultRoute = impulse;
     routeToInternal(defaultRoute);
-  } else {
-    
-  // ⭐ First route based on touch.page (passport-first)
-  // ⭐ Determine if we have a valid page
-  const hasPage =
-    touch &&
-    typeof touch.page === "string" &&
-    touch.page.trim() !== "";
+  } else if (hashRoute) {
+    routeToInternal(hashRoute);
+  } else {      
+    // ⭐ First route based on touch.page (passport-first)
+    // ⭐ Determine if we have a valid page
+    const hasPage =
+      touch &&
+      typeof touch.page === "string" &&
+      touch.page.trim() !== "";
+    // ⭐ CASE 1 — Direct page route
+    if (hasPage) {
+      const nextRoute = touch.page.trim();
+      routeToInternal(nextRoute);
+    }
+    // ⭐ CASE 2 — No page → use coordinates or default
+    else {
+      const coordRoute = interpretCoordinates(touch.coord);
 
-  // ⭐ CASE 1 — Direct page route
-  if (hasPage) {
-    const nextRoute = touch.page.trim();
-    routeToInternal(nextRoute);
-  }
-
-  // ⭐ CASE 2 — No page → use coordinates or default
-  else {
-    const coordRoute = interpretCoordinates(touch.coord);
-
-    if (coordRoute) {
-      routeToInternal(coordRoute);
-    } else {
+      if (coordRoute) {
+        routeToInternal(coordRoute);
+      } else {
+        const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
+        routeToInternal(defaultRoute);
+      }
+    }    
+    if (!touch) {
       const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
       routeToInternal(defaultRoute);
     }
-  }
-  
-  if (!touch) {
-    const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
-    routeToInternal(defaultRoute);
+    restorePageFromCookie();
   }
 
-  restorePageFromCookie();
-  
-  }
-  
   const urls = [
     "https://Port.GPUProcessing.Net",
     "https://Port.BooleanLogic.Net",
