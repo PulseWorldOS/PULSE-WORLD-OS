@@ -9,7 +9,7 @@
      PREFETCH / PRELOAD
      ============================================================ -->
 <link rel="prefetch" fetchpriority="high" href="/">
-<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSMarketplace.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSMarketplace-White.webp.pex" type="image/webp"/>
 
 <style>
   /* ============================================================
@@ -21,7 +21,7 @@
   .bg {
     position: fixed;
     inset: 0;
-    background: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSMarketplace.webp.pex') center/cover no-repeat;
+    background: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSMarketplace-White.webp.pex') center/cover no-repeat;
     z-index: -1;
     filter: brightness(0.55);
   }
