@@ -2221,11 +2221,22 @@ async function loadInternalPage(name) {
       viewport.innerHTML = html;
     }
 
+    // After you set PulseRealm.__PULSE_CURRENT_PAGE__
     PulseRealm.PulseWorldCurrentPage = fileToLoad;
-    PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad.replace(CONFIG_FOLDER,"").replace(".txt","");
+    PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad
+      .replace(CONFIG_FOLDER, "")
+      .replace(".txt", "");
     internalSelect.value = PulseRealm.__PULSE_CURRENT_PAGE__;
-    
-    window.location.href = `#${PulseRealm.__PULSE_CURRENT_PAGE__}` 
+
+    // 🔹 Update browser URL WITHOUT navigating
+    try {
+      const url = new URL(window.location.href);
+      url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
+      history.replaceState(null, "", url.toString());
+    } catch (e) {
+      console.warn("Unable to update hash via history.replaceState:", e);
+    }
+
     
     // ⭐ If page includes "admin"
     if (PulseRealm.__PULSE_CURRENT_PAGE__.includes("Admin")) {
@@ -2343,7 +2354,14 @@ async function loadInternalPage(name) {
 
     PulseRealm.PulseWorldCurrentPage = fileToLoad;
     PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad.replace(CONFIG_FOLDER,"").replace(".txt","");
-    window.location.href = `#${PulseRealm.__PULSE_CURRENT_PAGE__}` 
+    try {
+      const url = new URL(window.location.href);
+      url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
+      history.replaceState(null, "", url.toString());
+    } catch (e) {
+      console.warn("Unable to update hash via history.replaceState (error path):", e);
+    }
+
     isPulseContext = true;
     checkPersistentStorage(true);
     speedPulse.textContent = PulseRealm.PulseSpeed
