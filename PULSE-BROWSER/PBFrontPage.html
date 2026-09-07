@@ -220,6 +220,39 @@
       0% { transform: translateX(-100%) translateY(-100%); }
       100% { transform: translateX(100%) translateY(100%); }
     }
+
+    .search-engine-textbox {
+      width: 100%;
+      max-width: 600px;
+      min-height: 60px;
+
+      background: #111;
+      color: #eee;
+
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.4;
+
+      padding: 16px 20px;
+      border-radius: 12px;
+
+      border: 2px solid #333;
+      outline: none;
+
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+
+      /* Smooth typing */
+      caret-color: #4af;
+
+      /* Allow typing */
+      white-space: pre-wrap;
+    }
+
+    .search-engine-textbox:focus {
+      border-color: #4af;
+      box-shadow: 0 0 18px rgba(68, 170, 255, 0.4);
+    }
+
   </style>
 </head>
 
@@ -238,16 +271,16 @@
     </div>
     
    <p>
-      <a class="search" id="search">
-        Engine Friendly Search Engine (Google.com)
-      </a>
-
       <div id="searchengineTextbox"
           class="search-engine-textbox"
           contenteditable="true"
           role="textbox"
           aria-label="Search Engine TextBox">
       </div>
+      
+      <a class="search" id="search">
+        Engine Friendly Search Engine (Google.com)
+      </a>
     </p>
 
 
