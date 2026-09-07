@@ -607,7 +607,7 @@
             </div>
           </div>
           <div class="console-body">
-            <pre>
+            <pre id="admin-activity-output">
 [00:00.000] PULSEWORLD.ADMIN: LINK ESTABLISHED • ONE‑BAND MODE • LOCAL‑ONLY IDENTITY
 [00:00.120] SQL.LOG: INTERVAL ENGINE ARMED • WRITE‑ONLY • VIEW DISABLED • PUBLIC ACCESS: NONE
 [00:00.240] ROUTE.MAP: EMAIL • PEX • BUSINESS • BANKING • ANALYTICS • SETTINGS ONLINE
@@ -632,7 +632,7 @@
             </div>
           </div>
           <div class="console-body">
-            <pre>
+            <pre id="sql-telemetry-output">
 [INTERVAL +60s] SQL.WRITE: CONSOLE_LOG_BATCH • ROWS: 42 • USER: ACTIVITY‑ONLY • ID: NONE
 [INTERVAL +60s] SQL.CHECK: STORAGE • 0.12 GB / 10 GB • STATUS: GREEN • PURGE: NOT REQUIRED
 [INTERVAL +60s] ENGINE: NO EXTERNAL CALLS • NO PUBLIC ENDPOINTS • NO VIEW ROUTES
@@ -699,18 +699,55 @@
       el.textContent = `LOCAL: ${h}:${m}:${s} MST`;
     }
 
+    // ⭐ SUPABASE ADMIN READ — loads all user records when Admin page opens
+    async function loadSupabaseUsers() {
+      const telemetryEl = document.getElementById("sql-telemetry-output");
+      const activityEl  = document.getElementById("admin-activity-output");
+      if (telemetryEl) telemetryEl.textContent = "⏳ Loading user data from Supabase...";
+      try {
+        const res = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-pulse-mode": "admin" },
+          body: JSON.stringify({ action: "read" })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          if (telemetryEl) telemetryEl.textContent = `❌ Supabase Error: ${data.error}`;
+          return;
+        }
+        const users = data.users || [];
+        if (telemetryEl) {
+          telemetryEl.textContent = users.length === 0
+            ? "📪 No users synced yet. Waiting for first 7s interval sync..."
+            : `✅ ${users.length} user(s) in Supabase\n\n` +
+              users.map((u, i) =>
+                `[${i+1}] ${u.name||'Unknown'} | ${u.email||'—'} | Points: ${u.pulse_points??0} | Updated: ${u.updated_at ? new Date(u.updated_at).toLocaleString() : '—'}`
+              ).join("\n");
+        }
+        if (activityEl) {
+          activityEl.textContent =
+            `📡 Supabase sync active — ${users.length} record(s) live\n` +
+            `🕐 Last fetched: ${new Date().toLocaleString()}\n\n` +
+            (users[0] ? `Latest: ${users[0].name||'—'} — ${users[0].email||'—'}` : "Awaiting first sync...");
+        }
+      } catch (err) {
+        console.error("❌ [Admin] Supabase read failed:", err);
+        if (telemetryEl) telemetryEl.textContent = `❌ Network error: ${err.message}`;
+      }
+    }
+
 (async () => {
     updateClock();
-    const adminEmailBtn =  document.getElementById("admin-emails");
-    const pexBuilderBtn =  document.getElementById("admin-pex");
-    adminEmailBtn.onclick = async () => {
-      loadInternalPage("PulseWorldAdminEmails");
-    }
-    pexBuilderBtn.onclick = async () => {
-      loadInternalPage("PulseWorldReality");
-      location.href="#PEXBuilder";
-    }
+    const adminEmailBtn = document.getElementById("admin-emails");
+    const pexBuilderBtn = document.getElementById("admin-pex");
+    if (adminEmailBtn) adminEmailBtn.onclick = async () => { loadInternalPage("PulseWorldAdminEmails"); };
+    if (pexBuilderBtn) pexBuilderBtn.onclick = async () => { loadInternalPage("PulseWorldReality"); location.href="#PEXBuilder"; };
     setInterval(updateClock, 1000);
+
+    // ⭐ Auto-load Supabase users on Admin page open
+    await loadSupabaseUsers();
+    // ⭐ Auto-refresh every 30s
+    setInterval(loadSupabaseUsers, 30000);
   })();
   </script>
 </body>

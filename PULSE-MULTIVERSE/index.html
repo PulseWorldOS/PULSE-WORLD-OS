@@ -2838,38 +2838,46 @@ function loadPhotos() {
   DASHBOARD BOOTSTRAP (v40)
   ============================================================ */
 async function save () {
- 
+
+  // ⭐ FIX: Preserve existing identity — never overwrite ID or createdAt
+  const _existing = (() => {
+    try { return JSON.parse(localStorage.getItem("PulseIdentity") || "{}"); }
+    catch (e) { return {}; }
+  })();
+
   identity = {
-    id: `world-${Math.random().toString(36).slice(2)}`,
-    createdAt: PulseRealm.PulseNOW,
+    // ✅ Keep existing ID — only generate once on first run ever
+    id: _existing.id || `world-${Math.random().toString(36).slice(2)}`,
+    createdAt: _existing.createdAt || PulseRealm.PulseNOW,
     tier: "temporal-os",
 
-    name: stripTimestamp(PulseRealm.PulseUser) ?? "Unknown Pulse User",
-    email: PulseRealm.PulseEmail ?? `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`,
-    userEmail: PulseRealm.PulseUserEmail ?? "YourEmail@Domain.com",
-    userName: PulseRealm.PulseUserName ?? "Aldwyn",
-    phone: PulseRealm.PulsePhone ?? "(555) 555-5555",
-    country: PulseRealm.PulseCountry ?? "US",
+    name: stripTimestamp(PulseRealm.PulseUser) ?? _existing.name ?? "Unknown Pulse User",
+    email: PulseRealm.PulseEmail ?? _existing.email ?? `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`,
+    userEmail: PulseRealm.PulseUserEmail ?? _existing.userEmail ?? "YourEmail@Domain.com",
+    userName: PulseRealm.PulseUserName ?? _existing.userName ?? "Aldwyn",
+    phone: PulseRealm.PulsePhone ?? _existing.phone ?? "(555) 555-5555",
+    country: PulseRealm.PulseCountry ?? _existing.country ?? "US",
 
-    role: PulseRealm.PulseRole ?? "User",
-    pulseRole: PulseRealm.PulseWorldRole ?? "Entrepreneur",
+    role: PulseRealm.PulseRole ?? _existing.role ?? "User",
+    pulseRole: PulseRealm.PulseWorldRole ?? _existing.pulseRole ?? "Entrepreneur",
 
-    bank: PulseRealm.PulseBank ?? "Unknown Stripe ID",
-    bankURL: PulseRealm.PulseBankMonitor || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
-    stripeLogin: PulseRealm.PulseBankURL || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
-    tokenID: PulseRealm.PulseBankID || null,
-    assetsWallet: PulseRealm.PulseAssets || null,
+    bank: PulseRealm.PulseBank ?? _existing.bank ?? "Unknown Stripe ID",
+    bankURL: PulseRealm.PulseBankMonitor || _existing.bankURL || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
+    stripeLogin: PulseRealm.PulseBankURL || _existing.stripeLogin || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
+    tokenID: PulseRealm.PulseBankID || _existing.tokenID || null,
+    assetsWallet: PulseRealm.PulseAssets || _existing.assetsWallet || null,
 
-    drift: PulseRealm.DriftSignature ?? PulseRealm.GenerateDriftSignature,
+    drift: PulseRealm.DriftSignature ?? _existing.drift ?? PulseRealm.GenerateDriftSignature,
     device: PulseRealm.PulseTrustedDevice ?? true,
 
-    photoURL: PulseRealm.PulsePhoto,
-    aliasPhotoURL: PulseRealm.PulseAliasPhoto,
-    bizphotoURL: PulseRealm.PulseBizPhoto,
-    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto,
+    // ✅ Preserve photos — never reset to null if they were saved
+    photoURL: PulseRealm.PulsePhoto || _existing.photoURL || null,
+    aliasPhotoURL: PulseRealm.PulseAliasPhoto || _existing.aliasPhotoURL || null,
+    bizphotoURL: PulseRealm.PulseBizPhoto || _existing.bizphotoURL || null,
+    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || _existing.bizaliasPhotoURL || null,
 
-    PulsePoints: PulseRealm.PulsePoints || 0,
-    PulseLoyalty: PulseRealm.PulseTierPhoto ?? "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
+    PulsePoints: PulseRealm.PulsePoints || _existing.PulsePoints || 0,
+    PulseLoyalty: PulseRealm.PulseTierPhoto ?? _existing.PulseLoyalty ?? "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
   };
 
   localStorage.setItem("PulseIdentity", JSON.stringify(identity));
@@ -2880,19 +2888,37 @@ async function save () {
 
 async function loadPulseIdentityContinual() {
   try {
-    
-    save(); // your original identity creation
-    
+
+    // ⭐ FIX: READ FIRST — restore saved data before ever calling save()
     const raw = localStorage.getItem("PulseIdentity");
     const data = raw ? JSON.parse(raw) : null;
 
-    // Apply identity
     if (data) {
+      // Apply saved identity to PulseRealm — localStorage always wins
       PulseRealm.PulseIdentity = data;
+
+      // Restore all PulseRealm fields so save() won't overwrite with defaults
+      if (data.name)             PulseRealm.PulseUser          = data.name;
+      if (data.email)            PulseRealm.PulseEmail          = data.email;
+      if (data.userEmail)        PulseRealm.PulseUserEmail      = data.userEmail;
+      if (data.userName)         PulseRealm.PulseUserName       = data.userName;
+      if (data.phone)            PulseRealm.PulsePhone          = data.phone;
+      if (data.country)          PulseRealm.PulseCountry        = data.country;
+      if (data.role)             PulseRealm.PulseRole           = data.role;
+      if (data.pulseRole)        PulseRealm.PulseWorldRole      = data.pulseRole;
+      if (data.bank)             PulseRealm.PulseBank           = data.bank;
+      if (data.bankURL)          PulseRealm.PulseBankMonitor    = data.bankURL;
+      if (data.photoURL)         PulseRealm.PulsePhoto          = data.photoURL;
+      if (data.aliasPhotoURL)    PulseRealm.PulseAliasPhoto     = data.aliasPhotoURL;
+      if (data.bizphotoURL)      PulseRealm.PulseBizPhoto       = data.bizphotoURL;
+      if (data.bizaliasPhotoURL) PulseRealm.PulseBizAliasPhoto  = data.bizaliasPhotoURL;
+      if (data.PulsePoints)      PulseRealm.PulsePoints         = data.PulsePoints;
     }
 
-    // Refresh photos
+    // Refresh photos from localStorage (saved photos always win)
     loadPhotos();
+
+    // Now safe to save — ID preserved, PulseRealm restored, no overwrite
     save();
 
   } catch (err) {
@@ -8403,6 +8429,22 @@ if (navigator.gpu) {
     pulseStreamGhost();
     loadPulseIdentityContinual();
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
+
+    // ⭐ SUPABASE FIRE-AND-FORGET SYNC — runs every 7s, ZERO blocking, silent fail
+    // localStorage is primary — Supabase is background cloud backup only
+    (function pulseSupabaseSync() {
+      try {
+        const _id = JSON.parse(localStorage.getItem("PulseIdentity") || "{}");
+        const _ph = JSON.parse(localStorage.getItem("PulsePhotos") || "{}");
+        if (!_id?.id) return; // skip if no identity yet
+        fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+          body: JSON.stringify({ action: "sync", identity: _id, photos: _ph })
+        }).catch(() => {}); // ✅ silent fail — never throws, never blocks UI
+      } catch (e) {}
+    })();
+
   }, 7000);
 })();
 

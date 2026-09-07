@@ -222,6 +222,85 @@ export async function handler(event) {
       };
     }
 
+    // ⭐ FIRE-AND-FORGET IDENTITY SYNC (called every 7s from browser interval)
+    // Upserts user identity + photos into pulse_users table — no blocking, no response needed
+    if (body.action === "sync") {
+      const { identity, photos } = body;
+      if (!identity?.id) {
+        return {
+          statusCode: 400,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({ ok: false, error: "Missing identity.id" })
+        };
+      }
+
+      const payload = {
+        pulse_id:            identity.id,
+        name:                identity.name               || null,
+        email:               identity.email              || null,
+        user_email:          identity.userEmail          || null,
+        username:            identity.userName           || null,
+        phone:               identity.phone              || null,
+        country:             identity.country            || null,
+        role:                identity.role               || null,
+        pulse_role:          identity.pulseRole          || null,
+        tier:                identity.tier               || null,
+        pulse_points:        identity.PulsePoints        || 0,
+        stripe_id:           identity.bank               || null,
+        stripe_url:          identity.bankURL            || null,
+        token_id:            identity.tokenID            || null,
+        drift_signature:     identity.drift              || null,
+        photo_url:           photos?.photoURL            || identity.photoURL         || null,
+        alias_photo_url:     photos?.aliasPhotoURL       || identity.aliasPhotoURL    || null,
+        biz_photo_url:       photos?.bizphotoURL         || identity.bizphotoURL      || null,
+        biz_alias_photo_url: photos?.bizaliasPhotoURL    || identity.bizaliasPhotoURL || null,
+        updated_at:          new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from("pulse_users")
+        .upsert(payload, { onConflict: "pulse_id" });
+
+      if (error) {
+        console.error("❌ [PULSE-SQL] Supabase sync error:", error);
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({ ok: false, error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ ok: true, synced: identity.id })
+      };
+    }
+
+    // ⭐ ADMIN READ — fetches all pulse_users records (Admin page only)
+    if (body.action === "read") {
+      const { data, error } = await supabase
+        .from("pulse_users")
+        .select("*")
+        .order("updated_at", { ascending: false })
+        .limit(1000);
+
+      if (error) {
+        console.error("❌ [PULSE-SQL] Admin read error:", error);
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({ ok: false, error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ ok: true, users: data })
+      };
+    }
+
     // ⭐ NOTHING PROVIDED
     return {
       statusCode: 400,
