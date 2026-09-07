@@ -9,7 +9,7 @@ let userInteracted = false;
 
 function searchengineButtonClick() {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
-  window.location.href = `https://www.google.com/search?q=${e}`;
+  window.location.href = `https://www.google.com/search?q=${text}`;
 }
 
 // Auto‑redirect ONLY if user did not type or interact
