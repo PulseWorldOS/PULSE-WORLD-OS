@@ -116,7 +116,7 @@
     }
 
     .enter:hover {
-      background: #33bbff;
+      background: green;
       box-shadow: 0 0 30px #33bbffcc;
       transform: scale(1.05);
     }
@@ -145,6 +145,35 @@
 
     .engage:hover {
       background: #33bbff;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .access {
+      margin-top: 10px;
+      padding: 6px 14px;
+      background: rosybrown;
+      color: white;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .access:hover {
+      background: green;
       box-shadow: 0 0 30px #33bbffcc;
       transform: scale(1.05);
     }
@@ -186,7 +215,8 @@
       Enter PulseWorld
     </a>
     </p>
-    
+
+    <p>
     <!-- ⭐ FIXED BUTTON: real link -->
     <a class="engage" id="enter" href="https://www.pulseworld.biz">
       PulseBusiness
@@ -195,7 +225,15 @@
     <a class="engage" id="enter" href="https://www.pulseworld.money">
       PulseBanking
     </a>
-    
+    </p>
+
+    <p>
+    <!-- ⭐ FIXED BUTTON: real link -->
+    <a class="access" id="enter" href="https://www.pulseworld.me/?Impulse=PulseWorldInventory">
+      PulseIdentity
+    </a>
+    </p>
+
   </div>
 
   <!-- ⭐ FIXED: external JS file -->
