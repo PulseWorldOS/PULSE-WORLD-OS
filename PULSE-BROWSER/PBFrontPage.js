@@ -7,10 +7,6 @@ let userInteracted = false;
   }, { once: true });
 });
 
-// Manual enter button
-document.getElementById("enter").addEventListener("click", () => {
-  window.location.href = "https://www.pulseworld.net";
-});
 
 // Auto‑redirect ONLY if user did not type or interact
 setTimeout(() => {
