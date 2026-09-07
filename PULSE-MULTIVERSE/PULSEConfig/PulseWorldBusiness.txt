@@ -9,7 +9,7 @@
      PREFETCH / PRELOAD
      ============================================================ -->
 <link rel="prefetch" fetchpriority="high" href="/">
-<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSMarketplace-White.png.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSMarketplace-White.png.pex" type="image/png"/>
 
 <style>
   /* ============================================================
