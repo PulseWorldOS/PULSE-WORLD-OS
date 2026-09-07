@@ -79,8 +79,7 @@
 
 <script>
 (async () => {
-  vaultBtn.style.display = "none";
-  rewardsBtn.style.display = "none";
+  
   scannerBtn.style.display = "none";
   ghostBtn.style.display = "none";
   assetBtn.style.display = "none";
@@ -106,9 +105,12 @@
   pulsepalSpeak(
     "PulseWorld.Biz is your Digital Business Hub — a living and connected online system interconnected with your earnings and banking modules."
   );
+  
   PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
-
+  vaultBtn.style.display = "none";
+  historyBtn.style.display = "none";
+  rewardsBtn.style.display = "none";
 })();
 </script>
 
