@@ -1078,7 +1078,7 @@ let isTouchMobile = false;
     urlParams.get("i");
 
   if (impulse) {
-    routeToInternal(defaultRoute);
+    routeToInternal(impulse.trim());
   } else if (hashRoute) {
     routeToInternal(hashRoute);
   } else {      
