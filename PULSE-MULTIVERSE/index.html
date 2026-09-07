@@ -3569,16 +3569,26 @@ if (assetBtn) {
 
 if (homeBtn) {
   homeBtn.onclick = () => {
+    const checkPage = PulseRealm.__PULSE_CURRENT_PAGE__;
+    if (isBiz) {
+      checkPage = "PulseWorldBusiness";
+    }
+    else if (isMoney) {
+      checkPage = "PulseWorldBanking";
+    }
+    else {
+      checkPage = "PulseWorldReality";
+    }
     // If already on scanner → refresh it
-    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldReality") {
-      location.reload();
+    if (PulseRealm.__PULSE_CURRENT_PAGE__ === checkPage) {
       PulseRealm.PickASpeech8(
-        "Reality Expressed! Ready for another Monumental Moment!",
+        `${checkPage} Expressed! Ready for another Monumental Moment!`,
         "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal3.webp.pex"
       );
+      location.reload();
       return;
     }
-    loadInternalPage("PulseWorldReality");
+    loadInternalPage(checkPage);
     PulseRealm.PickASpeech8(
       "Welcome Back Traveler! Have you Found what your Looking For?!",
       "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal3.webp.pex"
