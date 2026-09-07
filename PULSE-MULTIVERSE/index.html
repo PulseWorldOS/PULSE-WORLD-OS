@@ -789,6 +789,7 @@ else {
   setFavicon("./PWFavIcon.ico");
 }
 
+
 function setFavicon(url) {
   let link = document.querySelector("link[rel~='icon']");
   
@@ -1080,11 +1081,30 @@ let isTouchMobile = false;
   }
   
   if (!touch) {
-    routeToInternal(DEFAULT_INDEX);
+    const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
+    routeToInternal(defaultRoute);
   }
 
   restorePageFromCookie();
 
+  
+  // ---------------------------------------------------------
+  // 5. URL parameters
+  // ---------------------------------------------------------
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const pulseUser =
+    urlParams.get("pulseuser") ||
+    urlParams.get("PULSEUSER") ||
+    urlParams.get("PulseUser");
+
+  const impulse =
+    urlParams.get("impulse") ||
+    urlParams.get("IMPULSE") ||
+    urlParams.get("Impulse") ||
+    urlParams.get("i");
+
+  
   const urls = [
     "https://Port.GPUProcessing.Net",
     "https://Port.BooleanLogic.Net",
@@ -8486,7 +8506,6 @@ if (navigator.gpu) {
     cachePercent.textContent = PulseRealm.PulseCacheUsed;
     capability.textContent = PulseRealm.PulseCapability;
     if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
-    savePageToCookie();
     // ⭐ PulseStream Ghost Layer (Fake Streaming Telemetry)
     pulseStreamGhost();
     loadPulseIdentityContinual();
@@ -8663,7 +8682,6 @@ document.addEventListener("visibilitychange", () => {
       cachePercent.textContent = PulseRealm.PulseCacheUsed;
       capability.textContent = PulseRealm.PulseCapability;
       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
-      savePageToCookie();
       pulseStreamGhost();
       loadPulseIdentityContinual();
       pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
