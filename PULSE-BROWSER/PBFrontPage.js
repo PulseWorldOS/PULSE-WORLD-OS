@@ -10,6 +10,10 @@ document.getElementById("search").addEventListener("click", (event) => {
   window.location.href = url;
 });
 
+document.getElementById("searchus").addEventListener("click", (event) => {
+  window.location.href = "https://www.google.com/search?q=" + encodeURIComponent("pulseworld.net");
+});
+
 document.getElementById("searchengineTextbox").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault(); // stops newline insertion
