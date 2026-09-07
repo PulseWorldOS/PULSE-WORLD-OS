@@ -121,6 +121,33 @@
       transform: scale(1.05);
     }
     /* FIXED BUTTON — now an anchor */
+    .searchus {
+      margin-top: 10px;
+      padding: 6px 14px;
+      background: grey;
+      color: white;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .searchus:hover {
+      background: green;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+    /* FIXED BUTTON — now an anchor */
     .enter {
       margin-top: 40px;
       padding: 14px 34px;
