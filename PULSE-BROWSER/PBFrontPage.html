@@ -238,19 +238,23 @@
     </div>
     
    <p>
-  <a class="search" id="search"
-     href="#"
-     onclick="searchengineButtonClick()">
-     Engine Friendly Search Engine (Google.com)
-  </a>
+    <a class="search" id="search"
+      href="#"
+      onclick="
+        this.href = 'https://www.google.com/search?q=' +
+                    encodeURIComponent(document.getElementById('searchengineTextbox').innerText.trim());
+      ">
+      Engine Friendly Search Engine (Google.com)
+    </a>
 
-  <div id="searchengineTextbox"
-       class="search-engine-textbox"
-       contenteditable="true"
-       role="textbox"
-       aria-label="Search Engine TextBox">
-  </div>
-</p>
+    <div id="searchengineTextbox"
+        class="search-engine-textbox"
+        contenteditable="true"
+        role="textbox"
+        aria-label="Search Engine TextBox">
+    </div>
+  </p>
+
 
 
     <p>
