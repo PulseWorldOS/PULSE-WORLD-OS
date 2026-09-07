@@ -7909,8 +7909,19 @@ function restorePageFromCookie() {
   /* ============================================================
      1. DIRECT QUERY OVERRIDE — TAKES PRIORITY
      ============================================================ */
-  const params = new URLSearchParams(location.search);
-  const impulseParam = params.get("Impulse");
+     const params = new URLSearchParams(window.location.search);
+
+    const pulseUser =
+      params.get("pulseuser") ||
+      params.get("PULSEUSER") ||
+      params.get("PulseUser");
+
+    const impulseParam =
+      params.get("impulse") ||
+      params.get("IMPULSE") ||
+      params.get("Impulse") ||
+      params.get("i");
+
 
   if (impulseParam) {
     console.log("%c[PULSEWORLD::QUERY] Impulse query detected → overriding cookie.",
