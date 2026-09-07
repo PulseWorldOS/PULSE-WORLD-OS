@@ -5,6 +5,7 @@
     "node": "20"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.115.0",
     "stripe": "^16.0.0"
   }
 }

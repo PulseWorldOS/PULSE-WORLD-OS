@@ -1,11 +1,18 @@
 // netlify/functions/pulse-sql.js
 import { createClient } from "@supabase/supabase-js";
 
-// ⭐ Create Supabase client using Netlify extension variables
-const supabase = createClient(
-  process.env.SUPABASE_DATABASE_URL,
-  process.env.PulseWorld_SUPABASE_ANON_KEY
-);
+// ⭐ Lazy Supabase client — only created when handler runs, not at module load
+// This prevents crashes during cold starts if env vars are momentarily unavailable
+let _supabase = null;
+function getSupabase() {
+  if (!_supabase) {
+    const url = process.env.SUPABASE_DATABASE_URL;
+    const key = process.env.PulseWorld_SUPABASE_ANON_KEY;
+    if (!url || !key) throw new Error("Supabase env vars not set (SUPABASE_DATABASE_URL / PulseWorld_SUPABASE_ANON_KEY)");
+    _supabase = createClient(url, key);
+  }
+  return _supabase;
+}
 
 // ============================================================================
 //  RAW SQL EXECUTION (via Supabase RPC)
@@ -46,7 +53,7 @@ async function processCommands(commands = []) {
 
     // ⭐ INSERT
     if (cmd.type === "insert") {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from(cmd.table)
         .insert(cmd.data)
         .select();
@@ -57,7 +64,7 @@ async function processCommands(commands = []) {
 
     // ⭐ UPDATE
     if (cmd.type === "update") {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from(cmd.table)
         .update(cmd.data)
         .eq("id", cmd.id)
@@ -69,7 +76,7 @@ async function processCommands(commands = []) {
 
     // ⭐ RPC CALL
     if (cmd.type === "rpc") {
-      const { data, error } = await supabase.rpc(cmd.name, cmd.params);
+      const { data, error } = await getSupabase().rpc(cmd.name, cmd.params);
       if (error) throw error;
       result = data;
     }
@@ -90,7 +97,7 @@ async function processCommands(commands = []) {
 // ============================================================================
 
 async function getAllTables() {
-  const { data, error } = await supabase.rpc("raw_sql", {
+  const { data, error } = await getSupabase().rpc("raw_sql", {
     query: `
       SELECT table_name 
       FROM information_schema.tables 
@@ -107,7 +114,7 @@ async function getAllTables() {
 // ============================================================================
 
 async function getTableRows(table) {
-  const { data, error } = await supabase.from(table).select("*");
+  const { data, error } = await getSupabase().from(table).select("*");
   if (error) throw error;
   return data;
 }
@@ -117,7 +124,7 @@ async function getTableRows(table) {
 // ============================================================================
 
 async function getDoc(table, id) {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from(table)
     .select("*")
     .eq("id", id)
@@ -257,7 +264,7 @@ export async function handler(event) {
         updated_at:          new Date().toISOString()
       };
 
-      const { error } = await supabase
+      const { error } = await getSupabase()
         .from("pulse_users")
         .upsert(payload, { onConflict: "pulse_id" });
 
@@ -279,7 +286,7 @@ export async function handler(event) {
 
     // ⭐ ADMIN READ — fetches all pulse_users records (Admin page only)
     if (body.action === "read") {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from("pulse_users")
         .select("*")
         .order("updated_at", { ascending: false })
