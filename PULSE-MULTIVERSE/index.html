@@ -3569,7 +3569,7 @@ if (assetBtn) {
 
 if (homeBtn) {
   homeBtn.onclick = () => {
-    const checkPage = PulseRealm.__PULSE_CURRENT_PAGE__;
+    let checkPage = PulseRealm.__PULSE_CURRENT_PAGE__;
     if (isBiz) {
       checkPage = "PulseWorldBusiness";
     }
