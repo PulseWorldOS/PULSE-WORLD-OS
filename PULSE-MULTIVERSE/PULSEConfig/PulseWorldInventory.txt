@@ -802,7 +802,9 @@ async function renderDashboard(identity) {
   const bizStatus = document.getElementById("bizStatus");
   bizStatus.textContent = stripeStatus.textContent;
 
-  BizConsole.onclick = () => location.replace("https://www.pulseworld.biz/#PulseWorldBusiness");
+  BizConsole.onclick = () => {
+    window.open("https://www.pulseworld.biz", "_blank");
+  }
 
   const stripeBtn = document.getElementById("stripeBtn");
   if (stripeBtn) {
