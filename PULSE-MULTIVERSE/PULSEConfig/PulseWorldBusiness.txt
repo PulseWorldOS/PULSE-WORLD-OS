@@ -91,6 +91,8 @@
   adminBtn.style.display = "none";
   pulsemeshBtn.style.display = "none";
   pulsepalBtn.style.display = "none";
+  pulseworkerBtn.style.display = "none";
+  globalSpin.style.display = "none";
   evoToggleBtn.style.display = "none";
   driftBtn.style.display = "none";
   const badge2 = document.getElementById("pulsepal-badge");
