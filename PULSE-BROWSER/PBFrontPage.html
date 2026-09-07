@@ -93,6 +93,34 @@
     }
 
     /* FIXED BUTTON — now an anchor */
+    .search {
+      margin-top: 40px;
+      padding: 14px 34px;
+      background: grey;
+      color: black;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .search:hover {
+      background: green;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+    /* FIXED BUTTON — now an anchor */
     .enter {
       margin-top: 40px;
       padding: 14px 34px;
@@ -209,6 +237,13 @@
       Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime
     </div>
     
+    <p>
+    <!-- ⭐ FIXED BUTTON: real link -->
+    <a class="search" id="enter" href="https://www.google.com">
+      Engine Friendly Search Engine (Google.com)
+    </a>
+    </p>
+
     <p>
     <!-- ⭐ FIXED BUTTON: real link -->
     <a class="enter" id="enter" href="https://www.pulseworld.net">
