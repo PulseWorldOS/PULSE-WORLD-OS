@@ -621,6 +621,8 @@ const isBinaryOS = current.includes("binaryos.net");
 const isGPU = current.includes("gpuprocessing.net");
 const isLogic = current.includes("booleanlogic.net");
 const isOrb = current.includes("orbitalmap.net");
+const isMoney = current.includes("pulseworld.money");
+const isBiz = current.includes("pulseworld.biz");
 function loadAudioDisabled() {
   try {
     const audio = localStorage.getItem("pwAudioDisabled");
@@ -740,14 +742,13 @@ function loadPulseHistory() {
   }
 }
 
-
-
 PulseRealm.SoundDisabled = loadAudioDisabled();
 PulseRealm.VideoDisabled = loadVideoDisabled();
 PulseRealm.ServiceWorkerOffline = loadServiceWorker();
 PulseRealm.PulseHistory = loadPulseHistory();
 PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
 narMusic.muted = PulseRealm.SoundDisabled;
+
 let DEFAULT_INDEX;
 if (isSW) {
   DEFAULT_INDEX = "PulseWorldServiceWorker.txt";
@@ -774,9 +775,19 @@ else if (isOrb) {
   document.title = "OrbitalMap.Net - The New Internet Solutions";
   setFavicon("./OMFavIcon.ico");
 }
+else if (isBiz) {
+  DEFAULT_INDEX = "PulseWorldBusiness.txt";
+  document.title = "PulseWorld.Biz - Digital Business Hub";
+  setFavicon("./PWBFavIcon.ico");
+}
+else if (isMoney) {
+  DEFAULT_INDEX = "PulseWorldBanking.txt";
+  document.title = "PulseWorld.Money - Digital Banking Center";
+  setFavicon("./PWMFavIcon.ico");
+}
 else {
   DEFAULT_INDEX = "PulseWorldReality.txt";
-  document.title = "PulseWorld.Net - Multiversal Predictive Tranport Activated!";
+  document.title = "PulseWorld.Net - The New Digital Identity";
   setFavicon("./PWFavIcon.ico");
 }
 
@@ -6665,12 +6676,6 @@ async function enableBootVideo(isMobile) {
   // const BOOT_PATH = isMobile
   //   ? "./_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot-Mobile"
   //   : "./_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot2";
-
-  const isSW       = current.includes("serviceworker.net");
-  const isBinaryOS = current.includes("binaryos.net");
-  const isGPU      = current.includes("gpuprocessing.net");
-  const isLogic    = current.includes("booleanlogic.net");
-  const isOrb      = current.includes("orbitalmap.net");
 
   let BOOT_PATH;
 

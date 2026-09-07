@@ -496,15 +496,15 @@ chrome.runtime.onMessage.addListener((msg) => {
 // HOME UNIVERSE (Your 9 domains)
 // ---------------------------------------------------------------------------
 const PB_HOME = [
-  "pulseworld.me",
-  "pulseworld.net",
-  "pulseworld.money",
-  "pulseworld.biz",
-  "binaryos.net",
-  "booleanlogic.net",
-  "gpuprocessing.net",
-  "serviceworker.net",
-  "orbitalmap.net"
+  "www.pulseworld.me",
+  "www.pulseworld.net",
+  "www.pulseworld.money",
+  "www.pulseworld.biz",
+  "www.binaryos.net",
+  "www.booleanlogic.net",
+  "www.gpuprocessing.net",
+  "www.serviceworker.net",
+  "www.orbitalmap.net"
 ];
 
 // ---------------------------------------------------------------------------
