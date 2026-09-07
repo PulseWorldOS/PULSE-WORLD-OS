@@ -1055,6 +1055,28 @@ let isTouchMobile = false;
     "🛰️ PULSE MULTIVERSAL ROUTER v32.0 — %c[PULSEWORLD::Route] Selecting Initial Pulse World Route...",
     "color:#H02FHA; font-weight:bold; font-family:monospace;"
   );
+
+  // ---------------------------------------------------------
+  // 1. URL parameters
+  // ---------------------------------------------------------
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const pulseUser =
+    urlParams.get("pulseuser") ||
+    urlParams.get("PULSEUSER") ||
+    urlParams.get("PulseUser");
+
+  const impulse =
+    urlParams.get("impulse") ||
+    urlParams.get("IMPULSE") ||
+    urlParams.get("Impulse") ||
+    urlParams.get("i");
+
+  if (impulse) {
+    const defaultRoute = impulse;
+    routeToInternal(defaultRoute);
+  } else {
+    
   // ⭐ First route based on touch.page (passport-first)
   // ⭐ Determine if we have a valid page
   const hasPage =
@@ -1086,24 +1108,8 @@ let isTouchMobile = false;
   }
 
   restorePageFromCookie();
-
   
-  // ---------------------------------------------------------
-  // 5. URL parameters
-  // ---------------------------------------------------------
-  const urlParams = new URLSearchParams(window.location.search);
-
-  const pulseUser =
-    urlParams.get("pulseuser") ||
-    urlParams.get("PULSEUSER") ||
-    urlParams.get("PulseUser");
-
-  const impulse =
-    urlParams.get("impulse") ||
-    urlParams.get("IMPULSE") ||
-    urlParams.get("Impulse") ||
-    urlParams.get("i");
-
+  }
   
   const urls = [
     "https://Port.GPUProcessing.Net",
