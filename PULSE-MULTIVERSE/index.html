@@ -741,14 +741,12 @@ function loadPulseHistory() {
     };
   }
 }
-
 PulseRealm.SoundDisabled = loadAudioDisabled();
 PulseRealm.VideoDisabled = loadVideoDisabled();
 PulseRealm.ServiceWorkerOffline = loadServiceWorker();
 PulseRealm.PulseHistory = loadPulseHistory();
 PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
 narMusic.muted = PulseRealm.SoundDisabled;
-
 let DEFAULT_INDEX;
 if (isSW) {
   DEFAULT_INDEX = "PulseWorldServiceWorker.txt";
