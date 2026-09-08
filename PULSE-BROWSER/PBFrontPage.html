@@ -552,6 +552,32 @@
       font-size: 18px;
     }
 
+    .side-panel {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 220px;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+    .left-panel {
+      left: 0;
+    }
+
+    .right-panel {
+      right: 0;
+    }
+
+    /* Push core inward so it doesn't overlap */
+    .core {
+      margin-left: 240px;
+      margin-right: 240px;
+    }
 
 
   </style>
@@ -562,6 +588,14 @@
   <button id="timerBtn" aria-label="Timer" role="button">8</button>
   <div class="nebula"></div>
   <div class="shimmer"></div>
+
+  <div class="side-panel left-panel">
+    <!-- Left panel content -->
+  </div>
+
+  <div class="side-panel right-panel">
+    <!-- Right panel content -->
+  </div>
 
   <div class="core">
 
@@ -643,3 +677,4 @@
 
 </body>
 
+</html>
