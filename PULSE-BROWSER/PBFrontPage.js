@@ -3,16 +3,17 @@ let userInteracted = false;
 
 function getFavicon(url) {
   const u = new URL(url);
+  let icon = `${u.origin}/favicon.ico`;
   try {
     // 2. Strip subdomain → get root domain
     const parts = u.hostname.split(".");
     if (parts.length > 2) {
       const root = parts.slice(parts.length - 2).join(".");
-      const fallback = `https://${root}/favicon.ico`;
-      console.log(fallback);
+      icon = `https://${root}/favicon.ico`;
     }
+    console.log(icon);
     // Simple, reliable default: /favicon.ico on the origin
-    return fallback;
+    return icon;
   } catch {
     return; // external ONLY — no fallback
   }
