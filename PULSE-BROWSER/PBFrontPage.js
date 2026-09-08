@@ -126,10 +126,13 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
   // Check if the cleaned text is *exactly* a domain
   const isPureDomain = domainRegex.test(cleaned);
   let url;
+  
   if (isPureDomain) {
     // ⭐ PURE DOMAIN → Navigate directly
-    window.location.href = "https://" + cleaned;
-    return;
+    document.getElementById("navigate").style.display = "block";
+  } else {
+    // ⭐ PURE DOMAIN → Navigate directly
+    document.getElementById("navigate").style.display = "none";
   }
 });
 
