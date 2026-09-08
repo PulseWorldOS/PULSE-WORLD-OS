@@ -78,34 +78,77 @@ function buildSearchURL(engineURL, query) {
   // Normalize URL
   const url = engineURL.toLowerCase();
 
+  // GOOGLE
   if (url.includes("google")) {
     searchEngineActivated = "Google.com";
     return `https://www.google.com/search?q=${q}`;
   }
 
+  // YAHOO
   if (url.includes("yahoo")) {
     searchEngineActivated = "Yahoo.com";
     return `https://search.yahoo.com/search?p=${q}`;
   }
 
+  // DUCKDUCKGO
   if (url.includes("duckduckgo") || url.includes("ddg")) {
     searchEngineActivated = "DuckDuckGo.com";
     return `https://duckduckgo.com/?q=${q}`;
   }
 
+  // BING
   if (url.includes("bing")) {
     searchEngineActivated = "Bing.com";
     return `https://www.bing.com/search?q=${q}`;
   }
 
+  // BRAVE
   if (url.includes("brave")) {
     searchEngineActivated = "Brave.com";
     return `https://search.brave.com/search?q=${q}`;
   }
 
+  // BAIDU (China)
+  if (url.includes("baidu")) {
+    searchEngineActivated = "Baidu.com";
+    return `https://www.baidu.com/s?wd=${q}`;
+  }
+
+  // NAVER (Korea)
+  if (url.includes("naver")) {
+    searchEngineActivated = "Naver.com";
+    return `https://search.naver.com/search.naver?query=${q}`;
+  }
+
+  // YANDEX (Russia)
+  if (url.includes("yandex")) {
+    searchEngineActivated = "Yandex.com";
+    return `https://yandex.com/search/?text=${q}`;
+  }
+
+  // ASK
+  if (url.includes("ask")) {
+    searchEngineActivated = "Ask.com";
+    return `https://www.ask.com/web?q=${q}`;
+  }
+
+  // ECOSIA
+  if (url.includes("ecosia")) {
+    searchEngineActivated = "Ecosia.org";
+    return `https://www.ecosia.org/search?q=${q}`;
+  }
+
+  // QWANT
+  if (url.includes("qwant")) {
+    searchEngineActivated = "Qwant.com";
+    return `https://www.qwant.com/?q=${q}`;
+  }
+
   // Fallback: append query to custom engine
+  searchEngineActivated = engineURL;
   return `${engineURL}${q}`;
 }
+
 
 const engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
 const url = buildSearchURL(engineURL, text);
