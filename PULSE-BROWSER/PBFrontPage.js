@@ -1,5 +1,58 @@
 
 let userInteracted = false;
+
+function getFavicon(url) {
+  try {
+    const u = new URL(url);
+    return `chrome://favicon/${u.origin}`;
+  } catch {
+    return null; // external ONLY — no fallback
+  }
+}
+
+async function updateModuleIcons() {
+  const settings = await pbLoadSettings();
+
+  // EMAIL MODULE
+  const emailIcon = document.getElementById("moduleEmailIcon");
+  if (settings.emailMode === "internal") {
+    emailIcon.innerText = "📧";      // your original emoji
+    emailIcon.style.backgroundImage = "";
+  } else {
+    const fav = getFavicon(settings.externalEmailLink);
+    if (fav) {
+      emailIcon.innerText = "";
+      emailIcon.style.backgroundImage = `url(${fav})`;
+      emailIcon.style.backgroundSize = "contain";
+      emailIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // BANK MODULE
+  const bankIcon = document.getElementById("moduleBankIcon");
+  if (settings.bankMode === "internal") {
+    bankIcon.innerText = "🏦";      // your original emoji
+    bankIcon.style.backgroundImage = "";
+  } else {
+    const fav = getFavicon(settings.externalBankLink);
+    if (fav) {
+      bankIcon.innerText = "";
+      bankIcon.style.backgroundImage = `url(${fav})`;
+      bankIcon.style.backgroundSize = "contain";
+      bankIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // FAVORITES (always your emojis)
+  document.getElementById("moduleFav1Icon").innerText = "⭐";
+  document.getElementById("moduleFav1Icon").style.backgroundImage = "";
+
+  document.getElementById("moduleFav2Icon").innerText = "⭐";
+  document.getElementById("moduleFav2Icon").style.backgroundImage = "";
+}
+
+
+
 let engineType = "text";
 const text = document.getElementById("searchengineTextbox").innerText.trim();
 let url = "https://www.google.com/search?q=" + encodeURIComponent(text);
@@ -181,6 +234,9 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     chrome.tabs.create({ url: link });
 });
 
+window.addEventListener("DOMContentLoaded", () => {
+  updateModuleIcons();
+});
 
 
 // Any interaction cancels redirect

@@ -503,6 +503,30 @@
       box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
       transform: scale(1.08);
     }
+    .module-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      background: #1a1a1d;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #eee;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .module-icon {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .module-label {
+      font-size: 18px;
+    }
+
 
 
   </style>
@@ -558,13 +582,32 @@
       <div class="module-title">PulseBrowser Modules</div>
 
       <div class="module-row">
-        <a class="module-btn" id="moduleBank">🏦 Banking</a>
-        <a class="module-btn" id="moduleEmail">📧 Email</a>
-        <a class="module-btn" id="moduleFav1">⭐ Favorite 1</a>
-        <a class="module-btn" id="moduleFav2">⭐ Favorite 2</a>
+
+        <a class="module-btn" id="moduleBank">
+          <span class="module-icon" id="moduleBankIcon">🏦</span>
+          <span class="module-label">Banking</span>
+        </a>
+
+        <a class="module-btn" id="moduleEmail">
+          <span class="module-icon" id="moduleEmailIcon">📧</span>
+          <span class="module-label">Email</span>
+        </a>
+
+        <a class="module-btn" id="moduleFav1">
+          <span class="module-icon" id="moduleFav1Icon">⭐</span>
+          <span class="module-label">Favorite 1</span>
+        </a>
+
+        <a class="module-btn" id="moduleFav2">
+          <span class="module-icon" id="moduleFav2Icon">⭐</span>
+          <span class="module-label">Favorite 2</span>
+        </a>
+
+
       </div>
 
     </div>
+
 
   </div>
 
