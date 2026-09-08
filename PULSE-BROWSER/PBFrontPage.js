@@ -257,7 +257,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalBankLink?.trim() || "https://www.bank.com/";
+    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
 
     console.log("[FrontPage] Opening External Bank Provider:", link);
 
