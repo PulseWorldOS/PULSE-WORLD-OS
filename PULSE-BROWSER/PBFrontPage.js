@@ -4,7 +4,7 @@ let engineType = "text";
 let searchEngineActiveLink = null;
 let searchEngineActivated = "*Google.com";
 
-let engineURL = buildSearchURL("google.com","");
+let engineURL = buildSearchURL("google.com");
 
 function getFavicon(url) {
   const u = new URL(url);
@@ -75,15 +75,9 @@ async function updateModuleIcons() {
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
   
 }
-function cleanQuery(query) {
-  // Remove ZERO‑WIDTH characters that cause "undefineddfg"
-  return query.replace(/[\u200B-\u200D\uFEFF]/g, "");
-}
 
 function buildSearchURL(engineURL, query) {
-  query = cleanQuery(query);     // ← THIS removes the symbol
   const q = encodeURIComponent(query);
-
 
   // Normalize URL
   const url = engineURL.toLowerCase();
