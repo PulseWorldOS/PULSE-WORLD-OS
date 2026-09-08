@@ -13,9 +13,10 @@ function getFavicon(url) {
     if (parts.length > 2) {
       const root = parts.slice(parts.length - 2).join(".");
       const fallback = `https://${root}/favicon.ico`;
+      console.log(fallback);
       return fallback; // external ONLY — no fallback
     }
-    return null; // external ONLY — no fallback
+    return; // external ONLY — no fallback
   }
 }
 
