@@ -180,6 +180,19 @@ const PB_DEFAULT_SETTINGS = {
 
 const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
 
+async function pbLoadExtensionSettings() {
+  try {
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+
+    PB_LOG.load("pbLoadExtensionSettings()", settings);
+
+    return settings;
+  } catch (err) {
+    PB_LOG.error("pbLoadExtensionSettings() FAILED", err);
+    return {};
+  }
+}
 async function loadExtensionSettingsUI() {
   const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
   const settings = result[EXTENSION_SETTINGS_KEY] || {};

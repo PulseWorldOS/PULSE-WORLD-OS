@@ -219,7 +219,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
 document.getElementById("moduleEmail").addEventListener("click", async () => {
 
-    const settings = await loadExtensionSettingsUI();
+    const settings = await pbLoadExtensionSettings();
 
     console.log("[FrontPage] Email module clicked. Settings:", settings);
 
