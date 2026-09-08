@@ -407,17 +407,17 @@ async function updateStorageStats() {
     el.textContent = "Storage usage: error retrieving stats.";
   }
 }
-
 function updateLinkedPWInputs() {
   // Find all selects
   const selects = document.querySelectorAll(".pw-select");
 
   selects.forEach(select => {
-    // Find the next pw-input in the same section
+    // Find the section this select belongs to
     const section = select.closest(".pw-section");
     if (!section) return;
 
-    const linkedInput = section.querySelector(".pw-input");
+    // Find the pw-input that comes AFTER the select
+    const linkedInput = select.parentElement.querySelector(".pw-input");
     if (!linkedInput) return;
 
     // Apply logic
