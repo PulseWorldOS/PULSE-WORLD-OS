@@ -2,7 +2,7 @@
 let userInteracted = false;
 let engineType = "text";
 let searchEngineActiveLink = null;
-let searchEngineActivated = "Google.com";
+let searchEngineActivated = "*Google.com";
 
 function getFavicon(url) {
   const u = new URL(url);
