@@ -1,7 +1,8 @@
 
 let userInteracted = false;
 let engineType = "text";
-let searchEngineActivated = null;
+let searchEngineActiveLink = null;
+let searchEngineActivated = "google";
 
 function getFavicon(url) {
   const u = new URL(url);
@@ -30,7 +31,7 @@ async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
 
   
-  searchEngineActivated = settings.externalSearchLink;
+  searchEngineActiveLink = settings.externalSearchLink;
 
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
@@ -78,22 +79,27 @@ function buildSearchURL(engineURL, query) {
   const url = engineURL.toLowerCase();
 
   if (url.includes("google")) {
+    searchEngineActivated = "Google.com";
     return `https://www.google.com/search?q=${q}`;
   }
 
   if (url.includes("yahoo")) {
+    searchEngineActivated = "Yahoo.com";
     return `https://search.yahoo.com/search?p=${q}`;
   }
 
   if (url.includes("duckduckgo") || url.includes("ddg")) {
+    searchEngineActivated = "DuckDuckGo.com";
     return `https://duckduckgo.com/?q=${q}`;
   }
 
   if (url.includes("bing")) {
+    searchEngineActivated = "Bing.com";
     return `https://www.bing.com/search?q=${q}`;
   }
 
   if (url.includes("brave")) {
+    searchEngineActivated = "Brave.com";
     return `https://search.brave.com/search?q=${q}`;
   }
 
@@ -101,7 +107,7 @@ function buildSearchURL(engineURL, query) {
   return `${engineURL}${q}`;
 }
 
-const engineURL = searchEngineActivated || "https://www.google.com/search?q=";
+const engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
 const url = buildSearchURL(engineURL, text);
 
 
@@ -154,7 +160,7 @@ document.getElementById("text").addEventListener("click", (event) => {
   document.getElementById("videos").style.backgroundColor = "black";
   engineType = "text";
 });
-
+document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
 document.getElementById("search").addEventListener("click", (event) => {
   
   let text = document.getElementById("searchengineTextbox").innerText.trim();
