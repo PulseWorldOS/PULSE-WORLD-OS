@@ -2643,7 +2643,7 @@ function setNavigation(pageKey) {
 
   const homewLoad = `?Impulse=PulseWorldReality`;
   
-  const homewLoadOut = `https://www.pulseworld.net/?Impulse=PulseWorldReality`;
+  const homewLoadOut = `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldReality`;
   const bankwLoad = `?Impulse=PulseWorldRewards`;
   
   const navSets = {
@@ -6636,12 +6636,25 @@ function setPrefix(p) {
   prefixSpan.textContent = p;
 }
 function getOurDomain() {
-  return "pulseworld.net";
+  return PulseRealm.CurrentHost;
 }
 
 function isOurDomain(s) {
-  return s.endsWith(getOurDomain());
+  const OUR_DOMAINS = [
+    "pulseworld.net",
+    "pulseworld.me",
+    "pulseworld.biz",
+    "pulseworld.money",
+    "binaryos.net",
+    "serviceworker.net",
+    "gpuprocessing.net",
+    "booleanlogic.net",
+    "orbitalmap.net"
+  ];
+
+  return OUR_DOMAINS.some(domain => s.includes(domain));
 }
+
 
 function looksExternal(str) {
   const s = str.toLowerCase();
