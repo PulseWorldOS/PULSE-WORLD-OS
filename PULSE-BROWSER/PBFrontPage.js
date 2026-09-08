@@ -399,13 +399,16 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     userInteracted = true;
   }, { once: true });
 });
+
 let timerX = 0;
 
 setInterval(() => {
-  timerX++;
   document.getElementById("timerBtn").textContent = timerX;
+  timerX++;
   if (!userInteracted && timerX === 8) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
+  } else if (userInteracted) {
+    document.getElementById("timerBtn").textContent = `~`;
   }
 }, 1000);
