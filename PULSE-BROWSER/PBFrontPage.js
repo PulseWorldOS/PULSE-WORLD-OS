@@ -80,6 +80,26 @@ document.getElementById("search").addEventListener("click", (event) => {
 });
 
 
+// LIVE detection (fixes your issue)
+document.getElementById("searchengineTextbox").addEventListener("input", () => {
+  let text = document.getElementById("searchengineTextbox").innerText.trim();
+
+  // Remove spaces only for domain detection
+  const cleaned = text.replace(/\s+/g, "");
+
+  // Pure domain regex
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  const isPureDomain = domainRegex.test(cleaned);
+
+  if (isPureDomain) {
+    document.getElementById("navigate").style.display = "inline";
+    document.getElementById("navigate").style.backgroundColor = "red";
+  } else {
+    document.getElementById("navigate").style.display = "none";
+  }
+});
+
 document.getElementById("searchengineTextbox").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault(); // stops newline insertion
@@ -119,25 +139,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
     window.location.href = url;
   }
-  let text = document.getElementById("searchengineTextbox").innerText.trim();
-  // Remove spaces just in case (e.g., "gmail . com")
-  const cleaned = text.replace(/\s+/g, "");
-  // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
-  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // Check if the cleaned text is *exactly* a domain
-  const isPureDomain = domainRegex.test(cleaned);
-  let url;
-  
-  if (isPureDomain) {
-    // ⭐ PURE DOMAIN → Navigate directly
-    document.getElementById("navigate").style.display = "inline";
-      document.getElementById("navigate").style.backgroundColor = "red";
-  } else {
-    // ⭐ PURE DOMAIN → Navigate directly
-    document.getElementById("navigate").style.display = "none";
-  }
 });
-
 
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
