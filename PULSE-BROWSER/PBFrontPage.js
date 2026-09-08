@@ -4,7 +4,7 @@ let engineType = "text";
 let searchEngineActiveLink = null;
 let searchEngineActivated = "*Google.com";
 
-let engineURL = buildSearchURL("google.com");
+let engineURL = buildSearchURL("google.com","");
 
 function getFavicon(url) {
   const u = new URL(url);
