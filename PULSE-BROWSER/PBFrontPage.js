@@ -2,7 +2,7 @@
 let userInteracted = false;
 let engineType = "text";
 let searchEngineActiveLink = null;
-let searchEngineActivated = "google";
+let searchEngineActivated = "Google.com";
 
 function getFavicon(url) {
   const u = new URL(url);
@@ -71,6 +71,9 @@ async function updateModuleIcons() {
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
   
 }
+
+const engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
+document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
 
 function buildSearchURL(engineURL, query) {
   const q = encodeURIComponent(query);
@@ -150,10 +153,6 @@ function buildSearchURL(engineURL, query) {
 }
 
 
-const engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
-const url = buildSearchURL(engineURL, text);
-
-
 document.getElementById("searchus").addEventListener("click", (event) => {
   window.location.href = engineURL + encodeURIComponent("pulseworld.net");
 });
@@ -197,13 +196,13 @@ document.getElementById("videos").addEventListener("click", (event) => {
 
 document.getElementById("text").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
-  url = engineURL + encodeURIComponent(text);
+  url = buildSearchURL(engineURL, text);
   document.getElementById("text").style.backgroundColor = "red";
   document.getElementById("images").style.backgroundColor = "black";
   document.getElementById("videos").style.backgroundColor = "black";
   engineType = "text";
 });
-document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+
 document.getElementById("search").addEventListener("click", (event) => {
   
   let text = document.getElementById("searchengineTextbox").innerText.trim();
