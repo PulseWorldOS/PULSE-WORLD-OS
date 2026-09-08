@@ -1,16 +1,31 @@
 
 let userInteracted = false;
 
-function getFavicon(url) {
+async function getFavicon(url) {
   try {
     const u = new URL(url);
-    console.log(`${u.origin}/favicon.ico`);
-    // Simple, reliable default: /favicon.ico on the origin
-    return `${u.origin}/favicon.ico`;
+
+    // 1. Try the full origin first
+    const primary = `${u.origin}/favicon.ico`;
+    const ok = await faviconExists(primary);
+    if (ok) return primary;
+
+    // 2. Strip subdomain → get root domain
+    const parts = u.hostname.split(".");
+    if (parts.length > 2) {
+      const root = parts.slice(parts.length - 2).join(".");
+      const fallback = `https://${root}/favicon.ico`;
+
+      const ok2 = await faviconExists(fallback);
+      if (ok2) return fallback;
+    }
+
+    return null; // external ONLY — no fallback image
   } catch {
-    return `PulseWorldOSLogo.png`; // external ONLY — no fallback
+    return null;
   }
 }
+
 
 window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();
