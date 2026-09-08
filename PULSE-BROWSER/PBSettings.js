@@ -55,6 +55,19 @@ PB_LOG.info("PBSettings (Ultra Edition v7.0) loaded");
 // ============================================================================
 
 const PB_DEFAULT_SETTINGS = {
+  // EXTENSION SETTINGS MIRROR (so FrontPage can read them)
+  emailMode: "internal",
+  externalEmailLink: "",
+  bankMode: "internal",
+  externalBankLink: "",
+  businessLink: "",
+  filesLink: "",
+  goPublicEnabled: false,
+  publicLink: "",
+  programmaticEmail: false,
+  programmaticBanking: false,
+  experimentalPortalTransitions: false,
+  experimentalMeshAwareness: false,
   // (Your entire default block unchanged)
   enableInterceptor: true,
   enableAccelerator: true,
