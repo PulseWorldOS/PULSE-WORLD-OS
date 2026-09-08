@@ -397,6 +397,53 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     chrome.tabs.create({ url: link });
 });
 
+
+document.getElementById("moduleSocial").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Social Media module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld on the real domain
+    if (settings.socialMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldMessenger";
+        console.log("[FrontPage] Opening Internal PulseMessenger:", internalURL);
+
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalSocialLink?.trim() || "https://www.facebook.com/";
+
+    console.log("[FrontPage] Opening External Social Media Provider:", link);
+
+    chrome.tabs.create({ url: link });
+});
+
+document.getElementById("moduleWork").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Work module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Work on the real domain
+    if (settings.workMode === "internal") {
+        const internalURL = "https://www.pulseworld.biz";
+        console.log("[FrontPage] Opening Internal PulseWork:", internalURL);
+
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
+
+    console.log("[FrontPage] Opening External Work Provider:", link);
+
+    chrome.tabs.create({ url: link });
+});
+
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
   window.addEventListener(evt, () => {
