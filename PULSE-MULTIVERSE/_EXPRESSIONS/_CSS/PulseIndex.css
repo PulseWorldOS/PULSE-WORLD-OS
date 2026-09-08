@@ -1924,8 +1924,9 @@ nav a:hover::after {
     inset 0 0 12px rgba(255,155,155,0.25);
 }
 input[type="file"] {
+  margin: 0 auto;
   color: var(--pulse-cyan);
-  font-size: 14px;
+  font-size: 16px;
   text-shadow: 0 0 6px var(--pulse-cyan);
 }
 @keyframes panelFloat {
