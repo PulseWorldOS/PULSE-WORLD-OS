@@ -479,9 +479,7 @@ if (location.href.includes("PBSettings.html")) {
   })();
 }
 
-
-// Run once on load
-updateLinkedPWInputs();
+setTimeout(updateLinkedPWInputs, 150);
 
 // Run whenever ANY pw-select changes
 document.addEventListener("change", (e) => {
