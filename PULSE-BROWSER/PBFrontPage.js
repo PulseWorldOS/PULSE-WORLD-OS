@@ -4,6 +4,8 @@ let engineType = "text";
 let searchEngineActiveLink = null;
 let searchEngineActivated = "*Google.com";
 
+engineURL = "https://www.google.com/search?q=";
+
 function getFavicon(url) {
   const u = new URL(url);
   let icon = `${u.origin}/favicon.ico`;
@@ -33,6 +35,10 @@ async function updateModuleIcons() {
   
   searchEngineActiveLink = settings.externalSearchLink;
   console.log(searchEngineActivated);
+  
+  engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
+  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
   if (settings.emailMode === "internal") {
@@ -71,9 +77,6 @@ async function updateModuleIcons() {
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
   
 }
-
-const engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
-document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
 
 function buildSearchURL(engineURL, query) {
   const q = encodeURIComponent(query);
