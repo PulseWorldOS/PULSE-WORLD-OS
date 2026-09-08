@@ -407,6 +407,7 @@ async function updateStorageStats() {
     el.textContent = "Storage usage: error retrieving stats.";
   }
 }
+
 function updateLinkedPWInputs() {
   // Find all selects
   const selects = document.querySelectorAll(".pw-select");
@@ -417,7 +418,8 @@ function updateLinkedPWInputs() {
     if (!section) return;
 
     // Find the pw-input that comes AFTER the select
-    const linkedInput = select.parentElement.querySelector(".pw-input");
+    // This ensures we ONLY disable the one directly under the select
+    const linkedInput = section.querySelector(".pw-input");
     if (!linkedInput) return;
 
     // Apply logic
@@ -440,7 +442,6 @@ document.addEventListener("change", (e) => {
     updateLinkedPWInputs();
   }
 });
-
 
 
 // ============================================================================
