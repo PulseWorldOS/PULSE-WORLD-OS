@@ -4,8 +4,9 @@ let userInteracted = false;
 function getFavicon(url) {
   try {
     const u = new URL(url);
+    console.log(`${u.origin}/favicon.ico`);
     // Simple, reliable default: /favicon.ico on the origin
-    return `${url}/favicon.ico`;
+    return `${u.origin}/favicon.ico`;
   } catch {
     return `PulseWorldOSLogo.png`; // external ONLY — no fallback
   }
