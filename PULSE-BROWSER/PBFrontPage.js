@@ -34,9 +34,8 @@ async function updateModuleIcons() {
 
   
   searchEngineActiveLink = settings.externalSearchLink;
-  console.log(searchEngineActiveLink);
-  
-  engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
+    
+  engineURL = buildSearchURL(searchEngineActiveLink) || "https://www.google.com/search?q=";
 
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
