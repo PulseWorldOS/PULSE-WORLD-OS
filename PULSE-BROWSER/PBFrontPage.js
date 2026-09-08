@@ -7,6 +7,23 @@ document.getElementById("searchus").addEventListener("click", (event) => {
   window.location.href = "https://www.google.com/search?q=" + encodeURIComponent("pulseworld.net");
 });
 
+document.getElementById("navigate").addEventListener("click", (event) => {
+  let text = document.getElementById("searchengineTextbox").innerText.trim();
+  // Remove spaces just in case (e.g., "gmail . com")
+  const cleaned = text.replace(/\s+/g, "");
+  // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // Check if the cleaned text is *exactly* a domain
+  const isPureDomain = domainRegex.test(cleaned);
+  let url;
+  if (isPureDomain) {
+    // ⭐ PURE DOMAIN → Navigate directly
+    window.location.href = "https://" + cleaned;
+    return;
+  }
+  engineType = "navigate";
+});
+
 document.getElementById("images").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
   url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945&sxsrf=APpeQnum89enEMVZATiLWD0yh0mMe6oPJg%3A1788824443834&ei=e0ufas3CMvLMkPIP5PPV2Qw&ved=2ahUKEwiN7Kis0t2WAxVyJkQIHeR5NcsQ4dUDegQIBhAN&uact=5&oq=fsdfsdf&gs_lp=Egtnd3Mtd2l6LWltZyIHZnNkZnNkZjIKEAAYgAQYigUYQzIPEAAYgAQYChgLGLEDGIMBMgUQABiABDIJEAAYgAQYChgLMgkQABiABBgKGAsyBRAAGIAEMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAtIqANQAFgAcAF4AJABAJgBAKABAKoBALABALgBA8gBAJgCAaACAZgDAOIDBBgAIF3iAwQYACBe4gMEGAAgX-IDBBgAIGDiAwQYACBh4gMEGAAgYogGAZIHATGgBwCyBwC4BwDCBwMwLjHIBwGACAE&sclient=gws-wiz-img";
@@ -36,24 +53,18 @@ document.getElementById("text").addEventListener("click", (event) => {
 
 document.getElementById("search").addEventListener("click", (event) => {
   let text = document.getElementById("searchengineTextbox").innerText.trim();
-
   // Remove spaces just in case (e.g., "gmail . com")
   const cleaned = text.replace(/\s+/g, "");
-
   // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
   const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
   // Check if the cleaned text is *exactly* a domain
   const isPureDomain = domainRegex.test(cleaned);
-
   let url;
-
   if (isPureDomain) {
     // ⭐ PURE DOMAIN → Navigate directly
     window.location.href = "https://" + cleaned;
     return;
   }
-
   // ⭐ NOT a pure domain → treat as search
   if (engineType === "videos") {
     url = "https://www.google.com/search?q=" + encodeURIComponent(text) +
@@ -88,8 +99,10 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
     if (isPureDomain) {
       // ⭐ PURE DOMAIN → Navigate directly
-      window.location.href = "https://" + cleaned;
-      return;
+      document.getElementById("navigate").style.display = "block";
+    } else {
+      // ⭐ PURE DOMAIN → Navigate directly
+      document.getElementById("navigate").style.display = "none";
     }
 
     // ⭐ NOT a pure domain → treat as search
@@ -104,6 +117,19 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     }
 
     window.location.href = url;
+  }
+  let text = document.getElementById("searchengineTextbox").innerText.trim();
+  // Remove spaces just in case (e.g., "gmail . com")
+  const cleaned = text.replace(/\s+/g, "");
+  // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // Check if the cleaned text is *exactly* a domain
+  const isPureDomain = domainRegex.test(cleaned);
+  let url;
+  if (isPureDomain) {
+    // ⭐ PURE DOMAIN → Navigate directly
+    window.location.href = "https://" + cleaned;
+    return;
   }
 });
 
