@@ -12,9 +12,8 @@ function getFavicon(url) {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();
-});
+
 
 
 async function updateModuleIcons() {
