@@ -77,7 +77,7 @@ async function updateModuleIcons() {
 }
 
 function buildSearchURL(engineURL, query) {
-  const q = encodeURIComponent(query);
+  const q = query;
 
   // Normalize URL
   const url = engineURL.toLowerCase();
