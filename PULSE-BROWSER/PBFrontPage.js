@@ -100,6 +100,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     if (isPureDomain) {
       // ⭐ PURE DOMAIN → Navigate directly
       document.getElementById("navigate").style.display = "inline";
+      document.getElementById("navigate").style.backgroundColor = "red";
     } else {
       // ⭐ PURE DOMAIN → Navigate directly
       document.getElementById("navigate").style.display = "none";
@@ -130,6 +131,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
   if (isPureDomain) {
     // ⭐ PURE DOMAIN → Navigate directly
     document.getElementById("navigate").style.display = "inline";
+      document.getElementById("navigate").style.backgroundColor = "red";
   } else {
     // ⭐ PURE DOMAIN → Navigate directly
     document.getElementById("navigate").style.display = "none";
