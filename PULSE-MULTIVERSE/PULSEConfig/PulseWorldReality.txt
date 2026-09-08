@@ -1333,55 +1333,63 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
   // DISPLAY IMAGE + SIZE STATS
   // ---------------------------------------------------------
   async function showPulseExpressionImage(originalSize, compressedSize, originalFilename) {
-    const blob = await loadCachedImage();
+  const blob = await loadCachedImage();
 
-    if (!blob) {
-      document.getElementById("tp-test-metrics").textContent =
-        "No cached image found.";
-      return;
-    }
-
-    const url = URL.createObjectURL(blob);
-
-    const saved = originalSize - compressedSize;
-    const percent = ((saved / originalSize) * 100).toFixed(1);
-
-    // Load image to get dimensions
-    const img = new Image();
-    img.src = url;
-    await img.decode();
-
-    // ⭐ NEW REAL STATS
-    const binaryDensity = (compressedSize / (img.width * img.height)).toFixed(4);
-    let pulseFlow = 100 - (binaryDensity * 12);
-
-    // If compression failed (saved is negative), shrink PulseFlow heavily
-    if (saved < 0) {
-      const penalty = Math.min(Math.abs(saved) / originalSize * 100, 80); 
-      pulseFlow = Math.max(5, pulseFlow - penalty); 
-    }
-
-    const fidelity = pulseFlow.toFixed(1);
-
-
-    // Update UI fields
-    pexOriginalSize.textContent = `${(originalSize / 1024).toFixed(1)} KB`;
-    pexNewSize.textContent = `${(compressedSize / 1024).toFixed(1)} KB`;
-    pexDecodeSpeed.textContent = `${(saved / 1024).toFixed(1)} KB (${percent}% reduction)`;
-
-    // ⭐ These will now be DIFFERENT numbers
-    pexGpuUpload.textContent = `${binaryDensity} bytes/pixel (Binary Density)`;
-    pexScalingQuality.textContent = `${fidelity}% Pulse Flow`;
-
-    document.getElementById("tp-test-metrics").innerHTML = `
-      <div style="text-align:center; margin-top:10px;">
-        <img id="cacheFile" src="${url}" height="150" style="justify-self:center;border-radius:10px; box-shadow:0 0 12px rgba(0,0,0,0.25);">
-        <div style="margin-top:6px; font-size:14px; color:#8fa0b8;">
-          Image loaded from PulseWorld Binary Cache.
-        </div>
-      </div>
-    `;
+  if (!blob) {
+    document.getElementById("tp-test-metrics").textContent =
+      "No cached image found.";
+    return;
   }
+
+  const url = URL.createObjectURL(blob);
+
+  const saved = originalSize - compressedSize;
+  const percent = ((saved / originalSize) * 100).toFixed(1);
+
+  // Load image to get dimensions
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+
+  // ⭐ NEW REAL STATS
+  const binaryDensity = (compressedSize / (img.width * img.height)).toFixed(4);
+  let pulseFlow = 100 - (binaryDensity * 12);
+
+  // If compression failed (saved is negative), shrink PulseFlow heavily
+  if (saved < 0) {
+    const penalty = Math.min(Math.abs(saved) / originalSize * 100, 80); 
+    pulseFlow = Math.max(5, pulseFlow - penalty); 
+  }
+
+  const fidelity = pulseFlow.toFixed(1);
+
+  // Update UI fields
+  pexOriginalSize.textContent = `${(originalSize / 1024).toFixed(1)} KB`;
+  pexNewSize.textContent = `${(compressedSize / 1024).toFixed(1)} KB`;
+  pexDecodeSpeed.textContent = `${(saved / 1024).toFixed(1)} KB (${percent}% reduction)`;
+
+  // ⭐ These will now be DIFFERENT numbers
+  pexGpuUpload.textContent = `${binaryDensity} bytes/pixel (Binary Density)`;
+  pexScalingQuality.textContent = `${fidelity}% Pulse Flow`;
+
+  // Inject the image
+  document.getElementById("tp-test-metrics").innerHTML = `
+    <div style="text-align:center; margin-top:10px;">
+      <img id="cacheFile" src="${url}" height="150"
+           style="justify-self:center;border-radius:10px; box-shadow:0 0 12px rgba(0,0,0,0.25);">
+      <div style="margin-top:6px; font-size:14px; color:#8fa0b8;">
+        Image loaded from PulseWorld Binary Cache.
+      </div>
+    </div>
+  `;
+
+  // ⭐ DOUBLE‑CLICK HANDLER — open blob in new tab
+  const cacheImg = document.getElementById("cacheFile");
+  cacheImg.addEventListener("dblclick", () => {
+    window.open(url, "_blank");
+  });
+}
+
 
 
   let originalFilename = "";
