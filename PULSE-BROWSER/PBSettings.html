@@ -277,137 +277,144 @@
     </section>
 
   </div>
+<script>
+// Extension storage key
+const SETTINGS_KEY = "pulseworldSettings";
 
-  <script>
-  
-    // Simple modular settings storage using localStorage.
-    const SETTINGS_KEY = "pulseworldSettings";
+// -----------------------------
+// Load settings from extension
+// -----------------------------
+async function loadSettings() {
+  const result = await chrome.storage.local.get([SETTINGS_KEY]);
+  const settings = result[SETTINGS_KEY] || {};
 
-    function loadSettings() {
-      const raw = localStorage.getItem(SETTINGS_KEY);
-      let settings = {};
-      try {
-        settings = raw ? JSON.parse(raw) : {};
-      } catch {
-        settings = {};
-      }
+  // Email
+  document.getElementById("emailMode").value =
+    settings.emailMode || "internal";
+  document.getElementById("externalEmailLink").value =
+    settings.externalEmailLink || "";
 
-      // Email
-      document.getElementById("emailMode").value =
-        settings.emailMode || "internal";
-      document.getElementById("externalEmailLink").value =
-        settings.externalEmailLink || "";
+  // Banking
+  document.getElementById("bankMode").value =
+    settings.bankMode || "internal";
+  document.getElementById("externalBankLink").value =
+    settings.externalBankLink || "";
 
-      // Banking
-      document.getElementById("bankMode").value =
-        settings.bankMode || "internal";
-      document.getElementById("externalBankLink").value =
-        settings.externalBankLink || "";
+  // Business
+  document.getElementById("businessLink").value =
+    settings.businessLink || "";
+  document.getElementById("filesLink").value =
+    settings.filesLink || "";
 
-      // Business
-      document.getElementById("businessLink").value =
-        settings.businessLink || "";
-      document.getElementById("filesLink").value =
-        settings.filesLink || "";
+  // Public
+  document.getElementById("goPublicToggle").checked =
+    !!settings.goPublicEnabled;
+  document.getElementById("publicLink").value =
+    settings.publicLink || "";
 
-      // Public
-      document.getElementById("goPublicToggle").checked =
-        !!settings.goPublicEnabled;
-      document.getElementById("publicLink").value =
-        settings.publicLink || "";
+  // Programmatic
+  document.getElementById("programmaticEmail").checked =
+    !!settings.programmaticEmail;
+  document.getElementById("programmaticBanking").checked =
+    !!settings.programmaticBanking;
+}
 
-      // Programmatic
-      document.getElementById("programmaticEmail").checked =
-        !!settings.programmaticEmail;
-      document.getElementById("programmaticBanking").checked =
-        !!settings.programmaticBanking;
+// -----------------------------
+// Save settings to extension
+// -----------------------------
+async function saveSettings() {
+  const settings = {
+    emailMode: document.getElementById("emailMode").value,
+    externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
+
+    bankMode: document.getElementById("bankMode").value,
+    externalBankLink: document.getElementById("externalBankLink").value.trim(),
+
+    businessLink: document.getElementById("businessLink").value.trim(),
+    filesLink: document.getElementById("filesLink").value.trim(),
+
+    goPublicEnabled: document.getElementById("goPublicToggle").checked,
+    publicLink: document.getElementById("publicLink").value.trim(),
+
+    programmaticEmail: document.getElementById("programmaticEmail").checked,
+    programmaticBanking: document.getElementById("programmaticBanking").checked
+  };
+
+  await chrome.storage.local.set({ [SETTINGS_KEY]: settings });
+}
+
+// -----------------------------
+// Storage estimate (optional)
+// -----------------------------
+async function loadStorageEstimate() {
+  const statsEl = document.getElementById("storageStats");
+
+  if (!navigator.storage || !navigator.storage.estimate) {
+    statsEl.textContent = "Storage usage: not supported in this environment.";
+    return;
+  }
+
+  try {
+    const estimate = await navigator.storage.estimate();
+    const usedMB = ((estimate.usage || 0) / (1024 * 1024)).toFixed(2);
+    const quotaMB = ((estimate.quota || 0) / (1024 * 1024)).toFixed(2);
+
+    statsEl.textContent =
+      "Storage usage: " + usedMB + " MB used out of " + quotaMB + " MB available.";
+  } catch {
+    statsEl.textContent = "Storage usage: error reading estimate.";
+  }
+}
+
+// -----------------------------
+// Cache list (extension pages only)
+// -----------------------------
+async function loadCacheList() {
+  const listEl = document.getElementById("cacheList");
+
+  if (!("caches" in window)) {
+    listEl.innerHTML = "<li>Cache API not available.</li>";
+    return;
+  }
+
+  try {
+    const cacheNames = await caches.keys();
+    if (cacheNames.length === 0) {
+      listEl.innerHTML = "<li>No cached files detected.</li>";
+      return;
     }
 
-    function saveSettings() {
-      const settings = {
-        emailMode: document.getElementById("emailMode").value,
-        externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
+    listEl.innerHTML = "";
+    for (const name of cacheNames) {
+      const cache = await caches.open(name);
+      const requests = await cache.keys();
 
-        bankMode: document.getElementById("bankMode").value,
-        externalBankLink: document.getElementById("externalBankLink").value.trim(),
+      if (requests.length === 0) continue;
 
-        businessLink: document.getElementById("businessLink").value.trim(),
-        filesLink: document.getElementById("filesLink").value.trim(),
+      const groupLi = document.createElement("li");
+      groupLi.textContent = "Cache: " + name;
+      listEl.appendChild(groupLi);
 
-        goPublicEnabled: document.getElementById("goPublicToggle").checked,
-        publicLink: document.getElementById("publicLink").value.trim(),
-
-        programmaticEmail: document.getElementById("programmaticEmail").checked,
-        programmaticBanking: document.getElementById("programmaticBanking").checked
-      };
-
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-    }
-
-    async function loadStorageEstimate() {
-      const statsEl = document.getElementById("storageStats");
-      if (!navigator.storage || !navigator.storage.estimate) {
-        statsEl.textContent = "Storage usage: not supported in this environment.";
-        return;
-      }
-
-      try {
-        const estimate = await navigator.storage.estimate();
-        const usedBytes = estimate.usage || 0;
-        const quotaBytes = estimate.quota || 0;
-
-        const usedMB = (usedBytes / (1024 * 1024)).toFixed(2);
-        const quotaMB = (quotaBytes / (1024 * 1024)).toFixed(2);
-
-        statsEl.textContent =
-          "Storage usage: " + usedMB + " MB used out of " + quotaMB + " MB available.";
-      } catch (e) {
-        statsEl.textContent = "Storage usage: error reading estimate.";
+      for (const req of requests) {
+        const itemLi = document.createElement("li");
+        itemLi.textContent = "• " + req.url;
+        listEl.appendChild(itemLi);
       }
     }
+  } catch {
+    listEl.innerHTML = "<li>Error reading cache.</li>";
+  }
+}
 
-    async function loadCacheList() {
-      const listEl = document.getElementById("cacheList");
-
-      if (!("caches" in window)) {
-        listEl.innerHTML = "<li>Cache API not available.</li>";
-        return;
-      }
-
-      try {
-        const cacheNames = await caches.keys();
-        if (cacheNames.length === 0) {
-          listEl.innerHTML = "<li>No cached files detected.</li>";
-          return;
-        }
-
-        listEl.innerHTML = "";
-        for (const name of cacheNames) {
-          const cache = await caches.open(name);
-          const requests = await cache.keys();
-
-          if (requests.length === 0) continue;
-
-          const groupLi = document.createElement("li");
-          groupLi.textContent = "Cache: " + name;
-          listEl.appendChild(groupLi);
-
-          for (const req of requests) {
-            const itemLi = document.createElement("li");
-            itemLi.textContent = "• " + req.url;
-            listEl.appendChild(itemLi);
-          }
-        }
-      } catch (e) {
-        listEl.innerHTML = "<li>Error reading cache.</li>";
-      }
-    }
+// -----------------------------
+// Initialize
+// -----------------------------
 (async () => {
-  loadSettings();
-  loadStorageEstimate();
-  loadCacheList();
+  await loadSettings();
+  await loadStorageEstimate();
+  await loadCacheList();
 
-  // Wire all inputs to save on change.
+  // Auto-save on change
   const idsToWatch = [
     "emailMode",
     "externalEmailLink",
@@ -424,14 +431,15 @@
   idsToWatch.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
+
     const eventName =
       el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";
+
     el.addEventListener(eventName, saveSettings);
   });
-
 })();
+</script>
 
-  </script>
 
 </body>
 </html>
