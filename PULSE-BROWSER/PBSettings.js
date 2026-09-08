@@ -368,6 +368,41 @@ async function pbRenderCacheList() {
   PB_LOG.info("Cache list rendered", cacheNames);
 }
 
+async function updateStorageStats() {
+  const el = document.getElementById("storageStats");
+  if (!el) return;
+
+  // Check API availability
+  if (!navigator.storage || !navigator.storage.estimate) {
+    el.textContent = "Storage usage: StorageManager API not supported.";
+    return;
+  }
+
+  try {
+    const estimate = await navigator.storage.estimate();
+    const used = estimate.usage || 0;
+    const quota = estimate.quota || 0;
+
+    // Convert bytes → MB/GB
+    const usedMB = (used / (1024 * 1024)).toFixed(2);
+    const quotaMB = (quota / (1024 * 1024)).toFixed(2);
+    const percent = quota ? ((used / quota) * 100).toFixed(2) : "0";
+
+    // Persistent storage check
+    const persistent = await navigator.storage.persisted();
+
+    el.innerHTML = `
+      <strong>Storage Usage:</strong><br>
+      • Used: ${usedMB} MB<br>
+      • Quota: ${quotaMB} MB<br>
+      • Utilization: ${percent}%<br>
+      • Persistence: ${persistent ? "Granted" : "Not Granted"}
+    `;
+  } catch (err) {
+    el.textContent = "Storage usage: error retrieving stats.";
+  }
+}
+
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
@@ -378,6 +413,7 @@ if (location.href.includes("PBSettings.html")) {
 
     await loadExtensionSettingsUI();
     await pbRenderCacheList();   // ← NEW
+    await updateStorageStats();
 
     const idsToWatch = [
       "emailMode",
