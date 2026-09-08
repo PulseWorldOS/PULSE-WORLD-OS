@@ -89,6 +89,13 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
   // If ANY space exists → it's a search query
   if (text.includes(" ")) {
     navigateIcon.style.display = "none";
+    if (engineType === "videos") {
+      document.getElementById("videos").style.backgroundColor = "red";
+    } else if (engineType === "images") {
+      document.getElementById("images").style.backgroundColor = "red";
+    } else {
+      document.getElementById("text").style.backgroundColor = "red";
+    }
     return;
   }
 
