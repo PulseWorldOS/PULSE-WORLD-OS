@@ -282,14 +282,15 @@ function broadcastRealmState() {
 // Also emits PBACC_WARMPATH_EVENT for Realm HUD.
 // ---------------------------------------------------------------------------
 async function pbWarmPath(origin) {
-  // Ignore chrome:// and extension pages
+  // Ignore chrome:// and extension pages EXCEPT newtab
   if (
     !origin ||
-    origin.startsWith("chrome://") ||
+    (origin.startsWith("chrome://") && !origin.includes("newtab")) ||
     origin.startsWith("chrome-extension://")
   ) {
     return;
   }
+
 
   const S = await getSettings();
 

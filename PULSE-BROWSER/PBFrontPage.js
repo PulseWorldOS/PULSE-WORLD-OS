@@ -39,7 +39,7 @@ async function updateModuleIcons() {
   if (searchMode === "internal") {
     engineURL = "https://www.google.com/search?q=";
     searchEngineActivated = "Google.com";
-    document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+    document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
   } else {
     engineURL = buildSearchURL(searchEngineActiveLink);
   }
@@ -98,83 +98,83 @@ function buildSearchURL(engineURL, query) {
   // GOOGLE
   if (url.includes("google")) {
     searchEngineActivated = "Google.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://www.google.com/search?q=${q}`;
   }
 
   // YAHOO
   if (url.includes("yahoo")) {
     searchEngineActivated = "Yahoo.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://search.yahoo.com/search?p=${q}`;
   }
 
   // DUCKDUCKGO
   if (url.includes("duckduckgo") || url.includes("ddg")) {
     searchEngineActivated = "DuckDuckGo.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://duckduckgo.com/?q=${q}`;
   }
 
   // BING
   if (url.includes("bing")) {
     searchEngineActivated = "Bing.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://www.bing.com/search?q=${q}`;
   }
 
   // BRAVE
   if (url.includes("brave")) {
     searchEngineActivated = "Brave.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://search.brave.com/search?q=${q}`;
   }
 
   // BAIDU (China)
   if (url.includes("baidu")) {
     searchEngineActivated = "Baidu.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://www.baidu.com/s?wd=${q}`;
   }
 
   // NAVER (Korea)
   if (url.includes("naver")) {
     searchEngineActivated = "Naver.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://search.naver.com/search.naver?query=${q}`;
   }
 
   // YANDEX (Russia)
   if (url.includes("yandex")) {
     searchEngineActivated = "Yandex.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://yandex.com/search/?text=${q}`;
   }
 
   // ASK
   if (url.includes("ask")) {
     searchEngineActivated = "Ask.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://www.ask.com/web?q=${q}`;
   }
 
   // ECOSIA
   if (url.includes("ecosia")) {
     searchEngineActivated = "Ecosia.org";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://www.ecosia.org/search?q=${q}`;
   }
 
   // QWANT
   if (url.includes("qwant")) {
     searchEngineActivated = "Qwant.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
     return `https://www.qwant.com/?q=${q}`;
   }
 
   // Fallback: append query to custom engine
   searchEngineActivated = "Google.com";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
   return `https://www.google.com/search?q=${q}`;
 }
 
