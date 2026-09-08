@@ -32,9 +32,6 @@ document.getElementById("text").addEventListener("click", (event) => {
 
 document.getElementById("search").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
-  // Build Google search URL
-  url = "https://www.google.com/search?q=" + encodeURIComponent(text);
-  // Navigate
   window.location.href = url;
 });
 
