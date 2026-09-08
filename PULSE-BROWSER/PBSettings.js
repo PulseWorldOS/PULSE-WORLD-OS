@@ -348,10 +348,6 @@ async function pbRenderCacheList() {
   PB_LOG.info("Cache list rendered", cacheNames);
 }
 
-document.getElementById("backBtn").addEventListener("click", (event) => {
-  window.location.href = chrome.runtime.getURL("PBPopup.html");
-});
-
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
