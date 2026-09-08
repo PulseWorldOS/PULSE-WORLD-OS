@@ -1,5 +1,6 @@
 
 let userInteracted = false;
+let searchEngineActivated = null;
 
 function getFavicon(url) {
   const u = new URL(url);
@@ -26,6 +27,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
+
+  
+  searchEngineActivated = settings.externalSearchLink;
 
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
@@ -96,13 +100,9 @@ function buildSearchURL(engineURL, query) {
   return `${engineURL}${q}`;
 }
 
-const text = document.getElementById("searchengineTextbox").innerText.trim();
-const settings = await pbLoadExtensionSettings();
-
-const engineURL = settings.externalSearchLink || "https://www.google.com/search?q=";
+const engineURL = searchEngineActivated || "https://www.google.com/search?q=";
 const url = buildSearchURL(engineURL, text);
 
-window.location.href = url;
 
 document.getElementById("searchus").addEventListener("click", (event) => {
   window.location.href = engineURL + encodeURIComponent("pulseworld.net");
