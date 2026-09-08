@@ -1,31 +1,23 @@
 
 let userInteracted = false;
 
-async function getFavicon(url) {
+function getFavicon(url) {
   try {
     const u = new URL(url);
-
-    // 1. Try the full origin first
-    const primary = `${u.origin}/favicon.ico`;
-    const ok = await faviconExists(primary);
-    if (ok) return primary;
-
+    console.log(`${u.origin}/favicon.ico`);
+    // Simple, reliable default: /favicon.ico on the origin
+    return `${u.origin}/favicon.ico`;
+  } catch {
     // 2. Strip subdomain → get root domain
     const parts = u.hostname.split(".");
     if (parts.length > 2) {
       const root = parts.slice(parts.length - 2).join(".");
       const fallback = `https://${root}/favicon.ico`;
-
-      const ok2 = await faviconExists(fallback);
-      if (ok2) return fallback;
+      return fallback; // external ONLY — no fallback
     }
-
-    return null; // external ONLY — no fallback image
-  } catch {
-    return null;
+    return null; // external ONLY — no fallback
   }
 }
-
 
 window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();
