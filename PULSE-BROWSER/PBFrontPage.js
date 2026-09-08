@@ -410,5 +410,6 @@ setInterval(() => {
     timerX = 0;
   } else if (userInteracted) {
     document.getElementById("timerBtn").textContent = `~`;
+    timerX = 0;
   }
 }, 1000);
