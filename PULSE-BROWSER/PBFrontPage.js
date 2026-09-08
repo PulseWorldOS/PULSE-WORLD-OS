@@ -233,7 +233,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
+    const link = settings.externalEmailLink?.trim();
 
     console.log("[FrontPage] Opening External Email Provider:", link);
 
