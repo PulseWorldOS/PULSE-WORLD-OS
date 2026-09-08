@@ -1,3 +1,7 @@
+pbLoadSettings().then(settings => {
+    console.log("[FrontPage] Loaded settings:", settings);
+});
+
 let userInteracted = false;
 let engineType = "text";
 const text = document.getElementById("searchengineTextbox").innerText.trim();
@@ -156,6 +160,30 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     window.location.href = url;
   }
 });
+
+document.getElementById("moduleEmail").addEventListener("click", async () => {
+
+    const settings = await pbLoadSettings();
+
+    console.log("[FrontPage] Email module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Email on the real domain
+    if (settings.emailMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
+        console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
+
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
+
+    console.log("[FrontPage] Opening External Email Provider:", link);
+
+    chrome.tabs.create({ url: link });
+});
+
 
 
 // Any interaction cancels redirect
