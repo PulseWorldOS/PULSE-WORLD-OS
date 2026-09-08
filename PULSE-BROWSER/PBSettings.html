@@ -280,13 +280,6 @@
 
   <script>
   
-PulseRealm._2_DOM_START = performance.now();
-log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
-
-log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
-  "color:gold; font-weight:bold; font-family:monospace;");
-
-
     // Simple modular settings storage using localStorage.
     const SETTINGS_KEY = "pulseworldSettings";
 
@@ -435,9 +428,6 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
       el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";
     el.addEventListener(eventName, saveSettings);
   });
-
-  PulseRealm.__LOAD_END = performance.now();
-  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
 
 })();
 
