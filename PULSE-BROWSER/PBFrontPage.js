@@ -43,7 +43,6 @@ async function updateModuleIcons() {
   } else {
     engineURL = buildSearchURL(searchEngineActiveLink);
   }
-  engineURL = buildSearchURL(searchEngineActiveLink) || "https://www.google.com/search?q=";
 
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
