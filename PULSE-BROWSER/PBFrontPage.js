@@ -409,7 +409,7 @@ setInterval(() => {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
   } else if (userInteracted) {
-    document.getElementById("timerBtn").textContent = `~`;
+    document.getElementById("timerBtn").style.display = "none";
     timerX = 0;
   }
 }, 1000);
