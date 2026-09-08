@@ -182,7 +182,7 @@ document.getElementById("btn-open-email").onclick = async () => {
     console.log("[FrontPage] Opening External Email Provider:", link);
 
     chrome.tabs.create({ url: link });
-});
+};
 
 // ---------------------------------------------------------------------------
 // BUTTON: Refresh HUD (Realm Snapshot)
