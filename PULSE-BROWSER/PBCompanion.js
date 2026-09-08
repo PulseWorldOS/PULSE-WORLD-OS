@@ -628,7 +628,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 });
 
-let cacheNames = null;
 // ============================================================================
 //  SECTION 6 — MESSAGE BUS (Popup + Content + DevTools)
 // ============================================================================
@@ -636,10 +635,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
   switch (msg.type) {
-
+    
     case "GET_CACHE_LIST":
-      getCacheList().then(() => sendResponse({ cacheNames }));
-      break;
+      (async () => {
+        try {
+          const cacheNames = await caches.keys();
+          sendResponse({ ok: true, caches: cacheNames });
+        } catch (err) {
+          sendResponse({ ok: false, error: err.toString() });
+        }
+      })();
+
+      return true; // ⭐ REQUIRED for async response
   
     case "PULSE_OS_PING":
       PulseRealmState.lastPing = Date.now();
@@ -854,10 +861,6 @@ async function clearPulseCaches() {
         "color:#FF5555; font-weight:bold;");
     }
   }
-}
-
-async function getCacheList() {
-  cacheNames = await caches.keys();
 }
 
 // ============================================================================
