@@ -2,8 +2,8 @@
 let userInteracted = false;
 
 function getFavicon(url) {
+  const u = new URL(url);
   try {
-    const u = new URL(url);
     console.log(`${u.origin}/favicon.ico`);
     // Simple, reliable default: /favicon.ico on the origin
     return `${u.origin}/favicon.ico`;
