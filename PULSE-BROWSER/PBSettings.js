@@ -3,7 +3,6 @@
 //  Unified OS Registry + Extension Settings Page + MV3-Compliant Storage
 //  FULL DIAGNOSTIC MODE — Every change logged, color-coded, timestamped
 // ============================================================================
-
 const PB_LOG = {
   info(label, data) {
     console.log(
@@ -48,26 +47,13 @@ const PB_LOG = {
   }
 };
 
-PB_LOG.info("PBSettings (Ultra Edition v7.0) loaded");
+PB_LOG.info("PBSettings (Ultra Edition v7.1) loaded");
 
 // ============================================================================
-//  SECTION 1 — OS REGISTRY DEFAULTS
+//  SECTION 1 — OS REGISTRY DEFAULTS (NO EXTENSION SETTINGS HERE)
 // ============================================================================
 
 const PB_DEFAULT_SETTINGS = {
-  // EXTENSION SETTINGS MIRROR (so FrontPage can read them)
-  emailMode: "internal",
-  externalEmailLink: "",
-  bankMode: "internal",
-  externalBankLink: "",
-  businessLink: "",
-  filesLink: "",
-  goPublicEnabled: false,
-  publicLink: "",
-  programmaticEmail: false,
-  programmaticBanking: false,
-  
-  // (Your entire default block unchanged)
   enableInterceptor: true,
   enableAccelerator: true,
   enableNavigator: true,
@@ -189,7 +175,7 @@ const PB_DEFAULT_SETTINGS = {
 };
 
 // ============================================================================
-//  SECTION 2 — EXTENSION SETTINGS PAGE (PBSettings.html)
+//  SECTION 2 — EXTENSION SETTINGS (SEPARATE STORAGE)
 // ============================================================================
 
 const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
@@ -256,7 +242,7 @@ async function saveExtensionSettingsUI() {
 }
 
 // ============================================================================
-//  SECTION 3 — OS REGISTRY LOAD/SAVE
+//  SECTION 3 — OS REGISTRY LOAD/SAVE (SEPARATE)
 // ============================================================================
 
 function pbLoadSettings() {
