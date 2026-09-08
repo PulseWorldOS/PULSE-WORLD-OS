@@ -401,10 +401,11 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
 });
 
 let timerX = 0;
+document.getElementById("timerBtn").textContent = timerX;
 
 setInterval(() => {
-  document.getElementById("timerBtn").textContent = timerX;
   timerX++;
+  document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 8) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
