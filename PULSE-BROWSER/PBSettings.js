@@ -66,8 +66,7 @@ const PB_DEFAULT_SETTINGS = {
   publicLink: "",
   programmaticEmail: false,
   programmaticBanking: false,
-  experimentalPortalTransitions: false,
-  experimentalMeshAwareness: false,
+  
   // (Your entire default block unchanged)
   enableInterceptor: true,
   enableAccelerator: true,
