@@ -100,8 +100,22 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
   if (isDomainIntent) {
     navigateIcon.style.display = "inline";
     navigateIcon.style.backgroundColor = "red";
+    if (engineType === "videos") {
+      document.getElementById("videos").style.backgroundColor = "black";
+    } else if (engineType === "images") {
+      document.getElementById("images").style.backgroundColor = "black";
+    } else {
+      document.getElementById("text").style.backgroundColor = "black";
+    }
   } else {
     navigateIcon.style.display = "none";
+    if (engineType === "videos") {
+      document.getElementById("videos").style.backgroundColor = "red";
+    } else if (engineType === "images") {
+      document.getElementById("images").style.backgroundColor = "red";
+    } else {
+      document.getElementById("text").style.backgroundColor = "red";
+    }
   }
 });
 
