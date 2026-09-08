@@ -128,7 +128,7 @@
     }
     /* FIXED BUTTON — now an anchor */
     .text {
-      width: 25px;
+      width: 20px;
       height: 25px;
       margin-right: 8px;
       padding: 2px;
@@ -137,7 +137,7 @@
       background-color: red;
     }
     .videos {
-      width: 25px;
+      width: 20px;
       height: 25px;
       margin-right: 2px;
       padding: 2px;
@@ -146,7 +146,7 @@
       background-color: black;
     }
     .images {
-      width: 25px;
+      width: 20px;
       height: 25px;
       margin-right: 2px;
       padding: 2px;
@@ -155,7 +155,7 @@
       background-color: black;
     }
     .navigate {
-      width: 25px;
+      width: 20px;
       height: 25px;
       display: none;
       margin-right: 2px;
@@ -387,82 +387,244 @@
       box-shadow: 0 0 18px rgba(68, 170, 255, 0.4);
     }
 
+    /* ============================
+    GLOBAL LAYOUT IMPROVEMENTS
+    ============================ */
+
+    .core {
+      width: 900px;
+      max-width: 90%;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* ============================
+      SEARCH AREA
+      ============================ */
+
+    .search-area {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .search-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    /* Search box glow upgrade */
+    .search-engine-textbox {
+      min-height: 60px;
+      width: 600px;
+      max-width: 90%;
+      background: rgba(10, 10, 10, 0.85);
+      color: #eee;
+      font-size: 24px;
+      font-weight: 500;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 2px solid #333;
+      outline: none;
+      box-shadow: 0 0 18px rgba(0, 150, 255, 0.25);
+      backdrop-filter: blur(4px);
+    }
+
+    .search-engine-textbox:focus {
+      border-color: #4af;
+      box-shadow: 0 0 28px rgba(68, 170, 255, 0.45);
+    }
+
+    /* ============================
+      SEARCH ICON BUTTONS
+      ============================ */
+
+    .navigate,
+    .images,
+    .videos,
+    .text {
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+      border: 2px solid #00aaff;
+      background: rgba(0, 0, 0, 0.6);
+
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+
+    .navigate:hover,
+    .images:hover,
+    .videos:hover,
+    .text:hover {
+      transform: scale(1.15);
+      background: rgba(0, 150, 255, 0.4);
+      box-shadow: 0 0 18px rgba(0, 150, 255, 0.6);
+    }
+
+    .navigate {
+      display: none; /* controlled by JS */
+    }
+
+    /* ============================
+      MAIN BUTTON GROUPS
+      ============================ */
+
+    .main-links,
+    .business-links,
+    .identity-links {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* ============================
+      MODULE CONSOLE
+      ============================ */
+
+    .module-console {
+      margin-top: 40px;
+      padding: 20px;
+      width: 700px;
+      max-width: 90%;
+
+      background: rgba(0, 0, 0, 0.55);
+      border: 2px solid #00aaff55;
+      border-radius: 16px;
+
+      box-shadow: 0 0 25px rgba(0, 150, 255, 0.25);
+      backdrop-filter: blur(6px);
+
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .module-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
+    .module-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .module-btn {
+      padding: 10px 18px;
+      background: #111;
+      color: #fff;
+      border-radius: 10px;
+      border: 2px solid #00aaff88;
+
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+
+    .module-btn:hover {
+      background: #003344;
+      box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
+      transform: scale(1.08);
+    }
+
+
   </style>
 </head>
-
 <body>
 
   <div class="nebula"></div>
   <div class="shimmer"></div>
 
   <div class="core">
+
+    <!-- Logo + Title -->
     <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" />
 
     <div class="title">PulseBrowser OS</div>
-
     <div class="subtitle">
       Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime
     </div>
-    
-   <p>
-      <div id="searchengineTextbox"
-          class="search-engine-textbox"
-          contenteditable="true"
-          role="textbox"
-          aria-label="Search Engine TextBox"></div>
-      <a class="navigate" id="navigate">
-        🔗
-      </a>
-      <a class="images" id="images">
-        🖼️
-      </a>
-      <a class="videos" id="videos">
-        🎬
-      </a>
-      <a class="text" id="text">
-        📄
-      </a>
-      <a class="search" id="search">
-        🔍 Pulse Search Engine (Google.com)
-      </a>
-      <a class="searchus" id="searchus">
-        Who We Are? 🧑‍🎨
-      </a>
-    </p>
 
+    <!-- Search Area -->
+    <div class="search-area">
 
-    <p>
-    <!-- ⭐ FIXED BUTTON: real link -->
-    <a class="enter" id="enter" href="https://www.pulseworld.net">
-      🌐 Enter PulseWorld
-    </a>
-    </p>
+      <div class="search-row">
+        <div id="searchengineTextbox"
+             class="search-engine-textbox"
+             contenteditable="true"
+             role="textbox"
+             aria-label="Search Engine TextBox"></div>
 
-    <p>
-    <!-- ⭐ FIXED BUTTON: real link -->
-    <a class="engage" id="engage1" href="https://www.pulseworld.biz">
-      💼 PulseBusiness
-    </a>
-    <!-- ⭐ FIXED BUTTON: real link -->
-    <a class="engage" id="engage2" href="https://www.pulseworld.money">
-      🏦 PulseBanking
-    </a>
-    </p>
+        <!-- Intent Icons -->
+        <a class="navigate" id="navigate">🔗</a>
+        <a class="images" id="images">🖼️</a>
+        <a class="videos" id="videos">🎬</a>
+        <a class="text" id="text">📄</a>
+      </div>
 
-    <p>
-    <a class="setup" id="setup" href="https://www.pulseworld.net/?Impulse=PulseWorldInventory">
-      👤 PulseIdentity
-    </a>
-    <!-- ⭐ FIXED BUTTON: real link -->
-    <a class="setup" id="setup" href="https://www.pulseworld.net/?Impulse=PulseWorldSettings">
-      🛠️ PulseSettings
-    </a>
-    </p>
+      <div class="search-actions">
+        <a class="search" id="search">🔍 Pulse Search Engine (Google.com)</a>
+        <a class="searchus" id="searchus">Who We Are? 🧑‍🎨</a>
+      </div>
+
+    </div>
+
+    <!-- Main Navigation Buttons -->
+    <div class="main-links">
+      <a class="enter" id="enter" href="https://www.pulseworld.net">🌐 Enter PulseWorld</a>
+    </div>
+
+    <div class="business-links">
+      <a class="engage" id="engage1" href="https://www.pulseworld.biz">💼 PulseBusiness</a>
+      <a class="engage" id="engage2" href="https://www.pulseworld.money">🏦 PulseBanking</a>
+    </div>
+
+    <div class="identity-links">
+      <a class="setup" href="https://www.pulseworld.net/?Impulse=PulseWorldInventory">👤 PulseIdentity</a>
+      <a class="setup" href="https://www.pulseworld.net/?Impulse=PulseWorldSettings">🛠️ PulseSettings</a>
+    </div>
+
+    <!-- ⭐ PulseBrowser Modules Console -->
+    <div class="module-console">
+
+      <div class="module-title">PulseBrowser Modules</div>
+
+      <div class="module-row">
+        <a class="module-btn" id="moduleBank">🏦 Banking Module</a>
+        <a class="module-btn" id="moduleEmail">📧 Email Module</a>
+        <a class="module-btn" id="moduleFav1">⭐ Favorite Module 1</a>
+        <a class="module-btn" id="moduleFav2">⭐ Favorite Module 2</a>
+      </div>
+
+    </div>
 
   </div>
 
-  <!-- ⭐ FIXED: external JS file -->
   <script src="PBFrontpage.js"></script>
 
 </body>
-</html>
+
