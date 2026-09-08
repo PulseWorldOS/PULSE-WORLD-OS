@@ -11,6 +11,10 @@ function getFavicon(url) {
   }
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  updateModuleIcons();
+});
+
 
 async function updateModuleIcons() {
   const settings = await pbLoadSettings();
@@ -235,11 +239,6 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
 
     chrome.tabs.create({ url: link });
 });
-
-window.addEventListener("DOMContentLoaded", () => {
-  updateModuleIcons();
-});
-
 
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
