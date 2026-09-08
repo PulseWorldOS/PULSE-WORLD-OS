@@ -623,6 +623,7 @@ const isLogic = current.includes("booleanlogic.net");
 const isOrb = current.includes("orbitalmap.net");
 const isMoney = current.includes("pulseworld.money");
 const isBiz = current.includes("pulseworld.biz");
+const isSettings = current.includes("pulseworld.me");
 function loadAudioDisabled() {
   try {
     const audio = localStorage.getItem("pwAudioDisabled");
@@ -776,6 +777,11 @@ else if (isOrb) {
 else if (isBiz) {
   DEFAULT_INDEX = "PulseWorldBusiness.txt";
   document.title = "PulseWorld.Biz - Digital Business Hub";
+  setFavicon("./PWBFavIcon.ico");
+}
+else if (isSettings) {
+  DEFAULT_INDEX = "PulseWorldSettings.txt";
+  document.title = "PulseWorld.Me - Digital Identity Settings";
   setFavicon("./PWBFavIcon.ico");
 }
 else if (isMoney) {
@@ -3622,6 +3628,9 @@ if (homeBtn) {
     let checkPage = PulseRealm.__PULSE_CURRENT_PAGE__;
     if (isBiz) {
       checkPage = "PulseWorldBusiness";
+    }
+    else if (isSettings) {
+      checkPage = "PulseWorldSettings";
     }
     else if (isMoney) {
       checkPage = "PulseWorldBanking";
