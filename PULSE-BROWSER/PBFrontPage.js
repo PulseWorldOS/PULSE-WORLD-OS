@@ -403,6 +403,7 @@ let timerX = 0;
 
 setInterval(() => {
   timerX++;
+  document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 8) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
