@@ -413,13 +413,13 @@ function updateLinkedPWInputs() {
   const selects = document.querySelectorAll(".pw-select");
 
   selects.forEach(select => {
-    // Find the section this select belongs to
-    const section = select.closest(".pw-section");
-    if (!section) return;
+    // Example: "emailMode" → "externalEmailLink"
+    const modeId = select.id; // emailMode
+    const baseName = modeId.replace("Mode", ""); // email
+    const inputId = "external" + baseName.charAt(0).toUpperCase() + baseName.slice(1) + "Link";
+    // externalEmailLink
 
-    // Find the pw-input that comes AFTER the select
-    // This ensures we ONLY disable the one directly under the select
-    const linkedInput = section.querySelector(".pw-input");
+    const linkedInput = document.getElementById(inputId);
     if (!linkedInput) return;
 
     // Apply logic
