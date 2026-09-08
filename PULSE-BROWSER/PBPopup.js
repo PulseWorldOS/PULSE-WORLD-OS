@@ -161,7 +161,7 @@ document.getElementById("btn-toggle-decode").onclick = () =>
 document.getElementById("btn-open-settings").onclick = () =>
   window.location.href = chrome.runtime.getURL("PBSettings.html");
 
-document.getElementById("btn-open-email").addEventListener("click", async () => {
+document.getElementById("btn-open-email").onclick = async () => {
 
     const settings = await pbLoadSettings();
 
