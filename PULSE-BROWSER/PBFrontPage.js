@@ -2,6 +2,7 @@
 let userInteracted = false;
 let engineType = "text";
 let searchEngineActiveLink = null;
+let searchMode = "Internal";
 let searchEngineActivated = "*Google.com";
 
 let engineURL = buildSearchURL("google.com");
@@ -34,7 +35,14 @@ async function updateModuleIcons() {
 
   
   searchEngineActiveLink = settings.externalSearchLink;
-    
+  searchMode = settings.searchMode;
+  if (searchMode === "Internal") {
+    engineURL = "https://www.google.com/search?q=";
+    searchEngineActivated = "Google.com";
+    document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
+  } else {
+    engineURL = buildSearchURL(searchEngineActiveLink);
+  }
   engineURL = buildSearchURL(searchEngineActiveLink) || "https://www.google.com/search?q=";
 
   // EMAIL MODULE
@@ -83,7 +91,7 @@ function cleanQuery(query) {
 function buildSearchURL(engineURL, query) {
   if (query) query = cleanQuery(query);     // ← THIS removes the symbol
   const q = encodeURIComponent(query);
-
+  
 
   // Normalize URL
   const url = engineURL.toLowerCase();
