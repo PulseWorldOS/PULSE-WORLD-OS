@@ -18,7 +18,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 async function updateModuleIcons() {
-  const settings = await pbLoadSettings();
+  const settings = await pbLoadExtensionSettings();
 
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
