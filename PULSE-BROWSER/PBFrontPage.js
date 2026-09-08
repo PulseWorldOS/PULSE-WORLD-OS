@@ -7,22 +7,24 @@ document.getElementById("searchus").addEventListener("click", (event) => {
   window.location.href = "https://www.google.com/search?q=" + encodeURIComponent("pulseworld.net");
 });
 
-document.getElementById("navigate").addEventListener("click", (event) => {
+document.getElementById("navigate").addEventListener("click", () => {
   let text = document.getElementById("searchengineTextbox").innerText.trim();
-  // Remove spaces just in case (e.g., "gmail . com")
-  const cleaned = text.replace(/\s+/g, "");
-  // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
-  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // Check if the cleaned text is *exactly* a domain
-  const isPureDomain = domainRegex.test(cleaned);
-  let url;
-  if (isPureDomain) {
-    // ⭐ PURE DOMAIN → Navigate directly
-    window.location.href = "https://" + cleaned;
-    return;
+
+  // If ANY space exists → not navigation
+  if (text.includes(" ")) {
+    return; // do nothing
   }
-  engineType = "navigate";
+
+  // Domain or domain + path
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+
+  const isDomainIntent = domainRegex.test(text);
+
+  if (isDomainIntent) {
+    window.location.href = "https://" + text;
+  }
 });
+
 
 document.getElementById("images").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
