@@ -75,9 +75,15 @@ async function updateModuleIcons() {
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
   
 }
+function cleanQuery(query) {
+  // Remove ZERO‑WIDTH characters that cause "undefineddfg"
+  return query.replace(/[\u200B-\u200D\uFEFF]/g, "");
+}
 
 function buildSearchURL(engineURL, query) {
-  const q = query;
+  query = cleanQuery(query);     // ← THIS removes the symbol
+  const q = encodeURIComponent(query);
+
 
   // Normalize URL
   const url = engineURL.toLowerCase();
