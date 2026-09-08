@@ -7,7 +7,7 @@ function getFavicon(url) {
     // Simple, reliable default: /favicon.ico on the origin
     return `${u.origin}/favicon.ico`;
   } catch {
-    return null; // external ONLY — no fallback
+    return `PulseWorldOSLogo.png`; // external ONLY — no fallback
   }
 }
 
