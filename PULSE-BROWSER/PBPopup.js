@@ -161,6 +161,28 @@ document.getElementById("btn-toggle-decode").onclick = () =>
 document.getElementById("btn-open-settings").onclick = () =>
   window.location.href = chrome.runtime.getURL("PBSettings.html");
 
+document.getElementById("btn-open-email").addEventListener("click", async () => {
+
+    const settings = await pbLoadSettings();
+
+    console.log("[FrontPage] Email module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Email on the real domain
+    if (settings.emailMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
+        console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
+
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
+
+    console.log("[FrontPage] Opening External Email Provider:", link);
+
+    chrome.tabs.create({ url: link });
+});
 
 // ---------------------------------------------------------------------------
 // BUTTON: Refresh HUD (Realm Snapshot)
