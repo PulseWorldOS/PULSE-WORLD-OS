@@ -36,7 +36,7 @@ async function updateModuleIcons() {
   
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
-  if (searchMode === "Internal") {
+  if (searchMode === "internal") {
     engineURL = "https://www.google.com/search?q=";
     searchEngineActivated = "Google.com";
     document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
