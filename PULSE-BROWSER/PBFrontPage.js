@@ -408,10 +408,3 @@ setInterval(() => {
     timerX = 0;
   }
 }, 1000);
-
-// Auto‑redirect ONLY if user did not type or interact
-setTimeout(() => {
-  if (!userInteracted) {
-    window.location.href = "https://www.pulseworld.net";
-  }
-}, 8500);
