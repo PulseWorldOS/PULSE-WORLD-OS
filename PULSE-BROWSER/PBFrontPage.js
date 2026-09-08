@@ -1,5 +1,6 @@
 
 let userInteracted = false;
+let engineType = "text";
 let searchEngineActivated = null;
 
 function getFavicon(url) {
