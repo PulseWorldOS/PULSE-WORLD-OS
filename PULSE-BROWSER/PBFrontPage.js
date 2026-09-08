@@ -43,6 +43,11 @@ async function updateModuleIcons() {
   
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
+  socialMediaActiveLink = settings.externalSocialLink;
+  socialMode = settings.socialMode;
+  workActiveLink = settings.externalWorkLink;
+  workMode = settings.workMode;
+
   if (searchMode === "internal") {
     engineURL = "https://www.google.com/search?q=";
     searchEngineActivated = "Google.com";
@@ -81,12 +86,49 @@ async function updateModuleIcons() {
     }
   }
 
+  // SOCIAL MODULE
+  const socialIcon = document.getElementById("moduleSocialIcon");
+  if (settings.socialMode === "internal") {
+    socialIcon.innerText = "🏦";      // your original emoji
+    socialIcon.style.backgroundImage = "";
+  } else {
+    const fav = getFavicon(settings.externalSocialLink);
+    if (fav) {
+      socialIcon.innerText = "";
+      socialIcon.style.backgroundImage = `url(${fav})`;
+      socialIcon.style.backgroundSize = "contain";
+      socialIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // WORK MODULE
+  const workIcon = document.getElementById("moduleWorkIcon");
+  if (settings.workMode === "internal") {
+    workIcon.innerText = "🏦";      // your original emoji
+    workIcon.style.backgroundImage = "";
+  } else {
+    const fav = getFavicon(settings.externalWorkLink);
+    if (fav) {
+      workIcon.innerText = "";
+      workIcon.style.backgroundImage = `url(${fav})`;
+      workIcon.style.backgroundSize = "contain";
+      workIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
   // FAVORITES (always your emojis)
   document.getElementById("moduleFav1Icon").innerText = "⭐";
   document.getElementById("moduleFav1Icon").style.backgroundImage = "";
 
   document.getElementById("moduleFav2Icon").innerText = "⭐";
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
+
+  // FAVORITES (always your emojis)
+  document.getElementById("moduleFav3Icon").innerText = "⭐";
+  document.getElementById("moduleFav3Icon").style.backgroundImage = "";
+
+  document.getElementById("moduleFav4Icon").innerText = "⭐";
+  document.getElementById("moduleFav4Icon").style.backgroundImage = "";
   
 }
 function cleanQuery(query) {
