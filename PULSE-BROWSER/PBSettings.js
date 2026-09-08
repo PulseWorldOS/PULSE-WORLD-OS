@@ -212,7 +212,10 @@ async function loadExtensionSettingsUI() {
     programmaticBanking: "programmaticBanking",
     searchMode: "searchMode",
     externalSearchLink: "externalSearchLink",
-
+    socialMode: "socialMode",
+    externalSocialLink: "externalSocialLink",
+    workMode: "workMode",
+    externalWorkLink: "externalWorkLink",
   };
 
   for (const id in fields) {
@@ -252,7 +255,11 @@ async function saveExtensionSettingsUI() {
     programmaticBanking: document.getElementById("programmaticBanking").checked,
 
     searchMode: document.getElementById("searchMode").value,
-    externalSearchLink: document.getElementById("externalSearchLink").value.trim()
+    externalSearchLink: document.getElementById("externalSearchLink").value.trim(),
+    socialMode: document.getElementById("socialMode").value,
+    externalSocialLink: document.getElementById("externalSocialLink").value.trim(),
+    workMode: document.getElementById("workMode").value,
+    externalWorkLink: document.getElementById("externalWorkLink").value.trim()
     
   };
 
@@ -458,7 +465,10 @@ if (location.href.includes("PBSettings.html")) {
       "programmaticBanking",
       "searchMode",
       "externalSearchLink",
-
+      "socialMode",
+      "externalSocialLink",
+      "workMode",
+      "externalWorkLink",
     ];
 
     idsToWatch.forEach(id => {

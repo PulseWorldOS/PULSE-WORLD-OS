@@ -2,6 +2,10 @@
 let userInteracted = false;
 let engineType = "text";
 let searchEngineActiveLink = null;
+let socialMode = "Internal";
+let socialMediaActiveLink = null;
+let workMode = "Internal";
+let workActiveLink = null;
 let searchMode = "Internal";
 let searchEngineActivated = "*Google.com";
 
