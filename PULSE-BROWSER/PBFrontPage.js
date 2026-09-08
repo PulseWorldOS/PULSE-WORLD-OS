@@ -149,8 +149,8 @@ function buildSearchURL(engineURL, query) {
   }
 
   // Fallback: append query to custom engine
-  searchEngineActivated = engineURL;
-  return `${engineURL}${q}`;
+  searchEngineActivated = "Google.com";
+  return `https://www.google.com/search?q=${q}`;
 }
 
 
