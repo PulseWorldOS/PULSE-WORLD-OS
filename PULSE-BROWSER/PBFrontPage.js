@@ -6,6 +6,7 @@ let searchMode = "Internal";
 let searchEngineActivated = "*Google.com";
 
 let engineURL = buildSearchURL("google.com");
+let url = engineURL;
 
 function getFavicon(url) {
   const u = new URL(url);
@@ -91,7 +92,6 @@ function buildSearchURL(engineURL, query) {
   if (query) query = cleanQuery(query);     // ← THIS removes the symbol
   const q = encodeURIComponent(query);
   
-
   // Normalize URL
   const url = engineURL.toLowerCase();
 
@@ -184,7 +184,7 @@ document.getElementById("searchus").addEventListener("click", (event) => {
 });
 
 document.getElementById("navigate").addEventListener("click", () => {
-  let text = document.getElementById("searchengineTextbox").innerText.trim();
+  let text = document.getElementById("searchengineTextbox").value.trim();
 
   // If ANY space exists → not navigation
   if (text.includes(" ")) {
@@ -203,7 +203,7 @@ document.getElementById("navigate").addEventListener("click", () => {
 
 
 document.getElementById("images").addEventListener("click", (event) => {
-  const text = document.getElementById("searchengineTextbox").innerText.trim();
+  const text = document.getElementById("searchengineTextbox").value.trim();
   url = engineURL + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945&sxsrf=APpeQnum89enEMVZATiLWD0yh0mMe6oPJg%3A1788824443834&ei=e0ufas3CMvLMkPIP5PPV2Qw&ved=2ahUKEwiN7Kis0t2WAxVyJkQIHeR5NcsQ4dUDegQIBhAN&uact=5&oq=fsdfsdf&gs_lp=Egtnd3Mtd2l6LWltZyIHZnNkZnNkZjIKEAAYgAQYigUYQzIPEAAYgAQYChgLGLEDGIMBMgUQABiABDIJEAAYgAQYChgLMgkQABiABBgKGAsyBRAAGIAEMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAtIqANQAFgAcAF4AJABAJgBAKABAKoBALABALgBA8gBAJgCAaACAZgDAOIDBBgAIF3iAwQYACBe4gMEGAAgX-IDBBgAIGDiAwQYACBh4gMEGAAgYogGAZIHATGgBwCyBwC4BwDCBwMwLjHIBwGACAE&sclient=gws-wiz-img";
   document.getElementById("images").style.backgroundColor = "red";
   document.getElementById("videos").style.backgroundColor = "black";
@@ -212,7 +212,7 @@ document.getElementById("images").addEventListener("click", (event) => {
 });
 
 document.getElementById("videos").addEventListener("click", (event) => {
-  const text = document.getElementById("searchengineTextbox").innerText.trim();
+  const text = document.getElementById("searchengineTextbox").value.trim();
   url = engineURL + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945&sxsrf=APpeQnuWOgRcMsUytLVkUMU_oHzKtkSHyw%3A1788824889059&ei=OU2fao2bA7TVkPIP4qfi4AI&ved=2ahUKEwjNm8-A1N2WAxW0KkQIHeKTGCwQ4dUDegQIBRAM&uact=5&oq=canva&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLXZpZGVvIgVjYW52YTIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwA0iuAVAAWABwAXgBkAEAmAEAoAEAqgEAsAEAuAEDyAEAmAIBoAICmAMA4gMEGAAgXeIDBBgAIF7iAwQYACBf4gMEGAAgYOIDBBgAIGHiAwQYACBiiAYBkAYIkgcBMaAHALIHALgHAMIHAzAuMcgHAYAIAQ&sclient=gws-wiz-modeless-video";
   document.getElementById("videos").style.backgroundColor = "red";
   document.getElementById("images").style.backgroundColor = "black";
@@ -221,7 +221,7 @@ document.getElementById("videos").addEventListener("click", (event) => {
 });
 
 document.getElementById("text").addEventListener("click", (event) => {
-  const text = document.getElementById("searchengineTextbox").innerText.trim();
+  const text = document.getElementById("searchengineTextbox").value.trim();
   url = buildSearchURL(engineURL, text);
   document.getElementById("text").style.backgroundColor = "red";
   document.getElementById("images").style.backgroundColor = "black";
@@ -230,20 +230,30 @@ document.getElementById("text").addEventListener("click", (event) => {
 });
 
 document.getElementById("search").addEventListener("click", (event) => {
-  
-  let text = document.getElementById("searchengineTextbox").innerText.trim();
+  let text = document.getElementById("searchengineTextbox").value.trim();
+
   // Remove spaces just in case (e.g., "gmail . com")
   const cleaned = text.replace(/\s+/g, "");
+
   // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
   const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
   // Check if the cleaned text is *exactly* a domain
   const isPureDomain = domainRegex.test(cleaned);
-  let url;
+
   if (isPureDomain) {
+    const origin = "https://" + cleaned;
+
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(origin, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
     // ⭐ PURE DOMAIN → Navigate directly
-    window.location.href = "https://" + cleaned;
+    window.location.href = origin;
     return;
   }
+
   // ⭐ NOT a pure domain → treat as search
   if (engineType === "videos") {
     url = engineURL + encodeURIComponent(text) +
@@ -260,7 +270,7 @@ document.getElementById("search").addEventListener("click", (event) => {
 
 
 document.getElementById("searchengineTextbox").addEventListener("input", () => {
-  let text = document.getElementById("searchengineTextbox").innerText.trim();
+  let text = document.getElementById("searchengineTextbox").value.trim();
   const navigateIcon = document.getElementById("navigate");
 
   // If ANY space exists → it's a search query
@@ -308,7 +318,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
   if (event.key === "Enter") {
     event.preventDefault();
 
-    let text = document.getElementById("searchengineTextbox").innerText.trim();
+    let text = document.getElementById("searchengineTextbox").value.trim();
 
     // Domain or domain + path
     const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
