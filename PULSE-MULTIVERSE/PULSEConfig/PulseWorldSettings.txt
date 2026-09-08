@@ -200,10 +200,10 @@
       <h2>🏢 Business Settings</h2>
 
       <label class="pw-label">Business Page Link</label>
-      <input id="businessLink" class="pw-input" placeholder="https://yourbusiness.com/" />
+      <input id="businessLink" class="pw-input" placeholder="https://www.pulseworld.biz/yourbusiness" />
 
       <label class="pw-label">Files / Cloud Link</label>
-      <input id="filesLink" class="pw-input" placeholder="https://yourfiles.com/" />
+      <input id="filesLink" class="pw-input" placeholder="https://files.pulseworld.net/yourname" />
       <p class="pw-note">
         These links represent your external business presence and file storage capabilities.
       </p>
@@ -246,7 +246,7 @@
       </p>
 
       <label class="pw-label">Public Profile Link</label>
-      <input id="publicLink" class="pw-input" placeholder="https://pulseworld.net/yourname" />
+      <input id="publicLink" class="pw-input" placeholder="https://www.pulseworld.me/yourname" />
     </section>
 
     <!-- PROGRAMMATIC PERMISSIONS -->
@@ -275,6 +275,14 @@
   </div>
 
   <script>
+  
+PulseRealm._2_DOM_START = performance.now();
+log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD::DOM BOOT] Pulse World Route SECONDARY DOM Expression Ready — ${(PulseRealm._2_DOM_START - PulseRealm.__LOAD_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pulse Multiversal Warp Gate Pulse Rift Collapsed!",
+  "color:gold; font-weight:bold; font-family:monospace;");
+
+
     // Simple modular settings storage using localStorage.
     const SETTINGS_KEY = "pulseworldSettings";
 
@@ -397,34 +405,38 @@
         listEl.innerHTML = "<li>Error reading cache.</li>";
       }
     }
+(async () => {
+  loadSettings();
+  loadStorageEstimate();
+  loadCacheList();
 
-    document.addEventListener("DOMContentLoaded", () => {
-      loadSettings();
-      loadStorageEstimate();
-      loadCacheList();
+  // Wire all inputs to save on change.
+  const idsToWatch = [
+    "emailMode",
+    "externalEmailLink",
+    "bankMode",
+    "externalBankLink",
+    "businessLink",
+    "filesLink",
+    "goPublicToggle",
+    "publicLink",
+    "programmaticEmail",
+    "programmaticBanking"
+  ];
 
-      // Wire all inputs to save on change.
-      const idsToWatch = [
-        "emailMode",
-        "externalEmailLink",
-        "bankMode",
-        "externalBankLink",
-        "businessLink",
-        "filesLink",
-        "goPublicToggle",
-        "publicLink",
-        "programmaticEmail",
-        "programmaticBanking"
-      ];
+  idsToWatch.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const eventName =
+      el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";
+    el.addEventListener(eventName, saveSettings);
+  });
 
-      idsToWatch.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const eventName =
-          el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";
-        el.addEventListener(eventName, saveSettings);
-      });
-    });
+  PulseRealm.__LOAD_END = performance.now();
+  console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
+
+})();
+
   </script>
 
 </body>
