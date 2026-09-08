@@ -962,7 +962,7 @@
         <p style="font-size:15px;">Upload an image to convert it into a Pulse Expression Layer and store it inside your local PulseWorld file system.</p>
 
         <div class="test-controls">
-          <input type="file" id="tp-test-file" accept="image/*,video/*" class="pulse-input" aria-label="Upload an asset" />
+          <input type="file" id="tp-test-file" accept="image/*" class="pulse-input" aria-label="Upload an asset" />
           <button class="btn pulse-btn">Begin Asset Intake</button>
           <div id="tp-test-status" class="pulse-status"></div>
         </div>
