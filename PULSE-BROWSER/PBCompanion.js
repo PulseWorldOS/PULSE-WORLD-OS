@@ -48,6 +48,10 @@ self.addEventListener("install", event => {
     "PBPopup.html",
     "PBSettings.html",
     "PBCompanion.js",
+    "PBInterceptor.js",
+    "PBRealmBridge.js",
+    "PBRouter.js",
+    "PBSettings.js",
     "PulseWorldOSMarketplace-White.png"
   ];
 
@@ -165,7 +169,7 @@ async function getSettings() {
 // ---------------------------------------------------------------------------
 const PB_ASSETS = [
   "/PBContent.js", "/PBDevOverlay.js", "/PBDevTools.js", "/PBSettings.js",
-  "/styles.css", "/pulse.css", "/world.css",
+  "/PBInterceptor.js", "/PBRealmBridge.js", "/PBRouter.js",
   "/config.json", "/manifest.json", "/engine.wasm"
 ];
 
