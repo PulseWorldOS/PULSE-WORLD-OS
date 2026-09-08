@@ -32,7 +32,7 @@ async function updateModuleIcons() {
 
   
   searchEngineActiveLink = settings.externalSearchLink;
-
+  console.log(searchEngineActivated);
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
   if (settings.emailMode === "internal") {
