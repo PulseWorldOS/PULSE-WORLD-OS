@@ -4,7 +4,7 @@ let engineType = "text";
 let searchEngineActiveLink = null;
 let searchEngineActivated = "*Google.com";
 
-engineURL = "https://www.google.com/search?q=";
+let engineURL = buildSearchURL("google.com");
 
 function getFavicon(url) {
   const u = new URL(url);
@@ -37,7 +37,6 @@ async function updateModuleIcons() {
   console.log(searchEngineActiveLink);
   
   engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
-  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
 
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
