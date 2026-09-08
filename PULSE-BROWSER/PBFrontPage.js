@@ -406,7 +406,7 @@ document.getElementById("timerBtn").textContent = timerX;
 setInterval(() => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
-  if (!userInteracted && timerX === 8) {
+  if (!userInteracted && timerX === 10) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
   } else if (userInteracted) {
