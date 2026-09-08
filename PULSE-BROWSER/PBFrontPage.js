@@ -83,8 +83,8 @@ async function updateModuleIcons() {
   
 }
 function cleanQuery(query) {
-  // Remove ZERO‑WIDTH characters that cause "undefineddfg"
-  return query.replace(/[\u200B-\u200D\uFEFF]/g, "");
+  if (!query) return "";
+  return query.replace(/undefined/g, "").trim();
 }
 
 function buildSearchURL(engineURL, query) {
