@@ -408,6 +408,37 @@ async function updateStorageStats() {
   }
 }
 
+function updateAllPWInputs() {
+  // Get ALL selects
+  const selects = document.querySelectorAll(".pw-select");
+
+  // If ANY select is internal → lock all inputs
+  const anyInternal = Array.from(selects).some(sel => sel.value === "internal");
+
+  // Get ALL inputs
+  const inputs = document.querySelectorAll(".pw-input");
+
+  inputs.forEach(input => {
+    if (anyInternal) {
+      input.readOnly = true;
+      input.classList.add("pw-input-disabled");
+    } else {
+      input.readOnly = false;
+      input.classList.remove("pw-input-disabled");
+    }
+  });
+}
+
+// Run once on load
+updateAllPWInputs();
+
+// Run whenever ANY pw-select changes
+document.addEventListener("change", (e) => {
+  if (e.target.classList.contains("pw-select")) {
+    updateAllPWInputs();
+  }
+});
+
 
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
