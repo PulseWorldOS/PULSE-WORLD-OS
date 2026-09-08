@@ -80,59 +80,52 @@ document.getElementById("search").addEventListener("click", (event) => {
 });
 
 
-// LIVE detection (fixes your issue)
 document.getElementById("searchengineTextbox").addEventListener("input", () => {
   let text = document.getElementById("searchengineTextbox").innerText.trim();
+  const navigateIcon = document.getElementById("navigate");
 
-  // Remove spaces only for domain detection
-  const cleaned = text.replace(/\s+/g, "");
+  // If ANY space exists → it's a search query
+  if (text.includes(" ")) {
+    navigateIcon.style.display = "none";
+    return;
+  }
 
-  // Pure domain regex
-  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // Domain or domain + path (no spaces allowed)
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
 
-  const isPureDomain = domainRegex.test(cleaned);
+  const isDomainIntent = domainRegex.test(text);
 
-  if (isPureDomain) {
-    document.getElementById("navigate").style.display = "inline";
-    document.getElementById("navigate").style.backgroundColor = "red";
+  if (isDomainIntent) {
+    navigateIcon.style.display = "inline";
+    navigateIcon.style.backgroundColor = "red";
   } else {
-    document.getElementById("navigate").style.display = "none";
+    navigateIcon.style.display = "none";
   }
 });
 
+
 document.getElementById("searchengineTextbox").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    event.preventDefault(); // stops newline insertion
+    event.preventDefault();
 
     let text = document.getElementById("searchengineTextbox").innerText.trim();
 
-    // Remove spaces just in case (e.g., "gmail . com")
-    const cleaned = text.replace(/\s+/g, "");
-
-    // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
-    const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // Check if the cleaned text is *exactly* a domain
-    const isPureDomain = domainRegex.test(cleaned);
+    // Domain or domain + path
+    const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+    const isDomainIntent = domainRegex.test(text);
 
     let url;
 
-    if (isPureDomain) {
-      // ⭐ PURE DOMAIN → Navigate directly
-      document.getElementById("navigate").style.display = "inline";
-      document.getElementById("navigate").style.backgroundColor = "red";
-    } else {
-      // ⭐ PURE DOMAIN → Navigate directly
-      document.getElementById("navigate").style.display = "none";
+    if (isDomainIntent) {
+      window.location.href = "https://" + text;
+      return;
     }
 
-    // ⭐ NOT a pure domain → treat as search
+    // Fallback: search
     if (engineType === "videos") {
-      url = "https://www.google.com/search?q=" + encodeURIComponent(text) +
-        "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945";
+      url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=7";
     } else if (engineType === "images") {
-      url = "https://www.google.com/search?q=" + encodeURIComponent(text) +
-        "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945";
+      url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=2";
     } else {
       url = "https://www.google.com/search?q=" + encodeURIComponent(text);
     }
@@ -140,6 +133,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     window.location.href = url;
   }
 });
+
 
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
