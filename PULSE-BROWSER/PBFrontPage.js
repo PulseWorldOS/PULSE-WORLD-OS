@@ -1,6 +1,5 @@
 let userInteracted = false;
-const text = document.getElementById("searchengineTextbox").innerText.trim();
-let url = "https://www.google.com/search?q=" + encodeURIComponent(text);
+let url = "https://www.google.com";
 
 document.getElementById("searchus").addEventListener("click", (event) => {
   window.location.href = "https://www.google.com/search?q=" + encodeURIComponent("pulseworld.net");
@@ -32,6 +31,7 @@ document.getElementById("text").addEventListener("click", (event) => {
 
 document.getElementById("search").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
+  url = "https://www.google.com/search?q=" + encodeURIComponent(text);
   window.location.href = url;
 });
 
