@@ -203,6 +203,31 @@
       transform: scale(1.05);
     }
 
+    #timerBtn {
+      position: fixed;
+      z-index: 99999999;
+      width: 2dvw;
+      height: 2.5dvh;
+      padding: 0;
+      bottom: 1.5dvh;
+      right: 1dvw;
+      border-radius: 6px;
+      border: 1px solid #0ff;
+      background: rgba(0,0,0,0.0);
+      color: #0ff;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, 
+                  box-shadow 0.12s ease, 
+                  filter 0.12s ease,
+                  backdrop-filter 0.15s ease;
+      backdrop-filter: none;
+    }
+    #driftBtn:hover {
+      transform: scale(1.03);
+    }
+
     /* FIXED BUTTON — now an anchor */
     .enter {
       margin-top: 30px;
@@ -533,6 +558,8 @@
 </head>
 <body>
 
+  
+  <button id="timerBtn" aria-label="Timer" role="button"></button>
   <div class="nebula"></div>
   <div class="shimmer"></div>
 
