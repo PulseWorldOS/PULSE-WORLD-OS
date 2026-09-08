@@ -163,7 +163,7 @@ document.getElementById("btn-open-settings").onclick = () =>
 
 document.getElementById("btn-open-email").onclick = async () => {
 
-    const settings = await pbLoadSettings();
+    const settings = await loadExtensionSettingsUI();
 
     console.log("[FrontPage] Email module clicked. Settings:", settings);
 

@@ -219,14 +219,21 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
 document.getElementById("moduleEmail").addEventListener("click", async () => {
 
-    const settings = await pbLoadSettings();
+    const settings = await loadExtensionSettingsUI();
 
     console.log("[FrontPage] Email module clicked. Settings:", settings);
 
-    const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
-    console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
+    // INTERNAL MODE → open PulseWorld Email on the real domain
+    if (settings.emailMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
+        console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
 
-    chrome.tabs.create({ url: internalURL });
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
 
     console.log("[FrontPage] Opening External Email Provider:", link);
 
