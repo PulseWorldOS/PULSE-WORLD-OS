@@ -433,17 +433,6 @@ function updateLinkedPWInputs() {
   });
 }
 
-// Run once on load
-updateLinkedPWInputs();
-
-// Run whenever ANY pw-select changes
-document.addEventListener("change", (e) => {
-  if (e.target.classList.contains("pw-select")) {
-    updateLinkedPWInputs();
-  }
-});
-
-
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
@@ -490,3 +479,13 @@ if (location.href.includes("PBSettings.html")) {
   })();
 }
 
+
+// Run once on load
+updateLinkedPWInputs();
+
+// Run whenever ANY pw-select changes
+document.addEventListener("change", (e) => {
+  if (e.target.classList.contains("pw-select")) {
+    updateLinkedPWInputs();
+  }
+});
