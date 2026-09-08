@@ -314,14 +314,65 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 // ============================================================================
+//  SECTION X — CACHE LIST (via PBCompanion.js)
+// ============================================================================
+
+// Request cache list from background service worker
+async function pbRequestCacheList() {
+  PB_LOG.info("Requesting cache list from PBCompanion…");
+
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
+      if (!response || !response.ok) {
+        PB_LOG.info("Cache list unavailable or error", response);
+        resolve(null);
+        return;
+      }
+
+      PB_LOG.load("Cache list received", response.caches);
+      resolve(response.caches);
+    });
+  });
+}
+
+// Render cache list into PBSettings.html
+async function pbRenderCacheList() {
+  const listEl = document.getElementById("cacheList");
+  if (!listEl) return;
+
+  const cacheNames = await pbRequestCacheList();
+
+  if (!cacheNames) {
+    listEl.innerHTML = "<li>Cache API unavailable in extension pages.</li>";
+    return;
+  }
+
+  if (cacheNames.length === 0) {
+    listEl.innerHTML = "<li>No cached files detected.</li>";
+    return;
+  }
+
+  listEl.innerHTML = "";
+
+  cacheNames.forEach(name => {
+    const li = document.createElement("li");
+    li.textContent = `Cache: ${name}`;
+    listEl.appendChild(li);
+  });
+
+  PB_LOG.info("Cache list rendered", cacheNames);
+}
+
+// ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
 
 if (location.href.includes("PBSettings.html")) {
-  PB_LOG.info("Initializing Settings Page");
-
   (async () => {
+    PB_LOG.info("Initializing Settings Page");
+
     await loadExtensionSettingsUI();
+    await pbRenderCacheList();   // ← NEW
 
     const idsToWatch = [
       "emailMode",
@@ -353,3 +404,4 @@ if (location.href.includes("PBSettings.html")) {
     PB_LOG.info("Settings Page Ready");
   })();
 }
+
