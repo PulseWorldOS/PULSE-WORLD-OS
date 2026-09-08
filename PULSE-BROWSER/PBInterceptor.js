@@ -19,7 +19,7 @@ async function getSettings() {
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
 // ---------------------------------------------------------------------------
-const PB_HOME = [
+const PB_HOME2 = [
   "pulseworld.me",
   "pulseworld.net",
   "pulseworld.money",
@@ -114,7 +114,7 @@ async function pbIntercept(details) {
   // HOME UNIVERSE ACCELERATION
   // -----------------------------
   if (S.routerPrioritizeHomeUniverse) {
-    for (const domain of PB_HOME) {
+    for (const domain of PB_HOME2) {
       if (url.includes(domain)) {
         console.log("[PBInterceptor] Home universe accelerated:", url);
 
@@ -167,12 +167,3 @@ async function pbIntercept(details) {
   // -----------------------------
   return {};
 }
-
-// ---------------------------------------------------------------------------
-// ATTACH TO BROWSER
-// ---------------------------------------------------------------------------
-chrome.webRequest.onBeforeRequest.addListener(
-  (details) => pbIntercept(details),
-  { urls: ["<all_urls>"] },
-  ["blocking"]
-);
