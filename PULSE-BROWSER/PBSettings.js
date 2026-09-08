@@ -1,19 +1,18 @@
 // ============================================================================
-//  PBSettings.js — PulseBrowser OS Settings Registry (Ultra Edition v5.0)
-//  Full OS registry • chrome.storage-backed • modular • future-proof
+//  PBSettings.js — PulseBrowser OS Settings Registry (Ultra Edition v6.0)
+//  Unified OS Registry + Extension Settings Page + MV3-Compliant Storage
 // ============================================================================
 
-console.log("%c[PULSEBROWSER] PBSettings (Ultra Edition v5.0) loaded",
+console.log("%c[PULSEBROWSER] PBSettings (Ultra Edition v6.0) loaded",
   "color:#55BBFF; font-weight:bold; font-family:monospace;");
 
-// ---------------------------------------------------------------------------
-// DEFAULT SETTINGS (FULL OS REGISTRY)
-// ---------------------------------------------------------------------------
+// ============================================================================
+//  SECTION 1 — OS REGISTRY DEFAULTS
+// ============================================================================
+
 const PB_DEFAULT_SETTINGS = {
 
-  // -------------------------------------------------
   // CORE SUBSYSTEMS
-  // -------------------------------------------------
   enableInterceptor: true,
   enableAccelerator: true,
   enableNavigator: true,
@@ -26,9 +25,7 @@ const PB_DEFAULT_SETTINGS = {
   enablePulseFallback: true,
   enablePulseWorldBridge: true,
 
-  // -------------------------------------------------
   // TRACKER BLOCKING
-  // -------------------------------------------------
   blockTrackers: true,
   blockAnalytics: true,
   blockAds: true,
@@ -36,18 +33,14 @@ const PB_DEFAULT_SETTINGS = {
   blockSocialWidgets: false,
   blockCryptoMiners: true,
 
-  // -------------------------------------------------
   // PROTOCOL UPGRADES
-  // -------------------------------------------------
   upgradeHTTPtoHTTPS: true,
   forceHTTP2: false,
   forceHTTP3: false,
   forceQUIC: false,
   forceSecureCookies: true,
 
-  // -------------------------------------------------
   // ACCELERATION MODES
-  // -------------------------------------------------
   accelPreconnect: true,
   accelPrefetch: true,
   accelPreload: true,
@@ -58,9 +51,7 @@ const PB_DEFAULT_SETTINGS = {
   accelTLSWarm: true,
   accelRealmWarm: true,
 
-  // -------------------------------------------------
   // NAVIGATION MODES
-  // -------------------------------------------------
   navWarmSiblings: true,
   navWarmAssets: true,
   navWarmGlobalSites: true,
@@ -68,9 +59,7 @@ const PB_DEFAULT_SETTINGS = {
   navPredictiveJump: false,
   navTemporalShift: false,
 
-  // -------------------------------------------------
   // ROUTER MODES
-  // -------------------------------------------------
   routerPrioritizeCDN: true,
   routerPrioritizeAssets: true,
   routerPrioritizeHomeUniverse: true,
@@ -81,9 +70,7 @@ const PB_DEFAULT_SETTINGS = {
   routerFallbackScan: true,
   routerAdaptiveRouting: true,
 
-  // -------------------------------------------------
   // CONTENT RUNTIME
-  // -------------------------------------------------
   contentMutationObserver: true,
   contentPerformanceObserver: true,
   contentGPUWarm: true,
@@ -93,9 +80,7 @@ const PB_DEFAULT_SETTINGS = {
   contentAutoFixFonts: false,
   contentAutoFixContrast: false,
 
-  // -------------------------------------------------
   // DEVTOOLS
-  // -------------------------------------------------
   devLogKernelStatus: true,
   devLogRouting: true,
   devLogNavigation: true,
@@ -106,9 +91,7 @@ const PB_DEFAULT_SETTINGS = {
   devLogPortalEvents: true,
   devLogFallbackEvents: true,
 
-  // -------------------------------------------------
-  // HOME UNIVERSE (Your 9 domains)
-  // -------------------------------------------------
+  // HOME UNIVERSE
   homeUniverse: [
     "www.pulseworld.me",
     "www.pulseworld.net",
@@ -121,9 +104,7 @@ const PB_DEFAULT_SETTINGS = {
     "www.orbitalmap.net"
   ],
 
-  // -------------------------------------------------
-  // PORTAL SYSTEM (404 Warp Gate / Bootvideo Realm)
-  // -------------------------------------------------
+  // PORTAL SYSTEM
   portalEnableBootVideo: false,
   portalEnableFullViewport: false,
   portalEnableIndexCopy: false,
@@ -131,18 +112,14 @@ const PB_DEFAULT_SETTINGS = {
   portalEnableLatencyWarp: true,
   portalEnableFallbackWarp: true,
 
-  // -------------------------------------------------
-  // FALLBACK SYSTEM (404 OS)
-  // -------------------------------------------------
+  // FALLBACK SYSTEM
   fallbackEnable404OS: true,
   fallbackEnableConsoleClone: true,
   fallbackEnableRealmPing: true,
   fallbackEnableAutoWarp: true,
   fallbackEnableErrorCapture: true,
 
-  // -------------------------------------------------
-  // WORLD ENGINE (Optional)
-  // -------------------------------------------------
+  // WORLD ENGINE
   worldEnableMentor: false,
   worldEnableEarnMode: false,
   worldEnableIdentityTether: false,
@@ -150,18 +127,14 @@ const PB_DEFAULT_SETTINGS = {
   worldEnableUplift: false,
   worldEnableDiagnostics: false,
 
-  // -------------------------------------------------
   // EXTENSION-FIRST MODES
-  // -------------------------------------------------
   extEnableFrontPage: true,
   extEnableSettingsPage: true,
   extEnablePopupConsole: true,
   extEnableSpeedLayer: true,
   extEnableSWAccelerator: true,
 
-  // -------------------------------------------------
   // EXPERIMENTAL
-  // -------------------------------------------------
   experimentalGPUPaths: false,
   experimentalDecodePaths: false,
   experimentalRouteGraph: false,
@@ -173,29 +146,87 @@ const PB_DEFAULT_SETTINGS = {
   experimentalMeshAwareness: false
 };
 
-// ---------------------------------------------------------------------------
-// LOAD SETTINGS
-// ---------------------------------------------------------------------------
+// ============================================================================
+//  SECTION 2 — EXTENSION SETTINGS PAGE (PBSettings.html)
+// ============================================================================
+
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+
+// Load extension settings into PBSettings.html UI
+async function loadExtensionSettingsUI() {
+  const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+  const settings = result[EXTENSION_SETTINGS_KEY] || {};
+
+  document.getElementById("emailMode").value =
+    settings.emailMode || "internal";
+  document.getElementById("externalEmailLink").value =
+    settings.externalEmailLink || "";
+
+  document.getElementById("bankMode").value =
+    settings.bankMode || "internal";
+  document.getElementById("externalBankLink").value =
+    settings.externalBankLink || "";
+
+  document.getElementById("businessLink").value =
+    settings.businessLink || "";
+  document.getElementById("filesLink").value =
+    settings.filesLink || "";
+
+  document.getElementById("goPublicToggle").checked =
+    !!settings.goPublicEnabled;
+  document.getElementById("publicLink").value =
+    settings.publicLink || "";
+
+  document.getElementById("programmaticEmail").checked =
+    !!settings.programmaticEmail;
+  document.getElementById("programmaticBanking").checked =
+    !!settings.programmaticBanking;
+}
+
+// Save extension settings from PBSettings.html UI
+async function saveExtensionSettingsUI() {
+  const settings = {
+    emailMode: document.getElementById("emailMode").value,
+    externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
+
+    bankMode: document.getElementById("bankMode").value,
+    externalBankLink: document.getElementById("externalBankLink").value.trim(),
+
+    businessLink: document.getElementById("businessLink").value.trim(),
+    filesLink: document.getElementById("filesLink").value.trim(),
+
+    goPublicEnabled: document.getElementById("goPublicToggle").checked,
+    publicLink: document.getElementById("publicLink").value.trim(),
+
+    programmaticEmail: document.getElementById("programmaticEmail").checked,
+    programmaticBanking: document.getElementById("programmaticBanking").checked
+  };
+
+  await chrome.storage.local.set({ [EXTENSION_SETTINGS_KEY]: settings });
+}
+
+// ============================================================================
+//  SECTION 3 — OS REGISTRY LOAD/SAVE (chrome.storage.local)
+// ============================================================================
+
 function pbLoadSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(PB_DEFAULT_SETTINGS, (data) => {
+    chrome.storage.local.get(PB_DEFAULT_SETTINGS, (data) => {
       resolve(data || PB_DEFAULT_SETTINGS);
     });
   });
 }
 
-// ---------------------------------------------------------------------------
-// SAVE SETTINGS
-// ---------------------------------------------------------------------------
 function pbSaveSettings(settings) {
   return new Promise((resolve) => {
-    chrome.storage.sync.set(settings, () => resolve(true));
+    chrome.storage.local.set(settings, () => resolve(true));
   });
 }
 
-// ---------------------------------------------------------------------------
-// MESSAGE API (Kernel, Popup, Content)
-// ---------------------------------------------------------------------------
+// ============================================================================
+//  SECTION 4 — MESSAGE API (Kernel, Popup, Content)
+// ============================================================================
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
@@ -214,3 +245,36 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
   }
 });
+
+// ============================================================================
+//  SECTION 5 — SETTINGS PAGE INITIALIZER (PBSettings.html)
+// ============================================================================
+
+if (location.href.includes("PBSettings.html")) {
+  (async () => {
+    await loadExtensionSettingsUI();
+
+    const idsToWatch = [
+      "emailMode",
+      "externalEmailLink",
+      "bankMode",
+      "externalBankLink",
+      "businessLink",
+      "filesLink",
+      "goPublicToggle",
+      "publicLink",
+      "programmaticEmail",
+      "programmaticBanking"
+    ];
+
+    idsToWatch.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const eventName =
+        el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";
+
+      el.addEventListener(eventName, saveExtensionSettingsUI);
+    });
+  })();
+}
