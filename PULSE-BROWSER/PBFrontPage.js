@@ -99,7 +99,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
     if (isPureDomain) {
       // ⭐ PURE DOMAIN → Navigate directly
-      document.getElementById("navigate").style.display = "block";
+      document.getElementById("navigate").style.display = "inline";
     } else {
       // ⭐ PURE DOMAIN → Navigate directly
       document.getElementById("navigate").style.display = "none";
@@ -129,7 +129,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
   
   if (isPureDomain) {
     // ⭐ PURE DOMAIN → Navigate directly
-    document.getElementById("navigate").style.display = "block";
+    document.getElementById("navigate").style.display = "inline";
   } else {
     // ⭐ PURE DOMAIN → Navigate directly
     document.getElementById("navigate").style.display = "none";
