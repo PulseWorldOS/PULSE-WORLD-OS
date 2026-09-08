@@ -150,6 +150,7 @@ function buildSearchURL(engineURL, query) {
 
   // Fallback: append query to custom engine
   searchEngineActivated = "Google.com";
+  document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
   return `https://www.google.com/search?q=${q}`;
 }
 
