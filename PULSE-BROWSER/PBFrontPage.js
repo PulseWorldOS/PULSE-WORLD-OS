@@ -63,16 +63,49 @@ async function updateModuleIcons() {
 
   document.getElementById("moduleFav2Icon").innerText = "⭐";
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
+  
 }
 
+function buildSearchURL(engineURL, query) {
+  const q = encodeURIComponent(query);
 
+  // Normalize URL
+  const url = engineURL.toLowerCase();
 
-let engineType = "text";
+  if (url.includes("google")) {
+    return `https://www.google.com/search?q=${q}`;
+  }
+
+  if (url.includes("yahoo")) {
+    return `https://search.yahoo.com/search?p=${q}`;
+  }
+
+  if (url.includes("duckduckgo") || url.includes("ddg")) {
+    return `https://duckduckgo.com/?q=${q}`;
+  }
+
+  if (url.includes("bing")) {
+    return `https://www.bing.com/search?q=${q}`;
+  }
+
+  if (url.includes("brave")) {
+    return `https://search.brave.com/search?q=${q}`;
+  }
+
+  // Fallback: append query to custom engine
+  return `${engineURL}${q}`;
+}
+
 const text = document.getElementById("searchengineTextbox").innerText.trim();
-let url = "https://www.google.com/search?q=" + encodeURIComponent(text);
+const settings = await pbLoadExtensionSettings();
+
+const engineURL = settings.externalSearchLink || "https://www.google.com/search?q=";
+const url = buildSearchURL(engineURL, text);
+
+window.location.href = url;
 
 document.getElementById("searchus").addEventListener("click", (event) => {
-  window.location.href = "https://www.google.com/search?q=" + encodeURIComponent("pulseworld.net");
+  window.location.href = engineURL + encodeURIComponent("pulseworld.net");
 });
 
 document.getElementById("navigate").addEventListener("click", () => {
@@ -96,7 +129,7 @@ document.getElementById("navigate").addEventListener("click", () => {
 
 document.getElementById("images").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
-  url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945&sxsrf=APpeQnum89enEMVZATiLWD0yh0mMe6oPJg%3A1788824443834&ei=e0ufas3CMvLMkPIP5PPV2Qw&ved=2ahUKEwiN7Kis0t2WAxVyJkQIHeR5NcsQ4dUDegQIBhAN&uact=5&oq=fsdfsdf&gs_lp=Egtnd3Mtd2l6LWltZyIHZnNkZnNkZjIKEAAYgAQYigUYQzIPEAAYgAQYChgLGLEDGIMBMgUQABiABDIJEAAYgAQYChgLMgkQABiABBgKGAsyBRAAGIAEMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAtIqANQAFgAcAF4AJABAJgBAKABAKoBALABALgBA8gBAJgCAaACAZgDAOIDBBgAIF3iAwQYACBe4gMEGAAgX-IDBBgAIGDiAwQYACBh4gMEGAAgYogGAZIHATGgBwCyBwC4BwDCBwMwLjHIBwGACAE&sclient=gws-wiz-img";
+  url = engineURL + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945&sxsrf=APpeQnum89enEMVZATiLWD0yh0mMe6oPJg%3A1788824443834&ei=e0ufas3CMvLMkPIP5PPV2Qw&ved=2ahUKEwiN7Kis0t2WAxVyJkQIHeR5NcsQ4dUDegQIBhAN&uact=5&oq=fsdfsdf&gs_lp=Egtnd3Mtd2l6LWltZyIHZnNkZnNkZjIKEAAYgAQYigUYQzIPEAAYgAQYChgLGLEDGIMBMgUQABiABDIJEAAYgAQYChgLMgkQABiABBgKGAsyBRAAGIAEMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAtIqANQAFgAcAF4AJABAJgBAKABAKoBALABALgBA8gBAJgCAaACAZgDAOIDBBgAIF3iAwQYACBe4gMEGAAgX-IDBBgAIGDiAwQYACBh4gMEGAAgYogGAZIHATGgBwCyBwC4BwDCBwMwLjHIBwGACAE&sclient=gws-wiz-img";
   document.getElementById("images").style.backgroundColor = "red";
   document.getElementById("videos").style.backgroundColor = "black";
   document.getElementById("text").style.backgroundColor = "black";
@@ -105,7 +138,7 @@ document.getElementById("images").addEventListener("click", (event) => {
 
 document.getElementById("videos").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
-  url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945&sxsrf=APpeQnuWOgRcMsUytLVkUMU_oHzKtkSHyw%3A1788824889059&ei=OU2fao2bA7TVkPIP4qfi4AI&ved=2ahUKEwjNm8-A1N2WAxW0KkQIHeKTGCwQ4dUDegQIBRAM&uact=5&oq=canva&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLXZpZGVvIgVjYW52YTIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwA0iuAVAAWABwAXgBkAEAmAEAoAEAqgEAsAEAuAEDyAEAmAIBoAICmAMA4gMEGAAgXeIDBBgAIF7iAwQYACBf4gMEGAAgYOIDBBgAIGHiAwQYACBiiAYBkAYIkgcBMaAHALIHALgHAMIHAzAuMcgHAYAIAQ&sclient=gws-wiz-modeless-video";
+  url = engineURL + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945&sxsrf=APpeQnuWOgRcMsUytLVkUMU_oHzKtkSHyw%3A1788824889059&ei=OU2fao2bA7TVkPIP4qfi4AI&ved=2ahUKEwjNm8-A1N2WAxW0KkQIHeKTGCwQ4dUDegQIBRAM&uact=5&oq=canva&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLXZpZGVvIgVjYW52YTIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwA0iuAVAAWABwAXgBkAEAmAEAoAEAqgEAsAEAuAEDyAEAmAIBoAICmAMA4gMEGAAgXeIDBBgAIF7iAwQYACBf4gMEGAAgYOIDBBgAIGHiAwQYACBiiAYBkAYIkgcBMaAHALIHALgHAMIHAzAuMcgHAYAIAQ&sclient=gws-wiz-modeless-video";
   document.getElementById("videos").style.backgroundColor = "red";
   document.getElementById("images").style.backgroundColor = "black";
   document.getElementById("text").style.backgroundColor = "black";
@@ -114,7 +147,7 @@ document.getElementById("videos").addEventListener("click", (event) => {
 
 document.getElementById("text").addEventListener("click", (event) => {
   const text = document.getElementById("searchengineTextbox").innerText.trim();
-  url = "https://www.google.com/search?q=" + encodeURIComponent(text);
+  url = engineURL + encodeURIComponent(text);
   document.getElementById("text").style.backgroundColor = "red";
   document.getElementById("images").style.backgroundColor = "black";
   document.getElementById("videos").style.backgroundColor = "black";
@@ -122,6 +155,7 @@ document.getElementById("text").addEventListener("click", (event) => {
 });
 
 document.getElementById("search").addEventListener("click", (event) => {
+  
   let text = document.getElementById("searchengineTextbox").innerText.trim();
   // Remove spaces just in case (e.g., "gmail . com")
   const cleaned = text.replace(/\s+/g, "");
@@ -137,13 +171,13 @@ document.getElementById("search").addEventListener("click", (event) => {
   }
   // ⭐ NOT a pure domain → treat as search
   if (engineType === "videos") {
-    url = "https://www.google.com/search?q=" + encodeURIComponent(text) +
+    url = engineURL + encodeURIComponent(text) +
       "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945";
   } else if (engineType === "images") {
-    url = "https://www.google.com/search?q=" + encodeURIComponent(text) +
+    url = engineURL + encodeURIComponent(text) +
       "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945";
   } else {
-    url = "https://www.google.com/search?q=" + encodeURIComponent(text);
+    url = engineURL + encodeURIComponent(text);
   }
 
   window.location.href = url;
@@ -214,11 +248,11 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
     // Fallback: search
     if (engineType === "videos") {
-      url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=7";
+      url = engineURL + encodeURIComponent(text) + "&udm=7";
     } else if (engineType === "images") {
-      url = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=2";
+      url = engineURL + encodeURIComponent(text) + "&udm=2";
     } else {
-      url = "https://www.google.com/search?q=" + encodeURIComponent(text);
+      url = engineURL + encodeURIComponent(text);
     }
 
     window.location.href = url;
