@@ -372,36 +372,42 @@ async function updateStorageStats() {
   const el = document.getElementById("storageStats");
   if (!el) return;
 
-  // Check API availability
   if (!navigator.storage || !navigator.storage.estimate) {
     el.textContent = "Storage usage: StorageManager API not supported.";
     return;
   }
 
   try {
+    // ⭐ Always request persistence
+    const persistenceRequest = await navigator.storage.persist();
+    const persistent = await navigator.storage.persisted();
+
     const estimate = await navigator.storage.estimate();
     const used = estimate.usage || 0;
     const quota = estimate.quota || 0;
 
-    // Convert bytes → MB/GB
-    const usedMB = (used / (1024 * 1024)).toFixed(2);
-    const quotaMB = (quota / (1024 * 1024)).toFixed(2);
+    // Convert bytes → GB
+    const usedGB = (used / (1024 * 1024 * 1024)).toFixed(2);
+    const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
     const percent = quota ? ((used / quota) * 100).toFixed(2) : "0";
-
-    // Persistent storage check
-    const persistent = await navigator.storage.persisted();
 
     el.innerHTML = `
       <strong>Storage Usage:</strong><br>
-      • Used: ${usedMB} MB<br>
-      • Quota: ${quotaMB} MB<br>
+      • Used: ${usedGB} GB<br>
+      • Quota: ${quotaGB} GB<br>
       • Utilization: ${percent}%<br>
-      • Persistence: ${persistent ? "Granted" : "Not Granted"}
+      • Persistence: ${persistent ? "Granted" : "Not Granted"}<br>
+      <span class="pw-note">
+        ${persistent 
+          ? "Your data is protected from eviction." 
+          : "Large quota is normal even without persistence — Chrome may deny persistence unless the site is installed or heavily used."}
+      </span>
     `;
   } catch (err) {
     el.textContent = "Storage usage: error retrieving stats.";
   }
 }
+
 
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
