@@ -34,7 +34,7 @@ const PB_HOME2 = [
 // ---------------------------------------------------------------------------
 // TRACKERS / JUNK / SLOW PATHS
 // ---------------------------------------------------------------------------
-const PB_BLOCK = [
+const PB_BLOCK2 = [
   /doubleclick\.net/,
   /googletagmanager\.com/,
   /google-analytics\.com/,
@@ -51,7 +51,7 @@ const PB_BLOCK = [
 // ---------------------------------------------------------------------------
 // CDN PRIORITY
 // ---------------------------------------------------------------------------
-const PB_CDN = [
+const PB_CDN2 = [
   /cloudflare\.com/,
   /cloudfront\.net/,
   /akamaihd\.net/,
@@ -63,7 +63,7 @@ const PB_CDN = [
 // ---------------------------------------------------------------------------
 // ASSET PRIORITY
 // ---------------------------------------------------------------------------
-const PB_ASSET_PRIORITY = [
+const PB_ASSET_PRIORITY2 = [
   /\.js$/,
   /\.css$/,
   /\.json$/,
@@ -102,7 +102,7 @@ async function pbIntercept(details) {
   // BLOCK TRACKERS
   // -----------------------------
   if (S.blockTrackers || S.blockAnalytics || S.blockAds) {
-    for (const rule of PB_BLOCK) {
+    for (const rule of PB_BLOCK2) {
       if (rule.test(url)) {
         console.log("[PBInterceptor] Blocking tracker:", url);
         return { cancel: true };
@@ -135,7 +135,7 @@ async function pbIntercept(details) {
   // CDN PRIORITY
   // -----------------------------
   if (S.routerPrioritizeCDN) {
-    for (const cdn of PB_CDN) {
+    for (const cdn of PB_CDN2) {
       if (cdn.test(url)) {
         console.log("[PBInterceptor] CDN accelerated:", url);
         return {}; // allow
@@ -147,7 +147,7 @@ async function pbIntercept(details) {
   // ASSET PRIORITY
   // -----------------------------
   if (S.routerPrioritizeAssets) {
-    for (const asset of PB_ASSET_PRIORITY) {
+    for (const asset of PB_ASSET_PRIORITY2) {
       if (asset.test(url)) {
         console.log("[PBInterceptor] Asset prioritized:", url);
         return {}; // allow
