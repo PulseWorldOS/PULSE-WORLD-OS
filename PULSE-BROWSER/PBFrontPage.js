@@ -34,11 +34,11 @@ async function updateModuleIcons() {
 
   
   searchEngineActiveLink = settings.externalSearchLink;
-  console.log(searchEngineActivated);
+  console.log(searchEngineActiveLink);
   
   engineURL = searchEngineActiveLink || "https://www.google.com/search?q=";
   document.getElementById("search").textContent = "Pulse Search Engine (" + searchEngineActivated + ")";
-  
+
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
   if (settings.emailMode === "internal") {
