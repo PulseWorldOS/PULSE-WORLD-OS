@@ -1,6 +1,3 @@
-pbLoadSettings().then(settings => {
-    console.log("[FrontPage] Loaded settings:", settings);
-});
 
 let userInteracted = false;
 let engineType = "text";
