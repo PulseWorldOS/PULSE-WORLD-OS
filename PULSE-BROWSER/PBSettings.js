@@ -209,7 +209,10 @@ async function loadExtensionSettingsUI() {
     goPublicToggle: "goPublicEnabled",
     publicLink: "publicLink",
     programmaticEmail: "programmaticEmail",
-    programmaticBanking: "programmaticBanking"
+    programmaticBanking: "programmaticBanking",
+    searchMode: "searchMode",
+    externalSearchLink: "externalSearchLink",
+
   };
 
   for (const id in fields) {
@@ -246,7 +249,11 @@ async function saveExtensionSettingsUI() {
     publicLink: document.getElementById("publicLink").value.trim(),
 
     programmaticEmail: document.getElementById("programmaticEmail").checked,
-    programmaticBanking: document.getElementById("programmaticBanking").checked
+    programmaticBanking: document.getElementById("programmaticBanking").checked,
+
+    searchMode: document.getElementById("searchMode").value,
+    externalSearchLink: document.getElementById("externalSearchLink").value.trim()
+    
   };
 
   await chrome.storage.local.set({ [EXTENSION_SETTINGS_KEY]: settings });
@@ -382,7 +389,10 @@ if (location.href.includes("PBSettings.html")) {
       "goPublicToggle",
       "publicLink",
       "programmaticEmail",
-      "programmaticBanking"
+      "programmaticBanking",
+      "searchMode",
+      "externalSearchLink",
+
     ];
 
     idsToWatch.forEach(id => {
