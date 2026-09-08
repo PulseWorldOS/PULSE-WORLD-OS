@@ -25,8 +25,7 @@
   },
 
   "options_ui": {
-    "page": "PBSettings.html",
-    "open_in_tab": true
+    "page": "PBSettings.html"
   },
 
   "chrome_url_overrides": {
@@ -86,15 +85,6 @@
       "PulseWorldOSLogo.png",
       "PulseWorldSplash512.png",
       "android-chrome-192x192.png",
-      "PulseWorldNebulaMid.png",
-      "PulseEngine2.png",
-      "PBRouter.js",
-      "PBAccelerator.js",
-      "PBDevOverlay.js",
-      "PBDevTools.js",
-      "PBInterceptor.js",
-      "PBNavigator.js",
-      "PBRealmBridge.js",
       "PBSettings.js"
     ],
     "matches": ["<all_urls>"]
