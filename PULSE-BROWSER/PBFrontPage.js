@@ -4,11 +4,13 @@ let userInteracted = false;
 function getFavicon(url) {
   try {
     const u = new URL(url);
-    return `chrome://favicon/${u.origin}`;
+    // Simple, reliable default: /favicon.ico on the origin
+    return `${u.origin}/favicon.ico`;
   } catch {
     return null; // external ONLY — no fallback
   }
 }
+
 
 async function updateModuleIcons() {
   const settings = await pbLoadSettings();
