@@ -69,6 +69,16 @@ function startWarmPath() {
   });
 }
 
+function getPulseSettings() {
+  return new Promise(resolve => {
+    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
+      if (res && res.ok) resolve(res.settings);
+      else resolve({});
+    });
+  });
+}
+
+
 // ---------------------------------------------------------------------------
 // 2. HUD INJECTION (DevOverlay) — SAFE VERSION
 // ---------------------------------------------------------------------------
@@ -103,28 +113,32 @@ async function injectHUD() {
 
     HudOffline = true;
 
-    // ---------------------------------------------------------
-    // ⭐ PulseStream Auto-PIP Logic
-    // ---------------------------------------------------------
-    try {
-      const settings = await pbLoadExtensionSettings();
-      const autoPIP = settings.pulseStreamToggle === true;
+    const flag = document.getElementById("pulseworld-flag");
+    if (flag) {
+      flag.textContent = "PulseBrowser OS Active [HUD Offline — Streaming Detected]";
+    }
 
-      // Find video element
-      const video = document.querySelector("video");
+    // ---------------------------------------------------------
+    // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
+    // ---------------------------------------------------------
+    (async () => {
+      try {
+        const settings = await getPulseSettings();
+        const autoPIP = settings.pulseStreamToggle === true;
 
-      if (video) {
-        // AUTO-PIP ON → immediately request PIP
+        const video = document.querySelector("video");
+        if (!video) return;
+
         if (autoPIP) {
           video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
         } else {
-          // AUTO-PIP OFF → show PulseStream prompt
           showPulseStreamPrompt(video);
         }
+
+      } catch (e) {
+        console.warn("PulseStream Error:", e);
       }
-    } catch (e) {
-      console.warn("PulseStream Error:", e);
-    }
+    })();
 
     return;
   }
@@ -172,23 +186,27 @@ function showPulseStreamPrompt(video) {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: rgba(0,0,0,0.85);
+    width: 260px;
+    background: rgba(0,0,0,0.88);
     color: #00FF9C;
-    padding: 14px 18px;
-    border-radius: 14px;
+    padding: 16px 20px;
+    border-radius: 16px;
     border: 1px solid #0FF;
     font-family: monospace;
     font-size: 12px;
     z-index: 999999999;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 0 12px #0FF;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 14px #0FF;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.35s ease-out;
   `;
 
   box.innerHTML = `
     <div style="font-weight:600; margin-bottom:6px; color:#0FF;">
       🎥 PulseStream
     </div>
-    <div style="margin-bottom:10px;">
+    <div style="margin-bottom:12px;">
       Watch while you browse?
     </div>
 
@@ -196,7 +214,7 @@ function showPulseStreamPrompt(video) {
       background:#0FF;
       color:#000;
       border:none;
-      padding:6px 10px;
+      padding:6px 12px;
       border-radius:6px;
       font-weight:600;
       cursor:pointer;
@@ -204,10 +222,10 @@ function showPulseStreamPrompt(video) {
     ">Enable PIP</button>
 
     <button id="pipDisableBtn" style="
-      background:#333;
+      background:#222;
       color:#0FF;
       border:1px solid #0FF;
-      padding:6px 10px;
+      padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
     ">Don’t ask again</button>
@@ -215,16 +233,35 @@ function showPulseStreamPrompt(video) {
 
   document.body.appendChild(box);
 
+  // Animate in
+  requestAnimationFrame(() => {
+    box.style.opacity = "1";
+    box.style.transform = "translateY(0)";
+  });
+
+  // Auto-dismiss after 12 seconds
+  const autoClose = setTimeout(() => {
+    if (box) box.remove();
+  }, 12000);
+
   // Enable PIP
   document.getElementById("pipEnableBtn").onclick = () => {
+    clearTimeout(autoClose);
     video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
     box.remove();
   };
 
   // Disable future prompts
   document.getElementById("pipDisableBtn").onclick = () => {
-    settings.pulseStreamToggle = false;
-    if (typeof saveSettings === "function") saveSettings();
+    clearTimeout(autoClose);
+
+    // Update settings through extension messaging
+    chrome.runtime.sendMessage({
+      type: "PBSETTINGS_UPDATE",
+      key: "pulseStreamToggle",
+      value: false
+    });
+
     box.remove();
   };
 }
