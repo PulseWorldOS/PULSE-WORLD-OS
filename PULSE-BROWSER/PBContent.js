@@ -680,7 +680,6 @@ function injectPulseFlag() {
     
     wrap.style.display = "block";
     body.style.display = "block";
-    flag.textContent = "PulseBrowser OS";
     flag.style.background = "#00FF9C";
   
 
