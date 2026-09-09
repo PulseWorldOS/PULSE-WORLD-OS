@@ -17,6 +17,7 @@ const timerBtn = document.getElementById("timerBtn");
 function getFavicon(url) {
   const u = new URL(url);
   let icon = `${u.origin}/favicon.ico`;
+    
   try {
     // 2. Strip subdomain → get root domain
     const parts = u.hostname.split(".");
@@ -25,10 +26,13 @@ function getFavicon(url) {
       icon = `https://${root}/favicon.ico`;
     }
     console.log(icon);
+    if (u.contains("pulseworld")) {
+      icon = `https://${u.origin}/PWFavIcon.ico`;
+    }
     // Simple, reliable default: /favicon.ico on the origin
     return icon;
   } catch {
-    return `https://${u.origin}/PWFavIcon.ico`; // external ONLY — no fallback
+    return; // external ONLY — no fallback
   }
 }
 
