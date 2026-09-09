@@ -144,7 +144,7 @@ async function updateModuleIcons() {
   // SOCIAL MODULE
   const socialIcon = document.getElementById("moduleSocialIcon");
   if (settings.socialMode === "internal") {
-    socialIcon.innerText = "🏦";      // your original emoji
+    socialIcon.innerText = "🎭";      // your original emoji
     socialIcon.style.backgroundImage = "";
   } else {
     const fav = getFavicon(settings.externalSocialLink);
@@ -159,7 +159,7 @@ async function updateModuleIcons() {
   // WORK MODULE
   const workIcon = document.getElementById("moduleWorkIcon");
   if (settings.workMode === "internal") {
-    workIcon.innerText = "🏦";      // your original emoji
+    workIcon.innerText = "💼";      // your original emoji
     workIcon.style.backgroundImage = "";
   } else {
     const fav = getFavicon(settings.externalWorkLink);
@@ -174,7 +174,7 @@ async function updateModuleIcons() {
   // WORK MODULE
   const streamIcon = document.getElementById("moduleStreamIcon");
   if (settings.streamMode === "internal") {
-    streamIcon.innerText = "🏦";      // your original emoji
+    streamIcon.innerText = "📺";      // your original emoji
     streamIcon.style.backgroundImage = "";
   } else {
     const fav = getFavicon(settings.externalStreamingLink);
