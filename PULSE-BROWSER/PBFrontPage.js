@@ -26,9 +26,10 @@ function getFavicon(url) {
       icon = `https://${root}/favicon.ico`;
     }
     console.log(icon);
-    if (u.contains("pulseworld")) {
+    if (u.includes("pulseworld")) {
       icon = `https://${u.origin}/PWFavIcon.ico`;
     }
+    console.log(icon);
     // Simple, reliable default: /favicon.ico on the origin
     return icon;
   } catch {
