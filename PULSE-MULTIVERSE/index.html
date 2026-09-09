@@ -1090,8 +1090,8 @@ let isTouchMobile = false;
 
   if (impulse) {
     routeToInternal(impulse.trim());
-  } else if (isPageHash) {
-    routeToInternal(hashRoute);
+  // } else if (isPageHash) {
+  //   routeToInternal(hashRoute);
   } else {      
     // ⭐ First route based on touch.page (passport-first)
     // ⭐ Determine if we have a valid page
@@ -1173,7 +1173,7 @@ let isTouchMobile = false;
   // ---------------------------------------------------------
   // 1. Generate PulseUser Identity
   // ---------------------------------------------------------
-  const identity = generatePulseUser();
+  const identity = await generatePulseUser();
 
   if (isTouchMobile) {
     chromebg.style.display = "none";
@@ -2939,20 +2939,29 @@ const PulseIdentityStore = (() => {
 
   function load() {
     const stored = readJSON(IDENTITY_KEY);
-    if (stored.id) return apply(stored);
+    if (stored.id && validName(stored.name)) {
+      apply(stored);
+      if (!stored.email || /^unknown(?: pulse user)?@/i.test(stored.email)) return save();
+      return stored;
+    }
     return save();
+  }
+
+  function validName(value) {
+    return typeof value === "string" && value.trim() && !/^unknown(?: pulse user)?$/i.test(value.trim());
   }
 
   function save(overrides = {}) {
     const existing = readJSON(IDENTITY_KEY);
     const photos = loadPhotos(existing);
-    const pulseName = stripTimestamp(PulseRealm.PulseUser || "");
+    const candidates = [overrides.name, PulseRealm.PulseUser, existing.name, localStorage.getItem("PulseUser")];
+    const pulseName = stripTimestamp(candidates.find(validName) || generateDefaultPulseUser());
     const data = {
       id: existing.id || `world-${Math.random().toString(36).slice(2)}`,
       createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
       tier: existing.tier || "temporal-os",
-      name: pulseName || existing.name || "Unknown Pulse User",
-      email: PulseRealm.PulseEmail || existing.email || `${pulseName || "Unknown"}@PulseWorld.Net`,
+      name: pulseName,
+      email: `${pulseName}@PulseWorld.Net`,
       userEmail: PulseRealm.PulseUserEmail || existing.userEmail || "YourEmail@Domain.com",
       userName: PulseRealm.PulseUserName || existing.userName || "Aldwyn",
       phone: PulseRealm.PulsePhone || existing.phone || "(555) 555-5555",
@@ -2972,9 +2981,12 @@ const PulseIdentityStore = (() => {
       bizaliasPhotoURL: photos.bizaliasPhotoURL,
       PulsePoints: PulseRealm.PulsePoints ?? existing.PulsePoints ?? 0,
       PulseLoyalty: PulseRealm.PulseTierPhoto || existing.PulseLoyalty || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-      ...overrides
+      ...overrides,
+      name: pulseName,
+      email: `${pulseName}@PulseWorld.Net`
     };
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(data));
+    localStorage.setItem("PulseUser", data.name);
     savePhotos();
     return apply(data, readJSON(PHOTOS_KEY));
   }
@@ -7441,43 +7453,12 @@ async function runBootSequenceOnce(Rebooted,isMobile) {
 }
 
 async function generatePulseUser() {
+  // Canonical local identity wins over stale asynchronous memory mirrors.
+  const data = PulseRealm.PulseIdentityStore.load();
+  return data.name;
+}
 
-  // ---------------------------------------------------------
-  // 1) Try PulseCoreMemory first (always returns STRING)
-  // ---------------------------------------------------------
-  try {
-    const memUser = await PulseRealm.PulseCoreMemory.getAsync("pulseUser", "id");
-    if (typeof memUser === "string" && memUser.length > 0) {
-      PulseRealm.PulseUser = memUser;
-      return memUser;
-    }
-  } catch {}
-
-  // ---------------------------------------------------------
-  // 2) Try browser localStorage (always returns STRING)
-  // ---------------------------------------------------------
-  let browserUser = null;
-
-  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-    try {
-      browserUser = localStorage.getItem("PulseUser");
-    } catch {}
-  }
-
-  if (typeof browserUser === "string" && browserUser.length > 0) {
-    PulseRealm.PulseUser = browserUser;
-
-    // async mirror into CoreMemory
-    try {
-      await PulseRealm.PulseCoreMemory.putAsync("pulseUser", "id", browserUser);
-    } catch {}
-
-    return browserUser;
-  }
-
-  // ---------------------------------------------------------
-  // 3) Generate new identity (STRING)
-  // ---------------------------------------------------------
+function generateDefaultPulseUser() {
   const adjectives = [
     "Immortal","Binary","Echo","Flux","Wave","Nebula","Pulsar",
     "Specter","Voyager","Nomad","Strider","Cognitive","Intelligent",
@@ -7534,34 +7515,8 @@ async function generatePulseUser() {
   // Final PulseUser Identity
   // ---------------------------------------------------------
   const pulseUser = `${adj}-${noun}-${multiverseRealm}-${anchorTime}`;
-
-  // ---------------------------------------------------------
-  // 4) Save to CoreMemory (STRING)
-  // ---------------------------------------------------------
-  try {
-    PulseRealm.PulseCoreMemory.putAsync("pulseUser", "id", pulseUser);
-  } catch {}
-
-  // ---------------------------------------------------------
-  // 5) Mirror to localStorage (STRING)
-  // ---------------------------------------------------------
-  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-    try {
-      localStorage.setItem("PulseUser", pulseUser);
-    } catch {}
-  }
-
-  // ---------------------------------------------------------
-  // 6) Set global identity
-  // ---------------------------------------------------------
-  PulseRealm.PulseUser = pulseUser;
-  PulseRealm.PulseEmail = `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`;
-  // ---------------------------------------------------------
-  // 7) Return instantly
-  // ---------------------------------------------------------
   return pulseUser;
 }
-
 
 PulseRealm.GeneratePulseUser = generatePulseUser;
 
