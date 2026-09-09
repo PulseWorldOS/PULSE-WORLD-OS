@@ -693,6 +693,7 @@ function injectPulseFlag() {
 
           if (video.disablePictureInPicture) {
             flag.textContent = "PulseBrowser OS (PIP Disabled)";
+            flag.style.background = "rosybrown";
             return;
           }
           // ⭐ Toggle PIP
