@@ -102,7 +102,7 @@ async function injectHUD() {
 
     const flag = document.getElementById("pulseworld-flag");
     if (flag) {
-      flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
+      flag.textContent = "PulseBrowser OS - (PIP Available)";
     }
   }
 
@@ -665,10 +665,10 @@ function injectPulseFlag() {
     z-index: 999999999;
     opacity: 0.85;
   `;
-  flag.textContent = "PulseBrowser OS Active";
+  flag.textContent = "PulseBrowser OS";
   
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-    flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
+    flag.textContent = "PulseBrowser OS - (PIP Available)";
     flag.style.background = "#00C8FF";
   }
 
@@ -680,12 +680,12 @@ function injectPulseFlag() {
     if (body.style.display === "none") {
       wrap.style.display = "block";
       body.style.display = "block";
-      flag.textContent = "PulseBrowser OS Active";
+      flag.textContent = "PulseBrowser OS";
       flag.style.background = "#00FF9C";
     } else {
       wrap.style.display = "none";
       body.style.display = "none";
-      flag.textContent = "PulseBrowser OS Active";
+      flag.textContent = "PulseBrowser OS";
       flag.style.background = "#00C8FF";
     }
 
@@ -699,10 +699,10 @@ function injectPulseFlag() {
           // ⭐ Toggle PIP
           if (document.pictureInPictureElement) {
             await document.exitPictureInPicture();
-            flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
+            flag.textContent = "PulseBrowser OS - (PIP Available)";
           } else {
             await video.requestPictureInPicture();
-            flag.textContent = "PulseBrowser OS Active [PIP Mode]";
+            flag.textContent = "PulseBrowser OS - [PIP MODE]";
           }
 
         } catch (e) {
