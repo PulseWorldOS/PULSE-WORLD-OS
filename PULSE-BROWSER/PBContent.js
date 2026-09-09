@@ -113,7 +113,8 @@ async function injectHUD() {
     // ---------------------------------------------------------
     // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
     // ---------------------------------------------------------
-    (async () => {
+    
+      setTimeout(() => {
       try {
         const autoPIP = true;
         console.log(autoPIP);
@@ -129,7 +130,8 @@ async function injectHUD() {
       } catch (e) {
         console.warn("PulseStream Error:", e);
       }
-    })();
+        }, 4000);
+  
 
   }
 
