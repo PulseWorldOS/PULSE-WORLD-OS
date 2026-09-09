@@ -14,28 +14,78 @@ let url = engineURL;
 
 const timerBtn = document.getElementById("timerBtn");
 
-function getFavicon(url) {
+function getFavicon(url, flags = {}) {
   const u = new URL(url);
+
+  // Default external favicon
   let icon = `${u.origin}/favicon.ico`;
-    
+
+  // PulseWorld domains
+  const PB_HOMES = [
+    "pulseworld.me",
+    "pulseworld.net",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net"
+  ];
+
   try {
-    // 2. Strip subdomain → get root domain
+    // Check if this is a PulseWorld domain
+    const isPulseWorld = PB_HOMES.some(domain => u.hostname.endsWith(domain));
+
+    if (isPulseWorld) {
+      // MODULE‑AWARE FAVICON SWITCHING
+      if (flags.isSW) {
+        icon = "./SWFavIcon.ico";
+      }
+      else if (flags.isBinaryOS) {
+        icon = "./BOFavIcon.ico";
+      }
+      else if (flags.isGPU) {
+        icon = "./GPFavIcon.ico";
+      }
+      else if (flags.isLogic) {
+        icon = "./BLFavIcon.ico";
+      }
+      else if (flags.isOrb) {
+        icon = "./OMFavIcon.ico";
+      }
+      else if (flags.isBiz) {
+        icon = "./PWBFavIcon.ico";
+      }
+      else if (flags.isSettings) {
+        icon = "./PWBFavIcon.ico";
+      }
+      else if (flags.isMoney) {
+        icon = "./PWMFavIcon.ico";
+      }
+      else {
+        icon = "./PWFavIcon.ico"; // Default PulseWorld favicon
+      }
+
+      console.log("PulseWorld favicon:", icon);
+      return icon;
+    }
+
+    // External site → strip subdomain for cleaner favicon
     const parts = u.hostname.split(".");
     if (parts.length > 2) {
       const root = parts.slice(parts.length - 2).join(".");
       icon = `https://${root}/favicon.ico`;
     }
-    console.log(icon);
-    if (u.hostname.includes("pulseworld")) {
-      icon = `${u.origin}/PWFavIcon.ico`;
-    }
-    console.log(icon);
-    // Simple, reliable default: /favicon.ico on the origin
+
+    console.log("External favicon:", icon);
     return icon;
+
   } catch {
     return; // external ONLY — no fallback
   }
 }
+
 
 window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();
