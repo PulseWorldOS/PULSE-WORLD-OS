@@ -266,7 +266,11 @@ function predictNextCoordinates(coord) {
   return coord + ".R1";
 }
 
-function buildDynamicRoutes(navSets) {
+function buildDynamicRoutes(navSets = {}) {
+  // NavigationSets is loaded asynchronously on some cold starts. Treat a
+  // missing registry as an empty map so boot can continue and route fallback
+  // logic can supply the current page instead of throwing in Object.entries.
+  if (!navSets || typeof navSets !== "object") navSets = {};
   const routes = {};
 
   for (const [page, navItems] of Object.entries(navSets)) {
