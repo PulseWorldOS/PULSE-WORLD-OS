@@ -721,7 +721,7 @@ function injectPulseFlag() {
       })();
 
     }
-
+  };
 
   document.body.appendChild(flag);
 }
