@@ -680,26 +680,28 @@ function injectPulseFlag() {
   }
 
   flag.onclick = () => {
-    // ---------------------------------------------------------
-    // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
-    // ---------------------------------------------------------
-    (async () => {
-      try {
-        const autoPIP = true;
-        console.log(autoPIP);
-        const video = document.querySelector("video");
-        if (!video) return;
+    if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
+      // ---------------------------------------------------------
+      // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
+      // ---------------------------------------------------------
+      (async () => {
+        try {
+          const autoPIP = true;
+          console.log(autoPIP);
+          const video = document.querySelector("video");
+          if (!video) return;
 
-        if (autoPIP) {
-          video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
-        } else {
-          showPulseStreamPrompt(video);
+          if (autoPIP) {
+            video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
+          } else {
+            showPulseStreamPrompt(video);
+          }
+
+        } catch (e) {
+          console.warn("PulseStream Error:", e);
         }
-
-      } catch (e) {
-        console.warn("PulseStream Error:", e);
-      }
-    })();
+      })();
+    }
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
