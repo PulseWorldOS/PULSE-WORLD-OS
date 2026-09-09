@@ -1086,8 +1086,17 @@ let isTouchMobile = false;
   if (impulse) {
     routeToInternal(impulse.trim());
   } else if (hashRoute) {
-    FALLBACK_BARRIER = DEFAULT_INDEX;
-    routeToInternal(hashRoute);
+
+    // Only route internally if the FIRST LETTER is uppercase
+    const firstChar = hashRoute.charAt(0);
+    const isPageHash = firstChar === firstChar.toUpperCase();
+
+    if (isPageHash) {
+        routeToInternal(hashRoute);
+    } else {
+        console.log("PulseWorld: lowercase hashtag detected — normal browser behavior.");
+        // do nothing → normal hashtag navigation
+    }
   } else {      
     // ⭐ First route based on touch.page (passport-first)
     // ⭐ Determine if we have a valid page
