@@ -677,17 +677,12 @@ function injectPulseFlag() {
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
-    if (body.style.display === "none") {
-      wrap.style.display = "block";
-      body.style.display = "block";
-      flag.textContent = "PulseBrowser OS";
-      flag.style.background = "#00FF9C";
-    } else {
-      wrap.style.display = "none";
-      body.style.display = "none";
-      flag.textContent = "PulseBrowser OS";
-      flag.style.background = "#00C8FF";
-    }
+    
+    wrap.style.display = "block";
+    body.style.display = "block";
+    flag.textContent = "PulseBrowser OS";
+    flag.style.background = "#00FF9C";
+  
 
     if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
