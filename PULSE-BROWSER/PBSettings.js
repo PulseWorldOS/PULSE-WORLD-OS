@@ -217,6 +217,8 @@ async function loadExtensionSettingsUI() {
     externalSocialLink: "externalSocialLink",
     workMode: "workMode",
     externalWorkLink: "externalWorkLink",
+    streamingMode: "streamingMode",
+    externalStreamingLink: "externalStreamingLink"
   };
 
   for (const id in fields) {
@@ -261,7 +263,9 @@ async function saveExtensionSettingsUI() {
     socialMode: document.getElementById("socialMode").value,
     externalSocialLink: document.getElementById("externalSocialLink").value.trim(),
     workMode: document.getElementById("workMode").value,
-    externalWorkLink: document.getElementById("externalWorkLink").value.trim()
+    externalWorkLink: document.getElementById("externalWorkLink").value.trim(),
+    streamingMode: document.getElementById("streamingMode").value,
+    externalStreamingLink: document.getElementById("externalStreamingLink").value.trim()
     
   };
 
@@ -479,6 +483,8 @@ if (location.href.includes("PBSettings.html")) {
       "externalSocialLink",
       "workMode",
       "externalWorkLink",
+      "streamingMode",
+      "externalStreamingLink"
     ];
 
     idsToWatch.forEach(id => {

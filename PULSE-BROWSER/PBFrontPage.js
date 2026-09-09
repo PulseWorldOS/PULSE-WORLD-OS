@@ -171,6 +171,21 @@ async function updateModuleIcons() {
     }
   }
 
+  // WORK MODULE
+  const streamIcon = document.getElementById("moduleStreamIcon");
+  if (settings.streamMode === "internal") {
+    streamIcon.innerText = "🏦";      // your original emoji
+    streamIcon.style.backgroundImage = "";
+  } else {
+    const fav = getFavicon(settings.externalStreamingLink);
+    if (fav) {
+      streamIcon.innerText = "";
+      streamIcon.style.backgroundImage = `url(${fav})`;
+      streamIcon.style.backgroundSize = "contain";
+      streamIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
   // FAVORITES (always your emojis)
   document.getElementById("moduleFav1Icon").innerText = "⭐";
   document.getElementById("moduleFav1Icon").style.backgroundImage = "";
@@ -537,6 +552,29 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
 
     console.log("[FrontPage] Opening External Work Provider:", link);
+
+    chrome.tabs.create({ url: link });
+});
+
+document.getElementById("moduleStream").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Streaming module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Streaming on the real domain
+    if (settings.streamMode === "internal") {
+        const internalURL = "https://www.netflix.com";
+        console.log("[FrontPage] Opening Internal Netflix:", internalURL);
+
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalStreamingLink?.trim() || "https://www.hulu.com";
+
+    console.log("[FrontPage] Opening External Streaming Provider:", link);
 
     chrome.tabs.create({ url: link });
 });
