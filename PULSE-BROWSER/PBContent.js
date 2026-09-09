@@ -140,7 +140,6 @@ async function injectHUD() {
       }
     })();
 
-    return;
   }
 
 
