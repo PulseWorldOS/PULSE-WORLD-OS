@@ -7,8 +7,11 @@ let _supabase = null;
 function getSupabase() {
   if (!_supabase) {
     const url = process.env.SUPABASE_DATABASE_URL;
-    const key = process.env.PulseWorld_SUPABASE_ANON_KEY;
-    if (!url || !key) throw new Error("Supabase env vars not set (SUPABASE_DATABASE_URL / PulseWorld_SUPABASE_ANON_KEY)");
+    // This function is the server-side boundary for both background sync and
+    // the admin-only read.  It must use the server-only key: the database has
+    // RLS enabled and the browser must never receive this credential.
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) throw new Error("Supabase env vars not set (SUPABASE_DATABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
     _supabase = createClient(url, key);
   }
   return _supabase;
@@ -230,7 +233,8 @@ export async function handler(event) {
     }
 
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC (called every 7s from browser interval)
-    // Upserts user identity + photos into pulse_users table — no blocking, no response needed
+    // PulseIdentity is the existing production table.  The browser's local id
+    // is kept in attrs.localId because PulseIdentity.userID is a UUID.
     if (body.action === "sync") {
       const { identity, photos } = body;
       if (!identity?.id) {
@@ -241,32 +245,34 @@ export async function handler(event) {
         };
       }
 
-      const payload = {
-        pulse_id:            identity.id,
-        name:                identity.name               || null,
-        email:               identity.email              || null,
-        user_email:          identity.userEmail          || null,
-        username:            identity.userName           || null,
-        phone:               identity.phone              || null,
-        country:             identity.country            || null,
-        role:                identity.role               || null,
-        pulse_role:          identity.pulseRole          || null,
-        tier:                identity.tier               || null,
-        pulse_points:        identity.PulsePoints        || 0,
-        stripe_id:           identity.bank               || null,
-        stripe_url:          identity.bankURL            || null,
-        token_id:            identity.tokenID            || null,
-        drift_signature:     identity.drift              || null,
-        photo_url:           photos?.photoURL            || identity.photoURL         || null,
-        alias_photo_url:     photos?.aliasPhotoURL       || identity.aliasPhotoURL    || null,
-        biz_photo_url:       photos?.bizphotoURL         || identity.bizphotoURL      || null,
-        biz_alias_photo_url: photos?.bizaliasPhotoURL    || identity.bizaliasPhotoURL || null,
-        updated_at:          new Date().toISOString()
+      const now = new Date().toISOString();
+      const attrs = {
+        ...identity,
+        localId: identity.id,
+        photoURL: photos?.photoURL || identity.photoURL || null,
+        aliasPhotoURL: photos?.aliasPhotoURL || identity.aliasPhotoURL || null,
+        bizphotoURL: photos?.bizphotoURL || identity.bizphotoURL || null,
+        bizaliasPhotoURL: photos?.bizaliasPhotoURL || identity.bizaliasPhotoURL || null,
+        syncedAt: now
       };
+      const client = getSupabase();
+      const { data: existing, error: lookupError } = await client
+        .from("PulseIdentity")
+        .select("userID")
+        .eq("attrs->>localId", identity.id)
+        .maybeSingle();
 
-      const { error } = await getSupabase()
-        .from("pulse_users")
-        .upsert(payload, { onConflict: "pulse_id" });
+      if (lookupError) throw lookupError;
+
+      const payload = {
+        email: identity.email || identity.userEmail || null,
+        name: identity.name || identity.userName || null,
+        stripeID: identity.bank || null,
+        attrs
+      };
+      const { error } = existing
+        ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
+        : await client.from("PulseIdentity").insert({ ...payload, created: now });
 
       if (error) {
         console.error("❌ [PULSE-SQL] Supabase sync error:", error);
@@ -284,12 +290,12 @@ export async function handler(event) {
       };
     }
 
-    // ⭐ ADMIN READ — fetches all pulse_users records (Admin page only)
+    // ⭐ ADMIN READ — fetches production PulseIdentity records (Admin page only)
     if (body.action === "read") {
       const { data, error } = await getSupabase()
-        .from("pulse_users")
+        .from("PulseIdentity")
         .select("*")
-        .order("updated_at", { ascending: false })
+        .order("created", { ascending: false })
         .limit(1000);
 
       if (error) {
@@ -301,10 +307,20 @@ export async function handler(event) {
         };
       }
 
+      const users = (data || []).map((row) => ({
+        ...row,
+        ...(row.attrs || {}),
+        id: row.attrs?.localId || row.userID,
+        name: row.name || row.attrs?.name || null,
+        email: row.email || row.attrs?.email || row.attrs?.userEmail || null,
+        pulse_points: row.attrs?.PulsePoints ?? 0,
+        updated_at: row.attrs?.syncedAt || row.created || null
+      }));
+
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
-        body: JSON.stringify({ ok: true, users: data })
+        body: JSON.stringify({ ok: true, users })
       };
     }
 

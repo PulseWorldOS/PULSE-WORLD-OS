@@ -650,7 +650,7 @@
           <input id="bizName" class="t-input" type="text" placeholder="Pulse World Business Name">
 
           <div class="t-row">
-            <input id="displayNameInput" class="t-input" type="text" placeholder="Business Alias">
+            <input id="businessDisplayNameInput" class="t-input" type="text" placeholder="Business Alias">
           </div>
 
           <p id="displayNameStatus" class="msg" style="display:none;"></p>
@@ -698,7 +698,7 @@
             <div id="bizStatus" class="biz-status">Checking Status…</div>
           </div>
 
-          <button class="t-btn-primaryS" id="saveBtn">Save Dashboard</button>
+          <button class="t-btn-primaryS" id="saveBizBtn">Save Dashboard</button>
 
         </div> <!-- end profile -->
       </div> <!-- end profile-container -->
@@ -763,7 +763,7 @@ async function renderDashboard(identity) {
 
   const tetherName = document.getElementById("tetherName");
   const verifyEmailBtn = document.getElementById("verifyEmailBtn");
-  const saveBtn = document.getElementById("saveBtn");
+  const saveButtons = document.querySelectorAll("#saveBtn, #saveBizBtn");
 
   // ============================================================
   // INFO PANEL
@@ -790,10 +790,16 @@ async function renderDashboard(identity) {
     warmToggle.checked = false;
   }
 
-  fullName.value = identity.userName;
-  displayNameInput.value = identity.name;
-  email.value = identity.userEmail;
-  phone.value = identity.phone;
+  const setPersistedInput = (element, value) => {
+    const normalized = value || "";
+    element.setAttribute("value", normalized);
+    element.defaultValue = normalized;
+    element.value = normalized;
+  };
+  setPersistedInput(fullName, identity.userName);
+  setPersistedInput(displayNameInput, identity.name);
+  setPersistedInput(email, identity.userEmail);
+  setPersistedInput(phone, identity.phone);
   country.value = identity.country;
 
   const stripeStatus = document.getElementById("stripeStatus");
@@ -835,10 +841,6 @@ async function renderDashboard(identity) {
   // ============================================================
 
   function setupPhotoChange(btn, input, imgEl, realmKey) {
-
-    // Use PulseRealm as truth, NOT the DOM (DOM may contain corrupted blob)
-    const oldPhoto = PulseRealm[realmKey] || imgEl.src;
-
     btn.onclick = () => input.click();
 
     input.addEventListener("change", async (event) => {
@@ -847,6 +849,7 @@ async function renderDashboard(identity) {
 
       const reader = new FileReader();
       reader.onload = async (e) => {
+        const oldPhoto = PulseRealm[realmKey] || imgEl.src;
         let result = e.target.result;
 
         // ⭐ Normalize data URL (Chrome adds garbage on refresh)
@@ -862,14 +865,31 @@ async function renderDashboard(identity) {
 
         // ⭐ Save stable version
         PulseRealm[realmKey] = result;
-
-        // ⭐ Apply to DOM
         imgEl.src = result;
+
+        const identityPhotoKey = {
+          PulsePhoto: "photoURL",
+          PulseAliasPhoto: "aliasPhotoURL",
+          PulseBizPhoto: "bizphotoURL",
+          PulseBizAliasPhoto: "bizaliasPhotoURL"
+        }[realmKey];
+
+        try {
+          PulseRealm.PulseIdentityStore.savePhotos();
+          PulseRealm.PulseIdentityStore.save({ [identityPhotoKey]: result });
+        } catch (error) {
+          PulseRealm[realmKey] = oldPhoto;
+          imgEl.src = oldPhoto;
+          PulseRealm.PulseWorldPopup("Photo is too large for local storage", "OK", () => {});
+          return;
+        }
 
         // ⭐ Undo handler
         PulseRealm.PulseWorldPopup("Photo Updated", "Undo", () => {
           PulseRealm[realmKey] = oldPhoto;
           imgEl.src = oldPhoto;
+          PulseRealm.PulseIdentityStore.savePhotos();
+          PulseRealm.PulseIdentityStore.save({ [identityPhotoKey]: oldPhoto });
         });
       };
 
@@ -910,85 +930,40 @@ async function renderDashboard(identity) {
     }
   };
 
-  saveBtn.onclick = () => savebutton();
+  saveButtons.forEach((button) => {
+    button.onclick = () => savebutton();
+  });
 }
-
-function savePhotos() {
-  const photos = {
-    photoURL: PulseRealm.PulsePhoto ?? DEFAULT_PHOTO,
-    aliasPhotoURL: PulseRealm.PulseAliasPhoto ?? DEFAULT_ALIAS,
-    bizphotoURL: PulseRealm.PulseBizPhoto ?? DEFAULT_BIZ,
-    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto ?? DEFAULT_BIZ_ALIAS
-  };
-
-  localStorage.setItem("PulsePhotos", JSON.stringify(photos));
-
-}
-
-
-/* ============================================================
-  DASHBOARD BOOTSTRAP (v40)
-  ============================================================ */
-function save () {
-  console.log("[PulseIdentity] Building identity snapshot…");
-
-  identity = {
-    id: `world-${Math.random().toString(36).slice(2)}`,
-    createdAt: PulseRealm.PulseNOW,
-    tier: "temporal-os",
-
-    name: stripTimestamp(PulseRealm.PulseUser) ?? "Unknown Pulse User",
-    email: PulseRealm.PulseEmail ?? `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`,
-    userEmail: PulseRealm.PulseUserEmail ?? "YourEmail@Domain.com",
-    userName: PulseRealm.PulseUserName ?? "Aldwyn",
-    phone: PulseRealm.PulsePhone ?? "(555) 555-5555",
-    country: PulseRealm.PulseCountry ?? "US",
-
-    role: PulseRealm.PulseRole ?? "User",
-    pulseRole: PulseRealm.PulseWorldRole ?? "Entrepreneur",
-
-    bank: PulseRealm.PulseBank ?? "Unknown Stripe ID",
-    bankURL: PulseRealm.PulseBankMonitor || "https://www.pulseworld.net/?Impulse=PulseWorldBank",
-    stripeLogin: PulseRealm.PulseBankURL || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
-    tokenID: PulseRealm.PulseBankID || null,
-    assetsWallet: PulseRealm.PulseAssets || null,
-
-    drift: PulseRealm.DriftSignature ?? PulseRealm.GenerateDriftSignature,
-    device: PulseRealm.PulseTrustedDevice ?? true,
-
-    photoURL: PulseRealm.PulsePhoto,
-    aliasPhotoURL: PulseRealm.PulseAliasPhoto,
-    bizphotoURL: PulseRealm.PulseBizPhoto,
-    bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto,
-
-    PulsePoints: PulseRealm.PulsePoints || 0,
-    PulseLoyalty: PulseRealm.PulseTierPhoto ?? "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-  };
-
-  localStorage.setItem("PulseIdentity", JSON.stringify(identity));
-
-  // ⭐ ADD PHOTO STORAGE
-  savePhotos();
-}
-
-
 
 function savebutton() {
 
   console.log("[SaveButton] Starting savebutton()…");
 
   // Snapshot for undo
-  const previousIdentity = JSON.parse(localStorage.getItem("PulseIdentity") || "{}");
+  const previousIdentity = PulseRealm.PulseIdentityStore.readJSON("PulseIdentity");
+  const previousPhotos = PulseRealm.PulseIdentityStore.readJSON("PulsePhotos");
+  const fullNameValue = document.getElementById("fullName")?.value.trim();
+  const displayNameValue = document.getElementById("displayNameInput")?.value.trim();
+  const emailValue = document.getElementById("email")?.value.trim().toLowerCase();
+  const phoneValue = document.getElementById("phone")?.value.trim();
+  const countryValue = document.getElementById("country")?.value;
+  const trustedDevice = document.getElementById("stayToggle")?.checked;
 
-  // ⭐ NOW WE ACTUALLY SAVE IT
-  console.log("[SaveButton] Calling save() to persist identity + photos…");
-  save();
-  // This CREATES identity (your original behavior)
-  console.log("[SaveButton] Calling loadPulseIdentityContinual()…");
-  loadPulseIdentityContinual();
-  // ⭐ NOW WE ACTUALLY SAVE IT
-  console.log("[SaveButton] Calling save() to persist identity + photos…");
-  save();
+  PulseRealm.PulseUserName = fullNameValue || PulseRealm.PulseUserName;
+  PulseRealm.PulseUser = displayNameValue || PulseRealm.PulseUser;
+  PulseRealm.PulseUserEmail = emailValue || PulseRealm.PulseUserEmail;
+  PulseRealm.PulsePhone = phoneValue || PulseRealm.PulsePhone;
+  PulseRealm.PulseCountry = countryValue || PulseRealm.PulseCountry;
+  PulseRealm.PulseTrustedDevice = trustedDevice ?? PulseRealm.PulseTrustedDevice;
+
+  PulseRealm.PulseIdentityStore.save({
+    name: displayNameValue || previousIdentity.name,
+    userName: fullNameValue || previousIdentity.userName,
+    userEmail: emailValue || previousIdentity.userEmail,
+    phone: phoneValue || previousIdentity.phone,
+    country: countryValue || previousIdentity.country,
+    device: trustedDevice ?? previousIdentity.device
+  });
   console.log("[SaveButton] Identity + Photos saved successfully.");
 
   // Popup
@@ -997,10 +972,8 @@ function savebutton() {
     console.log("[SaveButton] Undo triggered. Restoring previous identity…");
 
     // Undo restore
-    localStorage.setItem("PulseIdentity", JSON.stringify(previousIdentity));
-
-    // Re-render dashboard with old identity
-    renderDashboard(previousIdentity);
+    const restoredIdentity = PulseRealm.PulseIdentityStore.restore(previousIdentity, previousPhotos);
+    renderDashboard(restoredIdentity);
 
     console.log("[SaveButton] Undo complete.");
   });

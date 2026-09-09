@@ -707,7 +707,9 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
     }
 
     // ⭐ SUPABASE ADMIN READ — loads all user records when Admin page opens
+    let supabaseAdminReadSuspended = false;
     async function loadSupabaseUsers() {
+      if (supabaseAdminReadSuspended) return;
       const telemetryEl = document.getElementById("sql-telemetry-output");
       const activityEl  = document.getElementById("admin-activity-output");
       if (telemetryEl) telemetryEl.textContent = "⏳ Loading user data from Supabase...";
@@ -719,6 +721,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
         });
         const data = await res.json();
         if (!data.ok) {
+          supabaseAdminReadSuspended = true;
           if (telemetryEl) telemetryEl.textContent = `❌ Supabase Error: ${data.error}`;
           return;
         }
@@ -738,6 +741,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
             (users[0] ? `Latest: ${users[0].name||'—'} — ${users[0].email||'—'}` : "Awaiting first sync...");
         }
       } catch (err) {
+        supabaseAdminReadSuspended = true;
         console.error("❌ [Admin] Supabase read failed:", err);
         if (telemetryEl) telemetryEl.textContent = `❌ Network error: ${err.message}`;
       }
