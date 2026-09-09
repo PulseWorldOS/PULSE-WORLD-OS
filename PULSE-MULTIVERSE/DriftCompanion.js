@@ -404,6 +404,24 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
+  // API writes and reads must always reach the server, never a cached mirror.
+  if (req.method !== 'GET' || url.pathname.startsWith('/.netlify/functions/')) return;
+
+  // Fetch current application code on return visits, retaining an offline fallback.
+  if (url.origin === self.location.origin &&
+      (req.mode === 'navigate' || /\.(?:html|js|txt)$/.test(url.pathname))) {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(req, { cache: 'no-store' });
+        if (response.ok) await putSharedResponse(req, response.clone());
+        return response;
+      } catch {
+        return await getSharedResponse(req) || new Response('Offline', { status: 503 });
+      }
+    })());
+    return;
+  }
+
   if (url.pathname.includes('-TEST') ||
       url.pathname.includes('/PulseAdmin') ||
       url.pathname.includes('/PULSE-SERVER') ||
