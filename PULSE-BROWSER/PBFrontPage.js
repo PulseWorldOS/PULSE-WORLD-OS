@@ -28,7 +28,7 @@ function getFavicon(url) {
     // Simple, reliable default: /favicon.ico on the origin
     return icon;
   } catch {
-    return; // external ONLY — no fallback
+    return `https://${u.origin}/PWFavIcon.ico`; // external ONLY — no fallback
   }
 }
 
