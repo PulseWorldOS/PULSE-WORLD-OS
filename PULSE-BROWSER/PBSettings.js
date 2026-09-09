@@ -207,6 +207,7 @@ async function loadExtensionSettingsUI() {
     businessLink: "businessLink",
     filesLink: "filesLink",
     goPublicToggle: "goPublicEnabled",
+    pulseStreamToggle: "pulseStreamEnabled",
     publicLink: "publicLink",
     programmaticEmail: "programmaticEmail",
     programmaticBanking: "programmaticBanking",
@@ -249,6 +250,7 @@ async function saveExtensionSettingsUI() {
     filesLink: document.getElementById("filesLink").value.trim(),
 
     goPublicEnabled: document.getElementById("goPublicToggle").checked,
+    pulseStreamEnabled: document.getElementById("pulseStreamToggle").checked,
     publicLink: document.getElementById("publicLink").value.trim(),
 
     programmaticEmail: document.getElementById("programmaticEmail").checked,
@@ -460,6 +462,7 @@ if (location.href.includes("PBSettings.html")) {
       "businessLink",
       "filesLink",
       "goPublicToggle",
+      "pulseStreamToggle",
       "publicLink",
       "programmaticEmail",
       "programmaticBanking",
