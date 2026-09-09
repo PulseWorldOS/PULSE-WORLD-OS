@@ -5,8 +5,6 @@
 // ============================================================================
 
 
-let HudOffline = false;
-
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
@@ -101,9 +99,6 @@ async function injectHUD() {
   if (!document.body) return setTimeout(injectHUD, 50);
 
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-    console.warn("PulseBrowser HUD Disabled on Streaming Site:", location.hostname);
-
-    HudOffline = true;
 
     const flag = document.getElementById("pulseworld-flag");
     if (flag) {
@@ -675,8 +670,6 @@ function injectPulseFlag() {
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
     flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
     flag.style.background = "#00C8FF";
-    HudOffline = true;
-    console.log("HUD Offline");
   }
 
   flag.onclick = () => {
@@ -689,13 +682,11 @@ function injectPulseFlag() {
       body.style.display = "block";
       flag.textContent = "PulseBrowser OS Active";
       flag.style.background = "#00FF9C";
-      HudOffline = false;
     } else {
       wrap.style.display = "none";
       body.style.display = "none";
       flag.textContent = "PulseBrowser OS Active [HUD Offline]";
       flag.style.background = "#00C8FF";
-      HudOffline = true;
       console.log("HUD Offline");
     }
 
