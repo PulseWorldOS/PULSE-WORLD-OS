@@ -40,31 +40,31 @@ function getFavicon(url, flags = {}) {
     if (isPulseWorld) {
       // MODULE‑AWARE FAVICON SWITCHING
       if (flags.isSW) {
-        icon = "./SWFavIcon.ico";
+        icon = `${u.origin}/SWFavIcon.ico`;
       }
       else if (flags.isBinaryOS) {
-        icon = "./BOFavIcon.ico";
+        icon = `${u.origin}/BOFavIcon.ico`;
       }
       else if (flags.isGPU) {
-        icon = "./GPFavIcon.ico";
+        icon = `${u.origin}/GPFavIcon.ico`;
       }
       else if (flags.isLogic) {
-        icon = "./BLFavIcon.ico";
+        icon = `${u.origin}/BLFavIcon.ico`;
       }
       else if (flags.isOrb) {
-        icon = "./OMFavIcon.ico";
+        icon = `${u.origin}/OMFavIcon.ico`;
       }
       else if (flags.isBiz) {
-        icon = "./PWBFavIcon.ico";
+        icon = `${u.origin}/PWBFavIcon.ico`;
       }
       else if (flags.isSettings) {
-        icon = "./PWBFavIcon.ico";
+        icon = `${u.origin}/PWBFavIcon.ico`;
       }
       else if (flags.isMoney) {
-        icon = "./PWMFavIcon.ico";
+        icon = `${u.origin}/PWMFavIcon.ico`;
       }
       else {
-        icon = "./PWFavIcon.ico"; // Default PulseWorld favicon
+        icon = `${u.origin}/PWFavIcon.ico`; // Default PulseWorld favicon
       }
 
       console.log("PulseWorld favicon:", icon);
