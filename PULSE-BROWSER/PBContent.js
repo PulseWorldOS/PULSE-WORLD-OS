@@ -644,7 +644,7 @@ document.addEventListener("PulseDocumentChanged", (ev) => {
 
 function injectPulseFlag() {
   const STREAMING_SITES = [
-    "netflix.com","hulu.com","disneyplus.com","primevideo.com",
+    "netflix.com","hulu.com","disneyplus.com","primevideo.com","sling.com",
     "amazon.com","hbomax.com","max.com","paramountplus.com",
     "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   ];
