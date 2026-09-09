@@ -2952,7 +2952,7 @@ const PulseIdentityStore = (() => {
       createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
       tier: existing.tier || "temporal-os",
       name: pulseName || existing.name || "Unknown Pulse User",
-      email: PulseRealm.PulseEmail || existing.email || `${pulseName || "Unknown"}@PulseWorld.Net`,
+      email: PulseRealm.PulseEmail || existing.email || `${pulseName}@PulseWorld.Net`,
       userEmail: PulseRealm.PulseUserEmail || existing.userEmail || "YourEmail@Domain.com",
       userName: PulseRealm.PulseUserName || existing.userName || "Aldwyn",
       phone: PulseRealm.PulsePhone || existing.phone || "(555) 555-5555",
@@ -7555,7 +7555,7 @@ async function generatePulseUser() {
   // 6) Set global identity
   // ---------------------------------------------------------
   PulseRealm.PulseUser = pulseUser;
-  PulseRealm.PulseEmail = `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`;
+  PulseRealm.PulseEmail = `${stripTimestamp(PulseRealm.PulseUser)}@PulseWorld.Net`;
   // ---------------------------------------------------------
   // 7) Return instantly
   // ---------------------------------------------------------
