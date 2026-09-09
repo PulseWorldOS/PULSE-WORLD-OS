@@ -161,6 +161,75 @@ async function injectHUD() {
   setInterval(updateHUD, 1500);
   setInterval(fadeHUD, 5500);
 }
+
+function showPulseStreamPrompt(video) {
+  // Prevent duplicates
+  if (document.getElementById("pulseStreamPrompt")) return;
+
+  const box = document.createElement("div");
+  box.id = "pulseStreamPrompt";
+  box.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.85);
+    color: #00FF9C;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid #0FF;
+    font-family: monospace;
+    font-size: 12px;
+    z-index: 999999999;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 12px #0FF;
+  `;
+
+  box.innerHTML = `
+    <div style="font-weight:600; margin-bottom:6px; color:#0FF;">
+      🎥 PulseStream
+    </div>
+    <div style="margin-bottom:10px;">
+      Watch while you browse?
+    </div>
+
+    <button id="pipEnableBtn" style="
+      background:#0FF;
+      color:#000;
+      border:none;
+      padding:6px 10px;
+      border-radius:6px;
+      font-weight:600;
+      cursor:pointer;
+      margin-right:10px;
+    ">Enable PIP</button>
+
+    <button id="pipDisableBtn" style="
+      background:#333;
+      color:#0FF;
+      border:1px solid #0FF;
+      padding:6px 10px;
+      border-radius:6px;
+      cursor:pointer;
+    ">Don’t ask again</button>
+  `;
+
+  document.body.appendChild(box);
+
+  // Enable PIP
+  document.getElementById("pipEnableBtn").onclick = () => {
+    video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
+    box.remove();
+  };
+
+  // Disable future prompts
+  document.getElementById("pipDisableBtn").onclick = () => {
+    settings.pulseStreamToggle = false;
+    if (typeof saveSettings === "function") saveSettings();
+    box.remove();
+  };
+}
+
+
 function fadeHUD() {
   const body = document.getElementById("pb-hud-body");
   const wrap = document.getElementById("pulsebrowser-dev-overlay");
