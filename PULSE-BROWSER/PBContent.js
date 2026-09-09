@@ -3,6 +3,8 @@
 //  Full DOM physics engine: warm-path, GPU, decode, mutation, performance,
 //  realm sync, HUD, world-band extraction, kernel bridge.
 // ============================================================================
+import "PBSettings.js";
+
 let HudOffline = false;
 
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
