@@ -700,9 +700,11 @@ function injectPulseFlag() {
           if (document.pictureInPictureElement) {
             await document.exitPictureInPicture();
             flag.textContent = "PulseBrowser OS (PIP Available)";
+            flag.style.background = "#00C8FF";
           } else {
             await video.requestPictureInPicture();
             flag.textContent = "PulseBrowser OS => [PIP MODE]";
+            flag.style.background = "#00FF9C";
           }
 
         } catch (e) {
