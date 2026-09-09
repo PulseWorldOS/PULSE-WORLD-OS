@@ -71,7 +71,7 @@ function startWarmPath() {
 
 function getPulseSettings() {
   return new Promise(resolve => {
-    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
+    chrome.runtime.sendMessage({ type: "PBEXTSETTINGS_GET" }, (res) => {
       if (res && res.ok) resolve(res.settings);
       else resolve({});
     });
@@ -125,7 +125,7 @@ async function injectHUD() {
       try {
         const settings = await getPulseSettings();
         const autoPIP = settings.pulseStreamToggle === true;
-
+        console.log(autoPIP);
         const video = document.querySelector("video");
         if (!video) return;
 

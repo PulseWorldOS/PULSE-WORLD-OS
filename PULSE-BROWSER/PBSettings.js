@@ -304,6 +304,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   switch (msg.type) {
 
+    case "PBEXTSETTINGS_GET":
+      pbLoadExtensionSettings().then((settings) => {
+        PB_LOG.info("PBEXTSETTINGS_GET", settings);
+        sendResponse({ ok: true, settings });
+      });
+      return true;
+
     case "PBSETTINGS_GET":
       pbLoadSettings().then((settings) => {
         PB_LOG.info("PBSETTINGS_GET", settings);
