@@ -86,7 +86,7 @@ function startWarmPath() {
   }
 })();
 
-function injectHUD() {
+async function injectHUD() {
   const STREAMING_SITES = [
     "netflix.com","hulu.com","disneyplus.com","primevideo.com",
     "amazon.com","hbomax.com","max.com","paramountplus.com",
@@ -98,11 +98,40 @@ function injectHUD() {
 
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
     console.warn("PulseBrowser HUD Disabled on Streaming Site:", location.hostname);
+
+    HudOffline = true;
+
     const flag = document.getElementById("pulseworld-flag");
-    flag.textContent = "PulseBrowser OS Active [HUD Offline]";
-    HudOffline === true;
+    if (flag) {
+      flag.textContent = "PulseBrowser OS Active [HUD Offline — Streaming Detected]";
+    }
+
+    // ---------------------------------------------------------
+    // ⭐ PulseStream Auto-PIP Logic
+    // ---------------------------------------------------------
+    try {
+      const settings = await pbLoadExtensionSettings();
+      const autoPIP = settings.pulseStreamToggle === true;
+
+      // Find video element
+      const video = document.querySelector("video");
+
+      if (video) {
+        // AUTO-PIP ON → immediately request PIP
+        if (autoPIP) {
+          video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
+        } else {
+          // AUTO-PIP OFF → show PulseStream prompt
+          showPulseStreamPrompt(video);
+        }
+      }
+    } catch (e) {
+      console.warn("PulseStream Error:", e);
+    }
+
     return;
   }
+
 
   const wrap = document.createElement("div");
   wrap.id = "pulsebrowser-dev-overlay";
