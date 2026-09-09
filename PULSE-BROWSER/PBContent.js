@@ -3,7 +3,7 @@
 //  Full DOM physics engine: warm-path, GPU, decode, mutation, performance,
 //  realm sync, HUD, world-band extraction, kernel bridge.
 // ============================================================================
-import "PBSettings.js";
+
 
 let HudOffline = false;
 
