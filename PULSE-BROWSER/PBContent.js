@@ -101,11 +101,6 @@ async function injectHUD() {
 
     HudOffline = true;
 
-    const flag = document.getElementById("pulseworld-flag");
-    if (flag) {
-      flag.textContent = "PulseBrowser OS Active [HUD Offline — Streaming Detected]";
-    }
-
     // ---------------------------------------------------------
     // ⭐ PulseStream Auto-PIP Logic
     // ---------------------------------------------------------
@@ -602,7 +597,7 @@ function injectPulseFlag() {
   flag.textContent = "PulseBrowser OS Active";
   
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-    flag.textContent = "PulseBrowser OS Active [HUD Offline]";
+    flag.textContent = "PulseBrowser OS Active [HUD Offline — Streaming Detected]";
     flag.style.background = "#00C8FF";
     HudOffline = true;
     console.log("HUD Offline");
