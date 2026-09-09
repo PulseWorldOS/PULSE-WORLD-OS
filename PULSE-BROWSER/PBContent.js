@@ -680,28 +680,7 @@ function injectPulseFlag() {
   }
 
   flag.onclick = () => {
-    if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-      // ---------------------------------------------------------
-      // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
-      // ---------------------------------------------------------
-      (async () => {
-        try {
-          const autoPIP = true;
-          console.log(autoPIP);
-          const video = document.querySelector("video");
-          if (!video) return;
-
-          if (autoPIP) {
-            video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
-          } else {
-            showPulseStreamPrompt(video);
-          }
-
-        } catch (e) {
-          console.warn("PulseStream Error:", e);
-        }
-      })();
-    }
+    
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
@@ -719,7 +698,30 @@ function injectPulseFlag() {
       HudOffline = true;
       console.log("HUD Offline");
     }
-  };
+
+    if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
+
+      (async () => {
+        try {
+          const video = document.querySelector("video");
+          if (!video) return;
+
+          // ⭐ Toggle PIP
+          if (document.pictureInPictureElement) {
+            await document.exitPictureInPicture();
+            flag.textContent = "PulseBrowser OS Active [HUD Offline]";
+          } else {
+            await video.requestPictureInPicture();
+            flag.textContent = "PulseBrowser OS Active [PIP Mode]";
+          }
+
+        } catch (e) {
+          console.warn("PulseStream Error:", e);
+        }
+      })();
+
+    }
+
 
   document.body.appendChild(flag);
 }
