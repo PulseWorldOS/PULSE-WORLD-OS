@@ -696,6 +696,10 @@ function injectPulseFlag() {
           const video = document.querySelector("video");
           if (!video) return;
 
+          if (video.disablePictureInPicture) {
+            flag.textContent = "PulseBrowser OS (PIP Disabled)";
+            return;
+          }
           // ⭐ Toggle PIP
           if (document.pictureInPictureElement) {
             await document.exitPictureInPicture();
