@@ -78,7 +78,7 @@ function startWarmPath() {
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
-      location.protocol === "chrome-extension:" || HudOffline === true
+      location.protocol === "chrome-extension:"
     ) {
       return;
     }
@@ -107,7 +107,7 @@ async function injectHUD() {
 
     const flag = document.getElementById("pulseworld-flag");
     if (flag) {
-      flag.textContent = "PulseBrowser OS Active [HUD Offline — Streaming Detected]";
+      flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
     }
 
     // ---------------------------------------------------------
@@ -695,7 +695,7 @@ function injectPulseFlag() {
   flag.textContent = "PulseBrowser OS Active";
   
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-    flag.textContent = "PulseBrowser OS Active [HUD Offline — Streaming Detected]";
+    flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
     flag.style.background = "#00C8FF";
     HudOffline = true;
     console.log("HUD Offline");
