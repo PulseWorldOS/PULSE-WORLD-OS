@@ -109,30 +109,6 @@ async function injectHUD() {
     if (flag) {
       flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
     }
-
-    // ---------------------------------------------------------
-    // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
-    // ---------------------------------------------------------
-    
-      setTimeout(() => {
-      try {
-        const autoPIP = true;
-        console.log(autoPIP);
-        const video = document.querySelector("video");
-        if (!video) return;
-
-        if (autoPIP) {
-          video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
-        } else {
-          showPulseStreamPrompt(video);
-        }
-
-      } catch (e) {
-        console.warn("PulseStream Error:", e);
-      }
-        }, 4000);
-  
-
   }
 
 
@@ -704,6 +680,26 @@ function injectPulseFlag() {
   }
 
   flag.onclick = () => {
+    // ---------------------------------------------------------
+    // ⭐ PulseStream Auto-PIP Logic (Content Script Safe)
+    // ---------------------------------------------------------
+    (async () => {
+      try {
+        const autoPIP = true;
+        console.log(autoPIP);
+        const video = document.querySelector("video");
+        if (!video) return;
+
+        if (autoPIP) {
+          video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
+        } else {
+          showPulseStreamPrompt(video);
+        }
+
+      } catch (e) {
+        console.warn("PulseStream Error:", e);
+      }
+    })();
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
