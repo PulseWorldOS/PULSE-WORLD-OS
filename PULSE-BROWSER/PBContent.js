@@ -685,9 +685,8 @@ function injectPulseFlag() {
     } else {
       wrap.style.display = "none";
       body.style.display = "none";
-      flag.textContent = "PulseBrowser OS Active [HUD Offline]";
+      flag.textContent = "PulseBrowser OS Active";
       flag.style.background = "#00C8FF";
-      console.log("HUD Offline");
     }
 
     if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
@@ -700,7 +699,7 @@ function injectPulseFlag() {
           // ⭐ Toggle PIP
           if (document.pictureInPictureElement) {
             await document.exitPictureInPicture();
-            flag.textContent = "PulseBrowser OS Active [HUD Offline]";
+            flag.textContent = "PulseBrowser OS Active [Streaming Detected]";
           } else {
             await video.requestPictureInPicture();
             flag.textContent = "PulseBrowser OS Active [PIP Mode]";
