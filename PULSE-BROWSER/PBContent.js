@@ -671,7 +671,11 @@ function injectPulseFlag() {
     flag.textContent = "PulseBrowser OS (PIP Possible)";
     flag.style.background = "#00C8FF";
     const video = document.querySelector("video");
-    if (!video || video.disablePictureInPicture) {
+    if (!video) {
+      flag.textContent = "PulseBrowser OS";
+      return;
+    }
+    if (video.disablePictureInPicture) {
       flag.textContent = "PulseBrowser OS (PIP Disabled)";
     }
   }
@@ -692,8 +696,12 @@ function injectPulseFlag() {
       (async () => {
         try {
           const video = document.querySelector("video");
-          
-          if (!video || video.disablePictureInPicture) {
+          if (!video) {
+            flag.textContent = "PulseBrowser OS";
+            return;
+          }
+
+          if (video.disablePictureInPicture) {
             flag.textContent = "PulseBrowser OS (PIP Disabled)";
             return;
           }
