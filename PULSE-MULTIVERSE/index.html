@@ -1086,6 +1086,7 @@ let isTouchMobile = false;
   if (impulse) {
     routeToInternal(impulse.trim());
   } else if (hashRoute) {
+    FALLBACK_BARRIER = DEFAULT_INDEX;
     routeToInternal(hashRoute);
   } else {      
     // ⭐ First route based on touch.page (passport-first)
