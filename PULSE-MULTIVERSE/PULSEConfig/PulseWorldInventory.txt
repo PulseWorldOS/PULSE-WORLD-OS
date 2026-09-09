@@ -949,6 +949,10 @@ function savebutton() {
 
   PulseRealm.PulseUserName = fullNameValue || PulseRealm.PulseUserName;
   PulseRealm.PulseUser = displayNameValue || PulseRealm.PulseUser;
+  // Keep the canonical email field in sync with the user-facing email field.
+  // PulseIdentityStore.save() uses PulseEmail for identity.email; updating
+  // only PulseUserEmail caused the form value to disappear on the next render.
+  PulseRealm.PulseEmail = emailValue || PulseRealm.PulseEmail;
   PulseRealm.PulseUserEmail = emailValue || PulseRealm.PulseUserEmail;
   PulseRealm.PulsePhone = phoneValue || PulseRealm.PulsePhone;
   PulseRealm.PulseCountry = countryValue || PulseRealm.PulseCountry;
@@ -957,6 +961,7 @@ function savebutton() {
   PulseRealm.PulseIdentityStore.save({
     name: displayNameValue || previousIdentity.name,
     userName: fullNameValue || previousIdentity.userName,
+    email: emailValue || previousIdentity.email,
     userEmail: emailValue || previousIdentity.userEmail,
     phone: phoneValue || previousIdentity.phone,
     country: countryValue || previousIdentity.country,
