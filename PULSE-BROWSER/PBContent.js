@@ -668,12 +668,14 @@ function injectPulseFlag() {
   flag.textContent = "PulseBrowser OS";
   
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-    flag.textContent = "PulseBrowser OS (PIP Possible)";
+    flag.textContent = "PulseBrowser OS";
     flag.style.background = "#00C8FF";
     const video = document.querySelector("video");
     if (!video) return;
+
     if (video.disablePictureInPicture) {
       flag.textContent = "PulseBrowser OS (PIP Disabled)";
+      return;
     }
   }
 
