@@ -8525,7 +8525,6 @@ if (navigator.gpu) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   PBIntervalSlow = setInterval(() => {
-    PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
     timeClock.textContent = pulseClock();
     timeClock.style.color = "#0FF";
     speedPulse.textContent = PulseRealm.PulseSpeed;
@@ -8534,7 +8533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     cachePercent.textContent = PulseRealm.PulseCacheUsed;
     capability.textContent = PulseRealm.PulseCapability;
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
-    
+    PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 10000);
      // ============================================================
   // IMPORT 404 LOGS FROM localStorage → INTO OUR CONSOLE SYSTEM

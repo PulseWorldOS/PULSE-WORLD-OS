@@ -522,7 +522,7 @@ async function loadUsers() {
     }
 
     // Query identities belonging to this bank ID
-    const identitiesCol = PulseRealm.PulseFirebaseDB.collection("PulseIdentity").get();
+    const identitiesCol = PulseRealm.PulseFirebaseDB.collection("PulseIdentity");
     const snapshot = await identitiesCol.find({ identityId });
 
     // Normalize
@@ -557,7 +557,7 @@ async function populateUserSelect() {
 
   if (!usersCache.length) {
     const opt = document.createElement("option");
-    const localEmail = PulseRealm.PulseIdentity.userEmail || PulseRealm.PulseIdentity.email;
+    const localEmail = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail;
     opt.value = localEmail;
     opt.textContent = localEmail;
     userSelect.appendChild(opt);
@@ -565,13 +565,13 @@ async function populateUserSelect() {
   }
 
   const placeholder = document.createElement("option");
-  placeholder.value = PulseRealm.PulseIdentity.userEmail || PulseRealm.PulseIdentity.email || "";
+  placeholder.value = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail || "";
   placeholder.textContent = "Select a User Identity…";
   userSelect.appendChild(placeholder);
 
   usersCache.forEach((u) => {
     const opt = document.createElement("option");
-    const localEmail = PulseRealm.PulseIdentity.userEmail || PulseRealm.PulseIdentity.email;
+    const localEmail = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail;
     opt.value = u.id ?? u.uid ?? u.email ?? localEmail;
     opt.textContent = u.email ?? u.name ?? u.id ?? localEmail ?? "Unknown Pulse User";
     opt.dataset.email = u.email ?? "";
