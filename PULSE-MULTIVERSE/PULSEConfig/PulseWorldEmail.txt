@@ -585,7 +585,7 @@ async function loadUsers() {
 
 async function populateUserSelect() {
   userSelect.innerHTML = "";
-
+  ccInput.value = PulseRealm.PulseIdentity.userEmail;
   if (!usersCache.length) {
     const opt = document.createElement("option");
     const localEmail = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail;
@@ -664,7 +664,7 @@ function buildEmailPayload() {
   
   const toEmail = toInput.value.trim() || null;
   const ccEmail = ccInput.value.trim() || userEmail;
-  ccInput.value = userEmail;
+  
 
   // ---------------------------------------------------------
   // Pull template from templatesCache (alphabetized loader)
