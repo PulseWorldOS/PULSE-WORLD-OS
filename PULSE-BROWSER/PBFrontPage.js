@@ -315,7 +315,18 @@ document.getElementById("navigate").addEventListener("click", () => {
   const isDomainIntent = domainRegex.test(text);
 
   if (isDomainIntent) {
-    window.location.href = "https://" + text;
+    const origin = "https://" + text;
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: origin
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(origin, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    // ⭐ PURE DOMAIN → Navigate directly
+    window.location.href = origin;
   }
 });
 
