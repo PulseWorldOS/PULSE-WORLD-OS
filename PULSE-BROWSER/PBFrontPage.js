@@ -361,7 +361,10 @@ document.getElementById("search").addEventListener("click", (event) => {
 
   if (isPureDomain) {
     const origin = "https://" + cleaned;
-
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: origin
+    });
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(origin, { mode: "no-cors" }).catch(() => {});
