@@ -402,6 +402,8 @@ const userSelect      = document.getElementById("userSelect");
 const templateSelect  = document.getElementById("templateSelect");
 const subjectInput    = document.getElementById("subjectInput");
 const payloadInput    = document.getElementById("payloadInput");
+const toInput    = document.getElementById("toInput");
+const ccInput    = document.getElementById("ccInput");
 const sendEmailBtn    = document.getElementById("sendEmailBtn");
 const logEl           = document.getElementById("log");
 

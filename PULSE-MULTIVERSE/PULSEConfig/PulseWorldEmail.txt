@@ -430,6 +430,8 @@ async function sendAdminAlertEmail(templateId, payload) {
 const userSelect      = document.getElementById("userSelect");
 const templateSelect  = document.getElementById("templateSelect");
 const subjectInput    = document.getElementById("subjectInput");
+const toInput    = document.getElementById("toInput");
+const ccInput    = document.getElementById("ccInput");
 const payloadInput    = document.getElementById("payloadInput");
 const sendEmailBtn    = document.getElementById("sendEmailBtn");
 const logEl           = document.getElementById("log");
