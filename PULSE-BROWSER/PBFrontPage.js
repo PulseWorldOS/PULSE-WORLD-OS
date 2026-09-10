@@ -413,6 +413,16 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
   const isDomainIntent = domainRegex.test(text);
 
   if (isDomainIntent) {
+    const origin = "https://" + text;
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: origin
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(origin, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
     navigateIcon.style.display = "inline";
     navigateIcon.style.backgroundColor = "red";
     if (engineType === "videos") {
@@ -448,7 +458,18 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     let url;
 
     if (isDomainIntent) {
-      window.location.href = "https://" + text;
+      const origin = "https://" + text;
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: origin
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(origin, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      // ⭐ PURE DOMAIN → Navigate directly
+      window.location.href = origin;
       return;
     }
 
