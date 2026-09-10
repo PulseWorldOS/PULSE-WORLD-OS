@@ -802,7 +802,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_HOVER_PREFETCH":
       if (msg.href && typeof PBQuantumPrefetch?.prefetch === "function") {
-        PBQuantumPrefetch.prefetch(msg.href);
+        PBQuantumPrefetch.prefetchLink(msg.href);
       }
       sendResponse?.({ ok: true });
       break;
