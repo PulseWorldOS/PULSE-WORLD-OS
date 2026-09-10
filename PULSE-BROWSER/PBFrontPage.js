@@ -507,7 +507,14 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     if (settings.emailMode === "internal") {
         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
         console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
-
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -516,7 +523,14 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
 
     console.log("[FrontPage] Opening External Email Provider:", link);
-
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
     chrome.tabs.create({ url: link });
 });
 
@@ -531,7 +545,14 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     if (settings.bankMode === "internal") {
         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
         console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
-
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -540,7 +561,14 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
 
     console.log("[FrontPage] Opening External Bank Provider:", link);
-
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
     chrome.tabs.create({ url: link });
 });
 
@@ -555,7 +583,14 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     if (settings.socialMode === "internal") {
         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldMessenger";
         console.log("[FrontPage] Opening Internal PulseMessenger:", internalURL);
-
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -564,7 +599,14 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     const link = settings.externalSocialLink?.trim() || "https://www.facebook.com/";
 
     console.log("[FrontPage] Opening External Social Media Provider:", link);
-
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
     chrome.tabs.create({ url: link });
 });
 
@@ -578,7 +620,14 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     if (settings.workMode === "internal") {
         const internalURL = "https://www.pulseworld.biz";
         console.log("[FrontPage] Opening Internal PulseWork:", internalURL);
-
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -587,7 +636,14 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
 
     console.log("[FrontPage] Opening External Work Provider:", link);
-
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
     chrome.tabs.create({ url: link });
 });
 
@@ -601,7 +657,14 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     if (settings.streamMode === "internal") {
         const internalURL = "https://www.netflix.com";
         console.log("[FrontPage] Opening Internal Netflix:", internalURL);
-
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -610,7 +673,14 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     const link = settings.externalStreamingLink?.trim() || "https://www.hulu.com";
 
     console.log("[FrontPage] Opening External Streaming Provider:", link);
-
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
     chrome.tabs.create({ url: link });
 });
 
