@@ -8516,9 +8516,9 @@ if (navigator.gpu) {
     loadPulseIdentityContinual();
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
 
-    // Supabase is a background backup only. One backend failure suspends sync
-    // for this page session instead of producing a failed request every 7s.
-    pulseSupabaseSync();
+    // // Supabase is a background backup only. One backend failure suspends sync
+    // // for this page session instead of producing a failed request every 7s.
+    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") pulseSupabaseSync();
 
   }, 7000);
 })();
@@ -8678,7 +8678,7 @@ document.addEventListener("visibilitychange", () => {
       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
       pulseStreamGhost();
       loadPulseIdentityContinual();
-      pulseSupabaseSync();
+      if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") pulseSupabaseSync();
       pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
       updateBackButtonVisibility();
     }, 7000);
