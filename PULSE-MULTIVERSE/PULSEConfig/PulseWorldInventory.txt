@@ -988,7 +988,8 @@ identityVideo = document.getElementById("identityVideo");
 
 
 (async () => {
-identityVideo.style.display = PulseRealm.VideoDisabled;
+  
+  identityVideo.style.display = PulseRealm.VideoDisabled;
   setInterval(() => {
     
     timerX = timerX + 1;
@@ -1107,6 +1108,8 @@ identityVideo.style.display = PulseRealm.VideoDisabled;
     };
 
     await renderDashboard(PulseRealm.PulseIdentity);
+    PulseRealm.PulseUserEmail = PulseRealm.PulseIdentity.userEmail;
+    PulseRealm.PulseEmail = PulseRealm.PulseIdentity.email;
 
   PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
