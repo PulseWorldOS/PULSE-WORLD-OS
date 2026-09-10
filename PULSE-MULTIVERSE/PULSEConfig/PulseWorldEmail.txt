@@ -596,7 +596,7 @@ async function populateUserSelect() {
   }
 
   const placeholder = document.createElement("option");
-  placeholder.value = "";
+  placeholder.value = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail || "";
   placeholder.textContent = "Select a User Identity…";
   userSelect.appendChild(placeholder);
 
