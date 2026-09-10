@@ -801,7 +801,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // PBQuantumPrefetch — hover prefetch from content
     // -------------------------------------------------------
     case "PB_HOVER_PREFETCH":
-      if (msg.href && typeof PBQuantumPrefetch?.prefetch === "function") {
+      if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         PBQuantumPrefetch.prefetchLink(msg.href);
       }
       sendResponse?.({ ok: true });
