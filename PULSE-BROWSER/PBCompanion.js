@@ -803,7 +803,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PB_HOVER_PREFETCH":
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         PBQuantumPrefetch.prefetchLink(msg.href);
+        console.log("Quantum Prefetching Enabled: " + msg.href);
       }
+      
       sendResponse?.({ ok: true });
       break;
 
