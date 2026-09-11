@@ -695,6 +695,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 
   let index = 0;
   const nebula = document.getElementById("nebula");
+  nebula.style.backgroundImage = `url(${images[index]})`;
 
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
