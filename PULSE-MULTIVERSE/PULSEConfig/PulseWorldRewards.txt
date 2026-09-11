@@ -355,9 +355,9 @@ function wireBankConsole(idInput, idSend, idArea, label) {
     resp.innerHTML = `${colorLabel}: Please Click Here to Create Tether: <font color=blue><a href=` + PulseRealm.PulseBankURL + `>Pulse Tether</a></font>`;
     area.appendChild(resp);
     area.scrollTop = area.scrollHeight;
-  }
+  };
 
-  send.onclick = () => {
+  function sendclick () {
     const text = input.value.trim();
     if (!text) return;
 
@@ -394,6 +394,17 @@ function wireBankConsole(idInput, idSend, idArea, label) {
         area.scrollTop = area.scrollHeight;
       }, 850);
     }
+  }
+
+  input.onclick = () => {    
+    input.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Enter") return;
+      sendclick();
+    });
+  };
+
+  send.onclick = () => {
+    sendclick();
   };
 }
 
