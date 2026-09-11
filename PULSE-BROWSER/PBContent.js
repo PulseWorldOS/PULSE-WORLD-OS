@@ -103,6 +103,10 @@ async function injectHUD() {
     const flag = document.getElementById("pulseworld-flag");
     if (flag) {
       flag.textContent = "PulseBrowser OS (PIP Available)";
+      setTimeout(() => {
+        flag.textContent = "PulseBrowser OS";
+        flag.style.background = "#00C8FF";
+      }, 2000);
     }
   }
 
@@ -712,7 +716,11 @@ function injectPulseFlag() {
           if (document.pictureInPictureElement) {
             await document.exitPictureInPicture();
             flag.textContent = "PulseBrowser OS (PIP Available)";
-            flag.style.background = "#00C8FF";
+            flag.style.background = "#00FF9C";
+            setTimeout(() => {
+              flag.textContent = "PulseBrowser OS";
+              flag.style.background = "#00C8FF";
+            }, 2000);
           } else {
             await video.requestPictureInPicture();
             flag.textContent = "PulseBrowser OS => [PIP MODE]";
