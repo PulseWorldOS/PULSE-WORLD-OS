@@ -718,4 +718,4 @@ setInterval(() => {
   setInterval(() => {
     index = (index + 1) % images.length;
     nebula.style.backgroundImage = `url(${images[index]})`;
-  }, 10000); // switch every 10 seconds
+  }, 15000); // switch every 10 seconds
