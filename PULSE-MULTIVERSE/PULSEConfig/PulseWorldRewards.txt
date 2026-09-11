@@ -375,6 +375,7 @@ wireBankConsole("consoleOvermindBankInput", "consoleOvermindBankSend", "consoleO
 wireBankConsole("consoleJobsBankInput", "consoleJobsBankSend", "consoleJobsBank", "Stripe / Jobs");
 wireBankConsole("consoleRewardsBankInput", "consoleRewardsBankSend", "consoleRewardsBank", "Rewards Spirit");
 
+wireBankConsole("bankConsoleInput", "bankConsoleSend", "bankLogArea", "PulseBank");
 /* ============================================================
    HISTORY ENGINE
 ============================================================ */
