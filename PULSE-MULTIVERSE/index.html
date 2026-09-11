@@ -551,6 +551,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
+const cookieName = `${PULSE_TOUCH_COOKIE_NAMEX}=`;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
@@ -4036,7 +4037,7 @@ function togglePulseBandPanel() {
 
     if (!PBIntervalSlow) {
       PBIntervalSlow = setInterval(() => {
-        PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
+        
         timeClock.textContent = pulseClock();
         timeClock.style.color = "#0FF";
         speedPulse.textContent = PulseRealm.PulseSpeed;
@@ -4045,7 +4046,8 @@ function togglePulseBandPanel() {
         cachePercent.textContent = PulseRealm.PulseCacheUsed;
         capability.textContent = PulseRealm.PulseCapability;
         pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
-        
+        savePageToCookie();
+        PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
       }, 10000);
     }
   }
@@ -8533,6 +8535,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     cachePercent.textContent = PulseRealm.PulseCacheUsed;
     capability.textContent = PulseRealm.PulseCapability;
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
+    savePageToCookie();
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 10000);
      // ============================================================
