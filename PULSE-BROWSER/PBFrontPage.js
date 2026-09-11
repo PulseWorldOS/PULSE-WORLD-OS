@@ -727,5 +727,5 @@ setInterval(() => {
     }, 1500);
   }
 
-  swap();
+  
   setInterval(swap, 15000);
