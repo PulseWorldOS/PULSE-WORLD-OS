@@ -690,14 +690,22 @@ function injectPulseFlag() {
         try {
           const video = document.querySelector("video");
           if (!video) { 
-            flag.textContent = "PulseBrowser OS (PIP Disabled)";
+            flag.textContent = "PulseBrowser OS (No Video)";
             flag.style.background = "rosybrown";
+            setTimeout(() => {
+              flag.textContent = "PulseBrowser OS";
+              flag.style.background = "#00FF9C";
+            }, 2000);
             return;
           }
 
           if (video.disablePictureInPicture) {
             flag.textContent = "PulseBrowser OS (PIP Disabled)";
             flag.style.background = "rosybrown";
+            setTimeout(() => {
+              flag.textContent = "PulseBrowser OS";
+              flag.style.background = "#00FF9C";
+            }, 2000);
             return;
           }
           // ⭐ Toggle PIP
