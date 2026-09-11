@@ -693,7 +693,6 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
   let index = 0;
   const nebula = document.getElementById("nebula");
 
-
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
   window.addEventListener(evt, () => {
@@ -710,12 +709,13 @@ setInterval(() => {
   if (!userInteracted && timerX === 10) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
-  } else if (userInteracted && timerX === 10) {
-    index = (index + 1) % images.length;
-    nebula.style.backgroundImage = `url(${images[index]})`;
-    timerX = 0;
   } else if (userInteracted) {
     document.getElementById("timerBtn").style.display = "none";
     timerX = 0;
   }
 }, 1000);
+
+  setInterval(() => {
+    index = (index + 1) % images.length;
+    nebula.style.backgroundImage = `url(${images[index]})`;
+  }, 10000); // switch every 10 seconds
