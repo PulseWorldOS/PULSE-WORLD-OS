@@ -466,7 +466,7 @@ function safeLog(msg, data) {
   const line = `[${time}] ${msg}${data ? " " + JSON.stringify(data) : ""}\n`;
 
   // prepend for cosmic "live feed" effect
-  logEl.textContent = line + logEl.textContent;
+  logEl.innerHTML = line + logEl.textContent;
 
   console.log("%c🧠🌐 PULSE BOOT AI v32.0 — [Pulse‑World Admin]", "color:#00e5ff;font-weight:bold;", msg, data || "");
 }
@@ -562,7 +562,7 @@ async function loadUsers() {
     // If no identities found, fallback to single identity
     if (!usersCache.length) {
       safeLog("No Pulse Tether found — using local identity only");
-      safeLog("Please Click Here to Create Tether:" + PulseRealm.PulseBankURL);
+      safeLog("Please Click Here to Create Tether: <a href=`" + PulseRealm.PulseBankURL + "`>Pulse Tether</a>");
       usersCache = [];
       await populateUserSelect();
       badgeUsers.textContent = "1";
