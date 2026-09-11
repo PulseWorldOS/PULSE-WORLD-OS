@@ -686,8 +686,11 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 
   const images = [
     "PulseWorldEntrancePulseGPUPulseEarn.png",
+    "PulseWorldRoute.png",
     "PulseWorldExpansion.png",
-    "PulseWorldRoute.png"
+    "PulseAIPulseMeshPulsePal.png",
+    "PulseBankPulseIdentityPulseVault.png",
+    "PulseToolsPulseTrustPulseProxy.png"
   ];
 
   let index = 0;
