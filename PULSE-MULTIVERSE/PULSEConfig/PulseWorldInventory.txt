@@ -809,12 +809,12 @@ async function renderDashboard(identity) {
   bizStatus.textContent = stripeStatus.textContent;
 
   BizConsole.onclick = () => {
-    window.open("https://www.pulseworld.biz?Impulse=PulseWorldBusiness", "_blank");
+    window.open("https://www.pulseworld.biz/", "_blank");
   }
 
   const stripeBtn = document.getElementById("stripeBtn");
   if (stripeBtn) {
-    const stripeUrl = identity.bankURL || identity.stripeLogin;
+    const stripeUrl = PulseRealm.PulseBankURL || identity.stripeLogin;
     stripeBtn.onclick = () => (window.location.href = stripeUrl);
   }
 
