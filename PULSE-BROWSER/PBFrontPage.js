@@ -691,7 +691,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
   ];
 
   let index = 0;
-  const nebula = document.querySelector(".nebula");
+  const nebula = document.getElementById("nebula");
 
 
 // Any interaction cancels redirect
