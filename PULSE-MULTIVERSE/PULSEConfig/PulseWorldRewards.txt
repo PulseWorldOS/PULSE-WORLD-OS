@@ -343,7 +343,7 @@ function wireBankConsole(idInput, idSend, idArea, label) {
   const input = document.getElementById(idInput);
   const send = document.getElementById(idSend);
   const area = document.getElementById(idArea);
-  const colorLabel = "<font color=blue>"+label+"</font>";
+  const colorLabel = "<font color=#0ff>"+label+"</font>";
 
   send.onclick = () => {
     const text = input.value.trim();
@@ -377,7 +377,7 @@ function wireBankConsole(idInput, idSend, idArea, label) {
         resp.style.fontSize = "12px";
         resp.style.lineHeight = "1.4";
         resp.style.color = "#a7f5e4";
-        resp.innerHTML = "${colorLabel}: Please Click Here to Create Tether: <font color=blue><a href=" + PulseRealm.PulseBankURL + ">Pulse Tether</a></font>";
+        resp.innerHTML = `${colorLabel}: Please Click Here to Create Tether: <font color=blue><a href=` + PulseRealm.PulseBankURL + `>Pulse Tether</a></font>`;
         area.appendChild(resp);
         area.scrollTop = area.scrollHeight;
       }, 650);
