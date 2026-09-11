@@ -690,7 +690,7 @@ function injectPulseFlag() {
         try {
           const video = document.querySelector("video");
           if (!video) { 
-            flag.textContent = "PulseBrowser OS (No Video)";
+            flag.textContent = "PulseBrowser OS (PIP Disabled)";
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
