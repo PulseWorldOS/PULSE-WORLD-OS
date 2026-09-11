@@ -369,7 +369,7 @@ function wireBankConsole(idInput, idSend, idArea, label) {
       area.scrollTop = area.scrollHeight;
     }, 350);
     
-    if (PulseRealm.PulseBankID === "Unknown User" && idArea === "bankLogArea") {
+    if (!PulseRealm.PulseBankID && idArea === "bankLogArea") {
       setTimeout(() => {
         const resp = document.createElement("div");
         resp.style.marginBottom = "5px";
