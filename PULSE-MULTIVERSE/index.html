@@ -8034,12 +8034,12 @@ function restorePageFromCookie() {
   console.log("[PULSEWORLD::COOKIE] viewport.scrollTop BEFORE restore =", viewport.scrollTop);
 
   if (viewport && typeof data.viewportScrollY === "number") {
-    console.log("[PULSEWORLD::COOKIE] Waiting 250ms before applying viewport.scrollTo...");
+    console.log("[PULSEWORLD::COOKIE] Waiting 350ms before applying viewport.scrollTo...");
 
     setTimeout(() => {
       console.log("[PULSEWORLD::COOKIE] Applying viewport.scrollTo(0, " + data.viewportScrollY + ")");
       viewport.scrollTo(0, data.viewportScrollY);
-      console.log("[PULSEWORLD::COOKIE] viewport.scrollTop AFTER 250ms delayed restore =", viewport.scrollTop);
+      console.log("[PULSEWORLD::COOKIE] viewport.scrollTop AFTER 350ms delayed restore =", viewport.scrollTop);
     }, 350);
   }
 }
