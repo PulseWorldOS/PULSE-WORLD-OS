@@ -290,6 +290,7 @@
 
 <script>
 
+
 /* ============================================================
    PULSEWORLD BANK v40 — FULL SCRIPT REPLACEMENT
    Currency Engine • Deposit Engine • Core Metrics • History
@@ -344,6 +345,17 @@ function wireBankConsole(idInput, idSend, idArea, label) {
   const send = document.getElementById(idSend);
   const area = document.getElementById(idArea);
   const colorLabel = "<font color=#0ff>"+label+"</font>";
+
+  if (!PulseRealm.PulseBankID && idArea === "consoleJobsBank") {
+    const resp = document.createElement("div");
+    resp.style.marginBottom = "5px";
+    resp.style.fontSize = "12px";
+    resp.style.lineHeight = "1.4";
+    resp.style.color = "#a7f5e4";
+    resp.innerHTML = `${colorLabel}: Please Click Here to Create Tether: <font color=blue><a href=` + PulseRealm.PulseBankURL + `>Pulse Tether</a></font>`;
+    area.appendChild(resp);
+    area.scrollTop = area.scrollHeight;
+  }
 
   send.onclick = () => {
     const text = input.value.trim();
