@@ -353,7 +353,7 @@ function wireBankConsole(idInput, idSend, idArea, label) {
     bubble.style.fontSize = "12px";
     bubble.style.lineHeight = "1.4";
     bubble.style.color = "#f9f9f9";
-    bubble.textContent = `You (${PulseRealm.PulseUser}): ${text}`;
+    bubble.innerHTML = `You (${PulseRealm.PulseUser}): ${text}`;
     area.appendChild(bubble);
     area.scrollTop = area.scrollHeight;
     input.value = "";
@@ -364,10 +364,23 @@ function wireBankConsole(idInput, idSend, idArea, label) {
       resp.style.fontSize = "12px";
       resp.style.lineHeight = "1.4";
       resp.style.color = "#a7f5e4";
-      resp.textContent = `${label}: Processing…`;
+      resp.innerHTML = `${label}: Processing…`;
       area.appendChild(resp);
       area.scrollTop = area.scrollHeight;
     }, 350);
+    
+    if (PulseRealm.PulseBankID === "Unknown User" && idArea === "bankLogArea") {
+      setTimeout(() => {
+        const resp = document.createElement("div");
+        resp.style.marginBottom = "5px";
+        resp.style.fontSize = "12px";
+        resp.style.lineHeight = "1.4";
+        resp.style.color = "#a7f5e4";
+        resp.innerHTML = "Please Click Here to Create Tether: <font color=blue><a href=" + PulseRealm.PulseBankURL + ">Pulse Tether</a></font>";
+        area.appendChild(resp);
+        area.scrollTop = area.scrollHeight;
+      }, 350);
+    }
   };
 }
 
