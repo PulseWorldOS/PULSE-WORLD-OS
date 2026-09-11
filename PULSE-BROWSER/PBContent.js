@@ -694,7 +694,7 @@ function injectPulseFlag() {
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00FF9C";
+              flag.style.background = "#00C8FF";
             }, 2000);
             return;
           }
@@ -704,7 +704,7 @@ function injectPulseFlag() {
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00FF9C";
+              flag.style.background = "#00C8FF";
             }, 2000);
             return;
           }
