@@ -718,7 +718,14 @@ setInterval(() => {
   }
 }, 1000);
 
-  setInterval(() => {
-    index = (index + 1) % images.length;
-    nebula.style.backgroundImage = `url(${images[index]})`;
-  }, 15000); // switch every 10 seconds
+  function swap() {
+    nebula.style.opacity = 0;
+    setTimeout(() => {
+      nebula.style.backgroundImage = `url(${images[index]})`;
+      nebula.style.opacity = 0.65;
+      index = (index + 1) % images.length;
+    }, 1500);
+  }
+
+  swap();
+  setInterval(swap, 15000);
