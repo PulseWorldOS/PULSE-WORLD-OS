@@ -309,7 +309,7 @@
 
 
 
-bankConsoleSend = document.getElementById("currencySwitchBtn");
+bankConsoleSend = document.querySelector(".bankConsoleSend");
 
 function appendBankMessage(area, role, text) {
   const bubble = document.createElement("div");
