@@ -551,7 +551,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
-
+let supabaseInterval = 0;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
@@ -3016,22 +3016,26 @@ async function loadPulseIdentityContinual() {
 }
 
 function pulseSupabaseSync() {
+  supabaseInterval++;
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
-  try {
-    const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-    const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
-    if (!storedIdentity.id) return;
-    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", identity: storedIdentity, photos: storedPhotos })
-    }).then((response) => {
-      if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-    }).catch(() => {
+  if (supabaseInterval === 8) {
+    try {
+      const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+      const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+      if (!storedIdentity.id) return;
+      fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+        body: JSON.stringify({ action: "sync", identity: storedIdentity, photos: storedPhotos })
+      }).then((response) => {
+        if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+      }).catch(() => {
+        PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+      });
+    } catch {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-    });
-  } catch {
-    PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    }
+    supabaseInterval = 0;
   }
 }
 
