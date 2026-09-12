@@ -159,6 +159,7 @@
 
     .field-block {
       margin-bottom: 22px;
+      width: 100%;
     }
 
     .field-block label {
@@ -168,56 +169,7 @@
       opacity: 0.85;
     }
 
-    select, textarea {
-      width: 100%;
-      padding: 8px 2px;
-      border-radius: 12px;
-      border: 1px solid var(--pw-border);
-      background: #0f1216;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
-
-    #payloadInput {
-      width: 100%;
-      padding: 8px 2px;
-      border-radius: 12px;
-      border: 1px solid var(--pw-border);
-      background: #0f1216;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
-    
-    #toInput {
-      width: 100%;
-      padding: 8px 2px;
-      border-radius: 12px;
-      border: 1px solid var(--pw-border);
-      background: #0f1216;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
-
-    #ccInput {
-      width: 100%;
-      padding: 8px 2px;
-      border-radius: 12px;
-      border: 1px solid var(--pw-border);
-      background: #0f1216;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
-
-    #subjectInput {
-      width: 100%;
+    select, input, textarea {
       padding: 8px 2px;
       border-radius: 12px;
       border: 1px solid var(--pw-border);
