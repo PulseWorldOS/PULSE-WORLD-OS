@@ -1152,12 +1152,39 @@
       spanning multiple realms.
     </p>
 
-    <!-- CONTACT -->
-    <div style="margin-top:40px;font-size:0.85rem;color:#555;">
+    
+    <!-- CONTACT + LEGAL -->
+    <div style="margin-top:40px;font-size:0.85rem;color:#555;line-height:1.5;">
       <strong>Pulse World OS © 2026 Pulse World OS. All Rights Reserved.</strong><br/>
-      Email: <a href="mailto:AIOvermindPrime@PulseWorld.Net" style="color:#00e6c7;">AIOvermindPrime@PulseWorld.Net</a><br/>
-      Website: <a href="https://www.PulseWorld.Net" style="color:#00e6c7;">https://www.PulseWorld.Net</a>
+
+      Email: 
+      <a href="mailto:AIOvermindPrime@PulseWorld.Net" style="color:#00e6c7;">
+        AIOvermindPrime@PulseWorld.Net
+      </a><br/>
+
+      Website: 
+      <a href="https://www.PulseWorld.Net" style="color:#00e6c7;">
+        https://www.PulseWorld.Net
+      </a><br/><br/>
+
+      <!-- Legal Links -->
+      <a href="/privacy" style="color:#00e6c7;margin-right:20px;">
+        Privacy Policy
+      </a>
+
+      <a href="/termsofuse" style="color:#00e6c7;margin-right:20px;">
+        Terms of Use
+      </a>
+
+      <a href="/data" style="color:#00e6c7;">
+        Data & Security Practices
+      </a>
+
+      <a href="/cookies" style="color:#00e6c7;">
+        Cookies
+      </a>
     </div>
+
 
   </div>
 </footer>
