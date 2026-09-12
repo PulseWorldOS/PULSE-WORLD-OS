@@ -2040,7 +2040,7 @@ let pwErrors = [];
     panel.innerHTML = "";
 
     const surface = PulseRealm.PulseTaskManagerSurface || PulseRealm.PulseTelemetrySurface || null;
-
+    
     if (!surface || !surface.systems) {
       const msg = document.createElement("div");
       msg.className = "pw-log-line";
@@ -2048,6 +2048,8 @@ let pwErrors = [];
       panel.appendChild(msg);
       return;
     }
+
+    console.log("Rendering Tasks: " + surface.systems);
 
     Object.keys(surface.systems).forEach(systemName => {
       const system = surface.systems[systemName];
