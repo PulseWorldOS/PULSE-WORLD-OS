@@ -2170,11 +2170,12 @@ let pwErrors = [];
       evoConsole.appendChild(tabsBar);
       
 
-      const taskPanel = document.getElementById("pw-task-panel");
+      let taskPanel = document.getElementById("pw-task-panel");
       if (taskPanel) {
         taskPanel.classList.remove("active");
       } else {
-        console.log("Tasks Panel Error. Will Not Render!");
+        console.log("Tasks Panel Error. Will Not Render! Attempting Creation..");
+        taskPanel = document.createElement("pw-task-panel");
       }
 
       logTab.onclick = () => {
@@ -2182,8 +2183,8 @@ let pwErrors = [];
         tasksTab.classList.remove("active");
 
         if (evoLogBox) evoLogBox.style.display = "block";
-        const tp = document.getElementById("pw-task-panel");
-        if (tp) tp.classList.remove("active");
+        taskPanel = document.getElementById("pw-task-panel");
+        if (taskPanel) taskPanel.classList.remove("active");
       };
 
       tasksTab.onclick = () => {
@@ -2191,9 +2192,9 @@ let pwErrors = [];
         logTab.classList.remove("active");
 
         if (evoLogBox) evoLogBox.style.display = "none";
-        const tp = document.getElementById("pw-task-panel");
-        if (tp) {
-          tp.classList.add("active");
+        taskPanel = document.getElementById("pw-task-panel");
+        if (taskPanel) {
+          taskPanel.classList.add("active");
           renderTaskPanel();
         }
       };
