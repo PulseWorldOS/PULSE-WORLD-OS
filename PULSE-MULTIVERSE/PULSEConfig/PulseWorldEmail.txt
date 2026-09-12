@@ -168,7 +168,7 @@
       opacity: 0.85;
     }
 
-    select, input, textarea {
+    select, textarea {
       width: 100%;
       padding: 14px;
       border-radius: 12px;
@@ -180,7 +180,55 @@
       transition: 0.2s;
     }
 
-    select:focus, input:focus, textarea:focus {
+    payloadInput {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--pw-border);
+      background: #0f1216;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    
+    toInput {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--pw-border);
+      background: #0f1216;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    ccInput {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--pw-border);
+      background: #0f1216;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    subjectInput {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--pw-border);
+      background: #0f1216;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    select:focus, subjectInput:focus, ccInput:focus, toInput:focus, payloadInput:focus, textarea:focus {
       border-color: var(--pw-green);
       box-shadow: var(--pw-glow);
     }
