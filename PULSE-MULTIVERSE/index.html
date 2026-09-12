@@ -370,8 +370,6 @@ checkPersistentStorage(true);
       </svg>
     </button>
 
-    <form id="pulseForm" autocomplete="on" aria-label="Address Form">
-
         <!-- INTERNAL PAGE SELECTOR -->
         <select id="internalSelect" aria-label="Internal PulseWorld Pages"
                 onchange="pulseInternalSelect(event)">
@@ -403,7 +401,6 @@ checkPersistentStorage(true);
         </div>
 
         <button id="goBtn" aria-label="Go">Go</button>
-    </form>
 </div>
 
 <div id="adminPanel" role="region" aria-label="Admin Panel">
@@ -2462,8 +2459,6 @@ function pulseRouteKey(event) {
   if (event.key === "Enter") {
     event.preventDefault();
     event.stopPropagation();
-
-    if (pulseForm) pulseForm.requestSubmit();
   }
 }
 
