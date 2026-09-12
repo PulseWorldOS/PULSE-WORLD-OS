@@ -114,6 +114,16 @@ export function attachPulseUniversalTouchWorldGate(config = {}) {
       return this.worldState;
     },
 
+    view: {
+      registerViewport() {},
+      navigate(path) {
+        try {
+          window.location.href = path;
+        } catch {}
+      },
+      setWorldState() {}
+    },
+
     // ============================================================
     // ⭐ NEW: DEVICE + LOGCOUNT + MAX_LOGS + KERNEL + SYMBOLIC KERNEL
     // ============================================================
@@ -229,12 +239,6 @@ export function attachPulseUniversalTouchWorldGate(config = {}) {
     };
   }
 
-  // ============================================================
-  // ⭐ GLOBAL EXPOSURE
-  // ============================================================
-  PulseRealm.PulseWorld = WORLD;
-  PulseRealm.PulseTouchWorld = WORLD;
-  PulseRealm.PulseUniversalTouchWorld = WORLD;
 
   // ============================================================
   // ⭐ AUTO‑REGISTER DEFAULT VIEWPORT
