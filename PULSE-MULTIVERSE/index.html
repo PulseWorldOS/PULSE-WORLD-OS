@@ -2485,9 +2485,9 @@ function pulseNavigateInternal(route) {
     // Example: swap your internal iframe, panel, or world
     // Replace this with your real internal routing logic
     if (PulseRealm.PulseWorld) {
-        PulseRealm.PulseWorld.navigate(route);
         console.log(PulseRealm.PulseWorld);
-        console.log("[PulseBrowser] PulseWorld.navigate() executed.");
+        loadInternalPage(route);
+        console.log("[PulseBrowser] PulseWorld.navigate() (loadInternalPage) executed.");
     } else {
         console.warn("[PulseBrowser] PulseWorld.navigate() missing.");
     }
