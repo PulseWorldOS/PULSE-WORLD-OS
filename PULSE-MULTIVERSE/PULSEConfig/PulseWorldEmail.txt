@@ -170,7 +170,7 @@
 
     select, textarea {
       width: 100%;
-      padding: 14px;
+      padding: 8px 2px;
       border-radius: 12px;
       border: 1px solid var(--pw-border);
       background: #0f1216;
@@ -182,7 +182,7 @@
 
     payloadInput {
       width: 100%;
-      padding: 14px;
+      padding: 8px 2px;
       border-radius: 12px;
       border: 1px solid var(--pw-border);
       background: #0f1216;
@@ -194,7 +194,7 @@
     
     toInput {
       width: 100%;
-      padding: 14px;
+      padding: 8px 2px;
       border-radius: 12px;
       border: 1px solid var(--pw-border);
       background: #0f1216;
@@ -206,7 +206,7 @@
 
     ccInput {
       width: 100%;
-      padding: 14px;
+      padding: 8px 2px;
       border-radius: 12px;
       border: 1px solid var(--pw-border);
       background: #0f1216;
@@ -218,7 +218,7 @@
 
     subjectInput {
       width: 100%;
-      padding: 14px;
+      padding: 8px 2px;
       border-radius: 12px;
       border: 1px solid var(--pw-border);
       background: #0f1216;
