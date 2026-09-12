@@ -2440,7 +2440,7 @@ function pulseRouteKey(event) {
   console.log("[PulseBrowser] Route key pressed:", event.key);
   // OPEN CONSOLE ON TILDE
   if (event.key === "`") {
-    evoConsole.classList.toggle("open");
+    pulseConsoleOpen();
     return;
   }
 
@@ -3964,8 +3964,7 @@ async function verifyAdminCode(code) {
 
 function pulseConsoleKey(event) {
   if (event.key === "`") {
-    evoLogBox.scrollTop = evoLogBox.scrollHeight;
-    evoConsole.classList.toggle("open");
+    pulseConsoleOpen();
   }
 }
 
