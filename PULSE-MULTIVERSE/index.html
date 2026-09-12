@@ -2596,7 +2596,7 @@ function handleGo() {
   const internalSelect = document.getElementById("internalSelect");
   const internalChoice = internalSelect.value + ".txt";
 
-  if (mode === "internal") {
+  if (mode === "external") {
     console.log("[PulseBrowser] Internal dropdown selected →", internalChoice);
     const pageName = extractPageName(internalChoice);
     routeToInternal(pageName);
