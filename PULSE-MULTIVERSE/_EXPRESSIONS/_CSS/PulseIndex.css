@@ -402,7 +402,7 @@ img {
 }
 #globalSpin {
   position: fixed;
-  bottom: 4.3dvh;
+  bottom: 4.5dvh;
 
   /* TRUE CENTERING WITH NO LEFT/RIGHT */
   inset-inline: 0;
