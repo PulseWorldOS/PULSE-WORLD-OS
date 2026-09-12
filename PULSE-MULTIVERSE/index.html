@@ -2599,7 +2599,7 @@ function handleGo() {
     //     // ============================================================
     //     // EXTERNAL ADDRESS INPUT
     //     // ============================================================
-    const raw = addressInput.value || "";
+    const raw = addressInput.value;
     const resolvedHref = resolveLikeBrowser(raw);
 
     console.log("[PulseBrowser] External address input:", raw);
@@ -3265,11 +3265,7 @@ if (bootVideo) {
 if (goBtn) {
   goBtn.onclick = handleGo;
 }
-if (pulseForm) {
-  pulseForm.onsubmit = (e) => {
-    handleGo();
-  }
-}
+
 
 if (evoToggleBtn){
    evoToggleBtn.onclick = pulseConsoleOpen;
@@ -3848,7 +3844,6 @@ if (routevideoBtn) {
 if (glassBtn) {
   glassBtn.onclick = () => {
     pulsepalSpeak("We’re fast — but we’re building an entire world. Come back later, and you’ll really see what it can do!");
-    pulseForm.style.display = "flex";
 
     if (mode === "internal") {
       unlockAddressContainer();
