@@ -119,6 +119,17 @@ export function attachPulseUniversalTouchWorldGate(config = {}) {
         window.location.href = path;
       } catch {}
     },
+    
+    navigateInternal(path) {
+      try {
+        PulseRealm.LoadInternalPage(path);
+      } catch {}
+    },
+    navigateExternal(path) {
+      try {
+        window.location.href = path;
+      } catch {}
+    },
 
     // ============================================================
     // ⭐ NEW: DEVICE + LOGCOUNT + MAX_LOGS + KERNEL + SYMBOLIC KERNEL
