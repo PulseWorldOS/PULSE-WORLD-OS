@@ -2435,14 +2435,6 @@ function pulseAddressContainerDown(e) {
   placeCursorAtEnd(routeSpan);
 };
 
-function pulseConsoleKey(event) {
-
-  // OPEN CONSOLE ON TILDE
-  if (event.key === "`") {
-    evoConsole.classList.toggle("open");
-    return;
-  }
-}
 
 function pulseRouteKey(event) {
   console.log("[PulseBrowser] Route key pressed:", event.key);
@@ -3971,8 +3963,14 @@ async function verifyAdminCode(code) {
 }
 
 
-
-
+function pulseConsoleKey(event) {
+  if (event.key === "`") {
+    evoConsole.classList.toggle("open");
+    return;
+  }
+}
+  
+document.addEventListener("keydown", pulseConsoleKey(event));
 adminCodeInput.addEventListener("keydown", unlockEnterAdmin);
 
 
