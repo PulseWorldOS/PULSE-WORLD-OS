@@ -2596,7 +2596,7 @@ function handleGo() {
   const internalSelect = document.getElementById("internalSelect");
   const internalChoice = internalSelect.value + ".txt";
 
-  if (PulseRealm.NavigationMode === "internal") {
+  if (PulseRealm.NavigationMode === "external") {
     console.log("[PulseBrowser] Internal dropdown selected →", internalChoice);
     const pageName = extractPageName(internalChoice);
     routeToInternal(pageName);
@@ -2611,8 +2611,8 @@ function handleGo() {
     console.log("[PulseBrowser] Resolved href:", resolvedHref);
     
     window.open(resolvedHref, "_blank");
-
   }
+
   PulseRealm.PickASpeech8(
     "Only the Pulse World Realities work Right Now! Come Back Soon for more Evolution!",
     "./_EXPRESSIONS/_PEX/BUILD/PulsePalAdvisor.webp.pex"
@@ -3855,7 +3855,7 @@ if (glassBtn) {
     pulsepalSpeak("We’re fast — but we’re building an entire world. Come back later, and you’ll really see what it can do!");
     pulseForm.style.display = "flex";
 
-    if (mode === "internal") {
+    if (PulseRealm.NavigationMode === "internal") {
       unlockAddressContainer();
       switchToExternal();
       addressContainer.style.display = "block";
