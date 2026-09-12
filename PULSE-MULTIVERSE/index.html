@@ -3964,6 +3964,7 @@ async function verifyAdminCode(code) {
 
 function pulseConsoleKey(event) {
   if (event.key === "`") {
+    evoLogBox.scrollTop = evoLogBox.scrollHeight;
     evoConsole.classList.toggle("open");
   }
 }
