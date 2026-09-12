@@ -1163,24 +1163,24 @@
       </a><br/>
 
       Website: 
-      <a href="https://www.PulseWorld.Net" style="color:#00e6c7;">
+      <a onclick="window.open('https://www.PulseWorld.Net', '_blank')" style="color:#00e6c7;">
         https://www.PulseWorld.Net
       </a><br/><br/>
 
-      <!-- Legal Links -->
-      <a href="/privacy" style="color:#00e6c7;margin-right:20px;">
+      <!-- Legal Links (Open in new tab to stay inside the world) -->
+      <a onclick="window.open('/privacy', '_blank')" style="color:#00e6c7;margin-right:20px;">
         Privacy Policy
       </a>
 
-      <a href="/termsofuse" style="color:#00e6c7;margin-right:20px;">
+      <a onclick="window.open('/termsofuse', '_blank')" style="color:#00e6c7;margin-right:20px;">
         Terms of Use
       </a>
 
-      <a href="/data" style="color:#00e6c7;">
+      <a onclick="window.open('/data', '_blank')" style="color:#00e6c7;margin-right:20px;">
         Data & Security Practices
       </a>
 
-      <a href="/cookies" style="color:#00e6c7;">
+      <a onclick="window.open('/cookies', '_blank')" style="color:#00e6c7;">
         Cookies
       </a>
     </div>
