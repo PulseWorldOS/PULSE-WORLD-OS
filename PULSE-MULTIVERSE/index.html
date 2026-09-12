@@ -2484,7 +2484,7 @@ function pulseNavigateInternal(route) {
     PulseRealm.__PULSE_CURRENT_PAGE__ = route;
     // Example: swap your internal iframe, panel, or world
     // Replace this with your real internal routing logic
-    if (PulseWorld.navigate) {
+    if (PulseWorld) {
         PulseWorld.navigate(route);
         console.log(PulseWorld);
         console.log(PulseWorld.navigate);
