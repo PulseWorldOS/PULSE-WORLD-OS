@@ -409,7 +409,7 @@ self.addEventListener('fetch', event => {
 
   // Fetch current application code on return visits, retaining an offline fallback.
   if (url.origin === self.location.origin &&
-      (req.mode === 'navigate' || /\.(?:html|js|txt)$/.test(url.pathname))) {
+      (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(url.pathname))) {
     event.respondWith((async () => {
       try {
         const response = await fetch(req, { cache: 'no-store' });
