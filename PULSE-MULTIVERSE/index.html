@@ -2486,7 +2486,8 @@ function pulseNavigateInternal(route) {
     // Replace this with your real internal routing logic
     if (PulseRealm.PulseWorld) {
         console.log(PulseRealm.PulseWorld);
-        loadInternalPage(route);
+        PulseRealm.PulseWorld.view.navigate(route);
+        // loadInternalPage(route);
         console.log("[PulseBrowser] PulseWorld.navigate() (loadInternalPage) executed.");
     } else {
         console.warn("[PulseBrowser] PulseWorld.navigate() missing.");
