@@ -2038,10 +2038,10 @@ input[type="file"] {
 
 .address-container {
   position: fixed;
-  top: 3.2dvh;
+  top: 4.4dvh;
   left: 33.6dvw;
   flex: 1;
-  font-size: x-large;
+  font-size: medium;
   padding: 6px 10px;
   max-width: 38dvw;
   border-radius: 4px;
@@ -3080,7 +3080,7 @@ input[type="file"] {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  top: 3.2dvh;
+  top: 4.5dvh;
   left: 33dvw;
   background: rgba(0, 0, 0, 0.45);
   color: #0ff;
@@ -3094,7 +3094,7 @@ input[type="file"] {
   margin-right: 10px;
   max-width: 38dvw;
   font-family: "Consolas", "Monaco", "Courier New", monospace;
-  font-size: x-large;
+  font-size: medium;
   font-weight: 600;
 
   cursor: pointer;
