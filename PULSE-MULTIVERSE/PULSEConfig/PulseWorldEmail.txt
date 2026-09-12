@@ -161,19 +161,19 @@
       margin-bottom: 22px;
     }
 
-    #toInput {      
+    #toInput input {      
       width: 100%;
     }
 
-    #payloadInput {      
+    #payloadInput textarea {      
       width: 100%;
     }
 
-    #ccInput {      
+    #ccInput input {      
       width: 100%;
     }
 
-    #subjectInput {      
+    #subjectInput input {      
       width: 100%;
     }
 
