@@ -114,14 +114,10 @@ export function attachPulseUniversalTouchWorldGate(config = {}) {
       return this.worldState;
     },
 
-    view: {
-      registerViewport() {},
-      navigate(path) {
-        try {
-          window.location.href = path;
-        } catch {}
-      },
-      setWorldState() {}
+    navigate(path) {
+      try {
+        window.location.href = path;
+      } catch {}
     },
 
     // ============================================================
