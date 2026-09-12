@@ -159,6 +159,21 @@
 
     .field-block {
       margin-bottom: 22px;
+    }
+
+    #toInput {      
+      width: 100%;
+    }
+
+    #payloadInput {      
+      width: 100%;
+    }
+
+    #ccInput {      
+      width: 100%;
+    }
+
+    #subjectInput {      
       width: 100%;
     }
 
