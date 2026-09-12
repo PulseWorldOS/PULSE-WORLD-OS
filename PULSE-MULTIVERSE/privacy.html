@@ -460,6 +460,66 @@ Your identity is protected by design — and I enforce that design continuously.
 <div class="footer">
   © 2026 PulseWorld.Net · Multiversal Privacy Protocol
 </div>
+<script>
+const current = location.hostname;
+const isSW = current.includes("serviceworker.net");
+const isBinaryOS = current.includes("binaryos.net");
+const isGPU = current.includes("gpuprocessing.net");
+const isLogic = current.includes("booleanlogic.net");
+const isOrb = current.includes("orbitalmap.net");
+const isMoney = current.includes("pulseworld.money");
+const isBiz = current.includes("pulseworld.biz");
+const isSettings = current.includes("pulseworld.me");
+if (isSW) {
+  document.title = "ServiceWorker.Net - The New Internet Kernel";
+  setFavicon("./SWFavIcon.ico");
+}
+else if (isBinaryOS) {
+  document.title = "BinaryOS.Net - The New Internet O.S.";
+  setFavicon("./BOFavIcon.ico");
+}
+else if (isGPU) {
+  document.title = "GPUProcessing.Net - The New Internet Processor";
+  setFavicon("./GPFavIcon.ico");
+}
+else if (isLogic) {
+  document.title = "BooleanLogic.Net - The New Internet Logic";
+  setFavicon("./BLFavIcon.ico");
+}
+else if (isOrb) {
+  document.title = "OrbitalMap.Net - The New Internet Solutions";
+  setFavicon("./OMFavIcon.ico");
+}
+else if (isBiz) {
+  document.title = "PulseWorld.Biz - Digital Business Hub";
+  setFavicon("./PWBFavIcon.ico");
+}
+else if (isSettings) {
+  document.title = "PulseWorld.Me - Digital Identity Settings";
+  setFavicon("./PWBFavIcon.ico");
+}
+else if (isMoney) {
+  document.title = "PulseWorld.Money - Digital Banking Center";
+  setFavicon("./PWMFavIcon.ico");
+}
+else {
+  document.title = "PulseWorld.Net - Your New Secure Digital Identity";
+  setFavicon("./PWFavIcon.ico");
+}
 
+
+function setFavicon(url) {
+  let link = document.querySelector("link[rel~='icon']");
+  
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.head.appendChild(link);
+  }
+
+  link.href = url;
+}
+
+</script>
 </body>
 </html>
