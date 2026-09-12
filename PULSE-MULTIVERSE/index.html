@@ -2035,6 +2035,7 @@ let pwErrors = [];
   // ============================================================
   function renderTaskPanel() {
     const panel = document.getElementById("pw-task-panel");
+    console.log("Rendering Tasks: " + surface.systems);
     if (!panel) return;
 
     panel.innerHTML = "";
@@ -2048,8 +2049,6 @@ let pwErrors = [];
       panel.appendChild(msg);
       return;
     }
-
-    console.log("Rendering Tasks: " + surface.systems);
 
     Object.keys(surface.systems).forEach(systemName => {
       const system = surface.systems[systemName];
