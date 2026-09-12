@@ -375,7 +375,7 @@ checkPersistentStorage(true);
         <!-- INTERNAL PAGE SELECTOR -->
         <select id="internalSelect" aria-label="Internal PulseWorld Pages"
                 onchange="pulseInternalSelect(event)">
-            <span class="impulse">IMPULSE://</span><option value="PulseWorldReality">PulseWorldReality</option>
+            <option value="PulseWorldReality">IMPULSE://PulseWorldReality</option>
             <option value="PulseWorldInventory">IMPULSE://PulseWorldInventory</option>
             <option value="PulseWorldVault">IMPULSE://PulseWorldVault</option>
             <option value="PulseWorldRewards">IMPULSE://PulseWorldBank</option>
@@ -2484,8 +2484,8 @@ function pulseNavigateInternal(route) {
     PulseRealm.__PULSE_CURRENT_PAGE__ = route;
     // Example: swap your internal iframe, panel, or world
     // Replace this with your real internal routing logic
-    if (window.PulseWorld && PulseWorld.navigate) {
-        PulseWorld.navigate(route);
+    if (PulseWorld.view.navigate) {
+        PulseWorld.view.navigate(route);
         console.log("[PulseBrowser] PulseWorld.navigate() executed.");
     } else {
         console.warn("[PulseBrowser] PulseWorld.navigate() missing.");
@@ -8156,8 +8156,8 @@ function pulseStreamGhost() {
       /****************************************************************************************
        * 1. SEGMENT PROBE A — EVERY 3 SECONDS
        ****************************************************************************************/
-      if (!window.__pulseNextSegA || now >= window.__pulseNextSegA) {
-        window.__pulseNextSegA = now + 3000;
+      if (!PulseRealm.__pulseNextSegA || now >= PulseRealm.__pulseNextSegA) {
+        PulseRealm.__pulseNextSegA = now + 3000;
 
         const useRealSegA = Math.random() < 0.20;
         __pulseGhostFetch(
@@ -8170,8 +8170,8 @@ function pulseStreamGhost() {
       /****************************************************************************************
        * 2. BITRATE LADDER PROBE — EVERY 30 SECONDS
        ****************************************************************************************/
-      if (!window.__pulseNextBitrate || now >= window.__pulseNextBitrate) {
-        window.__pulseNextBitrate = now + 30000;
+      if (!PulseRealm.__pulseNextBitrate || now >= PulseRealm.__pulseNextBitrate) {
+        PulseRealm.__pulseNextBitrate = now + 30000;
 
         __pulseGhostFetch("/GHOST-PROTOCOL/PulseBitrateToMimicStreaming_Probe", {
           method: "POST",
@@ -8186,16 +8186,16 @@ function pulseStreamGhost() {
       /****************************************************************************************
        * 3. HEARTBEAT — EVERY 5 SECONDS
        ****************************************************************************************/
-      if (!window.__pulseNextHeartbeat || now >= window.__pulseNextHeartbeat) {
-        window.__pulseNextHeartbeat = now + 5000;
+      if (!PulseRealm.__pulseNextHeartbeat || now >= PulseRealm.__pulseNextHeartbeat) {
+        PulseRealm.__pulseNextHeartbeat = now + 5000;
         __pulseGhostFetch("/GHOST-PROTOCOL/PulseStreamingHeartbeat.json");
       }
 
       /****************************************************************************************
        * 4. BUFFER FULLNESS — EVERY 1 MINUTE
        ****************************************************************************************/
-      if (!window.__pulseNextBuffer || now >= window.__pulseNextBuffer) {
-        window.__pulseNextBuffer = now + 60000;
+      if (!PulseRealm.__pulseNextBuffer || now >= PulseRealm.__pulseNextBuffer) {
+        PulseRealm.__pulseNextBuffer = now + 60000;
 
         const useRealBuffer = Math.random() < 0.30;
 
@@ -8216,10 +8216,10 @@ function pulseStreamGhost() {
       /****************************************************************************************
        * 5. PLAYBACK POSITION — EVERY 15 SECONDS
        ****************************************************************************************/
-      if (!window.__pulseNextPos || now >= window.__pulseNextPos) {
-        window.__pulseNextPos = now + 15000;
+      if (!PulseRealm.__pulseNextPos || now >= PulseRealm.__pulseNextPos) {
+        PulseRealm.__pulseNextPos = now + 15000;
 
-        window.__pulseStreamPos = (window.__pulseStreamPos || 0) + 10;
+        PulseRealm.__pulseStreamPos = (PulseRealm.__pulseStreamPos || 0) + 10;
 
         const useRealState = Math.random() < 0.50;
 
@@ -8232,7 +8232,7 @@ function pulseStreamGhost() {
             : {
                 method: "POST",
                 body: JSON.stringify({
-                  pos: window.__pulseStreamPos,
+                  pos: PulseRealm.__pulseStreamPos,
                   dur: 3600,
                   state: "playing"
                 }),
@@ -8244,8 +8244,8 @@ function pulseStreamGhost() {
       /****************************************************************************************
        * 6. SEGMENT PROBE B — EVERY 9 SECONDS
        ****************************************************************************************/
-      if (!window.__pulseNextSegB || now >= window.__pulseNextSegB) {
-        window.__pulseNextSegB = now + 9000;
+      if (!PulseRealm.__pulseNextSegB || now >= PulseRealm.__pulseNextSegB) {
+        PulseRealm.__pulseNextSegB = now + 9000;
 
         const useRealSegB = Math.random() < 0.20;
 
