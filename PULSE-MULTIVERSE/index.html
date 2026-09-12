@@ -2614,7 +2614,10 @@ function handleGo() {
 function pulseConsoleOpen () {
   // Assuming evoLogBox is your log container element
   evoLogBox.scrollTop = evoLogBox.scrollHeight;
-  
+  pulsemeshBtn.style.display =
+    pulsemeshBtn.style.display === "none" ? "flex" : "none";
+  historyBtn.style.display =
+    historyBtn.style.display === "none" ? "flex" : "none";
   adminBtn.style.display =
     adminBtn.style.display === "none" ? "flex" : "none";
   glassBtn.style.display =
