@@ -2663,7 +2663,7 @@ input[type="file"] {
   width: 4.2dvw;
   height: 2.5dvh;
   padding: 0;
-  bottom: 14dvh;
+  bottom: 14.2dvh;
   left: 20dvw;
   border-radius: 60px;
   border: none;
@@ -2685,7 +2685,7 @@ input[type="file"] {
   width: 4.2dvw;
   height: 3.5dvh;
   padding: 0;
-  bottom: 8dvh;
+  bottom: 8.2dvh;
   left: 11.5dvw;
   border-radius: 60px;
   border: none;
@@ -2707,7 +2707,7 @@ input[type="file"] {
   width: 4.4dvw;
   height: 3.5dvh;
   padding: 0;
-  bottom: 8.9dvh;
+  bottom: 9.1dvh;
   left: 27.2dvw;
   border-radius: 60px;
   border: none;
@@ -2730,7 +2730,7 @@ input[type="file"] {
   width: 3.5dvw;
   height: 3.2dvh;
   padding: 0;
-  bottom: 9dvh;
+  bottom: 9.2dvh;
   right: 20.6dvw;
   border-radius: 60px;
   border: none;
@@ -2752,7 +2752,7 @@ input[type="file"] {
   width: 9.6dvw;
   height: 3.2dvh;
   padding: 0;
-  bottom: 8.3dvh;
+  bottom: 8.5dvh;
   right: 29.2dvw;
   border-radius: 60px;
   border: none;
