@@ -2174,7 +2174,7 @@ let pwErrors = [];
       if (taskPanel) {
         taskPanel.classList.remove("active");
       } else {
-        console.log("Tasks Panel Error. Will Not Render! Attempting Creation..");
+        console.log("PulseWorld: Tasks Panel Error. Will Not Render! Attempting Creation..");
         taskPanel = document.createElement("pw-task-panel");
       }
 
@@ -2196,6 +2196,8 @@ let pwErrors = [];
         if (taskPanel) {
           taskPanel.classList.add("active");
           renderTaskPanel();
+        } else {
+          console.log("PulseWorld: Tasks Panel Error. Still Will Not Render!");
         }
       };
     }
