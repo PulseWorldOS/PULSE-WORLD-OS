@@ -188,7 +188,12 @@ export function attachPulseUniversalTouchWorldGate(config = {}) {
   if (!WORLD.view) {
     WORLD.view = {
       registerViewport() {},
-      navigate(path) {
+      navigateInternal(path) {
+        try {
+          PulseRealm.LoadInternalPage(path);
+        } catch {}
+      },
+      navigateExternal(path) {
         try {
           window.location.href = path;
         } catch {}
