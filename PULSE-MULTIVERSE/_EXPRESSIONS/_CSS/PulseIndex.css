@@ -388,8 +388,8 @@ img {
 }
 #pulseStatus {
   position: fixed;
-  width: 11.2dvw;
-  height: 16.1dvh;
+  width: 10.2dvw;
+  height: 16.5dvh;
   padding: 0;
   top: 12dvh;
   right: 0.7dvw;
@@ -408,7 +408,8 @@ img {
   inset-inline: 0;
   margin-inline: auto;
 
-  height: 13.6dvh;
+  height: 13.2dvh;
+  width: 20dvw;
   border-radius: 40px;
   object-fit: cover;
   z-index: 99999999;
