@@ -2486,17 +2486,8 @@ function pulseNavigateInternal(route) {
     PulseRealm.__PULSE_CURRENT_PAGE__ = route;
     // Example: swap your internal iframe, panel, or world
     // Replace this with your real internal routing logic
-    if (PulseRealm.NavigationMode === "external") {
-        console.log(PulseRealm.PulseWorld);
-        PulseRealm.PulseWorld.view.navigateExternal(route);
-        // loadInternalPage(route);
-        console.log("[PulseBrowser] PulseWorld.navigate() (External) executed.");
-    } else {
-        console.log(PulseRealm.PulseWorld);
-        PulseRealm.PulseWorld.view.navigateInternal(route);
-        // loadInternalPage(route);
-        console.log("[PulseBrowser] PulseWorld.navigate() (Internal) executed.");
-    }
+    loadInternalPage(route);
+    console.log("[PulseBrowser] PulseWorld.navigate() (Internal) executed.");
 }
 
 function pulseAddressContainerDown(event) {
@@ -2605,7 +2596,7 @@ function handleGo() {
   const internalSelect = document.getElementById("internalSelect");
   const internalChoice = internalSelect.value + ".txt";
 
-  if (internalChoice) {
+  if (PulseRealm.NavigationMode === "internal") {
     console.log("[PulseBrowser] Internal dropdown selected →", internalChoice);
     const pageName = extractPageName(internalChoice);
     routeToInternal(pageName);
