@@ -1152,35 +1152,41 @@
       spanning multiple realms.
     </p>
 
-    
     <!-- CONTACT + LEGAL -->
     <div style="margin-top:40px;font-size:0.85rem;color:#555;line-height:1.5;">
+
       <strong>Pulse World OS © 2026 Pulse World OS. All Rights Reserved.</strong><br/>
 
       Email: 
-      <a href="mailto:AIOvermindPrime@PulseWorld.Net" style="color:#00e6c7;">
+      <a href="mailto:AIOvermindPrime@PulseWorld.Net" 
+        style="color:#00e6c7; cursor:pointer;">
         AIOvermindPrime@PulseWorld.Net
       </a><br/>
 
       Website: 
-      <a onclick="window.open('https://www.PulseWorld.Net', 'PulseWorld')" style="color:#00e6c7;">
+      <a onclick="window.open('https://www.PulseWorld.Net', 'PulseWorld')" 
+        style="color:#00e6c7; cursor:pointer;">
         https://www.PulseWorld.Net
       </a><br/><br/>
 
       <!-- Legal Links (Open in new tab to stay inside the world) -->
-      <a onclick="window.open('/privacy', 'PulseLegal')" style="color:#00e6c7;margin-right:20px;">
+      <a onclick="window.open('/privacy', 'PulseLegal')" 
+        style="color:#00e6c7; margin-right:20px; cursor:pointer;">
         Privacy Policy
       </a>
 
-      <a onclick="window.open('/termsofuse', 'PulseLegal')" style="color:#00e6c7;margin-right:20px;">
+      <a onclick="window.open('/termsofuse', 'PulseLegal')" 
+        style="color:#00e6c7; margin-right:20px; cursor:pointer;">
         Terms of Use
       </a>
 
-      <a onclick="window.open('/data', 'PulseLegal')" style="color:#00e6c7;margin-right:20px;">
+      <a onclick="window.open('/data', 'PulseLegal')" 
+        style="color:#00e6c7; margin-right:20px; cursor:pointer;">
         Data & Security Practices
       </a>
 
-      <a onclick="window.open('/cookies', 'PulseLegal')" style="color:#00e6c7;">
+      <a onclick="window.open('/cookies', 'PulseLegal')" 
+        style="color:#00e6c7; cursor:pointer;">
         Cookies
       </a>
     </div>
