@@ -2090,7 +2090,7 @@ input[type="file"] {
 #goBtn {
   position: fixed;
   margin-top: 5px;
-  top: 3.8dvh;
+  top: 4dvh;
   left: 66dvw;
   padding: 6px 10px;
   border-radius: 14px;
@@ -3148,6 +3148,12 @@ input[type="file"] {
   border: none;
 }
 
+.impulse {
+  color: #00e0ff;
+  font-weight: bold;
+}
+
+
 #internalSelect option:hover {
   background: rgba(0, 255, 255, 0.25);
   color: #FFFFFF;
@@ -3155,7 +3161,7 @@ input[type="file"] {
 
 #internalSelect option:checked {
   background: rgba(0, 255, 255, 0.35);
-  color: #FFFFFF;
+  color: #000000;
 }
 
 #adminBtn {

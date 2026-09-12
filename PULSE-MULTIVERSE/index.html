@@ -372,20 +372,45 @@ checkPersistentStorage(true);
 
     <form id="pulseForm" autocomplete="on" aria-label="Address Form">
 
-        <!-- INTERNAL PAGE SELECTOR -->
-        <select id="internalSelect" aria-label="Internal PulseWorld Pages"
-                onchange="pulseInternalSelect(event)">
-            <option value="PulseWorldReality">IMPULSE://PulseWorldReality</option>
-            <option value="PulseWorldInventory">IMPULSE://PulseWorldInventory</option>
-            <option value="PulseWorldVault">IMPULSE://PulseWorldVault</option>
-            <option value="PulseWorldRewards">IMPULSE://PulseWorldBank</option>
-            <option value="PulseWorldAssets">IMPULSE://PulseWorldAssets</option>
-            <option value="PULSE-ENGINE-BLOCK">IMPULSE://PulseEngineBlock</option>
-            <option value="PulseWorldMeshLink">IMPULSE://PulseWorldMeshLink</option>
-            <option value="PulseWorldEmail">IMPULSE://PulseWorldEmail</option>
-            <option value="PulsePalSettings">IMPULSE://PulsePalSettings</option>
-            <option value="PulseWorldScanner">IMPULSE://PulseWorldScanner</option>
-        </select>
+        <div class="pulse-select" id="internalSelectWrapper">
+          <div class="pulse-selected" id="pulseSelectedDisplay">
+            <span class="impulse">IMPULSE://</span>PulseWorldReality
+          </div>
+
+          <ul class="pulse-options">
+            <li data-value="PulseWorldReality">
+              <span class="impulse">IMPULSE://</span>PulseWorldReality
+            </li>
+            <li data-value="PulseWorldInventory">
+              <span class="impulse">IMPULSE://</span>PulseWorldInventory
+            </li>
+            <li data-value="PulseWorldVault">
+              <span class="impulse">IMPULSE://</span>PulseWorldVault
+            </li>
+            <li data-value="PulseWorldRewards">
+              <span class="impulse">IMPULSE://</span>PulseWorldBank
+            </li>
+            <li data-value="PulseWorldAssets">
+              <span class="impulse">IMPULSE://</span>PulseWorldAssets
+            </li>
+            <li data-value="PULSE-ENGINE-BLOCK">
+              <span class="impulse">IMPULSE://</span>PulseEngineBlock
+            </li>
+            <li data-value="PulseWorldMeshLink">
+              <span class="impulse">IMPULSE://</span>PulseWorldMeshLink
+            </li>
+            <li data-value="PulseWorldEmail">
+              <span class="impulse">IMPULSE://</span>PulseWorldEmail
+            </li>
+            <li data-value="PulsePalSettings">
+              <span class="impulse">IMPULSE://</span>PulsePalSettings
+            </li>
+            <li data-value="PulseWorldScanner">
+              <span class="impulse">IMPULSE://</span>PulseWorldScanner
+            </li>
+          </ul>
+        </div>
+
 
         <!-- EXTERNAL ADDRESS INPUT -->
         <div id="addressInput" class="address-container"
