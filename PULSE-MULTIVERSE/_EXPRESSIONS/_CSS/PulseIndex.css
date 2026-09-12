@@ -402,14 +402,14 @@ img {
 }
 #globalSpin {
   position: fixed;
-  bottom: 4.1dvh;
+  bottom: 4.3dvh;
 
   /* TRUE CENTERING WITH NO LEFT/RIGHT */
   inset-inline: 0;
   margin-inline: auto;
 
   height: 13.2dvh;
-  width: 20dvw;
+  width: 19.6dvw;
   border-radius: 40px;
   object-fit: cover;
   z-index: 99999999;
