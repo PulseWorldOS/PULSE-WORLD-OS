@@ -2038,8 +2038,8 @@ input[type="file"] {
 
 .address-container {
   position: fixed;
-  top: 4.4dvh;
-  left: 33.6dvw;
+  top: 4.5dvh;
+  left: 33dvw;
   flex: 1;
   font-size: medium;
   padding: 4px 4px;
