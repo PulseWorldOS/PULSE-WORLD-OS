@@ -943,6 +943,7 @@ if (PulseRealm.ServiceWorkerOffline === true || PulseRealm.ServiceWorkerOffline 
 const INTERNAL_PREFIX = "IMPULSE://";
 let EXTERNAL_PREFIX   = "HTTPS://";
 let mode              = "external";
+PulseRealm.NavigationMode = mode;
 timeClock.textContent = pulseClock();
 timeClock.style.color = "#0FF";
 speedPulse.textContent = PulseRealm.PulseSpeed;
@@ -2485,13 +2486,14 @@ function pulseNavigateInternal(route) {
     PulseRealm.__PULSE_CURRENT_PAGE__ = route;
     // Example: swap your internal iframe, panel, or world
     // Replace this with your real internal routing logic
-    if (PulseRealm.PulseWorld) {
-        console.log(PulseRealm.PulseWorld);
-        PulseRealm.PulseWorld.view.navigate(route);
+    if (PulseRealm.NavigationMode === "external") {
+        PulseRealm.PulseWorld.view.navigateExternal(route);
         // loadInternalPage(route);
-        console.log("[PulseBrowser] PulseWorld.navigate() (loadInternalPage) executed.");
+        console.log("[PulseBrowser] PulseWorld.navigate() (External) executed.");
     } else {
-        console.warn("[PulseBrowser] PulseWorld.navigate() missing.");
+        PulseRealm.PulseWorld.view.navigateInternal(route);
+        // loadInternalPage(route);
+        console.log("[PulseBrowser] PulseWorld.navigate() (Internal) executed.");
     }
 }
 
