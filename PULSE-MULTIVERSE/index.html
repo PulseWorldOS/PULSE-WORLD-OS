@@ -370,6 +370,8 @@ checkPersistentStorage(true);
       </svg>
     </button>
 
+    <form id="pulseForm" autocomplete="on" aria-label="Address Form">
+
         <!-- INTERNAL PAGE SELECTOR -->
         <select id="internalSelect" aria-label="Internal PulseWorld Pages"
                 onchange="pulseInternalSelect(event)">
@@ -400,7 +402,8 @@ checkPersistentStorage(true);
                   aria-label="Route Input"></span>
         </div>
 
-        <button id="goBtn" aria-label="Go">Go</button>
+        <button id="goBtn" type="submit" aria-label="Go">Go</button>
+    </form>
 </div>
 
 <div id="adminPanel" role="region" aria-label="Admin Panel">
@@ -2459,6 +2462,8 @@ function pulseRouteKey(event) {
   if (event.key === "Enter") {
     event.preventDefault();
     event.stopPropagation();
+
+    if (pulseForm) pulseForm.requestSubmit();
   }
 }
 
@@ -2599,7 +2604,7 @@ function handleGo() {
     //     // ============================================================
     //     // EXTERNAL ADDRESS INPUT
     //     // ============================================================
-    const raw = addressInput.value;
+    const raw = addressInput.value || "";
     const resolvedHref = resolveLikeBrowser(raw);
 
     console.log("[PulseBrowser] External address input:", raw);
@@ -3265,7 +3270,11 @@ if (bootVideo) {
 if (goBtn) {
   goBtn.onclick = handleGo;
 }
-
+if (pulseForm) {
+  pulseForm.onsubmit = (e) => {
+    handleGo();
+  }
+}
 
 if (evoToggleBtn){
    evoToggleBtn.onclick = pulseConsoleOpen;
@@ -3844,6 +3853,7 @@ if (routevideoBtn) {
 if (glassBtn) {
   glassBtn.onclick = () => {
     pulsepalSpeak("We’re fast — but we’re building an entire world. Come back later, and you’ll really see what it can do!");
+    pulseForm.style.display = "flex";
 
     if (mode === "internal") {
       unlockAddressContainer();
