@@ -442,7 +442,6 @@ self.addEventListener('fetch', event => {
   event.respondWith(handlePulseRequest(req));
 });
 
-
 // ============================================================
 // ⭐ PULSE REQUEST HANDLER — shared-storage-first + shared state + multi-domain failover
 // ============================================================
