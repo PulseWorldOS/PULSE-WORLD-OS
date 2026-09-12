@@ -3962,15 +3962,14 @@ async function verifyAdminCode(code) {
   return data;
 }
 
-
 function pulseConsoleKey(event) {
   if (event.key === "`") {
     evoConsole.classList.toggle("open");
-    return;
   }
 }
-  
-document.addEventListener("keydown", pulseConsoleKey(event));
+
+document.addEventListener("keydown", pulseConsoleKey);
+
 adminCodeInput.addEventListener("keydown", unlockEnterAdmin);
 
 
