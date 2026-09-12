@@ -2035,7 +2035,6 @@ let pwErrors = [];
   // ============================================================
   function renderTaskPanel() {
     const panel = document.getElementById("pw-task-panel");
-    console.log("Rendering Tasks: " + surface.systems);
     if (!panel) return;
 
     panel.innerHTML = "";
@@ -2174,6 +2173,8 @@ let pwErrors = [];
       const taskPanel = document.getElementById("pw-task-panel");
       if (taskPanel) {
         taskPanel.classList.remove("active");
+      } else {
+        console.log("Tasks Panel Error. Will Not Render!");
       }
 
       logTab.onclick = () => {
