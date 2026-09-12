@@ -128,11 +128,7 @@
     </div>
   </div>
 
-  <!-- Pixel surface: 1×1 canvas to exercise iGPU/GPU via compositing -->
-  <canvas id="pulse-engine-pixel"
-          width="1"
-          height="1"></canvas>
-
+  
   <script type="module">
     
   PulseRealm._2_DOM_START = performance.now();
@@ -162,11 +158,14 @@
 
 
     // Simple GPU tickle / multiversal pulse visualization
-    const canvas = document.getElementById("pulse-engine-pixel");
-    const ctx = canvas.getContext("2d");
-
+    
     let t = 0;
     function tick() {
+      canvas = document.createElement("canvas");
+      canvas.width = "1";
+      canvas.height = "1";
+
+      const ctx = canvas.getContext("2d");
       t += 0.02;
       const v = (Math.sin(t) + 1) / 2; // 0..1
       const r = Math.floor(0 + 0 * v);
