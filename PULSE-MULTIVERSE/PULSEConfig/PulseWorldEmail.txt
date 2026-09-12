@@ -180,7 +180,7 @@
       transition: 0.2s;
     }
 
-    payloadInput {
+    #payloadInput {
       width: 100%;
       padding: 8px 2px;
       border-radius: 12px;
@@ -192,7 +192,7 @@
       transition: 0.2s;
     }
     
-    toInput {
+    #toInput {
       width: 100%;
       padding: 8px 2px;
       border-radius: 12px;
@@ -204,7 +204,7 @@
       transition: 0.2s;
     }
 
-    ccInput {
+    #ccInput {
       width: 100%;
       padding: 8px 2px;
       border-radius: 12px;
@@ -216,7 +216,7 @@
       transition: 0.2s;
     }
 
-    subjectInput {
+    #subjectInput {
       width: 100%;
       padding: 8px 2px;
       border-radius: 12px;
@@ -228,7 +228,7 @@
       transition: 0.2s;
     }
 
-    select:focus, subjectInput:focus, ccInput:focus, toInput:focus, payloadInput:focus, textarea:focus {
+    select:focus, input:focus, textarea:focus {
       border-color: var(--pw-green);
       box-shadow: var(--pw-glow);
     }
