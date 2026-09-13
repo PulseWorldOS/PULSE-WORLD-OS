@@ -63,24 +63,24 @@ export async function handler() {
   const runPresenceSweep = async () => {
     const client = getSupabase();
 
-    let now;
-
-    
+    // Correct UTC fallback
     const corrected = Date.now() - (7 * 60 * 60 * 1000);
-    now = new Date(corrected).toISOString(); // ⭐ convert to ISO
-    
+    const nowISO = new Date(corrected).toISOString();
 
-    const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();
-    const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();
+    // Convert ISO → number BEFORE subtracting minutes
+    const nowMs = new Date(nowISO).getTime();
 
-    // ⭐ INACTIVE
+    const inactiveCutoff = new Date(nowMs - 5 * 60_000).toISOString();
+    const offlineCutoff  = new Date(nowMs - 10 * 60_000).toISOString();
+
+    // INACTIVE
     await client
       .from("PulseIdentity")
       .update({ inactive: true })
       .eq("online", true)
       .lt("lastUpdated", inactiveCutoff);
 
-    // ⭐ OFFLINE
+    // OFFLINE
     await client
       .from("PulseIdentity")
       .update({
@@ -90,6 +90,7 @@ export async function handler() {
       .eq("online", true)
       .lt("lastUpdated", offlineCutoff);
   };
+
 
   // Run presence sweep immediately
   await runPresenceSweep();
