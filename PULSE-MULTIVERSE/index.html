@@ -3060,22 +3060,13 @@ async function loadPulseIdentityContinual() {
 function pulseOfflineBeacon() {
   try {
     const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-    if (!storedIdentity?.id) return;
-
-    // Minimal payload for beacon
-    const payload = {
-      action: "offline",
-      id: storedIdentity.id,
-      host: PulseRealm.CurrentHost,
-      online: false,
-      inactive: false,
-      lastOffline: Date.now()
-    };
-
-    navigator.sendBeacon(
-      "/.netlify/functions/PULSE-SERVER-SQL",
-      JSON.stringify(payload)
-    );
+    if (!storedIdentity.id) return;
+    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+      body: JSON.stringify({ action: "offline", id: storedIdentity.id, host: PulseRealm.CurrentHost, online: false, inactive: false, lastOffline: Date.now() })
+    })
+    
   } catch (err) {
     console.error("PulseOfflineBeacon error:", err);
   }
