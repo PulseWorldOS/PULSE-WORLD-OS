@@ -187,121 +187,6 @@ export async function handler(event) {
   try {
     const body = JSON.parse(event.body || "{}");
 
-    // ⭐ COMMANDS
-    if (body.commands) {
-      try {
-        const results = await processCommands(body.commands);
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ ok: true, mode: "commands", results })
-        };
-      } catch (err) {
-        if (isDuplicateError(err)) return duplicateResponse("command");
-        throw err;
-      }
-    }
-
-    // ⭐ RAW SQL
-    if (body.query) {
-      try {
-        const data = await runPulseQuery(body.query, body.params);
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ ok: true, mode: "sql", data })
-        };
-      } catch (err) {
-        if (isDuplicateError(err)) return duplicateResponse("sql");
-        throw err;
-      }
-    }
-
-    // ⭐ GET ALL TABLES
-    if (body.getAllTables) {
-      const tables = await getAllTables();
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ ok: true, mode: "getAllTables", tables })
-      };
-    }
-
-    // ⭐ GET ALL ROWS FROM TABLE
-    if (body.getTableRows) {
-      const rows = await getTableRows(body.getTableRows);
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          ok: true,
-          mode: "getTableRows",
-          table: body.getTableRows,
-          rows
-        })
-      };
-    }
-
-    // ⭐ GET DOC BY ID
-    if (body.getDoc) {
-      const { table, id } = body.getDoc;
-      const doc = await getDoc(table, id);
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          ok: true,
-          mode: "getDoc",
-          table,
-          id,
-          doc
-        })
-      };
-    }
-
-    if (body.action === "offline") {
-      // mark user offline
-      const { id, host, online, inactive, lastOffline } = body;
-      const client = getSupabase();
-      const { data: existing, error: lookupError } = await client
-        .from("PulseIdentity")
-        .select("userID")
-        .eq("attrs->>localId", id)
-        .maybeSingle();
-
-      if (lookupError) throw lookupError;
-      const now = new Date().toISOString();
-
-      const payload = {
-        host,
-        online,
-        inactive,
-        lastOffline
-      };
-
-      let result;
-      try {
-        result = existing
-          ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
-          : await client.from("PulseIdentity").insert({ ...payload, created: now });
-      } catch (err) {
-        if (isDuplicateError(err)) return duplicateResponse("identity");
-        throw err;
-      }
-
-      if (result.error) {
-        console.error("❌ [PULSE-SQL] Supabase sync error:", result.error);
-        return {
-          statusCode: 500,
-          headers: CORS_HEADERS,
-          body: JSON.stringify({ ok: false, error: result.error.message })
-        };
-      }
-
-      return {
-        statusCode: 200,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ ok: true, synced: id })
-      };
-    }
-
-
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
       const { identity, photos, host, online, inactive } = body;
@@ -373,6 +258,74 @@ export async function handler(event) {
       };
     }
 
+    // ⭐ COMMANDS
+    if (body.commands) {
+      try {
+        const results = await processCommands(body.commands);
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ ok: true, mode: "commands", results })
+        };
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("command");
+        throw err;
+      }
+    }
+
+    // ⭐ RAW SQL
+    if (body.query) {
+      try {
+        const data = await runPulseQuery(body.query, body.params);
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ ok: true, mode: "sql", data })
+        };
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("sql");
+        throw err;
+      }
+    }
+
+    // ⭐ GET ALL TABLES
+    if (body.getAllTables) {
+      const tables = await getAllTables();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true, mode: "getAllTables", tables })
+      };
+    }
+
+    // ⭐ GET ALL ROWS FROM TABLE
+    if (body.getTableRows) {
+      const rows = await getTableRows(body.getTableRows);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          mode: "getTableRows",
+          table: body.getTableRows,
+          rows
+        })
+      };
+    }
+
+    // ⭐ GET DOC BY ID
+    if (body.getDoc) {
+      const { table, id } = body.getDoc;
+      const doc = await getDoc(table, id);
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          mode: "getDoc",
+          table,
+          id,
+          doc
+        })
+      };
+    }
+    
     // ⭐ ADMIN READ
     if (body.action === "read") {
       const { data, error } = await getSupabase()

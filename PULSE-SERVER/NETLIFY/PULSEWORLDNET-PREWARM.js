@@ -65,7 +65,7 @@ export async function handler() {
     const now = Date.now();
 
     const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();   // 5 minutes
-    const offlineCutoff  = new Date(now - 15 * 60_000).toISOString();  // 15 minutes
+    const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();  // 15 minutes
 
     // ⭐ INACTIVE (idle but tab still open)
     // online=true AND lastUpdated older than 5 minutes
@@ -76,10 +76,10 @@ export async function handler() {
       .lt("lastUpdated", inactiveCutoff);
 
     // ⭐ OFFLINE (idle too long)
-    // online=true AND lastUpdated older than 15 minutes
+    // online=true AND lastUpdated older than 10 minutes
     await client
       .from("PulseIdentity")
-      .update({ online: false, inactive: false })
+      .update({ online: false, inactive: false, lastOffline: Date.now() })
       .eq("online", true)
       .lt("lastUpdated", offlineCutoff);
   };
