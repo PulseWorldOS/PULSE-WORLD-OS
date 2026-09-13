@@ -3043,12 +3043,12 @@ const PulseIdentityStore = (() => {
 })();
 
 PulseRealm.PulseIdentityStore = PulseIdentityStore;
-const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+
 function savePhotos() { return PulseIdentityStore.savePhotos(); }
 function loadPhotos() { return PulseIdentityStore.loadPhotos(); }
 async function save(overrides = {}) { return PulseIdentityStore.save(overrides); }
-
+const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
 async function loadPulseIdentityContinual() {
   try {
     return PulseIdentityStore.load();
