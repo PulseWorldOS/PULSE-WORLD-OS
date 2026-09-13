@@ -2944,17 +2944,47 @@ const PulseIdentityStore = (() => {
     return photos;
   }
 
-  function savePhotos() {
+  async function compressDataURL(dataURL, maxSize = 256) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const scale = maxSize / Math.max(img.width, img.height);
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // JPEG = tiny size, still looks great
+        resolve(canvas.toDataURL("image/jpeg", 0.7));
+      };
+      img.src = dataURL;
+    });
+  }
+
+  async function savePhotos() {
     const existing = readJSON(PHOTOS_KEY);
+
     const photos = {
       photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
       aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
       bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
       bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
     };
+
+    // ⭐ COMPRESS ALL PHOTOS BEFORE SAVING
+    for (const key of Object.keys(photos)) {
+      if (photos[key]?.startsWith("data:image/")) {
+        photos[key] = await compressDataURL(photos[key], 256);
+      }
+    }
+
     localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
     return photos;
   }
+
 
   function apply(data, photos = loadPhotos(data)) {
     if (!data || !data.id) return null;
