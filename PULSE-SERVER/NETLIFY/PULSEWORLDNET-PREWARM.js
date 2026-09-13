@@ -3,14 +3,12 @@
 //  Warm current universe + run inactivity sweep every 2 minutes.
 //  Prevents multiverse hammering, DNS spam, Netlify illusions.
 // ============================================================================
-globalThis.PulseRealm = globalThis;
-const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 
 import { getSupabase } from "./_shared/supabase.js";
 
 export async function handler() {
 
-  const CURRENT = (PulseRealm.location?.origin ?? "").toLowerCase();
+  const CURRENT = (globalThis.location?.origin ?? "").toLowerCase();
 
   // ==========================================================================
   //  SAFE WARM HELPER — ONLY WARMS CURRENT SITE
