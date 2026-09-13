@@ -3060,12 +3060,14 @@ async function loadPulseIdentityContinual() {
 function pulseOfflineBeacon() {
   try {
     const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-
     if (!storedIdentity?.id) return;
 
+    // Minimal payload for beacon
     const payload = {
-      action: "sync",
-      identity: { ...storedIdentity, online: false, inactive: false, host: PulseRealm.CurrentHost }
+      action: "offline",
+      id: storedIdentity.id,
+      host: PulseRealm.CurrentHost,
+      timestamp: Date.now()
     };
 
     navigator.sendBeacon(
