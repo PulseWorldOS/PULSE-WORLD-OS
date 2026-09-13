@@ -48,9 +48,9 @@
 <!-- <link rel="modulepreload" fetchpriority="high" href="./PulseMultiverseLayer.js"> -->
 
 <title>Pulse World Corp.</title>
-<script type="module" src="https://Port.ServiceWorker.Net"></script>
-<!-- <script type="module" src="https://Port.GPUProcessing.Net"></script> -->
-<script type="module" src="https://Port.BinaryOS.Net"></script>
+<script type="module" src="https://port.serviceworker.Net"></script>
+<!-- <script type="module" src="https://port.gpuprocessing.Net"></script> -->
+<script type="module" src="https://port.binaryos.Net"></script>
 <!-- <script type="module" src="./PulseWorldOSImports.js"></script> 
  -->
 
@@ -1145,8 +1145,8 @@ let isTouchMobile = false;
   }
 
   const urls = [
-    "https://Port.GPUProcessing.Net",
-    "https://Port.BooleanLogic.Net",
+    "https://port.gpuprocessing.Net",
+    "https://port.booleanlogic.Net",
     "./_EXPRESSIONS/_SOUNDS/PulseWorldBootUp",
     "./_EXPRESSIONS/_VIDEOS/PulseStatus",
     "./_EXPRESSIONS/_VIDEOS/PulseGlobalSpin"
@@ -3783,7 +3783,7 @@ if (driftBtn) {
   driftBtn.onclick = () => {
    
     log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[WARP] Gate Opening", "color:gold; font-weight:bold; font-family:monospace;");
-
+    
     // Realm rails (with Impulse continuity)
     const REALMS = [
       `https://www.pulseworld.net/?Impulse=${PulseRealm.__PULSE_CURRENT_PAGE__}`,
@@ -3807,6 +3807,8 @@ if (driftBtn) {
     const nextIdx = (idx + 1) % REALMS.length;
     const nextRealm = REALMS[nextIdx];
 
+    pulseOfflineBeacon();
+
     const pre = document.createElement("link");
     pre.rel = "preconnect";
     pre.href = nextRealm;
@@ -3826,7 +3828,7 @@ if (driftBtn) {
     .catch(err => console.error(`❌ ${nextRealm} Port Access Failed:`, err));
     // Update button label instantly
     driftBtn.textContent = "Drifting..";
-
+    
     // Warp
     location.replace(nextRealm);
 
