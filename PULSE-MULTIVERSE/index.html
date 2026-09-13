@@ -2906,15 +2906,15 @@ function setNavigation(pageKey) {
   });
 }
 
-
 // ============================================================
-//  PULSE PHOTO DATABASE (IndexedDB)
+//  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
 // ============================================================
 const PulsePhotoDB = (() => {
   const DB_NAME = "PulsePhotosDB";
   const STORE_NAME = "photos";
 
   let dbPromise = null;
+  const cache = {}; // ⭐ synchronous cache
 
   function getDB() {
     if (!dbPromise) {
@@ -2931,19 +2931,41 @@ const PulsePhotoDB = (() => {
   }
 
   async function savePhoto(key, dataURL) {
+    cache[key] = dataURL; // ⭐ keep sync cache updated
+
     const db = await getDB();
     const tx = db.transaction(STORE_NAME, "readwrite");
     tx.objectStore(STORE_NAME).put(dataURL, key);
     return tx.complete;
   }
 
-  async function loadPhoto(key) {
+  async function loadPhotoAsync(key) {
     const db = await getDB();
     const tx = db.transaction(STORE_NAME, "readonly");
     return tx.objectStore(STORE_NAME).get(key);
   }
 
-  return { savePhoto, loadPhoto };
+  // ⭐ synchronous getter (returns cache or null)
+  function loadPhotoSync(key) {
+    return cache[key] || null;
+  }
+
+  // ⭐ warm cache on boot (non-blocking)
+  (async () => {
+    const db = await getDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+
+    store.getAllKeys().onsuccess = async (e) => {
+      const keys = e.target.result;
+      for (const key of keys) {
+        const value = await loadPhotoAsync(key);
+        cache[key] = value;
+      }
+    };
+  })();
+
+  return { savePhoto, loadPhotoSync };
 })();
 
 
@@ -2969,31 +2991,50 @@ const PulseIdentityStore = (() => {
   };
 
   function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
-    const saved = readJSON(PHOTOS_KEY);
     const photos = {
-      photoURL: choosePhoto(saved.photoURL, identityData.photoURL, PulseRealm.PulsePhoto, DEFAULT_PHOTO),
-      aliasPhotoURL: choosePhoto(saved.aliasPhotoURL, identityData.aliasPhotoURL, PulseRealm.PulseAliasPhoto, DEFAULT_ALIAS),
-      bizphotoURL: choosePhoto(saved.bizphotoURL, identityData.bizphotoURL, PulseRealm.PulseBizPhoto, DEFAULT_BIZ),
-      bizaliasPhotoURL: choosePhoto(saved.bizaliasPhotoURL, identityData.bizaliasPhotoURL, PulseRealm.PulseBizAliasPhoto, DEFAULT_BIZ_ALIAS)
+      photoURL: PulsePhotoDB.loadPhotoSync("photoURL") ||
+                identityData.photoURL ||
+                DEFAULT_PHOTO,
+
+      aliasPhotoURL: PulsePhotoDB.loadPhotoSync("aliasPhotoURL") ||
+                    identityData.aliasPhotoURL ||
+                    DEFAULT_ALIAS,
+
+      bizphotoURL: PulsePhotoDB.loadPhotoSync("bizphotoURL") ||
+                  identityData.bizphotoURL ||
+                  DEFAULT_BIZ,
+
+      bizaliasPhotoURL: PulsePhotoDB.loadPhotoSync("bizaliasPhotoURL") ||
+                        identityData.bizaliasPhotoURL ||
+                        DEFAULT_BIZ_ALIAS
     };
+
     PulseRealm.PulsePhoto = photos.photoURL;
     PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
     PulseRealm.PulseBizPhoto = photos.bizphotoURL;
     PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
+
     return photos;
   }
 
   function savePhotos() {
-    const existing = readJSON(PHOTOS_KEY);
     const photos = {
-      photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
-      aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
-      bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
-      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
+      photoURL: PulseRealm.PulsePhoto || DEFAULT_PHOTO,
+      aliasPhotoURL: PulseRealm.PulseAliasPhoto || DEFAULT_ALIAS,
+      bizphotoURL: PulseRealm.PulseBizPhoto || DEFAULT_BIZ,
+      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || DEFAULT_BIZ_ALIAS
     };
-    localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
+
+    // ⭐ save to IndexedDB (async but non-blocking)
+    for (const [key, value] of Object.entries(photos)) {
+      if (typeof value === "string" && value.startsWith("data:image/")) {
+        PulsePhotoDB.savePhoto(key, value);
+      }
+    }
+
     return photos;
   }
+
 
   function apply(data, photos = loadPhotos(data)) {
     if (!data || !data.id) return null;
