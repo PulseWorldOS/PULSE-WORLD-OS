@@ -2908,90 +2908,104 @@ function setNavigation(pageKey) {
 
 
 
+const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+
+// ============================================================
+//  PULSE PHOTO DATABASE (IndexedDB)
+// ============================================================
+const PulsePhotoDB = (() => {
+  const DB_NAME = "PulsePhotosDB";
+  const STORE_NAME = "photos";
+
+  let dbPromise = null;
+
+  function getDB() {
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = () => {
+          request.result.createObjectStore(STORE_NAME);
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+    return dbPromise;
+  }
+
+  async function savePhoto(key, dataURL) {
+    const db = await getDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(dataURL, key);
+    return tx.complete;
+  }
+
+  async function loadPhoto(key) {
+    const db = await getDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    return tx.objectStore(STORE_NAME).get(key);
+  }
+
+  return { savePhoto, loadPhoto };
+})();
+
 /* ============================================================
-  CANONICAL IDENTITY STORAGE
-  Internal pages are injected into this document, so they must all use this
-  single store instead of declaring competing global save/load functions.
-  ============================================================ */
+  CANONICAL IDENTITY STORAGE — IndexedDB Photo Version
+============================================================ */
 const PulseIdentityStore = (() => {
   const IDENTITY_KEY = "PulseIdentity";
-  const PHOTOS_KEY = "PulsePhotos";
 
   const readJSON = (key) => {
     try { return JSON.parse(localStorage.getItem(key) || "{}"); }
     catch { return {}; }
   };
 
-  const choosePhoto = (savedPhoto, identityPhoto, realmPhoto, fallback) => {
-    const values = [savedPhoto, identityPhoto, realmPhoto];
-    return values.find((value) => typeof value === "string" && value.startsWith("data:image/"))
-      || values.find((value) => typeof value === "string" && value.length > 0)
-      || fallback;
-  };
+  // ⭐ Load photos from IndexedDB instead of localStorage
+  async function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
+    const keys = ["photoURL", "aliasPhotoURL", "bizphotoURL", "bizaliasPhotoURL"];
+    const photos = {};
 
-  function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
-    const saved = readJSON(PHOTOS_KEY);
-    const photos = {
-      photoURL: choosePhoto(saved.photoURL, identityData.photoURL, PulseRealm.PulsePhoto, DEFAULT_PHOTO),
-      aliasPhotoURL: choosePhoto(saved.aliasPhotoURL, identityData.aliasPhotoURL, PulseRealm.PulseAliasPhoto, DEFAULT_ALIAS),
-      bizphotoURL: choosePhoto(saved.bizphotoURL, identityData.bizphotoURL, PulseRealm.PulseBizPhoto, DEFAULT_BIZ),
-      bizaliasPhotoURL: choosePhoto(saved.bizaliasPhotoURL, identityData.bizaliasPhotoURL, PulseRealm.PulseBizAliasPhoto, DEFAULT_BIZ_ALIAS)
-    };
+    for (const key of keys) {
+      const saved = await PulsePhotoDB.loadPhoto(key);
+      photos[key] = saved || identityData[key] || DEFAULT_PHOTO;
+    }
+
     PulseRealm.PulsePhoto = photos.photoURL;
     PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
     PulseRealm.PulseBizPhoto = photos.bizphotoURL;
     PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
+
     return photos;
   }
 
-  async function compressDataURL(dataURL, maxSize = 256, format = "image/webp") {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        const scale = maxSize / Math.max(img.width, img.height);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        // ⭐ KEEP YOUR WORLD PURE: WEBP or PNG
-        const out = canvas.toDataURL(format, 0.85); 
-        resolve(out);
-      };
-      img.src = dataURL;
-    });
-  }
-
-
+  // ⭐ Save photos into IndexedDB
   async function savePhotos() {
-    const existing = readJSON(PHOTOS_KEY);
-
     const photos = {
-      photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
-      aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
-      bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
-      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
+      photoURL: PulseRealm.PulsePhoto,
+      aliasPhotoURL: PulseRealm.PulseAliasPhoto,
+      bizphotoURL: PulseRealm.PulseBizPhoto,
+      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto
     };
 
-    // ⭐ COMPRESS ALL PHOTOS BEFORE SAVING
-    for (const key of Object.keys(photos)) {
-      if (photos[key]?.startsWith("data:image/")) {
-        photos[key] = await compressDataURL(photos[key], 256);
+    for (const [key, value] of Object.entries(photos)) {
+      if (typeof value === "string" && value.startsWith("data:image/")) {
+        await PulsePhotoDB.savePhoto(key, value);
       }
     }
 
-    localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
     return photos;
   }
 
-
-  function apply(data, photos = loadPhotos(data)) {
+  // ⭐ Apply identity + photos to PulseRealm
+  async function apply(data) {
     if (!data || !data.id) return null;
+
+    const photos = await loadPhotos(data);
+
     PulseRealm.PulseIdentity = data;
     identity = data;
+
     PulseRealm.PulseUser = data.name || PulseRealm.PulseUser;
     PulseRealm.PulseEmail = data.email || PulseRealm.PulseEmail;
     PulseRealm.PulseUserEmail = data.userEmail || PulseRealm.PulseUserEmail;
@@ -3004,32 +3018,36 @@ const PulseIdentityStore = (() => {
     PulseRealm.PulseBankMonitor = data.bankURL || PulseRealm.PulseBankMonitor;
     PulseRealm.PulseTrustedDevice = data.device ?? PulseRealm.PulseTrustedDevice;
     PulseRealm.PulsePoints = data.PulsePoints ?? PulseRealm.PulsePoints;
+
     PulseRealm.PulsePhoto = photos.photoURL;
     PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
     PulseRealm.PulseBizPhoto = photos.bizphotoURL;
     PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
-    return data;
-  }
 
-  function load() {
-    const stored = readJSON(IDENTITY_KEY);
-    if (stored.id && validName(stored.name)) {
-      apply(stored);
-      if (!stored.email || /^unknown(?: pulse user)?@/i.test(stored.email)) return save();
-      return stored;
-    }
-    return save();
+    return data;
   }
 
   function validName(value) {
     return typeof value === "string" && value.trim() && !/^unknown(?: pulse user)?$/i.test(value.trim());
   }
 
-  function save(overrides = {}) {
+  async function load() {
+    const stored = readJSON(IDENTITY_KEY);
+    if (stored.id && validName(stored.name)) {
+      await apply(stored);
+      if (!stored.email || /^unknown(?: pulse user)?@/i.test(stored.email)) return save();
+      return stored;
+    }
+    return save();
+  }
+
+  async function save(overrides = {}) {
     const existing = readJSON(IDENTITY_KEY);
-    const photos = loadPhotos(existing);
     const candidates = [overrides.name, PulseRealm.PulseUser, existing.name, localStorage.getItem("PulseUser")];
     const pulseName = stripTimestamp(candidates.find(validName) || generateDefaultPulseUser());
+
+    const photos = await loadPhotos(existing);
+
     const data = {
       id: existing.id || `world-${Math.random().toString(36).slice(2)}`,
       createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
@@ -3059,28 +3077,28 @@ const PulseIdentityStore = (() => {
       name: pulseName,
       email: `${pulseName}@PulseWorld.Net`
     };
+
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(data));
     localStorage.setItem("PulseUser", data.name);
-    savePhotos();
-    return apply(data, readJSON(PHOTOS_KEY));
+
+    await savePhotos();
+    return apply(data);
   }
 
-  function restore(identityData, photosData) {
+  async function restore(identityData) {
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(identityData || {}));
-    if (photosData) localStorage.setItem(PHOTOS_KEY, JSON.stringify(photosData));
     return load();
   }
 
   return Object.freeze({ readJSON, load, save, apply, restore, loadPhotos, savePhotos });
 })();
 
+
 PulseRealm.PulseIdentityStore = PulseIdentityStore;
 
 function savePhotos() { return PulseIdentityStore.savePhotos(); }
 function loadPhotos() { return PulseIdentityStore.loadPhotos(); }
 async function save(overrides = {}) { return PulseIdentityStore.save(overrides); }
-const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
 async function loadPulseIdentityContinual() {
   try {
     return PulseIdentityStore.load();
