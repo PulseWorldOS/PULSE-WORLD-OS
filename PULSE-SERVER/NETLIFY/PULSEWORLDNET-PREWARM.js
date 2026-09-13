@@ -68,23 +68,15 @@ export async function handler() {
       .lt("lastUpdated", offlineCutoff);
   };
 
-  // ==========================================================================
-  //  MAIN LOOP — 60 SECONDS
-  // ==========================================================================
+  // Run presence sweep immediately
+  await runPresenceSweep();
+
+  // Then warm for 5–10 seconds max
   const start = Date.now();
-  let lastSweep = Date.now();
-
-  while (Date.now() - start < 60000) {
-
-    // Warm universe
+  while (Date.now() - start < 10000) {
     await igniteOnce();
-
-    // Run presence sweep every 2 minutes
-    if (Date.now() - lastSweep > 120000) {
-      await runPresenceSweep();
-      lastSweep = Date.now();
-    }
   }
+
 
   return {
     statusCode: 200,
