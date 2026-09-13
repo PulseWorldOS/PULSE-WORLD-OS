@@ -62,24 +62,29 @@ export async function handler() {
   // ==========================================================================
   const runPresenceSweep = async () => {
     const client = getSupabase();
-    const now = Date.now();
 
-    const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();   // 5 minutes
-    const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();  // 15 minutes
+    // ⭐ Use Postgres server time, not JS time
+    const { data: serverTime } = await client.rpc("pulse_server_time");
+    const now = serverTime.now; // UTC timestamp from server
 
-    // ⭐ INACTIVE (idle but tab still open)
-    // online=true AND lastUpdated older than 5 minutes
+    const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();
+    const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();
+
+    // ⭐ INACTIVE
     await client
       .from("PulseIdentity")
       .update({ inactive: true })
       .eq("online", true)
       .lt("lastUpdated", inactiveCutoff);
 
-    // ⭐ OFFLINE (idle too long)
-    // online=true AND lastUpdated older than 10 minutes
+    // ⭐ OFFLINE
     await client
       .from("PulseIdentity")
-      .update({ online: false, inactive: false, lastOffline: Date.now() })
+      .update({
+        online: false,
+        inactive: false,
+        lastOffline: now
+      })
       .eq("online", true)
       .lt("lastUpdated", offlineCutoff);
   };
