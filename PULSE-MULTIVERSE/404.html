@@ -1258,12 +1258,12 @@ async function saveLogsToIndexedDB(entries) {
 
   try {
     // wipe old logs
-    const txClear = db.transaction(LOG_STORE, "readwrite");
-    txClear.objectStore(LOG_STORE).clear();
+    const txClear = db.transaction(IDB_STORE_NAME, "readwrite");
+    txClear.objectStore(IDB_STORE_NAME).clear();
 
     // write new logs
-    const tx = db.transaction(LOG_STORE, "readwrite");
-    const store = tx.objectStore(LOG_STORE);
+    const tx = db.transaction(IDB_STORE_NAME, "readwrite");
+    const store = tx.objectStore(IDB_STORE_NAME);
 
     for (const entry of trimmed) {
       store.put(entry);
