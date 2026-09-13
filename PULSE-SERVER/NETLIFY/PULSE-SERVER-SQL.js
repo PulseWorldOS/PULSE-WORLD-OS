@@ -148,6 +148,32 @@ const CORS_HEADERS = {
   "Content-Type": "application/json; charset=utf-8"
 };
 
+function isDuplicateError(err) {
+  if (!err) return false;
+
+  const msg = String(err.message || "").toLowerCase();
+
+  return (
+    msg.includes("duplicate key") ||
+    msg.includes("unique constraint") ||
+    msg.includes("violates unique") ||
+    msg.includes("already exists")
+  );
+}
+
+function duplicateResponse(identityField) {
+  return {
+    statusCode: 409,
+    headers: CORS_HEADERS,
+    body: JSON.stringify({
+      ok: false,
+      duplicate: true,
+      field: identityField || "username",
+      error: "Identity conflict — this name is already anchored in the PulseWorld Continuity Layer."
+    })
+  };
+}
+
 export async function handler(event) {
   // Handle OPTIONS preflight
   if (event.httpMethod === "OPTIONS") {
@@ -157,35 +183,36 @@ export async function handler(event) {
       body: JSON.stringify({ ok: true })
     };
   }
+
   try {
     const body = JSON.parse(event.body || "{}");
 
     // ⭐ COMMANDS
     if (body.commands) {
-      const results = await processCommands(body.commands);
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          ok: true,
-          mode: "commands",
-          results
-        })
-      };
+      try {
+        const results = await processCommands(body.commands);
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ ok: true, mode: "commands", results })
+        };
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("command");
+        throw err;
+      }
     }
 
     // ⭐ RAW SQL
     if (body.query) {
-      const data = await runPulseQuery(body.query, body.params);
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          ok: true,
-          mode: "sql",
-          data
-        })
-      };
+      try {
+        const data = await runPulseQuery(body.query, body.params);
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ ok: true, mode: "sql", data })
+        };
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("sql");
+        throw err;
+      }
     }
 
     // ⭐ GET ALL TABLES
@@ -193,11 +220,7 @@ export async function handler(event) {
       const tables = await getAllTables();
       return {
         statusCode: 200,
-        body: JSON.stringify({
-          ok: true,
-          mode: "getAllTables",
-          tables
-        })
+        body: JSON.stringify({ ok: true, mode: "getAllTables", tables })
       };
     }
 
@@ -232,11 +255,10 @@ export async function handler(event) {
       };
     }
 
-    // ⭐ FIRE-AND-FORGET IDENTITY SYNC (called every 7s from browser interval)
-    // PulseIdentity is the existing production table.  The browser's local id
-    // is kept in attrs.localId because PulseIdentity.userID is a UUID.
+    // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
       const { identity, photos } = body;
+
       if (!identity?.id) {
         return {
           statusCode: 400,
@@ -255,6 +277,7 @@ export async function handler(event) {
         bizaliasPhotoURL: photos?.bizaliasPhotoURL || identity.bizaliasPhotoURL || null,
         syncedAt: now
       };
+
       const client = getSupabase();
       const { data: existing, error: lookupError } = await client
         .from("PulseIdentity")
@@ -268,18 +291,27 @@ export async function handler(event) {
         email: identity.email || identity.userEmail || null,
         name: identity.name || identity.userName || null,
         stripeID: identity.bank || null,
-        attrs
+        attrs,
+        phone: identity.phone || null,
+        lastUpdated: now
       };
-      const { error } = existing
-        ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
-        : await client.from("PulseIdentity").insert({ ...payload, created: now });
 
-      if (error) {
-        console.error("❌ [PULSE-SQL] Supabase sync error:", error);
+      let result;
+      try {
+        result = existing
+          ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
+          : await client.from("PulseIdentity").insert({ ...payload, created: now });
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("identity");
+        throw err;
+      }
+
+      if (result.error) {
+        console.error("❌ [PULSE-SQL] Supabase sync error:", result.error);
         return {
           statusCode: 500,
           headers: CORS_HEADERS,
-          body: JSON.stringify({ ok: false, error: error.message })
+          body: JSON.stringify({ ok: false, error: result.error.message })
         };
       }
 
@@ -290,7 +322,7 @@ export async function handler(event) {
       };
     }
 
-    // ⭐ ADMIN READ — fetches production PulseIdentity records (Admin page only)
+    // ⭐ ADMIN READ
     if (body.action === "read") {
       const { data, error } = await getSupabase()
         .from("PulseIdentity")
@@ -334,12 +366,11 @@ export async function handler(event) {
     };
 
   } catch (err) {
+    if (isDuplicateError(err)) return duplicateResponse("general");
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        ok: false,
-        error: err.message
-      })
+      body: JSON.stringify({ ok: false, error: err.message })
     };
   }
 }
+
