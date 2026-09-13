@@ -257,7 +257,7 @@ export async function handler(event) {
 
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
-      const { identity, photos } = body;
+      const { identity, photos,  } = body;
 
       if (!identity?.id) {
         return {

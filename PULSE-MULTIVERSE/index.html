@@ -552,7 +552,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
-let supabaseInterval = 0;
+let supabaseInterval = 6;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
@@ -3055,6 +3055,29 @@ async function loadPulseIdentityContinual() {
   }
 }
 
+function pulseOfflineBeacon() {
+  try {
+    const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+    const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+
+    if (!storedIdentity?.id) return;
+
+    const payload = {
+      action: "sync",
+      identity: { ...storedIdentity, online: false },
+      photos: storedPhotos
+    };
+
+    navigator.sendBeacon(
+      "/.netlify/functions/PULSE-SERVER-SQL",
+      JSON.stringify(payload)
+    );
+  } catch (err) {
+    console.error("PulseOfflineBeacon error:", err);
+  }
+}
+
+
 function pulseSupabaseSync() {
   supabaseInterval++;
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
@@ -3066,7 +3089,7 @@ function pulseSupabaseSync() {
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "sync", identity: storedIdentity, photos: storedPhotos })
+        body: JSON.stringify({ action: "sync", identity: storedIdentity, photos: storedPhotos, online: true })
       }).then((response) => {
         if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
       }).catch(() => {
@@ -8348,7 +8371,7 @@ function interceptNavigation(url) {
 
 
 (async function PulseLife() {
-  
+
   narMusic.muted = PulseRealm.SoundDisabled;
   loadPulseIdentityContinual();
   // // ⭐ USE PASSPORT-CAPABLE READER CORRECTLY (AWAIT)
@@ -8706,10 +8729,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
+  if (document.hidden || document.visibilityState === "hidden") {
     if (PulseRealm.TropicPulseScanner) {
       PulseRealm.TropicPulseScanner.close();
     }
+    pulseOfflineBeacon();
     pbPanel.style.display = "none";
     clearInterval(balanceBankTimer);
     clearInterval(motionTickTimer);
@@ -8735,12 +8759,19 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+window.addEventListener("pagehide", () => {
+  pulseOfflineBeacon();
+});
+
+window.addEventListener("beforeunload", () => {
+  pulseOfflineBeacon();
+});
 
 // Close scanner when an internal document loads
 document.addEventListener("PulseDocumentChanged", () => {
   clearInterval(balanceBankTimer);
   clearInterval(motionTickTimer);
-  if (document.hidden && PulseRealm.TropicPulseScanner) {
+  if ((document.hidden || document.visibilityState === "hidden") && PulseRealm.TropicPulseScanner) {
     PulseRealm.TropicPulseScanner.close();
   }
 });
