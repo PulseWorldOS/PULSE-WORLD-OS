@@ -7563,7 +7563,7 @@ async function runBootSequenceOnce(Rebooted,isMobile) {
 
 async function generatePulseUser() {
   // Canonical local identity wins over stale asynchronous memory mirrors.
-  const data = PulseRealm.PulseIdentityStore.load();
+  const data = PulseIdentityStore.load();
   return data.name;
 }
 
