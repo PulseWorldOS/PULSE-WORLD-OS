@@ -217,7 +217,7 @@ export async function handler(event) {
       const { data: existing, error: lookupError } = await client
         .from("PulseIdentity")
         .select("userID")
-        .eq("localId", identity.id)
+        .eq("attrs->>localId", identity.id)
         .maybeSingle();
 
       if (lookupError) throw lookupError;
