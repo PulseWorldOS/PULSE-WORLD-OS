@@ -552,7 +552,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
-let supabaseInterval = 6;
+let supabaseInterval = 7;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
@@ -3077,11 +3077,13 @@ function pulseOfflineBeacon() {
   }
 }
 
+let supabaseLimit = 8;
 
 function pulseSupabaseSync() {
   supabaseInterval++;
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
-  if (supabaseInterval === 8) {
+  
+  if (supabaseInterval === supabaseLimit) {
     try {
       const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
       const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
@@ -3099,6 +3101,11 @@ function pulseSupabaseSync() {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }
     supabaseInterval = 0;
+  }
+  if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") {
+    supabaseLimit = 8;
+  } else {
+    supabaseLimit = 40;
   }
 }
 
@@ -8591,7 +8598,7 @@ if (navigator.gpu) {
 
     // // Supabase is a background backup only. One backend failure suspends sync
     // // for this page session instead of producing a failed request every 7s.
-    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") pulseSupabaseSync();
+    pulseSupabaseSync();
 
   }, 7000);
 })();
@@ -8752,7 +8759,7 @@ document.addEventListener("visibilitychange", () => {
       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
       pulseStreamGhost();
       loadPulseIdentityContinual();
-      if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") pulseSupabaseSync();
+      pulseSupabaseSync();
       pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
       updateBackButtonVisibility();
     }, 7000);
