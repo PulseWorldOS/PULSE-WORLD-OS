@@ -3065,7 +3065,7 @@ function pulseOfflineBeacon() {
 
     const payload = {
       action: "sync",
-      identity: { ...storedIdentity, online: false }
+      identity: { ...storedIdentity, online: false, inactive: false, host: PulseRealm.CurrentHost }
     };
 
     navigator.sendBeacon(
