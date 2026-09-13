@@ -186,7 +186,8 @@ export async function handler(event) {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    // ⭐ FIRE-AND-FORGET IDENTITY SYNC (FAST VERSION)
+
+    // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
       const { identity, photos, host, online, inactive } = body;
 
@@ -198,8 +199,9 @@ export async function handler(event) {
         };
       }
 
-      const now = new Date().toISOString();
+      const client = getSupabase();
 
+      const now = new Date().toISOString();
       const attrs = {
         ...identity,
         localId: identity.id,
@@ -211,8 +213,16 @@ export async function handler(event) {
         syncedAt: now
       };
 
+      
+      const { data: existing, error: lookupError } = await client
+        .from("PulseIdentity")
+        .select("userID")
+        .eq("localId", identity.id)
+        .maybeSingle();
+
+      if (lookupError) throw lookupError;
+
       const payload = {
-        localId: identity.id,
         email: identity.email || identity.userEmail || null,
         name: identity.name || identity.userName || null,
         stripeID: identity.bank || null,
@@ -221,17 +231,15 @@ export async function handler(event) {
         lastUpdated: now,
         host,
         online,
-        inactive
+        inactive,
+        localId: identity.id
       };
-
-      const client = getSupabase();
 
       let result;
       try {
-        // 🔥 Single fast upsert instead of SELECT + UPDATE/INSERT
-        result = await client
-          .from("PulseIdentity")
-          .upsert(payload, { onConflict: "localId" });
+        result = existing
+          ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
+          : await client.from("PulseIdentity").insert({ ...payload, created: now });
       } catch (err) {
         if (isDuplicateError(err)) return duplicateResponse("identity");
         throw err;
