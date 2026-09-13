@@ -3060,14 +3060,12 @@ async function loadPulseIdentityContinual() {
 function pulseOfflineBeacon() {
   try {
     const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-    const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
 
     if (!storedIdentity?.id) return;
 
     const payload = {
       action: "sync",
-      identity: { ...storedIdentity, online: false },
-      photos: storedPhotos
+      identity: { ...storedIdentity, online: false }
     };
 
     navigator.sendBeacon(
