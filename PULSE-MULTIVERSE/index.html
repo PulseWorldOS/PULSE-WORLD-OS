@@ -2946,62 +2946,59 @@ const PulsePhotoDB = (() => {
   return { savePhoto, loadPhoto };
 })();
 
+
 /* ============================================================
-  CANONICAL IDENTITY STORAGE — IndexedDB Photo Version
-============================================================ */
+  CANONICAL IDENTITY STORAGE
+  Internal pages are injected into this document, so they must all use this
+  single store instead of declaring competing global save/load functions.
+  ============================================================ */
 const PulseIdentityStore = (() => {
   const IDENTITY_KEY = "PulseIdentity";
+  const PHOTOS_KEY = "PulsePhotos";
 
   const readJSON = (key) => {
     try { return JSON.parse(localStorage.getItem(key) || "{}"); }
     catch { return {}; }
   };
 
-  // ⭐ Load photos from IndexedDB instead of localStorage
-  async function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
-    const keys = ["photoURL", "aliasPhotoURL", "bizphotoURL", "bizaliasPhotoURL"];
-    const photos = {};
+  const choosePhoto = (savedPhoto, identityPhoto, realmPhoto, fallback) => {
+    const values = [savedPhoto, identityPhoto, realmPhoto];
+    return values.find((value) => typeof value === "string" && value.startsWith("data:image/"))
+      || values.find((value) => typeof value === "string" && value.length > 0)
+      || fallback;
+  };
 
-    for (const key of keys) {
-      const saved = await PulsePhotoDB.loadPhoto(key);
-      photos[key] = saved || identityData[key] || DEFAULT_PHOTO;
-    }
-
+  function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
+    const saved = readJSON(PHOTOS_KEY);
+    const photos = {
+      photoURL: choosePhoto(saved.photoURL, identityData.photoURL, PulseRealm.PulsePhoto, DEFAULT_PHOTO),
+      aliasPhotoURL: choosePhoto(saved.aliasPhotoURL, identityData.aliasPhotoURL, PulseRealm.PulseAliasPhoto, DEFAULT_ALIAS),
+      bizphotoURL: choosePhoto(saved.bizphotoURL, identityData.bizphotoURL, PulseRealm.PulseBizPhoto, DEFAULT_BIZ),
+      bizaliasPhotoURL: choosePhoto(saved.bizaliasPhotoURL, identityData.bizaliasPhotoURL, PulseRealm.PulseBizAliasPhoto, DEFAULT_BIZ_ALIAS)
+    };
     PulseRealm.PulsePhoto = photos.photoURL;
     PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
     PulseRealm.PulseBizPhoto = photos.bizphotoURL;
     PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
-
     return photos;
   }
 
-  // ⭐ Save photos into IndexedDB
-  async function savePhotos() {
+  function savePhotos() {
+    const existing = readJSON(PHOTOS_KEY);
     const photos = {
-      photoURL: PulseRealm.PulsePhoto,
-      aliasPhotoURL: PulseRealm.PulseAliasPhoto,
-      bizphotoURL: PulseRealm.PulseBizPhoto,
-      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto
+      photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
+      aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
+      bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
+      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
     };
-
-    for (const [key, value] of Object.entries(photos)) {
-      if (typeof value === "string" && value.startsWith("data:image/")) {
-        await PulsePhotoDB.savePhoto(key, value);
-      }
-    }
-
+    localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
     return photos;
   }
 
-  // ⭐ Apply identity + photos to PulseRealm
-  async function apply(data) {
+  function apply(data, photos = loadPhotos(data)) {
     if (!data || !data.id) return null;
-
-    const photos = await loadPhotos(data);
-
     PulseRealm.PulseIdentity = data;
     identity = data;
-
     PulseRealm.PulseUser = data.name || PulseRealm.PulseUser;
     PulseRealm.PulseEmail = data.email || PulseRealm.PulseEmail;
     PulseRealm.PulseUserEmail = data.userEmail || PulseRealm.PulseUserEmail;
@@ -3014,36 +3011,32 @@ const PulseIdentityStore = (() => {
     PulseRealm.PulseBankMonitor = data.bankURL || PulseRealm.PulseBankMonitor;
     PulseRealm.PulseTrustedDevice = data.device ?? PulseRealm.PulseTrustedDevice;
     PulseRealm.PulsePoints = data.PulsePoints ?? PulseRealm.PulsePoints;
-
     PulseRealm.PulsePhoto = photos.photoURL;
     PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
     PulseRealm.PulseBizPhoto = photos.bizphotoURL;
     PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
-
     return data;
   }
 
-  function validName(value) {
-    return typeof value === "string" && value.trim() && !/^unknown(?: pulse user)?$/i.test(value.trim());
-  }
-
-  async function load() {
+  function load() {
     const stored = readJSON(IDENTITY_KEY);
     if (stored.id && validName(stored.name)) {
-      await apply(stored);
+      apply(stored);
       if (!stored.email || /^unknown(?: pulse user)?@/i.test(stored.email)) return save();
       return stored;
     }
     return save();
   }
 
-  async function save(overrides = {}) {
+  function validName(value) {
+    return typeof value === "string" && value.trim() && !/^unknown(?: pulse user)?$/i.test(value.trim());
+  }
+
+  function save(overrides = {}) {
     const existing = readJSON(IDENTITY_KEY);
+    const photos = loadPhotos(existing);
     const candidates = [overrides.name, PulseRealm.PulseUser, existing.name, localStorage.getItem("PulseUser")];
     const pulseName = stripTimestamp(candidates.find(validName) || generateDefaultPulseUser());
-
-    const photos = await loadPhotos(existing);
-
     const data = {
       id: existing.id || `world-${Math.random().toString(36).slice(2)}`,
       createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
@@ -3073,22 +3066,20 @@ const PulseIdentityStore = (() => {
       name: pulseName,
       email: `${pulseName}@PulseWorld.Net`
     };
-
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(data));
     localStorage.setItem("PulseUser", data.name);
-
-    await savePhotos();
-    return apply(data);
+    savePhotos();
+    return apply(data, readJSON(PHOTOS_KEY));
   }
 
-  async function restore(identityData) {
+  function restore(identityData, photosData) {
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(identityData || {}));
+    if (photosData) localStorage.setItem(PHOTOS_KEY, JSON.stringify(photosData));
     return load();
   }
 
   return Object.freeze({ readJSON, load, save, apply, restore, loadPhotos, savePhotos });
 })();
-
 
 PulseRealm.PulseIdentityStore = PulseIdentityStore;
 
