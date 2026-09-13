@@ -3063,7 +3063,7 @@ function pulseOfflineBeacon() {
     if (!storedIdentity.id) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+      headers: { "Content-Type": "application/json", "x-pulse-mode": "offline" },
       body: JSON.stringify({ action: "offline", id: storedIdentity.id, host: PulseRealm.CurrentHost, online: false, inactive: false, lastOffline: Date.now() })
     })
     
