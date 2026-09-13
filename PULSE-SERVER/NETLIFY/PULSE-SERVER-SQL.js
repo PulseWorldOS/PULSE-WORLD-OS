@@ -255,6 +255,53 @@ export async function handler(event) {
       };
     }
 
+    if (body.action === "offline") {
+      // mark user offline
+      const { id, host, online, inactive, lastOffline } = body;
+      const client = getSupabase();
+      const { data: existing, error: lookupError } = await client
+        .from("PulseIdentity")
+        .select("userID")
+        .eq("attrs->>localId", id)
+        .maybeSingle();
+
+      if (lookupError) throw lookupError;
+      const now = new Date().toISOString();
+
+      const payload = {
+        host,
+        online,
+        inactive,
+        lastOffline
+      };
+
+      let result;
+      try {
+        result = existing
+          ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
+          : await client.from("PulseIdentity").insert({ ...payload, created: now });
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("identity");
+        throw err;
+      }
+
+      if (result.error) {
+        console.error("❌ [PULSE-SQL] Supabase sync error:", result.error);
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({ ok: false, error: result.error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ ok: true, synced: id })
+      };
+    }
+
+
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
       const { identity, photos, host, online, inactive } = body;
