@@ -201,8 +201,17 @@ export async function handler(event) {
 
       const client = getSupabase();
 
+      let now;
+
+      // ⭐ Try server time first
       const { data: serverTime } = await client.rpc("pulse_server_time");
-      const now = serverTime.now; // UTC timestamp from server
+
+      if (serverTime?.now) {
+        now = serverTime.now; // already UTC ms
+      } else {
+        // ⭐ Fallback: convert local time → UTC
+        now = Date.now() - (7 * 60 * 60 * 1000);
+      }
       const attrs = {
         ...identity,
         localId: identity.id,

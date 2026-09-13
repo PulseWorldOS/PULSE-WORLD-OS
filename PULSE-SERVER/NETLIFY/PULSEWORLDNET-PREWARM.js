@@ -63,9 +63,17 @@ export async function handler() {
   const runPresenceSweep = async () => {
     const client = getSupabase();
 
-    // ⭐ Use Postgres server time, not JS time
+    let now;
+
+    // ⭐ Try server time first
     const { data: serverTime } = await client.rpc("pulse_server_time");
-    const now = serverTime.now; // UTC timestamp from server
+
+    if (serverTime?.now) {
+      now = serverTime.now; // already UTC ms
+    } else {
+      // ⭐ Fallback: convert local time → UTC
+      now = Date.now() - (7 * 60 * 60 * 1000);
+    }
 
     const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();
     const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();
