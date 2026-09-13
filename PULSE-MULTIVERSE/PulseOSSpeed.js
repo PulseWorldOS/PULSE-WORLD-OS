@@ -169,8 +169,10 @@ if (typeof navigator !== "undefined" && navigator.serviceWorker && PulseRealm.Se
               urls: [
                 "/PulseWorldReality.txt",
                 "/PULSE-ENGINE-BLOCK.txt",
+                "/PulseWorldScanner.txt",
                 "/PulseWorldInventory.txt",
                 "/PulseWorldChallenge.txt",
+                "/PulseWorldHistory.txt",
                 "/PulseWorldMeshLink.txt",
                 "/PulseWorldEmail.txt",
                 "/PulsePalSettings.txt",

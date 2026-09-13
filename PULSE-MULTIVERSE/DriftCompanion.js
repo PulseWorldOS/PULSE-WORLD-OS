@@ -287,6 +287,7 @@ self.addEventListener('install', event => {
         '/_CREATION_BARRIER/PULSE-BOOT-WORLD.js',
         '/_CREATION_BARRIER/PULSE-BOOT-PORTAL.js',
         '/PULSEConfig/PulseWorldReality.txt',
+        '/PULSEConfig/PulseWorldHistory.txt',
         '/PULSEConfig/PulseWorldFounders.txt',
         '/PULSEConfig/PulseWorldTeam.txt',
         '/PULSEConfig/PULSE-ENGINE-BLOCK.txt',
