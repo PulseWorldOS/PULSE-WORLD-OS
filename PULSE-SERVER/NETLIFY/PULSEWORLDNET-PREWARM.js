@@ -62,24 +62,31 @@ export async function handler() {
   // ==========================================================================
   const runPresenceSweep = async () => {
     const client = getSupabase();
-    const now = Date.now();
 
-    const inactiveCutoff = new Date(now - 420 * 60_000).toISOString();   // 5 minutes
-    const offlineCutoff  = new Date(now - 700 * 60_000).toISOString();  // 15 minutes
+    let now;
 
-    // ⭐ INACTIVE (idle but tab still open)
-    // online=true AND lastUpdated older than 5 minutes
+    
+    const corrected = Date.now() - (7 * 60 * 60 * 1000);
+    now = new Date(corrected).toISOString(); // ⭐ convert to ISO
+    
+
+    const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();
+    const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();
+
+    // ⭐ INACTIVE
     await client
       .from("PulseIdentity")
       .update({ inactive: true })
       .eq("online", true)
       .lt("lastUpdated", inactiveCutoff);
 
-    // ⭐ OFFLINE (idle too long)
-    // online=true AND lastUpdated older than 10 minutes
+    // ⭐ OFFLINE
     await client
       .from("PulseIdentity")
-      .update({ online: false, inactive: false })
+      .update({
+        online: false,
+        inactive: false
+      })
       .eq("online", true)
       .lt("lastUpdated", offlineCutoff);
   };
