@@ -65,16 +65,10 @@ export async function handler() {
 
     let now;
 
-    // ⭐ Try server time first
-    const { data: serverTime } = await client.rpc("pulse_server_time");
-
-    if (serverTime?.now) {
-      now = new Date(serverTime.now).toISOString(); // ⭐ convert to ISO
-    } else {
-      // Fallback: convert local time → UTC
-      const corrected = Date.now() - (7 * 60 * 60 * 1000);
-      now = new Date(corrected).toISOString(); // ⭐ convert to ISO
-    }
+    
+    const corrected = Date.now() - (7 * 60 * 60 * 1000);
+    now = new Date(corrected).toISOString(); // ⭐ convert to ISO
+    
 
     const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();
     const offlineCutoff  = new Date(now - 10 * 60_000).toISOString();
