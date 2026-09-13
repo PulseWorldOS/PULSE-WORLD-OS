@@ -82,8 +82,7 @@ export async function handler() {
       .from("PulseIdentity")
       .update({
         online: false,
-        inactive: false,
-        lastOffline: now
+        inactive: false
       })
       .eq("online", true)
       .lt("lastUpdated", offlineCutoff);
