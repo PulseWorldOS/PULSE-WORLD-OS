@@ -3772,8 +3772,14 @@ if (forwardBtn) {
   };
 }
 
+driftBtn.addEventListener("mouseover", (e) => {
+  pulseOfflineBeacon();
+})
+
+
 if (driftBtn) {
   driftBtn.onclick = () => {
+    
     log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[WARP] Gate Opening", "color:gold; font-weight:bold; font-family:monospace;");
     
     // Realm rails (with Impulse continuity)
