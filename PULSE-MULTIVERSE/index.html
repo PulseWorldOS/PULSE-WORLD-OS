@@ -3043,7 +3043,8 @@ const PulseIdentityStore = (() => {
 })();
 
 PulseRealm.PulseIdentityStore = PulseIdentityStore;
-
+const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
 function savePhotos() { return PulseIdentityStore.savePhotos(); }
 function loadPhotos() { return PulseIdentityStore.loadPhotos(); }
 async function save(overrides = {}) { return PulseIdentityStore.save(overrides); }
@@ -3058,8 +3059,7 @@ async function loadPulseIdentityContinual() {
 }
 
 function pulseOfflineBeacon() {
-  try {
-    const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+  try {    
     if (!storedIdentity.id) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
@@ -3079,9 +3079,7 @@ function pulseSupabaseSync() {
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
   if (supabaseInterval === supabaseLimit) {
-    try {
-      const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-      const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+    try {      
       if (!storedIdentity.id) return;
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
