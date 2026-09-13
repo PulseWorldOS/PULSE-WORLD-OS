@@ -2907,10 +2907,6 @@ function setNavigation(pageKey) {
 }
 
 
-
-const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
-
 // ============================================================
 //  PULSE PHOTO DATABASE (IndexedDB)
 // ============================================================
@@ -3116,7 +3112,9 @@ function pulseSupabaseSync() {
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
   if (supabaseInterval === supabaseLimit) {
-    try {      
+    try {
+      const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
+      const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
       if (!storedIdentity.id) return;
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
