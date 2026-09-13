@@ -207,11 +207,13 @@ export async function handler(event) {
       const { data: serverTime } = await client.rpc("pulse_server_time");
 
       if (serverTime?.now) {
-        now = serverTime.now; // already UTC ms
+        now = new Date(serverTime.now).toISOString(); // ⭐ convert to ISO
       } else {
-        // ⭐ Fallback: convert local time → UTC
-        now = Date.now() - (7 * 60 * 60 * 1000);
+        // Fallback: convert local time → UTC
+        const corrected = Date.now() - (7 * 60 * 60 * 1000);
+        now = new Date(corrected).toISOString(); // ⭐ convert to ISO
       }
+      
       const attrs = {
         ...identity,
         localId: identity.id,
