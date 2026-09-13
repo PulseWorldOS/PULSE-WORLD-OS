@@ -7338,7 +7338,7 @@ async function bootPulseWorldBarrier() {
   // ---------------------------------------------------------
   // 1. Generate PulseUser Identity
   // ---------------------------------------------------------
-  const identity = PulseRealm.PulseUser;
+  const identity = PulseRealm.PulseUser ?? await generatePulseUser();
 
   // ---------------------------------------------------------
   // 2. Stabilize physics inputs (no time salt, no entropy)
