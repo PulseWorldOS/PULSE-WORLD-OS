@@ -2991,50 +2991,31 @@ const PulseIdentityStore = (() => {
   };
 
   function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
+    const saved = readJSON(PHOTOS_KEY);
     const photos = {
-      photoURL: PulsePhotoDB.loadPhotoSync("photoURL") ||
-                identityData.photoURL ||
-                DEFAULT_PHOTO,
-
-      aliasPhotoURL: PulsePhotoDB.loadPhotoSync("aliasPhotoURL") ||
-                    identityData.aliasPhotoURL ||
-                    DEFAULT_ALIAS,
-
-      bizphotoURL: PulsePhotoDB.loadPhotoSync("bizphotoURL") ||
-                  identityData.bizphotoURL ||
-                  DEFAULT_BIZ,
-
-      bizaliasPhotoURL: PulsePhotoDB.loadPhotoSync("bizaliasPhotoURL") ||
-                        identityData.bizaliasPhotoURL ||
-                        DEFAULT_BIZ_ALIAS
+      photoURL: choosePhoto(saved.photoURL, identityData.photoURL, PulseRealm.PulsePhoto, DEFAULT_PHOTO),
+      aliasPhotoURL: choosePhoto(saved.aliasPhotoURL, identityData.aliasPhotoURL, PulseRealm.PulseAliasPhoto, DEFAULT_ALIAS),
+      bizphotoURL: choosePhoto(saved.bizphotoURL, identityData.bizphotoURL, PulseRealm.PulseBizPhoto, DEFAULT_BIZ),
+      bizaliasPhotoURL: choosePhoto(saved.bizaliasPhotoURL, identityData.bizaliasPhotoURL, PulseRealm.PulseBizAliasPhoto, DEFAULT_BIZ_ALIAS)
     };
-
     PulseRealm.PulsePhoto = photos.photoURL;
     PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
     PulseRealm.PulseBizPhoto = photos.bizphotoURL;
     PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
-
     return photos;
   }
 
   function savePhotos() {
+    const existing = readJSON(PHOTOS_KEY);
     const photos = {
-      photoURL: PulseRealm.PulsePhoto || DEFAULT_PHOTO,
-      aliasPhotoURL: PulseRealm.PulseAliasPhoto || DEFAULT_ALIAS,
-      bizphotoURL: PulseRealm.PulseBizPhoto || DEFAULT_BIZ,
-      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || DEFAULT_BIZ_ALIAS
+      photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
+      aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
+      bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
+      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
     };
-
-    // ⭐ save to IndexedDB (async but non-blocking)
-    for (const [key, value] of Object.entries(photos)) {
-      if (typeof value === "string" && value.startsWith("data:image/")) {
-        PulsePhotoDB.savePhoto(key, value);
-      }
-    }
-
+    localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
     return photos;
   }
-
 
   function apply(data, photos = loadPhotos(data)) {
     if (!data || !data.id) return null;
