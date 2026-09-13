@@ -198,7 +198,7 @@ export async function handler(event) {
           body: JSON.stringify({ ok: false, error: "Missing identity.id" })
         };
       }
-
+      
       const client = getSupabase();
 
       const now = new Date().toISOString();
@@ -231,8 +231,7 @@ export async function handler(event) {
         lastUpdated: now,
         host,
         online,
-        inactive,
-        localId: identity.id
+        inactive
       };
 
       let result;
