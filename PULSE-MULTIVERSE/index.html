@@ -3058,19 +3058,6 @@ async function loadPulseIdentityContinual() {
   }
 }
 
-function pulseOfflineBeacon() {
-  try {    
-    if (!storedIdentity.id) return;
-    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-pulse-mode": "offline" },
-      body: JSON.stringify({ action: "offline", id: storedIdentity.id, host: PulseRealm.CurrentHost, online: false, inactive: false, lastOffline: Date.now() })
-    })
-    
-  } catch (err) {
-    console.error("PulseOfflineBeacon error:", err);
-  }
-}
 
 let supabaseLimit = 8;
 
@@ -3771,11 +3758,6 @@ if (forwardBtn) {
     pulseForward();
   };
 }
-
-driftBtn.addEventListener("mouseover", (e) => {
-  pulseOfflineBeacon();
-})
-
 
 if (driftBtn) {
   driftBtn.onclick = () => {
@@ -8738,7 +8720,7 @@ document.addEventListener("visibilitychange", () => {
     if (PulseRealm.TropicPulseScanner) {
       PulseRealm.TropicPulseScanner.close();
     }
-    pulseOfflineBeacon();
+    
     pbPanel.style.display = "none";
     clearInterval(balanceBankTimer);
     clearInterval(motionTickTimer);
@@ -8762,14 +8744,6 @@ document.addEventListener("visibilitychange", () => {
       updateBackButtonVisibility();
     }, 7000);
   }
-});
-
-window.addEventListener("pagehide", () => {
-  pulseOfflineBeacon();
-});
-
-window.addEventListener("beforeunload", () => {
-  pulseOfflineBeacon();
 });
 
 // Close scanner when an internal document loads
