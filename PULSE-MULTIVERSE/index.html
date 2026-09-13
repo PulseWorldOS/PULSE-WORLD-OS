@@ -2944,7 +2944,7 @@ const PulseIdentityStore = (() => {
     return photos;
   }
 
-  async function compressDataURL(dataURL, maxSize = 256) {
+  async function compressDataURL(dataURL, maxSize = 256, format = "image/webp") {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
@@ -2957,12 +2957,14 @@ const PulseIdentityStore = (() => {
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // JPEG = tiny size, still looks great
-        resolve(canvas.toDataURL("image/jpeg", 0.7));
+        // ⭐ KEEP YOUR WORLD PURE: WEBP or PNG
+        const out = canvas.toDataURL(format, 0.85); 
+        resolve(out);
       };
       img.src = dataURL;
     });
   }
+
 
   async function savePhotos() {
     const existing = readJSON(PHOTOS_KEY);
