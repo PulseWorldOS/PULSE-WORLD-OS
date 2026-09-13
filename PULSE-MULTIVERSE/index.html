@@ -257,6 +257,7 @@ checkPersistentStorage(true);
 <audio id="narMusic" autoplay muted aria-label="PulseWorld Bootup Jingle">
   <source src="./_EXPRESSIONS/_SOUNDS/PulseWorldBootUp" type="audio/mpeg">
 </audio>
+
   <!-- Visual FX layers (invisible to screen readers) -->
   <div id="scanlines" aria-hidden="true"></div>
   <div id="aberration" aria-hidden="true"></div>
@@ -1013,16 +1014,35 @@ function closePulsePopup() {
   document.getElementById('pulsePopup').style.display = 'none';
 }
 
+function showPWLoader() {
+  let loader = document.getElementById("pw-loading");
+
+  // If the loader was removed, recreate it
+  if (!loader) {
+    loader = document.createElement("div");
+    loader.id = "pw-loading";
+    loader.className = "pw-loader";
+    document.body.appendChild(loader);
+  }
+
+  // Ensure styles apply before fading in
+  requestAnimationFrame(() => {
+    loader.style.opacity = "1";
+    loader.style.pointerEvents = "auto"; // optional if your loader blocks input
+  });
+}
+
 function hidePWLoader() {
   const loader = document.getElementById("pw-loading");
   if (!loader) return;
 
-  // Ensure the browser has applied styles before fading
   requestAnimationFrame(() => {
     loader.style.opacity = "0";
+    loader.style.pointerEvents = "none";
 
-    // Remove after transition completes
-    loader.addEventListener("transitionend", () => loader.remove(), { once: true });
+    loader.addEventListener("transitionend", () => {
+      loader.remove();
+    }, { once: true });
   });
 }
 
@@ -2216,6 +2236,7 @@ async function routeToInternal(routeName) {
   loadInternalPage(routeName);
 }
 async function loadInternalPage(name) {
+  showPWLoader();
   const now = performance.now();
   const raw = (name || "").trim();
   cameraBtn.style.display = "none";
@@ -2253,9 +2274,7 @@ async function loadInternalPage(name) {
       res = await fetch(fileToLoad);
     }
     if (!res.ok) throw new Error("Missing");
-    
-    hidePWLoader();
-    
+        
     const html = await res.text();
 
     // Inject HTML
@@ -2342,6 +2361,7 @@ async function loadInternalPage(name) {
 
     isPulseContext = true;
     savePageToCookie();
+    hidePWLoader();
 
     const H = PulseRealm.PulseHistory;
 
@@ -8532,8 +8552,6 @@ if (navigator.gpu) {
  ********************************************************************************************/
 // PulseRealm.PulseDomPromiseScan = domScanPromise(); // DO NOT TOUCH
   
-  hidePWLoader();
-
   StarlinkGhostProtocol = setInterval(() => {
     timeClock.textContent = pulseClock();
     timeClock.style.color = "#0FF";
