@@ -4,7 +4,23 @@
 //  Prevents multiverse hammering, DNS spam, Netlify illusions.
 // ============================================================================
 
-import { getSupabase } from "./_shared/supabase.js";
+import { createClient } from "@supabase/supabase-js";
+
+// ⭐ Lazy Supabase client — only created when handler runs, not at module load
+// This prevents crashes during cold starts if env vars are momentarily unavailable
+let _supabase = null;
+function getSupabase() {
+  if (!_supabase) {
+    const url = process.env.SUPABASE_DATABASE_URL;
+    // This function is the server-side boundary for both background sync and
+    // the admin-only read.  It must use the server-only key: the database has
+    // RLS enabled and the browser must never receive this credential.
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) throw new Error("Supabase env vars not set (SUPABASE_DATABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
+    _supabase = createClient(url, key);
+  }
+  return _supabase;
+}
 
 export async function handler() {
 
