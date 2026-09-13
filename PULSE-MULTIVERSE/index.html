@@ -3785,7 +3785,7 @@ if (forwardBtn) {
 
 if (driftBtn) {
   driftBtn.onclick = () => {
-   
+    pulseOfflineBeacon();
     log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[WARP] Gate Opening", "color:gold; font-weight:bold; font-family:monospace;");
     
     // Realm rails (with Impulse continuity)
@@ -3810,8 +3810,6 @@ if (driftBtn) {
     // Step to next realm (wrap around)
     const nextIdx = (idx + 1) % REALMS.length;
     const nextRealm = REALMS[nextIdx];
-
-    pulseOfflineBeacon();
 
     const pre = document.createElement("link");
     pre.rel = "preconnect";
