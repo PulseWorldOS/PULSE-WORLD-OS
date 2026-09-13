@@ -257,7 +257,7 @@ export async function handler(event) {
 
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
-      const { identity, photos, online } = body;
+      const { identity, photos, host, online } = body;
 
       if (!identity?.id) {
         return {
@@ -271,6 +271,7 @@ export async function handler(event) {
       const attrs = {
         ...identity,
         localId: identity.id,
+        host,
         photoURL: photos?.photoURL || identity.photoURL || null,
         aliasPhotoURL: photos?.aliasPhotoURL || identity.aliasPhotoURL || null,
         bizphotoURL: photos?.bizphotoURL || identity.bizphotoURL || null,
@@ -294,6 +295,7 @@ export async function handler(event) {
         attrs,
         phone: identity.phone || null,
         lastUpdated: now,
+        host,
         online
       };
 
@@ -344,6 +346,7 @@ export async function handler(event) {
         ...row,
         ...(row.attrs || {}),
         id: row.attrs?.localId || row.userID,
+        host: row.attrs?.host || row.host,
         name: row.name || row.attrs?.name || null,
         email: row.email || row.attrs?.email || row.attrs?.userEmail || null,
         pulse_points: row.attrs?.PulsePoints ?? 0,

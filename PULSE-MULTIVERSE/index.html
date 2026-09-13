@@ -3091,7 +3091,7 @@ function pulseSupabaseSync() {
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "sync", identity: storedIdentity, photos: storedPhotos, online: true })
+        body: JSON.stringify({ action: "sync", identity: storedIdentity, photos: storedPhotos, host: PulseRealm.CurrentHost, online: true })
       }).then((response) => {
         if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
       }).catch(() => {

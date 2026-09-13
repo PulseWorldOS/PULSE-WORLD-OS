@@ -1,37 +1,20 @@
 // ============================================================================
-//  PULSE-PREWARM-v8 — SELF-ORIGIN IGNITION (NO MULTIVERSE HAMMERING)
-//  Each universe warms ONLY itself + its own local fallbacks.
-//  Prevents 15s hangs, 499 spam, DNS hammering, Netlify load illusions.
+//  PULSE-PREWARM-v9 — SELF-ORIGIN IGNITION + PRESENCE DAEMON
+//  Warm current universe + run inactivity sweep every 2 minutes.
+//  Prevents multiverse hammering, DNS spam, Netlify illusions.
 // ============================================================================
 
-const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
+import { getSupabase } from "./_shared/supabase.js";
 
 export async function handler() {
 
-  // ==========================================================================
-  //  DETECT CURRENT UNIVERSE (THE SITE WE ARE RUNNING ON)
-  // ==========================================================================
   const CURRENT = (globalThis.location?.origin ?? "").toLowerCase();
-
-  // ==========================================================================
-  //  LOCAL FALLBACKS (ONLY FOR CURRENT SITE)
-  // ==========================================================================
-  const SITE_LOCAL              = "/";
-  const TOUCH_GATE_LOCAL        = "../pulse-multiverse/pulse-universe/pulse-universal-touch-gate.js";
-  const TOUCH_ENGINE_LOCAL      = "../pulse-multiverse/pulse-multiversal-touch.js";
-  const BOOT_BARRIER_LOCAL      = "../pulse-multiverse/_creation_barrier/pulse-boot-barrier.js";
-  const BOOT_WORLD_LOCAL        = "../pulse-multiverse/_creation_barrier/pulse-boot-world.js";
-  const WORLD_ROUTE_TXT_LOCAL   = "../pulse-multiverse/PULSEConfig/PulseWorldReality.txt";
-  const WORLD_LOGIN_TXT_LOCAL   = "../pulse-multiverse/PULSEConfig/PulseWorldInventory.txt";
-  const WORLD_HTML_LOCAL        = "../pulse-multiverse/index.html";
-  const WORLD_404_LOCAL         = "../pulse-multiverse/404.html";
 
   // ==========================================================================
   //  SAFE WARM HELPER — ONLY WARMS CURRENT SITE
   // ==========================================================================
   const warm = async (internetURL, localURL) => {
     try {
-      // Only warm if URL matches CURRENT origin
       if (internetURL.toLowerCase().startsWith(CURRENT)) {
         await fetch(internetURL, { cache: "no-store" });
       }
@@ -44,36 +27,67 @@ export async function handler() {
   };
 
   // ==========================================================================
-  //  SINGLE IGNITION PASS — ONLY CURRENT SITE
+  //  IGNITE CURRENT UNIVERSE
   // ==========================================================================
   const igniteOnce = async () => {
-
-    // Warm the CURRENT site only
-    await warm(CURRENT, SITE_LOCAL);
-    
-    await warm(SITE_LOCAL, null);
-    // Warm local fallbacks (never internet)
-    await warm(TOUCH_ENGINE_LOCAL, null);
-    await warm(WORLD_HTML_LOCAL, null);
-    await warm(BOOT_BARRIER_LOCAL, null);
-    await warm(BOOT_WORLD_LOCAL, null);
-    await warm(WORLD_ROUTE_TXT_LOCAL, null);
-    await warm(WORLD_LOGIN_TXT_LOCAL, null);
+    await warm(CURRENT, "/");
+    await warm("/", null);
+    await warm("../pulse-multiverse/DriftCompanion.js", null);
+    await warm("../pulse-multiverse/pulse-multiversal-touch.js", null);
+    await warm("../pulse-multiverse/index.html", null);
+    await warm("../pulse-multiverse/_creation_barrier/pulse-boot-barrier.js", null);
+    await warm("../pulse-multiverse/_creation_barrier/pulse-boot-world.js", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldReality.txt", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldInventory.txt", null);
   };
 
   // ==========================================================================
-  //  MICRO-PULSE LOOP — FULL 60 SECONDS, NO MULTIVERSE HAMMERING
+  //  PRESENCE DAEMON — RUNS EVERY 2 MINUTES
   // ==========================================================================
-  const start = Date.now();
-  while (Date.now() - start < 60000) {
-    await igniteOnce();
-  }
+  const runPresenceSweep = async () => {
+    const client = getSupabase();
+    const now = Date.now();
+
+    const inactiveCutoff = new Date(now - 5 * 60_000).toISOString();   // 5 minutes
+    const offlineCutoff  = new Date(now - 15 * 60_000).toISOString();  // 15 minutes
+
+    // ⭐ INACTIVE (idle but tab still open)
+    // online=true AND lastUpdated older than 5 minutes
+    await client
+      .from("PulseIdentity")
+      .update({ inactive: true })
+      .eq("online", true)
+      .lt("lastUpdated", inactiveCutoff);
+
+    // ⭐ OFFLINE (idle too long)
+    // online=true AND lastUpdated older than 15 minutes
+    await client
+      .from("PulseIdentity")
+      .update({ online: false, inactive: false })
+      .eq("online", true)
+      .lt("lastUpdated", offlineCutoff);
+  };
 
   // ==========================================================================
-  //  DONE
+  //  MAIN LOOP — 60 SECONDS
   // ==========================================================================
+  const start = Date.now();
+  let lastSweep = Date.now();
+
+  while (Date.now() - start < 60000) {
+
+    // Warm universe
+    await igniteOnce();
+
+    // Run presence sweep every 2 minutes
+    if (Date.now() - lastSweep > 120000) {
+      await runPresenceSweep();
+      lastSweep = Date.now();
+    }
+  }
+
   return {
     statusCode: 200,
-    body: "PULSE PREWARM COMPLETE — SELF-ORIGIN ONLY — NO MULTIVERSE HAMMERING"
+    body: "PULSE PREWARM COMPLETE — IGNITION + PRESENCE DAEMON"
   };
 }
