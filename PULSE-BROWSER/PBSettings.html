@@ -56,7 +56,7 @@
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: 15px;
+      font-size: 14px;
       color: #ccc;
     }
 
@@ -103,8 +103,8 @@
     .pw-switch {
       position: relative;
       display: inline-block;
-      width: 60px;
-      height: 32px;
+      width: 30px;
+      height: 16px;
       margin-right: 10px;
     }
 
@@ -127,8 +127,8 @@
     .pw-slider:before {
       position: absolute;
       content: "";
-      height: 24px;
-      width: 24px;
+      height: 12px;
+      width: 12px;
       left: 4px;
       bottom: 4px;
       background-color: #ccc;
@@ -145,12 +145,12 @@
     }
 
     .pw-switch-label {
-      font-size: 18px;
+      font-size: 14px;
       vertical-align: middle;
     }
 
     .storage-stats {
-      font-size: 16px;
+      font-size: 12px;
       margin-top: 10px;
       color: #ccc;
     }
@@ -300,44 +300,6 @@
       </p>
     </section>
     
-    
-    <section class="pw-section">
-      <h2>🌍 PulseStream</h2>
-
-      <label class="pw-switch">
-        <input type="checkbox" id="pulseStreamToggle">
-        <span class="pw-slider"></span>
-      </label>
-      <span class="pw-switch-label">Enable Auto-PIP for Streaming Sites</span>
-
-      <p class="pw-note">
-        When enabled, it auto sets up a streaming module on browser to help watch.
-      </p>
-
-    </section>
-
-    <!-- FILE CACHE / STORAGE -->
-    <section class="pw-section">
-      <h2>🗂️ Storage & Cached Files</h2>
-      <p class="pw-note">Overview of storage usage and cached entries used by PulseBrowser and PulseWorld.</p>
-
-      <div id="storageStats" class="storage-stats">
-        Storage usage: (loading...)
-      </div>
-
-      <p class="pw-note" style="margin-top: 15px;">
-        Cached entries detected in the current environment:
-      </p>
-
-      <ul id="cacheList" class="pw-list">
-        <li>Loading cache info...</li>
-      </ul>
-
-      <p class="pw-note">
-        In the future, this section can show user-added pages and files, with controls to manage and publish them.
-      </p>
-    </section>
-
     <!-- PUBLIC ACCESS -->
     <section class="pw-section">
       <h2>🌍 Public Access</h2>
