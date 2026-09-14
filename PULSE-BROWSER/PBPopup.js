@@ -10,7 +10,7 @@ const out = document.getElementById("output");
 
 // Utility: write to console panel
 function write(msg) {
-  out.innerHTML = out.innerHTML + "<br>" + msg;
+  out.innerHTML = out.innerHTML + msg + "<br>";
 }
 
 
@@ -80,13 +80,11 @@ function toggleSetting(key, label) {
 
 write("Welcome to PulseWorld!");
 
-write("This is PulseBrowser OS, Tier 2 Engine.");
+write("Your running PulseBrowser OS, Tier 2.");
 
-write("We are Always Here to Help!");
+write("We are Always Here When you Need us..");
 
-write("Whether you Use us or Not!");
-
-write("Open Settings to Setup Your Browser..");
+write("Open Settings to Tune Your Browser..");
 
 write("PulseWorld, to Own your Digital World!");
 
