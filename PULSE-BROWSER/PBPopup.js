@@ -88,6 +88,10 @@ write("We are Always Here to Help!");
 
 write("Whether you Use us or Not!");
 
+write("Open Settings to Create Your Environment..");
+
+write("Open PulseWorld to Create Your New Identity!");
+
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
