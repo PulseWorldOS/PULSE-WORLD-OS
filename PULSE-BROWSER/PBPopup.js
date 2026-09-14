@@ -28,27 +28,27 @@ function saveSettings(settings, cb) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// BUTTON: Kernel Ping
-// ---------------------------------------------------------------------------
-document.getElementById("btn-ping").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (res) => {
-    if (chrome.runtime.lastError) return write("Kernel unreachable.");
-    write("Kernel Response:\n" + JSON.stringify(res, null, 2));
-  });
-};
+// // ---------------------------------------------------------------------------
+// // BUTTON: Kernel Ping
+// // ---------------------------------------------------------------------------
+// document.getElementById("btn-ping").onclick = () => {
+//   chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (res) => {
+//     if (chrome.runtime.lastError) return write("Kernel unreachable.");
+//     write("Kernel Response:\n" + JSON.stringify(res, null, 2));
+//   });
+// };
 
 
 
-// ---------------------------------------------------------------------------
-// BUTTON: Open PulseWorld
-// ---------------------------------------------------------------------------
-document.getElementById("btn-open-pulseworld").onclick = () => {
-  chrome.runtime.sendMessage({
-    type: "PBNAV_OPEN_PULSEWORLD",
-    url: "https://www.pulseworld.net"
-  }, () => write("PulseWorld opened."));
-};
+// // ---------------------------------------------------------------------------
+// // BUTTON: Open PulseWorld
+// // ---------------------------------------------------------------------------
+// document.getElementById("btn-open-pulseworld").onclick = () => {
+//   chrome.runtime.sendMessage({
+//     type: "PBNAV_OPEN_PULSEWORLD",
+//     url: "https://www.pulseworld.net"
+//   }, () => write("PulseWorld opened."));
+// };
 
 // ---------------------------------------------------------------------------
 // SUBSYSTEM TOGGLES (Interceptor / Accelerator / Navigator / Router / GPU / Decode)
@@ -64,11 +64,11 @@ function toggleSetting(key, label) {
 
 
 
-document.getElementById("btn-toggle-decode").onclick = () =>
-  toggleSetting("enablePulseDecode", "PulseDecode");
+// document.getElementById("btn-toggle-decode").onclick = () =>
+//   toggleSetting("enablePulseDecode", "PulseDecode");
 
-document.getElementById("btn-open-settings").onclick = () =>
-  window.location.href = chrome.runtime.getURL("PBSettings.html");
+// document.getElementById("btn-open-settings").onclick = () =>
+//   window.location.href = chrome.runtime.getURL("PBSettings.html");
 
 // document.getElementById("btn-open-email").onclick = async () => {
 
@@ -116,14 +116,14 @@ document.getElementById("btn-open-settings").onclick = () =>
 //     chrome.tabs.create({ url: link });
 // };
 
-// ---------------------------------------------------------------------------
-// BUTTON: Refresh HUD (Realm Snapshot)
-// ---------------------------------------------------------------------------
-document.getElementById("btn-refresh-hud").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realm) => {
-    write("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(realm.state, null, 2));
-  });
-};
+// // ---------------------------------------------------------------------------
+// // BUTTON: Refresh HUD (Realm Snapshot)
+// // ---------------------------------------------------------------------------
+// document.getElementById("btn-refresh-hud").onclick = () => {
+//   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realm) => {
+//     write("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(realm.state, null, 2));
+//   });
+// };
 
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
@@ -191,46 +191,46 @@ function updateHUD() {
     });
   });
 }
-// ---------------------------------------------------------------------------
-// BUTTON: Site HUD (Realm Snapshot)
-// ---------------------------------------------------------------------------
-document.getElementById("btn-site-hud").onclick = () => {
+// // ---------------------------------------------------------------------------
+// // BUTTON: Site HUD (Realm Snapshot)
+// // ---------------------------------------------------------------------------
+// document.getElementById("btn-site-hud").onclick = () => {
 
-  // STEP 1 — Get the active tab
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const tab = tabs[0];
-    if (!tab) {
-      write("No active tab found.");
-      return;
-    }
+//   // STEP 1 — Get the active tab
+//   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//     const tab = tabs[0];
+//     if (!tab) {
+//       write("No active tab found.");
+//       return;
+//     }
 
-    // STEP 2 — Get settings
-    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settings) => {
+//     // STEP 2 — Get settings
+//     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settings) => {
 
-      // STEP 3 — Get REALM for THIS tab
-      chrome.runtime.sendMessage(
-        { type: "PBREALM_GET", tabId: tab.id },
-        (realm) => {
+//       // STEP 3 — Get REALM for THIS tab
+//       chrome.runtime.sendMessage(
+//         { type: "PBREALM_GET", tabId: tab.id },
+//         (realm) => {
 
-          write(
-            "Pulse Site HUD\n" +
-            "URL: " + tab.url + "\n" +
-            "Realm:\n" + JSON.stringify(realm, null, 2) + "\n" +
-            "Setup:\n" + JSON.stringify(settings.settings, null, 2)
-          );
-        }
-      );
-    });
-  });
-};
+//           write(
+//             "Pulse Site HUD\n" +
+//             "URL: " + tab.url + "\n" +
+//             "Realm:\n" + JSON.stringify(realm, null, 2) + "\n" +
+//             "Setup:\n" + JSON.stringify(settings.settings, null, 2)
+//           );
+//         }
+//       );
+//     });
+//   });
+// };
 
 
-// ---------------------------------------------------------------------------
-// BUTTON: Reset OS Settings
-// ---------------------------------------------------------------------------
-document.getElementById("btn-reset-os").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PBSETTINGS_RESET" }, () => {
-    if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
-    write("PulseBrowser OS settings reset to defaults.");
-  });
-};
+// // ---------------------------------------------------------------------------
+// // BUTTON: Reset OS Settings
+// // ---------------------------------------------------------------------------
+// document.getElementById("btn-reset-os").onclick = () => {
+//   chrome.runtime.sendMessage({ type: "PBSETTINGS_RESET" }, () => {
+//     if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
+//     write("PulseBrowser OS settings reset to defaults.");
+//   });
+// };
