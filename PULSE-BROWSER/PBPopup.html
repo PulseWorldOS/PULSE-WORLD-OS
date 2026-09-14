@@ -51,12 +51,12 @@
     }
 
     #output {
-      margin-top: 14px;
+      margin-top: 36px;
       font-size: 12px;
       background: #001F1A;
-      padding: 10px;
+      padding: 6px;
       border-radius: 40px;
-      height: 140px;
+      height: 136px;
       overflow-y: auto;
       white-space: pre-wrap;
     }
@@ -65,7 +65,6 @@
 
 <body>
   <div class="bg"></div>
-  <h1>PulseBrowser OS Console</h1>
 
   <!-- ========================= -->
   <!-- OUTPUT -->
@@ -77,20 +76,11 @@
   <div class="section">
     <div class="section-title">Kernel</div>
     <button id="btn-ping">Ping Kernel</button>
-    <button id="btn-status">Kernel Status</button>
     <button id="btn-refresh-hud">Refresh HUD</button>
     <button id="btn-site-hud">View Site Stats</button>
-    <button id="btn-reset-os">Reset OS Settings</button>
   </div>
 
-  <!-- ========================= -->
-  <!-- CACHE -->
-  <!-- ========================= -->
-  <div class="section">
-    <div class="section-title">Cache</div>
-    <button id="btn-clear-caches">Clear Pulse Caches</button>
-  </div>
-
+ 
   <!-- ========================= -->
   <!-- NAVIGATION -->
   <!-- ========================= -->
@@ -98,8 +88,6 @@
     <div class="section-title">Navigation</div>
     <button id="btn-open-pulseworld">Open PulseWorld</button>
     <button id="btn-open-settings">Open Settings Panel</button>
-    <button id="btn-open-email">Open Email Center</button>
-    <button id="btn-open-bank">Open Banking Hub</button>
   </div>
 
   <!-- ========================= -->
@@ -107,11 +95,6 @@
   <!-- ========================= -->
   <div class="section">
     <div class="section-title">Settings</div>
-    <button id="btn-toggle-interceptor">Toggle Interceptor</button>
-    <button id="btn-toggle-accelerator">Toggle Accelerator</button>
-    <button id="btn-toggle-navigator">Toggle Navigator</button>
-    <button id="btn-toggle-router">Toggle Router</button>
-    <button id="btn-toggle-gpu">Toggle PulseGPU</button>
     <button id="btn-toggle-decode">Toggle PulseDecode</button>
   </div>
 
@@ -119,13 +102,6 @@
   <!-- DEVTOOLS -->
   <!-- ========================= -->
   <div class="section">
-    <div class="section-title">DevTools</div>
-    <button id="btn-dev-router">Router Inspector</button>
-    <button id="btn-dev-interceptor">Interceptor Inspector</button>
-    <button id="btn-dev-navigator">Navigator Inspector</button>
-    <button id="btn-dev-accelerator">Accelerator Inspector</button>
-    <button id="btn-dev-content">Content Runtime Inspector</button>
-    <button id="btn-dev-overlay">Overlay Inspector</button>
     <button id="btn-dev-dump">Full OS Diagnostic Dump</button>
   </div>
 
