@@ -67,8 +67,8 @@ function toggleSetting(key, label) {
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
-// document.getElementById("btn-open-settings").onclick = () =>
-//   window.location.href = chrome.runtime.getURL("PBSettings.html");
+document.getElementById("btn-open-settings").onclick = () =>
+  window.location.href = chrome.runtime.getURL("PBSettings.html");
 
 document.getElementById("btn-open-identity").onclick = async () => {
   const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
