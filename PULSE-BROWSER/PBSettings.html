@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       padding: 10px;
-      width: 350px;
+      width: 450px;
       
       background: url("PulseWorldSettings.png") center top / contain repeat;
 
@@ -19,8 +19,32 @@
       font-family: Arial, sans-serif;
     }
 
+    /* Scrollbar width */
+    body::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Scrollbar track (background) */
+    body::-webkit-scrollbar-track {
+      background: rgba(0, 40, 50, 0.4);   /* dark teal glass */
+      border-radius: 10px;
+    }
+
+    /* Scrollbar thumb (the draggable part) */
+    body::-webkit-scrollbar-thumb {
+      background: #00bcd4;                /* bright teal */
+      border-radius: 10px;
+      border: 2px solid rgba(0, 40, 50, 0.6); /* inner glow effect */
+    }
+
+    /* Scrollbar thumb on hover */
+    body::-webkit-scrollbar-thumb:hover {
+      background: #00e0ff;                /* lighter teal glow */
+    }
+
+
     .pw-settings-page {
-      max-width: 350px;
+      max-width: 450px;
       padding: 30px;
       background: transparent;
       color: #e6e6e6;

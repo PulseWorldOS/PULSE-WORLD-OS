@@ -17,6 +17,30 @@
       height: 550px;
     }
 
+    /* Scrollbar width */
+    body::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Scrollbar track (background) */
+    body::-webkit-scrollbar-track {
+      background: rgba(0, 40, 50, 0.4);   /* dark teal glass */
+      border-radius: 10px;
+    }
+
+    /* Scrollbar thumb (the draggable part) */
+    body::-webkit-scrollbar-thumb {
+      background: #00bcd4;                /* bright teal */
+      border-radius: 10px;
+      border: 2px solid rgba(0, 40, 50, 0.6); /* inner glow effect */
+    }
+
+    /* Scrollbar thumb on hover */
+    body::-webkit-scrollbar-thumb:hover {
+      background: #00e0ff;                /* lighter teal glow */
+    }
+
+
     h1 {
       font-size: 20px;
       margin-bottom: 10px;
@@ -128,7 +152,7 @@
 
 <body>
   <div class="bg"></div>
-  
+
   <!-- ========================= -->
   <!-- OUTPUT -->
   <!-- ========================= -->
