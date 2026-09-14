@@ -38,85 +38,7 @@ document.getElementById("btn-ping").onclick = () => {
   });
 };
 
-// ---------------------------------------------------------------------------
-// BUTTON: Clear Pulse Caches
-// ---------------------------------------------------------------------------
-document.getElementById("btn-clear-caches").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES" }, () => {
-    write("Pulse caches cleared.");
-  });
-};
 
-// ---------------------------------------------------------------------------
-// BUTTON: Warm Boot (preconnect all home domains)
-// ---------------------------------------------------------------------------
-document.getElementById("btn-warmboot").onclick = () => {
-  chrome.runtime.sendMessage({
-    type: "PBACC_PRECONNECT",
-    origins: [
-      "https://www.pulseworld.me",
-      "https://www.pulseworld.net",
-      "https://www.pulseworld.money",
-      "https://www.pulseworld.biz",
-      "https://www.binaryos.net",
-      "https://www.booleanlogic.net",
-      "https://www.gpuprocessing.net",
-      "https://www.serviceworker.net",
-      "https://www.orbitalmap.net"
-    ]
-  }, () => write("Warm boot executed."));
-};
-
-// ---------------------------------------------------------------------------
-// BUTTON: Full Warm-Path (preconnect + preload + prefetch)
-// ---------------------------------------------------------------------------
-document.getElementById("btn-warmpath").onclick = () => {
-  chrome.runtime.sendMessage({
-    type: "PBACC_WARMPATH",
-    origin: "https://www.pulseworld.net"
-  }, () => write("Full warm-path executed."));
-};
-
-// ---------------------------------------------------------------------------
-// BUTTON: Accelerate Current Tab
-// ---------------------------------------------------------------------------
-document.getElementById("btn-accelerate-tab").onclick = () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0]?.url;
-    if (!url) return write("No active tab.");
-
-    chrome.runtime.sendMessage({ type: "PBACC_ACCELERATE", url }, () => {
-      write("Acceleration triggered for:\n" + url);
-    });
-  });
-};
-
-// ---------------------------------------------------------------------------
-// BUTTON: GPU Warm-Path
-// ---------------------------------------------------------------------------
-document.getElementById("btn-gpuwarm").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM" }, () => {
-    write("GPU warm-path triggered.");
-  });
-};
-
-// ---------------------------------------------------------------------------
-// BUTTON: Decode Warm-Path
-// ---------------------------------------------------------------------------
-document.getElementById("btn-decodewarm").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PBACC_DECODEWARM" }, () => {
-    write("Decode warm-path triggered.");
-  });
-};
-
-// ---------------------------------------------------------------------------
-// BUTTON: Show Kernel Status
-// ---------------------------------------------------------------------------
-document.getElementById("btn-status").onclick = () => {
-  chrome.runtime.sendMessage({ type: "PBDEV_STATUS" }, () => {
-    write("Kernel status logged to console.");
-  });
-};
 
 // ---------------------------------------------------------------------------
 // BUTTON: Open PulseWorld
@@ -140,20 +62,7 @@ function toggleSetting(key, label) {
   });
 }
 
-document.getElementById("btn-toggle-interceptor").onclick = () =>
-  toggleSetting("enableInterceptor", "Interceptor");
 
-document.getElementById("btn-toggle-accelerator").onclick = () =>
-  toggleSetting("enableAccelerator", "Accelerator");
-
-document.getElementById("btn-toggle-navigator").onclick = () =>
-  toggleSetting("enableNavigator", "Navigator");
-
-document.getElementById("btn-toggle-router").onclick = () =>
-  toggleSetting("enableRouter", "Router");
-
-document.getElementById("btn-toggle-gpu").onclick = () =>
-  toggleSetting("enablePulseGPU", "PulseGPU");
 
 document.getElementById("btn-toggle-decode").onclick = () =>
   toggleSetting("enablePulseDecode", "PulseDecode");
@@ -161,51 +70,51 @@ document.getElementById("btn-toggle-decode").onclick = () =>
 document.getElementById("btn-open-settings").onclick = () =>
   window.location.href = chrome.runtime.getURL("PBSettings.html");
 
-document.getElementById("btn-open-email").onclick = async () => {
+// document.getElementById("btn-open-email").onclick = async () => {
 
-    const settings = await pbLoadExtensionSettings();
+//     const settings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Email module clicked. Settings:", settings);
+//     console.log("[FrontPage] Email module clicked. Settings:", settings);
 
-    // INTERNAL MODE → open PulseWorld Email on the real domain
-    if (settings.emailMode === "internal") {
-        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
-        console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
+//     // INTERNAL MODE → open PulseWorld Email on the real domain
+//     if (settings.emailMode === "internal") {
+//         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
+//         console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
 
-        chrome.tabs.create({ url: internalURL });
-        return;
-    }
+//         chrome.tabs.create({ url: internalURL });
+//         return;
+//     }
 
-    // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
+//     // EXTERNAL MODE → open user’s chosen provider
+//     const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
 
-    console.log("[FrontPage] Opening External Email Provider:", link);
+//     console.log("[FrontPage] Opening External Email Provider:", link);
 
-    chrome.tabs.create({ url: link });
-};
+//     chrome.tabs.create({ url: link });
+// };
 
-document.getElementById("btn-open-bank").onclick = async () => {
+// document.getElementById("btn-open-bank").onclick = async () => {
 
-    const settings = await pbLoadExtensionSettings();
+//     const settings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Bank module clicked. Settings:", settings);
+//     console.log("[FrontPage] Bank module clicked. Settings:", settings);
 
-    // INTERNAL MODE → open PulseWorld Bank on the real domain
-    if (settings.bankMode === "internal") {
-        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
-        console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
+//     // INTERNAL MODE → open PulseWorld Bank on the real domain
+//     if (settings.bankMode === "internal") {
+//         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
+//         console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
 
-        chrome.tabs.create({ url: internalURL });
-        return;
-    }
+//         chrome.tabs.create({ url: internalURL });
+//         return;
+//     }
 
-    // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
+//     // EXTERNAL MODE → open user’s chosen provider
+//     const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
 
-    console.log("[FrontPage] Opening External Bank Provider:", link);
+//     console.log("[FrontPage] Opening External Bank Provider:", link);
 
-    chrome.tabs.create({ url: link });
-};
+//     chrome.tabs.create({ url: link });
+// };
 
 // ---------------------------------------------------------------------------
 // BUTTON: Refresh HUD (Realm Snapshot)
