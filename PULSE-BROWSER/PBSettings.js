@@ -513,3 +513,6 @@ document.addEventListener("change", (e) => {
     updateLinkedPWInputs();
   }
 });
+
+document.getElementById("btn-back").onclick = () =>
+  window.location.href = chrome.runtime.getURL("PBPopup.html");
