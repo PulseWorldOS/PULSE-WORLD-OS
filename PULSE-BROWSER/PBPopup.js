@@ -93,28 +93,28 @@ document.getElementById("btn-open-email").onclick = async () => {
     chrome.tabs.create({ url: link });
 };
 
-// document.getElementById("btn-open-bank").onclick = async () => {
+document.getElementById("btn-open-bank").onclick = async () => {
 
-//     const settings = await pbLoadExtensionSettings();
+    const settings = await pbLoadExtensionSettings();
 
-//     console.log("[FrontPage] Bank module clicked. Settings:", settings);
+    console.log("[FrontPage] Bank module clicked. Settings:", settings);
 
-//     // INTERNAL MODE → open PulseWorld Bank on the real domain
-//     if (settings.bankMode === "internal") {
-//         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
-//         console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
+    // INTERNAL MODE → open PulseWorld Bank on the real domain
+    if (settings.bankMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
+        console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
 
-//         chrome.tabs.create({ url: internalURL });
-//         return;
-//     }
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
 
-//     // EXTERNAL MODE → open user’s chosen provider
-//     const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
 
-//     console.log("[FrontPage] Opening External Bank Provider:", link);
+    console.log("[FrontPage] Opening External Bank Provider:", link);
 
-//     chrome.tabs.create({ url: link });
-// };
+    chrome.tabs.create({ url: link });
+};
 
 // // ---------------------------------------------------------------------------
 // // BUTTON: Refresh HUD (Realm Snapshot)
