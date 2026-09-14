@@ -10,7 +10,7 @@ const out = document.getElementById("output");
 
 // Utility: write to console panel
 function write(msg) {
-  out.textContent = msg;
+  out.innerHTML = out.innerHTML + "<br>" + msg;
 }
 
 // Utility: load settings
@@ -64,11 +64,11 @@ function toggleSetting(key, label) {
 
 write("Welcome to PulseWorld!");
 
-setTimeout(write("This is PulseBrowser OS, Tier 2 Engine."), 450);
+write("This is PulseBrowser OS, Tier 2 Engine.");
 
-setTimeout(write("Scanning Environment.."), 1050);
+write("Scanning Environment..");
 
-setTimeout(write("We are Here to Help!"), 2050);
+write("We are Here to Help!");
 
 
 
