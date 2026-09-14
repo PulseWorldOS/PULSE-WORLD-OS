@@ -70,6 +70,35 @@ function toggleSetting(key, label) {
 // document.getElementById("btn-open-settings").onclick = () =>
 //   window.location.href = chrome.runtime.getURL("PBSettings.html");
 
+document.getElementById("btn-open-identity").onclick = async () => {
+  const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
+  console.log("[FrontPage] Opening Internal PulseIdentity:", internalURL);
+
+  chrome.tabs.create({ url: internalURL });
+};
+
+document.getElementById("btn-open-business").onclick = async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Bank module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Bank on the real domain
+    if (settings.workMode === "internal") {
+        const internalURL = "https://www.pulseworld.biz";
+        console.log("[FrontPage] Opening Internal PulseBusiness:", internalURL);
+
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.biz/";
+
+    console.log("[FrontPage] Opening External Business Provider:", link);
+
+    chrome.tabs.create({ url: link });
+};
 document.getElementById("btn-open-email").onclick = async () => {
 
     const settings = await pbLoadExtensionSettings();
