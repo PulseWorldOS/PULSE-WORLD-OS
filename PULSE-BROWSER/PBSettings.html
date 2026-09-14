@@ -62,10 +62,11 @@
 
     .pw-input,
     .pw-select {
-      width: 100%;
+      width: 93%;
       padding: 2px 4px;
       font-size: 14px;
       border-radius: 10px;
+      font-weight: bold;
       border: 2px solid #333;
       background: #1a1a1d;
       color: #eee;
@@ -177,7 +178,11 @@
 <body>
   
   <div class="pw-settings-page">
-    <button id="btn-back"></button>
+    <button id="btn-back" aria-label="Pulse Back Button" role="button">
+      <svg viewBox="0 0 24 24" width="120%" height="120%" fill="#0ff">
+        <path d="M15 4l-8 8 8 8" stroke="#0ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <h1 class="pw-title">🌐 PulseWorld Settings</h1>
     <p class="pw-subtitle">
       Configure your identity, email, banking, business, files, storage, public access, and programmatic permissions.
@@ -185,12 +190,10 @@
 
     <!-- EMAIL SETTINGS -->
     <section class="pw-section">
-      <h2>📧 Email Settings</h2>
-
       <label class="pw-label">Email Mode</label>
       <select id="emailMode" class="pw-select">
         <option value="internal">Use Internal PulseMail</option>
-        <option value="external">Use External Email Provider</option>
+        <option value="external">Use External</option>
       </select>
 
       <label class="pw-label">External Email Link</label>
@@ -202,12 +205,10 @@
 
     <!-- BANKING SETTINGS -->
     <section class="pw-section">
-      <h2>🏦 Banking Settings</h2>
-
       <label class="pw-label">Banking Mode</label>
       <select id="bankMode" class="pw-select">
         <option value="internal">Use Internal PulseBank</option>
-        <option value="external">Use External Banking Provider</option>
+        <option value="external">Use External</option>
       </select>
 
       <label class="pw-label">External Bank Link</label>
@@ -219,12 +220,10 @@
         
     <!-- SEARCH ENGINE SETTINGS -->
     <section class="pw-section">
-      <h2>🔍 Search Engine Settings</h2>
-
       <label class="pw-label">Search Mode</label>
       <select id="searchMode" class="pw-select">
         <option value="internal">Use Internal Google</option>
-        <option value="external">Use External Search Provider</option>
+        <option value="external">Use External</option>
       </select>
 
       <label class="pw-label">External Search Engine Link</label>
@@ -238,12 +237,10 @@
 
     <!-- SOCIAL SETTINGS -->
     <section class="pw-section">
-      <h2>🟣 Social Settings</h2>
-
       <label class="pw-label">Social Mode</label>
       <select id="socialMode" class="pw-select">
         <option value="internal">Use Internal PulseSocial</option>
-        <option value="external">Use External Social Platform</option>
+        <option value="external">Use External</option>
       </select>
 
       <label class="pw-label">External Social Link</label>
@@ -257,12 +254,10 @@
 
     <!-- WORK SETTINGS -->
     <section class="pw-section">
-      <h2>🟩 Work Settings</h2>
-
       <label class="pw-label">Work Mode</label>
       <select id="workMode" class="pw-select">
         <option value="internal">Use Internal PulseWork</option>
-        <option value="external">Use External Work Portal</option>
+        <option value="external">Use External</option>
       </select>
 
       <label class="pw-label">External Work Link</label>
@@ -276,12 +271,10 @@
 
     <!-- STREAMING SETTINGS -->
     <section class="pw-section">
-      <h2>🎥 Streaming Settings</h2>
-
       <label class="pw-label">Streaming Mode</label>
       <select id="streamingMode" class="pw-select">
         <option value="internal">Use Internal PulseStream</option>
-        <option value="external">Use External Streaming Provider</option>
+        <option value="external">Use External</option>
       </select>
 
       <label class="pw-label">External Streaming Link</label>
@@ -302,8 +295,6 @@
 
     <!-- BUSINESS SETTINGS -->
     <section class="pw-section">
-      <h2>🏢 Business Settings</h2>
-
       <label class="pw-label">Business Page Link</label>
       <input id="businessLink" class="pw-input" placeholder="https://www.pulseworld.biz/yourbusiness" />
 
