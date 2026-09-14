@@ -78,15 +78,16 @@ function toggleSetting(key, label) {
   });
 }
 
-write("Welcome to PulseWorld!");
+write("<bold><center>Welcome to PulseWorld!</center></bold>");
 
-write("Your running PulseBrowser OS, Tier 2.");
+write("Your running PulseBrowser OS, Tier 2 Engine.");
 
 write("We are Always Here When you Need us..");
 
 write("Open Settings to Tune Your Browser..");
 
-write("PulseWorld, to Own your Digital World!");
+write("Enter PulseWorld, to Own your Digital World!");
+
 
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
