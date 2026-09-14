@@ -514,5 +514,7 @@ document.addEventListener("change", (e) => {
   }
 });
 
-document.getElementById("btn-back").onclick = () =>
+if (document.getElementById("btn-back")) {
+  document.getElementById("btn-back").onclick = () =>
   window.location.href = chrome.runtime.getURL("PBPopup.html");
+};

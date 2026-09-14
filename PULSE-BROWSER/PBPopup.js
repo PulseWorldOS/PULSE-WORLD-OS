@@ -68,21 +68,24 @@ write("This is PulseBrowser OS, Tier 2 Engine.");
 
 write("Scanning Environment..");
 
-write("We are Here to Help!");
+write("We are Always Here to Help!");
 
 
 
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
-document.getElementById("btn-open-settings").onclick = () =>
+document.getElementById("btn-open-settings").onclick = () => {
   window.location.href = chrome.runtime.getURL("PBSettings.html");
+  write("Accessing PulseSettings..");
+};
 
 document.getElementById("btn-open-identity").onclick = async () => {
   const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
   console.log("[FrontPage] Opening Internal PulseIdentity:", internalURL);
 
   chrome.tabs.create({ url: internalURL });
+  write("Accessing PulseIdentity..");
 };
 
 document.getElementById("btn-open-business").onclick = async () => {
@@ -106,6 +109,7 @@ document.getElementById("btn-open-business").onclick = async () => {
     console.log("[FrontPage] Opening External Business Provider:", link);
 
     chrome.tabs.create({ url: link });
+    write("Accessing PulseBusiness Module..");
 };
 document.getElementById("btn-open-email").onclick = async () => {
 
@@ -128,6 +132,7 @@ document.getElementById("btn-open-email").onclick = async () => {
     console.log("[FrontPage] Opening External Email Provider:", link);
 
     chrome.tabs.create({ url: link });
+    write("Accessing PulseMail Module..");
 };
 
 document.getElementById("btn-open-bank").onclick = async () => {
@@ -151,6 +156,7 @@ document.getElementById("btn-open-bank").onclick = async () => {
     console.log("[FrontPage] Opening External Bank Provider:", link);
 
     chrome.tabs.create({ url: link });
+    write("Accessing PulseBank Module..");
 };
 
 // // ---------------------------------------------------------------------------
