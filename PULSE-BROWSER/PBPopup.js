@@ -86,15 +86,14 @@ write("Scanning Environment..");
 
 write("We are Always Here to Help!");
 
-
+write("Whether you Use us or Not!");
 
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
 document.getElementById("btn-open-settings").onclick = () => {
-  // window.location.href = chrome.runtime.getURL("PBSettings.html");
+  window.location.href = chrome.runtime.getURL("PBSettings.html");
   write("Accessing PulseSettings..");
-  saveConsole(out.innerHTML);
 };
 
 document.getElementById("btn-open-identity").onclick = async () => {
