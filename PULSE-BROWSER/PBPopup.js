@@ -82,15 +82,13 @@ write("Welcome to PulseWorld!");
 
 write("This is PulseBrowser OS, Tier 2 Engine.");
 
-write("Scanning Environment..");
-
 write("We are Always Here to Help!");
 
 write("Whether you Use us or Not!");
 
-write("Open Settings to Create Your Environment..");
+write("Open Settings to Setup Your Browser..");
 
-write("Open PulseWorld to Create Your New Identity!");
+write("PulseWorld, to Own your Digital World!");
 
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
