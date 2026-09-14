@@ -62,6 +62,14 @@ function toggleSetting(key, label) {
   });
 }
 
+write("Welcome to PulseWorld!");
+
+setTimeout(write("This is PulseBrowser OS, Tier 2 Engine."), 450);
+
+setTimeout(write("Scanning Environment.."), 1050);
+
+setTimeout(write("We are Here to Help!"), 2050);
+
 
 
 // document.getElementById("btn-toggle-decode").onclick = () =>

@@ -78,14 +78,36 @@
     .pw-label {
       display: block;
       margin-top: 2px;
+      font-weight: bold;
       margin-bottom: 2px;
       font-size: 14px;
-      color: #ccc;
+      color: #0FF;
     }
 
-    .pw-input,
+    .pw-label2 {
+      display: block;
+      margin-top: -5px;
+      font-weight: bold;
+      margin-bottom: 2px;
+      font-size: 12px;
+      color: #0FF;
+    }
+
+    .pw-input {
+      width: 95%;
+      padding: 2px 4px;
+      font-size: 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      border: 2px solid #333;
+      background: #1a1a1d;
+      color: #eee;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
     .pw-select {
-      width: 93%;
+      width: 39%;
       padding: 2px 4px;
       font-size: 14px;
       border-radius: 10px;
@@ -106,7 +128,7 @@
     .pw-note {
       font-size: 12px;
       color: #888;
-      margin-top: -5px;
+      margin-top: -2px;
     }
 
     .pw-list {
@@ -213,12 +235,13 @@
     <!-- EMAIL SETTINGS -->
     <section class="pw-section">
       <label class="pw-label">Email Mode</label>
+      
       <select id="emailMode" class="pw-select">
-        <option value="internal">Use Internal PulseMail</option>
+        <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
 
-      <label class="pw-label">External Email Link</label>
+      <label class="pw-label2">External Email Link</label>
       <input id="externalEmailLink" class="pw-input" placeholder="https://mail.google.com/" />
       <p class="pw-note">
         When using Internal PulseMail, this external link is kept as a backup. When using External mode, this URL is used directly.
@@ -229,11 +252,11 @@
     <section class="pw-section">
       <label class="pw-label">Banking Mode</label>
       <select id="bankMode" class="pw-select">
-        <option value="internal">Use Internal PulseBank</option>
+        <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
 
-      <label class="pw-label">External Bank Link</label>
+      <label class="pw-label2">External Bank Link</label>
       <input id="externalBankLink" class="pw-input" placeholder="https://yourbank.com/login" />
       <p class="pw-note">
         When using Internal PulseBank, this external link is kept as a backup. When using External mode, this URL is used directly.
@@ -244,11 +267,11 @@
     <section class="pw-section">
       <label class="pw-label">Search Mode</label>
       <select id="searchMode" class="pw-select">
-        <option value="internal">Use Internal Google</option>
+        <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
 
-      <label class="pw-label">External Search Engine Link</label>
+      <label class="pw-label2">External Search Engine Link</label>
       <input id="externalSearchLink" class="pw-input" placeholder="google.com" />
 
       <p class="pw-note">
@@ -261,11 +284,11 @@
     <section class="pw-section">
       <label class="pw-label">Social Mode</label>
       <select id="socialMode" class="pw-select">
-        <option value="internal">Use Internal PulseSocial</option>
+        <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
 
-      <label class="pw-label">External Social Link</label>
+      <label class="pw-label2">External Social Link</label>
       <input id="externalSocialLink" class="pw-input" placeholder="https://facebook.com/" />
 
       <p class="pw-note">
@@ -278,11 +301,11 @@
     <section class="pw-section">
       <label class="pw-label">Work Mode</label>
       <select id="workMode" class="pw-select">
-        <option value="internal">Use Internal PulseWork</option>
+        <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
 
-      <label class="pw-label">External Work Link</label>
+      <label class="pw-label2">External Work Link</label>
       <input id="externalWorkLink" class="pw-input" placeholder="https://yourcompany.com/login" />
 
       <p class="pw-note">
@@ -295,11 +318,11 @@
     <section class="pw-section">
       <label class="pw-label">Streaming Mode</label>
       <select id="streamingMode" class="pw-select">
-        <option value="internal">Use Internal PulseStream</option>
+        <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
 
-      <label class="pw-label">External Streaming Link</label>
+      <label class="pw-label2">External Streaming Link</label>
       <input id="externalStreamingLink" class="pw-input" placeholder="https://netflix.com/" />
 
       <p class="pw-note">
@@ -309,7 +332,7 @@
 
       <p class="pw-note">
         PulseWorld automatically offers Picture‑in‑Picture on streaming sites  
-        so you can browse while watching. This can be toggled off at any time.
+        so you can browse while watching. This can be toggled on at any time using PulseFlag.
       </p>
     </section>
 
