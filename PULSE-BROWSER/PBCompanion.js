@@ -516,9 +516,23 @@ function pbLoadSettings() {
   });
 }
 
+function pbLoadConsole() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(console, (data) => {
+      resolve(data);
+    });
+  });
+}
+
 function pbSaveSettings(settings) {
   return new Promise((resolve) => {
     chrome.storage.sync.set(settings, () => resolve(true));
+  });
+}
+
+function pbSaveConsole(console) {
+  return new Promise((resolve) => {
+    chrome.storage.sync.set(console, () => resolve(true));
   });
 }
 
@@ -790,6 +804,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBSETTINGS_SET":
       pbSaveSettings(msg.settings || {}).then(() => sendResponse({ ok: true }));
+      return true;
+    
+    case "PBCONSOLE_SET":
+      pbSaveConsole(msg.console || {}).then(() => sendResponse({ ok: true }));
+      return true;
+    
+    case "PBCONSOLE_GET":
+      pbLoadConsole().then((console) => sendResponse({ ok: true, console }));
       return true;
 
     case "PBDEV_STATUS":

@@ -329,6 +329,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       });
       return true;
 
+    case "PBCONSOLE_SET":
+      pbSaveConsole(msg.console || {}).then(() => {
+        PB_LOG.info("PBCONSOLE_SET", msg.console);
+        sendResponse({ ok: true });
+      });
+      return true;
+
     case "PBSETTINGS_RESET":
       pbSaveSettings(PB_DEFAULT_SETTINGS).then(() => {
         PB_LOG.info("PBSETTINGS_RESET", "Defaults Restored");

@@ -13,6 +13,7 @@ function write(msg) {
   out.innerHTML = out.innerHTML + "<br>" + msg;
 }
 
+
 // Utility: load settings
 function loadSettings(cb) {
   chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
@@ -21,9 +22,24 @@ function loadSettings(cb) {
   });
 }
 
+// Utility: load settings
+function loadConsole(cb) {
+  chrome.runtime.sendMessage({ type: "PBCONSOLE_GET" }, (res) => {
+    cb(res.console);
+  });
+}
+
 // Utility: save settings
 function saveSettings(settings, cb) {
   chrome.runtime.sendMessage({ type: "PBSETTINGS_SET", settings }, () => {
+    cb && cb();
+  });
+}
+
+
+// Utility: save settings
+function saveConsole(console, cb) {
+  chrome.runtime.sendMessage({ type: "PBCONSOLE_SET", console }, () => {
     cb && cb();
   });
 }
@@ -76,8 +92,9 @@ write("We are Always Here to Help!");
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
 document.getElementById("btn-open-settings").onclick = () => {
-  window.location.href = chrome.runtime.getURL("PBSettings.html");
+  // window.location.href = chrome.runtime.getURL("PBSettings.html");
   write("Accessing PulseSettings..");
+  saveConsole(out.innerHTML);
 };
 
 document.getElementById("btn-open-identity").onclick = async () => {
