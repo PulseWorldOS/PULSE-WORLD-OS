@@ -960,7 +960,7 @@
     <div class="feature-grid pulse-grid-3d" style="grid-template-columns:minmax(0,2fr) minmax(0,1.4fr);gap:20px;justify-content:center;max-width: var(--tp-max-width);">
       <div class="pex-card pulse-panel">
         <h3 class="pulse-title">Load a Pulse Expression Asset</h3>
-        <p style="font-size:15px;">Upload an image to convert it into a Pulse Expression Layer and store it inside your local PulseWorld file system.</p>
+        <p style="font-size:15px;">Upload an image to convert it into a Pulse Expression Layer and store it inside your local PulseWorld file system. (Drop Storage by up to 90%)</p>
 
         <div class="test-controls">
           <input type="file" id="tp-test-file" accept="image/*" class="pulse-input" aria-label="Upload an asset" />
