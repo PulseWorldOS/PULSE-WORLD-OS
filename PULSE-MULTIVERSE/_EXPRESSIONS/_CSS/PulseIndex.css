@@ -2920,7 +2920,7 @@ input[type="file"] {
   box-shadow: 0 0 6px #0ff inset;
 }
 
-#assetBtn {
+#extBtn {
   position: fixed;
   width: 7.7dvw;
   height: 7.5dvh;
@@ -2940,10 +2940,10 @@ input[type="file"] {
               backdrop-filter 0.15s ease;
   backdrop-filter: none;
 }
-#assetBtn:hover {
+#extBtn:hover {
   transform: scale(1.03);
 }
-#assetBtn:active {
+#extBtn:active {
   backdrop-filter: blur(2px) brightness(0.85);
   transform: scale(0.92) translateY(1px);
   filter: brightness(0.85);
@@ -4534,7 +4534,7 @@ header {
     top: 41.1dvh;
     left: 2.7dvw;
   }
-  #assetBtn {
+  #extBtn {
     width: 11dvw;
     height: 5dvh;
     top: 35dvh;
