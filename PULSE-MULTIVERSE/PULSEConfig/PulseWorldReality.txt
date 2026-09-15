@@ -1214,7 +1214,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
   rewardsBtn.style.display = "flex";
   scannerBtn.style.display = "flex";
   ghostBtn.style.display = "flex";
-  assetBtn.style.display = "flex";
+  extBtn.style.display = "flex";
   videoBtn.style.display = "flex";
   inventoryBtn.style.display = "flex";
   engineBtn.style.display = "flex";

@@ -91,7 +91,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
   rewardsBtn.style.display = "none";
   scannerBtn.style.display = "none";
   ghostBtn.style.display = "none";
-  assetBtn.style.display = "none";
+  extBtn.style.display = "none";
   inventoryBtn.style.display = "none";
   engineBtn.style.display = "none";
   emailBtn.style.display = "none";
