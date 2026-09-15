@@ -2279,9 +2279,7 @@ async function pingAllRealms() {
   const results = {};
 
   for (const [key, url] of Object.entries(realms)) {
-    setTimeout(async () => {
-      results[key] = await ping(url);
-    },150);
+    results[key] = await ping(url);
   }
 
   return results;
