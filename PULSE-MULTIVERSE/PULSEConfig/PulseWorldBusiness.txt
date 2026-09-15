@@ -99,6 +99,9 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
   pulsemeshBtn.style.display = "none";
   pulsepalBtn.style.display = "none";
   pulseworkerBtn.style.display = "none";
+  pulseStatus.style.display = "none";
+  vaultBtn.style.display = "none";
+  rewardsBtn.style.display = "none";
   globalSpin.style.display = "none";
   evoToggleBtn.style.display = "none";
   driftBtn.style.display = "none";
