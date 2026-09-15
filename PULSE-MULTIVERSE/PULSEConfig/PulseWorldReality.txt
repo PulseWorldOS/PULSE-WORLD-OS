@@ -1474,6 +1474,11 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
     document.body.removeChild(a);
   };
 
+  // ⭐ WARM BOOT (unchanged build)
+  const alreadyBooted = getPulseSessionBootFlag();
+  if (alreadyBooted) {
+    pulseNotify("🌐 PulseBrowser OS","I Remember You, Stay a while this time!");
+  };
 
   // ---------------------------------------------------------
   // VIEWPORT
