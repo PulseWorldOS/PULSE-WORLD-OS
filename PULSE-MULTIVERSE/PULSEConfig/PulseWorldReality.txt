@@ -1476,7 +1476,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
 
   // ⭐ WARM BOOT (unchanged build)
   const alreadyBooted = getPulseSessionBootFlag();
-  if (alreadyBooted) {
+  if (alreadyBooted && PulseRealm.__PULSE_CURRENT_PAGE__ != PulseRealm.__PULSE_LAST_PAGE__) {
     pulseNotify("🌐 PulseBrowser OS","I Remember You, Stay a while this time!");
   };
 
