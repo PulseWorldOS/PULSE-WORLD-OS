@@ -2286,10 +2286,14 @@ async function pingAllRealms() {
 }
 
 async function ping(url) {
-  const start = performance.now();
+  let end = Infinity;
   try {
-    await fetch(url, { method: "HEAD", cache: "no-store" });
-    return performance.now() - start;
+    setTimeout(async () => {
+      const start = performance.now();
+      await fetch(url, { method: "HEAD", cache: "no-store" })
+      end = performance.now() - start;
+    },150);
+    return end;
   } catch {
     return Infinity;
   }
