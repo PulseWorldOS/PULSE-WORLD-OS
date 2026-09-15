@@ -69,7 +69,7 @@
       <div class="hero-ctas">
         <a href="#tp-meetthem" class="btn btn-outline" onclick="loadInternalPage('PulseWorldFounders'); return false;">Explore Them</a>
         <a href="#PulseWorldInventory" class="btn btn-drift" onclick="loadInternalPage('PulseWorldInventory'); return false;">Choose your Identity!</a>
-        <a href="#PulseWorldExtensions" class="btn btn-drift" onclick="loadInternalPage('PulseWorldExtensions'); return false;">View Tier 2 Engine?</a>
+        <a href="#PulseWorldExtensions" class="btn btn-tier" onclick="loadInternalPage('PulseWorldExtensions'); return false;">View Tier 2 Engine?</a>
         <a href="#tp-meetus" class="btn btn-outline" onclick="loadInternalPage('PulseWorldTeam'); return false;">Explore Us</a>
       </div>
 

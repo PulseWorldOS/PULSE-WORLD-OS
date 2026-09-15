@@ -1350,8 +1350,8 @@ nav a:hover::after {
   margin-top: 2dvh;
   border: 2px solid transparent;
   font-weight: 600;
-  background: var(--pulse-coral);
-  background-image: linear-gradient(90deg, var(--pulse-coral), #ffffff, var(--pulse-coral));
+  background: var(--pulse-teal-soft);
+  background-image: linear-gradient(90deg, var(--pulse-teal-soft), #ffffff, var(--pulse-teal-soft));
   padding: 14px 24px;
   background-size: 400%;
   background-position: 0%;
@@ -1365,7 +1365,32 @@ nav a:hover::after {
 }
 .btn-drift:hover {
   margin-top: 2dvh;
-   background-position: 100%;
+  background-position: 100%;
+  background:var(--pulse-teal-soft);
+  transform:translateY(-2px);
+  box-shadow:0 0 12px rgba(255,95,106,0.45);
+}
+
+.btn-tier {
+  margin-top: 2dvh;
+  border: 2px solid transparent;
+  font-weight: 600;
+  background: var(--pulse-coral);
+  background-image: linear-gradient(90deg, var(--pulse-coral), #ffffff, var(--pulse-coral));
+  padding: 14px 24px;
+  background-size: 400%;
+  background-position: 0%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #FFF;
+  color:#fff;
+  border-image: linear-gradient(90deg, #000000, #ffffff, #000000) 1;
+  box-shadow:0 0 12px rgba(255,95,106,0.45);
+  transition: background-position 1s linear, border-image 1s linear, box-shadow 0.2s ease;
+}
+.btn-tier:hover {
+  margin-top: 2dvh;
+  background-position: 100%;
   background:var(--pulse-coral-strong);
   transform:translateY(-2px);
   box-shadow:0 0 12px rgba(255,95,106,0.45);
