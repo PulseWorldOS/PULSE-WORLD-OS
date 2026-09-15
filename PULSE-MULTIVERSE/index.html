@@ -3472,7 +3472,7 @@ if (refreshBtn) {
 // EMAIL
 if (emailBtn) {
   emailBtn.onclick = () => {
-    ensureNotificationAccess();
+    pulseNotify("PulseBrowser OS","PulseWorldEmail: Testing Notifications through the Browser!");
     
     if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldEmail") {
       location.reload(); // full reload, cache stays warm
@@ -3511,7 +3511,7 @@ if (inventoryBtn) {
 // ENGINE
 if (engineBtn) {
   engineBtn.onclick = () => {
-    pulseNotify("PulseBrowser OS","PulseWorldEmail: Testing Notifications through the Browser!");
+    ensureLocationAccess();
     
     if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PULSE-ENGINE-BLOCK") {
       location.reload();
