@@ -7461,6 +7461,8 @@ async function checkReboot() {
   // ⭐ WARM BOOT (unchanged build)
   const alreadyBooted = getPulseSessionBootFlag();
   if (alreadyBooted) {
+    pulseNotify("🌐 PulseBrowser OS","I Remember You, Stay a while this time!");
+
     console.log("%c✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Boot Cookie says World Already Booted → Skipping Cinematic.",
       "color:#H02FHA; font-weight:bold; font-family:monospace;");
 
