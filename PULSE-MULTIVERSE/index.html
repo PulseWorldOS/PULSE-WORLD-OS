@@ -815,7 +815,7 @@ function setFavicon(url) {
 
 // Decide Next Future Universe/Present Universe/Past Present Universe
 const next = current === "www.pulseworld.net" ? USER : WORLD;
-const FALLBACK_BARRIER = DEFAULT_INDEX === "PulseWorldReality.txt" ? "PulseWorldInventory.txt" : "PulseWorldRewards.txt";
+const FALLBACK_BARRIER = PulseRealm.__PULSE_LAST_PAGE__ + ".txt";
 let engineSessionCount = 0;
 const engineSessionLimit = 60;
 let PBInterval = null;
@@ -2240,6 +2240,7 @@ async function routeToInternal(routeName) {
 }
 async function loadInternalPage(name) {
   showPWLoader();
+  PulseRealm.__PULSE_LAST_PAGE__ = PulseRealm.__PULSE_CURRENT_PAGE__ ?? "PulseWorldInventory";
   const now = performance.now();
   const raw = (name || "").trim();
   cameraBtn.style.display = "none";
