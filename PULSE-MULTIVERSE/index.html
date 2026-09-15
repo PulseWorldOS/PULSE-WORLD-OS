@@ -3146,11 +3146,7 @@ async function loadPulseIdentityContinual() {
 
 
 let supabaseLimit = 8;
-if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") {
-  supabaseInterval = 7;
-} else {
-  supabaseInterval = 23;
-}
+
 function pulseSupabaseSync() {
   supabaseInterval++;
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
@@ -3178,7 +3174,7 @@ function pulseSupabaseSync() {
   if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") {
     supabaseLimit = 8;
   } else {
-    supabaseLimit = 24;
+    supabaseLimit = 8;
   }
 }
 
