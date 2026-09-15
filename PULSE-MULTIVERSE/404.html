@@ -2338,6 +2338,7 @@ async function ping(url) {
   );
 
   const rawPath = location.pathname.replace("/", "");
+  console.log(rawPath);
   if (rawPath) {
     location.replace(`/?Impulse=${rawPath}`);
   }
