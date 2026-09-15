@@ -564,7 +564,7 @@ PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
   stack: [
     {
-      identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name,
+      identity: PulseRealm.PulseUser ?? generatePulseUser(),
       page: PulseRealm.__PULSE_CURRENT_PAGE__ ?? null,
       timing: PulseRealm.LoadTiming ?? 0,
       time: PulseRealm.CurrentTime,
@@ -721,7 +721,7 @@ function loadPulseHistory() {
       // Convert string-only entries
       if (typeof entry === "string") {
         return {
-          identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name,
+          identity: PulseRealm.PulseUser ?? generatePulseUser(),
           page: entry,
           timing: 0,
           time: PulseRealm.CurrentTime,   // always real Date
@@ -732,7 +732,7 @@ function loadPulseHistory() {
       }
 
       return {
-        identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name,
+        identity: PulseRealm.PulseUser ?? generatePulseUser(),
         page: entry.page,
         timing: entry.timing ?? PulseRealm.LoadTiming ?? 0,
         time: new Date(entry.time) ?? PulseRealm.CurrentTime,
@@ -2384,7 +2384,7 @@ async function loadInternalPage(name) {
     PulseRealm.LastTime = Date.now();
     PulseRealm.LoadTiming = performance.now() - now;
     const entry = {
-      identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name,
+      identity: PulseRealm.PulseUser ?? generatePulseUser(),
       page: corrected,
       timing: PulseRealm.LoadTiming,
       time: PulseRealm.CurrentTime,
@@ -5917,7 +5917,7 @@ const options = {
   chunkProfile: "default",
   band: "PulseBand",
   identity: PulseRealm.PulseIdentity,
-  displayName: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name,
+  displayName: PulseRealm.PulseUser ?? generatePulseUser(),
 };
 const defaults = {
   region: options.region || "PulseMultiverse#1",
@@ -5926,7 +5926,7 @@ const defaults = {
   page: options.page || "index",
   band: options.band || "binary",
   identity: PulseRealm.PulseIdentity || {},
-  displayName: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name,
+  displayName: PulseRealm.PulseUser ?? generatePulseUser(),
   version: PULSE_TOUCH_VERSIONX
 };
 /* ============================================================
