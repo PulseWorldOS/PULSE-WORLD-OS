@@ -185,8 +185,10 @@ function pulsepalSpeak(message) {
   rewardsBtn.style.display = "none";
   badge.classList.add("talking");
   setTimeout(() => badge.classList.remove("talking"), 7500); // hides after 3s
-  vaultBtn.style.display = "flex";
-  rewardsBtn.style.display = "flex";
+  if (!PulseRealm.CurrentHost.inclues("pulseworld.biz")) {
+    vaultBtn.style.display = "flex";
+    rewardsBtn.style.display = "flex";
+  }
 }
 async function checkPersistentStorage(skip) {
   if (!navigator.storage || !navigator.storage.estimate) {
