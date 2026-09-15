@@ -70,7 +70,7 @@ export async function handler() {
     // Convert ISO → number BEFORE subtracting minutes
     const nowMs = new Date(nowISO).getTime();
 
-    const inactiveCutoff = new Date(nowMs - 5 * 60_000).toISOString();
+    const inactiveCutoff = new Date(nowMs - 3 * 60_000).toISOString();
     const offlineCutoff  = new Date(nowMs - 10 * 60_000).toISOString();
 
     // INACTIVE
