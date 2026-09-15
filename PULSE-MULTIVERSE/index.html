@@ -1041,10 +1041,6 @@ function hidePWLoader() {
   requestAnimationFrame(() => {
     loader.style.opacity = "0";
     loader.style.pointerEvents = "none";
-
-    loader.addEventListener("transitionend", () => {
-      loader.remove();
-    }, { once: true });
   });
 }
 
