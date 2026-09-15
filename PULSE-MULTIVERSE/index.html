@@ -2241,6 +2241,7 @@ async function routeToInternal(routeName) {
 async function loadInternalPage(name) {
   showPWLoader();
   PulseRealm.__PULSE_LAST_PAGE__ = PulseRealm.__PULSE_CURRENT_PAGE__ ?? "PulseWorldInventory";
+  
   const now = performance.now();
   const raw = (name || "").trim();
   cameraBtn.style.display = "none";
@@ -2286,6 +2287,9 @@ async function loadInternalPage(name) {
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
       viewport.innerHTML = html;
+      if (PulseRealm.__PULSE_LAST_PAGE__ != name) {
+        viewport.scrollTo(0, 0);
+      }
     }
 
     // After you set PulseRealm.__PULSE_CURRENT_PAGE__
