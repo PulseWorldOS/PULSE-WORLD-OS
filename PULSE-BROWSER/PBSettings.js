@@ -207,7 +207,6 @@ async function loadExtensionSettingsUI() {
     externalBankLink: "externalBankLink",
     businessLink: "businessLink",
     filesLink: "filesLink",
-    identityLink: "identityLink",
     bankingLink: "bankingLink",
     goPublicToggle: "goPublicEnabled",
     publicLink: "publicLink",
@@ -252,7 +251,6 @@ async function saveExtensionSettingsUI() {
 
     businessLink: document.getElementById("businessLink").value.trim(),
     filesLink: document.getElementById("filesLink").value.trim(),
-    identityLink: document.getElementById("identityLink").value.trim(),
     bankingLink: document.getElementById("bankingLink").value.trim(),
 
     searchMode: document.getElementById("searchMode").value,
@@ -481,7 +479,6 @@ if (location.href.includes("PBSettings.html")) {
       "externalBankLink",
       "businessLink",
       "filesLink",
-      "identityLink",
       "bankingLink",
       "goPublicToggle",
       "pulseStreamToggle",
