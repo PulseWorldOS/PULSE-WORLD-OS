@@ -554,7 +554,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
-pulseNotify("🌐 PulseBrowser OS","Welcome to the Pulse World Multiverse!");
+
 let supabaseInterval = 6;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
@@ -7447,6 +7447,7 @@ async function checkReboot() {
   // ⭐ WARM BOOT (unchanged build)
   const alreadyBooted = getPulseSessionBootFlag();
   if (alreadyBooted) {
+    pulseNotify("🌐 PulseBrowser OS","I Remember You, Stay a while this time!");
     console.log("%c✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Boot Cookie says World Already Booted → Skipping Cinematic.",
       "color:#H02FHA; font-weight:bold; font-family:monospace;");
 
@@ -7549,7 +7550,8 @@ function MergedPickASpeech(message, imagePath) {
 PulseRealm.PickASpeech8 = MergedPickASpeech;
 
 async function runBootSequenceOnce(Rebooted,isMobile) {
-     if (!Rebooted || Rebooted === false) {
+    if (!Rebooted || Rebooted === false) {
+    pulseNotify("🌐 PulseBrowser OS","Welcome to the Pulse World Multiverse!");
     BOOT_PANEL_DURATION = BOOT_DURATION + 1500;
   
     pulsepalSpeak("Welcome to PulseWorld.Net! Built by History, Built for You!");
