@@ -1016,9 +1016,9 @@ function closePulsePopup() {
   document.getElementById('pulsePopup').style.display = 'none';
 }
 
-function showPWLoader() {
-  let loader = document.getElementById("pw-loading");
+let loader = document.getElementById("pw-loading");
 
+function showPWLoader() {
   // If the loader was removed, recreate it
   if (!loader) {
     loader = document.createElement("div");
@@ -1035,7 +1035,7 @@ function showPWLoader() {
 }
 
 function hidePWLoader() {
-  const loader = document.getElementById("pw-loading");
+  
   if (!loader) return;
 
   requestAnimationFrame(() => {
