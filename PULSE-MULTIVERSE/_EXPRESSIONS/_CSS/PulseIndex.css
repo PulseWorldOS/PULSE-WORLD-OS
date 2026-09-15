@@ -1360,7 +1360,7 @@ nav a:hover::after {
   -webkit-text-fill-color: #FFF;
   color:#fff;
   border-image: linear-gradient(90deg, #000000, #ffffff, #000000) 1;
-  box-shadow:0 0 12px rgba(255,95,106,0.45);
+  box-shadow:0 0 12px var(--pulse-teal-soft);
   transition: background-position 1s linear, border-image 1s linear, box-shadow 0.2s ease;
 }
 .btn-drift:hover {
@@ -1368,7 +1368,7 @@ nav a:hover::after {
   background-position: 100%;
   background:var(--pulse-teal-soft);
   transform:translateY(-2px);
-  box-shadow:0 0 12px rgba(255,95,106,0.45);
+  box-shadow:0 0 12px var(--pulse-teal-soft);
 }
 
 .btn-tier {
