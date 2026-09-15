@@ -209,7 +209,7 @@
           <div class="bankPanelItem"><span>Eligibility</span><span>Based on PB Rewards</span></div>
           <div class="bankPanelItem"><span>Hint</span><span>“Your Balance Across Realms!”</span></div>
           <div class="bankPanelItem"><span>Preview Mode</span><span id="burstPreviewMode">Currency Simulation</span></div>
-          <button id="comingsoonbtn" class="comingsoonbtn">Coming Soon!</button>
+          <button id="comingsoonbtn" class="bankConsoleSend comingsoonbtn">Coming Soon!</button>
         </div>
 
         <!-- SYSTEM & OVERMIND -->
@@ -549,6 +549,11 @@ function updateBankPanels(balance) {
 
 document.getElementById("comingsoonbtn").onclick = async () => {
   loadInternalPage("PulseWorldAssets");
+  
+  PulseRealm.PickASpeech8(
+    "Welcome to the New Idea of the word, Asset!",
+    "./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex"
+  );
 };
 /* ============================================================
    BANK FETCH ENGINE

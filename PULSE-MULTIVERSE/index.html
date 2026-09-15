@@ -35,6 +35,7 @@
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalExpansionFox.webp.pex" type="image/webp"/>
 <link rel="preload"       fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalArchitect.webp.pex" type="image/webp"/>
 <link rel="preload"       fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex" type="image/webp"/>
+<link rel="preload"       fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash.webp.pex" type="image/webp"/>
 <link rel="preload"       fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalGrid.webp.pex" type="image/webp"/>
 <link rel="preload"       fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePal.webp.pex" type="image/webp"/>
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulsePalIcon.webp.pex" type="image/webp"/>
@@ -317,7 +318,7 @@ checkPersistentStorage(true);
     <button id="pulsemeshBtn" aria-label="PulseMesh System" role="button">PulseMesh</button>
     <button id="pulseworkerBtn" aria-label="Pulse Worker" role="button"></button>    
     <button id="aliasSnap" aria-label="Build Alias" role="button">Build PulseWorld Alias</button>
-    <button id="assetBtn" aria-label="Pulse Assets" role="button">Pulse Assets</button>
+    <button id="extBtn" aria-label="Pulse Extensions" role="button">Pulse Extensions</button>
     
     <button id="backBtn" aria-label="Pulse Back Button" role="button">
       <svg viewBox="0 0 24 24" width="65%" height="65%" fill="#0ff">
@@ -855,7 +856,7 @@ const globalSpin = document.getElementById("globalSpin");
 const pulseStatus = document.getElementById("pulseStatus");
 const pulsemeshBtn = document.getElementById("pulsemeshBtn");
 const pulseworkerBtn = document.getElementById("pulseworkerBtn");
-const assetBtn = document.getElementById("assetBtn");
+const extBtn = document.getElementById("extBtn");
 const scannerBtn = document.getElementById("scannerBtn");
 const ghostBtn = document.getElementById("ghostBtn");
 const videoBtn = document.getElementById("videoBtn");
@@ -3765,26 +3766,28 @@ if (scannerBtn) {
   };
 }
 
-if (assetBtn) {
-  assetBtn.onclick = () => {
-    // If already on scanner → refresh it
-    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldAssets") {
+if (extBtn) {
+  extBtn.onclick = () => {
+    // If already on extensions → refresh it
+    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldExtensions") {
       location.reload();
       PulseRealm.PickASpeech8(
-        "Assets Loaded! Ready for another $$ Moment!",
-        "./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex"
+        "Extensions Loaded! Ready to Explore Your PulseBrowser OS!",
+        "./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash.webp.pex"
       );
       return;
     }
+
     // First-time load
-    loadInternalPage("PulseWorldAssets");
-    PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseWorldAssets";
+    loadInternalPage("PulseWorldExtensions");
+    PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseWorldExtensions";
     PulseRealm.PickASpeech8(
-      "Welcome to the New Idea of the word, Asset!",
-      "./_EXPRESSIONS/_PEX/BUILD/PulsePalEntrepreneur.webp.pex"
+      "Welcome to Your Extensions Hub! PulseWorld Today, More Modules Tomorrow!",
+      "./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash.webp.pex"
     );
   };
 }
+
 
 
 if (homeBtn) {
