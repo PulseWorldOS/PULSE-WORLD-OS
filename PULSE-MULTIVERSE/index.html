@@ -815,7 +815,7 @@ function setFavicon(url) {
 
 // Decide Next Future Universe/Present Universe/Past Present Universe
 const next = current === "www.pulseworld.net" ? USER : WORLD;
-const FALLBACK_BARRIER = PulseRealm.__PULSE_LAST_PAGE__ + ".txt";
+const FALLBACK_BARRIER = !PulseRealm.__PULSE_LAST_PAGE__ ? "PulseWorldInventory.txt" : PulseRealm.__PULSE_LAST_PAGE__ + ".txt";
 let engineSessionCount = 0;
 const engineSessionLimit = 60;
 let PBInterval = null;
