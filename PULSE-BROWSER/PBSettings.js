@@ -251,13 +251,6 @@ async function saveExtensionSettingsUI() {
     businessLink: document.getElementById("businessLink").value.trim(),
     filesLink: document.getElementById("filesLink").value.trim(),
 
-    goPublicEnabled: document.getElementById("goPublicToggle").checked,
-    pulseStreamEnabled: document.getElementById("pulseStreamToggle").checked,
-    publicLink: document.getElementById("publicLink").value.trim(),
-
-    programmaticEmail: document.getElementById("programmaticEmail").checked,
-    programmaticBanking: document.getElementById("programmaticBanking").checked,
-
     searchMode: document.getElementById("searchMode").value,
     externalSearchLink: document.getElementById("externalSearchLink").value.trim(),
     socialMode: document.getElementById("socialMode").value,
@@ -265,8 +258,13 @@ async function saveExtensionSettingsUI() {
     workMode: document.getElementById("workMode").value,
     externalWorkLink: document.getElementById("externalWorkLink").value.trim(),
     streamingMode: document.getElementById("streamingMode").value,
-    externalStreamingLink: document.getElementById("externalStreamingLink").value.trim()
+    externalStreamingLink: document.getElementById("externalStreamingLink").value.trim(),
     
+    goPublicEnabled: document.getElementById("goPublicToggle").checked,
+    publicLink: document.getElementById("publicLink").value.trim(),
+
+    programmaticEmail: document.getElementById("programmaticEmail").checked,
+    programmaticBanking: document.getElementById("programmaticBanking").checked
   };
 
   await chrome.storage.local.set({ [EXTENSION_SETTINGS_KEY]: settings });
