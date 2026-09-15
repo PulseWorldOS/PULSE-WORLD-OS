@@ -7003,6 +7003,13 @@ async function enableBootVideo(isMobile) {
   }
 
   // ---------------------------------------------------------
+  // PulseWorld.Me → Pulse World Banking Boot Video
+  // ---------------------------------------------------------
+  else if (isSettings) {
+    BOOT_PATH = "./_EXPRESSIONS/_VIDEOS/PulseIdentity";
+  }
+
+  // ---------------------------------------------------------
   // PULSEWORLD.NET → PulseWorld Boot Videos (mobile/desktop)
   // ---------------------------------------------------------
   else if (current.includes("pulseworld.net")) {
@@ -7464,7 +7471,7 @@ async function checkReboot() {
   // ⭐ WARM BOOT (unchanged build)
   const alreadyBooted = getPulseSessionBootFlag();
   if (alreadyBooted) {
-    pulseNotify("🌐 PulseBrowser OS","I Remember You, Stay a while this time!");
+    pulseNotify("🌐 PulseBrowser OS","Overmind Prime Remember You, Stay a while this time!");
 
     console.log("%c✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Boot Cookie says World Already Booted → Skipping Cinematic.",
       "color:#H02FHA; font-weight:bold; font-family:monospace;");
