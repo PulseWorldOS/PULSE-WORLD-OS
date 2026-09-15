@@ -2279,21 +2279,19 @@ async function pingAllRealms() {
   const results = {};
 
   for (const [key, url] of Object.entries(realms)) {
-    results[key] = await ping(url);
+    setTimeout(async () => {
+      results[key] = await ping(url);
+    },150);
   }
 
   return results;
 }
 
 async function ping(url) {
-  let end = Infinity;
+  const start = performance.now();
   try {
-    setTimeout(async () => {
-      const start = performance.now();
-      await fetch(url, { method: "HEAD", cache: "no-store" })
-      end = performance.now() - start;
-    },150);
-    return end;
+    await fetch(url, { method: "HEAD", cache: "no-store" });
+    return performance.now() - start;
   } catch {
     return Infinity;
   }
