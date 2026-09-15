@@ -3339,7 +3339,7 @@ async function pulseNotify(title, body) {
 
   new Notification(title, {
     body,
-    icon: "/_EXPRESSIONS/_PICTURES/PulseWorldSplash512.png.pex"
+    icon: "/_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex"
   });
 }
 
@@ -3472,7 +3472,7 @@ if (refreshBtn) {
 // EMAIL
 if (emailBtn) {
   emailBtn.onclick = () => {
-    pulseNotify("PulseBrowser OS","PulseWorldEmail: Testing Notifications through the Browser!");
+    pulseNotify("🌐 PulseBrowser OS","PulseWorldEmail: Testing Notifications through the Browser!");
     
     if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldEmail") {
       location.reload(); // full reload, cache stays warm
