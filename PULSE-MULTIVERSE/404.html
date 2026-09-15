@@ -23,14 +23,12 @@
 <link rel="modulepreload" fetchpriority="high" href="./PulseMultiverseLayer.js">
 <link rel="prefetch"      fetchpriority="high" href="/">
 <title>PulseWorld — Dimensional Drift Detected</title>
-<script type="module" src="./PULSE-MULTIVERSAL-TOUCH.js"></script>
-<script type="module" src="./PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js"></script>
-<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PULSE-WORLD-OPTIMIZE.js"></script>
-<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-BAND/PULSE-BAND.js"></script>
-<script type="module" src="./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/PULSE-WORLD-STRANDED-DNA.js"></script>
-<script type="module" src="./_CREATION_BARRIER/PULSE-BOOT-BARRIER.js"></script>
-<script type="module" src="./_PROOF/PULSE-PROOF.js"></script>
-<script type="module" src="./_CREATION_BARRIER/PULSE-BOOT-WORLD.js"></script>
+
+<script type="module" src="https://port.serviceworker.net"></script>
+<!-- <script type="module" src="https://port.gpuprocessing.net"></script> -->
+<script type="module" src="https://port.binaryos.net"></script>
+<!-- <script type="module" src="./PulseWorldOSImports.js"></script> 
+ -->
 <script>
 globalThis.PulseRealm = globalThis;
 const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
@@ -2338,7 +2336,7 @@ async function ping(url) {
   );
 
   const rawPath = location.pathname.replace("/", "");
-  console.log(rawPath);
+  console.log("RawPath:"+rawPath);
   if (rawPath) {
     location.replace(`/?Impulse=${rawPath}`);
   }
