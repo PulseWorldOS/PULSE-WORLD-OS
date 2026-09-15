@@ -275,6 +275,66 @@ export async function handler(event) {
       };
     }
 
+    // ⭐ FIRE-AND-FORGET IDENTITY EXTSYNC
+    if (body.action === "extsync") {
+      const { tetherCode, host, online, inactive } = body;
+
+      const client = getSupabase();
+
+      let now;
+
+      // ⭐ Try server time first
+      const { data: serverTime } = await client.rpc("pulse_server_time");
+
+      if (serverTime?.now) {
+        now = new Date(serverTime.now).toISOString(); // ⭐ convert to ISO
+      } else {
+        // Fallback: convert local time → UTC
+        const corrected = Date.now() - (7 * 60 * 60 * 1000);
+        now = new Date(corrected).toISOString(); // ⭐ convert to ISO
+      }
+            
+      const { data: existing, error: lookupError } = await client
+        .from("PulseIdentity")
+        .select("userID")
+        .eq("tetherCode", tetherCode)
+        .maybeSingle();
+
+      if (lookupError) throw lookupError;
+
+      const payload = {        
+        lastUpdated: now,
+        host,
+        online,
+        inactive
+      };
+
+      let result;
+      try {
+        result = existing
+          ? await client.from("PulseIdentity").update(payload).eq("userID", existing.userID)
+          : await client.from("PulseIdentity").insert({ ...payload, created: now });
+      } catch (err) {
+        if (isDuplicateError(err)) return duplicateResponse("identity");
+        throw err;
+      }
+
+      if (result.error) {
+        console.error("❌ [PULSE-SQL] Supabase sync error:", result.error);
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({ ok: false, error: result.error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ ok: true, synced: identity.id })
+      };
+    }
+
     // ⭐ COMMANDS
     if (body.commands) {
       try {
