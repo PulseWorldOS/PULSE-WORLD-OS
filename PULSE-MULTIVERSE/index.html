@@ -185,7 +185,7 @@ function pulsepalSpeak(message) {
   rewardsBtn.style.display = "none";
   badge.classList.add("talking");
   setTimeout(() => badge.classList.remove("talking"), 7500); // hides after 3s
-  if (!PulseRealm.CurrentHost.inclues("pulseworld.biz")) {
+  if (!PulseRealm.CurrentHost.includes("pulseworld.biz")) {
     vaultBtn.style.display = "flex";
     rewardsBtn.style.display = "flex";
   }
