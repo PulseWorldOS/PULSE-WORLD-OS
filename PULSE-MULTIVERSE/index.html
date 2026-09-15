@@ -3493,7 +3493,7 @@ if (refreshBtn) {
 // EMAIL
 if (emailBtn) {
   emailBtn.onclick = () => {
-    pulseNotify("🌐 PulseBrowser OS","PulseWorldEmail: Email Notifications will be Received through Here!");
+    // pulseNotify("🌐 PulseBrowser OS","PulseWorldEmail: Email Notifications will be Received through Here!");
     
     if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldEmail") {
       location.reload(); // full reload, cache stays warm
@@ -7471,7 +7471,7 @@ async function checkReboot() {
   // ⭐ WARM BOOT (unchanged build)
   const alreadyBooted = getPulseSessionBootFlag();
   if (alreadyBooted) {
-    pulseNotify("🌐 PulseBrowser OS","Overmind Prime Remember You, Stay a while this time!");
+    // pulseNotify("🌐 PulseBrowser OS","Overmind Prime Remember You, Stay a while this time!");
 
     console.log("%c✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Boot Cookie says World Already Booted → Skipping Cinematic.",
       "color:#H02FHA; font-weight:bold; font-family:monospace;");
