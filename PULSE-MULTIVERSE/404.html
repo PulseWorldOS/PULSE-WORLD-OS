@@ -2323,41 +2323,51 @@ async function ping(url) {
 
   // Ping all realms safely
   const results = await pingAllRealms();
-
   console.table(results);
 
-  const hud = document.getElementById("output");
+  // Sort realms by latency (ascending)
+  const sorted = Object.entries(results).sort((a, b) => a[1] - b[1]);
 
-  if (hud) {
-    // Convert results object into a table-like string
-    let table = "Pulse\tRealm\tLatency (ms)\n";
-    table += "-------------------------\n";
+  // Determine best realm
+  const bestRealm = sorted[0][0];
+  const bestLatency = sorted[0][1];
 
-    for (const realm in results) {
-      table += `${realm}\t${results[realm]} ms\n`;
-    }
-
-    hud.textContent = table;
-  }
-
-
-  // Pick best (lowest latency)
-  const bestRealm = Object.entries(results)
-    .sort((a, b) => a[1] - b[1])[0][0];
-
+  // Realm → URL map
   const realmMap = {
     WORLD: "https://www.pulseworld.net/",
     USER:  "https://www.pulseworld.me/",
     MONEY: "https://www.pulseworld.money/",
     BIZ:   "https://www.pulseworld.biz/",
-    OS: "https://www.binaryos.net/",
-    SW: "https://www.serviceworker.net/",
-    GPU:  "https://www.gpuprocessing.net/",
-    BOOL: "https://www.booleanlogic.net/",
+    OS:    "https://www.binaryos.net/",
+    SW:    "https://www.serviceworker.net/",
+    GPU:   "https://www.gpuprocessing.net/",
+    BOOL:  "https://www.booleanlogic.net/",
     ORB:   "https://www.orbitalmap.net/"
   };
 
   const bestURL = realmMap[bestRealm];
+
+  // HUD output
+  const hud = document.getElementById("output");
+
+  if (hud) {
+    let table = "";
+    table += `PulseWorld Realm Diagnostics\n`;
+    table += `============================\n`;
+    table += `Best Realm → ${bestRealm} (${bestLatency.toFixed(2)} ms)\n`;
+    table += `Warp Target → ${bestURL}\n`;
+    table += `\n`;
+    table += `Realm        Latency (ms)\n`;
+    table += `--------------------------\n`;
+
+    for (const [realm, latency] of sorted) {
+      const mark = realm === bestRealm ? " ← FASTEST" : "";
+      table += `${realm.padEnd(12)} ${latency.toFixed(2).padStart(8)} ms${mark}\n`;
+    }
+
+    hud.textContent = table;
+  }
+
   // Hard refresh ONLY current realm
   hardRefreshTestServer(bestURL);
 
