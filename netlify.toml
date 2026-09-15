@@ -142,6 +142,12 @@
 [functions."PULSEWORLDNET-PREWARM"]
   schedule = "* * * * *"
 
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+
 # Route: Make FILES.PULSEWORLD.NET serve the _EXPRESSIONS folder
 [[redirects]]
   from = "https://files.pulseworld.net/*"
