@@ -721,6 +721,7 @@ function loadPulseHistory() {
       // Convert string-only entries
       if (typeof entry === "string") {
         return {
+          identity: PulseRealm.PulseUser,
           page: entry,
           timing: 0,
           time: PulseRealm.CurrentTime,   // always real Date
@@ -731,6 +732,7 @@ function loadPulseHistory() {
       }
 
       return {
+        identity: PulseRealm.PulseUser,
         page: entry.page,
         timing: entry.timing ?? PulseRealm.LoadTiming ?? 0,
         time: new Date(entry.time) ?? PulseRealm.CurrentTime,
@@ -2382,6 +2384,7 @@ async function loadInternalPage(name) {
     PulseRealm.LastTime = Date.now();
     PulseRealm.LoadTiming = performance.now() - now;
     const entry = {
+      identity: PulseRealm.PulseUser,
       page: corrected,
       timing: PulseRealm.LoadTiming,
       time: PulseRealm.CurrentTime,
