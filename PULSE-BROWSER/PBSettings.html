@@ -102,6 +102,19 @@
       margin-bottom: 2px;
     }
 
+    .tether-input {
+      width: 35%;
+      padding: 2px 4px;
+      font-size: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      border: 2px solid #333;
+      background: #1a1a1d;
+      color: #eee;
+      outline: none;
+      margin-bottom: 2px;
+    }
+
     .pw-select {
       width: 39%;
       padding: 2px 4px;
@@ -214,6 +227,10 @@
       opacity: 0.6;
     }
 
+    .tether-input-disabled {
+      opacity: 0.6;
+    }
+
     #btn-back {
       position: fixed;
       top: 4.2dvh;
@@ -225,6 +242,32 @@
       cursor: pointer;
       background: transparent;
       border-radius: 14px;
+    }
+
+    /* MODULE BUTTONS INSIDE POPUP */
+    .tetherBtn {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: inline-block;
+      padding: 1px 15px;
+      background: rgba(0,255,255,0.15);
+      border: 1px solid #00FF9C;
+      border-radius: 14px;
+      color: #00FF9C;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .tetherBtn:hover {
+      transform: scale(1.03);
+    }
+    .tetherBtn:active {
+      backdrop-filter: blur(2px) brightness(0.85);
+      transform: scale(0.92) translateY(1px);
+      filter: brightness(0.85);
+      box-shadow: 0 0 6px #0ff inset;
     }
 
   </style>
@@ -348,6 +391,15 @@
     <!-- PUBLIC ACCESS -->
     <section class="pw-section">
       <h2>🌍 Public Access</h2>
+
+      <input id="tetherCode" class="tether-input" placeholder="Example: 4DH7" />
+      <button id="tetherBtn" class="tetherBtn">
+        Set PulseWorld Tether
+      </button>
+      <br>
+      <p class="pw-note">
+        In order to integrate your PulseEngine Tiers, go to PulseEngine world and create a PulseTier Code.
+      </p>
 
       <label class="pw-switch">
         <input type="checkbox" id="goPublicToggle">

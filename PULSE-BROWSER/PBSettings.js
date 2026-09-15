@@ -202,6 +202,7 @@ async function loadExtensionSettingsUI() {
   const fields = {
     
     emailMode: "emailMode",
+    tetherCode: "tetherCode",
     externalEmailLink: "externalEmailLink",
     bankMode: "bankMode",
     externalBankLink: "externalBankLink",
@@ -245,6 +246,8 @@ async function saveExtensionSettingsUI() {
   const settings = {
     emailMode: document.getElementById("emailMode").value,
     externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
+
+    tetherCode: document.getElementById("tetherCode").value.trim(),
 
     bankMode: document.getElementById("bankMode").value,
     externalBankLink: document.getElementById("externalBankLink").value.trim(),
@@ -474,6 +477,7 @@ if (location.href.includes("PBSettings.html")) {
 
     const idsToWatch = [
       "emailMode",
+      "tetherCode",
       "externalEmailLink",
       "bankMode",
       "externalBankLink",
@@ -538,6 +542,17 @@ document.addEventListener("change", (e) => {
 });
 
 if (document.getElementById("btn-back")) {
-  document.getElementById("btn-back").onclick = () =>
-  window.location.href = chrome.runtime.getURL("PBPopup.html");
+    document.getElementById("btn-back").onclick = () => {
+      window.location.href = chrome.runtime.getURL("PBPopup.html");
+    };
+};
+
+if (document.getElementById("tetherBtn")) {
+  document.getElementById("tetherBtn").onclick = () => {
+    fetch("https://pulseworld.netlify.app/.netlify/functions/PULSE-SERVER-SQL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+      body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tether-input").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
+    });
+  };
 };
