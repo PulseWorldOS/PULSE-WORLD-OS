@@ -883,13 +883,14 @@ input[type="file"] {
 }
 
 #output {
-  margin-top: 60px;
+  margin-top: 10px;
   margin-left: -6px;
   font-size: 12px;
   background: rgba(0, 20, 30, 0.55);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   padding: 6px;
+  text-align: center;
   border-radius: 40px;
   height: 112px;
   width: 292px;
@@ -2329,7 +2330,7 @@ async function ping(url) {
 
   if (hud) {
     // Convert results object into a table-like string
-    let table = "Realm\tLatency (ms)\n";
+    let table = "\nRealm\tLatency (ms)\n";
     table += "-------------------------\n";
 
     for (const realm in results) {
@@ -2373,7 +2374,7 @@ async function ping(url) {
 
   setTimeout(() => {
     location.replace(bestURL);
-  }, 10000);
+  }, 15000);
 
 
 })();
