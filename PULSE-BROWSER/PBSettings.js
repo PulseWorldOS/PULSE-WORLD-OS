@@ -495,6 +495,21 @@ if (location.href.includes("PBSettings.html")) {
     idsToWatch.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
+      // Find nearest pw-note (same row or next sibling)
+      const note = el.closest(".pw-section")?.querySelector(".pw-note")
+             || el.parentElement.querySelector(".pw-note");
+
+      if (note) {
+        // Hover in → activate note
+        el.addEventListener("mouseenter", () => {
+          note.classList.add("active");
+        });
+
+        // Hover out → deactivate note
+        el.addEventListener("mouseleave", () => {
+          note.classList.remove("active");
+        });
+      }
 
       const eventName =
         el.tagName === "INPUT" && el.type === "checkbox" ? "change" : "input";

@@ -7,6 +7,7 @@ console.log("%c[PULSEBROWSER] PBPopup (Ultra Edition v6.0) loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
 
 const out = document.getElementById("output");
+// WORK MODULE
 
 // Utility: write to console panel
 function write(msg) {
@@ -78,7 +79,7 @@ function toggleSetting(key, label) {
   });
 }
 
-write("<bold><center>Welcome to PulseWorld!</center></bold>");
+write("<bold><center>Welcome to PulseWorld OS!</center></bold>");
 
 write("Your running PulseBrowser OS, Tier 2 Engine.");
 
@@ -97,11 +98,12 @@ modulesBtn.onclick = () => {
   modulesOpen = !modulesOpen;
 
   if (modulesOpen) {
-    modulesPopup.style.height = "200px"; // slide down
+    modulesPopup.style.height = "170px"; // slide UP
   } else {
-    modulesPopup.style.height = "0"; // slide up
+    modulesPopup.style.height = "0";     // slide DOWN (collapse)
   }
 };
+
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
@@ -119,28 +121,12 @@ document.getElementById("btn-open-identity").onclick = async () => {
 };
 
 document.getElementById("btn-open-business").onclick = async () => {
-
-    const settings = await pbLoadExtensionSettings();
-
-    console.log("[FrontPage] Bank module clicked. Settings:", settings);
-
-    // INTERNAL MODE → open PulseWorld Bank on the real domain
-    if (settings.workMode === "internal") {
-        const internalURL = "https://www.pulseworld.biz";
-        console.log("[FrontPage] Opening Internal PulseBusiness:", internalURL);
-
-        chrome.tabs.create({ url: internalURL });
-        return;
-    }
-
-    // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.biz/";
-
-    console.log("[FrontPage] Opening External Business Provider:", link);
-
-    chrome.tabs.create({ url: link });
+    const internalURL = "https://www.pulseworld.biz";
+    console.log("[FrontPage] Opening Internal PulseBusiness:", internalURL);
+    chrome.tabs.create({ url: internalURL });
     write("Accessing PulseBusiness Module..");
 };
+
 document.getElementById("btn-open-email").onclick = async () => {
 
     const settings = await pbLoadExtensionSettings();
@@ -187,6 +173,119 @@ document.getElementById("btn-open-bank").onclick = async () => {
 
     chrome.tabs.create({ url: link });
     write("Accessing PulseBank Module..");
+};
+
+
+document.getElementById("mod-social").onclick = async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Social Media module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld on the real domain
+    if (settings.socialMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldMessenger";
+        console.log("[FrontPage] Opening Internal PulseMessenger:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalSocialLink?.trim() || "https://www.facebook.com/";
+
+    console.log("[FrontPage] Opening External Social Media Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+};
+
+document.getElementById("mod-work").onclick = async () => {
+    
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Work module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Work on the real domain
+    if (settings.workMode === "internal") {
+        const internalURL = "https://www.pulseworld.biz";
+        console.log("[FrontPage] Opening Internal PulseWork:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
+
+    console.log("[FrontPage] Opening External Work Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+};
+
+
+document.getElementById("mod-stream").onclick = async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Streaming module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Streaming on the real domain
+    if (settings.streamMode === "internal") {
+        const internalURL = "https://www.netflix.com";
+        console.log("[FrontPage] Opening Internal Netflix:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+        chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalStreamingLink?.trim() || "https://www.hulu.com";
+
+    console.log("[FrontPage] Opening External Streaming Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
 };
 
 // // ---------------------------------------------------------------------------
@@ -264,6 +363,8 @@ function updateHUD() {
     });
   });
 }
+
+setTimeout(loadWorld,450);
 // // ---------------------------------------------------------------------------
 // // BUTTON: Site HUD (Realm Snapshot)
 // // ---------------------------------------------------------------------------
@@ -297,6 +398,77 @@ function updateHUD() {
 //   });
 // };
 
+function getFavicon(url, flags = {}) {
+  const u = new URL(url);
+
+  // Default external favicon
+  let icon = `${u.origin}/favicon.ico`;
+
+  // PulseWorld domains
+  const PB_HOMES = [
+    "pulseworld.me",
+    "pulseworld.net",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net"
+  ];
+
+  try {
+    // Check if this is a PulseWorld domain
+    const isPulseWorld = PB_HOMES.some(domain => u.hostname.endsWith(domain));
+
+    if (isPulseWorld) {
+      // MODULE‑AWARE FAVICON SWITCHING
+      if (flags.isSW) {
+        icon = `${u.origin}/SWFavIcon.ico`;
+      }
+      else if (flags.isBinaryOS) {
+        icon = `${u.origin}/BOFavIcon.ico`;
+      }
+      else if (flags.isGPU) {
+        icon = `${u.origin}/GPFavIcon.ico`;
+      }
+      else if (flags.isLogic) {
+        icon = `${u.origin}/BLFavIcon.ico`;
+      }
+      else if (flags.isOrb) {
+        icon = `${u.origin}/OMFavIcon.ico`;
+      }
+      else if (flags.isBiz) {
+        icon = `${u.origin}/PWBFavIcon.ico`;
+      }
+      else if (flags.isSettings) {
+        icon = `${u.origin}/PWBFavIcon.ico`;
+      }
+      else if (flags.isMoney) {
+        icon = `${u.origin}/PWMFavIcon.ico`;
+      }
+      else {
+        icon = `${u.origin}/PWFavIcon.ico`; // Default PulseWorld favicon
+      }
+
+      console.log("PulseWorld favicon:", icon);
+      return icon;
+    }
+
+    // External site → strip subdomain for cleaner favicon
+    const parts = u.hostname.split(".");
+    if (parts.length > 2) {
+      const root = parts.slice(parts.length - 2).join(".");
+      icon = `https://${root}/favicon.ico`;
+    }
+
+    console.log("External favicon:", icon);
+    return icon;
+
+  } catch {
+    return; // external ONLY — no fallback
+  }
+}
 
 // // ---------------------------------------------------------------------------
 // // BUTTON: Reset OS Settings
@@ -307,3 +479,50 @@ function updateHUD() {
 //     write("PulseBrowser OS settings reset to defaults.");
 //   });
 // };
+
+
+// Utility: load settings
+async function loadWorld() {
+  const workIcon = document.getElementById("moduleWorkIcon");
+  const streamIcon = document.getElementById("moduleStreamIcon");
+  const socialIcon = document.getElementById("moduleSocialIcon");
+    
+  const settings = await pbLoadExtensionSettings();
+  // INTERNAL MODE → open PulseWorld Work on the real domain
+  if (settings.workMode === "internal") {
+      workIcon.innerText = "💼";      // your original emoji
+      workIcon.style.backgroundImage = "";
+  } else {        
+    const fav = getFavicon(settings.externalWorkLink);
+    if (fav) {
+      workIcon.innerText = "";
+      workIcon.style.backgroundImage = `url(${fav})`;
+      workIcon.style.backgroundSize = "contain";
+      workIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+  if (settings.streamMode === "internal") {
+      streamIcon.innerText = "📺";      // your original emoji
+      streamIcon.style.backgroundImage = "";
+  } else {        
+    const fav = getFavicon(settings.externalStreamingLink);
+    if (fav) {
+      streamIcon.innerText = "";
+      streamIcon.style.backgroundImage = `url(${fav})`;
+      streamIcon.style.backgroundSize = "contain";
+      streamIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+  if (settings.socialMode === "internal") {
+      socialIcon.innerText = "🎭";      // your original emoji
+      socialIcon.style.backgroundImage = "";
+  } else {        
+    const fav = getFavicon(settings.externalSocialLink);
+    if (fav) {
+      socialIcon.innerText = "";
+      socialIcon.style.backgroundImage = `url(${fav})`;
+      socialIcon.style.backgroundSize = "contain";
+      socialIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+}

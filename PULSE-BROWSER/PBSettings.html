@@ -10,7 +10,7 @@
     body {
       margin: 0;
       padding: 0;
-      width: 380px;
+      width: 316px;
       background: url("PulseWorldSettings.png") center top / contain repeat;
 
       color: #e6e6e6;
@@ -42,8 +42,8 @@
 
 
     .pw-settings-page {
-      max-width: 380px;
-      padding: 30px;
+      max-width: 316px;
+      padding: 10px 14px;
       background: transparent;
       color: #e6e6e6;
       border-radius: 16px;
@@ -79,7 +79,6 @@
       display: block;
       margin-top: 2px;
       font-weight: bold;
-      margin-bottom: 2px;
       font-size: 14px;
       color: #0FF;
     }
@@ -88,7 +87,6 @@
       display: block;
       margin-top: -5px;
       font-weight: bold;
-      margin-bottom: 2px;
       font-size: 12px;
       color: #0FF;
     }
@@ -96,27 +94,27 @@
     .pw-input {
       width: 95%;
       padding: 2px 4px;
-      font-size: 14px;
+      font-size: 12px;
       border-radius: 10px;
       font-weight: bold;
       border: 2px solid #333;
       background: #1a1a1d;
       color: #eee;
       outline: none;
-      margin-bottom: 10px;
+      margin-bottom: 2px;
     }
 
     .pw-select {
       width: 39%;
       padding: 2px 4px;
-      font-size: 14px;
+      font-size: 12px;
       border-radius: 10px;
       font-weight: bold;
       border: 2px solid #333;
       background: #1a1a1d;
       color: #eee;
       outline: none;
-      margin-bottom: 10px;
+      margin-bottom: 2px;
     }
 
     .pw-input:focus,
@@ -126,10 +124,17 @@
     }
 
     .pw-note {
-      font-size: 12px;
+      font-size: 10px;
       color: #888;
       margin-top: -2px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
     }
+
+    .pw-note.active {
+      opacity: 1;
+    }
+
 
     .pw-list {
       list-style: none;
@@ -207,8 +212,8 @@
 
     #btn-back {
       position: fixed;
-      top: 5.4dvh;
-      right: 9.7dvw;
+      top: 4.2dvh;
+      right: 5.8dvw;
       width: 6dvw;
       height: 3.9dvh;
       color: black;
@@ -234,13 +239,13 @@
 
     <!-- EMAIL SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Email Mode</label>
+      <label class="pw-label">Email Mode
       
       <select id="emailMode" class="pw-select">
         <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
-
+      </label>
       <label class="pw-label2">External Email Link</label>
       <input id="externalEmailLink" class="pw-input" placeholder="https://mail.google.com/" />
       <p class="pw-note">
@@ -250,12 +255,12 @@
 
     <!-- BANKING SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Banking Mode</label>
+      <label class="pw-label">Banking Mode
       <select id="bankMode" class="pw-select">
         <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
-
+      </label>
       <label class="pw-label2">External Bank Link</label>
       <input id="externalBankLink" class="pw-input" placeholder="https://yourbank.com/login" />
       <p class="pw-note">
@@ -265,12 +270,12 @@
         
     <!-- SEARCH ENGINE SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Search Mode</label>
+      <label class="pw-label">Search Mode
       <select id="searchMode" class="pw-select">
         <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
-
+      </label>
       <label class="pw-label2">External Search Engine Link</label>
       <input id="externalSearchLink" class="pw-input" placeholder="google.com" />
 
@@ -282,12 +287,12 @@
 
     <!-- SOCIAL SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Social Mode</label>
+      <label class="pw-label">Social Mode
       <select id="socialMode" class="pw-select">
         <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
-
+      </label>
       <label class="pw-label2">External Social Link</label>
       <input id="externalSocialLink" class="pw-input" placeholder="https://facebook.com/" />
 
@@ -299,12 +304,12 @@
 
     <!-- WORK SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Work Mode</label>
+      <label class="pw-label">Work Mode
       <select id="workMode" class="pw-select">
         <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
-
+      </label>
       <label class="pw-label2">External Work Link</label>
       <input id="externalWorkLink" class="pw-input" placeholder="https://yourcompany.com/login" />
 
@@ -316,12 +321,12 @@
 
     <!-- STREAMING SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Streaming Mode</label>
+      <label class="pw-label">Streaming Mode
       <select id="streamingMode" class="pw-select">
         <option value="internal">Use Internal</option>
         <option value="external">Use External</option>
       </select>
-
+      </label>
       <label class="pw-label2">External Streaming Link</label>
       <input id="externalStreamingLink" class="pw-input" placeholder="https://netflix.com/" />
 

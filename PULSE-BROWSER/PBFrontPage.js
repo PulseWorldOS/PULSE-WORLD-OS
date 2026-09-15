@@ -187,17 +187,17 @@ async function updateModuleIcons() {
   }
 
   // FAVORITES (always your emojis)
-  document.getElementById("moduleFav1Icon").innerText = "⭐";
+  document.getElementById("moduleFav1Icon").innerText = "⚡";
   document.getElementById("moduleFav1Icon").style.backgroundImage = "";
 
-  document.getElementById("moduleFav2Icon").innerText = "⭐";
+  document.getElementById("moduleFav2Icon").innerText = "⚡";
   document.getElementById("moduleFav2Icon").style.backgroundImage = "";
 
   // FAVORITES (always your emojis)
-  document.getElementById("moduleFav3Icon").innerText = "⭐";
+  document.getElementById("moduleFav3Icon").innerText = "⚡";
   document.getElementById("moduleFav3Icon").style.backgroundImage = "";
 
-  document.getElementById("moduleFav4Icon").innerText = "⭐";
+  document.getElementById("moduleFav4Icon").innerText = "⚡";
   document.getElementById("moduleFav4Icon").style.backgroundImage = "";
   
 }

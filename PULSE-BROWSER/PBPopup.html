@@ -71,6 +71,16 @@
       border-radius: 14px;
     }
 
+    button:hover {
+      transform: scale(1.03);
+    }
+    button:active {
+      backdrop-filter: blur(2px) brightness(0.85);
+      transform: scale(0.92) translateY(1px);
+      filter: brightness(0.85);
+      box-shadow: 0 0 6px #0ff inset;
+    }
+
     #btn-open-email {
       position: fixed;
       top: 36.3dvh;
@@ -165,35 +175,36 @@
       box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.15), 0 0 10px rgba(0, 255, 255, 0.1);
     }
 
-    /* MODULES POPUP PANEL */
+    /* MODULES POPUP PANEL — bottom-up */
     #modules-popup {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 0;
+      right: 18%;        /* anchor to bottom */
+      bottom: 0;
+      left: 18%;
+      width: 64%;
+      height: 0;        /* start collapsed */
       overflow: hidden;
 
-      background: rgba(0, 20, 30, 0.85);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
 
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
+      border-top-left-radius: 20px;       /* flipped */
+      border-top-right-radius: 20px;
 
-      box-shadow: 0 6px 20px rgba(0,255,255,0.25);
+      box-shadow: 0 -6px 20px rgba(0,255,255,0.25); /* flipped shadow */
 
       transition: height 0.35s ease;
       z-index: 9999;
-      padding-top: 20px;
+      padding-top: 4px;
     }
+
 
     /* MODULE BUTTONS INSIDE POPUP */
     .module-btn {
       display: block;
       width: 80%;
-      margin: 10px auto;
-      padding: 10px;
+      margin: 3px auto;
+      padding: 0px;
       background: rgba(0,255,255,0.15);
       border: 1px solid #00FF9C;
       border-radius: 14px;
@@ -205,7 +216,20 @@
     }
 
     .module-btn:hover {
-      background: rgba(0,255,255,0.25);
+      transform: scale(1.03);
+    }
+    .module-btn:active {
+      backdrop-filter: blur(2px) brightness(0.85);
+      transform: scale(0.92) translateY(1px);
+      filter: brightness(0.85);
+      box-shadow: 0 0 6px #0ff inset;
+    }
+    .module-icon {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+      border-radius: 6px;
     }
 
   </style>
@@ -215,10 +239,13 @@
   <div class="bg"></div>
   <!-- MODULES POPUP -->
   <div id="modules-popup">
-    <div class="module-btn" id="mod-email">Accelerated Email</div>
-    <div class="module-btn" id="mod-bank">Accelerated Bank</div>
-    <div class="module-btn" id="mod-identity">Accelerated Identity</div>
-    <div class="module-btn" id="mod-business">Accelerated Business</div>
+    <div class="module-btn" id="mod-social"><span class="module-icon" id="moduleSocialIcon">🎭</span> Accelerated Social</div>
+    <div class="module-btn" id="mod-work"><span class="module-icon" id="moduleWorkIcon">💼</span> Accelerated Work</div>
+    <div class="module-btn" id="mod-stream"><span class="module-icon" id="moduleStreamIcon">📺</span> Accelerated Stream</div>
+    <div class="module-btn" id="mod-1">Accelerated 1 ⚡</div>
+    <div class="module-btn" id="mod-2">Accelerated 2 ⚡</div>
+    <div class="module-btn" id="mod-3">Accelerated 3 ⚡</div>
+    <div class="module-btn" id="mod-4">Accelerated 4 ⚡</div>
   </div>
 
   <!-- ========================= -->
