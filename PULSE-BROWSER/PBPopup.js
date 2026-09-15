@@ -88,7 +88,20 @@ write("Open Settings to Tune Your Browser..");
 
 write("Enter PulseWorld, to Own your Digital World!");
 
+const modulesBtn = document.getElementById("btn-open-modules");
+const modulesPopup = document.getElementById("modules-popup");
 
+let modulesOpen = false;
+
+modulesBtn.onclick = () => {
+  modulesOpen = !modulesOpen;
+
+  if (modulesOpen) {
+    modulesPopup.style.height = "200px"; // slide down
+  } else {
+    modulesPopup.style.height = "0"; // slide up
+  }
+};
 // document.getElementById("btn-toggle-decode").onclick = () =>
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
