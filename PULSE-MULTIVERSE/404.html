@@ -2335,14 +2335,13 @@ async function ping(url) {
     `color:#00e6c7; font-weight:bold; font-family:monospace;`
   );
 
-  const rawPath = location.pathname.replace("/", "");
-  console.log("RawPath:"+rawPath);
-  if (rawPath) {
-    location.replace(`/?Impulse=${rawPath}`);
-  }
+  // const rawPath = location.pathname.replace("/", "");
+  // console.log("RawPath:"+rawPath);
+  // if (rawPath) {
+  //   location.replace(`/?Impulse=${rawPath}`);
+  // }
 
-  // // Warp to best realm
-  // location.replace(bestURL);
+  setTimeout(location.replace(bestURL), 6000)
 
 })();
 
