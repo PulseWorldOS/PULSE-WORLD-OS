@@ -2701,7 +2701,7 @@ function setNavigation(pageKey) {
   
   const navSets = {
     PulseWorldReality: [
-      { text: "So It Began", href: "#PulseWorldReality", color: "gold" },
+      { text: "So It Began", href: "#PulseWorldReality", load: "PulseWorldReality", color: "gold" },
       { text: "Our Systems", href: "#tp-pulse-layers" },
       { text: "User Benefits", href: "#tp-layer-benefits" },
       { text: "Explore Them", href: "#PulseWorldFounders", load: "PulseWorldFounders" },
@@ -2720,7 +2720,7 @@ function setNavigation(pageKey) {
       { text: "Bank", href: "#PulseWorldBank", load: "PulseWorldRewards"},
       { text: "Vault", href: "#PulseWorldVault", load: "PulseWorldVault"},
       { text: "Dashboard", href: "#business-dashboard" },
-      { text: "Banking", href: "https://www.pulseworld.money/#PulseWorldBanking", color: "red" },
+      { text: "Banking", href: "https://www.pulseworld.money", color: "red" },
       { text: "Email Hub", href: "#business-email" },
       { text: "Analytics", href: "#business-analytics" },
       { text: "World Settings", href: "#PulseWorldSettings", load: "PulseWorldSettings"}
@@ -2731,7 +2731,7 @@ function setNavigation(pageKey) {
       { text: "Drift Identity", href: "#profile-identity"},
       { text: "World Settings", href: "#PulseWorldSettings", load: "PulseWorldSettings"},
       { text: "Pulse Operations", href: "#profile-operations" },
-      { text: "Pulse Business", href: "https://www.pulseworld.biz/#PulseWorldBusiness", color: "red" },
+      { text: "Pulse Business", href: "https://www.pulseworld.biz", color: "red" },
       { text: "PulseBiz Profile", href: "#profile-container" },
       { text: "Use Us", href: "#PEXBuilder", load: "PulseWorldReality", }
     ],
@@ -2894,7 +2894,7 @@ function setNavigation(pageKey) {
       if (link.href && link.href.startsWith("#")) {
         setTimeout(() => {
           location.hash = link.href;
-        }, 50);
+        }, 250);
       }
 
       // If it's an external link, open normally
@@ -8176,13 +8176,13 @@ function restorePageFromCookie() {
   console.log("[PULSEWORLD::COOKIE] viewport.scrollTop BEFORE restore =", viewport.scrollTop);
 
   if (viewport && typeof data.viewportScrollY === "number") {
-    console.log("[PULSEWORLD::COOKIE] Waiting 350ms before applying viewport.scrollTo...");
+    console.log("[PULSEWORLD::COOKIE] Waiting 250ms before applying viewport.scrollTo...");
 
     setTimeout(() => {
       console.log("[PULSEWORLD::COOKIE] Applying viewport.scrollTo(0, " + data.viewportScrollY + ")");
       viewport.scrollTo(0, data.viewportScrollY);
-      console.log("[PULSEWORLD::COOKIE] viewport.scrollTop AFTER 350ms delayed restore =", viewport.scrollTop);
-    }, 350);
+      console.log("[PULSEWORLD::COOKIE] viewport.scrollTop AFTER 250ms delayed restore =", viewport.scrollTop);
+    }, 250);
   }
 }
 
