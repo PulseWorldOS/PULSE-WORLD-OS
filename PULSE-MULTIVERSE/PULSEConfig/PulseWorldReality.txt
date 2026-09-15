@@ -6,7 +6,7 @@
 <link rel="prefetch" fetchpriority="high" href="/">
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorld-Browser.webp.pex" type="image/webp"/>
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldTier3Engine.webp.pex" type="image/webp"/>
-<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex" type="image/webp"/>
+<link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" type="image/png"/>
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorld5Bubbles.webp.pex" type="image/webp"/>
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/ServiceWorkerNet.webp.pex" type="image/webp"/>
 <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/BooleanLogicNet.webp.pex" type="image/webp"/>
@@ -90,7 +90,7 @@
     <div class="pulseworld-summary pulse-panel float">
       <!-- IMAGE ABOVE TITLE -->
       <div class="pulseworld-image-wrap">
-        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex" alt="PulseWorld Logo" class="pulseworld-image">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" alt="PulseWorld Logo" class="pulseworld-image">
       </div>
       <h2 class="section-title">Pulse World O.S.</h2>
       <p class="pulseworld-description">
