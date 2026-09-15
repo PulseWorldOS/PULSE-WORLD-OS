@@ -200,14 +200,16 @@ async function loadExtensionSettingsUI() {
   PB_LOG.load("Extension Settings Loaded", settings);
 
   const fields = {
+    
     emailMode: "emailMode",
     externalEmailLink: "externalEmailLink",
     bankMode: "bankMode",
     externalBankLink: "externalBankLink",
     businessLink: "businessLink",
     filesLink: "filesLink",
+    identityLink: "identityLink",
+    bankingLink: "bankingLink",
     goPublicToggle: "goPublicEnabled",
-    pulseStreamToggle: "pulseStreamEnabled",
     publicLink: "publicLink",
     programmaticEmail: "programmaticEmail",
     programmaticBanking: "programmaticBanking",
@@ -250,6 +252,8 @@ async function saveExtensionSettingsUI() {
 
     businessLink: document.getElementById("businessLink").value.trim(),
     filesLink: document.getElementById("filesLink").value.trim(),
+    identityLink: document.getElementById("identityLink").value.trim(),
+    bankingLink: document.getElementById("bankingLink").value.trim(),
 
     searchMode: document.getElementById("searchMode").value,
     externalSearchLink: document.getElementById("externalSearchLink").value.trim(),
@@ -477,6 +481,8 @@ if (location.href.includes("PBSettings.html")) {
       "externalBankLink",
       "businessLink",
       "filesLink",
+      "identityLink",
+      "bankingLink",
       "goPublicToggle",
       "pulseStreamToggle",
       "publicLink",

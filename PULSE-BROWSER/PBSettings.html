@@ -10,7 +10,7 @@
     body {
       margin: 0;
       padding: 0;
-      width: 316px;
+      width: 336px;
       background: url("PulseWorldSettings.png") center top / contain repeat;
 
       color: #e6e6e6;
@@ -42,7 +42,7 @@
 
 
     .pw-settings-page {
-      max-width: 316px;
+      max-width: 336px;
       padding: 10px 14px;
       background: transparent;
       color: #e6e6e6;
@@ -65,13 +65,11 @@
     }
 
     .pw-section {
-      margin-bottom: 10px;
       border-bottom: 1px solid #333;
     }
 
     .pw-section h2 {
       font-size: 15px;
-      margin-bottom: 10px;
       color: #ddd;
     }
 
@@ -123,6 +121,12 @@
       box-shadow: 0 0 10px rgba(68,170,255,0.4);
     }
 
+    .pw-note1 {
+      font-size: 10px;
+      color: #888;
+      margin-top: -2px;
+      opacity: 1;
+    }
     .pw-note {
       font-size: 10px;
       color: #888;
@@ -335,7 +339,7 @@
         When using External mode, this URL is used directly for your streaming provider.
       </p>
 
-      <p class="pw-note">
+      <p class="pw-note1">
         PulseWorld automatically offers Picture‑in‑Picture on streaming sites  
         so you can browse while watching. This can be toggled on at any time using PulseFlag.
       </p>
@@ -345,14 +349,22 @@
 
     <!-- BUSINESS SETTINGS -->
     <section class="pw-section">
-      <label class="pw-label">Business Page Link</label>
-      <input id="businessLink" class="pw-input" placeholder="https://www.pulseworld.biz/yourbusiness" />
+      <label class="pw-label">PulseBusiness World Link</label>
+      <input id="businessLink" class="pw-input" placeholder="https://www.pulseworld.biz/AldwynFox" />
 
-      <label class="pw-label">Files / Cloud Link</label>
-      <input id="filesLink" class="pw-input" placeholder="https://files.pulseworld.net/yourname" />
+      <label class="pw-label">PulseIdentity World Link</label>
+      <input id="identityLink" class="pw-input" placeholder="https://www.pulseworld.me/AldwynFox" />
+      
+      <label class="pw-label">PulseBanking World Link</label>
+      <input id="bankingLink" class="pw-input" placeholder="https://www.pulseworld.money/AldwynFox" />
+
+      <label class="pw-label">PulseFiles/Cloud Link</label>
+      <input id="filesLink" class="pw-input" placeholder="https://files.pulseworld.net/?PulseUser=AldwynFox" />
+      
       <p class="pw-note">
-        These links represent your external business presence and file storage capabilities.
+        These links define your external PulseWorld presence across business, identity, banking, and cloud services. Together they form your public-facing ecosystem, connecting your OS to the modules that represent you online.
       </p>
+
     </section>
     
     <!-- PUBLIC ACCESS -->
@@ -369,8 +381,21 @@
         When enabled, your public link becomes accessible to others. Internal services can still operate privately while this is active.
       </p>
 
-      <label class="pw-label">Public Profile Link</label>
-      <input id="publicLink" class="pw-input" placeholder="https://www.pulseworld.me/yourname" />
+      <label class="pw-label">PulseIdentity Profile Link</label>
+      <input id="publicLink" class="pw-input" placeholder="https://www.pulseworld.me/AldwynFox" />
+
+      <label class="pw-label">PulseBusiness World Link</label>
+      <input id="businessLink" class="pw-input" placeholder="https://www.pulseworld.biz/AldwynFox" />
+      
+      <label class="pw-label">PulseBanking/Stripe World Link</label>
+      <input id="bankingLink" class="pw-input" placeholder="https://www.pulseworld.money/AldwynFox" />
+
+      <label class="pw-label">PulseFiles/Cloud Link</label>
+      <input id="filesLink" class="pw-input" placeholder="https://files.pulseworld.net/?PulseUser=AldwynFox" />
+      
+      <p class="pw-note">
+        These links define your external PulseWorld presence across business, identity, banking, and cloud services. Together they form your public-facing ecosystem, connecting your OS to the modules that represent you online.
+      </p>
     </section>
 
     <!-- PROGRAMMATIC PERMISSIONS -->

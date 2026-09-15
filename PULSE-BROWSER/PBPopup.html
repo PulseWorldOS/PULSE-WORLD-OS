@@ -185,13 +185,8 @@
       height: 0;        /* start collapsed */
       overflow: hidden;
 
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-
       border-top-left-radius: 20px;       /* flipped */
       border-top-right-radius: 20px;
-
-      box-shadow: 0 -6px 20px rgba(0,255,255,0.25); /* flipped shadow */
 
       transition: height 0.35s ease;
       z-index: 9999;
@@ -201,6 +196,8 @@
 
     /* MODULE BUTTONS INSIDE POPUP */
     .module-btn {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       display: block;
       width: 80%;
       margin: 3px auto;
@@ -242,10 +239,10 @@
     <div class="module-btn" id="mod-social"><span class="module-icon" id="moduleSocialIcon">🎭</span> Accelerated Social</div>
     <div class="module-btn" id="mod-work"><span class="module-icon" id="moduleWorkIcon">💼</span> Accelerated Work</div>
     <div class="module-btn" id="mod-stream"><span class="module-icon" id="moduleStreamIcon">📺</span> Accelerated Stream</div>
-    <div class="module-btn" id="mod-1">Accelerated 1 ⚡</div>
-    <div class="module-btn" id="mod-2">Accelerated 2 ⚡</div>
-    <div class="module-btn" id="mod-3">Accelerated 3 ⚡</div>
-    <div class="module-btn" id="mod-4">Accelerated 4 ⚡</div>
+    <div class="module-btn" id="mod-1">Accelerated 1 <span class="module-icon" id="module1">⚡</span></div>
+    <div class="module-btn" id="mod-2">Accelerated 2 <span class="module-icon" id="module2">⚡</span></div>
+    <div class="module-btn" id="mod-3">Accelerated 3 <span class="module-icon" id="module3">⚡</span></div>
+    <div class="module-btn" id="mod-4">Accelerated 4 <span class="module-icon" id="module4">⚡</span></div>
   </div>
 
   <!-- ========================= -->
