@@ -319,6 +319,7 @@ checkPersistentStorage(true);
     <button id="pulsepalBtn" aria-label="PulsePal Settings" role="button">PulsePal</button>
     <button id="pulsemeshBtn" aria-label="PulseMesh System" role="button">PulseMesh</button>
     <button id="pulseworkerBtn" aria-label="Pulse Worker" role="button"></button>    
+    <button id="pulse404Btn" aria-label="Pulse Drift" role="button"></button>    
     <button id="aliasSnap" aria-label="Build Alias" role="button">Build PulseWorld Alias</button>
     <button id="extBtn" aria-label="Pulse Extensions" role="button">Pulse Extensions</button>
     
@@ -861,6 +862,7 @@ const globalSpin = document.getElementById("globalSpin");
 const pulseStatus = document.getElementById("pulseStatus");
 const pulsemeshBtn = document.getElementById("pulsemeshBtn");
 const pulseworkerBtn = document.getElementById("pulseworkerBtn");
+const pulse404Btn = document.getElementById("pulse404Btn");
 const extBtn = document.getElementById("extBtn");
 const scannerBtn = document.getElementById("scannerBtn");
 const ghostBtn = document.getElementById("ghostBtn");
@@ -1207,6 +1209,7 @@ let isTouchMobile = false;
     globalSpin.style.display = "none";
     pulsemeshBtn.style.display = "none";
     pulseworkerBtn.style.display = "none";
+    pulse404Btn.style.display = "none";
     chromebgmobile.style.display = "block";
   }
 
@@ -3650,6 +3653,11 @@ if (pulsepalBtn) {
   };
 }
 
+if (pulse404Btn) {
+  pulse404Btn.onclick = async () => {
+    window.location.href = "/404";
+  };
+}
 if (pulseworkerBtn) {
   pulseworkerBtn.onclick = async () => {
     
