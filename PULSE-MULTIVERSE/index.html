@@ -561,6 +561,7 @@ PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
   stack: [
     {
+      identity: PulseRealm.PulseUser,
       page: PulseRealm.__PULSE_CURRENT_PAGE__ ?? null,
       timing: PulseRealm.LoadTiming ?? 0,
       time: PulseRealm.CurrentTime,
