@@ -3511,7 +3511,7 @@ if (inventoryBtn) {
 // ENGINE
 if (engineBtn) {
   engineBtn.onclick = () => {
-    ensureLocationAccess();
+    pulseNotify("PulseBrowser OS","PulseWorldEmail: Testing Notifications through the Browser!");
     
     if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PULSE-ENGINE-BLOCK") {
       location.reload();
