@@ -882,7 +882,21 @@ input[type="file"] {
   }
 }
 
-
+#output {
+  margin-top: 60px;
+  margin-left: -6px;
+  font-size: 12px;
+  background: rgba(0, 20, 30, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 6px;
+  border-radius: 40px;
+  height: 112px;
+  width: 292px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.15), 0 0 10px rgba(0, 255, 255, 0.1);
+}
 </style>
 </head>
 <body>
@@ -918,6 +932,7 @@ input[type="file"] {
         a stabilizing chamber where PulseWorld re‑threads your timeline,  
         restores your realm integrity, and preserves your identity across layers.
         <br><br>
+        <pre id="output"></pre>
         <strong>Your current realm is undergoing a safe correction.</strong>
       </div>
 
@@ -940,7 +955,7 @@ input[type="file"] {
       </div>
 
       <div class="terminal-actions">
-        <button class="btn-primary" onclick="history.back()">RE‑ANCHOR THIS REALM</button>
+        <button class="btn-primary" onclick="history.back();history.back();">RE‑ANCHOR THIS REALM</button>
 
         <!-- Backup universe link -->
         <a href="https://www.binaryos.net"
@@ -2310,6 +2325,21 @@ async function ping(url) {
 
   console.table(results);
 
+  const hud = document.getElementById("output");
+
+  if (hud) {
+    // Convert results object into a table-like string
+    let table = "Realm\tLatency (ms)\n";
+    table += "-------------------------\n";
+
+    for (const realm in results) {
+      table += `${realm}\t${results[realm]} ms\n`;
+    }
+
+    hud.textContent = table;
+  }
+
+
   // Pick best (lowest latency)
   const bestRealm = Object.entries(results)
     .sort((a, b) => a[1] - b[1])[0][0];
@@ -2341,7 +2371,10 @@ async function ping(url) {
   //   location.replace(`/?Impulse=${rawPath}`);
   // }
 
-  setTimeout(location.replace(bestURL), 10000)
+  setTimeout(() => {
+    location.replace(bestURL);
+  }, 10000);
+
 
 })();
 
