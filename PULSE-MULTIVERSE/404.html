@@ -2337,8 +2337,13 @@ async function ping(url) {
     `color:#00e6c7; font-weight:bold; font-family:monospace;`
   );
 
-  // Warp to best realm
-  location.replace(bestURL);
+  const rawPath = location.pathname.replace("/", "");
+  if (rawPath) {
+    location.replace(`/?Impulse=${rawPath}`);
+  }
+
+  // // Warp to best realm
+  // location.replace(bestURL);
 
 })();
 
