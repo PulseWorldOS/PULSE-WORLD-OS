@@ -935,7 +935,6 @@ function loadPulseHistory() {
       };
     }
     const parsed = JSON.parse(raw);
-
     parsed.stack = parsed.stack.map(entry => {
       // Convert string-only entries
       if (typeof entry === "string") {

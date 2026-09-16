@@ -712,7 +712,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
       if (supabaseAdminReadSuspended) return;
       const telemetryEl = document.getElementById("sql-telemetry-output");
       const activityEl  = document.getElementById("admin-activity-output");
-      if (telemetryEl) telemetryEl.textContent = "⏳ Loading user data from Supabase...";
+      if (telemetryEl) telemetryEl.innerHTML = "⏳ Loading user data from Supabase...";
       try {
         const res = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
           method: "POST",
@@ -722,12 +722,12 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
         const data = await res.json();
         if (!data.ok) {
           supabaseAdminReadSuspended = true;
-          if (telemetryEl) telemetryEl.textContent = `❌ Supabase Error: ${data.error}`;
+          if (telemetryEl) telemetryEl.innerHTML = `❌ Supabase Error: ${data.error}`;
           return;
         }
         const users = data.users || [];
         if (telemetryEl) {
-          telemetryEl.textContent = users.length === 0
+          telemetryEl.innerHTML = users.length === 0
             ? "📪 No users synced yet. Waiting for first 7s interval sync..."
             : `✅ ${users.length} user(s) in Supabase\n\n` +
               users.map((u, i) =>
@@ -735,7 +735,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
               ).join("\n");
         }
         if (activityEl) {
-          activityEl.textContent =
+          activityEl.innerHTML =
             `📡 Supabase sync active — ${users.length} record(s) live\n` +
             `🕐 Last fetched: ${new Date().toLocaleString()}\n\n` +
             (users[0] ? `Latest: ${users[0].name||'—'} — ${users[0].email||'—'}` : "Awaiting first sync...");
@@ -743,7 +743,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
       } catch (err) {
         supabaseAdminReadSuspended = true;
         console.error("❌ [Admin] Supabase read failed:", err);
-        if (telemetryEl) telemetryEl.textContent = `❌ Network error: ${err.message}`;
+        if (telemetryEl) telemetryEl.innerHTML = `❌ Network error: ${err.message}`;
       }
     }
 
