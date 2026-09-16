@@ -51,6 +51,16 @@
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
 
+.panel2 {
+  background: rgba(18, 24, 38, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
 /* TITLES */
 .section-title,
 .pulse-title {
@@ -316,7 +326,7 @@
 
 
     <!-- HISTORY LIST PANEL (THE PANEL YOU ASKED FOR) -->
-    <div class="pulse-panel history-list-panel">
+    <div class="panel2 history-list-panel">
       <h3 class="pulse-title">Your PulseHistory Timeline</h3>
       <p style="font-size:14px;color:#8fa0b8;">
         Every entry below represents a moment in your PulseWorld journey.  
