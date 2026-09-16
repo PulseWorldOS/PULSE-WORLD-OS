@@ -951,7 +951,7 @@ async function loadPulseHistory() {
       }
 
       return {
-        identity: PulseRealm.PulseUser ?? await generatePulseUser(),
+        identity: PulseRealm.PulseUser,
         page: entry.page,
         timing: entry.timing ?? PulseRealm.LoadTiming ?? 0,
         time: new Date(entry.time) ?? PulseRealm.CurrentTime,
