@@ -752,7 +752,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
     const adminEmailBtn = document.getElementById("admin-emails");
     const pexBuilderBtn = document.getElementById("admin-pex");
     if (adminEmailBtn) adminEmailBtn.onclick = async () => { loadInternalPage("PulseWorldAdminEmails"); };
-    if (pexBuilderBtn) pexBuilderBtn.onclick = async () => { loadInternalPage("PulseWorldReality"); location.href="#PEXBuilder"; };
+    if (pexBuilderBtn) pexBuilderBtn.onclick = async () => { location.href=`https://${PulseRealm.CurrentHost}/#PEXBuilder`; };
     setInterval(updateClock, 1000);
 
     // ⭐ Auto-load Supabase users on Admin page open
