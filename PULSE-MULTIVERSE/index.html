@@ -5924,7 +5924,7 @@ const options = {
   chunkProfile: "default",
   band: "PulseBand",
   identity: PulseRealm.PulseIdentity,
-  displayName: PulseRealm.PulseUser ?? await generatePulseUser(),
+  displayName: PulseRealm.PulseUser,
 };
 const defaults = {
   region: options.region || "PulseMultiverse#1",
@@ -5933,7 +5933,7 @@ const defaults = {
   page: options.page || "index",
   band: options.band || "binary",
   identity: PulseRealm.PulseIdentity || {},
-  displayName: PulseRealm.PulseUser ?? await generatePulseUser(),
+  displayName: PulseRealm.PulseUser ?? "Unknown User",
   version: PULSE_TOUCH_VERSIONX
 };
 /* ============================================================
