@@ -726,7 +726,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
             ? "📪 No users synced yet. Waiting for first 7s interval sync..."
             : `✅ ${users.length} user(s) in Supabase\n\n` +
               users.map((u, i) =>
-                `[${i+1}] ${u.name||'Unknown'} | ${u.email||'—'} | Points: ${u.pulse_points??0} | Updated: ${u.updated_at ? new Date(u.updated_at).toLocaleString() : '—'}`
+                `[${i+1}] ${u.name||'Unknown'} | ${u.host||'—'} | Points: ${u.pulse_points??0} | Updated: ${u.updated_at ? new Date(u.updated_at).toLocaleString() : '—'}`
               ).join("\n");
         }
         if (activityEl) {
