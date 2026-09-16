@@ -431,7 +431,7 @@ export async function handler(event) {
         proximity: row.proximity || null,
         online: row.online ?? false,
         inactive: row.inactive ?? false,
-        updated_at: row.attrs?.syncedAt || row.created || null
+        updated_at: row.lastUpdated || row.attrs?.syncedAt || row.created || null
       }));
 
       return {
