@@ -558,6 +558,218 @@ checkPersistentStorage(true);
 
 <script>
 
+// ============================================================
+//  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
+// ============================================================
+const PulsePhotoDB = (() => {
+  const DB_NAME = "PulsePhotosDB";
+  const STORE_NAME = "photos";
+
+  let dbPromise = null;
+  const cache = {}; // ⭐ synchronous cache
+
+  function getDB() {
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = () => {
+          request.result.createObjectStore(STORE_NAME);
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+    return dbPromise;
+  }
+
+  async function savePhoto(key, dataURL) {
+    cache[key] = dataURL; // ⭐ keep sync cache updated
+
+    const db = await getDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(dataURL, key);
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+
+  }
+
+  async function loadPhotoAsync(key) {
+    const db = await getDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    return tx.objectStore(STORE_NAME).get(key);
+  }
+
+  // ⭐ synchronous getter (returns cache or null)
+  function loadPhotoSync(key) {
+    return cache[key] || null;
+  }
+
+  // ⭐ warm cache on boot (non-blocking)
+  (async () => {
+    const db = await getDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+
+    store.getAllKeys().onsuccess = async (e) => {
+      const keys = e.target.result;
+      for (const key of keys) {
+        const value = await loadPhotoAsync(key);
+        cache[key] = value;
+      }
+    };
+  })();
+
+  return { savePhoto, loadPhotoSync };
+})();
+
+
+/* ============================================================
+  CANONICAL IDENTITY STORAGE
+  Internal pages are injected into this document, so they must all use this
+  single store instead of declaring competing global save/load functions.
+  ============================================================ */
+const PulseIdentityStore = (() => {
+  const IDENTITY_KEY = "PulseIdentity";
+  const PHOTOS_KEY = "PulsePhotos";
+
+  const readJSON = (key) => {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); }
+    catch { return {}; }
+  };
+
+  const choosePhoto = (savedPhoto, identityPhoto, realmPhoto, fallback) => {
+    const values = [savedPhoto, identityPhoto, realmPhoto];
+    return values.find((value) => typeof value === "string" && value.startsWith("data:image/"))
+      || values.find((value) => typeof value === "string" && value.length > 0)
+      || fallback;
+  };
+
+  function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
+    const saved = readJSON(PHOTOS_KEY);
+    const photos = {
+      photoURL: choosePhoto(saved.photoURL, identityData.photoURL, PulseRealm.PulsePhoto, DEFAULT_PHOTO),
+      aliasPhotoURL: choosePhoto(saved.aliasPhotoURL, identityData.aliasPhotoURL, PulseRealm.PulseAliasPhoto, DEFAULT_ALIAS),
+      bizphotoURL: choosePhoto(saved.bizphotoURL, identityData.bizphotoURL, PulseRealm.PulseBizPhoto, DEFAULT_BIZ),
+      bizaliasPhotoURL: choosePhoto(saved.bizaliasPhotoURL, identityData.bizaliasPhotoURL, PulseRealm.PulseBizAliasPhoto, DEFAULT_BIZ_ALIAS)
+    };
+    PulseRealm.PulsePhoto = photos.photoURL;
+    PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
+    PulseRealm.PulseBizPhoto = photos.bizphotoURL;
+    PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
+    return photos;
+  }
+
+  function savePhotos() {
+    const existing = readJSON(PHOTOS_KEY);
+    const photos = {
+      photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
+      aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
+      bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
+      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
+    };
+    localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
+    
+    // ⭐ save to IndexedDB (async but non-blocking)
+    for (const [key, value] of Object.entries(photos)) {
+      if (typeof value === "string" && value.startsWith("data:image/")) {
+        PulsePhotoDB.savePhoto(key, value);
+      }
+    }
+    
+    return photos;
+  }
+
+
+  function apply(data, photos = loadPhotos(data)) {
+    if (!data || !data.id) return null;
+    PulseRealm.PulseIdentity = data;
+    identity = data;
+    PulseRealm.PulseUser = data.name || PulseRealm.PulseUser;
+    PulseRealm.PulseEmail = data.email || PulseRealm.PulseEmail;
+    PulseRealm.PulseUserEmail = data.userEmail || PulseRealm.PulseUserEmail;
+    PulseRealm.PulseUserName = data.userName || PulseRealm.PulseUserName;
+    PulseRealm.PulsePhone = data.phone || PulseRealm.PulsePhone;
+    PulseRealm.PulseCountry = data.country || PulseRealm.PulseCountry;
+    PulseRealm.PulseRole = data.role || PulseRealm.PulseRole;
+    PulseRealm.PulseWorldRole = data.pulseRole || PulseRealm.PulseWorldRole;
+    PulseRealm.PulseBank = data.bank || PulseRealm.PulseBank;
+    PulseRealm.PulseBankMonitor = data.bankURL || PulseRealm.PulseBankMonitor;
+    PulseRealm.PulseTrustedDevice = data.device ?? PulseRealm.PulseTrustedDevice;
+    PulseRealm.PulsePoints = data.PulsePoints ?? PulseRealm.PulsePoints;
+    PulseRealm.PulsePhoto = photos.photoURL;
+    PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
+    PulseRealm.PulseBizPhoto = photos.bizphotoURL;
+    PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
+    return data;
+  }
+
+  function load() {
+    const stored = readJSON(IDENTITY_KEY);
+    if (stored.id && validName(stored.name)) {
+      apply(stored);
+      if (!stored.email || /^unknown(?: pulse user)?@/i.test(stored.email)) return save();
+      return stored;
+    }
+    return save();
+  }
+
+  function validName(value) {
+    return typeof value === "string" && value.trim() && !/^unknown(?: pulse user)?$/i.test(value.trim());
+  }
+
+  function save(overrides = {}) {
+    const existing = readJSON(IDENTITY_KEY);
+    const photos = loadPhotos(existing);
+    const candidates = [overrides.name, PulseRealm.PulseUser, existing.name, localStorage.getItem("PulseUser")];
+    const pulseName = stripTimestamp(candidates.find(validName) || generateDefaultPulseUser());
+    const data = {
+      id: existing.id || `world-${Math.random().toString(36).slice(2)}`,
+      createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
+      tier: existing.tier || "temporal-os",
+      name: pulseName,
+      email: `${pulseName}@PulseWorld.Net`,
+      userEmail: PulseRealm.PulseUserEmail || existing.userEmail || "YourEmail@Domain.com",
+      userName: PulseRealm.PulseUserName || existing.userName || "Aldwyn",
+      phone: PulseRealm.PulsePhone || existing.phone || "(555) 555-5555",
+      country: PulseRealm.PulseCountry || existing.country || "US",
+      role: PulseRealm.PulseRole || existing.role || "User",
+      pulseRole: PulseRealm.PulseWorldRole || existing.pulseRole || "Entrepreneur",
+      bank: PulseRealm.PulseBank || existing.bank || "Unknown Stripe ID",
+      bankURL: PulseRealm.PulseBankMonitor || existing.bankURL || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
+      stripeLogin: PulseRealm.PulseBankURL || existing.stripeLogin || "https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00",
+      tokenID: PulseRealm.PulseBankID || existing.tokenID || null,
+      assetsWallet: PulseRealm.PulseAssets || existing.assetsWallet || null,
+      drift: PulseRealm.DriftSignature || existing.drift || PulseRealm.GenerateDriftSignature,
+      device: PulseRealm.PulseTrustedDevice ?? existing.device ?? true,
+      photoURL: photos.photoURL,
+      aliasPhotoURL: photos.aliasPhotoURL,
+      bizphotoURL: photos.bizphotoURL,
+      bizaliasPhotoURL: photos.bizaliasPhotoURL,
+      PulsePoints: PulseRealm.PulsePoints ?? existing.PulsePoints ?? 0,
+      PulseLoyalty: PulseRealm.PulseTierPhoto || existing.PulseLoyalty || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
+      ...overrides,
+      name: pulseName,
+      email: `${pulseName}@PulseWorld.Net`
+    };
+    localStorage.setItem(IDENTITY_KEY, JSON.stringify(data));
+    localStorage.setItem("PulseUser", data.name);
+    savePhotos();
+    return apply(data, readJSON(PHOTOS_KEY));
+  }
+
+  function restore(identityData, photosData) {
+    localStorage.setItem(IDENTITY_KEY, JSON.stringify(identityData || {}));
+    if (photosData) localStorage.setItem(PHOTOS_KEY, JSON.stringify(photosData));
+    return load();
+  }
+
+  return Object.freeze({ readJSON, load, save, apply, restore, loadPhotos, savePhotos });
+})();
+
+PulseRealm.PulseIdentityStore = PulseIdentityStore;
+
 let supabaseInterval = 7;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
@@ -2918,218 +3130,6 @@ function setNavigation(pageKey) {
     nav.appendChild(a);
   });
 }
-
-// ============================================================
-//  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
-// ============================================================
-const PulsePhotoDB = (() => {
-  const DB_NAME = "PulsePhotosDB";
-  const STORE_NAME = "photos";
-
-  let dbPromise = null;
-  const cache = {}; // ⭐ synchronous cache
-
-  function getDB() {
-    if (!dbPromise) {
-      dbPromise = new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
-        request.onupgradeneeded = () => {
-          request.result.createObjectStore(STORE_NAME);
-        };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-    }
-    return dbPromise;
-  }
-
-  async function savePhoto(key, dataURL) {
-    cache[key] = dataURL; // ⭐ keep sync cache updated
-
-    const db = await getDB();
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    tx.objectStore(STORE_NAME).put(dataURL, key);
-    return new Promise((resolve, reject) => {
-      tx.oncomplete = () => resolve(true);
-      tx.onerror = () => reject(tx.error);
-    });
-
-  }
-
-  async function loadPhotoAsync(key) {
-    const db = await getDB();
-    const tx = db.transaction(STORE_NAME, "readonly");
-    return tx.objectStore(STORE_NAME).get(key);
-  }
-
-  // ⭐ synchronous getter (returns cache or null)
-  function loadPhotoSync(key) {
-    return cache[key] || null;
-  }
-
-  // ⭐ warm cache on boot (non-blocking)
-  (async () => {
-    const db = await getDB();
-    const tx = db.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-
-    store.getAllKeys().onsuccess = async (e) => {
-      const keys = e.target.result;
-      for (const key of keys) {
-        const value = await loadPhotoAsync(key);
-        cache[key] = value;
-      }
-    };
-  })();
-
-  return { savePhoto, loadPhotoSync };
-})();
-
-
-/* ============================================================
-  CANONICAL IDENTITY STORAGE
-  Internal pages are injected into this document, so they must all use this
-  single store instead of declaring competing global save/load functions.
-  ============================================================ */
-const PulseIdentityStore = (() => {
-  const IDENTITY_KEY = "PulseIdentity";
-  const PHOTOS_KEY = "PulsePhotos";
-
-  const readJSON = (key) => {
-    try { return JSON.parse(localStorage.getItem(key) || "{}"); }
-    catch { return {}; }
-  };
-
-  const choosePhoto = (savedPhoto, identityPhoto, realmPhoto, fallback) => {
-    const values = [savedPhoto, identityPhoto, realmPhoto];
-    return values.find((value) => typeof value === "string" && value.startsWith("data:image/"))
-      || values.find((value) => typeof value === "string" && value.length > 0)
-      || fallback;
-  };
-
-  function loadPhotos(identityData = readJSON(IDENTITY_KEY)) {
-    const saved = readJSON(PHOTOS_KEY);
-    const photos = {
-      photoURL: choosePhoto(saved.photoURL, identityData.photoURL, PulseRealm.PulsePhoto, DEFAULT_PHOTO),
-      aliasPhotoURL: choosePhoto(saved.aliasPhotoURL, identityData.aliasPhotoURL, PulseRealm.PulseAliasPhoto, DEFAULT_ALIAS),
-      bizphotoURL: choosePhoto(saved.bizphotoURL, identityData.bizphotoURL, PulseRealm.PulseBizPhoto, DEFAULT_BIZ),
-      bizaliasPhotoURL: choosePhoto(saved.bizaliasPhotoURL, identityData.bizaliasPhotoURL, PulseRealm.PulseBizAliasPhoto, DEFAULT_BIZ_ALIAS)
-    };
-    PulseRealm.PulsePhoto = photos.photoURL;
-    PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
-    PulseRealm.PulseBizPhoto = photos.bizphotoURL;
-    PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
-    return photos;
-  }
-
-  function savePhotos() {
-    const existing = readJSON(PHOTOS_KEY);
-    const photos = {
-      photoURL: PulseRealm.PulsePhoto || existing.photoURL || DEFAULT_PHOTO,
-      aliasPhotoURL: PulseRealm.PulseAliasPhoto || existing.aliasPhotoURL || DEFAULT_ALIAS,
-      bizphotoURL: PulseRealm.PulseBizPhoto || existing.bizphotoURL || DEFAULT_BIZ,
-      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || existing.bizaliasPhotoURL || DEFAULT_BIZ_ALIAS
-    };
-    localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos));
-    
-    // ⭐ save to IndexedDB (async but non-blocking)
-    for (const [key, value] of Object.entries(photos)) {
-      if (typeof value === "string" && value.startsWith("data:image/")) {
-        PulsePhotoDB.savePhoto(key, value);
-      }
-    }
-    
-    return photos;
-  }
-
-
-  function apply(data, photos = loadPhotos(data)) {
-    if (!data || !data.id) return null;
-    PulseRealm.PulseIdentity = data;
-    identity = data;
-    PulseRealm.PulseUser = data.name || PulseRealm.PulseUser;
-    PulseRealm.PulseEmail = data.email || PulseRealm.PulseEmail;
-    PulseRealm.PulseUserEmail = data.userEmail || PulseRealm.PulseUserEmail;
-    PulseRealm.PulseUserName = data.userName || PulseRealm.PulseUserName;
-    PulseRealm.PulsePhone = data.phone || PulseRealm.PulsePhone;
-    PulseRealm.PulseCountry = data.country || PulseRealm.PulseCountry;
-    PulseRealm.PulseRole = data.role || PulseRealm.PulseRole;
-    PulseRealm.PulseWorldRole = data.pulseRole || PulseRealm.PulseWorldRole;
-    PulseRealm.PulseBank = data.bank || PulseRealm.PulseBank;
-    PulseRealm.PulseBankMonitor = data.bankURL || PulseRealm.PulseBankMonitor;
-    PulseRealm.PulseTrustedDevice = data.device ?? PulseRealm.PulseTrustedDevice;
-    PulseRealm.PulsePoints = data.PulsePoints ?? PulseRealm.PulsePoints;
-    PulseRealm.PulsePhoto = photos.photoURL;
-    PulseRealm.PulseAliasPhoto = photos.aliasPhotoURL;
-    PulseRealm.PulseBizPhoto = photos.bizphotoURL;
-    PulseRealm.PulseBizAliasPhoto = photos.bizaliasPhotoURL;
-    return data;
-  }
-
-  function load() {
-    const stored = readJSON(IDENTITY_KEY);
-    if (stored.id && validName(stored.name)) {
-      apply(stored);
-      if (!stored.email || /^unknown(?: pulse user)?@/i.test(stored.email)) return save();
-      return stored;
-    }
-    return save();
-  }
-
-  function validName(value) {
-    return typeof value === "string" && value.trim() && !/^unknown(?: pulse user)?$/i.test(value.trim());
-  }
-
-  function save(overrides = {}) {
-    const existing = readJSON(IDENTITY_KEY);
-    const photos = loadPhotos(existing);
-    const candidates = [overrides.name, PulseRealm.PulseUser, existing.name, localStorage.getItem("PulseUser")];
-    const pulseName = stripTimestamp(candidates.find(validName) || generateDefaultPulseUser());
-    const data = {
-      id: existing.id || `world-${Math.random().toString(36).slice(2)}`,
-      createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
-      tier: existing.tier || "temporal-os",
-      name: pulseName,
-      email: `${pulseName}@PulseWorld.Net`,
-      userEmail: PulseRealm.PulseUserEmail || existing.userEmail || "YourEmail@Domain.com",
-      userName: PulseRealm.PulseUserName || existing.userName || "Aldwyn",
-      phone: PulseRealm.PulsePhone || existing.phone || "(555) 555-5555",
-      country: PulseRealm.PulseCountry || existing.country || "US",
-      role: PulseRealm.PulseRole || existing.role || "User",
-      pulseRole: PulseRealm.PulseWorldRole || existing.pulseRole || "Entrepreneur",
-      bank: PulseRealm.PulseBank || existing.bank || "Unknown Stripe ID",
-      bankURL: PulseRealm.PulseBankMonitor || existing.bankURL || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
-      stripeLogin: PulseRealm.PulseBankURL || existing.stripeLogin || "https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00",
-      tokenID: PulseRealm.PulseBankID || existing.tokenID || null,
-      assetsWallet: PulseRealm.PulseAssets || existing.assetsWallet || null,
-      drift: PulseRealm.DriftSignature || existing.drift || PulseRealm.GenerateDriftSignature,
-      device: PulseRealm.PulseTrustedDevice ?? existing.device ?? true,
-      photoURL: photos.photoURL,
-      aliasPhotoURL: photos.aliasPhotoURL,
-      bizphotoURL: photos.bizphotoURL,
-      bizaliasPhotoURL: photos.bizaliasPhotoURL,
-      PulsePoints: PulseRealm.PulsePoints ?? existing.PulsePoints ?? 0,
-      PulseLoyalty: PulseRealm.PulseTierPhoto || existing.PulseLoyalty || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-      ...overrides,
-      name: pulseName,
-      email: `${pulseName}@PulseWorld.Net`
-    };
-    localStorage.setItem(IDENTITY_KEY, JSON.stringify(data));
-    localStorage.setItem("PulseUser", data.name);
-    savePhotos();
-    return apply(data, readJSON(PHOTOS_KEY));
-  }
-
-  function restore(identityData, photosData) {
-    localStorage.setItem(IDENTITY_KEY, JSON.stringify(identityData || {}));
-    if (photosData) localStorage.setItem(PHOTOS_KEY, JSON.stringify(photosData));
-    return load();
-  }
-
-  return Object.freeze({ readJSON, load, save, apply, restore, loadPhotos, savePhotos });
-})();
-
-PulseRealm.PulseIdentityStore = PulseIdentityStore;
 
 function savePhotos() { return PulseIdentityStore.savePhotos(); }
 function loadPhotos() { return PulseIdentityStore.loadPhotos(); }
