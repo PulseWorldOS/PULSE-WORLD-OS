@@ -770,6 +770,13 @@ const PulseIdentityStore = (() => {
 
 PulseRealm.PulseIdentityStore = PulseIdentityStore;
 
+async function generatePulseUser() {
+  // Canonical local identity wins over stale asynchronous memory mirrors.
+  const data = PulseIdentityStore.load();
+  return data.name;
+}
+
+if (!PulseRealm.PulseUser) PulseRealm.PulseUser = generatePulseUser();
 let supabaseInterval = 7;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
@@ -7630,12 +7637,6 @@ async function runBootSequenceOnce(Rebooted,isMobile) {
       }, 1200);
     }, BOOT_DURATION);
   }
-}
-
-async function generatePulseUser() {
-  // Canonical local identity wins over stale asynchronous memory mirrors.
-  const data = PulseIdentityStore.load();
-  return data.name;
 }
 
 function generateDefaultPulseUser() {
