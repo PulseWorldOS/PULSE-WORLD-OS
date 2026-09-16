@@ -776,14 +776,14 @@ async function generatePulseUser() {
   return data.name;
 }
 
-if (!PulseRealm.PulseUser) PulseRealm.PulseUser = generatePulseUser();
+
 let supabaseInterval = 7;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
   stack: [
     {
-      identity: PulseRealm.PulseUser ?? generatePulseUser(),
+      identity: PulseRealm.PulseUser ?? await generatePulseUser(),
       page: PulseRealm.__PULSE_CURRENT_PAGE__ ?? null,
       timing: PulseRealm.LoadTiming ?? 0,
       time: PulseRealm.CurrentTime,
@@ -924,7 +924,7 @@ function loadServiceWorker() {
 }
 
 
-function loadPulseHistory() {
+async function loadPulseHistory() {
   try {
     const raw = localStorage.getItem("pulseHistory");
 
@@ -936,11 +936,11 @@ function loadPulseHistory() {
     }
     const parsed = JSON.parse(raw);
 
-    parsed.stack = parsed.stack.map(entry => {
+    parsed.stack = parsed.stack.map(async entry => {
       // Convert string-only entries
       if (typeof entry === "string") {
         return {
-          identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name ?? generatePulseUser(),
+          identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name ?? await generatePulseUser(),
           page: entry,
           timing: 0,
           time: PulseRealm.CurrentTime,   // always real Date
@@ -951,7 +951,7 @@ function loadPulseHistory() {
       }
 
       return {
-        identity: PulseRealm.PulseUser ?? generatePulseUser(),
+        identity: PulseRealm.PulseUser ?? await generatePulseUser(),
         page: entry.page,
         timing: entry.timing ?? PulseRealm.LoadTiming ?? 0,
         time: new Date(entry.time) ?? PulseRealm.CurrentTime,
@@ -1422,7 +1422,7 @@ let isTouchMobile = false;
   // ---------------------------------------------------------
   // 1. Generate PulseUser Identity
   // ---------------------------------------------------------
-  const identity = generatePulseUser();
+  const identity = await generatePulseUser();
 
   if (isTouchMobile) {
     chromebg.style.display = "none";
@@ -5924,7 +5924,7 @@ const options = {
   chunkProfile: "default",
   band: "PulseBand",
   identity: PulseRealm.PulseIdentity,
-  displayName: PulseRealm.PulseUser ?? generatePulseUser(),
+  displayName: PulseRealm.PulseUser ?? await generatePulseUser(),
 };
 const defaults = {
   region: options.region || "PulseMultiverse#1",
@@ -5933,7 +5933,7 @@ const defaults = {
   page: options.page || "index",
   band: options.band || "binary",
   identity: PulseRealm.PulseIdentity || {},
-  displayName: PulseRealm.PulseUser ?? generatePulseUser(),
+  displayName: PulseRealm.PulseUser ?? await generatePulseUser(),
   version: PULSE_TOUCH_VERSIONX
 };
 /* ============================================================
