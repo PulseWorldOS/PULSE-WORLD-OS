@@ -733,7 +733,7 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
           activityEl.innerHTML =
             `📡 Supabase sync active — ${users.length} record(s) live\n` +
             `🕐 Last fetched: ${new Date().toLocaleString()}\n\n` +
-            (users[0] ? `Latest: ${users[0].name||'—'} — ${users[0].email||'—'}` : "Awaiting first sync...");
+            (users[0] ? `Latest: ${users[0].name||'—'} — ${users[0].host||'—'}` : "Awaiting first sync...");
         }
       } catch (err) {
         supabaseAdminReadSuspended = true;
