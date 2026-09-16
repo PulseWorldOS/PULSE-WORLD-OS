@@ -2384,7 +2384,7 @@ async function loadInternalPage(name) {
     PulseRealm.LastTime = Date.now();
     PulseRealm.LoadTiming = performance.now() - now;
     const entry = {
-      identity: PulseRealm.PulseUser ?? generatePulseUser(),
+      identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name ?? await generatePulseUser(),
       page: corrected,
       timing: PulseRealm.LoadTiming,
       time: PulseRealm.CurrentTime,
