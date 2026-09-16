@@ -705,7 +705,7 @@ function loadServiceWorker() {
 }
 
 
-function loadPulseHistory() {
+async function loadPulseHistory() {
   try {
     const raw = localStorage.getItem("pulseHistory");
 
@@ -717,11 +717,11 @@ function loadPulseHistory() {
     }
     const parsed = JSON.parse(raw);
 
-    parsed.stack = parsed.stack.map(entry => {
+    parsed.stack = parsed.stack.map(async entry => {
       // Convert string-only entries
       if (typeof entry === "string") {
         return {
-          identity: PulseRealm.PulseUser ?? generatePulseUser(),
+          identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name ?? await generatePulseUser(),
           page: entry,
           timing: 0,
           time: PulseRealm.CurrentTime,   // always real Date
@@ -732,7 +732,7 @@ function loadPulseHistory() {
       }
 
       return {
-        identity: PulseRealm.PulseUser ?? generatePulseUser(),
+        identity: PulseRealm.PulseUser ?? PulseRealm.PulseIdentity.name ?? await generatePulseUser(),
         page: entry.page,
         timing: entry.timing ?? PulseRealm.LoadTiming ?? 0,
         time: new Date(entry.time) ?? PulseRealm.CurrentTime,
