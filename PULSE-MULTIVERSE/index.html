@@ -3113,6 +3113,11 @@ function setNavigation(pageKey) {
       // If this link loads an internal page, load it first
       if (link.load) {
         await loadInternalPage(link.load);
+        if (link.href && link.href.startsWith("#")) {
+          setTimeout(() => {
+            location.hash = link.href;
+          }, 250);
+        }
       }
 
       // If the link has a hash, jump AFTER the page loads
