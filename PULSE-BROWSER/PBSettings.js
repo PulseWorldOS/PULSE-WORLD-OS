@@ -550,11 +550,23 @@ if (document.getElementById("btn-back")) {
 if (document.getElementById("tetherBtn")) {
   document.getElementById("tetherBtn").onclick = () => {
     if (document.getElementById("tetherCode").value && document.getElementById("tetherCode").value.length === 4) {
-      fetch("https://pulseworld.netlify.app/.netlify/functions/PULSE-SERVER-SQL", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
-      });
+      try {
+        fetch("https://pulseworld.netlify.app/.netlify/functions/PULSE-SERVER-SQL", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+          body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
+        });
+      } catch (err) {
+        document.getElementById("tetherCode").style.backgroundColor = "red";
+        setTimeout(() => {
+          document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
+        }, 2000);
+      }
+    } else {
+      document.getElementById("tetherCode").style.backgroundColor = "red";
+      setTimeout(() => {
+        document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
+      }, 2000);
     };
   };
 };

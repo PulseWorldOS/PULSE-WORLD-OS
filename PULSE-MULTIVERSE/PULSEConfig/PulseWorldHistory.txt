@@ -353,7 +353,7 @@
         <!-- JS will populate details here -->
         <!-- Example:
         <div class="history-detail-row"><span>Page:</span> /castle/overview</div>
-        <div class="history-detail-row"><span>Identity:</span> AldwynFox</div>
+        <div class="history-detail-row"><span>Identity:</span> *AldwynFox</div>
         <div class="history-detail-row"><span>Date:</span> Aug 21, 2026 — 9:14 PM</div>
         <div class="history-detail-row"><span>Index:</span> 12</div>
         <div class="history-detail-row"><span>Load Duration:</span> 42ms</div>
@@ -497,7 +497,7 @@ function renderPulseHistory() {
     const syncValue = e.disableSW ? "45%" : "100%";
     detailEl.innerHTML = `
       <div class="history-detail-row"><span>Page:</span> ${e.page}</div>
-      <div class="history-detail-row"><span>Identity:</span> ${e.identity}</div>
+      <div class="history-detail-row"><span>Identity:</span> ${e.identity ?? "Unknown"}</div>
       <div class="history-detail-row"><span>Date:</span> ${e.time}</div>
       <div class="history-detail-row"><span>Index:</span> ${i}</div>
       <div class="history-detail-row"><span>Load Duration:</span> ${(e.timing).toFixed(2)} ms</div>
