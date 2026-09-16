@@ -369,13 +369,16 @@
       font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size: 0.75rem;
       color: var(--text-soft);
-      max-height: 280px;
+      max-height: 250px;
+      overflow: hidden;
     }
 
     .console-body pre {
       margin: 0;
       white-space: pre-wrap;
       word-break: break-word;
+      max-height: 100%;
+      overflow-y: auto;
     }
 
     .console-footer {
