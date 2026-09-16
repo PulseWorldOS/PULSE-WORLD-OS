@@ -69,14 +69,7 @@
       pointer-events: none;
       z-index: -1;
     }
-  /* FULL BACKGROUND IMAGE */
-  .pw-admin-bg {
-    position: fixed;
-    inset: 0;
-    background: url('./_EXPRESSIONS/_PEX/BUILD/PulseWorldDomain.webp.pex') center/cover no-repeat;
-    filter: brightness(0.35) blur(2px);
-    z-index: -3;
-  }
+  
 
   /* LIGHT OVERLAY GLOW */
   .pw-admin-overlay {
@@ -89,7 +82,7 @@
 
   /* MAIN EMBLEM IMAGE */
   .pw-admin-main-image {
-    width: 260px;
+    width: 220px;
     border-radius: 999px;
     margin: 0 auto 30px;
     display: block;
@@ -487,7 +480,7 @@
 </head>
 <body>
   <!-- BACKGROUND IMAGE -->
-  <div class="pw-admin-bg"></div>
+
 
   <!-- OVERLAY GLOW -->
   <div class="pw-admin-overlay"></div>
