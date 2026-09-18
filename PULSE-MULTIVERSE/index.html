@@ -827,6 +827,7 @@ const refreshInstance = document.querySelector(".btn-primary");
 const bootVideo = document.getElementById("bootVideo");
 const viewport =  document.getElementById("viewport");
 const badge = document.getElementById("pulsepal-badge");
+const tetherCode = document.getElementById("tetherCode");
 const talk = document.getElementById("pulsepal-talk");
 const speedPulse = document.getElementById("speedPulse");
 const speedPulseX = document.getElementById("speedPulseX");
@@ -3166,13 +3167,15 @@ function pulseSupabaseSync() {
       ensureLocationAccess();
       const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
       const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+      const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
       if (!storedIdentity.id) return;
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}"), photos: storedPhotos, host: PulseRealm.CurrentHost, online: true, inactive: false })
+        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, tetherCode: tetherCode, online: true, inactive: false })
       }).then((response) => {
         if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+        tetherCode.value = "";
       }).catch(() => {
         PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
       });

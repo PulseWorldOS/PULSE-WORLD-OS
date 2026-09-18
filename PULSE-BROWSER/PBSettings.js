@@ -555,6 +555,10 @@ if (document.getElementById("tetherBtn")) {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
           body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
+        }).then((response) => {
+          if (!response.ok) document.getElementById("tetherCode").value = "";
+        }).catch(() => {
+          document.getElementById("tetherCode").style.backgroundColor = "red";
         });
       } catch (err) {
         document.getElementById("tetherCode").style.backgroundColor = "red";
