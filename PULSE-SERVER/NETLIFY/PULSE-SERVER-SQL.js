@@ -306,7 +306,8 @@ export async function handler(event) {
         lastUpdated: now,
         host,
         online,
-        inactive
+        inactive,
+        tetherID: existing.userID
       };
 
       let result;
@@ -331,7 +332,7 @@ export async function handler(event) {
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
-        body: JSON.stringify({ ok: true, synced: identity.id })
+        body: JSON.stringify({ ok: true, synced: tetherCode })
       };
     }
 

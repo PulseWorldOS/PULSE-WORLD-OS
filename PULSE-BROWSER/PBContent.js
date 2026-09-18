@@ -433,6 +433,7 @@ function updateHUD() {
         <font color="#0FF">Last URL:</font> ${displayURL}<br/>
         <font color="#0FF">Domain:</font> ${realm.lastDomainClass || "-"}<br/>
         <font color="#0FF">Ping:</font> ${realm.lastPing || "-"}<br/>
+        <font color="#0FF">Messages:</font> ${"No Active Messages"}<br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">
         <b><font color="white">Local PulseBrowser Tab Stats</font></b><br/>
         <font color="#0FF">PageReady:</font> ${domTime}ms<br/>
