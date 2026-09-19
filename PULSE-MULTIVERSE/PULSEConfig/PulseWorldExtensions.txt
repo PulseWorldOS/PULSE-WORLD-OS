@@ -529,7 +529,7 @@
           <h3 class="card-title">🌐 Integration-Wise</h3>
           <p class="card-subtitle">Multi-domain World-Layer Connectivity.</p>
           <ul class="card-list">
-            <li>Bridges PulseWorld, OrbitalMap, BinaryOS, BooleanLogic and ServiceWorker ports.</li>
+            <li>Bridges PulseWorld, OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing and ServiceWorker ports.</li>
             <li>Creates a unified identity layer across all PulseWorld realms.</li>
             <li>Supports cross-domain world-layer physics.</li>
             <li>Keeps extension logic clean and deterministic.</li>
@@ -548,7 +548,7 @@
         </article>
 
         <article class="card">
-          <h3 class="card-title">🏢 Business-Wise & 📡 Proximity-Wise</h3>
+          <h3 class="card-title">🏢 Business-Wise</h3>
           <p class="card-subtitle">Local Identity, Global Safety.</p>
           <ul class="card-list">
             <li>Enables local business visibility through proximity, not surveillance.</li>
