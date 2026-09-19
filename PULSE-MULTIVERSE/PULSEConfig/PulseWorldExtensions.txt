@@ -89,7 +89,7 @@
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 62px;
+      gap: 82px;
       margin-top: 10px;
     }
 
@@ -509,14 +509,14 @@
     <!-- SPEED / INTEGRATION / WORLD / BUSINESS / PROXIMITY -->
     <section class="section" id="capabilities">
       <div class="section-header">
-        <h2 class="section-title">Engine Capabilities</h2>
+        <h2 class="section-title">PulseEngine Capabilities</h2>
         <span class="section-tag">Speed • Integration • World • Business • Proximity</span>
       </div>
 
       <div class="grid-4">
         <article class="card">
           <h3 class="card-title">⚡ Speedwise</h3>
-          <p class="card-subtitle">Tier 2 performance core for everyday browsing.</p>
+          <p class="card-subtitle">Tier 2 Performance Core for Everyday Browsing.</p>
           <ul class="card-list">
             <li>Preloads common assets for instant responsiveness.</li>
             <li>Reduces layout thrashing and script stalls.</li>
@@ -527,7 +527,7 @@
 
         <article class="card">
           <h3 class="card-title">🌐 Integration-Wise</h3>
-          <p class="card-subtitle">Multi-domain world-layer connectivity.</p>
+          <p class="card-subtitle">Multi-domain World-Layer Connectivity.</p>
           <ul class="card-list">
             <li>Bridges PulseWorld, OrbitalMap, BinaryOS, BooleanLogic and ServiceWorker ports.</li>
             <li>Creates a unified identity layer across all PulseWorld realms.</li>
@@ -538,7 +538,7 @@
 
         <article class="card">
           <h3 class="card-title">🏙️ World-Wise</h3>
-          <p class="card-subtitle">Presence without surveillance.</p>
+          <p class="card-subtitle">Presence Without Surveillance.</p>
           <ul class="card-list">
             <li>Uses proximity bubbles instead of raw GPS coordinates.</li>
             <li>Allows anonymous presence until mutual consent.</li>
@@ -549,7 +549,7 @@
 
         <article class="card">
           <h3 class="card-title">🏢 Business-Wise & 📡 Proximity-Wise</h3>
-          <p class="card-subtitle">Local identity, global safety.</p>
+          <p class="card-subtitle">Local Identity, Global Safety.</p>
           <ul class="card-list">
             <li>Enables local business visibility through proximity, not surveillance.</li>
             <li>Supports PulseBusiness identity tethering.</li>
