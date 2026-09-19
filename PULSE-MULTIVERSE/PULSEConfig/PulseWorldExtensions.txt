@@ -561,10 +561,15 @@
 
       <div class="link-row" style="margin-top: 16px;">
         <span>Supported domains:</span>
-        <a href="https://www.pulseworld.net" target="_blank" rel="noopener noreferrer">Pulse World OS</a>
-        <a href="https://www.pulseworld.me" target="_blank" rel="noopener noreferrer">Pulse Identity</a>
-        <a href="https://www.pulseworld.biz" target="_blank" rel="noopener noreferrer">Pulse Business</a>
-        <a href="https://www.pulseworld.money" target="_blank" rel="noopener noreferrer">Pulse Banking</a>
+        <a href="https://www.pulseworld.net" target="Pulse World OS" rel="noopener noreferrer">Pulse World OS</a>
+        <a href="https://www.pulseworld.me" target="Pulse Identity" rel="noopener noreferrer">Pulse Identity</a>
+        <a href="https://www.pulseworld.biz" target="Pulse Business" rel="noopener noreferrer">Pulse Business</a>
+        <a href="https://www.pulseworld.money" target="Pulse Banking" rel="noopener noreferrer">Pulse Banking</a>
+        <a href="https://www.serviceworker.net" target="ServiceWorker" rel="noopener noreferrer">ServiceWorker</a>
+        <a href="https://www.binaryos.net" target="BinaryOS" rel="noopener noreferrer">BinaryOS</a>
+        <a href="https://www.booleanlogic.net" target="BooleanLogic" rel="noopener noreferrer">BooleanLogic</a>
+        <a href="https://www.gpuprocessing.net" target="GPUProcessing" rel="noopener noreferrer">GPUProcessing</a>
+        <a href="https://www.orbitalmap.net" target="OrbitalMap" rel="noopener noreferrer">OrbitalMap</a>
       </div>
     </section>
 
