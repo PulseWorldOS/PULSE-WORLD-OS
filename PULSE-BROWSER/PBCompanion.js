@@ -173,6 +173,30 @@ const PB_ASSETS = [
   "/config.json", "/manifest.json", "/engine.wasm"
 ];
 
+const PB_GENERIC_ASSETS = [
+  "/favicon.ico",
+  "/manifest.json",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/logo.png",
+  "/index.html",
+  "/main.js",
+  "/styles.css"
+];
+
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
+
+
 // ---------------------------------------------------------------------------
 // DNS WARM (resolve domain early)
 // ---------------------------------------------------------------------------
@@ -229,8 +253,11 @@ function pbPreconnect(origins = []) {
 // PRELOAD (asset warm-path) + Realm counter
 // ---------------------------------------------------------------------------
 function pbPreload(origin) {
-  const urls = PB_ASSETS.map((p) => origin + p);
-  urls.forEach((url) => {
+  const urls = isPulseWorld(origin)
+    ? PB_PULSEWORLD_ASSETS.map(p => origin + p)
+    : PB_GENERIC_ASSETS.map(p => origin + p);
+
+  urls.forEach(url => {
     try { fetch(url, { cache: "force-cache" }).catch(() => {}); } catch (_) {}
   });
 
@@ -240,6 +267,7 @@ function pbPreload(origin) {
 
   console.log("%c[PBAccelerator] Preload:", "color:#00C8FF;", urls);
 }
+
 
 // ---------------------------------------------------------------------------
 // GPU WARM (decode shaders early) + Realm counter
