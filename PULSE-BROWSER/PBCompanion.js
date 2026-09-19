@@ -168,9 +168,11 @@ async function getSettings() {
 // ASSET TARGETS (JS/CSS/WASM/JSON)
 // ---------------------------------------------------------------------------
 const PB_ASSETS = [
-  "/PBContent.js", "/PBDevOverlay.js", "/PBDevTools.js", "/PBSettings.js",
-  "/PBInterceptor.js", "/PBRealmBridge.js", "/PBRouter.js",
-  "/config.json", "/manifest.json", "/engine.wasm"
+  "/index.html", "/DriftCompanion.js", "/PWFavIcon.ico", "/PWManifest.json",
+  "/site.webmanifest", "/404.html", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex",
+  "/_EXPRESSIONS/_PEX/BUILD/PulseEngine.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSBootLoader.webp.pex",
+  "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex",
+  "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal3.webp.pex"
 ];
 
 const PB_GENERIC_ASSETS = [
