@@ -425,9 +425,8 @@
      PULSE EXTENSIONS IMAGE CSS
      ============================ */
   .pulse-legendary-wrapper {
-    width: 100%;
-    max-width: 980px;
-    margin: 0 auto 40px;
+    width: 300px;
+    margin: 0 auto;
     padding: 0;
     border-radius: 18px;
     overflow: hidden;
