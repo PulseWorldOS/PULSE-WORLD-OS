@@ -7,7 +7,7 @@
 
   <title>PulseBrowser OS (Tier 2) Engine — Extension Preview</title>
   <link rel="prefetch" fetchpriority="high" href="/">
-  <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions.webp.pex" type="image/webp"/>
+  <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" type="image/webp"/>
 
   <!-- Legendary CSS -->
   <style>
@@ -462,7 +462,7 @@
          ============================ -->
     <section style="margin-top: 20px; text-align: center;">
       <div class="pulse-legendary-wrapper">
-        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions.webp.pex" alt="Pulse Extensions Legendary Showcase">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
       </div>
 
       <p class="pulse-legendary-caption">
