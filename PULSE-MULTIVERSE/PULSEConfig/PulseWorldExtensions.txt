@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="PulseBrowser OS (Tier 2) Engine — World-Layer Performance, Proximity Identity, and Multi-Domain Integration." />
+
+  <title>PulseBrowser OS (Tier 2) Engine — Extension Preview</title>
+  <link rel="prefetch" fetchpriority="high" href="/">
+  <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions.webp.pex" type="image/webp"/>
+
+  <!-- Legendary CSS -->
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-alt: #0b1020;
+      --accent: #00c8ff;
+      --accent-soft: rgba(0, 200, 255, 0.12);
+      --accent-strong: rgba(0, 200, 255, 0.35);
+      --text: #f5f7ff;
+      --muted: #9aa0c2;
+      --border: #1b2238;
+      --danger: #ff4b81;
+      --success: #3dd68c;
+      --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.55);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #101633 0, #050814 55%, #02030a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 16px 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 840px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-title {
+      font-size: 2.6rem;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 18px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+    }
+
+    .hero-badge span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00c8ff, #3dd68c);
+      color: #02030a;
+      box-shadow: 0 12px 32px rgba(0, 200, 255, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(0, 200, 255, 0.6);
+    }
+
+    .btn-ghost {
+      background: rgba(11, 16, 32, 0.9);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(18, 24, 48, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .hero-image-card {
+      background: linear-gradient(145deg, #0b1020, #050814);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .hero-image-title {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .hero-image-pill {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--accent-strong);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(0, 200, 255, 0.25) 0, transparent 40%),
+        radial-gradient(circle at 90% 100%, rgba(61, 214, 140, 0.25) 0, transparent 40%),
+        linear-gradient(135deg, #050814, #0b1020);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image-logo {
+      font-size: 1.4rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(0, 200, 255, 0.8);
+    }
+
+    .hero-image-orbit {
+      position: absolute;
+      width: 72%;
+      height: 72%;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 200, 255, 0.35);
+      box-shadow: 0 0 24px rgba(0, 200, 255, 0.35);
+    }
+
+    .hero-image-node {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 16px rgba(0, 200, 255, 0.9);
+    }
+
+    .hero-image-node:nth-child(1) { top: 12%; left: 50%; transform: translateX(-50%); }
+    .hero-image-node:nth-child(2) { bottom: 14%; left: 18%; }
+    .hero-image-node:nth-child(3) { bottom: 18%; right: 16%; }
+    .hero-image-node:nth-child(4) { top: 40%; left: 10%; }
+    .hero-image-node:nth-child(5) { top: 36%; right: 8%; }
+
+    .hero-image-footer {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-image-footer span.accent {
+      color: var(--accent);
+    }
+
+    .section {
+      background: rgba(5, 8, 20, 0.96);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 22px 22px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-tag {
+      font-size: 0.8rem;
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 960px) {
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .grid-4 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 14px 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(0, 200, 255, 0.12), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .card-list {
+      list-style: none;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .card-list li {
+      margin-bottom: 4px;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .card-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .link-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .link-row a:hover {
+      text-decoration: underline;
+    }
+
+    .tether-section {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 840px) {
+      .tether-section {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .tether-box {
+      background: var(--bg-alt);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--accent-strong);
+      padding: 16px 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tether-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0% 0%, rgba(0, 200, 255, 0.18), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .tether-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .tether-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tether-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #050814;
+      color: var(--text);
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .tether-input::placeholder {
+      color: #4f5678;
+    }
+
+    .tether-status {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .tether-status span {
+      color: var(--accent);
+    }
+
+    .tether-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .footer {
+      margin-top: 26px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .footer span {
+      color: var(--accent);
+    }
+
+  /* ============================
+     PULSE EXTENSIONS IMAGE CSS
+     ============================ */
+  .pulse-legendary-wrapper {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto 40px;
+    padding: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 200, 255, 0.35);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  .pulse-legendary-wrapper img {
+    width: 100%;
+    display: block;
+  }
+
+  .pulse-legendary-caption {
+    text-align: center;
+    max-width: 760px;
+    margin: 20px auto 50px;
+    color: #9aa0c2;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .pulse-legendary-caption strong {
+    color: #00c8ff;
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+
+    <!-- ============================
+         NEW LEGENDARY IMAGE SECTION
+         ============================ -->
+    <section style="margin-top: 20px; text-align: center;">
+      <div class="pulse-legendary-wrapper">
+        <img src="PulseWorldExtensions.webp.pex" alt="Pulse Extensions Legendary Showcase">
+      </div>
+
+      <p class="pulse-legendary-caption">
+        Pulse Extensions expand your digital world — giving you <strong>speed</strong>,  
+        <strong>identity safety</strong>, <strong>proximity physics</strong>,  
+        <strong>business visibility</strong>, and a browser that finally feels  
+        like <strong>your own world-layer OS</strong>.
+      </p>
+    </section>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          <span>Tier 2 • World-Layer Engine</span>
+        </div>
+        <h1 class="hero-title">PulseBrowser OS Engine Extension</h1>
+        <p class="hero-subtitle">
+          A world-layer performance engine for the browser. Faster pages, safer identity, proximity-based presence, and
+          multi-domain integration across PulseWorld, OrbitalMap, BinaryOS, and ServiceWorker ports.
+        </p>
+        <div class="hero-actions">
+          <a
+            class="btn btn-primary"
+            href="https://chrome.google.com/webstore/detail/pulsebrowser-os-tier2-engine"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>Install from Chrome Web Store</span>
+          </a>
+          <button class="btn btn-ghost" type="button" onclick="scrollToSection('capabilities')">
+            <span>View Engine Capabilities</span>
+          </button>
+        </div>
+      </div>
+
+      <aside class="hero-image-card">
+        <div class="hero-image-header">
+          <div class="hero-image-title">Extension Preview • PulseBrowser OS</div>
+          <div class="hero-image-pill">World-Layer Engine</div>
+        </div>
+        <div class="hero-image">
+          <div class="hero-image-orbit"></div>
+          <div class="hero-image-logo">PULSEBROWSER OS</div>
+          <div class="hero-image-node"></div>
+          <div class="hero-image-node"></div>
+          <div class="hero-image-node"></div>
+          <div class="hero-image-node"></div>
+          <div class="hero-image-node"></div>
+        </div>
+        <div class="hero-image-footer">
+          <span>Preview image for the PulseBrowser OS (Tier 2) Engine extension.</span>
+          <span class="accent">PNG • 5.6 KB • application/javascript-backed</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- SPEED / INTEGRATION / WORLD / BUSINESS / PROXIMITY -->
+    <section class="section" id="capabilities">
+      <div class="section-header">
+        <h2 class="section-title">Engine Capabilities</h2>
+        <span class="section-tag">Speed • Integration • World • Business • Proximity</span>
+      </div>
+
+      <div class="grid-4">
+        <article class="card">
+          <h3 class="card-title">⚡ Speedwise</h3>
+          <p class="card-subtitle">Tier 2 performance core for everyday browsing.</p>
+          <ul class="card-list">
+            <li>Preloads common assets for instant responsiveness.</li>
+            <li>Reduces layout thrashing and script stalls.</li>
+            <li>Accelerates world-layer modules and service-worker ports.</li>
+            <li>Optimizes tab-to-tab transitions via PBAccelerator.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">🌐 Integration-Wise</h3>
+          <p class="card-subtitle">Multi-domain world-layer connectivity.</p>
+          <ul class="card-list">
+            <li>Bridges PulseWorld, OrbitalMap, BinaryOS, and ServiceWorker ports.</li>
+            <li>Creates a unified identity layer across all PulseWorld realms.</li>
+            <li>Supports cross-domain world-layer physics.</li>
+            <li>Keeps extension logic clean and deterministic.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">🏙️ World-Wise</h3>
+          <p class="card-subtitle">Presence without surveillance.</p>
+          <ul class="card-list">
+            <li>Uses proximity bubbles instead of raw GPS coordinates.</li>
+            <li>Allows anonymous presence until mutual consent.</li>
+            <li>Supports neighborhood-level communication without exposing home addresses.</li>
+            <li>Powers world-layer OS modules above the browser.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">🏢 Business-Wise & 📡 Proximity-Wise</h3>
+          <p class="card-subtitle">Local identity, global safety.</p>
+          <ul class="card-list">
+            <li>Enables local business visibility through proximity, not surveillance.</li>
+            <li>Supports PulseBusiness identity tethering.</li>
+            <li>Lets businesses appear in world-layer maps without revealing exact coordinates.</li>
+            <li>Users appear only when they are close enough to matter.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="link-row" style="margin-top: 16px;">
+        <span>Supported domains:</span>
+        <a href="https://www.pulseworld.net" target="_blank" rel="noopener noreferrer">Pulse World OS</a>
+        <a href="https://www.pulseworld.me" target="_blank" rel="noopener noreferrer">Pulse Identity</a>
+        <a href="https://www.pulseworld.biz" target="_blank" rel="noopener noreferrer">Pulse Business</a>
+        <a href="https://www.pulseworld.money" target="_blank" rel="noopener noreferrer">Pulse Banking</a>
+      </div>
+    </section>
+
+    <!-- TETHER CODE -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">TetherCode Activation</h2>
+        <span class="section-tag">Identity • Business • Realm</span>
+      </div>
+
+      <div class="tether-section">
+        <div id="tetherBox" class="tether-box">
+          <div class="tether-label">Enter your TetherCode to bind identity, business, or realm to the PulseBrowser OS Engine.</div>
+          <div class="tether-input-row">
+            <input
+              type="text"
+              id="tetherCode"
+              class="tether-input"
+              placeholder="Your TetherCode here"
+              autocomplete="off"
+            />
+            <button class="btn btn-primary" type="button" id="tetherActivateBtn">
+              <span>Activate (60s)</span>
+            </button>
+          </div>
+          <div class="tether-status" id="tetherStatus">
+            Status: <span>Idle</span>
+          </div>
+        </div>
+
+        <div class="tether-meta">
+          <p style="margin-bottom: 8px;">
+            When you press <span>Activate</span>, your TetherCode is tagged into the PulseBrowser OS Engine for a
+            <span>60-second timer loop</span>. During that loop, the extension can treat your code as a live tether for
+            presence, business identity, or realm binding.
+          </p>
+          <p style="margin-bottom: 8px;">
+            After 60 seconds, the TetherCode input box disappears from this page, signaling that the loop has completed.
+            The extension can continue to use the tether internally, but the visible activation window closes.
+          </p>
+          <p>
+            This is how world-layer identity should feel: brief, intentional, proximity-aware, and never permanently
+            exposed in the UI.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENGINE MODULES -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Engine Modules</h2>
+        <span class="section-tag">Tier 2 Core</span>
+      </div>
+
+      <div class="grid-4">
+        <article class="card">
+          <h3 class="card-title">PBContent.js</h3>
+          <p class="card-subtitle">World-layer content manager.</p>
+          <ul class="card-list">
+            <li>Coordinates content across PulseWorld realms.</li>
+            <li>Ensures deterministic rendering.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">PBDevTools.js & PBDevOverlay.js</h3>
+          <p class="card-subtitle">Developer visibility without leaking internals.</p>
+          <ul class="card-list">
+            <li>Overlay tools for inspecting world-layer behavior.</li>
+            <li>Safe diagnostics for extension and OS modules.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">PBSettings.js & PBRouter.js</h3>
+          <p class="card-subtitle">Configuration and routing.</p>
+          <ul class="card-list">
+            <li>OS-level configuration for PulseBrowser Engine.</li>
+            <li>World-layer routing between realms and domains.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">PBInterceptor.js & PBRealmBridge.js</h3>
+          <p class="card-subtitle">Signals and realm communication.</p>
+          <ul class="card-list">
+            <li>Interception of relevant browser events.</li>
+            <li>Bridge between identity realms and proximity bubbles.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>
+        PulseBrowser OS (Tier 2) Engine is not just an extension — it is a
+        <span>world-layer operating system</span> for the browser.  
+        Built for proximity, identity, and speed. This is the extension page Google should have displayed years ago.
+      </p>
+    </footer>
+
+  </main>
+
+
+  <!-- Legendary JS -->
+  <script>
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    (function setupTether() {
+      const box = document.getElementById("tetherBox");
+      const input = document.getElementById("tetherCode");
+      const btn = document.getElementById("tetherActivateBtn");
+      const status = document.getElementById("tetherStatus");
+
+      if (!box || !input || !btn || !status) return;
+
+      btn.addEventListener("click", () => {
+        const code = input.value.trim();
+        if (!code) {
+          status.innerHTML = 'Status: <span style="color:' + "var(--danger)" + '">TetherCode required</span>';
+          return;
+        }
+
+        // Tag the tetherCode for a 60-second loop
+        console.log("[PulseBrowserOS] TetherCode Activated:", code);
+
+        status.innerHTML =
+          'Status: <span style="color:' +
+          "var(--success)" +
+          '">Active (60s loop)</span>';
+
+        // Example: send to extension if available
+        try {
+          if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.sendMessage) {
+            chrome.runtime.sendMessage({
+              type: "PULSE_TETHER_ACTIVATE",
+              tetherCode: code,
+              ttlSeconds: 60
+            });
+          }
+        } catch (_) {
+          // ignore
+        }
+
+        // After 60 seconds, hide the tether box
+        setTimeout(() => {
+          if (box) {
+            box.style.opacity = "0";
+            box.style.transform = "translateY(4px)";
+            setTimeout(() => {
+              box.style.display = "none";
+            }, 260);
+          }
+        }, 60000);
+      });
+    })();
+  </script>
+</body>
+</html>
