@@ -119,6 +119,7 @@
 
     .btn-ghost {
       background: rgba(11, 16, 32, 0.9);
+      padding: 2px 18px;
       color: var(--muted);
       border: 1px solid var(--border);
     }
@@ -500,7 +501,7 @@
         <div class="hero-image-footer">
           <span>Preview image for the PulseBrowser OS (Tier 2) Engine extension.</span>
           <span class="accent">PEX • 170 KB • using the Pulse Expression eXtension format.</span>
-          <span class="accent">Tier 2 Engine • ~9 MB • Integrate and Spread your Authority!</span>
+          <span class="accent">PulseBrowser OS Tier 2 Engine • ~9 MB • Integrate and Spread your Authority!</span>
         </div>
       </aside>
     </section>
