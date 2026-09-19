@@ -359,7 +359,7 @@ content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, 
 
 <body>
 <video id="vaultVideo" src="./_EXPRESSIONS/_VIDEOS/PulseVault" autoplay muted playsinline style="display:block;" aria-label="Vault Video"></video>
-<div class="vaultBackground">
+<div class="PulseWorldVault1">
   <div class="vaultPageShell">
 
     <!-- HEADER -->
