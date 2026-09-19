@@ -55,6 +55,11 @@ export async function handler() {
     await warm("../pulse-multiverse/_creation_barrier/pulse-boot-world.js", null);
     await warm("../pulse-multiverse/PULSEConfig/PulseWorldReality.txt", null);
     await warm("../pulse-multiverse/PULSEConfig/PulseWorldInventory.txt", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldBusiness.txt", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldRewards.txt", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldVault.txt", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldEmail.txt", null);
+    await warm("../pulse-multiverse/PULSEConfig/PulseWorldHistory.txt", null);
   };
 
   // ==========================================================================
@@ -85,7 +90,8 @@ export async function handler() {
       .from("PulseIdentity")
       .update({
         online: false,
-        inactive: false
+        inactive: false,
+        lastOffline: nowISO
       })
       .eq("online", true)
       .lt("lastUpdated", offlineCutoff);
