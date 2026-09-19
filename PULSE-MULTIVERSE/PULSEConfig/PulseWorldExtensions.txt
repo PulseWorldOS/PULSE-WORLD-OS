@@ -34,19 +34,10 @@
       padding: 0;
     }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      background: radial-gradient(circle at top, #101633 0, #050814 55%, #02030a 100%);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 40px 16px 60px;
-      display: flex;
-      justify-content: center;
-    }
-
     .page {
       width: 100%;
-      max-width: 1120px;
+      margin: 0px auto;
+      max-width: var(--tp-max-width);
     }
 
     .hero {
