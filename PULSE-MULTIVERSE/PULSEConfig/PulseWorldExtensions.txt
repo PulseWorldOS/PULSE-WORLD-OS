@@ -526,7 +526,7 @@
           <h3 class="card-title">🌐 Integration-Wise</h3>
           <p class="card-subtitle">Multi-domain world-layer connectivity.</p>
           <ul class="card-list">
-            <li>Bridges PulseWorld, OrbitalMap, BinaryOS, and ServiceWorker ports.</li>
+            <li>Bridges PulseWorld, OrbitalMap, BinaryOS, BooleanLogic and ServiceWorker ports.</li>
             <li>Creates a unified identity layer across all PulseWorld realms.</li>
             <li>Supports cross-domain world-layer physics.</li>
             <li>Keeps extension logic clean and deterministic.</li>
