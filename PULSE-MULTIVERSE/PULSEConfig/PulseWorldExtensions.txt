@@ -498,7 +498,7 @@
         </div>
         <div class="hero-image-footer">
           <span>Preview image for the PulseBrowser OS (Tier 2) Engine extension.</span>
-          <span class="accent">PNG • 5.6 KB • application/javascript-backed</span>
+          <span class="accent">PEX • 170 KB • application/javascript-backed and using the pulse expression extension format.</span>
         </div>
       </aside>
     </section>
