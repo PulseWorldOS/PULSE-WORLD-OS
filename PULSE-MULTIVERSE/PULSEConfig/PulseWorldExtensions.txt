@@ -463,7 +463,7 @@
          ============================ -->
     <section style="margin-top: 20px; text-align: center;">
       <div class="pulse-legendary-wrapper">
-        <img src="PulseWorldExtensions.webp.pex" alt="Pulse Extensions Legendary Showcase">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions.webp.pex" alt="Pulse Extensions Legendary Showcase">
       </div>
 
       <p class="pulse-legendary-caption">
