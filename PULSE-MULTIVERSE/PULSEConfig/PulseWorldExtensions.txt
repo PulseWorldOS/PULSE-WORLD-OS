@@ -397,7 +397,7 @@
      PULSE EXTENSIONS IMAGE CSS
      ============================ */
   .pulse-legendary-wrapper {
-    width: 320px;
+    width: 420px;
     margin: 0 auto;
     padding: 0;
     border-radius: 18px;
@@ -407,6 +407,21 @@
   }
 
   .pulse-legendary-wrapper img {
+    width: 100%;
+    display: block;
+  }
+
+  .pulse-supreme-wrapper {
+    width: 320px;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 200, 255, 0.35);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  .pulse-supreme-wrapper img {
     width: 100%;
     display: block;
   }
@@ -523,7 +538,7 @@
           <div class="hero-image-title">Extension Preview • PulseBrowser OS</div>
           <div class="hero-image-pill">World-Layer Engine</div>
         </div>
-        <div class="pulse-legendary-wrapper">
+        <div class="pulse-supreme-wrapper">
           <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" alt="Pulse Extensions Legendary Showcase">
         </div>
         <div class="hero-image-footer">
