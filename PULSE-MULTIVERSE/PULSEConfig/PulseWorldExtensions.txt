@@ -461,10 +461,6 @@
           These modules are elevated to OS-level anchors: accelerated, cached, pre-connected, identity-verified, GPU-assisted,
           and always warm. They replace the outdated “favorites” model with a living, intelligent system that understands your
           daily patterns, stabilizes your identity pathways, and keeps your essential services instantly available.
-          <br><br>
-          Through Tier 2, the browser becomes aware of the modules you actually use, optimizing them with proximity signals,
-          pre-rendering, and world-layer routing. This transforms PulseBrowser from a page viewer into a true operating system
-          for human life — faster, safer, and deeply integrated with the way people really move through the web.
         </p>
 
         <div class="pulse-legendary-wrapper">
