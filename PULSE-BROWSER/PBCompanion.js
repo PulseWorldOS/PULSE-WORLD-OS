@@ -256,7 +256,7 @@ function pbPreconnect(origins = []) {
 // ---------------------------------------------------------------------------
 function pbPreload(origin) {
   const urls = isPulseWorld(origin)
-    ? PB_PULSEWORLD_ASSETS.map(p => origin + p)
+    ? PB_ASSETS.map(p => origin + p)
     : PB_GENERIC_ASSETS.map(p => origin + p);
 
   urls.forEach(url => {
