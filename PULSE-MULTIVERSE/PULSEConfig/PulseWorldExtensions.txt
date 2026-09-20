@@ -448,9 +448,7 @@
           <span>Tier 2 • World-Layer Engine</span>
         </div>
         <h1 class="hero-title">PulseBrowser OS - Tier 2 Engine</h1>
-        <div class="pulse-legendary-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" alt="Pulse Extensions Legendary Showcase">
-        </div>
+        
         <p class="hero-subtitle">
           A world-layer performance engine for the browser. Faster pages, safer identity, proximity-based presence, and
           multi-domain integration across every PulseWorld realm, as well as, OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing and ServiceWorker ports.
@@ -471,7 +469,7 @@
             <span>Install from Chrome Web Store</span>
           </a>
           <button class="btn btn-ghost" type="button" onclick="loadInternalPage('PulseWorldTiers')">
-            <span>View Engine Tiers & Capabilities</span>
+            <span>View Engine Tiers/Capabilities</span>
           </button>
         </div>
       </div>
@@ -482,7 +480,7 @@
           <div class="hero-image-pill">World-Layer Engine</div>
         </div>
         <div class="pulse-legendary-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
+          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" alt="Pulse Extensions Legendary Showcase">
         </div>
         <div class="hero-image-footer">
           <span>Preview image for the PulseBrowser OS (Tier 2) Engine Extension.</span>
@@ -652,6 +650,9 @@
 
     <!-- FOOTER -->
     <footer class="footer">
+      <div class="pulse-legendary-wrapper">
+        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
+      </div>
       <p>
         PulseBrowser OS (Tier 2) Engine is not just an extension — it is a
         <span>world-layer operating system</span> for the browser.  
