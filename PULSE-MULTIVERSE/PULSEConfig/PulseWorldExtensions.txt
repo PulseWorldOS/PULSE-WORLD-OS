@@ -93,7 +93,6 @@
 
     .btn-primary:hover {
       color: #FFFFFF;
-      transform: scale(1.08);
       box-shadow: 0 16px 40px rgba(0, 200, 255, 0.6);
     }
 
@@ -114,7 +113,6 @@
 
     .btn-ghost:hover {
       background: rgba(18, 24, 48, 0.95);
-      transform: scale(1.08);
     }
 
     .hero-image-card {
