@@ -474,16 +474,16 @@
     <!-- HERO -->
     <section class="hero">
       <div class="hero-section">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          <span>Tier 2 • World-Layer Engine</span>
+        </div>
         <div class="main-image-wrap">
           <img src="./_EXPRESSIONS/_PEX/BUILD/ChromeExtensionsPulseWorld.webp.pex" 
               alt="Pulse History" 
               class="main-image">
         </div>
-        <div class="hero-badge">
-          <span class="dot"></span>
-          <span>Tier 2 • World-Layer Engine</span>
-        </div>
-        
+                
         <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
 
         <p class="hero-subtitle">
