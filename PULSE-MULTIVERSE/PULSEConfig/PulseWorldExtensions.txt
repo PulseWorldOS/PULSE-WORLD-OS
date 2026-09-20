@@ -455,8 +455,11 @@
           A world-layer performance engine for the browser. Tier 2 rebuilds the original favorites system into the five core
           human modules — Email, Banking, Social, Work, and Streaming — each accelerated, cached, pre-connected, and identity-safe.
           These modules become OS-level anchors that keep your essential digital life instantly available, always warm, and
-          optimized through proximity-based presence and world-layer routing.
+          optimized through proximity-based presence and world-layer routing. By overlaying the browser with a world instead of
+          a UI, Tier 2 transforms everyday browsing into a structured, living environment that understands what you use and
+          accelerates the paths that matter most.
         </p>
+
 
         <div class="pulse-legendary-wrapper">
           <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
