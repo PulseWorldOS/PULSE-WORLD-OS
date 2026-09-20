@@ -448,6 +448,11 @@
           <span class="dot"></span>
           <span>Tier 2 • World-Layer Engine</span>
         </div>
+        <a href="#" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
+            onclick="loadInternalPage('PulseWorldTiers'); return false;">
+          <strong>Learn More</strong> →
+          <strong>PulseWorld Tier Breakdown</strong>
+        </a>
         <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
         
         <p class="hero-subtitle">
@@ -467,11 +472,6 @@
             target="Extensions"
             rel="noopener noreferrer">
             <span>Install from Chrome Web Store</span>
-          </a>
-          <a href="#" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
-             onclick="loadInternalPage('PulseWorldTiers'); return false;">
-            <strong>Learn More</strong> →
-            <strong>PulseWorld Tier Breakdown</strong>
           </a>
         </div>
       </div>
