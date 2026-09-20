@@ -455,17 +455,16 @@
           A world-layer performance engine for the browser. Faster pages, safer identity, proximity-based presence, and
           multi-domain integration across every PulseWorld realm, as well as, OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing and ServiceWorker ports.
         </p>
+        <div class="pulse-legendary-wrapper">
+          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
+        </div>
         <p class="pulse-legendary-caption">
           Pulse Extensions expand your digital world — giving you <strong>speed</strong>,  
           <strong>identity safety</strong>, <strong>proximity physics</strong>,  
           <strong>business visibility</strong>, and a browser that finally feels  
           like <strong>your own world-layer OS</strong>.
         </p>
-        <a href="#" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
-            onclick=`loadInternalPage("PulseWorldTiers"); return false;`>
-          <strong>Learn More</strong> →
-          <strong>PulseWorld Tier Breakdown</strong>
-        </a>
+        
         <div class="hero-actions">
           <a
             class="btn btn-primary"
@@ -558,6 +557,11 @@
         <a href="https://www.gpuprocessing.net" target="GPUProcessing" rel="noopener noreferrer">GPUProcessing</a>
         <a href="https://www.orbitalmap.net" target="OrbitalMap" rel="noopener noreferrer">OrbitalMap</a>
       </div>
+      <a href="#" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
+          onclick=`loadInternalPage("PulseWorldTiers"); return false;`>
+        <strong>Learn More</strong> →
+        <strong>PulseWorld Tier Breakdown</strong>
+      </a>
     </section>
 
     <!-- TETHER CODE -->
@@ -608,7 +612,7 @@
     <!-- ENGINE MODULES -->
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">Engine Modules</h2>
+        <h2 class="section-title">Pulse Engine Modules</h2>
         <span class="section-tag">Tier 2 Core</span>
       </div>
 
@@ -653,14 +657,13 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-      <div class="pulse-legendary-wrapper">
-        <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
-      </div>
+      <br>
       <p>
         PulseBrowser OS (Tier 2) Engine is not just an extension — it is a
         <span>world-layer operating system</span> for the browser.  
         Built for proximity, identity, and speed. This is the extension page Google should have displayed years ago.
       </p>
+      <br>
     </footer>
 
   </main>
