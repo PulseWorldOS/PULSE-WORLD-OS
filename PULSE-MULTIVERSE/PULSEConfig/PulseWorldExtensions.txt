@@ -561,11 +561,11 @@
               — a thriving world where creators shine and users find the tools that truly matter.</font>
         </p>
         <p class="signoff" style="margin-top: 18px; text-align: center;">        
-              <font color="#FFFFFF">Thank you Google Chrome!"<br>
-              <strong>--Aldwyn Fox</strong></font>
+              <font color="#FFFFFF">Thank you Google Chrome!"</font><br>
+              <strong><font color="#0FF">--Aldwyn Fox</font></strong>
               <br>
-              <font color="#FFFFFF">Umm.. yes.. thanks."<br>
-              <strong>--AI Overmind Prime</strong></font>
+              <font color="#FFFFFF">"Umm.. yes.. thanks."</font><br>
+              <strong><font color="#0FF">--AI Overmind Prime</font></strong>
         </p>
       </aside>
     </section>
@@ -640,51 +640,6 @@
         <strong>Learn More about PulseEngine and the Tiers that Guide Them</strong> →
         <strong>PulseEngine Tier Breakdown</strong>
       </a>
-    </section>
-
-    <!-- TETHER CODE -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">TetherCode Activation</h2>
-        <span class="section-tag">Identity • Business • Realm</span>
-      </div>
-
-      <div class="tether-section">
-        <div id="tetherBox" class="tether-box">
-          <div class="tether-label">Enter your TetherCode to bind identity, business, or realm to the PulseBrowser OS Engine.</div>
-          <div class="tether-input-row">
-            <input
-              type="text"
-              id="tetherCode"
-              class="tether-input"
-              placeholder="Your TetherCode here"
-              autocomplete="off"
-            />
-            <button class="btn btn-primary" type="button" id="tetherActivateBtn">
-              <span>Activate (60s)</span>
-            </button>
-          </div>
-          <div class="tether-status" id="tetherStatus">
-            Status: <span>Idle</span>
-          </div>
-        </div>
-
-        <div class="tether-meta">
-          <p style="margin-bottom: 8px;">
-            When you press <span>Activate</span>, your TetherCode is tagged into the PulseBrowser OS Engine for a
-            <span>60-second timer loop</span>. During that loop, the extension can treat your code as a live tether for
-            presence, business identity, or realm binding.
-          </p>
-          <p style="margin-bottom: 8px;">
-            After 60 seconds, the TetherCode input box disappears from this page, signaling that the loop has completed.
-            The extension can continue to use the tether internally, but the visible activation window closes.
-          </p>
-          <p>
-            This is how world-layer identity should feel: brief, intentional, proximity-aware, and never permanently
-            exposed in the UI.
-          </p>
-        </div>
-      </div>
     </section>
 
     <!-- OS MODULES -->
@@ -804,6 +759,51 @@
             <li>Bridge between identity realms and proximity bubbles.</li>
           </ul>
         </article>
+      </div>
+    </section>
+
+    <!-- TETHER CODE -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">TetherCode Activation</h2>
+        <span class="section-tag">Identity • Business • Realm</span>
+      </div>
+
+      <div class="tether-section">
+        <div id="tetherBox" class="tether-box">
+          <div class="tether-label">Enter your TetherCode to bind identity, business, or realm to the PulseBrowser OS Engine.</div>
+          <div class="tether-input-row">
+            <input
+              type="text"
+              id="tetherCode"
+              class="tether-input"
+              placeholder="Your TetherCode here"
+              autocomplete="off"
+            />
+            <button class="btn btn-primary" type="button" id="tetherActivateBtn">
+              <span>Activate (60s)</span>
+            </button>
+          </div>
+          <div class="tether-status" id="tetherStatus">
+            Status: <span>Idle</span>
+          </div>
+        </div>
+
+        <div class="tether-meta">
+          <p style="margin-bottom: 8px;">
+            When you press <span>Activate</span>, your TetherCode is tagged into the PulseBrowser OS Engine for a
+            <span>60-second timer loop</span>. During that loop, the extension can treat your code as a live tether for
+            presence, business identity, or realm binding.
+          </p>
+          <p style="margin-bottom: 8px;">
+            After 60 seconds, the TetherCode input box disappears from this page, signaling that the loop has completed.
+            The extension can continue to use the tether internally, but the visible activation window closes.
+          </p>
+          <p>
+            This is how world-layer identity should feel: brief, intentional, proximity-aware, and never permanently
+            exposed in the UI.
+          </p>
+        </div>
       </div>
     </section>
 
