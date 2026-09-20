@@ -554,7 +554,7 @@
             <strong>PulseWorld</strong> exists to honor that achievement. We’re not here to replace <strong>Chrome</strong> or compete with it; we’re here to elevate the creators who make the browser extraordinary.
             <font color="#0FF">By giving extensions a place to be discovered, showcased, and celebrated, <strong>PulseWorld</strong> helps the ecosystem grow into the marketplace it always had the potential to become
               — a thriving world where creators shine and users find the tools that truly matter.</font>
-              <p></p>
+              <p></p><p></p><br>
               Thank you Google Chrome!"<br>
               --Aldwyn Fox
         </p>
