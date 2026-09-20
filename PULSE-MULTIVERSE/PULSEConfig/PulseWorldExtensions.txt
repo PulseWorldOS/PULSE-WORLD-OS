@@ -94,7 +94,6 @@
 
     .btn-primary:hover {
       color: #FFFFFF;
-      transform: translateY(-1px);
       box-shadow: 0 16px 40px rgba(0, 200, 255, 0.6);
     }
 
@@ -474,8 +473,7 @@
         </p>
         
         <div class="hero-actions">
-          <a
-            class="btn btn-primary"
+          <a class="btn btn-primary"
             href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
             target="Extensions"
             rel="noopener noreferrer">
