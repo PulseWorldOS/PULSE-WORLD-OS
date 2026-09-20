@@ -548,13 +548,15 @@
           <span class="accent">PulseBrowser OS Tier 2 Extension • ~9 MB • Integrate and Spread your New Authority!</span>
         </div>
         <p></p>
-        <p class="purpose" style="margin-top: 14px;">
-          <strong>Chrome</strong> created one of the most revolutionary ecosystems on the web — <font color="#0FF">the extension platform</font> — but it never became the celebration it deserved.
+        <p class="purpose" style="margin-top: 34px;">
+          "<strong>Chrome</strong> created one of the most revolutionary ecosystems on the web — <font color="#0FF">the extension platform</font> — but it never became the celebration it deserved.
           Millions of creators built tools that changed how people browse, work, and live online, yet the ecosystem never got a stage, a spotlight, or a world of its own.
             <strong>PulseWorld</strong> exists to honor that achievement. We’re not here to replace <strong>Chrome</strong> or compete with it; we’re here to elevate the creators who make the browser extraordinary.
             <font color="#0FF">By giving extensions a place to be discovered, showcased, and celebrated, <strong>PulseWorld</strong> helps the ecosystem grow into the marketplace it always had the potential to become
-              — a thriving world where creators shine and users find the tools that truly matter.</font><br>
-              Thank you Google Chrome!
+              — a thriving world where creators shine and users find the tools that truly matter.</font>
+              <p></p>
+              Thank you Google Chrome!"<br>
+              --Aldwyn Fox
         </p>
       </aside>
     </section>
