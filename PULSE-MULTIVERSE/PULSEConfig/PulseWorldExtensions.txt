@@ -466,8 +466,8 @@
           >
             <span>Install from Chrome Web Store</span>
           </a>
-          <button class="btn btn-ghost" type="button" onclick="scrollToSection('capabilities')">
-            <span>View Engine Capabilities</span>
+          <button class="btn btn-ghost" type="button" onclick="loadInternalPage('PulseWorldTiers')">
+            <span>View Engine Tiers & Capabilities</span>
           </button>
         </div>
       </div>
