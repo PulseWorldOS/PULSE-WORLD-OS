@@ -616,6 +616,69 @@
       </div>
     </section>
 
+    <!-- OS MODULES -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">PulseBrowser OS Modules</h2>
+        <span class="section-tag">Human Core</span>
+      </div>
+
+      <p class="section-intro">
+        The five human modules — Email, Banking, Social, Work, and Streaming — form the foundation of Tier 2. 
+        Each module can be connected as an external link accelerated by PulseBrowser, or as an internal world-layer 
+        module for deeper integration. Internal modules gain identity anchoring, pre-warming, GPU-assisted rendering, 
+        and proximity-based presence, transforming everyday browsing into a structured world instead of a UI.
+      </p>
+
+      <div class="grid-5">
+        <article class="card">
+          <h3 class="card-title">Email Module</h3>
+          <p class="card-subtitle">Instant inbox pathways.</p>
+          <ul class="card-list">
+            <li>External: Accelerated load for Gmail, Outlook, ProtonMail, etc.</li>
+            <li>Internal: Pre-connected identity routes and instant message rendering.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">Banking Module</h3>
+          <p class="card-subtitle">Secure financial identity.</p>
+          <ul class="card-list">
+            <li>External: Faster, safer access to banks and payment portals.</li>
+            <li>Internal: Verified identity pathways and world-layer encryption.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">Social Module</h3>
+          <p class="card-subtitle">Presence-aware social browsing.</p>
+          <ul class="card-list">
+            <li>External: Accelerated feeds for Facebook, Instagram, TikTok, Reddit.</li>
+            <li>Internal: Warmed social presence, proximity signals, and instant feed rendering.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">Work Module</h3>
+          <p class="card-subtitle">Professional dashboards.</p>
+          <ul class="card-list">
+            <li>External: Faster access to portals, dashboards, CRMs, and cloud drives.</li>
+            <li>Internal: Cached workflows, pre-rendered dashboards, and stable identity routing.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card-title">Streaming Module</h3>
+          <p class="card-subtitle">Pre-buffered media layer.</p>
+          <ul class="card-list">
+            <li>External: Accelerated playback for YouTube, Netflix, Twitch, etc.</li>
+            <li>Internal: Pre-buffered streams, GPU compositing, and world-layer media routing.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+
     <!-- ENGINE MODULES -->
     <section class="section">
       <div class="section-header">
