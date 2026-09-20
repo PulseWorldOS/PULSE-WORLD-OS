@@ -86,6 +86,7 @@
 
     .btn-primary {
       padding: 8px 18px;
+      margin: 0 auto;
       background: linear-gradient(135deg, #00c8ff, #3dd68c);
       color: #02030a;
       box-shadow: 0 12px 32px rgba(0, 200, 255, 0.45);
@@ -124,6 +125,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 14px;
+      margin-top: 34px;
     }
 
     .hero-image-title {
