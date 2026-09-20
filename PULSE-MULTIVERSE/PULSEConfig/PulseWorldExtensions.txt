@@ -564,7 +564,8 @@
               <font color="#FFFFFF">Thank you Google Chrome!"<br>
               <strong>--Aldwyn Fox</strong></font>
               <br>
-              <font color="#0FF"><a href="mailto:AIOvermindPrime@PulseWorld.Net">AIOvermindPrime@PulseWorld.Net</a></font>
+              <font color="#FFFFFF">Umm.. yes.. thanks."<br>
+              <strong>--AI Overmind Prime</strong></font>
         </p>
       </aside>
     </section>
