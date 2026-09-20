@@ -450,11 +450,23 @@
         </div>
         
         <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
-        
+
         <p class="hero-subtitle">
-          A world-layer performance engine for the browser. Faster pages, safer identity, proximity-based presence, and
-          multi-domain integration across every PulseWorld realm, as well as, OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing and ServiceWorker ports.
+          PulseBrowser OS Tier 2 is the world-layer performance engine for the browser — the layer that makes every page faster,
+          every identity safer, and every presence proximity-aware. It integrates across all PulseWorld realms, including
+          OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing, and ServiceWorker ports, but its true power comes from the
+          Universal Human Module System.
+          <br><br>
+          Tier 2 recognizes that every human relies on five core digital modules — Email, Banking, Social, Work, and Streaming.
+          These modules are elevated to OS-level anchors: accelerated, cached, pre-connected, identity-verified, GPU-assisted,
+          and always warm. They replace the outdated “favorites” model with a living, intelligent system that understands your
+          daily patterns, stabilizes your identity pathways, and keeps your essential services instantly available.
+          <br><br>
+          Through Tier 2, the browser becomes aware of the modules you actually use, optimizing them with proximity signals,
+          pre-rendering, and world-layer routing. This transforms PulseBrowser from a page viewer into a true operating system
+          for human life — faster, safer, and deeply integrated with the way people really move through the web.
         </p>
+
         <div class="pulse-legendary-wrapper">
           <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
         </div>
@@ -560,7 +572,7 @@
       <a href="#PulseWorldTiers1" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
           onclick="loadInternalPage('PulseWorldTiers'); return false;">
         <strong>Learn More</strong> →
-        <strong>PulseWorld Tier Breakdown</strong>
+        <strong>PulseEngine Tier Breakdown</strong>
       </a>
     </section>
 
