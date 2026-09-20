@@ -530,11 +530,11 @@
             rel="noopener noreferrer">
             <span>Install from Chrome Web Store</span>
           </a>
-          <a class="btn btn-primary"
+          <a class="btn btn-ghost"
             href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
             target="Extensions"
             rel="noopener noreferrer">
-            <span>Explore PulseWorld Extensions Marketplace</span>
+            <span>Explore PulseWorld Marketplace</span>
           </a>
         </div>
       </div>
