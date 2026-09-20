@@ -531,6 +531,12 @@
             rel="noopener noreferrer">
             <span>Install from Chrome Web Store</span>
           </a>
+          <a class="btn btn-primary"
+            href="chrome://extensions/"
+            target="Extensions"
+            rel="noopener noreferrer">
+            <span>Explore Extension Marketplace</span>
+          </a>
         </div>
       </div>
 
