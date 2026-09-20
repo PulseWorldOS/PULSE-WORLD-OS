@@ -87,6 +87,19 @@
       transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
     }
 
+    .btn-unit {
+      padding: 8px 18px;
+      margin: 0px auto;
+      background: linear-gradient(135deg, #00c8ff, #3dd68c);
+      color: #02030a;
+      box-shadow: 0 12px 32px rgba(0, 200, 255, 0.45);
+    }
+
+    .btn-unit:hover {
+      color: #FFFFFF;
+      transform: scale(1.08);
+      box-shadow: 0 16px 40px rgba(0, 200, 255, 0.6);
+    }
 
     .btn-ghost {
       background: rgba(11, 16, 32, 0.9);
@@ -512,13 +525,13 @@
         </p>
         
         <div class="hero-actions">
-          <a class="btn-primary"
+          <a class="btn-unit"
             href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
             target="Extensions"
             rel="noopener noreferrer">
             <span>Install from Chrome Web Store</span>
           </a>
-          <a class="btn-primary"
+          <a class="btn-unit"
             href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
             target="Extensions"
             rel="noopener noreferrer">
@@ -647,7 +660,7 @@
               placeholder="Your TetherCode here"
               autocomplete="off"
             />
-            <button class="btn-primary" type="button" id="tetherActivateBtn">
+            <button class="btn-unit" type="button" id="tetherActivateBtn">
               <span>Activate (60s)</span>
             </button>
           </div>
