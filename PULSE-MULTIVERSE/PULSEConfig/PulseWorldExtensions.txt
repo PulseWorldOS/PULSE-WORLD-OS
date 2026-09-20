@@ -700,11 +700,12 @@
 
       <div class="grid-4">
         <article class="card">
-          <h3 class="card-title">PBContent.js</h3>
-          <p class="card-subtitle">World-layer content manager.</p>
+          <h3 class="card-title">PBContent.js & PBAccelerator.js</h3>
+          <p class="card-subtitle">World-layer content manager with acceleration.</p>
           <ul class="card-list">
             <li>Coordinates content across PulseWorld realms.</li>
             <li>Ensures deterministic rendering.</li>
+            <li>Perpetual Preloading/Acceleration.</li>
           </ul>
         </article>
 
