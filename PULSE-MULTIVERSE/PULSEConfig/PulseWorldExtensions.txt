@@ -557,7 +557,7 @@
         </p>
         <p class="signoff" style="margin-top: 18px; text-align: center;">        
               <font color="#FFFFFF">Thank you Google Chrome!"<br>
-              --Aldwyn Fox</font>
+              <strong>--Aldwyn Fox</strong></font>
         </p>
       </aside>
     </section>
