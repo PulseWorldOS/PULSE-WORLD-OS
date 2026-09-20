@@ -8,6 +8,7 @@
   <title>PulseBrowser OS (Tier 2) Engine — Extension Preview</title>
   <link rel="prefetch" fetchpriority="high" href="/">
   <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" type="image/webp"/>
+  <link rel="preload" fetchpriority="high" as="image" href="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" type="image/png"/>
 
   <!-- Legendary CSS -->
   <style>
@@ -446,7 +447,10 @@
           <span class="dot"></span>
           <span>Tier 2 • World-Layer Engine</span>
         </div>
-        <h1 class="hero-title">PulseBrowser OS Engine Extension</h1>
+        <h1 class="hero-title">PulseBrowser OS - Tier 2 Engine</h1>
+        <div class="pulse-legendary-wrapper">
+          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
+        </div>
         <p class="hero-subtitle">
           A world-layer performance engine for the browser. Faster pages, safer identity, proximity-based presence, and
           multi-domain integration across every PulseWorld realm, as well as, OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing and ServiceWorker ports.
@@ -478,7 +482,7 @@
           <div class="hero-image-pill">World-Layer Engine</div>
         </div>
         <div class="pulse-legendary-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldExtensions-Logo.webp.pex" alt="Pulse Extensions Legendary Showcase">
+          <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" alt="Pulse Extensions Legendary Showcase">
         </div>
         <div class="hero-image-footer">
           <span>Preview image for the PulseBrowser OS (Tier 2) Engine Extension.</span>
