@@ -448,11 +448,7 @@
           <span class="dot"></span>
           <span>Tier 2 • World-Layer Engine</span>
         </div>
-        <a href="#" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
-            onclick="loadInternalPage('PulseWorldTiers'); return false;">
-          <strong>Learn More</strong> →
-          <strong>PulseWorld Tier Breakdown</strong>
-        </a>
+        
         <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
         
         <p class="hero-subtitle">
@@ -465,6 +461,11 @@
           <strong>business visibility</strong>, and a browser that finally feels  
           like <strong>your own world-layer OS</strong>.
         </p>
+        <a href="#" class="pb-docs-link2" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
+            onclick="loadInternalPage('PulseWorldTiers'); return false;">
+          <strong>Learn More</strong> →
+          <strong>PulseWorld Tier Breakdown</strong>
+        </a>
         <div class="hero-actions">
           <a
             class="btn btn-primary"
