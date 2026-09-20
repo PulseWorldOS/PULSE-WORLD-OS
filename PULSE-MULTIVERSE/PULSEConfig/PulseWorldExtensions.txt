@@ -841,7 +841,6 @@
    
     timerX = timerX + 1;
     if (timerX >= 6) {
-      vaultVideo.style.display = "none";
       timerX = 0;
     }
   }, 1000);
