@@ -46,6 +46,7 @@
     }
 
     .hero-badge {
+      margin: 0 auto;
       display: inline-flex;
       align-items: center;
       gap: 8px;
