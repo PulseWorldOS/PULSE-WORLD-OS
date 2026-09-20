@@ -533,11 +533,12 @@
         </div>
         <p></p>
         <p class="purpose">
-          Chrome created one of the most revolutionary ecosystems on the web — the extension platform — but it never became the celebration it deserved.
+          <strong>Chrome</strong> created one of the most revolutionary ecosystems on the web — the extension platform — but it never became the celebration it deserved.
           Millions of creators built tools that changed how people browse, work, and live online, yet the ecosystem never got a stage, a spotlight, or a world of its own.
-            PulseWorld exists to honor that achievement. We’re not here to replace Chrome or compete with it; we’re here to elevate the creators who make the browser extraordinary.
+            <strong>PulseWorld</strong> exists to honor that achievement. We’re not here to replace Chrome or compete with it; we’re here to elevate the creators who make the browser extraordinary.
             <font color="#0FF">By giving extensions a place to be discovered, showcased, and celebrated, <strong>PulseWorld</strong> helps the ecosystem grow into the marketplace it always had the potential to become
-              — a thriving world where creators shine and users find the tools that truly matter.</font>
+              — a thriving world where creators shine and users find the tools that truly matter.</font><br>
+              Thank you Google Chrome!
         </p>
       </aside>
     </section>
