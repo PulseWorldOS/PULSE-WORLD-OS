@@ -515,12 +515,12 @@
     <section class="section" id="capabilities">
       <div class="section-header">
         <h2 class="section-title">PulseEngine Capabilities</h2>
-        <span class="section-tag">Speed • Integration • World • Business</span>
+        <span class="section-tag">Performance • Integration • World • Business</span>
       </div>
 
       <div class="grid-4">
         <article class="card">
-          <h3 class="card-title">⚡ Speedwise</h3>
+          <h3 class="card-title">⚡ Performance-Wise</h3>
           <p class="card-subtitle">Tier 2 Performance Core for Everyday Browsing.</p>
           <ul class="card-list">
             <li>Preloads common assets for instant responsiveness.</li>
