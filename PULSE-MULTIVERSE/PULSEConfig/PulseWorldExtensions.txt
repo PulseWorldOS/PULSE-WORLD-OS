@@ -11,23 +11,7 @@
 
   <!-- Legendary CSS -->
   <style>
-    :root {
-      --bg: #050814;
-      --bg-alt: #0b1020;
-      --accent: #00c8ff;
-      --accent-soft: rgba(0, 200, 255, 0.12);
-      --accent-strong: rgba(0, 200, 255, 0.35);
-      --text: #f5f7ff;
-      --muted: #9aa0c2;
-      --border: #1b2238;
-      --danger: #ff4b81;
-      --success: #3dd68c;
-      --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.55);
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
-    }
-
+    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -44,12 +28,6 @@
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
       gap: 32px;
-    }
-
-    @media (max-width: 840px) {
-      .hero {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
 
     .hero-title {
@@ -343,12 +321,6 @@
       align-items: start;
     }
 
-    @media (max-width: 840px) {
-      .tether-section {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
     .tether-box {
       background: var(--bg-alt);
       border-radius: var(--radius-md);
@@ -450,6 +422,16 @@
 
   .pulse-legendary-caption strong {
     color: #00c8ff;
+  }
+
+  
+  @media (max-width: 840px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .tether-section {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 </style>
 </head>
