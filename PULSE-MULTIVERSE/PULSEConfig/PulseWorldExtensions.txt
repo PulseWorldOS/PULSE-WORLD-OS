@@ -93,6 +93,7 @@
 
     .btn-primary:hover {
       color: #FFFFFF;
+      transform: scale(1.08);
       box-shadow: 0 16px 40px rgba(0, 200, 255, 0.6);
     }
 
@@ -113,6 +114,7 @@
 
     .btn-ghost:hover {
       background: rgba(18, 24, 48, 0.95);
+      transform: scale(1.08);
     }
 
     .hero-image-card {
@@ -525,21 +527,21 @@
           <strong>business visibility</strong>, and a browser that finally feels  
           like <strong>your own world-layer OS</strong>.
         </p>
-        
-        <div class="hero-actions">
-          <a class="btn-primary"
-            href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
-            target="Extensions"
-            rel="noopener noreferrer">
-            <span>Install from Chrome Web Store</span>
-          </a>
-          <a class="btn-ghost"
-            href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
-            target="Extensions"
-            rel="noopener noreferrer">
-            <span>Explore PulseWorld Marketplace</span>
-          </a>
-        </div>
+      
+      
+        <a class="btn-primary"
+          href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
+          target="Extensions"
+          rel="noopener noreferrer">
+          <span>Install from Chrome Web Store</span>
+        </a>
+        <a class="btn-ghost"
+          href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
+          target="Extensions"
+          rel="noopener noreferrer">
+          <span>Explore PulseWorld Marketplace</span>
+        </a>
+      
       </div>
 
       <aside class="hero-image-card">
