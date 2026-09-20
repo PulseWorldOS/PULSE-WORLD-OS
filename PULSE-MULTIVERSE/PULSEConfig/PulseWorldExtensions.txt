@@ -70,7 +70,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 32px;
-      margin-top: 10px;
     }
 
     .btn {
@@ -86,7 +85,7 @@
 
     .btn-primary {
       padding: 8px 18px;
-      margin: 10px auto;
+      margin: 0px auto;
       background: linear-gradient(135deg, #00c8ff, #3dd68c);
       color: #02030a;
       box-shadow: 0 12px 32px rgba(0, 200, 255, 0.45);
@@ -421,7 +420,8 @@
     margin: 10px auto;
     color: #9aa0c2;
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.6;    
+    margin-bottom: 10px;
   }
 
   .pulse-legendary-caption strong {
