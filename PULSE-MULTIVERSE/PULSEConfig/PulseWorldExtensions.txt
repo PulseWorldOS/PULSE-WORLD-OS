@@ -636,7 +636,7 @@
       </div>
       <a href="#PulseWorldTiers1" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
           onclick="loadInternalPage('PulseWorldTiers'); return false;">
-        <strong>Learn More</strong> →
+        <strong>Learn More about PulseEngine and the Tiers that Guide Them</strong> →
         <strong>PulseEngine Tier Breakdown</strong>
       </a>
     </section>
