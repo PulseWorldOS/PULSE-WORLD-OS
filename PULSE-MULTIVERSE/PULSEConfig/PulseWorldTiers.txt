@@ -405,7 +405,7 @@
 
     <!-- HERO -->
     <section class="pw-hero">
-      <div>
+      <div class="PulseWorldTiers1">
         <div class="pw-hero-pill">
           <span>PULSEWORLD TIERS</span>
           <span>TRUST → ACCESS</span>

@@ -557,7 +557,7 @@
         <a href="https://www.gpuprocessing.net" target="GPUProcessing" rel="noopener noreferrer">GPUProcessing</a>
         <a href="https://www.orbitalmap.net" target="OrbitalMap" rel="noopener noreferrer">OrbitalMap</a>
       </div>
-      <a href="#" class="pb-docs-link" style="color:#6bff6b;text-align:center;" aria-label="PulseWorld Tier Breakdown Popup"
+      <a href="#PulseWorldTiers1" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
           onclick="loadInternalPage('PulseWorldTiers'); return false;">
         <strong>Learn More</strong> →
         <strong>PulseWorld Tier Breakdown</strong>
