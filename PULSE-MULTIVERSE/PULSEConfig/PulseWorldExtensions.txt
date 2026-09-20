@@ -452,15 +452,10 @@
         <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
 
         <p class="hero-subtitle">
-          PulseBrowser OS Tier 2 is the world-layer performance engine for the browser — the layer that makes every page faster,
-          every identity safer, and every presence proximity-aware. It integrates across all PulseWorld realms, including
-          OrbitalMap, BinaryOS, BooleanLogic, GPUProcessing, and ServiceWorker ports, but its true power comes from the
-          Universal Human Module System.
-          <br><br>
-          Tier 2 recognizes that every human relies on five core digital modules — Email, Banking, Social, Work, and Streaming.
-          These modules are elevated to OS-level anchors: accelerated, cached, pre-connected, identity-verified, GPU-assisted,
-          and always warm. They replace the outdated “favorites” model with a living, intelligent system that understands your
-          daily patterns, stabilizes your identity pathways, and keeps your essential services instantly available.
+          A world-layer performance engine for the browser. Tier 2 rebuilds the original favorites system into the five core
+          human modules — Email, Banking, Social, Work, and Streaming — each accelerated, cached, pre-connected, and identity-safe.
+          These modules become OS-level anchors that keep your essential digital life instantly available, always warm, and
+          optimized through proximity-based presence and world-layer routing.
         </p>
 
         <div class="pulse-legendary-wrapper">
