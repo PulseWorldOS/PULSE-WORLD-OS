@@ -525,13 +525,13 @@
         </p>
         
         <div class="hero-actions">
-          <a class="btn btn-prim"
+          <a class="btn-prim"
             href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
             target="Extensions"
             rel="noopener noreferrer">
             <span>Install from Chrome Web Store</span>
           </a>
-          <a class="btn btn-prim"
+          <a class="btn-prim"
             href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
             target="Extensions"
             rel="noopener noreferrer">
@@ -660,7 +660,7 @@
               placeholder="Your TetherCode here"
               autocomplete="off"
             />
-            <button class="btn btn-prim" type="button" id="tetherActivateBtn">
+            <button class="btn-prim" type="button" id="tetherActivateBtn">
               <span>Activate (60s)</span>
             </button>
           </div>
