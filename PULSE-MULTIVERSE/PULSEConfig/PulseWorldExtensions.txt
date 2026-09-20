@@ -72,6 +72,7 @@
 
     .hero-actions {
       display: flex;
+      justify-content: center;
       gap: 22px;
     }
 
@@ -527,21 +528,21 @@
           <strong>business visibility</strong>, and a browser that finally feels  
           like <strong>your own world-layer OS</strong>.
         </p>
-      
-      
-        <a class="btn-primary"
-          href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
-          target="Extensions"
-          rel="noopener noreferrer">
-          <span>Install from Chrome Web Store</span>
-        </a>
-        <a class="btn-ghost"
-          href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
-          target="Extensions"
-          rel="noopener noreferrer">
-          <span>Explore PulseWorld Marketplace</span>
-        </a>
-      
+        
+        <div class="hero-actions">
+          <a class="btn-primary"
+            href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
+            target="Extensions"
+            rel="noopener noreferrer">
+            <span>Install from Chrome Web Store</span>
+          </a>
+          <a class="btn-ghost"
+            href="https://www.pulseworld.net/?Impulse=PulseWorldExtMarketplace"
+            target="Extensions"
+            rel="noopener noreferrer">
+            <span>Explore PulseWorld Marketplace</span>
+          </a>
+        </div>
       </div>
 
       <aside class="hero-image-card">
