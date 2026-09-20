@@ -68,7 +68,7 @@
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 82px;
+      gap: 32px;
       margin-top: 10px;
     }
 
@@ -442,12 +442,12 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div>
+      <div class="hero-section">
         <div class="hero-badge">
           <span class="dot"></span>
           <span>Tier 2 • World-Layer Engine</span>
         </div>
-        <h1 class="hero-title">PulseBrowser OS - Tier 2 Engine</h1>
+        <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
         
         <p class="hero-subtitle">
           A world-layer performance engine for the browser. Faster pages, safer identity, proximity-based presence, and
@@ -464,13 +464,14 @@
             class="btn btn-primary"
             href="https://chromewebstore.google.com/detail/pulseworld-os/mcbbhkdjpaakjabngfjmaeihnoilognk"
             target="Extensions"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
             <span>Install from Chrome Web Store</span>
           </a>
-          <button class="btn btn-ghost" type="button" onclick="loadInternalPage('PulseWorldTiers')">
-            <span>View Engine Tiers/Capabilities</span>
-          </button>
+          <a href="#" class="pb-docs-link" style="color:#6bff6b;" aria-label="PulseWorld Tier Breakdown Popup"
+             onclick="loadInternalPage('PulseWorldTiers'); return false;">
+            <strong>Learn More</strong> →
+            <strong>PulseWorld Tier Breakdown</strong>
+          </a>
         </div>
       </div>
 
