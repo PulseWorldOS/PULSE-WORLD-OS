@@ -842,7 +842,7 @@
 
   PulseRealm.PickASpeech8(
     "PulseBrowser OS Tier 2, A world-layer performance engine for the browser.",
-    "./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.webp.pex"
+    "./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex"
   );
    
     function scrollToSection(id) {
