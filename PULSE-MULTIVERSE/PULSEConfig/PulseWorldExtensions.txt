@@ -672,12 +672,13 @@
 
         <article class="card">
           <h3 class="card-title">Work Module</h3>
-          <p class="card-subtitle">Professional dashboards.</p>
+          <p class="card-subtitle">Projects, jobs, and build spaces.</p>
           <ul class="card-list">
-            <li>External: Faster access to portals, dashboards, CRMs, and cloud drives.</li>
-            <li>Internal: Cached workflows, pre-rendered dashboards, and stable identity routing.</li>
+            <li>External: Faster access to job sites, project platforms, and build hosts like Netlify.</li>
+            <li>Internal: Pulse Business workspaces with cached workflows, pre-rendered project views, and stable identity routing.</li>
           </ul>
         </article>
+
 
         <article class="card">
           <h3 class="card-title">Streaming Module</h3>
@@ -697,6 +698,15 @@
         <h2 class="section-title">Pulse Engine Modules</h2>
         <span class="section-tag">Tier 2 Core</span>
       </div>
+
+      <p class="section-intro">
+        The Pulse Engine Modules form the technical backbone of Tier 2, applying world-layer acceleration, caching, and
+        deterministic rendering across the entire browsing experience. While traditional browsers reserve their most advanced
+        performance techniques for internal surfaces, the Pulse Engine extends these capabilities outward — coordinating,
+        preloading, and stabilizing content no matter where it comes from. These modules unify routing, diagnostics, signals,
+        and world-layer behavior into a single accelerated system that treats every site as a first-class citizen.
+      </p>
+
 
       <div class="grid-4">
         <article class="card">
