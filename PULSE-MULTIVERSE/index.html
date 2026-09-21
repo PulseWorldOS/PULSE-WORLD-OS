@@ -8686,8 +8686,9 @@ if (navigator.gpu) {
   setTimeout(() => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     pulseSupabaseSync();
-  }, 1000);
+  }, 2000);
   SupabaseProtocol = setInterval(() => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     pulseSupabaseSync();
   }, 30000);
 })();
