@@ -6,11 +6,15 @@
         Pulse World can operate online, offline, locally, or across PulseMesh, forming a continuity layer that follows you anywhere.">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
 <head>
+<link rel="preconnect" href="https://www.pulseworld.net" crossorigin>
 <link rel="preconnect" href="https://port.serviceworker.net" crossorigin>
 <link rel="preconnect" href="https://port.binaryos.net" crossorigin>
 <link rel="preconnect" href="https://port.gpuprocessing.net" crossorigin>
 <link rel="preconnect" href="https://port.booleanlogic.net" crossorigin>
 <link rel="preconnect" href="https://port.orbitalmap.net" crossorigin>
+<link rel="preconnect" href="https://www.pulseworld.me" crossorigin>
+<link rel="preconnect" href="https://www.pulseworld.money" crossorigin>
+<link rel="preconnect" href="https://www.pulseworld.biz" crossorigin>
 <link rel="modulepreload" fetchpriority="highest" href="./DriftCompanion.js">
 <link rel="modulepreload" fetchpriority="highest" href="https://port.serviceworker.net">
 <link rel="stylesheet" fetchpriority="high" href="./_EXPRESSIONS/_CSS/PulseIndex.css">
@@ -7741,7 +7745,7 @@ async function initImpulseRouter() {
   // ---------------------------------------------------------
   if (bootComplete) {
     bootComplete.innerText =
-      `PULSE WORLD Welcomes You! (${identity})`;
+      `PULSE WORLD OS, Welcomes You! (${identity})`;
   }
 
   // ---------------------------------------------------------
@@ -7763,6 +7767,7 @@ async function initImpulseRouter() {
   try {
     smartPrewarm(window.location.href);
   } catch {}
+  
 
   // ---------------------------------------------------------
   // 6. Router Payload (includes DriftSignature)
