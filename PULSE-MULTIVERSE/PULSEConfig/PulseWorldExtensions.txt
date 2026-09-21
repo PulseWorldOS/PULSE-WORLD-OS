@@ -242,7 +242,7 @@
     }
 
     .section-tag2 {
-      width: 400px
+      width: 400px;
       font-size: 0.8rem;
       color: var(--accent);
       padding: 4px 10px;
