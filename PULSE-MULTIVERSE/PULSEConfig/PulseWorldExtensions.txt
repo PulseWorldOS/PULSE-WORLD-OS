@@ -241,6 +241,15 @@
       background: var(--accent-soft);
     }
 
+    .section-tag2 {
+      width: 400px
+      font-size: 0.8rem;
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+    }
+
     .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -555,7 +564,7 @@
         </div>
         <div class="hero-image-footer">
           <span>Preview image for the PulseBrowser OS (Tier 2) Engine Extension.</span>
-          <span class="accent">PEX Image Logo • 170 KB • using the Pulse Expression eXtension Format.</span>
+          <span class="accent">PEX Image Logo • 77 KB • using the Pulse Expression eXtension Format.</span>
           <span class="accent">PulseBrowser OS Tier 2 Extension • ~9.14 MB • Integrate and Spread your New Authority!</span>
         </div>
         <br>
@@ -580,7 +589,7 @@
     <section class="section" id="capabilities">
       <div class="section-header">
         <h2 class="section-title">PulseEngine Capabilities</h2>
-        <span class="section-tag">Performance • Integration • World • Business</span>
+        <span class="section-tag2">Performance • Integration • World • Business</span>
       </div>
 
       <div class="grid-4">
