@@ -119,41 +119,7 @@ let vaultVideo = document.getElementById("vaultVideo");
 let bankVideo = document.getElementById("bankVideo");
 let historyVideo = document.getElementById("historyVideo");
 let ghostProtocol = document.getElementById("pps-ghostprotocol");
-async function loadPulseWorldBankBalance() {
-  const stripeAccountID = PulseRealm.PulseBankID;
-  if (!stripeAccountID) {
-    // console.warn("[PulseWorldBank] No Stripe Account ID found.");
-    return;
-  }
-  try {
-    const res = await fetch(`/.netlify/functions/PULSE-SERVER-BANK?account=${stripeAccountID}`, {
-      method: "GET",
-      mode: "cors",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    if (!res.ok) {
-      console.warn(`[PulseWorldBank] HTTP ${res.status} returned from bank API.`);
-      return;
-    }
-    const bankData = await res.json();
-    if (!bankData || !bankData.balance || bankData.error) {
-      return;
-    }
-    PulseRealm.PulseBankData = bankData;
-    PulseRealm.PulseBankBalance = bankData.balance;
-    console.log(
-      "%c[PULSEWORLD::BANK] Balance Updated\n" +
-      `   Available: ${bankData.balance.availableBalance}\n` +
-      `   Pending: ${bankData.balance.pendingBalance}`,
-      "color:#00FFAA; font-weight:bold;"
-    );
-  } catch (err) {
-    console.warn("[PulseWorldBank] Fetch error:", err.message);
-  }
-}
+
 const log = PulseRealm.PulseLog || console.log;
 const warn = PulseRealm.PulseWarn || console.warn;
 function nowMs() {
