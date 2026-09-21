@@ -3134,35 +3134,26 @@ async function loadPulseIdentityContinual() {
   }
 }
 
-
-let supabaseLimit = 4;
-
 function pulseSupabaseSync() {
-  console.log(supabaseInterval);
-  supabaseInterval++;
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
-  if (supabaseInterval >= supabaseLimit) {
-    try {
-      ensureLocationAccess();
-      supabaseInterval = 0;
-      const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
-      const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
-      const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
-      if (!storedIdentity.id) return;
-      fetch("/.netlify/functions/PULSE-SERVER-SQL", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
-      }).then((response) => {
-        if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-      }).catch(() => {
-        PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-      });
-    } catch {
+  try {
+    ensureLocationAccess();
+    const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
+    const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
+    const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
+    if (!storedIdentity.id) return;
+    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+      body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
+    }).then((response) => {
+      if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    }).catch(() => {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-    }
-    
+    });
+  } catch {
+    PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
   }
 }
 
