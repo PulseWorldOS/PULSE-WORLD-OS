@@ -3163,11 +3163,6 @@ function pulseSupabaseSync() {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }
     supabaseInterval = 0;
-    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseWorldInventory") {
-      supabaseLimit = 8;
-    } else {
-      supabaseLimit = 24;
-    }
   }
 }
 
