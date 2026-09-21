@@ -3149,7 +3149,6 @@ function pulseSupabaseSync() {
       const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
       const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
       if (!storedIdentity.id) return;
-      if (PulseRealm.CurrentHost.includes("netlify")) return;
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
@@ -3295,7 +3294,13 @@ async function ensureLocationAccess() {
     return null;
   }
 
-  pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
+  // ⭐ Store proximity coordinates locally
+  try {
+    pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
+  } catch (e) {
+    console.warn("[PulseWorld] Failed to store past proximity coords:", e);
+  }
+  
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
