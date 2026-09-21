@@ -3285,7 +3285,7 @@ function preloadBootVideo(path, audio) {
   narMusic.src= audio;
   
 }
-const pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
+let pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
 
 async function ensureLocationAccess() {
   if (!("geolocation" in navigator)) {
