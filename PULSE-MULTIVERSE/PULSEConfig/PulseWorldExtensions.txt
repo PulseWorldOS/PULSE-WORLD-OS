@@ -557,7 +557,7 @@
       <aside class="hero-image-card">
         <div class="hero-image-header">
           <div class="hero-image-title">Extension Preview • PulseBrowser OS</div>
-          <div class="hero-image-pill">World-Layer Engine</div>
+          <div class="hero-image-pill">Tier 2 Engine</div>
         </div>
         <div class="pulse-supreme-wrapper">
           <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" alt="Pulse Extensions Legendary Showcase">
