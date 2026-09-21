@@ -8683,10 +8683,7 @@ if (navigator.gpu) {
     // // Supabase is a background backup only. One backend failure suspends sync
     // // for this page session instead of producing a failed request every 7s.
   }, 7000);
-  setTimeout(() => {
-    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    pulseSupabaseSync();
-  }, 2000);
+  
   SupabaseProtocol = setInterval(() => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     pulseSupabaseSync();
@@ -8706,6 +8703,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     savePageToCookie();
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 7000);
+  setTimeout(() => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+    pulseSupabaseSync();
+  }, 2000);
      // ============================================================
   // IMPORT 404 LOGS FROM localStorage → INTO OUR CONSOLE SYSTEM
   // ============================================================
