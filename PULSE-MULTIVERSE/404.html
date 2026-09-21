@@ -982,7 +982,7 @@ input[type="file"] {
 
       <div class="terminal-actions">
         <button class="btn-primary" onclick="history.back();history.back();">RE‑ANCHOR THIS REALM</button>
-        <button class="btn-secondary" onclick="loadBestRealm();">SPAWN A UNIVERSE IN THE BEST REALM</button>
+        <button class="btn-primary" onclick="loadBestRealm();">SPAWN A UNIVERSE IN THE BEST REALM</button>
       </div>
 
       <div class="terminal-footer">
@@ -2293,8 +2293,8 @@ async function ping(url) {
   }
 }
 
-async function loadBestRealm(bestURL) {
-  location.replace(bestURL);
+async function loadBestRealm() {
+  location.replace(PulseRealm.BestPulseRealm);
 }
 
 (async function () {
@@ -2409,6 +2409,8 @@ async function loadBestRealm(bestURL) {
   // if (rawPath) {
   //   location.replace(`/?Impulse=${rawPath}`);
   // }
+
+  PulseRealm.BestPulseRealm = bestURL;
 
   setTimeout(() => {
     location.replace(bestURL);
