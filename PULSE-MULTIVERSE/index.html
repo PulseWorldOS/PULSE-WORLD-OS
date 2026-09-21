@@ -3152,7 +3152,7 @@ function pulseSupabaseSync() {
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
+        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
       }).then((response) => {
         if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
         tetherCode.value = "";
@@ -3290,12 +3290,15 @@ function preloadBootVideo(path, audio) {
   narMusic.src= audio;
   
 }
+const pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
 
 async function ensureLocationAccess() {
   if (!("geolocation" in navigator)) {
     console.warn("[PulseWorld] Geolocation not supported in this browser.");
     return null;
   }
+
+  pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
