@@ -8679,10 +8679,14 @@ if (navigator.gpu) {
     pulseStreamGhost();
     loadPulseIdentityContinual();
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
-    if (!SupabaseProtocol) pulseSupabaseSync();
+    
     // // Supabase is a background backup only. One backend failure suspends sync
     // // for this page session instead of producing a failed request every 7s.
   }, 7000);
+  setTimeout(() => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+    pulseSupabaseSync();
+  }, 1000);
   SupabaseProtocol = setInterval(() => {
     pulseSupabaseSync();
   }, 30000);
