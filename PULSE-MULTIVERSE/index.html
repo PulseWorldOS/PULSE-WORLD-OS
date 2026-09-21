@@ -3138,6 +3138,7 @@ async function loadPulseIdentityContinual() {
 let supabaseLimit = 8;
 
 function pulseSupabaseSync() {
+  console.log(supabaseInterval);
   supabaseInterval++;
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
@@ -3148,7 +3149,7 @@ function pulseSupabaseSync() {
       const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
       const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
       if (!storedIdentity.id) return;
-      if (PulseRealm.CurrentHost.includes("netlify") === true) return;
+      if (PulseRealm.CurrentHost.includes("netlify")) return;
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
@@ -3162,6 +3163,7 @@ function pulseSupabaseSync() {
     } catch {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }
+    
     supabaseInterval = 0;
   }
 }
