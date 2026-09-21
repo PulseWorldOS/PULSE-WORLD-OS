@@ -3173,14 +3173,15 @@ function pulseSupabaseSync() {
   if (supabaseInterval === supabaseLimit) {
     try {
       ensureLocationAccess();
-      const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity");
-      const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos");
+      const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
+      const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
       const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
       if (!storedIdentity.id) return;
+      if (PulseRealm.CurrentHost.includes("netlify") === true) return;
       fetch("/.netlify/functions/PULSE-SERVER-SQL", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, tetherCode: tetherCode, online: true, inactive: false })
+        body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
       }).then((response) => {
         if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
         tetherCode.value = "";
