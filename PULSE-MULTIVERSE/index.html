@@ -1020,6 +1020,7 @@ let PBInterval = null;
 let PBIntervalFast = null;   // runs when open
 let PBIntervalSlow = null;   // runs when closed
 let StarlinkGhostProtocol = null;
+let SupabaseProtocol = null;
 let PBHeartbeat = null;
 let balanceBankTimer = null;
 let motionTickTimer = null;
@@ -3136,10 +3137,6 @@ async function loadPulseIdentityContinual() {
 
 function pulseSupabaseSync() {
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
-  if (PulseRealm.__PULSE_SUPABASE_INTERVAL = true) {
-    PulseRealm.__PULSE_SUPABASE_INTERVAL = false;
-    return;
-  }
   
   try {
     ensureLocationAccess();
@@ -3153,7 +3150,6 @@ function pulseSupabaseSync() {
       body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
     }).then((response) => {
       if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-      if (response.ok) PulseRealm.__PULSE_SUPABASE_INTERVAL = true;
     }).catch(() => {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     });
@@ -8683,11 +8679,13 @@ if (navigator.gpu) {
     pulseStreamGhost();
     loadPulseIdentityContinual();
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
+    if (!SupabaseProtocol) pulseSupabaseSync();
     // // Supabase is a background backup only. One backend failure suspends sync
     // // for this page session instead of producing a failed request every 7s.
-    pulseSupabaseSync();
-
   }, 7000);
+  SupabaseProtocol = setInterval(() => {
+    pulseSupabaseSync();
+  }, 30000);
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
