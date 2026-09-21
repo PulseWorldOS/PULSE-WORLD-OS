@@ -982,12 +982,7 @@ input[type="file"] {
 
       <div class="terminal-actions">
         <button class="btn-primary" onclick="history.back();history.back();">RE‑ANCHOR THIS REALM</button>
-
-        <!-- Backup universe link -->
-        <a href="https://www.binaryos.net"
-           class="btn-secondary">
-          SPAWN A NEW UNIVERSE IN THE BACKUP REALM
-        </a>
+        <button class="btn-secondary" onclick="loadBestRealm();">SPAWN A UNIVERSE IN THE BEST REALM</button>
       </div>
 
       <div class="terminal-footer">
@@ -2271,7 +2266,12 @@ async function pingAllRealms() {
     WORLD: "https://www.pulseworld.net/",
     USER:  "https://www.pulseworld.me/",
     MONEY: "https://www.pulseworld.money/",
-    BIZ:   "https://www.pulseworld.biz/"
+    BIZ:   "https://www.pulseworld.biz/",
+    OSBACKUP:   "https://www.binaryos.net/",
+    KERNELBACKUP:   "https://www.serviceworker.net/",
+    LOGICBACKUP:   "https://www.booleanlogic.net/",
+    PROCESSBACKUP:   "https://www.gpuprocessing.net/",
+    SPATIALBACKUP:   "https://www.orbitalmap.net/"
   };
 
   const results = {};
@@ -2291,6 +2291,10 @@ async function ping(url) {
   } catch {
     return Infinity;
   }
+}
+
+async function loadBestRealm(bestURL) {
+  location.replace(bestURL);
 }
 
 (async function () {
