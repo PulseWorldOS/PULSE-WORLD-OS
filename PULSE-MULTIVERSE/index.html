@@ -748,7 +748,7 @@ async function generatePulseUser() {
 }
 
 
-let supabaseInterval = 7;
+let supabaseInterval = 3;
 PulseRealm.LastTime = Date.now();
 PulseRealm.CurrentTime = new Date();
 PulseRealm.PulseHistory = {
@@ -3135,7 +3135,7 @@ async function loadPulseIdentityContinual() {
 }
 
 
-let supabaseLimit = 8;
+let supabaseLimit = 4;
 
 function pulseSupabaseSync() {
   console.log(supabaseInterval);
@@ -3145,6 +3145,7 @@ function pulseSupabaseSync() {
   if (supabaseInterval >= supabaseLimit) {
     try {
       ensureLocationAccess();
+      supabaseInterval = 0;
       const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
       const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
       const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
@@ -3162,7 +3163,6 @@ function pulseSupabaseSync() {
       PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }
     
-    supabaseInterval = 0;
   }
 }
 
