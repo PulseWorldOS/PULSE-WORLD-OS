@@ -3144,6 +3144,7 @@ function pulseSupabaseSync() {
     const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
     const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
     if (!storedIdentity.id) return;
+    if (PulseRealm.CurrentHost.includes("netlify")) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
