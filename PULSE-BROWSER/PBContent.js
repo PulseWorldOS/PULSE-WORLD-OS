@@ -96,7 +96,7 @@ async function injectHUD() {
   ];
 
   if (document.getElementById("pulsebrowser-dev-overlay")) return;
-  if (!document.body) return setTimeout(injectHUD, 50);
+  if (!document.body) return setTimeout(injectHUD, 150);
 
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
@@ -117,11 +117,14 @@ async function injectHUD() {
     position: fixed;
     top: 10px;
     right: 10px;
-    width: 260px;
+    width: 30dvw;
+    max-width: 240px;
+    display: flex;
+    flex-wrap: wrap;
     background: rgba(0,0,0,0.85);
     color: #00FF9C;
     font-family: monospace;
-    font-size: 11px;
+    font-size: clamp(8px, 2dvw, 11px);
     padding: 12px 16px;
     border:1px solid #0FF;
     border-radius: 40px;
@@ -430,9 +433,7 @@ function updateHUD() {
         <font color="#0FF">Current World:</font> <font color="white">${currentEngine}</font><br/>
         <font color="#0FF">About:</font> <font color="gold">${engineDescriptor}</font><br/>
         <font color="#0FF">Last Page:</font> ${displayPage}<br/>
-        <font color="#0FF">Last URL:</font> ${displayURL}<br/>
         <font color="#0FF">Domain:</font> ${realm.lastDomainClass || "-"}<br/>
-        <font color="#0FF">Ping:</font> ${realm.lastPing || "-"}<br/>
         <font color="#0FF">Messages:</font> ${"No Active Messages"}<br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">
         <b><font color="white">Local PulseBrowser Tab Stats</font></b><br/>
@@ -792,7 +793,7 @@ function collectPageAssets() {
   });
 }
 
-setTimeout(collectPageAssets, 50);
+setTimeout(collectPageAssets, 150);
 
 document.addEventListener("DOMContentLoaded", collectPageAssets);
 
