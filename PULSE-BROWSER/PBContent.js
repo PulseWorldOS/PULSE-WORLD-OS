@@ -117,8 +117,7 @@ async function injectHUD() {
     position: fixed;
     top: 10px;
     right: 10px;
-    width: 30dvw;
-    max-width: 240px;
+    width: 240px;
     display: flex;
     flex-wrap: wrap;
     background: rgba(0,0,0,0.85);
