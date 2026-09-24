@@ -19,7 +19,7 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 
 function pbPreconnect(origins = []) {
   origins.forEach((origin) => {
-    pbDNSWarm(origin);
+    // pbDNSWarm(origin);
     pbTLSWarm(origin);
     pbProtocolWarm(origin);
   });
