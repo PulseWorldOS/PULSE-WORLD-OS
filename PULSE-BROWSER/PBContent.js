@@ -17,6 +17,39 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
     "color:#00C8FF; font-family:monospace;", response);
 });
 
+function pbPreconnect(origins = []) {
+  origins.forEach((origin) => {
+    pbDNSWarm(origin);
+    pbTLSWarm(origin);
+    pbProtocolWarm(origin);
+  });
+  console.log("%c[PBAccelerator] Preconnect:", "color:#00C8FF;", origins);
+}
+
+// ---------------------------------------------------------------------------
+// DNS WARM (resolve domain early)
+// ---------------------------------------------------------------------------
+function pbDNSWarm(origin) {
+  try { fetch(origin, { method: "OPTIONS" }).catch(() => {}); } catch (_) {}
+  console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
+}
+
+// ---------------------------------------------------------------------------
+// TLS WARM (establish TLS early)
+// ---------------------------------------------------------------------------
+function pbTLSWarm(origin) {
+  try { fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {}); } catch (_) {}
+  console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
+}
+
+// ---------------------------------------------------------------------------
+// HTTP/2 / HTTP/3 / QUIC Warm (protocol warm-path)
+// ---------------------------------------------------------------------------
+function pbProtocolWarm(origin) {
+  try { fetch(origin, { method: "GET", cache: "no-store" }).catch(() => {}); } catch (_) {}
+  console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
+}
+
 
 // ---------------------------------------------------------------------------
 // 5. DECODE WARM-PATH (images) — SAFE VERSION
@@ -166,6 +199,7 @@ const PBQuantumPrefetch = {
       const a = e.target.closest("a[href]");
       if (!a) return;
       this.lastHoverLink = a.href;
+      pbPreconnect(a.href);
       if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
       this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
     });
@@ -175,6 +209,7 @@ const PBQuantumPrefetch = {
     const href = this.lastHoverLink;
     if (!href) return;
     try {
+      pbPreconnect(a.href);
       fetch(href, { cache: "force-cache" }).catch(() => {});
       console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
     } catch (_) {}
