@@ -196,6 +196,33 @@ async function injectHUD() {
 //  PBQuantumPrefetch.js — AI-ish navigation prediction (lightweight heuristic)
 // ============================================================================
 
+// const PBQuantumPrefetch = {
+//   lastHoverLink: null,
+//   hoverTimeout: null,
+//   prefetchDelayMs: 250,
+
+//   attachToDocument() {
+//     document.addEventListener("mouseover", (e) => {
+//       const a = e.target.closest("a[href]");
+//       if (!a) return;
+//       this.lastHoverLink = a.href;
+//       const link = [a.href];
+//       pbPreconnect(link);
+//       if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+//       this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
+//     });
+//   },
+
+//   prefetchLink() {
+//     const href = this.lastHoverLink;
+//     if (!href) return;
+//     try {
+//       fetch(href, { cache: "force-cache" }).catch(() => {});
+//       console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
+//     } catch (_) {}
+//   }
+// };
+
 const PBQuantumPrefetch = {
   lastHoverLink: null,
   hoverTimeout: null,
@@ -203,25 +230,80 @@ const PBQuantumPrefetch = {
 
   attachToDocument() {
     document.addEventListener("mouseover", (e) => {
-      const a = e.target.closest("a[href]");
-      if (!a) return;
-      this.lastHoverLink = a.href;
-      const link = [a.href];
-      pbPreconnect(link);
+      const el = e.target.closest("*");
+      if (!el) return;
+
+      // Try multiple ways to extract a URL
+      const href = this.extractLink(el);
+      if (!href) return;
+
+      this.lastHoverLink = href;
+
+      // Warm transport layer
+      pbPreconnect([href]);
+
       if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
       this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
     });
   },
 
+  extractLink(el) {
+    // 1) Native <a href="">
+    if (el.tagName === "A" && el.href) return el.href;
+
+    // 2) data-href or data-link
+    if (el.dataset?.href) return el.dataset.href;
+    if (el.dataset?.link) return el.dataset.link;
+
+    // 3) role="link" with an href attribute somewhere
+    if (el.getAttribute("role") === "link") {
+      const maybe = el.getAttribute("href") || el.getAttribute("data-href");
+      if (maybe) return maybe;
+    }
+
+    // 4) Look for any attribute that looks like a URL
+    for (const attr of el.attributes) {
+      const val = attr.value;
+      if (typeof val === "string" && this.looksLikeURL(val)) {
+        return val;
+      }
+    }
+
+    // 5) Look inside children for URL-like attributes
+    const childLink = el.querySelector("[href], [data-href], [data-link]");
+    if (childLink) {
+      return (
+        childLink.getAttribute("href") ||
+        childLink.getAttribute("data-href") ||
+        childLink.getAttribute("data-link")
+      );
+    }
+
+    return null;
+  },
+
+  looksLikeURL(str) {
+    return (
+      str.startsWith("http://") ||
+      str.startsWith("https://") ||
+      str.startsWith("//") ||
+      str.includes(".com") ||
+      str.includes(".net") ||
+      str.includes(".org")
+    );
+  },
+
   prefetchLink() {
     const href = this.lastHoverLink;
     if (!href) return;
+
     try {
       fetch(href, { cache: "force-cache" }).catch(() => {});
       console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
     } catch (_) {}
   }
 };
+
 
 function showPulseStreamPrompt(video) {
   // Prevent duplicates
