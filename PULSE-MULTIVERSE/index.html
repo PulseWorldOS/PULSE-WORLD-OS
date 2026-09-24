@@ -4743,15 +4743,18 @@ async function scanPulseWorld(device) {
   latency = await measureLatency();
   PulseRealm.PulseLatency = latency;
 
-  if (PulseRealm.PulseLatency > 300) {
+  if (PulseRealm.PulseLatency > 400) {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
   } else if (PulseRealm.PulseStability === 0) {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
-    pulsepalSpeak("Attempting Optimization Efforts! Either your Router has Blocked you or you Left Camera Open! Closing Camera and Initiating Optimization.");
+    pulsepalSpeak("Attempting Optimization Efforts! Either you Walked Away or you Left Camera Open! Initiating Optimization.");
     optimizationCountdown++;
     if (optimizationCountdown === 5) {
       location.reload();
     }
+  } else if (PulseRealm.PulseWebGPU === false) {
+    pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
+    pulsepalSpeak("PulseEngine has Detected WebGPU Adapter is Offline.  This is just a Warning!");
   } else {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus"
   }
@@ -4810,7 +4813,7 @@ async function scanPulseWorld(device) {
 
   gpu = await measureGpu();
   PulseRealm.PulseGpu = gpu;
-
+  PulseRealm.PulseWebGPU = PulseRealm.PulseGpu.webgpuAvailable;
 
   // ------------------------------------------------------------
   // Scoring, bars, efficiency, advantage, etc.
