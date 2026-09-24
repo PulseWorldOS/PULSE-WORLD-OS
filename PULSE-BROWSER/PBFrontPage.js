@@ -989,3 +989,31 @@ setInterval(() => {
 
   
   setInterval(swap, 15000);
+
+  function pbRefreshWarmDocument() {
+  const S = getSettingsSync(); // or cached settings
+
+  const links = [
+    S.acceleratedBankLink,
+    S.acceleratedEmailLink,
+    S.acceleratedSocialLink,
+    S.acceleratedWorkLink,
+    S.acceleratedStreamLink,
+    S.acceleratedModule1Link,
+    S.acceleratedModule2Link,
+    S.acceleratedModule3Link,
+    S.acceleratedModule4Link,
+    S.acceleratedModule5Link
+  ].filter(u => u && u.startsWith("http"));
+
+  const container = document.getElementById("pbWarmContainer");
+  container.innerHTML = ""; // clear old warm paths
+
+  links.forEach(url => {
+    container.insertAdjacentHTML("beforeend",
+      `<link rel="preload" href="${url}" as="document">`
+    );
+  });
+}
+
+setInterval(pbRefreshWarmDocument, 6000);
