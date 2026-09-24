@@ -12,6 +12,7 @@ let searchEngineActivated = "*Google.com";
 let engineURL = buildSearchURL("google.com");
 let url = engineURL;
 
+
 const timerBtn = document.getElementById("timerBtn");
 
 function getFavicon(url, flags = {}) {
@@ -112,11 +113,10 @@ function getFavicon(url, flags = {}) {
   }
 }
 
-
-
 window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();
 });
+
 
 
 async function updateModuleIcons() {

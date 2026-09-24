@@ -257,6 +257,48 @@ async function pbHomeWarmBoot() {
 // Run home warm-boot once when accelerator loads
 pbHomeWarmBoot().catch(() => {});
 
+async function pbModuleWarmBoot() {
+  const S = await getSettings();
+  if (!S.accelModuleWarmBoot) return;
+
+  // Collect all accelerated module links directly from settings
+  const warmTargets = [
+    S.acceleratedBankLink,
+    S.acceleratedEmailLink,
+    S.acceleratedSocialLink,
+    S.acceleratedWorkLink,
+    S.acceleratedStreamLink,
+    S.acceleratedModule1Link,
+    S.acceleratedModule2Link,
+    S.acceleratedModule3Link,
+    S.acceleratedModule4Link,
+    S.acceleratedModule5Link
+  ].filter(link => link && typeof link === "string" && link.startsWith("http"));
+
+  if (warmTargets.length === 0) return;
+
+  // Preconnect all module targets
+  pbPreconnect(warmTargets);
+
+  // Warm each module target
+  warmTargets.forEach(origin => {
+    pbPreload(origin);
+    pbRealmWarm(origin);
+  });
+
+  chrome.runtime.sendMessage({
+    type: "PBACC_WARMPATH_EVENT",
+    origin: "MODULE_UNIVERSE"
+  });
+
+  console.log(
+    "%c[PBAccelerator] Module Warm-Boot executed",
+    "color:#00C8FF; font-weight:bold;"
+  );
+}
+
+// Run home warm-boot once when accelerator loads
+pbModuleWarmBoot().catch(() => {});
 // ---------------------------------------------------------------------------
 // MESSAGE CHANNEL (buttons optional; auto-nav is primary)
 // ---------------------------------------------------------------------------
