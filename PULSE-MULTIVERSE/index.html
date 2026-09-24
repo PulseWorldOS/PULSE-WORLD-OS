@@ -8845,8 +8845,8 @@ document.addEventListener("visibilitychange", () => {
     clearInterval(motionTickTimer);
     clearInterval(PBIntervalFast);
     clearInterval(StarlinkGhostProtocol);
+    clearInterval(SupabaseProtocol);
   } else {
-    clearInterval(StarlinkGhostProtocol);
     StarlinkGhostProtocol = setInterval(() => {
       timeClock.textContent = pulseClock();
       timeClock.style.color = "#0FF";
@@ -8859,9 +8859,12 @@ document.addEventListener("visibilitychange", () => {
       pulseStreamGhost();
       loadPulseIdentityContinual();
       pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
-      pulseSupabaseSync();
       updateBackButtonVisibility();
     }, 7000);
+    SupabaseProtocol = setInterval(() => {
+      console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+      pulseSupabaseSync();
+    }, 30000);
   }
 });
 
