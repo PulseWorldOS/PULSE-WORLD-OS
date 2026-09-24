@@ -174,6 +174,7 @@ async function injectHUD() {
     top: 10px;
     right: 10px;
     width: 260px;
+    line-height: normal;
     display: flex;
     flex-wrap: wrap;
     background: rgba(0,0,0,0.85);
