@@ -990,30 +990,31 @@ setInterval(() => {
   
   setInterval(swap, 15000);
 
-  function pbRefreshWarmDocument() {
-  const S = getSettingsSync(); // or cached settings
+  async function pbRefreshWarmDocument() {
+    const settings = await pbLoadExtensionSettings();
 
-  const links = [
-    S.acceleratedBankLink,
-    S.acceleratedEmailLink,
-    S.acceleratedSocialLink,
-    S.acceleratedWorkLink,
-    S.acceleratedStreamLink,
-    S.acceleratedModule1Link,
-    S.acceleratedModule2Link,
-    S.acceleratedModule3Link,
-    S.acceleratedModule4Link,
-    S.acceleratedModule5Link
-  ].filter(u => u && u.startsWith("http"));
+    const links = [
+      settings.externalBankLink,
+      settings.externalEmailLink,
+      settings.externalSocialLink,
+      settings.externalWorkLink,
+      settings.externalStreamingLink,
+      settings.externalSearchLink,
+      settings.acceleratedModule1Link,
+      settings.acceleratedModule2Link,
+      settings.acceleratedModule3Link,
+      settings.acceleratedModule4Link,
+      settings.acceleratedModule5Link
+    ].filter(u => u && u.startsWith("http"));
 
-  const container = document.getElementById("pbWarmContainer");
-  container.innerHTML = ""; // clear old warm paths
+    const container = document.getElementById("pbWarmContainer");
+    container.innerHTML = ""; // clear old warm paths
 
-  links.forEach(url => {
-    container.insertAdjacentHTML("beforeend",
-      `<link rel="preload" href="${url}" as="document">`
-    );
-  });
-}
+    links.forEach(url => {
+      container.insertAdjacentHTML("beforeend",
+        `<link rel="preload" href="${url}" as="document">`
+      );
+    });
+  }
 
 setInterval(pbRefreshWarmDocument, 6000);
