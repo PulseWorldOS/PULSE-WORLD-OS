@@ -343,7 +343,36 @@ async function updateModuleIcons() {
 
   // Run home warm-boot once when accelerator loads
   pbModuleWarmBoot(settings).catch(() => {});
-  
+
+  const PB_HOMES = [
+    "https://www.pulseworld.me",
+    "https://www.pulseworld.net",
+    "https://www.pulseworld.money",
+    "https://www.pulseworld.biz",
+    "https://www.binaryos.net",
+    "https://www.booleanlogic.net",
+    "https://www.gpuprocessing.net",
+    "https://www.serviceworker.net",
+    "https://www.orbitalmap.net"
+  ];
+
+  const links = [
+    settings.externalBankLink,
+    settings.externalEmailLink,
+    settings.externalSocialLink,
+    settings.externalWorkLink,
+    settings.externalStreamingLink,
+    settings.externalSearchLink,
+    settings.acceleratedModule1Link,
+    settings.acceleratedModule2Link,
+    settings.acceleratedModule3Link,
+    settings.acceleratedModule4Link,
+    settings.acceleratedModule5Link
+  ].filter(u => u && u.startsWith("http"));
+
+  const interval = getWarmInterval(links, PB_HOMES);
+
+  setInterval(pbRefreshWarmDocument, interval);
 }
 
 function getReadableName(url) {
@@ -1083,39 +1112,3 @@ setInterval(() => {
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
     if (links.length > 0) pbPreconnect(links);
   }
-
-  // Compute interval dynamically
-  (async () => {
-    const settings = await pbLoadExtensionSettings();
-
-    const PB_HOMES = [
-      "https://www.pulseworld.me",
-      "https://www.pulseworld.net",
-      "https://www.pulseworld.money",
-      "https://www.pulseworld.biz",
-      "https://www.binaryos.net",
-      "https://www.booleanlogic.net",
-      "https://www.gpuprocessing.net",
-      "https://www.serviceworker.net",
-      "https://www.orbitalmap.net"
-    ];
-
-    const links = [
-      settings.externalBankLink,
-      settings.externalEmailLink,
-      settings.externalSocialLink,
-      settings.externalWorkLink,
-      settings.externalStreamingLink,
-      settings.externalSearchLink,
-      settings.acceleratedModule1Link,
-      settings.acceleratedModule2Link,
-      settings.acceleratedModule3Link,
-      settings.acceleratedModule4Link,
-      settings.acceleratedModule5Link
-    ].filter(u => u && u.startsWith("http"));
-
-    const interval = getWarmInterval(links, PB_HOMES);
-
-    setInterval(pbRefreshWarmDocument, interval);
-  })();
-
