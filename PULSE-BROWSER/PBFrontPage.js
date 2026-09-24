@@ -119,8 +119,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
-async function pbModuleWarmBoot() {
-  const settings = await pbLoadExtensionSettings();
+async function pbModuleWarmBoot(settings) {
 
   // Collect all accelerated module links directly from settings
   const warmTargets = [
@@ -321,7 +320,7 @@ async function updateModuleIcons() {
   }
 
   // Run home warm-boot once when accelerator loads
-  pbModuleWarmBoot().catch(() => {});
+  pbModuleWarmBoot(settings).catch(() => {});
   
 }
 
