@@ -417,9 +417,6 @@ async function pbLoadExtensionSettings() {
 }
 
 async function pbModuleWarmBoot() {
-  const S = await getSettings();
-  if (!S.accelModuleWarmBoot) return;
-
   const settings = await pbLoadExtensionSettings();
 
   // Collect all accelerated module links directly from settings

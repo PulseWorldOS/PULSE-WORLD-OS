@@ -15,6 +15,7 @@ let url = engineURL;
 
 const timerBtn = document.getElementById("timerBtn");
 
+
 function getFavicon(url, flags = {}) {
   let icon;
   let u;
@@ -118,6 +119,44 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
+async function pbModuleWarmBoot() {
+  const settings = await pbLoadExtensionSettings();
+
+  // Collect all accelerated module links directly from settings
+  const warmTargets = [
+    settings.externalBankLink,
+    settings.externalEmailLink,
+    settings.externalSocialLink,
+    settings.externalWorkLink,
+    settings.externalStreamLink,
+    settings.acceleratedModule1Link,
+    settings.acceleratedModule2Link,
+    settings.acceleratedModule3Link,
+    settings.acceleratedModule4Link,
+    settings.acceleratedModule5Link
+  ];
+
+  if (warmTargets.length === 0) return;
+
+  // Preconnect all module targets
+  pbPreconnect(warmTargets);
+
+  // Warm each module target
+  warmTargets.forEach(origin => {
+    pbPreload(origin);
+    pbRealmWarm(origin);
+  });
+
+  chrome.runtime.sendMessage({
+    type: "PBACC_WARMPATH_EVENT",
+    origin: "MODULE_UNIVERSE"
+  });
+
+  console.log(
+    "%c[PBAccelerator] Module Warm-Boot executed",
+    "color:#00C8FF; font-weight:bold;"
+  );
+}
 
 async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
@@ -280,6 +319,9 @@ async function updateModuleIcons() {
       moduleFav5Icon.style.backgroundRepeat = "no-repeat";
     }
   }
+
+  // Run home warm-boot once when accelerator loads
+  pbModuleWarmBoot().catch(() => {});
   
 }
 
