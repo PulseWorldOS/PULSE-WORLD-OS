@@ -145,6 +145,42 @@ async function injectHUD() {
   setInterval(fadeHUD, 4000);
 }
 
+
+// Example kernel hook (inside PBCompanion.js tab update):
+// if (domainClass === "home" || domainClass === "global") PBUniversalBoost.warmTab(tab);
+
+// ============================================================================
+//  PBQuantumPrefetch.js — AI-ish navigation prediction (lightweight heuristic)
+// ============================================================================
+
+const PBQuantumPrefetch = {
+  lastHoverLink: null,
+  hoverTimeout: null,
+  prefetchDelayMs: 250,
+
+  attachToDocument(doc = document) {
+    doc.addEventListener("mouseover", (e) => {
+      const a = e.target.closest("a[href]");
+      if (!a) return;
+      this.lastHoverLink = a.href;
+      if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
+    });
+  },
+
+  prefetchLink() {
+    const href = this.lastHoverLink;
+    if (!href) return;
+    try {
+      fetch(href, { cache: "force-cache" }).catch(() => {});
+      console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
+    } catch (_) {}
+  }
+};
+
+// Example content script usage (PBContent.js):
+PBQuantumPrefetch.attachToDocument(document);
+
 function showPulseStreamPrompt(video) {
   // Prevent duplicates
   if (document.getElementById("pulseStreamPrompt")) return;
