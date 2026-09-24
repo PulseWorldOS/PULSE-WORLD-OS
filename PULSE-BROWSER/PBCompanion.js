@@ -402,24 +402,39 @@ async function pbHomeWarmBoot() {
 // Run home warm-boot once when accelerator loads
 pbHomeWarmBoot().catch(() => {});
 
+async function pbLoadExtensionSettings() {
+  try {
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+
+    PB_LOG.load("pbLoadExtensionSettings()", settings);
+
+    return settings;
+  } catch (err) {
+    PB_LOG.error("pbLoadExtensionSettings() FAILED", err);
+    return {};
+  }
+}
 
 async function pbModuleWarmBoot() {
   const S = await getSettings();
   if (!S.accelModuleWarmBoot) return;
 
+  const settings = await pbLoadExtensionSettings();
+
   // Collect all accelerated module links directly from settings
   const warmTargets = [
-    S.acceleratedBankLink,
-    S.acceleratedEmailLink,
-    S.acceleratedSocialLink,
-    S.acceleratedWorkLink,
-    S.acceleratedStreamLink,
-    S.acceleratedModule1Link,
-    S.acceleratedModule2Link,
-    S.acceleratedModule3Link,
-    S.acceleratedModule4Link,
-    S.acceleratedModule5Link
-  ].filter(link => link && typeof link === "string" && link.startsWith("http"));
+    settings.externalBankLink,
+    settings.externalEmailLink,
+    settings.externalSocialLink,
+    settings.externalWorkLink,
+    settings.externalStreamLink,
+    settings.acceleratedModule1Link,
+    settings.acceleratedModule2Link,
+    settings.acceleratedModule3Link,
+    settings.acceleratedModule4Link,
+    settings.acceleratedModule5Link
+  ];
 
   if (warmTargets.length === 0) return;
 

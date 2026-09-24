@@ -264,17 +264,17 @@ async function pbModuleWarmBoot() {
 
   // Collect all accelerated module links directly from settings
   const warmTargets = [
-    S.acceleratedBankLink,
-    S.acceleratedEmailLink,
-    S.acceleratedSocialLink,
-    S.acceleratedWorkLink,
-    S.acceleratedStreamLink,
+    S.externalBankLink,
+    S.externalEmailLink,
+    S.externalSocialLink,
+    S.externalWorkLink,
+    S.externalStreamLink,
     S.acceleratedModule1Link,
     S.acceleratedModule2Link,
     S.acceleratedModule3Link,
     S.acceleratedModule4Link,
     S.acceleratedModule5Link
-  ].filter(link => link && typeof link === "string" && link.startsWith("http"));
+  ];
 
   if (warmTargets.length === 0) return;
 
