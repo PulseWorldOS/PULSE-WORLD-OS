@@ -12,9 +12,67 @@ let searchEngineActivated = "*Google.com";
 let engineURL = buildSearchURL("google.com");
 let url = engineURL;
 
-
 const timerBtn = document.getElementById("timerBtn");
 
+
+    // ============================================================================
+    //  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
+    // ============================================================================
+
+  const PBUniversalBoost = {
+    async warmOrigin(origin) {
+      if (!origin) return;
+
+      // ⭐ HARD BLOCK: skip all non-web origins
+      const forbidden = [
+        "chrome://",
+        "chrome-extension://",
+        "edge://",
+        "brave://",
+        "opera://",
+        "file://",
+        "data://",
+        "blob://",
+        "about://"
+      ];
+
+      for (const prefix of forbidden) {
+        if (origin.startsWith(prefix)) {
+          console.log("[PBUniversalBoost] Skipped forbidden origin:", origin);
+          return;
+        }
+      }
+
+      // ⭐ Only warm http/https origins
+      if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
+        console.log("[PBUniversalBoost] Skipped non-HTTP origin:", origin);
+        return;
+      }
+
+      const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
+      const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css", "/engine.wasm"];
+
+      const urls = []
+        .concat(paths.map((p) => origin + p))
+        .concat(assets.map((p) => origin + p));
+
+      for (const url of urls) {
+        try {
+          fetch(url, { cache: "force-cache" }).catch(() => {});
+        } catch (_) {}
+      }
+
+      console.log("[PBUniversalBoost] Warmed publish directory for", origin, urls);
+    },
+
+    async warmTab(tab) {
+      if (!tab || !tab.url) return;
+      try {
+        const origin = new URL(tab.url).origin;
+        await PBUniversalBoost.warmOrigin(origin);
+      } catch (_) {}
+    }
+  };
 
 function getFavicon(url, flags = {}) {
   let icon;
@@ -711,6 +769,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+        await PBUniversalBoost.warmTab(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -726,7 +785,8 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
+    } catch (_) {}    
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -749,6 +809,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+        await PBUniversalBoost.warmTab(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -765,6 +826,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -787,6 +849,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+        await PBUniversalBoost.warmTab(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -803,6 +866,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -824,6 +888,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+        await PBUniversalBoost.warmTab(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -840,6 +905,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -861,6 +927,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+        await PBUniversalBoost.warmTab(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -877,6 +944,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -899,6 +967,7 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -921,6 +990,7 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -943,6 +1013,7 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -965,6 +1036,7 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -987,6 +1059,7 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    await PBUniversalBoost.warmTab(link);
     chrome.tabs.create({ url: link });
 });
 

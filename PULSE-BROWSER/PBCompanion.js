@@ -351,8 +351,10 @@ async function pbWarmPath(origin) {
     origin.startsWith("chrome-extension://")
   ) {
     return;
+  }// Universal boost warm-path
+  if (typeof PBUniversalBoost?.warmTab === "function") {
+    PBUniversalBoost.warmTab(tab);
   }
-
 
   const S = await getSettings();
 
@@ -939,8 +941,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         PBQuantumPrefetch.prefetchLink();
         console.log("Quantum Prefetching Enabled: " + msg.href);
-      }
-      
+      }      
       sendResponse?.({ ok: true });
       break;
 
