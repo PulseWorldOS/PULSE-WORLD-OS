@@ -3821,7 +3821,22 @@ if (extBtn) {
 if (homeBtn) {
   homeBtn.onclick = () => {
     let checkPage = PulseRealm.__PULSE_CURRENT_PAGE__;
-    if (isBiz) {
+    if (isSW) {
+      checkPage = "PulseWorldServiceWorker";
+    }
+    else if (isBinaryOS) {
+      checkPage = "PulseWorldBinaryOS";
+    }
+    else if (isGPU) {
+      checkPage = "PulseWorldGPUProcessing";
+    }
+    else if (isLogic) {
+      checkPage = "PulseWorldBooleanLogic";
+    }
+    else if (isOrb) {
+      checkPage = "PulseWorldOrbital";
+    }
+    else if (isBiz) {
       checkPage = "PulseWorldBusiness";
     }
     else if (isSettings) {
