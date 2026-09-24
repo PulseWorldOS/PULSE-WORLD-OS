@@ -31,28 +31,41 @@ function pbPreconnect(origins = []) {
 // ---------------------------------------------------------------------------
 function pbDNSWarm(origin) {
   try {
-     fetch(origin, { method: "OPTIONS" }).catch(() => {});
-     console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
+    const link = document.createElement("link");
+    link.rel = "dns-prefetch";
+    link.href = origin;
+    document.head.appendChild(link);
+
+    console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
-  
 }
+
 
 // ---------------------------------------------------------------------------
 // TLS WARM (establish TLS early)
 // ---------------------------------------------------------------------------
 function pbTLSWarm(origin) {
   try {
-    fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {});
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = origin;
+    document.head.appendChild(link);
+
     console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
+
 
 // ---------------------------------------------------------------------------
 // HTTP/2 / HTTP/3 / QUIC Warm (protocol warm-path)
 // ---------------------------------------------------------------------------
 function pbProtocolWarm(origin) {
   try {
-    fetch(origin, { method: "GET", cache: "no-store" }).catch(() => {});
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = origin;
+    document.head.appendChild(link);
+
     console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
