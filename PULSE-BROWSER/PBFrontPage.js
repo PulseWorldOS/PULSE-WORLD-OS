@@ -181,27 +181,50 @@ window.addEventListener("DOMContentLoaded", () => {
 // ---------------------------------------------------------------------------
 function pbPreconnect(origins = []) {
   origins.forEach((origin) => {
+    pbDNSWarm(origin);
     pbTLSWarm(origin);
     pbProtocolWarm(origin);
   });
   console.log("%c[PBAccelerator] Preconnect:", "color:#00C8FF;", origins);
 }
 
+function pbDNSWarm(origin) {
+  try {
+    const link = document.createElement("link");
+    link.rel = "dns-prefetch";
+    link.href = origin;
+    document.head.appendChild(link);
+
+    console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
+  } catch (_) {}
+}
 
 // ---------------------------------------------------------------------------
 // TLS WARM (establish TLS early)
 // ---------------------------------------------------------------------------
 function pbTLSWarm(origin) {
-  try { fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {}); } catch (_) {}
-  console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
+  try {
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = origin;
+    document.head.appendChild(link);
+
+    console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
+  } catch (_) {}
 }
 
 // ---------------------------------------------------------------------------
 // HTTP/2 / HTTP/3 / QUIC Warm (protocol warm-path)
 // ---------------------------------------------------------------------------
 function pbProtocolWarm(origin) {
-  try { fetch(origin, { method: "GET", cache: "no-store" }).catch(() => {}); } catch (_) {}
-  console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
+  try {
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = origin;
+    document.head.appendChild(link);
+
+    console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
+  } catch (_) {}
 }
 
 async function pbModuleWarmBoot(settings) {
