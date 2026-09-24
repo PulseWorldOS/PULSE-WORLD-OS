@@ -296,7 +296,7 @@ function pbDecodeWarm() {
 // ---------------------------------------------------------------------------
 // REALM WARM (PulseWorld OS warm-path)
 // ---------------------------------------------------------------------------
-function pbRealmWarm(origin) {
+function pbHomeRealmWarm(origin) {
   const urls = [
     origin + "/PULSEConfig/PulseWorldReality.txt",
     origin + "/PULSEConfig/PulseWorldInventory.txt",
@@ -318,6 +318,15 @@ function pbRealmWarm(origin) {
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
 
+function pbRealmWarm(origin) {
+  const urls = [
+    origin + "/index.html",
+    origin + "/404.html",
+    origin + "/"
+  ];
+  pbPrefetch(urls);
+  console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
+}
 
 function broadcastRealmState() {
   chrome.tabs.query({}, (tabs) => {
@@ -403,7 +412,7 @@ async function pbHomeWarmBoot() {
 
   origins.forEach((origin) => {
     pbPreload(origin);
-    pbRealmWarm(origin);
+    pbHomeRealmWarm(origin);
   });
 
   chrome.runtime.sendMessage({
