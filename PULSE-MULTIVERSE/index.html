@@ -16,7 +16,6 @@
 <link rel="preconnect" href="https://www.pulseworld.me" crossorigin>
 <link rel="preconnect" href="https://www.pulseworld.money" crossorigin>
 <link rel="preconnect" href="https://www.pulseworld.biz" crossorigin>
-<link rel="modulepreload" fetchpriority="highest" href="https://port.serviceworker.net">
 <link rel="modulepreload" fetchpriority="highest" href="./DriftCompanion.js">
 <link rel="stylesheet" fetchpriority="high" href="./_EXPRESSIONS/_CSS/PulseIndex.css">
 <link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot2" type="video/mp4">
@@ -55,7 +54,7 @@
 <!-- <link rel="modulepreload" fetchpriority="high" href="./PulseMultiverseLayer.js"> -->
 
 <title>Pulse World Corp.</title>
-<script type="module" src="https://port.serviceworker.net"></script>
+<!-- <script type="module" src="https://port.serviceworker.net"></script> -->
 <!-- <script type="module" src="https://port.gpuprocessing.net"></script> -->
 <script type="module" src="https://port.binaryos.net"></script>
 <!-- <script type="module" src="./PulseWorldOSImports.js"></script> 
@@ -1347,6 +1346,7 @@ let isTouchMobile = false;
   }
 
   const urls = [
+    "https://port.serviceworker.net",
     "https://port.gpuprocessing.net",
     "https://port.booleanlogic.net",
     "https://port.orbitalmap.net",
