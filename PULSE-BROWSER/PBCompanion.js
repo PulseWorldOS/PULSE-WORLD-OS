@@ -351,9 +351,10 @@ async function pbWarmPath(origin) {
     origin.startsWith("chrome-extension://")
   ) {
     return;
-  }// Universal boost warm-path
-  if (typeof PBUniversalBoost?.warmTab === "function") {
-    PBUniversalBoost.warmTab(tab);
+  }
+  // Universal boost warm-path
+  if (typeof PBUniversalBoost?.warmOrigin === "function") {
+    PBUniversalBoost.warmOrigin(origin);
   }
 
   const S = await getSettings();
