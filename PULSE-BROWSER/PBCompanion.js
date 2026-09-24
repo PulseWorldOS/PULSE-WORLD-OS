@@ -158,6 +158,7 @@ async function getSettings() {
       S.accelRealmWarm    = S.accelRealmWarm    !== false;
       S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
+      S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
 
       resolve(S);
     });
