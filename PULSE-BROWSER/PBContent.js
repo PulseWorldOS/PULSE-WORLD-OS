@@ -19,7 +19,7 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 
 function pbPreconnect(origins = []) {
   origins.forEach((origin) => {
-    // pbDNSWarm(origin);
+    pbDNSWarm(origin);
     pbTLSWarm(origin);
     pbProtocolWarm(origin);
   });
@@ -30,24 +30,31 @@ function pbPreconnect(origins = []) {
 // DNS WARM (resolve domain early)
 // ---------------------------------------------------------------------------
 function pbDNSWarm(origin) {
-  try { fetch(origin, { method: "OPTIONS" }).catch(() => {}); } catch (_) {}
-  console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
+  try {
+     fetch(origin, { method: "OPTIONS" }).catch(() => {});
+     console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
+  } catch (_) {}
+  
 }
 
 // ---------------------------------------------------------------------------
 // TLS WARM (establish TLS early)
 // ---------------------------------------------------------------------------
 function pbTLSWarm(origin) {
-  try { fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {}); } catch (_) {}
-  console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
+  try {
+    fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {});
+    console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
+  } catch (_) {}
 }
 
 // ---------------------------------------------------------------------------
 // HTTP/2 / HTTP/3 / QUIC Warm (protocol warm-path)
 // ---------------------------------------------------------------------------
 function pbProtocolWarm(origin) {
-  try { fetch(origin, { method: "GET", cache: "no-store" }).catch(() => {}); } catch (_) {}
-  console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
+  try {
+    fetch(origin, { method: "GET", cache: "no-store" }).catch(() => {});
+    console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
+  } catch (_) {}
 }
 
 
