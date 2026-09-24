@@ -60,6 +60,9 @@ function startWarmPath() {
   const imgObserver = new MutationObserver(() => {
     document.querySelectorAll("img").forEach(warmImageDecode);
   });
+  
+  // Example content script usage (PBContent.js):
+  PBQuantumPrefetch.attachToDocument(document);
 
   imgObserver.observe(document.body, {
     childList: true,
@@ -177,9 +180,6 @@ const PBQuantumPrefetch = {
     } catch (_) {}
   }
 };
-
-// Example content script usage (PBContent.js):
-PBQuantumPrefetch.attachToDocument(document);
 
 function showPulseStreamPrompt(video) {
   // Prevent duplicates
