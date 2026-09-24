@@ -147,9 +147,21 @@ function pbDecodeWarm() {
 // ---------------------------------------------------------------------------
 function pbRealmWarm(origin) {
   const urls = [
-    origin + "/realm",
-    origin + "/band",
-    origin + "/os"
+    origin + "/PULSEConfig/PulseWorldReality.txt",
+    origin + "/PULSEConfig/PulseWorldInventory.txt",
+    origin + "/PULSEConfig/PulseWorldVault.txt",
+    origin + "/PULSEConfig/PulseWorldExtensions.txt",
+    origin + "/PULSEConfig/PulseWorldSettings.txt",
+    origin + "/PULSEConfig/PulseWorldFounders.txt",
+    origin + "/PULSEConfig/PulseWorldTeam.txt",
+    origin + "/PULSEConfig/PulseWorldTiers.txt",
+    origin + "/PULSEConfig/PulsePalSettings.txt",
+    origin + "/PULSEConfig/PulseWorldRewards.txt",
+    origin + "/PULSEConfig/PulseWorldScanner.txt",
+    origin + "/PULSEConfig/PulseWorldHistory.txt",
+    origin + "/PULSEConfig/PulseWorldMeshLink.txt",
+    origin + "/PULSEConfig/PULSE-ENGINE-BLOCK.txt",
+    origin + "/PULSEConfig/PulseWorldBusiness.txt"
   ];
   pbPrefetch(urls);
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
@@ -188,8 +200,8 @@ async function pbWarmPath(origin) {
   if (S.accelPreload)      pbPreload(origin);
 
   const siblingPaths = [
-    "/", "/home", "/world", "/engine", "/about",
-    "/pulse", "/realm", "/band", "/map", "/os"
+    "/", "/privacy", "/data", "/termsofuse", "/cookies",
+    "/404", "/realm", "/band", "/map", "/os"
   ];
 
   const siblingURLs = siblingPaths.map((p) => origin + p);
