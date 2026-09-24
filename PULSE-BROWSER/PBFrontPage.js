@@ -1010,11 +1010,37 @@ setInterval(() => {
 
   
   setInterval(swap, 15000);
-    
+      
+  const ENTERPRISE_DOMAINS = [
+    "microsoft.com",
+    "office.com",
+    "live.com",
+    "outlook.com",
+    "azure.com",
+    "login.microsoftonline.com",
+    "okta.com",
+    "google.com",
+    "workspace.google.com"
+  ];
+
+  function isEnterpriseURL(url) {
+    try {
+      const host = new URL(url).hostname;
+      return ENTERPRISE_DOMAINS.some(domain => host.includes(domain));
+    } catch {
+      return false;
+    }
+  }
+
+  function getWarmInterval(links, homes) {
+    const allTargets = [...links, ...homes];
+    const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
+    return hasEnterprise ? 15000 : 6000; // 15s for enterprise, 6s for normal
+  }
+
   async function pbRefreshWarmDocument() {
     const settings = await pbLoadExtensionSettings();
 
-    // PulseWorld domains
     const PB_HOMES = [
       "https://www.pulseworld.me",
       "https://www.pulseworld.net",
@@ -1044,30 +1070,52 @@ setInterval(() => {
     const container = document.getElementById("pbWarmContainer");
     if (!container) return;
 
-    // 1) Refresh preconnect hints (keeps DNS/TLS/protocol warm)
     container.innerHTML = "";
+
     PB_HOMES.forEach(url => {
-      container.insertAdjacentHTML(
-        "beforeend",
-        `<link rel="preconnect" href="${url}">`
-      );
-    });
-    links.forEach(url => {
-      container.insertAdjacentHTML(
-        "beforeend",
-        `<link rel="preconnect" href="${url}">`
-      );
+      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
-    // 2) Actively re‑run your accelerator warm path
-    if (PB_HOMES.length > 0) {
-      pbPreconnect(PB_HOMES);
-    }
-    // 2) Actively re‑run your accelerator warm path
-    if (links.length > 0) {
-      pbPreconnect(links);
-    }
+    links.forEach(url => {
+      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
+    });
+
+    if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
+    if (links.length > 0) pbPreconnect(links);
   }
 
+  // Compute interval dynamically
+  (async () => {
+    const settings = await pbLoadExtensionSettings();
 
-  setInterval(pbRefreshWarmDocument, 6000);
+    const PB_HOMES = [
+      "https://www.pulseworld.me",
+      "https://www.pulseworld.net",
+      "https://www.pulseworld.money",
+      "https://www.pulseworld.biz",
+      "https://www.binaryos.net",
+      "https://www.booleanlogic.net",
+      "https://www.gpuprocessing.net",
+      "https://www.serviceworker.net",
+      "https://www.orbitalmap.net"
+    ];
+
+    const links = [
+      settings.externalBankLink,
+      settings.externalEmailLink,
+      settings.externalSocialLink,
+      settings.externalWorkLink,
+      settings.externalStreamingLink,
+      settings.externalSearchLink,
+      settings.acceleratedModule1Link,
+      settings.acceleratedModule2Link,
+      settings.acceleratedModule3Link,
+      settings.acceleratedModule4Link,
+      settings.acceleratedModule5Link
+    ].filter(u => u && u.startsWith("http"));
+
+    const interval = getWarmInterval(links, PB_HOMES);
+
+    setInterval(pbRefreshWarmDocument, interval);
+  })();
+
