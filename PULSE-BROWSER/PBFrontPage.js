@@ -134,7 +134,7 @@ async function pbModuleWarmBoot(settings) {
     settings.acceleratedModule3Link,
     settings.acceleratedModule4Link,
     settings.acceleratedModule5Link
-  ];
+  ].filter(u => u && u.startsWith("http"));
 
   if (warmTargets.length === 0) return;
 
