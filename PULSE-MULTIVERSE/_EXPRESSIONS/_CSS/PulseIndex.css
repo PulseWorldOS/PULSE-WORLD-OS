@@ -197,6 +197,23 @@ html {
   19%   { transform: translateX(120%); opacity: 0.9; }
   100% { opacity: 0; }
 }
+#pwTopBand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 0;
+  background: linear-gradient(90deg, #ffb300, #ffdd55);
+  color: #222;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  z-index: 999999;
+  border-bottom: 2px solid #000;
+  text-transform: uppercase;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 img {
   max-width: 100%;
   display: block;

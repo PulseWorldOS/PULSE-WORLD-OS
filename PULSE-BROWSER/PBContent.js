@@ -117,7 +117,7 @@ async function injectHUD() {
     position: fixed;
     top: 10px;
     right: 10px;
-    width: 240px;
+    width: 260px;
     display: flex;
     flex-wrap: wrap;
     background: rgba(0,0,0,0.85);
@@ -142,7 +142,7 @@ async function injectHUD() {
 
   updateHUD();
   setInterval(updateHUD, 1500);
-  setInterval(fadeHUD, 5500);
+  setInterval(fadeHUD, 3500);
 }
 
 function showPulseStreamPrompt(video) {
@@ -313,9 +313,42 @@ function updateHUD() {
         engineDescriptor = "Simple • Direct • Fast";
       }
 
-      else if (currentEngine.includes("pulseworld")) {
+      if (currentEngine.includes("pulseworld.net")) {
         engineDescriptor = "Universal • Open • Neutral";
       }
+
+      else if (currentEngine.includes("pulseworld.me")) {
+        engineDescriptor = "Personal • Adaptive • Identity";
+      }
+
+      else if (currentEngine.includes("pulseworld.biz")) {
+        engineDescriptor = "Commerce • Productive • Enterprise";
+      }
+
+      else if (currentEngine.includes("pulseworld.money")) {
+        engineDescriptor = "Financial • Secure • Integrity";
+      }
+
+      else if (currentEngine.includes("binaryos.net")) {
+        engineDescriptor = "Deterministic • Structured • System‑Level";
+      }
+
+      else if (currentEngine.includes("booleanlogic.net")) {
+        engineDescriptor = "Logical • Precise • Rule‑Driven";
+      }
+
+      else if (currentEngine.includes("gpuprocessing.net")) {
+        engineDescriptor = "Parallel • Accelerated • High‑Performance";
+      }
+
+      else if (currentEngine.includes("serviceworker.net")) {
+        engineDescriptor = "Persistent • Background • Multi‑Realm";
+      }
+
+      else if (currentEngine.includes("orbitalmap.net")) {
+        engineDescriptor = "Spatial • Navigational • World‑Layer";
+      }
+
 
       else if (currentEngine.includes("bing")) {
         engineDescriptor = "Bright • Visual • Structured";

@@ -15,10 +15,18 @@ let url = engineURL;
 const timerBtn = document.getElementById("timerBtn");
 
 function getFavicon(url, flags = {}) {
-  const u = new URL(url);
+  let icon;
+  let u;
 
+  try {
+    u = new URL(url);
+  } catch {
+    // If URL parsing fails, bail out with nothing
+    return;
+  }
+    
   // Default external favicon
-  let icon = `${u.origin}/favicon.ico`;
+  icon = `${u.origin}/favicon.ico`;
 
   // PulseWorld domains
   const PB_HOMES = [
@@ -34,6 +42,23 @@ function getFavicon(url, flags = {}) {
   ];
 
   try {
+    if (u.hostname.includes("office.com")) {
+      return "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+    }
+
+    if (u.hostname.includes("github.com")) {
+      return "https://github.githubassets.com/favicons/favicon.svg";
+    }
+
+    if (u.hostname.includes("youtube.com")) {
+      return "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+    }
+
+    if (u.hostname.includes("discord.com")) {
+      return "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+    }
+
+
     // Check if this is a PulseWorld domain
     const isPulseWorld = PB_HOMES.some(domain => u.hostname.endsWith(domain));
 
@@ -82,9 +107,11 @@ function getFavicon(url, flags = {}) {
     return icon;
 
   } catch {
-    return; // external ONLY — no fallback
+    // If anything inside blows up, still return whatever icon we had
+    return icon;
   }
 }
+
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -103,12 +130,12 @@ async function updateModuleIcons() {
   workActiveLink = settings.externalWorkLink;
   workMode = settings.workMode;
 
-  if (searchMode === "internal") {
+  if (settings.searchMode === "internal") {
     engineURL = "https://www.google.com/search?q=";
     searchEngineActivated = "Google.com";
     document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
   } else {
-    engineURL = buildSearchURL(searchEngineActiveLink);
+    engineURL = buildSearchURL(settings.externalSearchLink);
   }
 
   // EMAIL MODULE
@@ -186,21 +213,98 @@ async function updateModuleIcons() {
     }
   }
 
-  // FAVORITES (always your emojis)
-  document.getElementById("moduleFav1Icon").innerText = "⚡";
-  document.getElementById("moduleFav1Icon").style.backgroundImage = "";
+  if (settings.acceleratedModule1Link) {
+    const moduleFav1Link = document.getElementById("moduleFav1Link");
+    const moduleFav1Icon = document.getElementById("moduleFav1Icon");
+    const fav1 = getFavicon(settings.acceleratedModule1Link);
+    if (fav1) {
+      moduleFav1Link.innerText = getReadableName(settings.acceleratedModule1Link) + " ";
+      moduleFav1Icon.innerText = "⚡";
+      moduleFav1Icon.style.backgroundImage = `url(${fav1})`;
+      moduleFav1Icon.style.backgroundSize = "contain";
+      moduleFav1Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
 
-  document.getElementById("moduleFav2Icon").innerText = "⚡";
-  document.getElementById("moduleFav2Icon").style.backgroundImage = "";
 
-  // FAVORITES (always your emojis)
-  document.getElementById("moduleFav3Icon").innerText = "⚡";
-  document.getElementById("moduleFav3Icon").style.backgroundImage = "";
+  if (settings.acceleratedModule2Link) {
+    const moduleFav2Link = document.getElementById("moduleFav2Link");
+    const moduleFav2Icon = document.getElementById("moduleFav2Icon");
+    const fav2 = getFavicon(settings.acceleratedModule2Link);
+    if (fav2) {
+      moduleFav2Link.innerText = getReadableName(settings.acceleratedModule2Link) + " ";
+      moduleFav2Icon.innerText = "⚡";
+      moduleFav2Icon.style.backgroundImage = `url(${fav2})`;
+      moduleFav2Icon.style.backgroundSize = "contain";
+      moduleFav2Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
 
-  document.getElementById("moduleFav4Icon").innerText = "⚡";
-  document.getElementById("moduleFav4Icon").style.backgroundImage = "";
+
+  if (settings.acceleratedModule3Link) {
+    const moduleFav3Link = document.getElementById("moduleFav3Link");
+    const moduleFav3Icon = document.getElementById("moduleFav3Icon");
+    const fav3 = getFavicon(settings.acceleratedModule3Link);
+    if (fav3) {
+      moduleFav3Link.innerText = getReadableName(settings.acceleratedModule3Link) + " ";
+      moduleFav3Icon.innerText = "⚡";
+      moduleFav3Icon.style.backgroundImage = `url(${fav3})`;
+      moduleFav3Icon.style.backgroundSize = "contain";
+      moduleFav3Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+
+  if (settings.acceleratedModule4Link) {
+    const moduleFav4Link = document.getElementById("moduleFav4Link");
+    const moduleFav4Icon = document.getElementById("moduleFav4Icon");
+    const fav4 = getFavicon(settings.acceleratedModule4Link);
+    if (fav4) {
+      moduleFav4Link.innerText = getReadableName(settings.acceleratedModule4Link) + " ";
+      moduleFav4Icon.innerText = "⚡";
+      moduleFav4Icon.style.backgroundImage = `url(${fav4})`;
+      moduleFav4Icon.style.backgroundSize = "contain";
+      moduleFav4Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  if (settings.acceleratedModule5Link) {
+    const moduleFav5Link = document.getElementById("moduleFav5Link");
+    const moduleFav5Icon = document.getElementById("moduleFav5Icon");
+    const fav5 = getFavicon(settings.acceleratedModule5Link);
+    if (fav5) {
+      moduleFav5Link.innerText = getReadableName(settings.acceleratedModule5Link) + " ";
+      moduleFav5Icon.innerText = "⚡";
+      moduleFav5Icon.style.backgroundImage = `url(${fav5})`;
+      moduleFav5Icon.style.backgroundSize = "contain";
+      moduleFav5Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
   
 }
+
+function getReadableName(url) {
+  try {
+    const u = new URL(url);
+
+    // Remove protocol + www
+    let host = u.hostname.replace("www.", "");
+
+    // Remove TLD (.com, .net, etc)
+    host = host.split(".")[0];
+
+    // Replace dashes with spaces
+    host = host.replace(/[-_]/g, " ");
+
+    // Capitalize each word
+    host = host.replace(/\b\w/g, c => c.toUpperCase());
+
+    return host;
+  } catch {
+    return url;
+  }
+}
+
 function cleanQuery(query) {
   if (!query) return "";
   return query.replace(/undefined/g, "").trim();
@@ -684,6 +788,116 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     chrome.tabs.create({ url: link });
 });
 
+
+document.getElementById("moduleFav1").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] moduleFav1Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com/";
+
+    console.log("[FrontPage] Opening External moduleFav1Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+});
+
+
+document.getElementById("moduleFav2").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] moduleFav2Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.acceleratedModule2Link?.trim() || "https://www.office.com/";
+
+    console.log("[FrontPage] Opening External moduleFav2Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+});
+
+
+document.getElementById("moduleFav3").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] moduleFav3Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com/";
+
+    console.log("[FrontPage] Opening External moduleFav3Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+});
+
+
+document.getElementById("moduleFav4").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] moduleFav4Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com/";
+
+    console.log("[FrontPage] Opening External moduleFav4Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+});
+
+
+document.getElementById("moduleFav5").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] moduleFav5Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com/";
+
+    console.log("[FrontPage] Opening External moduleFav5Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    chrome.tabs.create({ url: link });
+});
+
   const images = [
     "PulseWorldEntrancePulseGPUPulseEarn.png",
     "PulseWorldRoute.png",
@@ -702,6 +916,10 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     userInteracted = true;
   }, { once: true });
 });
+window.addEventListener("blur", () => {
+  userInteracted = true;
+}, { once: true });
+
 
 let timerX = 0;
 document.getElementById("timerBtn").textContent = timerX;
@@ -709,7 +927,7 @@ document.getElementById("timerBtn").textContent = timerX;
 setInterval(() => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
-  if (!userInteracted && timerX === 10) {
+  if (!userInteracted && timerX === 20) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
   } else if (userInteracted) {
