@@ -65,7 +65,7 @@ const timerBtn = document.getElementById("timerBtn");
       console.log("[PBUniversalBoost] Warmed publish directory for", origin, urls);
     },
 
-    async warmTab(tab) {
+    async warmOrigin(tab) {
       if (!tab || !tab.url) return;
       try {
         const origin = new URL(tab.url).origin;
@@ -769,7 +769,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
-        await PBUniversalBoost.warmTab(internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -786,7 +786,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}    
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -809,7 +809,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
-        await PBUniversalBoost.warmTab(internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -826,7 +826,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -849,7 +849,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
-        await PBUniversalBoost.warmTab(internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -866,7 +866,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -888,7 +888,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
-        await PBUniversalBoost.warmTab(internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -905,7 +905,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -927,7 +927,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
-        await PBUniversalBoost.warmTab(internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
         chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -944,7 +944,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -967,7 +967,7 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -990,7 +990,7 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -1013,7 +1013,7 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -1036,7 +1036,7 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
@@ -1059,7 +1059,7 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
-    await PBUniversalBoost.warmTab(link);
+    await PBUniversalBoost.warmOrigin(link);
     chrome.tabs.create({ url: link });
 });
 
