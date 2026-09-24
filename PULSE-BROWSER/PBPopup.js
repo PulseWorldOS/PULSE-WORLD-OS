@@ -386,7 +386,7 @@ document.getElementById("mod-stream").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalStreamingLink?.trim() || "https://www.hulu.com";
+    const link = settings.externalStreamLink?.trim() || "https://www.hulu.com";
 
     console.log("[FrontPage] Opening External Streaming Provider:", link);
     chrome.runtime.sendMessage({
@@ -665,7 +665,7 @@ async function loadWorld() {
       streamIcon.innerText = "📺";      // your original emoji
       streamIcon.style.backgroundImage = "";
   } else {        
-    const fav = getFavicon(settings.externalStreamingLink);
+    const fav = getFavicon(settings.externalStreamLink);
     if (fav) {
       streamIcon.innerText = "";
       streamIcon.style.backgroundImage = `url(${fav})`;
