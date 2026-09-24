@@ -225,7 +225,7 @@ async function loadExtensionSettingsUI() {
     workMode: "workMode",
     externalWorkLink: "externalWorkLink",
     streamingMode: "streamingMode",
-    externalStreamLink: "externalStreamLink"
+    externalStreamingLink: "externalStreamingLink"
   };
 
   for (const id in fields) {
@@ -273,7 +273,7 @@ async function saveExtensionSettingsUI() {
     workMode: document.getElementById("workMode").value,
     externalWorkLink: document.getElementById("externalWorkLink").value.trim(),
     streamingMode: document.getElementById("streamingMode").value,
-    externalStreamLink: document.getElementById("externalStreamLink").value.trim(),
+    externalStreamingLink: document.getElementById("externalStreamingLink").value.trim(),
     
     goPublicEnabled: document.getElementById("goPublicToggle").checked,
     publicLink: document.getElementById("publicLink").value.trim(),
@@ -511,7 +511,7 @@ if (location.href.includes("PBSettings.html")) {
       "workMode",
       "externalWorkLink",
       "streamingMode",
-      "externalStreamLink"
+      "externalStreamingLink"
     ];
 
     idsToWatch.forEach(id => {

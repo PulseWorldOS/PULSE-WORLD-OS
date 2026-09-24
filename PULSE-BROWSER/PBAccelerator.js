@@ -282,7 +282,7 @@ async function pbModuleWarmBoot() {
     settings.externalEmailLink,
     settings.externalSocialLink,
     settings.externalWorkLink,
-    settings.externalStreamLink,
+    settings.externalStreamingLink,
     settings.externalSearchLink,
     settings.acceleratedModule1Link,
     settings.acceleratedModule2Link,
