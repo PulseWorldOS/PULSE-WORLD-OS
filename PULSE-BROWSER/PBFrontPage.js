@@ -989,7 +989,7 @@ setInterval(() => {
 
   
   setInterval(swap, 15000);
-
+    
   async function pbRefreshWarmDocument() {
     const settings = await pbLoadExtensionSettings();
 
@@ -1008,13 +1008,26 @@ setInterval(() => {
     ].filter(u => u && u.startsWith("http"));
 
     const container = document.getElementById("pbWarmContainer");
-    container.innerHTML = ""; // clear old warm paths
+    if (!container) return;
 
+    // 1) Refresh preconnect hints (keeps DNS/TLS/protocol warm)
+    container.innerHTML = "";
     links.forEach(url => {
-      container.insertAdjacentHTML("beforeend",
-        `<link rel="preload" href="${url}" as="document">`
+      container.insertAdjacentHTML(
+        "beforeend",
+        `<link rel="preconnect" href="${url}">`
       );
     });
+
+    // 2) Actively re‑run your accelerator warm path
+    if (links.length > 0) {
+      pbPreconnect(links);
+      links.forEach(origin => {
+        pbPreload(origin);
+        pbRealmWarm(origin);
+      });
+    }
   }
 
-setInterval(pbRefreshWarmDocument, 6000);
+
+  setInterval(pbRefreshWarmDocument, 6000);
