@@ -161,8 +161,8 @@ const PBQuantumPrefetch = {
   hoverTimeout: null,
   prefetchDelayMs: 250,
 
-  attachToDocument(doc = document) {
-    doc.addEventListener("mouseover", (e) => {
+  attachToDocument() {
+    document.addEventListener("mouseover", (e) => {
       const a = e.target.closest("a[href]");
       if (!a) return;
       this.lastHoverLink = a.href;
