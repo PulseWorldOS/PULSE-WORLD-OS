@@ -53,6 +53,7 @@ self.addEventListener("install", event => {
     "PBRealmBridge.js",
     "PBRouter.js",
     "PBSettings.js",
+    "android-chrome-192x192.png",
     "PulseWorldOSMarketplace-White.png"
   ];
 
@@ -128,7 +129,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     domainClass: pbDomainClass(tab.url),
     ts: Date.now()
   });
-
+  
 });
 
 // ============================================================================
@@ -175,7 +176,8 @@ const PB_ASSETS = [
   "/site.webmanifest", "/404.html", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseEngine.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSBootLoader.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex",
-  "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal3.webp.pex", "/_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot2"
+  "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal3.webp.pex", "/_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot2",
+  "/PULSEConfig/PulseWorldReality.txt","/PULSEConfig/PulseWorldInventory.txt","/PULSEConfig/PulseWorldBusiness.txt"
 ];
 
 const PB_GENERIC_ASSETS = [
@@ -233,12 +235,12 @@ function pbPrefetch(urls = []) {
   urls.forEach((url) => {
     try { fetch(url, { cache: "force-cache" }).catch(() => {}); } catch (_) {}
   });
-
+  PBQuantumPrefetch.prefetchLink();
   // Asset warm-path counter
   if (urls.length > 0) {
     chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: urls.length });
   }
-
+  
   console.log("%c[PBAccelerator] Prefetch:", "color:#00C8FF;", urls);
 }
 
@@ -476,6 +478,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.url) {
         pbAccelerate(msg.url);
       }
+      PBQuantumPrefetch.attachToDocument(document);
       sendResponse({ ok: true });
       break;
 
@@ -914,7 +917,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_HOVER_PREFETCH":
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
-        PBQuantumPrefetch.prefetchLink(msg.href);
+        PBQuantumPrefetch.prefetchLink();
         console.log("Quantum Prefetching Enabled: " + msg.href);
       }
       

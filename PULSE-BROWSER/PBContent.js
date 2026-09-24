@@ -141,8 +141,8 @@ async function injectHUD() {
 
 
   updateHUD();
-  setInterval(updateHUD, 1500);
-  setInterval(fadeHUD, 3500);
+  setInterval(updateHUD, 1200);
+  setInterval(fadeHUD, 4000);
 }
 
 function showPulseStreamPrompt(video) {
