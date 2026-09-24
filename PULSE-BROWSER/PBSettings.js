@@ -166,7 +166,7 @@ const PB_DEFAULT_SETTINGS = {
   experimentalGPUPaths: false,
   experimentalDecodePaths: false,
   experimentalRouteGraph: false,
-  experimentalPredictivePrefetch: false,
+  experimentalPredictivePrefetch: true,
   experimentalAIWarmPath: false,
   experimentalTemporalNavigation: false,
   experimentalQuantumRouting: false,

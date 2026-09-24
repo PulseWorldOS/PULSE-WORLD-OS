@@ -372,8 +372,6 @@ async function pbAccelerate(url) {
   // FULL acceleration for EVERYONE
   await pbWarmPath(origin);
   
-  const S = await getSettings();
-
   console.log("%c[PBAccelerator] Accelerate:", "color:#00C8FF;", url);
 
 }
@@ -580,7 +578,7 @@ const PB_DEFAULT_SETTINGS = {
   experimentalGPUPaths: false,
   experimentalDecodePaths: false,
   experimentalRouteGraph: false,
-  experimentalPredictivePrefetch: false,
+  experimentalPredictivePrefetch: true,
   experimentalAIWarmPath: false,
   experimentalTemporalNavigation: false,
   experimentalQuantumRouting: false,
