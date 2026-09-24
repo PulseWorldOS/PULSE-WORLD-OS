@@ -478,7 +478,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.url) {
         pbAccelerate(msg.url);
       }
-      PBQuantumPrefetch.attachToDocument();
       sendResponse({ ok: true });
       break;
 
