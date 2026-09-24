@@ -404,60 +404,17 @@ async function pbHomeWarmBoot() {
 // Run home warm-boot once when accelerator loads
 pbHomeWarmBoot().catch(() => {});
 
-const PB_LOG = {
-  info(label, data) {
-    console.log(
-      `%c[PBSettings][INFO][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#55BBFF; font-weight:bold;",
-      data || ""
-    );
-  },
-
-  change(label, before, after) {
-    console.groupCollapsed(
-      `%c[PBSettings][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00FFAA; font-weight:bold;"
-    );
-    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
-    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
-    console.groupEnd();
-  },
-
-  save(label, data) {
-    console.log(
-      `%c[PBSettings][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00DDFF; font-weight:bold;",
-      data
-    );
-  },
-
-  load(label, data) {
-    console.log(
-      `%c[PBSettings][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FFD700; font-weight:bold;",
-      data
-    );
-  },
-
-  event(label, data) {
-    console.log(
-      `%c[PBSettings][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FF55AA; font-weight:bold;",
-      data
-    );
-  }
-};
-
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
 async function pbLoadExtensionSettings() {
   try {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
-    PB_LOG.load("pbLoadExtensionSettings()", settings);
+    console.log("pbLoadExtensionSettings()", settings);
 
     return settings;
   } catch (err) {
-    PB_LOG.error("pbLoadExtensionSettings() FAILED", err);
+    console.error("pbLoadExtensionSettings() FAILED", err);
     return {};
   }
 }
