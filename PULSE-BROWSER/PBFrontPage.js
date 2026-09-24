@@ -118,6 +118,33 @@ window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();
 });
 
+// ---------------------------------------------------------------------------
+// PRECONNECT (DNS/TLS/TCP warm-path)
+// ---------------------------------------------------------------------------
+function pbPreconnect(origins = []) {
+  origins.forEach((origin) => {
+    pbTLSWarm(origin);
+    pbProtocolWarm(origin);
+  });
+  console.log("%c[PBAccelerator] Preconnect:", "color:#00C8FF;", origins);
+}
+
+
+// ---------------------------------------------------------------------------
+// TLS WARM (establish TLS early)
+// ---------------------------------------------------------------------------
+function pbTLSWarm(origin) {
+  try { fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {}); } catch (_) {}
+  console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
+}
+
+// ---------------------------------------------------------------------------
+// HTTP/2 / HTTP/3 / QUIC Warm (protocol warm-path)
+// ---------------------------------------------------------------------------
+function pbProtocolWarm(origin) {
+  try { fetch(origin, { method: "GET", cache: "no-store" }).catch(() => {}); } catch (_) {}
+  console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
+}
 
 async function pbModuleWarmBoot(settings) {
 
@@ -140,12 +167,6 @@ async function pbModuleWarmBoot(settings) {
 
   // Preconnect all module targets
   pbPreconnect(warmTargets);
-
-  // Warm each module target
-  warmTargets.forEach(origin => {
-    pbPreload(origin);
-    pbRealmWarm(origin);
-  });
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
@@ -993,6 +1014,19 @@ setInterval(() => {
   async function pbRefreshWarmDocument() {
     const settings = await pbLoadExtensionSettings();
 
+    // PulseWorld domains
+    const PB_HOMES = [
+      "https://www.pulseworld.me",
+      "https://www.pulseworld.net",
+      "https://www.pulseworld.money",
+      "https://www.pulseworld.biz",
+      "https://www.binaryos.net",
+      "https://www.booleanlogic.net",
+      "https://www.gpuprocessing.net",
+      "https://www.serviceworker.net",
+      "https://www.orbitalmap.net"
+    ];
+
     const links = [
       settings.externalBankLink,
       settings.externalEmailLink,
@@ -1012,6 +1046,12 @@ setInterval(() => {
 
     // 1) Refresh preconnect hints (keeps DNS/TLS/protocol warm)
     container.innerHTML = "";
+    PB_HOMES.forEach(url => {
+      container.insertAdjacentHTML(
+        "beforeend",
+        `<link rel="preconnect" href="${url}">`
+      );
+    });
     links.forEach(url => {
       container.insertAdjacentHTML(
         "beforeend",
@@ -1020,12 +1060,12 @@ setInterval(() => {
     });
 
     // 2) Actively re‑run your accelerator warm path
+    if (PB_HOMES.length > 0) {
+      pbPreconnect(PB_HOMES);
+    }
+    // 2) Actively re‑run your accelerator warm path
     if (links.length > 0) {
       pbPreconnect(links);
-      links.forEach(origin => {
-        pbPreload(origin);
-        pbRealmWarm(origin);
-      });
     }
   }
 
