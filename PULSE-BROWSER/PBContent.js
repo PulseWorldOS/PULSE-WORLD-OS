@@ -62,7 +62,7 @@ function startWarmPath() {
   });
   
   // Example content script usage (PBContent.js):
-  PBQuantumPrefetch.attachToDocument(document);
+  PBQuantumPrefetch.attachToDocument();
 
   imgObserver.observe(document.body, {
     childList: true,
