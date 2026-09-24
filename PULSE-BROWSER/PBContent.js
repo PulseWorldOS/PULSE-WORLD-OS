@@ -199,7 +199,8 @@ const PBQuantumPrefetch = {
       const a = e.target.closest("a[href]");
       if (!a) return;
       this.lastHoverLink = a.href;
-      pbPreconnect(a.href);
+      const link = [a.href];
+      pbPreconnect(link);
       if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
       this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
     });
@@ -209,7 +210,6 @@ const PBQuantumPrefetch = {
     const href = this.lastHoverLink;
     if (!href) return;
     try {
-      pbPreconnect(a.href);
       fetch(href, { cache: "force-cache" }).catch(() => {});
       console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
     } catch (_) {}
