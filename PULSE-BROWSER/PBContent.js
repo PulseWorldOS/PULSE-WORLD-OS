@@ -217,6 +217,10 @@ const PBQuantumPrefetch = {
     const href = this.lastHoverLink;
     if (!href) return;
     try {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: this.lastHover
+      });
       fetch(href, { cache: "force-cache" }).catch(() => {});
       console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
     } catch (_) {}
@@ -849,35 +853,6 @@ function injectPulseFlag() {
 
   document.body.appendChild(flag);
 }
-
-// ============================================================================
-// 11. PBQuantumPrefetchContent — Hover Prefetch (Content → Kernel)
-// ============================================================================
-
-const PBQuantumPrefetchContent = {
-  lastHover: null,
-  hoverDelay: 200,
-  hoverTimer: null,
-
-  attach(doc = document) {
-    doc.addEventListener("mouseover", (e) => {
-      const a = e.target.closest("a[href]");
-      if (!a) return;
-
-      this.lastHover = a.href;
-
-      if (this.hoverTimer) clearTimeout(this.hoverTimer);
-      this.hoverTimer = setTimeout(() => {
-        chrome.runtime.sendMessage({
-          type: "PB_HOVER_PREFETCH",
-          href: this.lastHover
-        });
-      }, this.hoverDelay);
-    });
-  }
-};
-
-PBQuantumPrefetchContent.attach(document);
 
 
 // ============================================================================

@@ -182,11 +182,3 @@ async function pbHandleRequest(details) {
 
   return {}; // allow
 }
-
-// ---------------------------------------------------------------------------
-// EXPORTS
-// ---------------------------------------------------------------------------
-self.PBRouter = {
-  pbRoute,
-  pbHandleRequest
-};
