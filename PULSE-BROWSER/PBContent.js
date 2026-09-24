@@ -217,10 +217,6 @@ const PBQuantumPrefetch = {
     const href = this.lastHoverLink;
     if (!href) return;
     try {
-      chrome.runtime.sendMessage({
-        type: "PB_HOVER_PREFETCH",
-        href: this.lastHover
-      });
       fetch(href, { cache: "force-cache" }).catch(() => {});
       console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
     } catch (_) {}
