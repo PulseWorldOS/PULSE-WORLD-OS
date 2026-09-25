@@ -1183,6 +1183,9 @@ setInterval(() => {
   async function pbRefreshWarmDocument() {
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
+    const now2 = new Date().toISOString();
+    console.log(`[FrontPage] PulseWorld Module Refresh • ${now2}`);
+
     const settings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
