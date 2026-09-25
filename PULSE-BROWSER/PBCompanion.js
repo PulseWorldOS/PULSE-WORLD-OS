@@ -41,6 +41,15 @@ const PulseRealmState = {
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
 
+const settings = null;
+
+(async () => {
+  try {
+    settings = await pbLoadExtensionSettings();
+  } catch (err) {
+  }
+})();
+
 function getFavicon(url, flags = {}) {
   let icon;
   let u;
@@ -129,14 +138,12 @@ function getFavicon(url, flags = {}) {
 // ============================================================================
 //  SECTION 0 — INSTALL / ACTIVATE (Warm Boot)
 // ============================================================================
-self.addEventListener("install",async event => {
+self.addEventListener("install", event => {
   console.log(
     "%c[PULSEWORLD OS KERNEL] Installed",
     "color:#00FF9C; font-weight:bold; font-family:monospace;"
   );
   
-  const settings = await pbLoadExtensionSettings();
-
   const CACHE_NAME = "pulseworld-os-cache";
   const PRELOAD_URLS = [
     "PBFrontPage.html",
@@ -201,7 +208,7 @@ const PB_HOMES = [
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
 function pbDomainClass(url) {
-  for (const domain of PB_HOMESS) {
+  for (const domain of PB_HOMES) {
     if (url.includes(domain)) return "PulseWorld";
   }
   return "WWW";
@@ -531,7 +538,7 @@ async function pbHomeWarmBoot() {
   const S = await getSettings();
   if (!S.accelHomeWarmBoot) return;
 
-  const origins = PB_HOMESS.map((d) => "https://" + d);
+  const origins = PB_HOMES.map((d) => "https://" + d);
   pbPreconnect(origins);
 
   origins.forEach((origin) => {
