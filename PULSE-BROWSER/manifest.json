@@ -3,7 +3,7 @@
   "name": "PulseWorld OS",
   "short_name": "PulseWorld",
   "description": "PulseWorld — Temporal OS, Unified Internet, Adaptive Routing, Immortal Runtime.",
-  "version": "12.2.0",
+  "version": "12.3.0",
 
   "icons": {
     "16": "PulseWorldSplash512.png",
@@ -85,6 +85,10 @@
       "PulseWorldOSLogo.png",
       "PulseWorldSplash512.png",
       "android-chrome-192x192.png",
+      "PulseWorldEntrancePulseGPUPulseEarn.png",
+      "PBFrontPage.js",
+      "PBPopup.js",      
+      "PBCompanion.js",
       "PBSettings.js"
     ],
     "matches": ["<all_urls>"]
