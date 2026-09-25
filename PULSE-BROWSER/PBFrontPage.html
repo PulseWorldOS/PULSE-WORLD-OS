@@ -108,6 +108,20 @@
       to { opacity: 0.85; }
     }
 
+    .subsubtitle {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      color: white;
+      animation: subsubtitleReveal 2.5s ease forwards;
+      animation-delay: 2.6s;
+      text-shadow: 0 0 8px #00aaff88;
+    }
+
+    @keyframes subsubtitleReveal {
+      to { opacity: 0.85; }
+    }
+
     /* FIXED BUTTON — now an anchor */
     .search {
       margin-top: 8px;
@@ -644,7 +658,7 @@
     <div class="subtitle">
       Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness
     </div>
-
+    
     <!-- Search Area -->
     <div class="search-area">
 
@@ -733,13 +747,11 @@
           <span class="module-labelF" id="moduleFav5Link">Accelerated 5 </span>
           <span class="module-iconF" id="moduleFav5Icon">⚡</span>
         </a>
-
-
       </div>
-
+      <div class="subsubtitle">
+        We keep your Worlds Warm and Running — every Site you set Stays Accelerated, Ready, and Offline‑Capable!
+      </div>
     </div>
-
-
   </div>
 
   <script src="PBFrontpage.js"></script>
