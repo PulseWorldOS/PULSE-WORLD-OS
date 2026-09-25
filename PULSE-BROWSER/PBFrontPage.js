@@ -1177,10 +1177,12 @@ setInterval(() => {
   function getWarmInterval(links, homes) {
     const allTargets = [...links, ...homes];
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
-    return hasEnterprise ? 15000 : 6000; // 15s for enterprise, 6s for normal
+    return hasEnterprise ? 15000 : 8000; // 15s for enterprise, 8s for normal
   }
 
   async function pbRefreshWarmDocument() {
+    const now = Date.now();
+    console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules: ", now);
     const settings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
