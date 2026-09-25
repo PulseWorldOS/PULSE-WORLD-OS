@@ -9,7 +9,7 @@ console.log("%c[PULSEBROWSER] PBRealmBridge (Ultra Edition v4.0) loaded",
 // ---------------------------------------------------------------------------
 // REALM STATE (browser-side OS memory)
 // ---------------------------------------------------------------------------
-const PulseRealmState = {
+const PulseRealmState2 = {
 
   // Core
   lastPing: null,
@@ -64,8 +64,8 @@ const PulseRealmState = {
 // HELPERS
 // ---------------------------------------------------------------------------
 function updateRealm(partial) {
-  Object.assign(PulseRealmState, partial);
-  PulseRealmState.lastPing = Date.now();
+  Object.assign(PulseRealmState2, partial);
+  PulseRealmState2.lastPing = Date.now();
 }
 
 // ---------------------------------------------------------------------------
@@ -81,9 +81,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // ---------------------------------------------------------
     case "PBREALM_UPDATE":
       updateRealm({
-        lastPage: msg.page || PulseRealmState.lastPage,
-        bands: Object.assign({}, PulseRealmState.bands, msg.bands || {}),
-        lastPing: Date.now() || PulseRealmState.lastPing
+        lastPage: msg.page || PulseRealmState2.lastPage,
+        bands: Object.assign({}, PulseRealmState2.bands, msg.bands || {}),
+        lastPing: Date.now() || PulseRealmState2.lastPing
       });
       sendResponse({ ok: true });
       break;
@@ -92,10 +92,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // NAVIGATION EVENT (from PBNavigator)
     // ---------------------------------------------------------
     case "PBNAV_EVENT":
-      PulseRealmState.lastURL = msg.url;
-      PulseRealmState.lastDomainClass = msg.domainClass;
-      PulseRealmState.navHistory.push(msg.url);
-      PulseRealmState.navEvents.push(msg);
+      PulseRealmState2.lastURL = msg.url;
+      PulseRealmState2.lastDomainClass = msg.domainClass;
+      PulseRealmState2.navHistory.push(msg.url);
+      PulseRealmState2.navEvents.push(msg);
       sendResponse({ ok: true });
       break;
 
@@ -103,8 +103,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // PERFORMANCE EVENTS (from PBContent)
     // ---------------------------------------------------------
     case "PBCONTENT_PERF":
-      PulseRealmState.perfEntries = msg.entries || [];
-      PulseRealmState.perfLastNavigation = msg.ts || Date.now();
+      PulseRealmState2.perfEntries = msg.entries || [];
+      PulseRealmState2.perfLastNavigation = msg.ts || Date.now();
       sendResponse({ ok: true });
       break;
 
@@ -112,8 +112,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // MUTATION EVENTS (from PBContent)
     // ---------------------------------------------------------
     case "PBCONTENT_MUTATION":
-      PulseRealmState.mutationCount += msg.count || 0;
-      PulseRealmState.lastMutationTS = msg.ts || Date.now();
+      PulseRealmState2.mutationCount += msg.count || 0;
+      PulseRealmState2.lastMutationTS = msg.ts || Date.now();
       sendResponse({ ok: true });
       break;
 
@@ -121,24 +121,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // GPU WARM-PATH (from PBContent / PBAccelerator)
     // ---------------------------------------------------------
     case "PBCONTENT_GPUWARM":
-      PulseRealmState.gpuWarmCount++;
+      PulseRealmState2.gpuWarmCount++;
       sendResponse({ ok: true });
       break;
 
     case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount++;
+      PulseRealmState2.gpuWarmCount++;
       sendResponse({ ok: true });
       break;
     // ---------------------------------------------------------
     // IMAGE DECODE WARM-PATH (from PBContent)
     // ---------------------------------------------------------
     case "PBCONTENT_DECODEWARM":
-      PulseRealmState.imagesDecoded++;
+      PulseRealmState2.imagesDecoded++;
       sendResponse({ ok: true });
       break;
 
     case "PBCONTENT_DECODEWARM_EXTRA":
-      PulseRealmState.imagesDecoded++;
+      PulseRealmState2.imagesDecoded++;
       sendResponse({ ok: true });
       break;
 
@@ -146,12 +146,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // WARM-PATH TRIGGERED (from PBAccelerator)
     // ---------------------------------------------------------
     case "PBACC_WARMPATH_EVENT":
-      PulseRealmState.warmPathsTriggered++;
+      PulseRealmState2.warmPathsTriggered++;
       sendResponse({ ok: true });
       break;
 
     case "PBACC_WARMPATH":
-      PulseRealmState.warmPathsTriggered++;
+      PulseRealmState2.warmPathsTriggered++;
       sendResponse({ ok: true });
       break;
 
@@ -159,7 +159,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // ASSET WARM-PATH TRIGGERED
     // ---------------------------------------------------------
     case "PBACC_ASSETWARM_EVENT":
-      PulseRealmState.warmAssetsTriggered++;
+      PulseRealmState2.warmAssetsTriggered++;
       sendResponse({ ok: true });
       break;
 
@@ -167,7 +167,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // SETTINGS SNAPSHOT (from PBSettings kernel)
     // ---------------------------------------------------------
     case "PBSETTINGS_SNAPSHOT":
-      PulseRealmState.settings = msg.settings || {};
+      PulseRealmState2.settings = msg.settings || {};
       sendResponse({ ok: true });
       break;
 
@@ -175,7 +175,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // FLAGS UPDATE (DevOverlay / kernel)
     // ---------------------------------------------------------
     case "PBREALM_FLAGS_UPDATE":
-      PulseRealmState.flags = Object.assign({}, PulseRealmState.flags, msg.flags || {});
+      PulseRealmState2.flags = Object.assign({}, PulseRealmState2.flags, msg.flags || {});
       sendResponse({ ok: true });
       break;
 
@@ -183,7 +183,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // REALM GET (DevOverlay + Popup)
     // ---------------------------------------------------------
     case "PBREALM_GET":
-      sendResponse({ ok: true, state: PulseRealmState });
+      sendResponse({ ok: true, state: PulseRealmState2 });
       break;
   }
 });

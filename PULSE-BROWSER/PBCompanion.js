@@ -12,7 +12,15 @@ const PulseRealmState = {
   lastPage: null,
   lastURL: null,
   lastDomainClass: null,
-  bands: {},
+  // Bands (PulseWorld / OS)
+  bands: {
+    pulseBand: null,
+    accelBand: null,
+    routerBand: null,
+    gpuBand: null,
+    decodeBand: null,
+    worldBand: null
+  },
   navHistory: [],
   perfEntries: [],
   mutationCount: 0,
@@ -46,19 +54,6 @@ function getFavicon(url, flags = {}) {
 
   // Default external favicon
   icon = `${u.origin}/favicon.ico`;
-
-  // PulseWorld domains
-  const PB_HOMES = [
-    "pulseworld.me",
-    "pulseworld.net",
-    "pulseworld.money",
-    "pulseworld.biz",
-    "binaryos.net",
-    "booleanlogic.net",
-    "gpuprocessing.net",
-    "serviceworker.net",
-    "orbitalmap.net"
-  ];
 
   try {
     if (u.hostname.includes("office.com")) {
@@ -190,7 +185,7 @@ self.addEventListener("activate", (event) => {
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
 // ---------------------------------------------------------------------------
-const PB_HOME = [
+const PB_HOMES = [
   "www.pulseworld.me",
   "www.pulseworld.net",
   "www.pulseworld.money",
@@ -206,7 +201,7 @@ const PB_HOME = [
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
 function pbDomainClass(url) {
-  for (const domain of PB_HOME) {
+  for (const domain of PB_HOMESS) {
     if (url.includes(domain)) return "PulseWorld";
   }
   return "WWW";
@@ -479,8 +474,8 @@ async function pbWarmPath(origin) {
     return;
   }
   // Universal boost warm-path
-  if (typeof PBUniversalBoost?.warmOrigin === "function") {
-    PBUniversalBoost.warmOrigin(origin);
+  if (typeof PBUniversalBoost2?.warmOrigin === "function") {
+    PBUniversalBoost2.warmOrigin(origin);
   }
 
   const S = await getSettings();
@@ -536,7 +531,7 @@ async function pbHomeWarmBoot() {
   const S = await getSettings();
   if (!S.accelHomeWarmBoot) return;
 
-  const origins = PB_HOME.map((d) => "https://" + d);
+  const origins = PB_HOMESS.map((d) => "https://" + d);
   pbPreconnect(origins);
 
   origins.forEach((origin) => {
@@ -556,11 +551,11 @@ async function pbHomeWarmBoot() {
 // Run home warm-boot once when accelerator loads
 pbHomeWarmBoot().catch(() => {});
 
-const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 async function pbLoadExtensionSettings() {
   try {
-    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
-    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
+    const settings = result[EXTENSION_SETTINGS_KEY2] || {};
 
     console.log("pbLoadExtensionSettings()", settings);
 
@@ -684,7 +679,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 // ============================================================================
 //  SECTION 2 — SETTINGS (Full OS Registry)
 // ============================================================================
-const PB_DEFAULT_SETTINGS = {
+const PB_DEFAULT_SETTINGS2 = {
   enableInterceptor: true,
   enableAccelerator: true,
   enableNavigator: true,
@@ -752,8 +747,8 @@ const PB_DEFAULT_SETTINGS = {
 
 function pbLoadSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(PB_DEFAULT_SETTINGS, (data) => {
-      resolve(data || PB_DEFAULT_SETTINGS);
+    chrome.storage.sync.get(PB_DEFAULT_SETTINGS2, (data) => {
+      resolve(data || PB_DEFAULT_SETTINGS2);
     });
   });
 }
@@ -870,8 +865,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   }
 
   // Universal boost warm-path
-  if (typeof PBUniversalBoost?.warmTab === "function") {
-    PBUniversalBoost.warmTab(tab);
+  if (typeof PBUniversalBoost2?.warmTab === "function") {
+    PBUniversalBoost2.warmTab(tab);
   }
 
   // Existing accel hook
@@ -1017,8 +1012,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.url) {
         const origin = new URL(msg.url).origin;
         chrome.runtime.sendMessage({ type: "PBACC_WARMPATH_EVENT", origin });
-        if (typeof PBUniversalBoost?.warmOrigin === "function") {
-          PBUniversalBoost.warmOrigin(origin);
+        if (typeof PBUniversalBoost2?.warmOrigin === "function") {
+          PBUniversalBoost2.warmOrigin(origin);
         }
       }
       sendResponse({ ok: true });
@@ -1098,8 +1093,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_WARMPATH":
       try {
         const origin = new URL(msg.url).origin;
-        if (typeof PBUniversalBoost?.warmOrigin === "function") {
-          PBUniversalBoost.warmOrigin(origin);
+        if (typeof PBUniversalBoost2?.warmOrigin === "function") {
+          PBUniversalBoost2.warmOrigin(origin);
         }
       } catch (_) {}
       sendResponse?.({ ok: true });
@@ -1146,10 +1141,10 @@ function pbLogKernelStatus() {
 }
 
   // ============================================================================
-//  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
+//  PBUniversalBoost2.js — Global SW-like acceleration (publish directory warm)
 // ============================================================================
 
-const PBUniversalBoost = {
+const PBUniversalBoost2 = {
   async warmOrigin(origin) {
     if (!origin) return;
 
@@ -1168,14 +1163,14 @@ const PBUniversalBoost = {
 
     for (const prefix of forbidden) {
       if (origin.startsWith(prefix)) {
-        console.log("[PBUniversalBoost] Skipped forbidden origin:", origin);
+        console.log("[PBUniversalBoost2] Skipped forbidden origin:", origin);
         return;
       }
     }
 
     // ⭐ Only warm http/https origins
     if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
-      console.log("[PBUniversalBoost] Skipped non-HTTP origin:", origin);
+      console.log("[PBUniversalBoost2] Skipped non-HTTP origin:", origin);
       return;
     }
 
@@ -1192,21 +1187,21 @@ const PBUniversalBoost = {
       } catch (_) {}
     }
 
-    console.log("[PBUniversalBoost] Warmed publish directory for", origin, urls);
+    console.log("[PBUniversalBoost2] Warmed publish directory for", origin, urls);
   },
 
   async warmTab(tab) {
     if (!tab || !tab.url) return;
     try {
       const origin = new URL(tab.url).origin;
-      await PBUniversalBoost.warmOrigin(origin);
+      await PBUniversalBoost2.warmOrigin(origin);
     } catch (_) {}
   }
 };
 
 
 // Example kernel hook (inside PBCompanion.js tab update):
-// if (domainClass === "home" || domainClass === "global") PBUniversalBoost.warmTab(tab);
+// if (domainClass === "home" || domainClass === "global") PBUniversalBoost2.warmTab(tab);
 
 // ============================================================================
 //  PBQuantumPrefetch.js — AI-ish navigation prediction (lightweight heuristic)
