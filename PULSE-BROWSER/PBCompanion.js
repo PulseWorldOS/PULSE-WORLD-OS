@@ -41,14 +41,7 @@ const PulseRealmState = {
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
 
-const settings = null;
-
-(async () => {
-  try {
-    settings = await pbLoadExtensionSettings();
-  } catch (err) {
-  }
-})();
+const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 
 function getFavicon(url, flags = {}) {
   let icon;
@@ -156,13 +149,7 @@ self.addEventListener("install", event => {
     "PBRouter.js",
     "PBSettings.js",
     "android-chrome-192x192.png",
-    "PulseWorldOSMarketplace-White.png",
-    getFavicon(settings.externalEmailLink),
-    getFavicon(settings.externalBankLink),
-    getFavicon(settings.externalWorkLink),
-    getFavicon(settings.externalStreamingLink),
-    getFavicon(settings.externalSocialLink),
-    getFavicon(settings.externalSearchLink),
+    "PulseWorldOSMarketplace-White.png"
   ];
 
   event.waitUntil(
@@ -558,7 +545,6 @@ async function pbHomeWarmBoot() {
 // Run home warm-boot once when accelerator loads
 pbHomeWarmBoot().catch(() => {});
 
-const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 async function pbLoadExtensionSettings() {
   try {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
