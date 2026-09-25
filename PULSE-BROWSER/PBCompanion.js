@@ -33,14 +33,114 @@ const PulseRealmState = {
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
 
+function getFavicon(url, flags = {}) {
+  let icon;
+  let u;
+
+  try {
+    u = new URL(url);
+  } catch {
+    // If URL parsing fails, bail out with nothing
+    return;
+  }
+
+  // Default external favicon
+  icon = `${u.origin}/favicon.ico`;
+
+  // PulseWorld domains
+  const PB_HOMES = [
+    "pulseworld.me",
+    "pulseworld.net",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net"
+  ];
+
+  try {
+    if (u.hostname.includes("office.com")) {
+      return "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+    }
+
+    if (u.hostname.includes("github.com")) {
+      return "https://github.githubassets.com/favicons/favicon.svg";
+    }
+
+    if (u.hostname.includes("youtube.com")) {
+      return "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+    }
+
+    if (u.hostname.includes("discord.com")) {
+      return "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+    }
+
+
+    // Check if this is a PulseWorld domain
+    const isPulseWorld = PB_HOMES.some(domain => u.hostname.endsWith(domain));
+
+    if (isPulseWorld) {
+      // MODULE‑AWARE FAVICON SWITCHING
+      if (flags.isSW) {
+        icon = `${u.origin}/SWFavIcon.ico`;
+      }
+      else if (flags.isBinaryOS) {
+        icon = `${u.origin}/BOFavIcon.ico`;
+      }
+      else if (flags.isGPU) {
+        icon = `${u.origin}/GPFavIcon.ico`;
+      }
+      else if (flags.isLogic) {
+        icon = `${u.origin}/BLFavIcon.ico`;
+      }
+      else if (flags.isOrb) {
+        icon = `${u.origin}/OMFavIcon.ico`;
+      }
+      else if (flags.isBiz) {
+        icon = `${u.origin}/PWBFavIcon.ico`;
+      }
+      else if (flags.isSettings) {
+        icon = `${u.origin}/PWBFavIcon.ico`;
+      }
+      else if (flags.isMoney) {
+        icon = `${u.origin}/PWMFavIcon.ico`;
+      }
+      else {
+        icon = `${u.origin}/PWFavIcon.ico`; // Default PulseWorld favicon
+      }
+
+      console.log("PulseWorld favicon:", icon);
+      return icon;
+    }
+
+    // External site → strip subdomain for cleaner favicon
+    const parts = u.hostname.split(".");
+    if (parts.length > 2) {
+      const root = parts.slice(parts.length - 2).join(".");
+      icon = `https://${root}/favicon.ico`;
+    }
+
+    console.log("External favicon:", icon);
+    return icon;
+
+  } catch {
+    // If anything inside blows up, still return whatever icon we had
+    return icon;
+  }
+}
+
 // ============================================================================
 //  SECTION 0 — INSTALL / ACTIVATE (Warm Boot)
 // ============================================================================
-self.addEventListener("install", event => {
+self.addEventListener("install",async event => {
   console.log(
     "%c[PULSEWORLD OS KERNEL] Installed",
     "color:#00FF9C; font-weight:bold; font-family:monospace;"
   );
+  
+  const settings = await pbLoadExtensionSettings();
 
   const CACHE_NAME = "pulseworld-os-cache";
   const PRELOAD_URLS = [
@@ -54,9 +154,14 @@ self.addEventListener("install", event => {
     "PBRouter.js",
     "PBSettings.js",
     "android-chrome-192x192.png",
-    "PulseWorldOSMarketplace-White.png"
+    "PulseWorldOSMarketplace-White.png",
+    getFavicon(settings.externalEmailLink),
+    getFavicon(settings.externalBankLink),
+    getFavicon(settings.externalWorkLink),
+    getFavicon(settings.externalStreamingLink),
+    getFavicon(settings.externalSocialLink),
+    getFavicon(settings.externalSearchLink),
   ];
-
 
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
