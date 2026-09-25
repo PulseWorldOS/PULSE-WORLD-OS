@@ -87,6 +87,10 @@
       "android-chrome-192x192.png",
       "PulseWorldEntrancePulseGPUPulseEarn.png",
       "PBFrontPage.js",
+      "PBNavigator.js",
+      "PBInterceptor.js",
+      "PBRealmBridge.js",
+      "PBRouter.js",
       "PBPopup.js",      
       "PBCompanion.js",
       "PBSettings.js"
