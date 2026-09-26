@@ -574,11 +574,19 @@ function buildSearchURL(engineURL, query) {
 }
 
 let pulseTabs = {};
+
 function openNamedTab(name, url) {
   const existing = pulseTabs[name];
 
   if (existing) {
-    chrome.tabs.update(existing, { url, active: true });
+    chrome.tabs.update(existing, { url, active: true }, tab => {
+      if (chrome.runtime.lastError) {
+        // Tab doesn't exist anymore → recreate it
+        chrome.tabs.create({ url }, newTab => {
+          pulseTabs[name] = newTab.id;
+        });
+      }
+    });
     return;
   }
 
@@ -586,6 +594,15 @@ function openNamedTab(name, url) {
     pulseTabs[name] = tab.id;
   });
 }
+
+// Remove dead tabs from registry
+chrome.tabs.onRemoved.addListener((tabId) => {
+  for (const name in pulseTabs) {
+    if (pulseTabs[name] === tabId) {
+      delete pulseTabs[name];
+    }
+  }
+});
 
 
 document.getElementById("searchus").addEventListener("click", (event) => {
