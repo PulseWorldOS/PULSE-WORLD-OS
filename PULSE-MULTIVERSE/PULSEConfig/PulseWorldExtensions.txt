@@ -737,7 +737,8 @@
       </p>
 
 
-      <div class="grid-4">
+      <div class="grid-5">
+
         <article class="card">
           <h3 class="card-title">PBContent.js & PBAccelerator.js</h3>
           <p class="card-subtitle">World-layer content manager with acceleration.</p>
@@ -774,8 +775,21 @@
             <li>Bridge between identity realms and proximity bubbles.</li>
           </ul>
         </article>
+
+        <article class="card">
+          <h3 class="card-title">PBFrontPage.js & PBCompanion.js</h3>
+          <p class="card-subtitle">Warm‑State Reactor & Universe Accelerator.</p>
+          <ul class="card-list">
+            <li>Keeps all OS modules warm inside New Tab.</li>
+            <li>Maintains continuous acceleration for PulseWorld realms.</li>
+            <li>Preloads and caches modules before user interaction.</li>
+            <li>Hydrates service workers with pre‑accelerated state.</li>
+            <li>Acts as the OS kernel for world‑layer continuity.</li>
+          </ul>
+        </article>
+
       </div>
-    </section>
+
 
     <!-- TETHER CODE -->
     <section class="section">

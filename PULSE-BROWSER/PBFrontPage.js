@@ -303,7 +303,7 @@ async function updateModuleIcons() {
   } else {
     const fav = getFavicon(settings.externalEmailLink);
     if (fav) {
-      emailIcon.innerText = "";
+      emailIcon.innerText = "⚡";
       emailIcon.style.backgroundImage = `url(${fav})`;
       emailIcon.style.backgroundSize = "contain";
       emailIcon.style.backgroundRepeat = "no-repeat";
@@ -318,7 +318,7 @@ async function updateModuleIcons() {
   } else {
     const fav = getFavicon(settings.externalBankLink);
     if (fav) {
-      bankIcon.innerText = "";
+      bankIcon.innerText = "⚡";
       bankIcon.style.backgroundImage = `url(${fav})`;
       bankIcon.style.backgroundSize = "contain";
       bankIcon.style.backgroundRepeat = "no-repeat";
@@ -333,7 +333,7 @@ async function updateModuleIcons() {
   } else {
     const fav = getFavicon(settings.externalSocialLink);
     if (fav) {
-      socialIcon.innerText = "";
+      socialIcon.innerText = "⚡";
       socialIcon.style.backgroundImage = `url(${fav})`;
       socialIcon.style.backgroundSize = "contain";
       socialIcon.style.backgroundRepeat = "no-repeat";
@@ -348,7 +348,7 @@ async function updateModuleIcons() {
   } else {
     const fav = getFavicon(settings.externalWorkLink);
     if (fav) {
-      workIcon.innerText = "";
+      workIcon.innerText = "⚡";
       workIcon.style.backgroundImage = `url(${fav})`;
       workIcon.style.backgroundSize = "contain";
       workIcon.style.backgroundRepeat = "no-repeat";
@@ -363,7 +363,7 @@ async function updateModuleIcons() {
   } else {
     const fav = getFavicon(settings.externalStreamingLink);
     if (fav) {
-      streamIcon.innerText = "";
+      streamIcon.innerText = "⚡";
       streamIcon.style.backgroundImage = `url(${fav})`;
       streamIcon.style.backgroundSize = "contain";
       streamIcon.style.backgroundRepeat = "no-repeat";
