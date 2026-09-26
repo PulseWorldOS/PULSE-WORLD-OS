@@ -15,80 +15,99 @@ let url = engineURL;
 const timerBtn = document.getElementById("timerBtn");
 
 
-    // ============================================================================
-    //  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
-    // ============================================================================
+// ============================================================================
+//  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
+// ============================================================================
 
-  const PBUniversalBoost = {
-    async warmOrigin(origin) {
-      if (!origin) return;
+const PBUniversalBoost = {
+  async warmOrigin(origin) {
+    if (!origin) return;
 
-      // ⭐ HARD BLOCK: skip all non-web origins
-      const forbidden = [
-        "chrome://",
-        "chrome-extension://",
-        "edge://",
-        "brave://",
-        "opera://",
-        "file://",
-        "data://",
-        "blob://",
-        "about://"
-      ];
+    // ⭐ HARD BLOCK: skip all non-web origins
+    const forbidden = [
+      "chrome://",
+      "chrome-extension://",
+      "edge://",
+      "brave://",
+      "opera://",
+      "file://",
+      "data://",
+      "blob://",
+      "about://"
+    ];
 
-      for (const prefix of forbidden) {
-        if (origin.startsWith(prefix)) {
-          console.log("[PBUniversalBoost] Skipped forbidden origin:", origin);
-          return;
-        }
-      }
-
-      // ⭐ Only warm http/https origins
-      if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
-        console.log("[PBUniversalBoost] Skipped non-HTTP origin:", origin);
+    for (const prefix of forbidden) {
+      if (origin.startsWith(prefix)) {
+        console.log("[PBUniversalBoost] Skipped forbidden origin:", origin);
         return;
       }
+    }
 
-      const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
-      const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css", "/engine.wasm"];
+    // ⭐ Only warm http/https origins
+    if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
+      console.log("[PBUniversalBoost] Skipped non-HTTP origin:", origin);
+      return;
+    }
 
-      const urls = []
-        .concat(paths.map((p) => origin + p))
-        .concat(assets.map((p) => origin + p));
+    const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
+    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css", "/engine.wasm"];
 
-      for (const url of urls) {
-        try {
-          fetch(url, { cache: "force-cache" }).catch(() => {});
-        } catch (_) {}
-      }
+    const urls = []
+      .concat(paths.map((p) => origin + p))
+      .concat(assets.map((p) => origin + p));
 
-      console.log("[PBUniversalBoost] Warmed publish directory for", origin, urls);
-    },
-
-    async warmOrigin(tab) {
-      if (!tab || !tab.url) return;
+    for (const url of urls) {
       try {
-        const origin = new URL(tab.url).origin;
-        await PBUniversalBoost.warmOrigin(origin);
+        fetch(url, { cache: "force-cache" }).catch(() => {});
       } catch (_) {}
     }
-  };
+
+    console.log("[PBUniversalBoost] Warmed publish directory for", origin, urls);
+  },
+
+  async warmOrigin(tab) {
+    if (!tab || !tab.url) return;
+    try {
+      const origin = new URL(tab.url).origin;
+      await PBUniversalBoost.warmOrigin(origin);
+    } catch (_) {}
+  }
+};
+
+// Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
+let FAVICON_CACHE = {};
+
+// Load cache from storage at startup
+chrome.storage.local.get(["faviconCache"], (res) => {
+  if (res.faviconCache) {
+    FAVICON_CACHE = res.faviconCache;
+  }
+});
+
+function saveCache() {
+  chrome.storage.local.set({ faviconCache: FAVICON_CACHE });
+}
 
 function getFavicon(url, flags = {}) {
-  let icon;
   let u;
 
   try {
     u = new URL(url);
   } catch {
-    // If URL parsing fails, bail out with nothing
     return;
   }
-    
-  // Default external favicon
-  icon = `${u.origin}/favicon.ico`;
 
-  // PulseWorld domains
+  const host = u.hostname;
+
+  // ⭐ If cached → return instantly
+  if (FAVICON_CACHE[host]) {
+    return FAVICON_CACHE[host];
+  }
+
+  // Default external favicon
+  let icon = `${u.origin}/favicon.ico`;
+
   const PB_HOMES = [
     "pulseworld.me",
     "pulseworld.net",
@@ -102,75 +121,72 @@ function getFavicon(url, flags = {}) {
   ];
 
   try {
-    if (u.hostname.includes("office.com")) {
-      return "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-    }
-
-    if (u.hostname.includes("github.com")) {
-      return "https://github.githubassets.com/favicons/favicon.svg";
-    }
-
-    if (u.hostname.includes("youtube.com")) {
-      return "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-    }
-
-    if (u.hostname.includes("discord.com")) {
-      return "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-    }
-
-
-    // Check if this is a PulseWorld domain
-    const isPulseWorld = PB_HOMES.some(domain => u.hostname.endsWith(domain));
-
-    if (isPulseWorld) {
-      // MODULE‑AWARE FAVICON SWITCHING
-      if (flags.isSW) {
-        icon = `${u.origin}/SWFavIcon.ico`;
-      }
-      else if (flags.isBinaryOS) {
-        icon = `${u.origin}/BOFavIcon.ico`;
-      }
-      else if (flags.isGPU) {
-        icon = `${u.origin}/GPFavIcon.ico`;
-      }
-      else if (flags.isLogic) {
-        icon = `${u.origin}/BLFavIcon.ico`;
-      }
-      else if (flags.isOrb) {
-        icon = `${u.origin}/OMFavIcon.ico`;
-      }
-      else if (flags.isBiz) {
-        icon = `${u.origin}/PWBFavIcon.ico`;
-      }
-      else if (flags.isSettings) {
-        icon = `${u.origin}/PWBFavIcon.ico`;
-      }
-      else if (flags.isMoney) {
-        icon = `${u.origin}/PWMFavIcon.ico`;
-      }
-      else {
-        icon = `${u.origin}/PWFavIcon.ico`; // Default PulseWorld favicon
-      }
-
-      console.log("PulseWorld favicon:", icon);
+    // Special cases
+    if (host.includes("office.com")) {
+      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
       return icon;
     }
 
-    // External site → strip subdomain for cleaner favicon
-    const parts = u.hostname.split(".");
+    if (host.includes("github.com")) {
+      icon = "https://github.githubassets.com/favicons/favicon.svg";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("youtube.com")) {
+      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("discord.com")) {
+      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // PulseWorld module-aware switching
+    const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
+
+    if (isPulseWorld) {
+      if (flags.isSW) icon = `${u.origin}/SWFavIcon.ico`;
+      else if (flags.isBinaryOS) icon = `${u.origin}/BOFavIcon.ico`;
+      else if (flags.isGPU) icon = `${u.origin}/GPFavIcon.ico`;
+      else if (flags.isLogic) icon = `${u.origin}/BLFavIcon.ico`;
+      else if (flags.isOrb) icon = `${u.origin}/OMFavIcon.ico`;
+      else if (flags.isBiz) icon = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
+      else icon = `${u.origin}/PWFavIcon.ico`;
+
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // External site → strip subdomain
+    const parts = host.split(".");
     if (parts.length > 2) {
       const root = parts.slice(parts.length - 2).join(".");
       icon = `https://${root}/favicon.ico`;
     }
 
-    console.log("External favicon:", icon);
+    FAVICON_CACHE[host] = icon;
+    saveCache();
     return icon;
 
   } catch {
-    // If anything inside blows up, still return whatever icon we had
+    FAVICON_CACHE[host] = icon;
+    saveCache();
     return icon;
   }
 }
+
 
 window.addEventListener("DOMContentLoaded", () => {
   updateModuleIcons();

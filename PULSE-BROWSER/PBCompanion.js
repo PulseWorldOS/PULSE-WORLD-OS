@@ -176,6 +176,49 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(pbModuleWarmBoot());
 });
 
+self.addEventListener('fetch', event => {
+  const req = event.request;
+
+  // Only cache GET requests
+  if (req.method !== 'GET') return;
+
+  // Skip chrome-extension:// URLs (cannot be cached)
+  if (req.url.startsWith('chrome-extension://')) {
+    return; // Let the browser handle extension assets normally
+  }
+
+  event.respondWith((async () => {
+    const cache = await caches.open('pbcompanion-cache');
+
+    // Try cache first
+    const cached = await cache.match(req);
+    if (cached) {
+      return cached; // Warm-state: instant return
+    }
+
+    // Network fallback
+    try {
+      const net = await fetch(req, { cache: 'no-store' });
+
+      // Only store good GET 200 responses
+      if (net && net.ok) {
+        cache.put(req, net.clone());
+      }
+
+      return net;
+    } catch (err) {
+      // Offline fallback: return last known cached version
+      const fallback = await cache.match(req);
+      if (fallback) return fallback;
+
+      // Final fallback: offline message
+      return new Response("Offline", { status: 503 });
+    }
+  })());
+});
+
+
+
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
 // ---------------------------------------------------------------------------
