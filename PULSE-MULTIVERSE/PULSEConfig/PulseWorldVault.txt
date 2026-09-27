@@ -29,7 +29,7 @@ content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, 
   }
 
   /* MAIN SHELL */
-  .vaultPageShell {
+  .PulseWorldVault1 {
     width: 100%;
     max-width: var(--tp-max-width);
     padding: 12px;
@@ -359,145 +359,144 @@ content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, 
 
 <body>
 <video id="vaultVideo" src="./_EXPRESSIONS/_VIDEOS/PulseVault" autoplay muted playsinline style="display:block;" aria-label="Vault Video"></video>
+
 <div class="PulseWorldVault1">
-  <div class="vaultPageShell">
 
-    <!-- HEADER -->
-    <div class="vaultHeaderRow">
-      <div class="pulse-vault-bubble">
-        <img src="./_EXPRESSIONS/_PEX/BUILD/AldwynVault1.webp.pex" class="pulse-vault-img" />
-      </div>
-
-      <div class="vaultTitle">The Pulse Chamber</div>
-      <div class="vaultSubtitle">Loyalty, Memory, and Magic Converge!</div>
-
-      <div class="secureSessionBadge">
-        <div class="secureSessionDot"></div>
-        Trusted
-      </div>
+  <!-- HEADER -->
+  <div class="vaultHeaderRow">
+    <div class="pulse-vault-bubble">
+      <img src="./_EXPRESSIONS/_PEX/BUILD/AldwynVault1.webp.pex" class="pulse-vault-img" />
     </div>
 
-    <!-- DASHBOARD GRID -->
-    <div class="vaultDashboard">
+    <div class="vaultTitle">The Pulse Chamber</div>
+    <div class="vaultSubtitle">Loyalty, Memory, and Magic Converge!</div>
 
-      <!-- LEFT COLUMN: ASSETS / REWARDS / INVENTORY -->
-      <div class="vaultSideColumn">
-
-        <div class="vaultPanel">
-          <div class="vaultPanelTitle">Vault Assets</div>
-          <div class="vaultPanelHighlight">0 PulsePoints</div>
-          <div class="vaultPanelItem"><span>PulseCoins</span><span>0</span></div>
-          <div class="vaultPanelItem"><span>Locked Balance</span><span>0</span></div>
-          <div class="vaultPanelItem"><span>Available</span><span>0</span></div>
-        </div>
-
-        <div class="vaultPanel">
-          <div class="vaultPanelTitle">Rewards</div>
-          <div class="vaultPanelItem"><span>Earned</span><span>None</span></div>
-          <div class="vaultPanelItem"><span>Available</span><span>0</span></div>
-          <div class="vaultPanelItem"><span>Next Tier</span><span>Tier 2</span></div>
-        </div>
-
-        <div class="vaultPanel">
-          <div class="vaultPanelTitle">Inventory</div>
-          <div class="vaultPanelItem"><span>Items</span><span>Empty</span></div>
-          <div class="vaultPanelItem"><span>Capacity</span><span>2.7x</span></div>
-        </div>
-
-      </div>
-
-      <!-- CENTER: VAULT CORE -->
-      <div>
-        <div class="vaultCenter">
-          <div class="vaultDoor"></div>
-        </div>
-      </div>
-
-      <!-- RIGHT COLUMN: ACTIVITY / EVENTS / SYSTEM -->
-      <div class="vaultSideColumn">
-
-        <div class="vaultPanel">
-          <div class="vaultPanelTitle">Vault Activity</div>
-          <div class="vaultPanelItem"><span>Recent Purchase</span><span>None</span></div>
-          <div class="vaultPanelItem"><span>Recent Reward</span><span>None</span></div>
-          <div class="vaultPanelItem"><span>Last Action</span><span>Idle</span></div>
-        </div>
-
-        <div class="vaultPanel">
-          <div class="vaultPanelTitle">Upcoming Events</div>
-          <div class="vaultPanelItem"><span>Next Event</span><span>None</span></div>
-          <div class="vaultPanelItem"><span>Schedule</span><span>Empty</span></div>
-        </div>
-
-        <div class="vaultPanel">
-          <div class="vaultPanelTitle">System & Overmind</div>
-          <div class="vaultPanelItem"><span>System Alert</span><span>None</span></div>
-          <div class="vaultPanelItem"><span>Overmind</span><span>Idle</span></div>
-          <div class="vaultPanelItem"><span>Mode</span><span>Tourist / Vault</span></div>
-        </div>
-
-      </div>
+    <div class="secureSessionBadge">
+      <div class="secureSessionDot"></div>
+      Trusted
     </div>
+  </div>
 
-    <!-- VAULT SYSTEMS PANEL -->
-    <div class="vaultPanel">
-      <div class="vaultPanelTitle">Vault Systems</div>
-      <div class="vaultPanelItem"><span>Engine Tier</span><span>Tier 1</span></div>
-      <div class="vaultPanelItem"><span>Stability</span><span>82%</span></div>
-      <div class="vaultPanelItem"><span>Power Output</span><span>147%</span></div>
-      <div class="vaultPanelItem"><span>Efficiency</span><span>138%</span></div>
-      <div class="vaultPanelItem"><span>Flow</span><span>162%</span></div>
-      <div class="vaultPanelItem"><span>Capacity</span><span>2.7x</span></div>
-      <div class="vaultPanelItem"><span>Upgrade Path</span><span>Tier 2</span></div>
-    </div>
+  <!-- DASHBOARD GRID -->
+  <div class="vaultDashboard">
 
-    <!-- MULTI-CONSOLE STRIP (AI OVERMIND / TOURIST / VAULT SPIRIT) -->
-    <div class="vaultConsoleStrip">
+    <!-- LEFT COLUMN: ASSETS / REWARDS / INVENTORY -->
+    <div class="vaultSideColumn">
 
-      <div class="vaultConsolePanel">
-        <div class="vaultConsoleTitle">Overmind Core</div>
-        <div id="consoleOvermind" class="consoleBubbleArea"></div>
-        <div class="vaultConsoleInputRow">
-          <input id="consoleOvermindInput" class="vaultConsoleInput"
-                 type="text" placeholder="Ask Overmind…" />
-          <button id="consoleOvermindSend" class="vaultConsoleSend">Send</button>
-        </div>
+      <div class="vaultPanel">
+        <div class="vaultPanelTitle">Vault Assets</div>
+        <div class="vaultPanelHighlight">0 PulsePoints</div>
+        <div class="vaultPanelItem"><span>PulseCoins</span><span>0</span></div>
+        <div class="vaultPanelItem"><span>Locked Balance</span><span>0</span></div>
+        <div class="vaultPanelItem"><span>Available</span><span>0</span></div>
       </div>
 
-      <div class="vaultConsolePanel">
-        <div class="vaultConsoleTitle">Tourist Archetype</div>
-        <div id="consoleTourist" class="consoleBubbleArea"></div>
-        <div class="vaultConsoleInputRow">
-          <input id="consoleTouristInput" class="vaultConsoleInput"
-                 type="text" placeholder="Ask Tourist AI…" />
-          <button id="consoleTouristSend" class="vaultConsoleSend">Send</button>
-        </div>
+      <div class="vaultPanel">
+        <div class="vaultPanelTitle">Rewards</div>
+        <div class="vaultPanelItem"><span>Earned</span><span>None</span></div>
+        <div class="vaultPanelItem"><span>Available</span><span>0</span></div>
+        <div class="vaultPanelItem"><span>Next Tier</span><span>Tier 2</span></div>
       </div>
 
-      <div class="vaultConsolePanel">
-        <div class="vaultConsoleTitle">Vault Spirit</div>
-        <div id="consoleSpirit" class="consoleBubbleArea"></div>
-        <div class="vaultConsoleInputRow">
-          <input id="consoleSpiritInput" class="vaultConsoleInput"
-                 type="text" placeholder="Ask Vault Spirit…" />
-          <button id="consoleSpiritSend" class="vaultConsoleSend">Send</button>
-        </div>
+      <div class="vaultPanel">
+        <div class="vaultPanelTitle">Inventory</div>
+        <div class="vaultPanelItem"><span>Items</span><span>Empty</span></div>
+        <div class="vaultPanelItem"><span>Capacity</span><span>2.7x</span></div>
       </div>
 
     </div>
 
-    <!-- PRIMARY CONSOLE (existing) -->
+    <!-- CENTER: VAULT CORE -->
+    <div>
+      <div class="vaultCenter">
+        <div class="vaultDoor"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: ACTIVITY / EVENTS / SYSTEM -->
+    <div class="vaultSideColumn">
+
+      <div class="vaultPanel">
+        <div class="vaultPanelTitle">Vault Activity</div>
+        <div class="vaultPanelItem"><span>Recent Purchase</span><span>None</span></div>
+        <div class="vaultPanelItem"><span>Recent Reward</span><span>None</span></div>
+        <div class="vaultPanelItem"><span>Last Action</span><span>Idle</span></div>
+      </div>
+
+      <div class="vaultPanel">
+        <div class="vaultPanelTitle">Upcoming Events</div>
+        <div class="vaultPanelItem"><span>Next Event</span><span>None</span></div>
+        <div class="vaultPanelItem"><span>Schedule</span><span>Empty</span></div>
+      </div>
+
+      <div class="vaultPanel">
+        <div class="vaultPanelTitle">System & Overmind</div>
+        <div class="vaultPanelItem"><span>System Alert</span><span>None</span></div>
+        <div class="vaultPanelItem"><span>Overmind</span><span>Idle</span></div>
+        <div class="vaultPanelItem"><span>Mode</span><span>Tourist / Vault</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VAULT SYSTEMS PANEL -->
+  <div class="vaultPanel">
+    <div class="vaultPanelTitle">Vault Systems</div>
+    <div class="vaultPanelItem"><span>Engine Tier</span><span>Tier 1</span></div>
+    <div class="vaultPanelItem"><span>Stability</span><span>82%</span></div>
+    <div class="vaultPanelItem"><span>Power Output</span><span>147%</span></div>
+    <div class="vaultPanelItem"><span>Efficiency</span><span>138%</span></div>
+    <div class="vaultPanelItem"><span>Flow</span><span>162%</span></div>
+    <div class="vaultPanelItem"><span>Capacity</span><span>2.7x</span></div>
+    <div class="vaultPanelItem"><span>Upgrade Path</span><span>Tier 2</span></div>
+  </div>
+
+  <!-- MULTI-CONSOLE STRIP (AI OVERMIND / TOURIST / VAULT SPIRIT) -->
+  <div class="vaultConsoleStrip">
+
     <div class="vaultConsolePanel">
-      <div class="vaultConsoleTitle">Vault Console Log</div>
-      <div id="messageBubbleArea"></div>
-      <div class="vaultConsoleInputRowMain">
-        <input id="vaultConsoleInput" type="text"
-               placeholder="Ask the Vault Spirit… (/help)" />
-        <button id="vaultConsoleSend">Send</button>
+      <div class="vaultConsoleTitle">Overmind Core</div>
+      <div id="consoleOvermind" class="consoleBubbleArea"></div>
+      <div class="vaultConsoleInputRow">
+        <input id="consoleOvermindInput" class="vaultConsoleInput"
+                type="text" placeholder="Ask Overmind…" />
+        <button id="consoleOvermindSend" class="vaultConsoleSend">Send</button>
+      </div>
+    </div>
+
+    <div class="vaultConsolePanel">
+      <div class="vaultConsoleTitle">Tourist Archetype</div>
+      <div id="consoleTourist" class="consoleBubbleArea"></div>
+      <div class="vaultConsoleInputRow">
+        <input id="consoleTouristInput" class="vaultConsoleInput"
+                type="text" placeholder="Ask Tourist AI…" />
+        <button id="consoleTouristSend" class="vaultConsoleSend">Send</button>
+      </div>
+    </div>
+
+    <div class="vaultConsolePanel">
+      <div class="vaultConsoleTitle">Vault Spirit</div>
+      <div id="consoleSpirit" class="consoleBubbleArea"></div>
+      <div class="vaultConsoleInputRow">
+        <input id="consoleSpiritInput" class="vaultConsoleInput"
+                type="text" placeholder="Ask Vault Spirit…" />
+        <button id="consoleSpiritSend" class="vaultConsoleSend">Send</button>
       </div>
     </div>
 
   </div>
+
+  <!-- PRIMARY CONSOLE (existing) -->
+  <div class="vaultConsolePanel">
+    <div class="vaultConsoleTitle">Vault Console Log</div>
+    <div id="messageBubbleArea"></div>
+    <div class="vaultConsoleInputRowMain">
+      <input id="vaultConsoleInput" type="text"
+              placeholder="Ask the Vault Spirit… (/help)" />
+      <button id="vaultConsoleSend">Send</button>
+    </div>
+  </div>
+
 </div>
 
 <script>

@@ -1232,6 +1232,7 @@ setInterval(() => {
     ];
 
     const links = [
+      "https://www.google.com",
       settings.externalBankLink,
       settings.externalEmailLink,
       settings.externalSocialLink,
