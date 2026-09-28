@@ -14,6 +14,85 @@ let url = engineURL;
 
 const timerBtn = document.getElementById("timerBtn");
 
+// Load saved PulseTabs from extension storage at startup
+let pulseTabs = {};
+
+chrome.storage.local.get("pulseTabs", data => {
+  if (data && data.pulseTabs) {
+    pulseTabs = data.pulseTabs;
+  }
+});
+
+// Normalize identity to domain or subdomain level
+function normalizeIdentity(url) {
+  try {
+    const u = new URL(url);
+    return u.origin; // scheme + host (perfect for Gmail, Chase, BridgeBase)
+  } catch {
+    return url; // fallback
+  }
+}
+
+function savePulseTabs() {
+  chrome.storage.local.set({ pulseTabs });
+}
+
+function openNamedTab(name, url) {
+
+  // ⭐ ALWAYS pull latest storage BEFORE using pulseTabs
+  chrome.storage.local.get("pulseTabs", data => {
+    if (data && data.pulseTabs) {
+      pulseTabs = data.pulseTabs;
+    }
+
+    // ⭐ Normalize identity
+    const identity = normalizeIdentity(url);
+    const existing = pulseTabs[identity];
+
+    // Lightweight warm‑state hint (safe, non‑blocking)
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: url
+    });
+
+    try {
+      fetch(url, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    if (existing) {
+      chrome.tabs.update(existing, { url, active: true }, tab => {
+        if (chrome.runtime.lastError) {
+          // Tab no longer exists → recreate it
+          chrome.tabs.create({ url }, newTab => {
+            pulseTabs[identity] = newTab.id;
+            savePulseTabs();
+          });
+        } else {
+          // Tab updated successfully
+          pulseTabs[identity] = tab.id;
+          savePulseTabs();
+        }
+      });
+      return;
+    }
+
+    // Create new named tab
+    chrome.tabs.create({ url }, tab => {
+      pulseTabs[identity] = tab.id;
+      savePulseTabs();
+    });
+  });
+}
+
+// Remove dead tabs from registry
+chrome.tabs.onRemoved.addListener((tabId) => {
+  for (const identity in pulseTabs) {
+    if (pulseTabs[identity] === tabId) {
+      delete pulseTabs[identity];
+    }
+  }
+});
+
 
 // ============================================================================
 //  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
@@ -588,37 +667,6 @@ function buildSearchURL(engineURL, query) {
   document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
   return `https://www.google.com/search?q=${q}`;
 }
-
-let pulseTabs = {};
-
-function openNamedTab(name, url) {
-  const existing = pulseTabs[name];
-
-  if (existing) {
-    chrome.tabs.update(existing, { url, active: true }, tab => {
-      if (chrome.runtime.lastError) {
-        // Tab doesn't exist anymore → recreate it
-        chrome.tabs.create({ url }, newTab => {
-          pulseTabs[name] = newTab.id;
-        });
-      }
-    });
-    return;
-  }
-
-  chrome.tabs.create({ url }, tab => {
-    pulseTabs[name] = tab.id;
-  });
-}
-
-// Remove dead tabs from registry
-chrome.tabs.onRemoved.addListener((tabId) => {
-  for (const name in pulseTabs) {
-    if (pulseTabs[name] === tabId) {
-      delete pulseTabs[name];
-    }
-  }
-});
 
 
 document.getElementById("searchus").addEventListener("click", (event) => {

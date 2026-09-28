@@ -43,87 +43,115 @@ console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loade
 
 const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 
+// Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
+let FAVICON_CACHE = {};
+
+// Load cache from storage at startup
+chrome.storage.local.get(["faviconCache"], (res) => {
+  if (res.faviconCache) {
+    FAVICON_CACHE = res.faviconCache;
+  }
+});
+
+function saveCache() {
+  chrome.storage.local.set({ faviconCache: FAVICON_CACHE });
+}
+
 function getFavicon(url, flags = {}) {
-  let icon;
   let u;
 
   try {
     u = new URL(url);
   } catch {
-    // If URL parsing fails, bail out with nothing
     return;
   }
 
+  const host = u.hostname;
+
+  // ⭐ If cached → return instantly
+  if (FAVICON_CACHE[host]) {
+    return FAVICON_CACHE[host];
+  }
+
   // Default external favicon
-  icon = `${u.origin}/favicon.ico`;
+  let icon = `${u.origin}/favicon.ico`;
+
+  const PB_HOMES = [
+    "pulseworld.me",
+    "pulseworld.net",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net"
+  ];
 
   try {
-    if (u.hostname.includes("office.com")) {
-      return "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-    }
-
-    if (u.hostname.includes("github.com")) {
-      return "https://github.githubassets.com/favicons/favicon.svg";
-    }
-
-    if (u.hostname.includes("youtube.com")) {
-      return "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-    }
-
-    if (u.hostname.includes("discord.com")) {
-      return "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-    }
-
-
-    // Check if this is a PulseWorld domain
-    const isPulseWorld = PB_HOMES.some(domain => u.hostname.endsWith(domain));
-
-    if (isPulseWorld) {
-      // MODULE‑AWARE FAVICON SWITCHING
-      if (flags.isSW) {
-        icon = `${u.origin}/SWFavIcon.ico`;
-      }
-      else if (flags.isBinaryOS) {
-        icon = `${u.origin}/BOFavIcon.ico`;
-      }
-      else if (flags.isGPU) {
-        icon = `${u.origin}/GPFavIcon.ico`;
-      }
-      else if (flags.isLogic) {
-        icon = `${u.origin}/BLFavIcon.ico`;
-      }
-      else if (flags.isOrb) {
-        icon = `${u.origin}/OMFavIcon.ico`;
-      }
-      else if (flags.isBiz) {
-        icon = `${u.origin}/PWBFavIcon.ico`;
-      }
-      else if (flags.isSettings) {
-        icon = `${u.origin}/PWBFavIcon.ico`;
-      }
-      else if (flags.isMoney) {
-        icon = `${u.origin}/PWMFavIcon.ico`;
-      }
-      else {
-        icon = `${u.origin}/PWFavIcon.ico`; // Default PulseWorld favicon
-      }
-
-      console.log("PulseWorld favicon:", icon);
+    // Special cases
+    if (host.includes("office.com")) {
+      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
       return icon;
     }
 
-    // External site → strip subdomain for cleaner favicon
-    const parts = u.hostname.split(".");
+    if (host.includes("github.com")) {
+      icon = "https://github.githubassets.com/favicons/favicon.svg";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("youtube.com")) {
+      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("discord.com")) {
+      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // PulseWorld module-aware switching
+    const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
+
+    if (isPulseWorld) {
+      if (flags.isSW) icon = `${u.origin}/SWFavIcon.ico`;
+      else if (flags.isBinaryOS) icon = `${u.origin}/BOFavIcon.ico`;
+      else if (flags.isGPU) icon = `${u.origin}/GPFavIcon.ico`;
+      else if (flags.isLogic) icon = `${u.origin}/BLFavIcon.ico`;
+      else if (flags.isOrb) icon = `${u.origin}/OMFavIcon.ico`;
+      else if (flags.isBiz) icon = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
+      else icon = `${u.origin}/PWFavIcon.ico`;
+
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // External site → strip subdomain
+    const parts = host.split(".");
     if (parts.length > 2) {
       const root = parts.slice(parts.length - 2).join(".");
       icon = `https://${root}/favicon.ico`;
     }
 
-    console.log("External favicon:", icon);
+    FAVICON_CACHE[host] = icon;
+    saveCache();
     return icon;
 
   } catch {
-    // If anything inside blows up, still return whatever icon we had
+    FAVICON_CACHE[host] = icon;
+    saveCache();
     return icon;
   }
 }
