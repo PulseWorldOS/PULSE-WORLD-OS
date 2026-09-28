@@ -177,15 +177,27 @@ function getFavicon(url, flags = {}) {
     return;
   }
 
-  const host = u.hostname;
+  let host = u.hostname;
+
+  // ⭐ If the URL explicitly contains "://www.", preserve www
+  if (url.includes("www.")) {
+    if (!host.startsWith("www.")) {
+      host = "www." + host;
+    }
+  }
+
 
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
+    console.log(
+      "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
+      "color:#00FF9C; font-weight:bold; font-family:monospace;"
+    );
     return FAVICON_CACHE[host];
   }
 
-  // Default external favicon
-  let icon = `${u.origin}/favicon.ico`;
+  // ⭐ Build favicon URL using hostname (preserves www)
+  let icon = `https://${host}/favicon.ico`;
 
   const PB_HOMES = [
     "pulseworld.me",
@@ -248,12 +260,15 @@ function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // External site → strip subdomain
+    // ⭐ Strip subdomains unless it's "www"
     const parts = host.split(".");
     if (parts.length > 2) {
-      const root = parts.slice(parts.length - 2).join(".");
-      icon = `https://${root}/favicon.ico`;
+      if (parts[0] !== "www") {
+        const root = parts.slice(parts.length - 2).join(".");
+        icon = `https://${root}/favicon.ico`;
+      }
     }
+
 
     FAVICON_CACHE[host] = icon;
     saveCache();
