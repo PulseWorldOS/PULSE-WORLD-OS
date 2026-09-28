@@ -38,8 +38,100 @@ const PulseRealmState = {
   }
 };
 
+// ============================================================================
+//  SECTION 0 — INSTALL / ACTIVATE (Warm Boot)
+// ============================================================================
+self.addEventListener("install", event => {
+  console.log(
+    "%c[PULSEWORLD OS KERNEL] Installed",
+    "color:#00FF9C; font-weight:bold; font-family:monospace;"
+  );
+  
+  const CACHE_NAME = "pulseworld-os-cache";
+  const PRELOAD_URLS = [
+    "PBFrontPage.html",
+    "PBPopup.html",
+    "PBSettings.html",
+    "PBCompanion.js",
+    "PBInterceptor.js",
+    "PBAccelerator.js",
+    "PBRealmBridge.js",
+    "PBRouter.js",
+    "PBSettings.js",
+    "android-chrome-192x192.png",
+    "PulseWorldOSMarketplace-White.png"
+  ];
+
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return Promise.all(
+        PRELOAD_URLS.map(url => {
+          // ⭐ SAFETY GUARD: skip chrome-extension://
+          if (!url.startsWith("http")) return Promise.resolve();
+          return cache.add(url).catch(() => {});
+        })
+      );
+    })
+  );
+
+  self.skipWaiting();
+});
+
+
+
+self.addEventListener("activate", (event) => {
+  console.log("%c[PULSEWORLD OS KERNEL] Activated",
+    "color:#00FF9C; font-weight:bold; font-family:monospace;");
+  event.waitUntil(pbHomeWarmBoot());
+  event.waitUntil(pbModuleWarmBoot());
+});
+
+self.addEventListener('fetch', event => {
+  const req = event.request;
+
+  // Only cache GET requests
+  if (req.method !== 'GET') return;
+
+  // Skip chrome-extension:// URLs (cannot be cached)
+  if (req.url.startsWith('chrome-extension://')) {
+    return; // Let the browser handle extension assets normally
+  }
+
+  event.respondWith((async () => {
+    const cache = await caches.open('pbcompanion-cache');
+
+    // Try cache first
+    const cached = await cache.match(req);
+    if (cached) {
+      return cached; // Warm-state: instant return
+    }
+
+    // Network fallback
+    try {
+      const net = await fetch(req, { cache: 'no-store' });
+
+      // Only store good GET 200 responses
+      if (net && net.ok) {
+        cache.put(req, net.clone());
+      }
+
+      return net;
+    } catch (err) {
+      // Offline fallback: return last known cached version
+      const fallback = await cache.match(req);
+      if (fallback) return fallback;
+
+      // Final fallback: offline message
+      return new Response("Offline", { status: 503 });
+    }
+  })());
+});
+
+
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
+const now = new Date().toLocaleString();
+console.log("[PULSEWORLD OS KERNEL] Initializing PulseWorld with Accelerated Modules:", now);
 
 const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 
@@ -171,97 +263,6 @@ function getFavicon(url, flags = {}) {
   }
 }
 
-// ============================================================================
-//  SECTION 0 — INSTALL / ACTIVATE (Warm Boot)
-// ============================================================================
-self.addEventListener("install", event => {
-  console.log(
-    "%c[PULSEWORLD OS KERNEL] Installed",
-    "color:#00FF9C; font-weight:bold; font-family:monospace;"
-  );
-  
-  const CACHE_NAME = "pulseworld-os-cache";
-  const PRELOAD_URLS = [
-    "PBFrontPage.html",
-    "PBPopup.html",
-    "PBSettings.html",
-    "PBCompanion.js",
-    "PBInterceptor.js",
-    "PBAccelerator.js",
-    "PBRealmBridge.js",
-    "PBRouter.js",
-    "PBSettings.js",
-    "android-chrome-192x192.png",
-    "PulseWorldOSMarketplace-White.png"
-  ];
-
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return Promise.all(
-        PRELOAD_URLS.map(url => {
-          // ⭐ SAFETY GUARD: skip chrome-extension://
-          if (!url.startsWith("http")) return Promise.resolve();
-          return cache.add(url).catch(() => {});
-        })
-      );
-    })
-  );
-
-  self.skipWaiting();
-});
-
-
-
-self.addEventListener("activate", (event) => {
-  console.log("%c[PULSEWORLD OS KERNEL] Activated",
-    "color:#00FF9C; font-weight:bold; font-family:monospace;");
-  event.waitUntil(pbWarmBoot());
-  event.waitUntil(pbModuleWarmBoot());
-});
-
-self.addEventListener('fetch', event => {
-  const req = event.request;
-
-  // Only cache GET requests
-  if (req.method !== 'GET') return;
-
-  // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.startsWith('chrome-extension://')) {
-    return; // Let the browser handle extension assets normally
-  }
-
-  event.respondWith((async () => {
-    const cache = await caches.open('pbcompanion-cache');
-
-    // Try cache first
-    const cached = await cache.match(req);
-    if (cached) {
-      return cached; // Warm-state: instant return
-    }
-
-    // Network fallback
-    try {
-      const net = await fetch(req, { cache: 'no-store' });
-
-      // Only store good GET 200 responses
-      if (net && net.ok) {
-        cache.put(req, net.clone());
-      }
-
-      return net;
-    } catch (err) {
-      // Offline fallback: return last known cached version
-      const fallback = await cache.match(req);
-      if (fallback) return fallback;
-
-      // Final fallback: offline message
-      return new Response("Offline", { status: 503 });
-    }
-  })());
-});
-
-
-
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
 // ---------------------------------------------------------------------------
@@ -301,6 +302,10 @@ function safeSendMessage(msg) {
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
+  // Universal boost warm-path
+  if (typeof PBUniversalBoost2?.warmTab === "function") {
+    PBUniversalBoost2.warmTab(tab);
+  }
 
   chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
@@ -595,12 +600,19 @@ async function pbWarmPath(origin) {
 // MAIN ACCELERATION HOOK (automatic on navigation)
 // ---------------------------------------------------------------------------
 async function pbAccelerate(url) {
+  const S = await getSettings();
+  const domainClass = pbDomainClass(url);
   const origin = new URL(url).origin;
-  // FULL acceleration for EVERYONE
-  await pbWarmPath(origin);
-  
-  console.log("%c[PBAccelerator] Accelerate:", "color:#00C8FF;", url);
 
+  console.log("%c[PBAccelerator] Accelerate:", "color:#00C8FF;", url, "class:", domainClass);
+
+  if (domainClass === "PulseWorld") {
+    await pbWarmPath(origin);
+  } else {
+    // WWW acceleration: preconnect + basic prefetch
+    if (S.accelPreconnect) pbPreconnect([origin]);
+    if (S.accelPrefetch)   pbPrefetch([origin + "/", origin + "/about"]);
+  }
 }
 
 
@@ -628,9 +640,6 @@ async function pbHomeWarmBoot() {
     "color:#00C8FF; font-weight:bold;");
 }
 
-// Run home warm-boot once when accelerator loads
-pbHomeWarmBoot().catch(() => {});
-
 async function pbLoadExtensionSettings() {
   try {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
@@ -644,6 +653,7 @@ async function pbLoadExtensionSettings() {
     return {};
   }
 }
+
 
 async function pbModuleWarmBoot() {
   const settings = await pbLoadExtensionSettings();
@@ -685,8 +695,8 @@ async function pbModuleWarmBoot() {
   );
 }
 
-// Run home warm-boot once when accelerator loads
-pbModuleWarmBoot().catch(() => {});
+setInterval(pbModuleWarmBoot, 30000);
+
 // ---------------------------------------------------------------------------
 // MESSAGE CHANNEL (buttons optional; auto-nav is primary)
 // ---------------------------------------------------------------------------
@@ -852,23 +862,6 @@ function pbSaveConsole(console) {
   });
 }
 
-// ============================================================================
-//  SECTION 3 — WARM BOOT (DNS/TLS/Protocol Warm)
-// ============================================================================
-async function pbWarmBoot() {
-  const S = await pbLoadSettings();
-
-  if (!S.enableAccelerator) return;
-
-  const origins = S.homeUniverse.map((d) => "https://" + d);
-
-  origins.forEach((origin) => {
-    try { fetch(origin, { method: "HEAD", cache: "no-store" }).catch(() => {}); } catch (_) {}
-  });
-
-  console.log("%c[PBAccelerator] Warm Boot (Home Universe)",
-    "color:#00C8FF; font-weight:bold;", origins);
-}
 
 // ============================================================================
 //  SECTION 4 — ROUTER + INTERCEPTOR (Request Physics)
@@ -913,7 +906,7 @@ async function pbHandleRequest(details) {
   }
 
   if (decision.accelerate && S.enableAccelerator) {
-    safeSendMessage({ type: "PBACC_ACCELERATE", url });
+    chrome.runtime.sendMessage({ type: "PBACC_ACCELERATE", url });
   }
 
   return {};
@@ -950,10 +943,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
   // Existing accel hook
   if (domainClass === "PulseWorld") {
-    safeSendMessage({ type: "PBACC_ACCELERATE", url });
+    chrome.runtime.sendMessage({ type: "PBACC_ACCELERATE", url });
   }
 
-  safeSendMessage({
+  chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
     tabId,
     url,
@@ -1242,14 +1235,14 @@ const PBUniversalBoost2 = {
 
     for (const prefix of forbidden) {
       if (origin.startsWith(prefix)) {
-        console.log("[PBUniversalBoost2] Skipped forbidden origin:", origin);
+        
         return;
       }
     }
 
     // ⭐ Only warm http/https origins
     if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
-      console.log("[PBUniversalBoost2] Skipped non-HTTP origin:", origin);
+      
       return;
     }
 

@@ -8,7 +8,7 @@ let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
 let searchEngineActivated = "*Google.com";
-
+let temporaryLinks = [];
 let engineURL = buildSearchURL("google.com");
 let url = engineURL;
 
@@ -65,6 +65,10 @@ function openNamedTab(name, url) {
           // Tab no longer exists → recreate it
           chrome.tabs.create({ url }, newTab => {
             pulseTabs[identity] = newTab.id;
+            // Universal boost warm-path
+            if (typeof PBUniversalBoost?.warmTab === "function") {
+              PBUniversalBoost.warmTab(tab);
+            }
             savePulseTabs();
           });
         } else {
@@ -79,6 +83,10 @@ function openNamedTab(name, url) {
     // Create new named tab
     chrome.tabs.create({ url }, tab => {
       pulseTabs[identity] = tab.id;
+      // Universal boost warm-path
+      if (typeof PBUniversalBoost?.warmTab === "function") {
+        PBUniversalBoost.warmTab(tab);
+      }
       savePulseTabs();
     });
   });
@@ -144,7 +152,7 @@ const PBUniversalBoost = {
     console.log("[PBUniversalBoost] Warmed publish directory for", origin, urls);
   },
 
-  async warmOrigin(tab) {
+  async warmTab(tab) {
     if (!tab || !tab.url) return;
     try {
       const origin = new URL(tab.url).origin;
@@ -341,6 +349,7 @@ async function pbModuleWarmBoot(settings) {
 
   // Collect all accelerated module links directly from settings
   const warmTargets = [
+    "https://www.google.com",
     settings.externalBankLink,
     settings.externalEmailLink,
     settings.externalSocialLink,
@@ -547,7 +556,8 @@ async function updateModuleIcons() {
     "https://www.orbitalmap.net"
   ];
 
-  const links = [
+  const Links = [
+    "https://www.google.com",
     settings.externalBankLink,
     settings.externalEmailLink,
     settings.externalSocialLink,
@@ -561,7 +571,7 @@ async function updateModuleIcons() {
     settings.acceleratedModule5Link
   ].filter(u => u && u.startsWith("http"));
 
-  const interval = getWarmInterval(links, PB_HOMES);
+  const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
 
   setInterval(pbRefreshWarmDocument, interval);
 }
@@ -702,20 +712,30 @@ document.getElementById("navigate").addEventListener("click", () => {
   const isDomainIntent = domainRegex.test(text);
 
   if (isDomainIntent) {
+
     const origin = "https://" + text;
+    
+    if (!temporaryLinks.includes(origin)) {
+      temporaryLinks.push(origin);
+    }
+
+
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: origin
     });
+
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(origin, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
 
+    openNamedTab("PulseSearchLink", origin);
     // ⭐ PURE DOMAIN → Navigate directly
-    window.location.href = origin;
+    // window.location.href = origin;
   }
 });
+
 
 
 document.getElementById("images").addEventListener("click", (event) => {
@@ -759,6 +779,12 @@ document.getElementById("search").addEventListener("click", (event) => {
 
   if (isPureDomain) {
     const origin = "https://" + cleaned;
+    
+    if (!temporaryLinks.includes(origin)) {
+      temporaryLinks.push(origin);
+    }
+
+    
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: origin
@@ -769,7 +795,8 @@ document.getElementById("search").addEventListener("click", (event) => {
     } catch (_) {}
 
     // ⭐ PURE DOMAIN → Navigate directly
-    window.location.href = origin;
+    openNamedTab("PulseSearchLink", origin);
+    // window.location.href = origin;
     return;
   }
 
@@ -784,7 +811,8 @@ document.getElementById("search").addEventListener("click", (event) => {
     url = engineURL + encodeURIComponent(text);
   }
 
-  window.location.href = url;
+  openNamedTab("PulseSearchLink", url);
+  // window.location.href = url;
 });
 
 
@@ -812,6 +840,7 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
 
   if (isDomainIntent) {
     const origin = "https://" + text;
+        
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: origin
@@ -857,6 +886,12 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 
     if (isDomainIntent) {
       const origin = "https://" + text;
+      
+      if (!temporaryLinks.includes(origin)) {
+        temporaryLinks.push(origin);
+      }
+
+    
       chrome.runtime.sendMessage({
         type: "PB_HOVER_PREFETCH",
         href: origin
@@ -867,7 +902,8 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
       } catch (_) {}
 
       // ⭐ PURE DOMAIN → Navigate directly
-      window.location.href = origin;
+      openNamedTab("PulseSearchLink", origin);
+      // window.location.href = origin;
       return;
     }
 
@@ -880,7 +916,8 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
       url = engineURL + encodeURIComponent(text);
     }
 
-    window.location.href = url;
+    openNamedTab("PulseSearchLink", url);
+    // window.location.href = url;
   }
 });
 
@@ -1199,17 +1236,36 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     openNamedTab("PulseModule5", link);
 });
 
-  const images = [
-    "PulseWorldEntrancePulseGPUPulseEarn.png",
-    "PulseWorldRoute.png",
-    "PulseWorldExpansion.png",
-    "PulseAIPulseMeshPulsePal.png",
-    "PulseBankPulseIdentityPulseVault.png",
-    "PulseToolsPulseTrustPulseProxy.png"
-  ];
+const images = [
+  "PulseWorldEntrancePulseGPUPulseEarn.png",
+  "PulseWorldRoute.png",
+  "PulseWorldExpansion.png",
+  "PulseAIPulseMeshPulsePal.png",
+  "PulseBankPulseIdentityPulseVault.png",
+  "PulseToolsPulseTrustPulseProxy.png"
+];
 
-  let index = 0;
-  const nebula = document.getElementById("nebula");
+let index = 0;
+const nebula = document.getElementById("nebula");
+
+async function pulseConsoleKey(event) {
+  if (event.key === "`") {
+    const link = "https://www.pulseworld.net";
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    await PBUniversalBoost.warmOrigin(link);
+    openNamedTab("PulseWorld", link);
+    // window.location.href = "https://www.pulseworld.net";
+  }
+}
+
+document.addEventListener("keydown", pulseConsoleKey);
 
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
@@ -1228,7 +1284,7 @@ document.getElementById("timerBtn").textContent = timerX;
 setInterval(() => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
-  if (!userInteracted && timerX === 20) {
+  if (!userInteracted && timerX === 21) {
     window.location.href = "https://www.pulseworld.net";
     timerX = 0;
   } else if (userInteracted) {
@@ -1270,10 +1326,10 @@ setInterval(() => {
     }
   }
 
-  function getWarmInterval(links, homes) {
-    const allTargets = [...links, ...homes];
+  function getWarmInterval(links, homes, temp) {
+    const allTargets = [...links, ...homes, ...temp];
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
-    return hasEnterprise ? 15000 : 8000; // 15s for enterprise, 8s for normal
+    return hasEnterprise ? 20000 : 10000; // 15s for enterprise, 8s for normal
   }
 
   async function pbRefreshWarmDocument() {
@@ -1294,7 +1350,7 @@ setInterval(() => {
       "https://www.orbitalmap.net"
     ];
 
-    const links = [
+    const Links = [
       "https://www.google.com",
       settings.externalBankLink,
       settings.externalEmailLink,
@@ -1318,10 +1374,15 @@ setInterval(() => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
-    links.forEach(url => {
+    Links.forEach(url => {
+      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
+    });
+
+    temporaryLinks.forEach(url => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
-    if (links.length > 0) pbPreconnect(links);
+    if (Links.length > 0) pbPreconnect(Links);
+    if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
   }
