@@ -17,6 +17,7 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
     "color:#00C8FF; font-family:monospace;", response);
 });
 
+
 function pbPreconnect(origins = []) {
   origins.forEach((origin) => {
     pbDNSWarm(origin);
@@ -152,7 +153,7 @@ async function injectHUD() {
   ];
 
   if (document.getElementById("pulsebrowser-dev-overlay")) return;
-  if (!document.body) return setTimeout(injectHUD, 150);
+  if (!document.body) return setTimeout(injectHUD, 50);
 
   if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
@@ -558,11 +559,11 @@ function updateHUD() {
         <font color="#0FF">About:</font> <font color="gold">${engineDescriptor}</font><br/>
         <font color="#0FF">Last Page:</font> ${displayPage}<br/>
         <font color="#0FF">Domain:</font> ${realm.lastDomainClass || "-"}<br/>
-        <font color="#0FF">Messages:</font> ${"No Active Messages"}<br/>
+        <font color="#0FF">Messages:</font> <font color="red">${"No Active Messages"}</font><br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">
         <b><font color="white">Local PulseBrowser Tab Stats</font></b><br/>
-        <font color="#0FF">PageReady:</font> ${domTime}ms<br/>
-        <font color="#0FF">PageLoad:</font> ${loadTime}ms<br/>
+        <font color="#0FF">PageReady:</font> ${domTime}ms <font color="gold">(Where We Help!)</font><br/>
+        <font color="#0FF">PageLoad:</font> ${loadTime}ms <font color="white">(Where We Can't!)</font><br/>
         <font color="#0FF">Type:</font> ${refreshType}<br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">
         <b><font color="white">Global PulseBrowser OS Stats</font></b><br/>

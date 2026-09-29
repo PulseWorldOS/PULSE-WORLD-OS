@@ -59,13 +59,15 @@ self.addEventListener("install", event => {
     "PBRouter.js",
     "PBSettings.js",
     "android-chrome-192x192.png",
-    "PulseWorldOSMarketplace-White.png"
+    "PulseWorldOSMarketplace-White.png",
+    "PulseWorldEntrancePulseGPUPulseEarn.png",
+    "PulseWorldSplash512.png"
   ];
 
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return Promise.all(
-        PRELOAD_URLS.map(url => {
+        PRELOAD_URLS.map(async url => {
           // ⭐ SAFETY GUARD: skip chrome-extension://
           if (!url.startsWith("http")) return Promise.resolve();
           return cache.add(url).catch(() => {});
@@ -77,13 +79,15 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-
+async function pbWarmBoot() {
+  await pbHomeWarmBoot();
+  await pbModuleWarmBoot();
+}
 
 self.addEventListener("activate", (event) => {
   console.log("%c[PULSEWORLD OS KERNEL] Activated",
     "color:#00FF9C; font-weight:bold; font-family:monospace;");
-  event.waitUntil(pbHomeWarmBoot());
-  event.waitUntil(pbModuleWarmBoot());
+  event.waitUntil(pbWarmBoot());
 });
 
 self.addEventListener('fetch', event => {
@@ -92,10 +96,10 @@ self.addEventListener('fetch', event => {
   // Only cache GET requests
   if (req.method !== 'GET') return;
 
-  // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.startsWith('chrome-extension://')) {
-    return; // Let the browser handle extension assets normally
-  }
+  // // Skip chrome-extension:// URLs (cannot be cached)
+  // if (req.url.startsWith('chrome-extension://')) {
+  //   return; // Let the browser handle extension assets normally
+  // }
 
   event.respondWith((async () => {
     const cache = await caches.open('pbcompanion-cache');
@@ -111,7 +115,7 @@ self.addEventListener('fetch', event => {
       const net = await fetch(req, { cache: 'no-store' });
 
       // Only store good GET 200 responses
-      if (net && net.ok) {
+      if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
         cache.put(req, net.clone());
       }
 
@@ -136,7 +140,6 @@ console.log("[PULSEWORLD OS KERNEL] Initializing PulseWorld with Accelerated Mod
 const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 
 // Persistent favicon cache stored in chrome.storage.local
-// Local in-memory mirror for speed
 let FAVICON_CACHE = {};
 
 // Load cache from storage at startup
@@ -150,7 +153,41 @@ function saveCache() {
   chrome.storage.local.set({ faviconCache: FAVICON_CACHE });
 }
 
-function getFavicon(url, flags = {}) {
+// Fetch icon → follow redirects → convert to Base64 → store
+async function fetchAndStoreIcon(host, iconUrl) {
+  try {
+    const response = await fetch(iconUrl);
+
+    if (!response.ok) throw new Error("Fetch failed");
+
+    const blob = await response.blob();
+    const reader = new FileReader();
+
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        const base64 = reader.result;
+
+        // Save actual icon data
+        FAVICON_CACHE[host] = base64;
+        saveCache();
+
+        resolve(base64);
+      };
+
+      reader.readAsDataURL(blob);
+    });
+
+  } catch (err) {
+    console.warn("Favicon fetch failed:", iconUrl, err);
+
+    // Store fallback URL (last resort)
+    FAVICON_CACHE[host] = iconUrl;
+    saveCache();
+    return iconUrl;
+  }
+}
+
+async function getFavicon(url, flags = {}) {
   let u;
 
   try {
@@ -161,15 +198,12 @@ function getFavicon(url, flags = {}) {
 
   let host = u.hostname;
 
-  // ⭐ If the URL explicitly contains "://www.", preserve www
-  if (url.includes("www.")) {
-    if (!host.startsWith("www.")) {
-      host = "www." + host;
-    }
+  // Preserve www if present
+  if (url.includes("www.") && !host.startsWith("www.")) {
+    host = "www." + host;
   }
 
-
-  // ⭐ If cached → return instantly
+  // ⭐ If cached → return instantly (Base64 or URL fallback)
   if (FAVICON_CACHE[host]) {
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
@@ -178,8 +212,8 @@ function getFavicon(url, flags = {}) {
     return FAVICON_CACHE[host];
   }
 
-  // ⭐ Build favicon URL using hostname (preserves www)
-  let icon = `https://${host}/favicon.ico`;
+  // Default favicon URL
+  let iconUrl = `https://${host}/favicon.ico`;
 
   const PB_HOMES = [
     "pulseworld.me",
@@ -196,72 +230,63 @@ function getFavicon(url, flags = {}) {
   try {
     // Special cases
     if (host.includes("office.com")) {
-      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      FAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
+      iconUrl = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      await fetchAndStoreIcon(host, iconUrl);
+      return iconUrl;
     }
 
     if (host.includes("github.com")) {
-      icon = "https://github.githubassets.com/favicons/favicon.svg";
-      FAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
+      iconUrl = "https://github.githubassets.com/favicons/favicon.svg";
+      await fetchAndStoreIcon(host, iconUrl);
+      return iconUrl;
     }
 
     if (host.includes("youtube.com")) {
-      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      FAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
+      iconUrl = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      await fetchAndStoreIcon(host, iconUrl);
+      return iconUrl;
     }
 
     if (host.includes("discord.com")) {
-      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      FAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
+      iconUrl = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      await fetchAndStoreIcon(host, iconUrl);
+      return iconUrl;
     }
 
     // PulseWorld module-aware switching
     const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
 
     if (isPulseWorld) {
-      if (flags.isSW) icon = `${u.origin}/SWFavIcon.ico`;
-      else if (flags.isBinaryOS) icon = `${u.origin}/BOFavIcon.ico`;
-      else if (flags.isGPU) icon = `${u.origin}/GPFavIcon.ico`;
-      else if (flags.isLogic) icon = `${u.origin}/BLFavIcon.ico`;
-      else if (flags.isOrb) icon = `${u.origin}/OMFavIcon.ico`;
-      else if (flags.isBiz) icon = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
-      else icon = `${u.origin}/PWFavIcon.ico`;
+      if (flags.isSW) iconUrl = `${u.origin}/SWFavIcon.ico`;
+      else if (flags.isBinaryOS) iconUrl = `${u.origin}/BOFavIcon.ico`;
+      else if (flags.isGPU) iconUrl = `${u.origin}/GPFavIcon.ico`;
+      else if (flags.isLogic) iconUrl = `${u.origin}/BLFavIcon.ico`;
+      else if (flags.isOrb) iconUrl = `${u.origin}/OMFavIcon.ico`;
+      else if (flags.isBiz) iconUrl = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isSettings) iconUrl = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isMoney) iconUrl = `${u.origin}/PWMFavIcon.ico`;
+      else iconUrl = `${u.origin}/PWFavIcon.ico`;
 
-      FAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
+      await fetchAndStoreIcon(host, iconUrl);
+      return iconUrl;
     }
 
-    // ⭐ Strip subdomains unless it's "www"
+    // Strip subdomains unless it's "www"
     const parts = host.split(".");
-    if (parts.length > 2) {
-      if (parts[0] !== "www") {
-        const root = parts.slice(parts.length - 2).join(".");
-        icon = `https://${root}/favicon.ico`;
-      }
+    if (parts.length > 2 && parts[0] !== "www") {
+      const root = parts.slice(parts.length - 2).join(".");
+      iconUrl = `https://${root}/favicon.ico`;
     }
 
-
-    FAVICON_CACHE[host] = icon;
-    saveCache();
-    return icon;
+    await fetchAndStoreIcon(host, iconUrl);
+    return iconUrl;
 
   } catch {
-    FAVICON_CACHE[host] = icon;
-    saveCache();
-    return icon;
+    await fetchAndStoreIcon(host, iconUrl);
+    return iconUrl;
   }
 }
+
 
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
@@ -357,15 +382,17 @@ async function getSettings() {
 // ASSET TARGETS (JS/CSS/WASM/JSON)
 // ---------------------------------------------------------------------------
 const PB_ASSETS = [
-  "/index.html", "/DriftCompanion.js", "/PWFavIcon.ico", "/PWManifest.json",
+  "/", "/index.html", "/DriftCompanion.js", "/PWFavIcon.ico", "/PWManifest.json",
   "/site.webmanifest", "/404.html", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseEngine.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSBootLoader.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal3.webp.pex", "/_EXPRESSIONS/_VIDEOS/PulseWorldOSBoot2",
-  "/PULSEConfig/PulseWorldReality.txt","/PULSEConfig/PulseWorldInventory.txt","/PULSEConfig/PulseWorldBusiness.txt"
+  "/PULSEConfig/PulseWorldReality.txt","/PULSEConfig/PulseWorldInventory.txt","/PULSEConfig/PulseWorldBusiness.txt",
+  "/PULSEConfig/PulseWorldRewards.txt", "/PULSEConfig/PulseWorldVault.txt", "/PULSEConfig/PulseWorldExtensions.txt"
 ];
 
 const PB_GENERIC_ASSETS = [
+  "/", 
   "/favicon.ico",
   "/manifest.json",
   "/robots.txt",

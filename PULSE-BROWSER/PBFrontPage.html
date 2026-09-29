@@ -111,9 +111,10 @@
       font-size: 0.9rem;
       opacity: 0;
       color: white;
+      box-shadow: 0 0 25px rgba(0, 150, 255, 0.25);
       animation: subsubtitleReveal 2.5s ease forwards;
-      animation-delay: 2.6s;
-      text-shadow: 0 0 8px #00aaff88;
+      animation-delay: 1.6s;
+      text-shadow: 0 0 18px #00aaff88;
     }
 
     @keyframes subsubtitleReveal {
@@ -618,7 +619,10 @@
       right: 0;
     }
 
-    
+    .hotkey {
+      text-decoration: underline;
+    }
+
 
 
   </style>
@@ -644,12 +648,12 @@
     <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" />
 
     <div class="title">PulseBrowser OS</div>
-    <div class="subtitle">
+    <div class="subtitle" id="subtitle">
       Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness
     </div>
     
     <!-- Search Area -->
-    <div class="search-area">
+    <div class="search-area" id="search-area">
 
       <div class="search-row">
         <div id="searchengineTextbox"
@@ -689,27 +693,37 @@
 
         <a class="module-btn" id="moduleBank">
           <span class="module-icon" id="moduleBankIcon">🏦</span>
-          <span class="module-label">Banking</span>
+          <span class="module-label">
+            <span class="hotkey">B</span>anking
+          </span>
         </a>
 
         <a class="module-btn" id="moduleEmail">
           <span class="module-icon" id="moduleEmailIcon">📧</span>
-          <span class="module-label">Email</span>
+          <span class="module-label">
+            <span class="hotkey">M</span>ail
+          </span>
         </a>
 
         <a class="module-btn" id="moduleSocial">
           <span class="module-icon" id="moduleSocialIcon">🎭</span>
-          <span class="module-label">Social</span>
+          <span class="module-label">
+            <span class="hotkey">S</span>ocial
+          </span>
         </a>
 
         <a class="module-btn" id="moduleWork">
           <span class="module-icon" id="moduleWorkIcon">💼</span>
-          <span class="module-label">Work</span>
+          <span class="module-label">
+            <span class="hotkey">W</span>ork
+          </span>
         </a>
 
         <a class="module-btn" id="moduleStream">
           <span class="module-icon" id="moduleStreamIcon">📺</span>
-          <span class="module-label">Streaming</span>
+          <span class="module-label">
+            <span class="hotkey">T</span>V/Movies
+          </span>
         </a>
 
         <a class="module-btnF" id="moduleFav1">
@@ -737,7 +751,7 @@
           <span class="module-iconF" id="moduleFav5Icon">⚡</span>
         </a>
       </div>
-      <div class="subsubtitle">
+      <div class="subsubtitle" id="subsubtitle">
         We keep your Worlds Warm and Running — every Site you set Stays Accelerated, Ready, and Offline‑Capable!
       </div>
     </div>

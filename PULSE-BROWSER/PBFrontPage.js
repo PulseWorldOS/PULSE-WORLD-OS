@@ -74,6 +74,10 @@ function openNamedTab(name, url) {
         } else {
           // Tab updated successfully
           pulseTabs[identity] = tab.id;
+          // Universal boost warm-path
+          if (typeof PBUniversalBoost?.warmTab === "function") {
+            PBUniversalBoost.warmTab(tab);
+          }
           savePulseTabs();
         }
       });
@@ -176,7 +180,42 @@ function saveCache() {
   chrome.storage.local.set({ faviconCache: FAVICON_CACHE });
 }
 
-function getFavicon(url, flags = {}) {
+
+// Fetch icon → follow redirects → convert to Base64 → store
+async function fetchAndStoreIcon(host, iconUrl) {
+  try {
+    const response = await fetch(iconUrl);
+
+    if (!response.ok) throw new Error("Fetch failed");
+
+    const blob = await response.blob();
+    const reader = new FileReader();
+
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        const base64 = reader.result;
+
+        // Save actual icon data
+        FAVICON_CACHE[host] = base64;
+        saveCache();
+
+        resolve(base64);
+      };
+
+      reader.readAsDataURL(blob);
+    });
+
+  } catch (err) {
+    console.warn("Favicon fetch failed:", iconUrl, err);
+
+    // Store fallback URL (last resort)
+    FAVICON_CACHE[host] = iconUrl;
+    saveCache();
+    return iconUrl;
+  }
+}
+
+async function getFavicon(url, flags = {}) {
   let u;
 
   try {
@@ -194,9 +233,12 @@ function getFavicon(url, flags = {}) {
     }
   }
 
+  // ⭐ Build favicon URL using hostname (preserves www)
+  let icon = `https://${host}/favicon.ico`;
 
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
+    icon = await fetchAndStoreIcon(host, icon);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -204,8 +246,6 @@ function getFavicon(url, flags = {}) {
     return FAVICON_CACHE[host];
   }
 
-  // ⭐ Build favicon URL using hostname (preserves www)
-  let icon = `https://${host}/favicon.ico`;
 
   const PB_HOMES = [
     "pulseworld.me",
@@ -379,9 +419,13 @@ async function pbModuleWarmBoot(settings) {
   );
 }
 
+let keyIsDown = false;
+let keyHoldTimer = null;
+let oldSettings = null;
+
 async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
-
+  oldSettings = settings;
   
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
@@ -404,7 +448,7 @@ async function updateModuleIcons() {
     emailIcon.innerText = "📧";      // your original emoji
     emailIcon.style.backgroundImage = "";
   } else {
-    const fav = getFavicon(settings.externalEmailLink);
+    const fav = await getFavicon(settings.externalEmailLink);
     if (fav) {
       emailIcon.innerText = "⚡";
       emailIcon.style.backgroundImage = `url(${fav})`;
@@ -419,7 +463,7 @@ async function updateModuleIcons() {
     bankIcon.innerText = "🏦";      // your original emoji
     bankIcon.style.backgroundImage = "";
   } else {
-    const fav = getFavicon(settings.externalBankLink);
+    const fav = await getFavicon(settings.externalBankLink);
     if (fav) {
       bankIcon.innerText = "⚡";
       bankIcon.style.backgroundImage = `url(${fav})`;
@@ -434,7 +478,7 @@ async function updateModuleIcons() {
     socialIcon.innerText = "🎭";      // your original emoji
     socialIcon.style.backgroundImage = "";
   } else {
-    const fav = getFavicon(settings.externalSocialLink);
+    const fav = await getFavicon(settings.externalSocialLink);
     if (fav) {
       socialIcon.innerText = "⚡";
       socialIcon.style.backgroundImage = `url(${fav})`;
@@ -449,7 +493,7 @@ async function updateModuleIcons() {
     workIcon.innerText = "💼";      // your original emoji
     workIcon.style.backgroundImage = "";
   } else {
-    const fav = getFavicon(settings.externalWorkLink);
+    const fav = await getFavicon(settings.externalWorkLink);
     if (fav) {
       workIcon.innerText = "⚡";
       workIcon.style.backgroundImage = `url(${fav})`;
@@ -464,7 +508,7 @@ async function updateModuleIcons() {
     streamIcon.innerText = "📺";      // your original emoji
     streamIcon.style.backgroundImage = "";
   } else {
-    const fav = getFavicon(settings.externalStreamingLink);
+    const fav = await getFavicon(settings.externalStreamingLink);
     if (fav) {
       streamIcon.innerText = "⚡";
       streamIcon.style.backgroundImage = `url(${fav})`;
@@ -476,7 +520,7 @@ async function updateModuleIcons() {
   if (settings.acceleratedModule1Link) {
     const moduleFav1Link = document.getElementById("moduleFav1Link");
     const moduleFav1Icon = document.getElementById("moduleFav1Icon");
-    const fav1 = getFavicon(settings.acceleratedModule1Link);
+    const fav1 = await getFavicon(settings.acceleratedModule1Link);
     if (fav1) {
       moduleFav1Link.innerText = getReadableName(settings.acceleratedModule1Link) + " ";
       moduleFav1Icon.innerText = "⚡";
@@ -490,7 +534,7 @@ async function updateModuleIcons() {
   if (settings.acceleratedModule2Link) {
     const moduleFav2Link = document.getElementById("moduleFav2Link");
     const moduleFav2Icon = document.getElementById("moduleFav2Icon");
-    const fav2 = getFavicon(settings.acceleratedModule2Link);
+    const fav2 = await getFavicon(settings.acceleratedModule2Link);
     if (fav2) {
       moduleFav2Link.innerText = getReadableName(settings.acceleratedModule2Link) + " ";
       moduleFav2Icon.innerText = "⚡";
@@ -504,7 +548,7 @@ async function updateModuleIcons() {
   if (settings.acceleratedModule3Link) {
     const moduleFav3Link = document.getElementById("moduleFav3Link");
     const moduleFav3Icon = document.getElementById("moduleFav3Icon");
-    const fav3 = getFavicon(settings.acceleratedModule3Link);
+    const fav3 = await getFavicon(settings.acceleratedModule3Link);
     if (fav3) {
       moduleFav3Link.innerText = getReadableName(settings.acceleratedModule3Link) + " ";
       moduleFav3Icon.innerText = "⚡";
@@ -518,7 +562,7 @@ async function updateModuleIcons() {
   if (settings.acceleratedModule4Link) {
     const moduleFav4Link = document.getElementById("moduleFav4Link");
     const moduleFav4Icon = document.getElementById("moduleFav4Icon");
-    const fav4 = getFavicon(settings.acceleratedModule4Link);
+    const fav4 = await getFavicon(settings.acceleratedModule4Link);
     if (fav4) {
       moduleFav4Link.innerText = getReadableName(settings.acceleratedModule4Link) + " ";
       moduleFav4Icon.innerText = "⚡";
@@ -531,7 +575,7 @@ async function updateModuleIcons() {
   if (settings.acceleratedModule5Link) {
     const moduleFav5Link = document.getElementById("moduleFav5Link");
     const moduleFav5Icon = document.getElementById("moduleFav5Icon");
-    const fav5 = getFavicon(settings.acceleratedModule5Link);
+    const fav5 = await getFavicon(settings.acceleratedModule5Link);
     if (fav5) {
       moduleFav5Link.innerText = getReadableName(settings.acceleratedModule5Link) + " ";
       moduleFav5Icon.innerText = "⚡";
@@ -574,7 +618,83 @@ async function updateModuleIcons() {
   const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
 
   setInterval(pbRefreshWarmDocument, interval);
+  
+
+  document.addEventListener("keydown", (e) => {
+    keyIsDown = true;
+    if (e.repeat) { 
+      e.preventDefault();
+      setTimeout(() => {
+        const searchArea = document.getElementById("searchengineTextbox");
+        searchArea.focus();
+        searchArea.textContent = "";
+      }, 1000);
+    }
+    if (e.target.closest("#search-area")) return;
+    
+    // SHORT PRESS → CONSOLE KEY (fires immediately)
+    pulseConsoleKey(e);
+        
+    // Start long-press timer
+    keyHoldTimer = setTimeout(() => {
+      if (keyIsDown) {
+        // LONG PRESS → TELEPORT
+        pulseTeleportKey(e);
+      }
+    }, 1500);
+
+  });
+
+  document.addEventListener("keyup", () => {
+    keyIsDown = false;
+    // ONLY cancel timer — NO logic, NO actions
+    if (keyHoldTimer) {
+      clearTimeout(keyHoldTimer);
+      keyHoldTimer = null;
+    }
+  });
 }
+
+async function pulseConsoleKey(event) {
+  const key = event.key.toLowerCase();
+  const searchArea = document.getElementById("searchengineTextbox");
+  searchArea.focus();
+  searchArea.value += key;
+}
+
+async function pulseTeleportKey(event) {
+  const key = event.key.toLowerCase();
+  
+  // ⭐ Otherwise: module teleport logic
+  let link = "https://www.pulseworld.net";
+
+  if (key === "`") {
+    link = "https://www.pulseworld.net";
+  } else if (key === "b") {
+    link = oldSettings.externalBankLink;
+  } else if (key === "m") {
+    link = oldSettings.externalEmailLink;
+  } else if (key === "s") {
+    link = oldSettings.externalSocialLink;
+  } else if (key === "w") {
+    link = oldSettings.externalWorkLink;
+  } else if (key === "t") {
+    link = oldSettings.externalStreamingLink;
+  }
+
+  chrome.runtime.sendMessage({
+    type: "PB_HOVER_PREFETCH",
+    href: link
+  });
+
+  try {
+    fetch(link, { mode: "no-cors" }).catch(() => {});
+  } catch (_) {}
+
+  await PBUniversalBoost.warmOrigin(link);
+  openNamedTab("PulseWorldModule", link);
+}
+
 
 function getReadableName(url) {
   try {
@@ -926,6 +1046,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 document.getElementById("moduleEmail").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] Email module clicked. Settings:", settings);
 
@@ -967,6 +1088,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
 document.getElementById("moduleBank").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] Bank module clicked. Settings:", settings);
 
@@ -1007,6 +1129,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
 document.getElementById("moduleSocial").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] Social Media module clicked. Settings:", settings);
 
@@ -1046,6 +1169,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
 document.getElementById("moduleWork").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] Work module clicked. Settings:", settings);
 
@@ -1085,6 +1209,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
 document.getElementById("moduleStream").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] Streaming module clicked. Settings:", settings);
 
@@ -1125,6 +1250,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 document.getElementById("moduleFav1").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] moduleFav1Icon module clicked. Settings:", settings);
 
@@ -1148,6 +1274,7 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
 document.getElementById("moduleFav2").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] moduleFav2Icon module clicked. Settings:", settings);
 
@@ -1171,6 +1298,7 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
 document.getElementById("moduleFav3").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] moduleFav3Icon module clicked. Settings:", settings);
 
@@ -1194,6 +1322,7 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
 document.getElementById("moduleFav4").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] moduleFav4Icon module clicked. Settings:", settings);
 
@@ -1217,6 +1346,7 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
 document.getElementById("moduleFav5").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
+    oldSettings = settings;
 
     console.log("[FrontPage] moduleFav5Icon module clicked. Settings:", settings);
 
@@ -1248,25 +1378,6 @@ const images = [
 let index = 0;
 const nebula = document.getElementById("nebula");
 
-async function pulseConsoleKey(event) {
-  if (event.key === "`") {
-    const link = "https://www.pulseworld.net";
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
-    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-    await PBUniversalBoost.warmOrigin(link);
-    openNamedTab("PulseWorld", link);
-    // window.location.href = "https://www.pulseworld.net";
-  }
-}
-
-document.addEventListener("keydown", pulseConsoleKey);
-
 // Any interaction cancels redirect
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
   window.addEventListener(evt, () => {
@@ -1275,8 +1386,9 @@ document.addEventListener("keydown", pulseConsoleKey);
 });
 window.addEventListener("blur", () => {
   userInteracted = true;
+  document.getElementById("subtitle").style.color = "yellow"
+  document.getElementById("subsubtitle").style.color = "yellow"
 }, { once: true });
-
 
 let timerX = 0;
 document.getElementById("timerBtn").textContent = timerX;
@@ -1336,7 +1448,7 @@ setInterval(() => {
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
 
-    const settings = await pbLoadExtensionSettings();
+    oldSettings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
       "https://www.pulseworld.me",
@@ -1352,17 +1464,17 @@ setInterval(() => {
 
     const Links = [
       "https://www.google.com",
-      settings.externalBankLink,
-      settings.externalEmailLink,
-      settings.externalSocialLink,
-      settings.externalWorkLink,
-      settings.externalStreamingLink,
-      settings.externalSearchLink,
-      settings.acceleratedModule1Link,
-      settings.acceleratedModule2Link,
-      settings.acceleratedModule3Link,
-      settings.acceleratedModule4Link,
-      settings.acceleratedModule5Link
+      oldSettings.externalBankLink,
+      oldSettings.externalEmailLink,
+      oldSettings.externalSocialLink,
+      oldSettings.externalWorkLink,
+      oldSettings.externalStreamingLink,
+      oldSettings.externalSearchLink,
+      oldSettings.acceleratedModule1Link,
+      oldSettings.acceleratedModule2Link,
+      oldSettings.acceleratedModule3Link,
+      oldSettings.acceleratedModule4Link,
+      oldSettings.acceleratedModule5Link
     ].filter(u => u && u.startsWith("http"));
 
     const container = document.getElementById("pbWarmContainer");

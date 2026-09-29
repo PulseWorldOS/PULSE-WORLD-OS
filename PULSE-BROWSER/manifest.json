@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "PulseWorld OS",
-  "short_name": "PulseWorld",
-  "description": "PulseWorld — Temporal OS, Unified Internet, Adaptive Routing, Immortal Runtime.",
-  "version": "12.3.0",
+  "name": "PulseBrowser OS",
+  "short_name": "PulseBrowser",
+  "description": "PulseBrowser OS — Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness",
+  "version": "12.5.0",
 
   "icons": {
     "16": "PulseWorldSplash512.png",
@@ -14,7 +14,7 @@
   },
 
   "action": {
-    "default_title": "PulseWorld OS",
+    "default_title": "PulseBrowser OS",
     "default_popup": "PBPopup.html",
     "default_icon": "PulseWorldSplash512.png"
   },

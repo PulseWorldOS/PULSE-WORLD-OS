@@ -53,7 +53,7 @@ const PB_HOME = [
 // ASSET TARGETS (JS/CSS/WASM/JSON)
 // ---------------------------------------------------------------------------
 const PB_ASSETS = [
-  "/main.js", "/app.js", "/engine.js", "/runtime.js",
+  "/", "/main.js", "/app.js", "/engine.js", "/runtime.js",
   "/styles.css", "/pulse.css", "/world.css",
   "/config.json", "/manifest.json", "/engine.wasm"
 ];
