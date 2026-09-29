@@ -3,7 +3,7 @@
 //  Manifest V3 Service Worker — full OS kernel
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
-
+const CACHE_NAME = "pb-companion-cache";
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
 // ============================================================================
@@ -47,7 +47,6 @@ self.addEventListener("install", event => {
     "color:#00FF9C; font-weight:bold; font-family:monospace;"
   );
   
-  const CACHE_NAME = "pb-companion-cache";
   const PRELOAD_URLS = [
     "PBFrontPage.html",
     "PBPopup.html",
@@ -252,8 +251,8 @@ async function getFavicon(url, flags = {}) {
 
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
-    // const IconURL = icon;
-    // icon = await fetchAndStoreIcon(host, IconURL);
+    const IconURL = icon;
+    icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
