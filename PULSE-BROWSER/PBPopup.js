@@ -631,22 +631,23 @@ async function pulseConsoleKey(event) {
 //   });
 // };
 
+
 // Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
 let FAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["faviconCache"], (res) => {
-  if (res.faviconCache) {
-    FAVICON_CACHE = res.faviconCache;
+chrome.storage.local.get(["faviconCaches"], (res) => {
+  if (res.faviconCaches) {
+    FAVICON_CACHE = res.faviconCaches;
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ faviconCache: FAVICON_CACHE });
+  chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
 }
 
 
-// Fetch icon → follow redirects → convert to Base64 → store
 async function fetchAndStoreIcon(host, iconUrl) {
   try {
     const response = await fetch(iconUrl);
@@ -654,17 +655,46 @@ async function fetchAndStoreIcon(host, iconUrl) {
     if (!response.ok) throw new Error("Fetch failed");
 
     const blob = await response.blob();
+
+    // ⭐ Fallback if blob is empty or unreadable
+    if (!blob || blob.size === 0) {
+      console.warn("Empty favicon blob, falling back:", iconUrl);
+      FAVICON_CACHE[host] = iconUrl;
+      saveCache();
+      return iconUrl;
+    }
+
     const reader = new FileReader();
 
     return new Promise((resolve) => {
       reader.onloadend = () => {
         const base64 = reader.result;
 
-        // Save actual icon data
+        // ⭐ Fallback if Base64 is invalid
+        if (
+          !base64 ||
+          typeof base64 !== "string" ||
+          base64.trim() === "" ||
+          base64.startsWith("data:") && base64.length < 10 // "data:" only
+        ) {
+          console.warn("Invalid Base64 favicon, falling back:", iconUrl);
+          FAVICON_CACHE[host] = iconUrl;
+          saveCache();
+          resolve(iconUrl);
+          return;
+        }
+
+        // ⭐ Save actual icon data
         FAVICON_CACHE[host] = base64;
         saveCache();
-
         resolve(base64);
+      };
+
+      reader.onerror = () => {
+        console.warn("FileReader failed, falling back:", iconUrl);
+        FAVICON_CACHE[host] = iconUrl;
+        saveCache();
+        resolve(iconUrl);
       };
 
       reader.readAsDataURL(blob);
@@ -673,12 +703,13 @@ async function fetchAndStoreIcon(host, iconUrl) {
   } catch (err) {
     console.warn("Favicon fetch failed:", iconUrl, err);
 
-    // Store fallback URL (last resort)
+    // ⭐ Store fallback URL (last resort)
     FAVICON_CACHE[host] = iconUrl;
     saveCache();
     return iconUrl;
   }
 }
+
 
 async function getFavicon(url, flags = {}) {
   let u;
@@ -691,13 +722,20 @@ async function getFavicon(url, flags = {}) {
 
   let host = u.hostname;
 
-  // Preserve www if present
-  if (url.includes("www.") && !host.startsWith("www.")) {
-    host = "www." + host;
+  // ⭐ If the URL explicitly contains "://www.", preserve www
+  if (url.includes("www.")) {
+    if (!host.startsWith("www.")) {
+      host = "www." + host;
+    }
   }
 
-  // ⭐ If cached → return instantly (Base64 or URL fallback)
+  // ⭐ Build favicon URL using hostname (preserves www)
+  let icon = `https://${host}/favicon.ico`;
+
+  // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
+    const IconURL = icon;
+    icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -705,8 +743,6 @@ async function getFavicon(url, flags = {}) {
     return FAVICON_CACHE[host];
   }
 
-  // Default favicon URL
-  let iconUrl = `https://${host}/favicon.ico`;
 
   const PB_HOMES = [
     "pulseworld.me",
@@ -723,60 +759,70 @@ async function getFavicon(url, flags = {}) {
   try {
     // Special cases
     if (host.includes("office.com")) {
-      iconUrl = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      await fetchAndStoreIcon(host, iconUrl);
-      return iconUrl;
+      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
     }
 
     if (host.includes("github.com")) {
-      iconUrl = "https://github.githubassets.com/favicons/favicon.svg";
-      await fetchAndStoreIcon(host, iconUrl);
-      return iconUrl;
+      icon = "https://github.githubassets.com/favicons/favicon.svg";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
     }
 
     if (host.includes("youtube.com")) {
-      iconUrl = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      await fetchAndStoreIcon(host, iconUrl);
-      return iconUrl;
+      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
     }
 
     if (host.includes("discord.com")) {
-      iconUrl = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      await fetchAndStoreIcon(host, iconUrl);
-      return iconUrl;
+      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
     }
 
     // PulseWorld module-aware switching
     const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
 
     if (isPulseWorld) {
-      if (flags.isSW) iconUrl = `${u.origin}/SWFavIcon.ico`;
-      else if (flags.isBinaryOS) iconUrl = `${u.origin}/BOFavIcon.ico`;
-      else if (flags.isGPU) iconUrl = `${u.origin}/GPFavIcon.ico`;
-      else if (flags.isLogic) iconUrl = `${u.origin}/BLFavIcon.ico`;
-      else if (flags.isOrb) iconUrl = `${u.origin}/OMFavIcon.ico`;
-      else if (flags.isBiz) iconUrl = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isSettings) iconUrl = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isMoney) iconUrl = `${u.origin}/PWMFavIcon.ico`;
-      else iconUrl = `${u.origin}/PWFavIcon.ico`;
+      if (flags.isSW) icon = `${u.origin}/SWFavIcon.ico`;
+      else if (flags.isBinaryOS) icon = `${u.origin}/BOFavIcon.ico`;
+      else if (flags.isGPU) icon = `${u.origin}/GPFavIcon.ico`;
+      else if (flags.isLogic) icon = `${u.origin}/BLFavIcon.ico`;
+      else if (flags.isOrb) icon = `${u.origin}/OMFavIcon.ico`;
+      else if (flags.isBiz) icon = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
+      else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
+      else icon = `${u.origin}/PWFavIcon.ico`;
 
-      await fetchAndStoreIcon(host, iconUrl);
-      return iconUrl;
+      FAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
     }
 
-    // Strip subdomains unless it's "www"
+    // ⭐ Strip subdomains unless it's "www"
     const parts = host.split(".");
-    if (parts.length > 2 && parts[0] !== "www") {
-      const root = parts.slice(parts.length - 2).join(".");
-      iconUrl = `https://${root}/favicon.ico`;
+    if (parts.length > 2) {
+      if (parts[0] !== "www") {
+        const root = parts.slice(parts.length - 2).join(".");
+        icon = `https://${root}/favicon.ico`;
+      }
     }
 
-    await fetchAndStoreIcon(host, iconUrl);
-    return iconUrl;
+
+    FAVICON_CACHE[host] = icon;
+    saveCache();
+    return icon;
 
   } catch {
-    await fetchAndStoreIcon(host, iconUrl);
-    return iconUrl;
+    FAVICON_CACHE[host] = icon;
+    saveCache();
+    return icon;
   }
 }
 
