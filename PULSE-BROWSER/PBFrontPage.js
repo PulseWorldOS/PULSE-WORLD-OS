@@ -170,18 +170,17 @@ const PBUniversalBoost = {
 let FAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["faviconCache"], (res) => {
-  if (res.faviconCache) {
-    FAVICON_CACHE = res.faviconCache;
+chrome.storage.local.get(["faviconCaches"], (res) => {
+  if (res.faviconCaches) {
+    FAVICON_CACHE = res.faviconCaches;
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ faviconCache: FAVICON_CACHE });
+  chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
 }
 
 
-// Fetch icon → follow redirects → convert to Base64 → store
 async function fetchAndStoreIcon(host, iconUrl) {
   try {
     const response = await fetch(iconUrl);
@@ -189,17 +188,46 @@ async function fetchAndStoreIcon(host, iconUrl) {
     if (!response.ok) throw new Error("Fetch failed");
 
     const blob = await response.blob();
+
+    // ⭐ Fallback if blob is empty or unreadable
+    if (!blob || blob.size === 0) {
+      console.warn("Empty favicon blob, falling back:", iconUrl);
+      FAVICON_CACHE[host] = iconUrl;
+      saveCache();
+      return iconUrl;
+    }
+
     const reader = new FileReader();
 
     return new Promise((resolve) => {
       reader.onloadend = () => {
         const base64 = reader.result;
 
-        // Save actual icon data
+        // ⭐ Fallback if Base64 is invalid
+        if (
+          !base64 ||
+          typeof base64 !== "string" ||
+          base64.trim() === "" ||
+          base64.startsWith("data:") && base64.length < 10 // "data:" only
+        ) {
+          console.warn("Invalid Base64 favicon, falling back:", iconUrl);
+          FAVICON_CACHE[host] = iconUrl;
+          saveCache();
+          resolve(iconUrl);
+          return;
+        }
+
+        // ⭐ Save actual icon data
         FAVICON_CACHE[host] = base64;
         saveCache();
-
         resolve(base64);
+      };
+
+      reader.onerror = () => {
+        console.warn("FileReader failed, falling back:", iconUrl);
+        FAVICON_CACHE[host] = iconUrl;
+        saveCache();
+        resolve(iconUrl);
       };
 
       reader.readAsDataURL(blob);
@@ -208,12 +236,13 @@ async function fetchAndStoreIcon(host, iconUrl) {
   } catch (err) {
     console.warn("Favicon fetch failed:", iconUrl, err);
 
-    // Store fallback URL (last resort)
+    // ⭐ Store fallback URL (last resort)
     FAVICON_CACHE[host] = iconUrl;
     saveCache();
     return iconUrl;
   }
 }
+
 
 async function getFavicon(url, flags = {}) {
   let u;
@@ -238,7 +267,8 @@ async function getFavicon(url, flags = {}) {
 
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
-    icon = await fetchAndStoreIcon(host, icon);
+    const IconURL = icon;
+    icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -622,32 +652,37 @@ async function updateModuleIcons() {
   
 
   document.addEventListener("keydown", (e) => {
-    keyIsDown = true;
+    const key = e.key.toLowerCase();
+    const moduleKeys = ["`","b","m","s","w","t"];
     if (e.repeat) { 
       e.preventDefault();
-      keyHold2Timer = setTimeout(() => {
+      // ⭐ If NOT a module key → send key to search box
+      if (moduleKeys.includes(key)) {
+        keyHold2Timer = setTimeout(() => {
+          const searchArea = document.getElementById("searchengineTextbox");
+          searchArea.focus();
+          searchArea.textContent = "";
+        }, 1000);
+      }
+      return;
+    }
+    // if (e.target.closest("#search-area")) return;
+    keyIsDown = true;
+    // SHORT PRESS → CONSOLE KEY (fires immediately)
+    pulseConsoleKey(e);
+    
+    // ⭐ If NOT a module key → send key to search box
+    if (moduleKeys.includes(key)) {
+      // Start long-press timer
+      keyHoldTimer = setTimeout(() => {
         if (keyIsDown) {
           const searchArea = document.getElementById("searchengineTextbox");
           searchArea.focus();
           searchArea.textContent = "";
+          pulseTeleportKey(e);
         }
-      }, 1000);
-      return;
+      }, 1500);
     }
-    if (e.target.closest("#search-area")) return;
-    
-    // SHORT PRESS → CONSOLE KEY (fires immediately)
-    pulseConsoleKey(e);
-        
-    // Start long-press timer
-    keyHoldTimer = setTimeout(() => {
-      if (keyIsDown) {
-        const searchArea = document.getElementById("searchengineTextbox");
-        searchArea.focus();
-        searchArea.textContent = "";
-        pulseTeleportKey(e);
-      }
-    }, 1500);
 
   });
 
