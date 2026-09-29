@@ -169,12 +169,12 @@ const PBUniversalBoost = {
 // Local in-memory mirror for speed
 let FAVICON_CACHE = {};
 
-// Load cache from storage at startup
-chrome.storage.local.get(["faviconCaches"], (res) => {
-  if (res.faviconCaches) {
-    FAVICON_CACHE = res.faviconCaches;
-  }
-});
+// // Load cache from storage at startup
+// chrome.storage.local.get(["faviconCaches"], (res) => {
+//   if (res.faviconCaches) {
+//     FAVICON_CACHE = res.faviconCaches;
+//   }
+// });
 
 function saveCache() {
   chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
@@ -208,13 +208,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
           !base64 ||
           typeof base64 !== "string" ||
           base64.trim() === "" ||
-          base64.startsWith("data:") && base64.length < 10 // "data:" only
+          base64.startsWith("data:") && base64.length < 10 ||
+          base64.startsWith("data:text")
         ) {
           console.warn("Invalid Base64 favicon, falling back:", iconUrl);
           FAVICON_CACHE[host] = iconUrl;
           saveCache();
           resolve(iconUrl);
-          return;
+          return iconUrl;
         }
 
         // ⭐ Save actual icon data
@@ -265,10 +266,19 @@ async function getFavicon(url, flags = {}) {
   // ⭐ Build favicon URL using hostname (preserves www)
   let icon = `https://${host}/favicon.ico`;
 
+  // ⭐ Strip subdomains unless it's "www"
+  const parts = host.split(".");
+  if (parts.length > 2) {
+    if (parts[0] !== "www") {
+      const root = parts.slice(parts.length - 2).join(".");
+      icon = `https://${root}/favicon.ico`;
+    }
+  }
+
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
-    const IconURL = icon;
-    icon = await fetchAndStoreIcon(host, IconURL);
+    // const IconURL = icon;
+    // icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -337,16 +347,6 @@ async function getFavicon(url, flags = {}) {
       saveCache();
       return icon;
     }
-
-    // ⭐ Strip subdomains unless it's "www"
-    const parts = host.split(".");
-    if (parts.length > 2) {
-      if (parts[0] !== "www") {
-        const root = parts.slice(parts.length - 2).join(".");
-        icon = `https://${root}/favicon.ico`;
-      }
-    }
-
 
     FAVICON_CACHE[host] = icon;
     saveCache();
@@ -440,7 +440,7 @@ async function pbModuleWarmBoot(settings) {
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
-    origin: "MODULE_UNIVERSE"
+    origins: warmTargets
   });
 
   console.log(

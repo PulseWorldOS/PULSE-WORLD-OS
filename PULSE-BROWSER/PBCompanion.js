@@ -47,7 +47,7 @@ self.addEventListener("install", event => {
     "color:#00FF9C; font-weight:bold; font-family:monospace;"
   );
   
-  const CACHE_NAME = "pulseworld-os-cache";
+  const CACHE_NAME = "pb-companion-cache";
   const PRELOAD_URLS = [
     "PBFrontPage.html",
     "PBPopup.html",
@@ -102,7 +102,7 @@ self.addEventListener('fetch', event => {
   // }
 
   event.respondWith((async () => {
-    const cache = await caches.open('pbcompanion-cache');
+    const cache = await caches.open(CACHE_NAME);
 
     // Try cache first
     const cached = await cache.match(req);
@@ -183,13 +183,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
           !base64 ||
           typeof base64 !== "string" ||
           base64.trim() === "" ||
-          base64.startsWith("data:") && base64.length < 10 // "data:" only
+          base64.startsWith("data:") && base64.length < 10 ||
+          base64.startsWith("data:text")
         ) {
           console.warn("Invalid Base64 favicon, falling back:", iconUrl);
           FAVICON_CACHE[host] = iconUrl;
           saveCache();
           resolve(iconUrl);
-          return;
+          return iconUrl;
         }
 
         // ⭐ Save actual icon data
@@ -240,10 +241,19 @@ async function getFavicon(url, flags = {}) {
   // ⭐ Build favicon URL using hostname (preserves www)
   let icon = `https://${host}/favicon.ico`;
 
+  // ⭐ Strip subdomains unless it's "www"
+  const parts = host.split(".");
+  if (parts.length > 2) {
+    if (parts[0] !== "www") {
+      const root = parts.slice(parts.length - 2).join(".");
+      icon = `https://${root}/favicon.ico`;
+    }
+  }
+
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
-    const IconURL = icon;
-    icon = await fetchAndStoreIcon(host, IconURL);
+    // const IconURL = icon;
+    // icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -312,16 +322,6 @@ async function getFavicon(url, flags = {}) {
       saveCache();
       return icon;
     }
-
-    // ⭐ Strip subdomains unless it's "www"
-    const parts = host.split(".");
-    if (parts.length > 2) {
-      if (parts[0] !== "www") {
-        const root = parts.slice(parts.length - 2).join(".");
-        icon = `https://${root}/favicon.ico`;
-      }
-    }
-
 
     FAVICON_CACHE[host] = icon;
     saveCache();
@@ -429,7 +429,7 @@ async function getSettings() {
 // ASSET TARGETS (JS/CSS/WASM/JSON)
 // ---------------------------------------------------------------------------
 const PB_ASSETS = [
-  "/", "/index.html", "/DriftCompanion.js", "/PWFavIcon.ico", "/PWManifest.json",
+  "/", "/index.html", "/DriftCompanion.js", "/PWFavIcon.ico", "/PWMFavIcon.ico", "/PWBFavIcon.ico", "/PWManifest.json",
   "/site.webmanifest", "/404.html", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseEngine.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSBootLoader.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex",
@@ -707,7 +707,7 @@ async function pbHomeWarmBoot() {
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
-    origin: "HOME_UNIVERSE"
+    origins: PB_HOMES
   });
 
   console.log("%c[PBAccelerator] Home Warm-Boot executed",
@@ -760,7 +760,7 @@ async function pbModuleWarmBoot() {
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
-    origin: "MODULE_UNIVERSE"
+    origins: warmTargets
   });
 
   console.log(
@@ -769,7 +769,7 @@ async function pbModuleWarmBoot() {
   );
 }
 
-setInterval(pbModuleWarmBoot, 30000);
+setInterval(pbWarmBoot, 30000);
 
 // ---------------------------------------------------------------------------
 // MESSAGE CHANNEL (buttons optional; auto-nav is primary)
@@ -819,6 +819,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBACC_REALMWARM":
       if (msg.origin) pbRealmWarm(msg.origin);
+      sendResponse({ ok: true });
+      break;
+
+    case "PBACC_WARMPATH_EVENT":
+      if (Array.isArray(msg.origins)) pbWarmPath(msg.origins);
+      if (msg.origin) pbWarmPath(msg.origin);
+      pbWarmBoot();
       sendResponse({ ok: true });
       break;
 
@@ -1157,7 +1164,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_ACCELERATE":
       if (msg.url) {
         const origin = new URL(msg.url).origin;
-        chrome.runtime.sendMessage({ type: "PBACC_WARMPATH_EVENT", origin });
+        const origins = [origin];
+        chrome.runtime.sendMessage({ type: "PBACC_WARMPATH_EVENT", origins });
         if (typeof PBUniversalBoost2?.warmOrigin === "function") {
           PBUniversalBoost2.warmOrigin(origin);
         }

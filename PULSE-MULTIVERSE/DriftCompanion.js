@@ -194,7 +194,7 @@ function pulseInc(index, delta = 1) {
 // ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
 // ============================================================
 
-const SHARED_CACHE_NAME = "pulse-shared-cache";
+const SHARED_CACHE_NAME = "drift-companion-cache";
 
 async function getSharedResponse(req) {
   const cache = await caches.open(SHARED_CACHE_NAME);

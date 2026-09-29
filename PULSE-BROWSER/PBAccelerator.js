@@ -270,7 +270,7 @@ async function pbHomeWarmBoot() {
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
-    origin: "HOME_UNIVERSE"
+    origins: PB_HOME
   });
 
   console.log("%c[PBAccelerator] Home Warm-Boot executed",
@@ -326,7 +326,7 @@ async function pbModuleWarmBoot() {
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
-    origin: "MODULE_UNIVERSE"
+    origins: warmTargets
   });
 
   console.log(
