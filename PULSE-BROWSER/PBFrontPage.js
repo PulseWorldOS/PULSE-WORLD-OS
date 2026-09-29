@@ -626,9 +626,11 @@ async function updateModuleIcons() {
     if (e.repeat) { 
       e.preventDefault();
       keyHold2Timer = setTimeout(() => {
-        const searchArea = document.getElementById("searchengineTextbox");
-        searchArea.focus();
-        searchArea.textContent = "";
+        if (keyIsDown) {
+          const searchArea = document.getElementById("searchengineTextbox");
+          searchArea.focus();
+          searchArea.textContent = "";
+        }
       }, 1000);
       return;
     }
