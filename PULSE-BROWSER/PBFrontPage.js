@@ -421,6 +421,7 @@ async function pbModuleWarmBoot(settings) {
 
 let keyIsDown = false;
 let keyHoldTimer = null;
+let keyHold2Timer = null;
 let oldSettings = null;
 
 async function updateModuleIcons() {
@@ -624,11 +625,12 @@ async function updateModuleIcons() {
     keyIsDown = true;
     if (e.repeat) { 
       e.preventDefault();
-      setTimeout(() => {
+      keyHold2Timer = setTimeout(() => {
         const searchArea = document.getElementById("searchengineTextbox");
         searchArea.focus();
         searchArea.textContent = "";
       }, 1000);
+      return;
     }
     if (e.target.closest("#search-area")) return;
     
@@ -638,7 +640,9 @@ async function updateModuleIcons() {
     // Start long-press timer
     keyHoldTimer = setTimeout(() => {
       if (keyIsDown) {
-        // LONG PRESS → TELEPORT
+        const searchArea = document.getElementById("searchengineTextbox");
+        searchArea.focus();
+        searchArea.textContent = "";
         pulseTeleportKey(e);
       }
     }, 1500);
@@ -651,6 +655,10 @@ async function updateModuleIcons() {
     if (keyHoldTimer) {
       clearTimeout(keyHoldTimer);
       keyHoldTimer = null;
+    }
+    if (keyHold2Timer) {
+      clearTimeout(keyHold2Timer);
+      keyHold2Timer = null;
     }
   });
 }
