@@ -196,7 +196,7 @@ async function pbWarmPath(origin) {
   // Ignore chrome:// and extension pages
   if (
     !origin ||
-    origin.startsWith("chrome://") ||
+    (origin.startsWith("chrome://") && !origin.includes("newtab")) ||
     origin.startsWith("chrome-extension://")
   ) {
     return;

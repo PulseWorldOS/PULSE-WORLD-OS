@@ -781,7 +781,7 @@
           <p class="card-subtitle">Warm‑State Reactor & Universe Accelerator.</p>
           <ul class="card-list">
             <li>Keeps all OS modules warm inside New Tab.</li>
-            <li>Maintains continuous acceleration for PulseWorld realms.</li>
+            <li>Maintains continuous acceleration for all world realms.</li>
             <li>Preloads and caches modules before user interaction.</li>
             <li>Hydrates service workers with pre‑accelerated state.</li>
             <li>Acts as the OS kernel for world‑layer continuity.</li>

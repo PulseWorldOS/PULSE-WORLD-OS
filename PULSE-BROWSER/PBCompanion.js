@@ -569,6 +569,17 @@ function pbPreload(origin) {
 // GPU WARM (decode shaders early) + Realm counter
 // ---------------------------------------------------------------------------
 function pbGPUWarm() {
+  const canvases = document.querySelectorAll("canvas");
+  const videos = document.querySelectorAll("video");
+
+  canvases.forEach((c) => {
+    try { c.getContext("webgl") || c.getContext("webgl2"); } catch (_) {}
+  });
+
+  videos.forEach((v) => {
+    try { v.play().catch(() => {}); } catch (_) {}
+  });
+
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM" });
   console.log("%c[PBAccelerator] GPU Warm", "color:#00C8FF;");
 }
@@ -577,7 +588,11 @@ function pbGPUWarm() {
 // DECODE WARM (image decode warm-path) + Realm counter
 // ---------------------------------------------------------------------------
 function pbDecodeWarm() {
-  chrome.runtime.sendMessage({ type: "PBCONTENT_DECODEWARM" });
+  document.querySelectorAll("img").forEach(img => {
+    try { img.decode?.().catch(() => {}); } catch (_) {}
+  });
+
+  chrome.runtime.sendMessage({ type: "PBCONTENT_DECODEWARM_EXTRA" });
   console.log("%c[PBAccelerator] Decode Warm", "color:#00C8FF;");
 }
 
@@ -628,6 +643,12 @@ function broadcastRealmState() {
   });
 }
 
+async function pbWarmPaths(origins) {
+  // Ignore chrome:// and extension pages EXCEPT newtab
+  origins.forEach((origin) => {
+    pbWarmPath(origin);
+  });
+}
 // ---------------------------------------------------------------------------
 // FULL WARM-PATH (preconnect + preload + prefetch + GPU + decode + realm)
 // Also emits PBACC_WARMPATH_EVENT for Realm HUD.
@@ -832,8 +853,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBACC_WARMPATH_EVENT":
-      if (Array.isArray(msg.origins)) pbWarmPath(msg.origins);
-      if (msg.origin) pbWarmPath(msg.origin);
+      if (Array.isArray(msg.origins)) pbWarmPaths(msg.origins);
       pbWarmBoot();
       sendResponse({ ok: true });
       break;

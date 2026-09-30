@@ -744,8 +744,8 @@ async function getFavicon(url, flags = {}) {
 
   // ⭐ If cached → return instantly
   if (FAVICON_CACHE[host]) {
-    // const IconURL = icon;
-    // icon = await fetchAndStoreIcon(host, IconURL);
+    const IconURL = icon;
+    icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -770,6 +770,8 @@ async function getFavicon(url, flags = {}) {
     // Special cases
     if (host.includes("office.com")) {
       icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      const IconURL = icon;
+      icon = await fetchAndStoreIcon(host, IconURL);
       FAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
@@ -777,6 +779,8 @@ async function getFavicon(url, flags = {}) {
 
     if (host.includes("github.com")) {
       icon = "https://github.githubassets.com/favicons/favicon.svg";
+      const IconURL = icon;
+      icon = await fetchAndStoreIcon(host, IconURL);
       FAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
@@ -784,6 +788,8 @@ async function getFavicon(url, flags = {}) {
 
     if (host.includes("youtube.com")) {
       icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      const IconURL = icon;
+      icon = await fetchAndStoreIcon(host, IconURL);
       FAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
@@ -791,6 +797,8 @@ async function getFavicon(url, flags = {}) {
 
     if (host.includes("discord.com")) {
       icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      const IconURL = icon;
+      icon = await fetchAndStoreIcon(host, IconURL);
       FAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
@@ -809,6 +817,8 @@ async function getFavicon(url, flags = {}) {
       else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
       else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
       else icon = `${u.origin}/PWFavIcon.ico`;
+      const IconURL = icon;
+      icon = await fetchAndStoreIcon(host, IconURL);
 
       FAVICON_CACHE[host] = icon;
       saveCache();
