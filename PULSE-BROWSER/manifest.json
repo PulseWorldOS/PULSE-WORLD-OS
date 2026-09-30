@@ -89,7 +89,6 @@
       "PBFrontPage.js",
       "PBNavigator.js",
       "PBInterceptor.js",
-      "PBRealmBridge.js",
       "PBRouter.js",
       "PBPopup.js",      
       "PBCompanion.js",

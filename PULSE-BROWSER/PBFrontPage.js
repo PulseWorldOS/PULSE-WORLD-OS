@@ -1543,12 +1543,27 @@ setInterval(() => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: PB_HOMES
+    });
+
     Links.forEach(url => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: Links
+    });
+
     temporaryLinks.forEach(url => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
+    });
+
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: temporaryLinks
     });
 
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);

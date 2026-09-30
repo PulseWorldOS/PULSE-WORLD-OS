@@ -54,7 +54,6 @@ self.addEventListener("install", event => {
     "PBCompanion.js",
     "PBInterceptor.js",
     "PBAccelerator.js",
-    "PBRealmBridge.js",
     "PBRouter.js",
     "PBSettings.js",
     "android-chrome-192x192.png",
@@ -569,17 +568,6 @@ function pbPreload(origin) {
 // GPU WARM (decode shaders early) + Realm counter
 // ---------------------------------------------------------------------------
 function pbGPUWarm() {
-  const canvases = document.querySelectorAll("canvas");
-  const videos = document.querySelectorAll("video");
-
-  canvases.forEach((c) => {
-    try { c.getContext("webgl") || c.getContext("webgl2"); } catch (_) {}
-  });
-
-  videos.forEach((v) => {
-    try { v.play().catch(() => {}); } catch (_) {}
-  });
-
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM" });
   console.log("%c[PBAccelerator] GPU Warm", "color:#00C8FF;");
 }
@@ -588,11 +576,7 @@ function pbGPUWarm() {
 // DECODE WARM (image decode warm-path) + Realm counter
 // ---------------------------------------------------------------------------
 function pbDecodeWarm() {
-  document.querySelectorAll("img").forEach(img => {
-    try { img.decode?.().catch(() => {}); } catch (_) {}
-  });
-
-  chrome.runtime.sendMessage({ type: "PBCONTENT_DECODEWARM_EXTRA" });
+  chrome.runtime.sendMessage({ type: "PBCONTENT_DECODEWARM" });
   console.log("%c[PBAccelerator] Decode Warm", "color:#00C8FF;");
 }
 
@@ -854,7 +838,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBACC_WARMPATH_EVENT":
       if (Array.isArray(msg.origins)) pbWarmPaths(msg.origins);
-      pbWarmBoot();
       sendResponse({ ok: true });
       break;
 
