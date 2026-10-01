@@ -180,16 +180,56 @@ function saveCache() {
   chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
 }
 
+// ---------------------------------------------------------
+// ⭐ TINYPNG-STYLE COMPRESSION (Canvas → WebP)
+// ---------------------------------------------------------
+async function compressImageTinyPNGStyle(blob) {
+  return new Promise((resolve) => {
+    const img = new Image();
 
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(
+          (compressed) => {
+            resolve(compressed || blob); // fallback
+          },
+          "image/webp",
+          0.82
+        );
+      } catch (err) {
+        console.warn("Compression failed, fallback to original blob:", err);
+        resolve(blob);
+      }
+    };
+
+    img.onerror = () => {
+      console.warn("Image load failed during compression, fallback.");
+      resolve(blob);
+    };
+
+    img.src = URL.createObjectURL(blob);
+  });
+}
+
+
+// ---------------------------------------------------------
+// ⭐ FETCH → COMPRESS → BASE64 → STORE
+// ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
   try {
     const response = await fetch(iconUrl);
-
     if (!response.ok) throw new Error("Fetch failed");
 
-    const blob = await response.blob();
+    let blob = await response.blob();
 
-    // ⭐ Fallback if blob is empty or unreadable
+    // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
       console.warn("Empty favicon blob, falling back:", iconUrl);
       FAVICON_CACHE[host] = iconUrl;
@@ -197,28 +237,31 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return iconUrl;
     }
 
+    // ⭐ Compress the blob (TinyPNG-style)
+    blob = await compressImageTinyPNGStyle(blob);
+
     const reader = new FileReader();
 
     return new Promise((resolve) => {
       reader.onloadend = () => {
         const base64 = reader.result;
 
-        // ⭐ Fallback if Base64 is invalid
+        // ⭐ Validate Base64
         if (
           !base64 ||
           typeof base64 !== "string" ||
           base64.trim() === "" ||
-          base64.startsWith("data:") && base64.length < 10 ||
+          (base64.startsWith("data:") && base64.length < 20) ||
           base64.startsWith("data:text")
         ) {
           console.warn("Invalid Base64 favicon, falling back:", iconUrl);
           FAVICON_CACHE[host] = iconUrl;
           saveCache();
           resolve(iconUrl);
-          return iconUrl;
+          return;
         }
 
-        // ⭐ Save actual icon data
+        // ⭐ Save compressed Base64
         FAVICON_CACHE[host] = base64;
         saveCache();
         resolve(base64);
@@ -237,12 +280,13 @@ async function fetchAndStoreIcon(host, iconUrl) {
   } catch (err) {
     console.warn("Favicon fetch failed:", iconUrl, err);
 
-    // ⭐ Store fallback URL (last resort)
+    // ⭐ Last resort fallback
     FAVICON_CACHE[host] = iconUrl;
     saveCache();
     return iconUrl;
   }
 }
+
 
 
 async function getFavicon(url, flags = {}) {

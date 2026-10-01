@@ -449,7 +449,7 @@ function describeValueType(value) {
   return out;
 }
 
-export function normalizeImage(value, mime = "image/png") {
+export function normalizeImage(value, mime = "image/webp") {
   const start = performance.now();
   const inType = describeValueType(value);
 
