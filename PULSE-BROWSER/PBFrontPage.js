@@ -383,7 +383,6 @@ function pbPreconnect(origins = []) {
   origins.forEach((origin) => {
     pbDNSWarm(origin);
     pbTLSWarm(origin);
-    pbProtocolWarm(origin);
   });
   console.log("%c[PBAccelerator] Preconnect:", "color:#00C8FF;", origins);
 }
@@ -413,19 +412,6 @@ function pbTLSWarm(origin) {
   } catch (_) {}
 }
 
-// ---------------------------------------------------------------------------
-// HTTP/2 / HTTP/3 / QUIC Warm (protocol warm-path)
-// ---------------------------------------------------------------------------
-function pbProtocolWarm(origin) {
-  try {
-    const link = document.createElement("link");
-    link.rel = "preconnect";
-    link.href = origin;
-    document.head.appendChild(link);
-
-    console.log("%c[PBAccelerator] Protocol Warm:", "color:#00C8FF;", origin);
-  } catch (_) {}
-}
 
 async function pbModuleWarmBoot(settings) {
 
