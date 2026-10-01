@@ -584,7 +584,7 @@ const mutationObserver = new MutationObserver((mutations) => {
     return;
   }
 
-  if (now - lastSend > 50) {
+  if (now - lastSend > 250) {
     chrome.runtime.sendMessage({
       type: "PBCONTENT_MUTATION",
       count: pendingMutations,
