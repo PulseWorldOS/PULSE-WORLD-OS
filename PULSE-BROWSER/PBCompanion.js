@@ -95,9 +95,9 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
 
   // // Skip chrome-extension:// URLs (cannot be cached)
-  // if (req.url.startsWith('chrome-extension://')) {
-  //   return; // Let the browser handle extension assets normally
-  // }
+  if (req.url.startsWith('chrome://extensions/')) {
+     return; // Let the browser handle extension assets normally
+  }
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
@@ -523,7 +523,7 @@ function pbPrefetch(urls = []) {
   urls.forEach((url) => {
     try { fetch(url, { cache: "force-cache" }).catch(() => {}); } catch (_) {}
   });
-  PBQuantumPrefetch.prefetchLink();
+
   // Asset warm-path counter
   if (urls.length > 0) {
     chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: urls.length });
@@ -672,9 +672,7 @@ async function pbWarmPath(origin) {
   
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered++;
-  PulseRealmState.lastWarmOrigin = origin;
-  broadcastRealmState();
-  
+  PulseRealmState.lastWarmOrigin = origin;  
 
   console.log(
     "%c[PBAccelerator] Warm-path (full):",
@@ -708,9 +706,6 @@ async function pbAccelerate(url) {
 // AUTO HOME WARM-BOOT (for your 9 domains)
 // ---------------------------------------------------------------------------
 async function pbHomeWarmBoot() {
-  const S = await getSettings();
-  if (!S.accelHomeWarmBoot) return;
-
   const origins = PB_HOMES.map((d) => "https://" + d);
   pbPreconnect(origins);
 
@@ -1434,7 +1429,6 @@ const PBTemporalCache = {
       } catch (_) {}
     }
     PulseRealmState.warmAssetsTriggered = PulseRealmState.warmAssetsTriggered + set.size;
-    broadcastRealmState();
     console.log("[PBTemporalCache] Warmed recent assets for", origin, set.size);
   }
 };
@@ -1485,7 +1479,6 @@ const PBGlobalAssetMap = {
       } catch (_) {}
     }
     PulseRealmState.warmAssetsTriggered = PulseRealmState.warmAssetsTriggered + urlsToWarm.length;
-    broadcastRealmState();
     console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, urlsToWarm.length);
   }
 };

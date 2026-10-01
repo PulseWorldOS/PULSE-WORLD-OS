@@ -1498,7 +1498,7 @@ setInterval(() => {
   function getWarmInterval(links, homes, temp) {
     const allTargets = [...links, ...homes, ...temp];
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
-    return hasEnterprise ? 20000 : 10000; // 15s for enterprise, 8s for normal
+    return hasEnterprise ? 30000 : 15000; // 15s for enterprise, 8s for normal
   }
 
   async function pbRefreshWarmDocument() {
@@ -1543,27 +1543,12 @@ setInterval(() => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
-    chrome.runtime.sendMessage({
-      type: "PBACC_WARMPATH_EVENT",
-      origins: PB_HOMES
-    });
-
     Links.forEach(url => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
-    chrome.runtime.sendMessage({
-      type: "PBACC_WARMPATH_EVENT",
-      origins: Links
-    });
-
     temporaryLinks.forEach(url => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
-    });
-
-    chrome.runtime.sendMessage({
-      type: "PBACC_WARMPATH_EVENT",
-      origins: temporaryLinks
     });
 
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);

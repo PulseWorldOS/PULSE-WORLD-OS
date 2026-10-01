@@ -224,7 +224,6 @@ async function pbWarmPath(origin) {
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered++;
   PulseRealmState.lastWarmOrigin = origin;
-  broadcastRealmState();
 
   console.log(
     "%c[PBAccelerator] Warm-path (full):",

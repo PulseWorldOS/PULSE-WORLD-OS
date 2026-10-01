@@ -566,7 +566,7 @@ if (document.getElementById("tetherBtn")) {
   document.getElementById("tetherBtn").onclick = () => {
     if (document.getElementById("tetherCode").value && document.getElementById("tetherCode").value.length === 4) {
       try {
-        fetch("https://pulseworld.netlify.app/.netlify/functions/PULSE-SERVER-SQL", {
+        fetch("/.netlify/functions/PULSE-SERVER-SQL", {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
           body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
