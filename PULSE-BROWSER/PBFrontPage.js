@@ -1484,7 +1484,7 @@ setInterval(() => {
   function getWarmInterval(links, homes, temp) {
     const allTargets = [...links, ...homes, ...temp];
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
-    return hasEnterprise ? 30000 : 15000; // 15s for enterprise, 8s for normal
+    return hasEnterprise ? 60000 : 30000; // 15s for enterprise, 8s for normal
   }
 
   async function pbRefreshWarmDocument() {

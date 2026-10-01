@@ -762,7 +762,7 @@ async function pbModuleWarmBoot() {
   );
 }
 
-setInterval(pbWarmBoot, 30000);
+setInterval(pbWarmBoot, 60000);
 
 // ---------------------------------------------------------------------------
 // MESSAGE CHANNEL (buttons optional; auto-nav is primary)
