@@ -85,7 +85,8 @@ async function pbWarmBoot() {
 self.addEventListener("activate", (event) => {
   console.log("%c[PULSEWORLD OS KERNEL] Activated",
     "color:#00FF9C; font-weight:bold; font-family:monospace;");
-  event.waitUntil(pbWarmBoot());
+  event.waitUntil(self.clients.claim());
+  pbWarmBoot();
 });
 
 self.addEventListener('fetch', event => {
@@ -805,7 +806,7 @@ async function pbModuleWarmBoot() {
   );
 }
 
-setInterval(pbWarmBoot, 60000);
+setInterval(pbWarmBoot, 45000);
 
 // ---------------------------------------------------------------------------
 // MESSAGE CHANNEL (buttons optional; auto-nav is primary)

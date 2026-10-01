@@ -296,6 +296,7 @@ self.addEventListener('install', event => {
         '/PULSEConfig/PulseWorldVault.txt',
         '/PULSEConfig/PulseWorldMeshLink.txt',
         '/PULSEConfig/PulseWorldAssets.txt',
+        '/PULSEConfig/PulseWorldExtensions.txt',
         '/PULSEConfig/PulseWorldChallenge.txt',
         '/PULSEConfig/PulsePalSettings.txt',
         '/PULSEConfig/PulseWorldScanner.txt',
