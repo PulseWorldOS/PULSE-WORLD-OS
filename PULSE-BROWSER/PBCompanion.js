@@ -630,7 +630,6 @@ function pbHomeRealmWarm(origin) {
     origin + "/PULSEConfig/PULSE-ENGINE-BLOCK.txt",
     origin + "/PULSEConfig/PulseWorldBusiness.txt"
   ];
-  pbPrefetch(urls);
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
 
@@ -640,7 +639,6 @@ function pbRealmWarm(origin) {
     origin + "/404.html",
     origin + "/"
   ];
-  pbPrefetch(urls);
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
 
