@@ -1555,3 +1555,18 @@ setInterval(() => {
     if (Links.length > 0) pbPreconnect(Links);
     if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
   }
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      // Force Chrome to rebuild the GPU layer
+      const body = document.body;
+
+      // Add a temporary class that breaks the stale GPU layer
+      body.classList.add("pulse-gpu-reset");
+
+      // Remove it on the next frame so the repaint happens cleanly
+      requestAnimationFrame(() => {
+        body.classList.remove("pulse-gpu-reset");
+      });
+    }
+  });

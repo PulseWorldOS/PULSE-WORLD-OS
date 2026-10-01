@@ -144,6 +144,13 @@
       to { opacity: 1; }
     }
 
+    .pulse-gpu-reset {
+      /* Any GPU-affecting property works */
+      transform: translateZ(0) !important;
+      opacity: 0.9999 !important; /* forces repaint */
+    }
+
+
     .search:hover {
       background: #33bbffcc;
       box-shadow: 0 0 30px #33bbffcc;
