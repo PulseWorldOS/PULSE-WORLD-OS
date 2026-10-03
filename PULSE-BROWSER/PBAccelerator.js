@@ -379,12 +379,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBACC_GPUWARM":
-      pbGPUWarm();
       sendResponse({ ok: true });
       break;
 
     case "PBACC_DECODEWARM":
-      pbDecodeWarm();
       sendResponse({ ok: true });
       break;
 

@@ -64,7 +64,9 @@ function pbTLSWarm(origin) {
 // Decode a single image safely
 function warmImageDecode(img) {
   if (!img) return;
-  try { img.decode?.().catch(() => {}); } catch (_) {}
+  try { 
+    img.decode?.().catch(() => {}); 
+  } catch (_) {}
 }
 
 // Extract CSS background-image URLs
@@ -108,23 +110,28 @@ function warmCSSImages() {
   document.addEventListener("DOMContentLoaded", startWarmPath);
 })();
 
+// Intelligent throttle window
+let lastWarm = 0;
+const WARM_COOLDOWN = 500; // ms
+
 function startWarmPath() {
-  // If body still doesn't exist, retry shortly
   if (!document.body) {
     setTimeout(startWarmPath, 50);
     return;
   }
 
-  // Warm HTML <img> elements
-  document.querySelectorAll("img").forEach(warmImageDecode);
-
-  // Warm CSS background images
-  warmCSSImages();
+  // Initial warm
+  warmAllImages();
 
   // MutationObserver for future images
   const imgObserver = new MutationObserver(() => {
-    document.querySelectorAll("img").forEach(warmImageDecode);
-    warmCSSImages();
+    const now = performance.now();
+
+    // Throttle: only warm once every 500ms
+    if (now - lastWarm < WARM_COOLDOWN) return;
+    lastWarm = now;
+
+    warmAllImages();
   });
 
   imgObserver.observe(document.body, {
@@ -132,9 +139,18 @@ function startWarmPath() {
     subtree: true
   });
 
-  // Attach Quantum Prefetch
   PBQuantumPrefetch.attachToDocument();
 }
+
+// Unified warm function
+function warmAllImages() {
+  // Warm HTML <img>
+  document.querySelectorAll("img").forEach(warmImageDecode);
+
+  // Warm CSS backgrounds
+  warmCSSImages();
+}
+
 
 
 
@@ -617,7 +633,7 @@ const mutationObserver = new MutationObserver((mutations) => {
     chrome.runtime.sendMessage({
       type: "PBCONTENT_MUTATION",
       count: pendingMutations,
-      ts: Date.now()
+      ts: new Date().toLocaleString()
     });
     pendingMutations = 0;
     lastSend = now;
@@ -630,7 +646,6 @@ mutationObserver.observe(document.documentElement, {
 });
 
 
-
 // ---------------------------------------------------------------------------
 // 4. PERFORMANCE PHYSICS
 // ---------------------------------------------------------------------------
@@ -640,9 +655,10 @@ const perfObserver = new PerformanceObserver((list) => {
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
       location.protocol === "chrome-extension:"
-    ) {
-      return;
-    }
+  ) {
+    return;
+  }
+
   chrome.runtime.sendMessage({
     type: "PBCONTENT_PERF",
     ts: Date.now(),
@@ -653,8 +669,8 @@ const perfObserver = new PerformanceObserver((list) => {
     })),
   });
 });
-perfObserver.observe({ entryTypes: ["resource", "navigation"] });
 
+perfObserver.observe({ entryTypes: ["resource", "navigation"] });
 
 // ---------------------------------------------------------------------------
 // 6. GPU WARM-PATH (canvas + video)
@@ -674,7 +690,7 @@ function warmGPU() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM" });
 }
 
-setTimeout(warmGPU, 500);
+// setTimeout(warmGPU, 500);
 
 // ---------------------------------------------------------------------------
 // 7. WORLD-BAND EXTRACTION (PulseWorld OS)
@@ -719,6 +735,10 @@ chrome.runtime.onMessage.addListener((msg) => {
 
     case "PBACC_GPUWARM":
       warmGPU();
+      break;
+
+    case "PBACC_GPUWARM_EXTRA":
+      gpuWarmExtra();
       break;
 
     case "PBACC_DECODEWARM":
@@ -881,31 +901,74 @@ function injectPulseFlag() {
 
 
 // ============================================================================
-// 12. PBAssetCollectorContent — Collect scripts/styles/images → Kernel
+// 15. PBContentDecodeWarm++ — Aggressive decode warm
 // ============================================================================
 
-function collectPageAssets() {
+function collectAndWarmAssetsContent() {
   const assets = [];
 
-  // Scripts
-  document.querySelectorAll("script[src]").forEach(el => assets.push(el.src));
+  // -------------------------------------------------------
+  // 1. Scripts
+  // -------------------------------------------------------
+  document.querySelectorAll("script[src]").forEach(el => {
+    assets.push(el.src);
+  });
 
-  // Stylesheets
-  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => assets.push(el.href));
+  // -------------------------------------------------------
+  // 2. Stylesheets
+  // -------------------------------------------------------
+  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => {
+    assets.push(el.href);
+  });
 
-  // Images
-  document.querySelectorAll("img[src]").forEach(el => assets.push(el.src));
+  // -------------------------------------------------------
+  // 3. HTML Images
+  // -------------------------------------------------------
+  const htmlImgs = [...document.querySelectorAll("img[src]")];
+  htmlImgs.forEach(el => assets.push(el.src));
 
+  // -------------------------------------------------------
+  // 4. CSS Background Images
+  // -------------------------------------------------------
+  const bgImgs = [...document.querySelectorAll("*")]
+    .map(el => getComputedStyle(el).backgroundImage)
+    .filter(bg => bg && bg !== "none")
+    .map(bg => {
+      const match = bg.match(/url\(["']?(.*?)["']?\)/);
+      return match ? match[1] : null;
+    })
+    .filter(Boolean);
+
+  bgImgs.forEach(src => assets.push(src));
+
+  // -------------------------------------------------------
+  // 5. Decode Warm (HTML + CSS synthetic)
+  // -------------------------------------------------------
+  const syntheticImgs = bgImgs.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+
+  const allImgs = [...htmlImgs, ...syntheticImgs];
+  const decodeCount = allImgs.length;
+
+  allImgs.forEach(img => {
+    try { img.decode?.().catch(() => {}); } catch (_) {}
+  });
+
+  // -------------------------------------------------------
+  // 6. Send unified front‑page report
+  // -------------------------------------------------------
   chrome.runtime.sendMessage({
     type: "PB_ASSET_LIST_CONTENT",
-    pageUrl: window.location.href,
-    assets
+    pageUrl: location.href,
+    assets,
+    decodeCount
   });
 }
 
-setTimeout(collectPageAssets, 150);
-
-document.addEventListener("DOMContentLoaded", collectPageAssets);
+document.addEventListener("DOMContentLoaded", collectAndWarmAssetsContent);
 
 
 // ============================================================================
@@ -927,12 +990,16 @@ setTimeout(triggerWarmPaths, 300);
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
 
+
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-
+  let count = 0;
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
-    try { el.getContext?.("webgl") || el.getContext?.("webgl2"); } catch (_) {}
+    try { 
+      el.getContext?.("webgl") || el.getContext?.("webgl2");
+      count += 1;
+     } catch (_) {}
     try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
   });
@@ -943,6 +1010,7 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
+        count += 1;
         // Create a tiny GPU workload to warm the queue
         const queue = device.queue;
         const buffer = device.createBuffer({
@@ -954,53 +1022,10 @@ async function gpuWarmExtra() {
     }
   } catch (_) {}
 
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA" });
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", count });
 }
 
-
-setTimeout(gpuWarmExtra, 1200);
-
-
-// ============================================================================
-// 15. PBContentDecodeWarm++ — Aggressive decode warm
-// ============================================================================
-
-function decodeWarmExtra() {
-  const imgs = [...document.querySelectorAll("img")];
-
-  // CSS background images
-  const bgImgs = [...document.querySelectorAll("*")]
-    .map(el => getComputedStyle(el).backgroundImage)
-    .filter(bg => bg && bg !== "none")
-    .map(bg => {
-      // background-image: url("https://example.com/image.jpg")
-      const match = bg.match(/url\(["']?(.*?)["']?\)/);
-      return match ? match[1] : null;
-    })
-    .filter(Boolean);
-
-  // Create synthetic Image objects for CSS backgrounds
-  const syntheticImgs = bgImgs.map(src => {
-    const img = new Image();
-    img.src = src;
-    return img;
-  });
-
-  const allImgs = [...imgs, ...syntheticImgs];
-  const count = allImgs.length;
-
-  allImgs.forEach(img => {
-    try { img.decode?.().catch(() => {}); } catch (_) {}
-  });
-
-  chrome.runtime.sendMessage({
-    type: "PBCONTENT_DECODEWARM_EXTRA",
-    count
-  });
-}
-
-
-setTimeout(decodeWarmExtra, 900);
+setTimeout(gpuWarmExtra, 900);
 
 
 // ============================================================================

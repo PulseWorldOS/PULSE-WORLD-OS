@@ -596,7 +596,7 @@ function pbPreload(origin) {
 // GPU WARM (decode shaders early) + Realm counter
 // ---------------------------------------------------------------------------
 function pbGPUWarm() {
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM" });
+  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM" });
   console.log("%c[PBAccelerator] GPU Warm", "color:#00C8FF;");
 }
 
@@ -604,7 +604,7 @@ function pbGPUWarm() {
 // DECODE WARM (image decode warm-path) + Realm counter
 // ---------------------------------------------------------------------------
 function pbDecodeWarm() {
-  chrome.runtime.sendMessage({ type: "PBCONTENT_DECODEWARM" });
+  chrome.runtime.sendMessage({ type: "PBACC_DECODEWARM" });
   console.log("%c[PBAccelerator] Decode Warm", "color:#00C8FF;");
 }
 
@@ -797,6 +797,7 @@ async function pbModuleWarmBoot() {
 
 setInterval(pbWarmBoot, 45000);
 
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
@@ -829,12 +830,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBACC_GPUWARM":
-      pbGPUWarm();
+      PulseRealmState.gpuWarmCount += msg.count || 1;
+      sendResponse({ ok: true });
+      break;
+
+    case "PBACC_GPUWARM_EXTRA":
+      PulseRealmState.gpuWarmCount += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
     case "PBACC_DECODEWARM":
-      pbDecodeWarm();
+      PulseRealmState.imagesDecoded += msg.count || 1;
+      sendResponse({ ok: true });
+      break;
+
+    case "PBACC_DECODEWARM_EXTRA":
+      PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
@@ -893,8 +904,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "PULSE_OS_PING":
-      now = new Date();
-      PulseRealmState.lastPing = now.toLocaleString();
+      PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true, ts: PulseRealmState.lastPing });
       break;
 
@@ -907,13 +917,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_PERF":
       PulseRealmState.perfEntries = msg.entries || [];
-      PulseRealmState.perfLastNavigation = msg.ts || Date.now();
+      PulseRealmState.perfLastNavigation = msg.ts || now;
       sendResponse({ ok: true });
       break;
-
+    
     case "PBCONTENT_MUTATION":
       PulseRealmState.mutationCount += msg.count || 0;
-      PulseRealmState.lastMutationTS = msg.ts || Date.now();
+      PulseRealmState.lastMutationTS = msg.ts || now;
       sendResponse({ ok: true });
       break;
 
@@ -922,7 +932,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_GPUWARM":
     case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount ++;
+      PulseRealmState.gpuWarmCount += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
@@ -969,8 +979,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBREALM_UPDATE":
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      now = new Date();
-      PulseRealmState.lastPing = now.toLocaleString();
+      PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true });
       break;
 
@@ -1026,6 +1035,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
+        PulseRealmState.imagesDecoded += msg.decodeCount || 1;
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1035,10 +1045,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_FRONT":
       try {
-        const origin = new URL(msg.pageUrl).origin;
-        PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
-        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
+        const originfile = new URL(msg.pageUrl).origin + "/PBFrontPage.html";
+        PBGlobalAssetMap?.scanAndWarm?.(originfile, msg.assets || []);
+        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(originfile, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
+        PulseRealmState.imagesDecoded += msg.decodeCount || 1;
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1061,8 +1072,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      now = new Date();
-      PulseRealmState.lastPing = now.toLocaleString();
+      PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true });
       break;
 
@@ -1075,7 +1085,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 // ============================================================================
 //  SECTION 2 — SETTINGS (Full OS Registry)
 // ============================================================================
-const PB_DEFAULT_SETTINGS = {
+const PB_SW_SETTINGS = {
   enableInterceptor: true,
   enableAccelerator: true,
   enableNavigator: true,
@@ -1143,8 +1153,8 @@ const PB_DEFAULT_SETTINGS = {
 
 function pbLoadSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(PB_DEFAULT_SETTINGS, (data) => {
-      resolve(data || PB_DEFAULT_SETTINGS);
+    chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
+      resolve(data || PB_SW_SETTINGS);
     });
   });
 }

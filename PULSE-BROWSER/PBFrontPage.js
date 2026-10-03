@@ -38,10 +38,13 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-
+  let count = 0;
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
-    try { el.getContext?.("webgl") || el.getContext?.("webgl2"); } catch (_) {}
+    try { 
+      el.getContext?.("webgl") || el.getContext?.("webgl2");
+      count += 1;
+     } catch (_) {}
     try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
   });
@@ -52,6 +55,7 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
+        count += 1;
         // Create a tiny GPU workload to warm the queue
         const queue = device.queue;
         const buffer = device.createBuffer({
@@ -63,79 +67,81 @@ async function gpuWarmExtra() {
     }
   } catch (_) {}
 
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA" });
+  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM_EXTRA", count });
 }
 
 
-setTimeout(gpuWarmExtra, 1200);
+setTimeout(gpuWarmExtra, 900);
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
 // ============================================================================
 
-function decodeWarmExtra() {
-  const imgs = [...document.querySelectorAll("img")];
+function collectAndWarmAssetsFront() {
+  const assets = [];
 
-  // CSS background images
+  // -------------------------------------------------------
+  // 1. Scripts
+  // -------------------------------------------------------
+  document.querySelectorAll("script[src]").forEach(el => {
+    assets.push(el.src);
+  });
+
+  // -------------------------------------------------------
+  // 2. Stylesheets
+  // -------------------------------------------------------
+  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => {
+    assets.push(el.href);
+  });
+
+  // -------------------------------------------------------
+  // 3. HTML Images
+  // -------------------------------------------------------
+  const htmlImgs = [...document.querySelectorAll("img[src]")];
+  htmlImgs.forEach(el => assets.push(el.src));
+
+  // -------------------------------------------------------
+  // 4. CSS Background Images
+  // -------------------------------------------------------
   const bgImgs = [...document.querySelectorAll("*")]
     .map(el => getComputedStyle(el).backgroundImage)
     .filter(bg => bg && bg !== "none")
     .map(bg => {
-      // background-image: url("https://example.com/image.jpg")
       const match = bg.match(/url\(["']?(.*?)["']?\)/);
       return match ? match[1] : null;
     })
     .filter(Boolean);
 
-  // Create synthetic Image objects for CSS backgrounds
+  bgImgs.forEach(src => assets.push(src));
+
+  // -------------------------------------------------------
+  // 5. Decode Warm (HTML + CSS synthetic)
+  // -------------------------------------------------------
   const syntheticImgs = bgImgs.map(src => {
     const img = new Image();
     img.src = src;
     return img;
   });
 
-  const allImgs = [...imgs, ...syntheticImgs];
-  const count = allImgs.length;
+  const allImgs = [...htmlImgs, ...syntheticImgs];
+  const decodeCount = allImgs.length;
 
   allImgs.forEach(img => {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
-
-  chrome.runtime.sendMessage({
-    type: "PBCONTENT_DECODEWARM_EXTRA",
-    count
-  });
-}
-
-setTimeout(decodeWarmExtra, 900);
-
-
-// ============================================================================
-// 12. PBAssetCollectorContent — Collect scripts/styles/images → Kernel
-// ============================================================================
-
-function collectPageAssets() {
-  const assets = [];
-
-  // Scripts
-  document.querySelectorAll("script[src]").forEach(el => assets.push(el.src));
-
-  // Stylesheets
-  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => assets.push(el.href));
-
-  // Images
-  document.querySelectorAll("img[src]").forEach(el => assets.push(el.src));
-
+  
+  // -------------------------------------------------------
+  // 6. Send unified front‑page report
+  // -------------------------------------------------------
   chrome.runtime.sendMessage({
     type: "PB_ASSET_LIST_FRONT",
-    pageUrl: window.location.href,
-    assets
+    pageUrl: location.href,
+    assets,
+    decodeCount
   });
 }
 
-setTimeout(collectPageAssets, 150);
-
-document.addEventListener("DOMContentLoaded", collectPageAssets);
+setTimeout(collectAndWarmAssetsFront, 600);
 
 // Normalize identity to domain or subdomain level
 function normalizeIdentity(url) {
@@ -1688,7 +1694,7 @@ setInterval(() => {
       PulseRealmSettings.acceleratedModule5Link
     ].filter(u => u && u.startsWith("http"));
 
-    decodeWarmExtra();
+    collectAndWarmAssetsFront();
 
     const container = document.getElementById("pbWarmContainer");
     if (!container) return;
@@ -1720,6 +1726,11 @@ setInterval(() => {
       type: "PBACC_WARMPATH_EVENT",
       origins: Links
     });
+
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: temporaryLinks
+    });
   }
 
   document.addEventListener("visibilitychange", () => {
@@ -1742,3 +1753,5 @@ setInterval(() => {
       });
     }
   });
+
+  

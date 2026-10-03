@@ -99,21 +99,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       break;
 
-    // ---------------------------------------------------------
-    // PERFORMANCE EVENTS (from PBContent)
-    // ---------------------------------------------------------
     case "PBCONTENT_PERF":
       PulseRealmState.perfEntries = msg.entries || [];
-      PulseRealmState.perfLastNavigation = msg.ts || Date.now();
+      PulseRealmState.perfLastNavigation = msg.ts || now;
       sendResponse({ ok: true });
       break;
-
-    // ---------------------------------------------------------
-    // MUTATION EVENTS (from PBContent)
-    // ---------------------------------------------------------
+    
     case "PBCONTENT_MUTATION":
       PulseRealmState.mutationCount += msg.count || 0;
-      PulseRealmState.lastMutationTS = msg.ts || Date.now();
+      PulseRealmState.lastMutationTS = msg.ts || now;
       sendResponse({ ok: true });
       break;
 
@@ -121,12 +115,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // GPU WARM-PATH (from PBContent / PBAccelerator)
     // ---------------------------------------------------------
     case "PBCONTENT_GPUWARM":
-      PulseRealmState.gpuWarmCount++;
+      PulseRealmState.gpuWarmCount += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
     case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount++;
+      PulseRealmState.gpuWarmCount += msg.count || 1;
       sendResponse({ ok: true });
       break;
     // ---------------------------------------------------------
