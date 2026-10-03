@@ -170,14 +170,14 @@ const PBUniversalBoost = {
 let FAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["faviconCaches"], (res) => {
-  if (res.faviconCaches) {
-    FAVICON_CACHE = res.faviconCaches;
+chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
+  if (res.ModuleFaviconCaches) {
+    FAVICON_CACHE = res.ModuleFaviconCaches;
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
+  chrome.storage.local.set({ ModuleFaviconCaches: FAVICON_CACHE });
 }
 
 // ---------------------------------------------------------
@@ -222,7 +222,7 @@ function receiveRealmState() {
   chrome.tabs.query({}, (tabs) => {
     for (const tab of tabs) {
       chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realm) => {
-        write("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(realm.state, null, 2));
+        console.log("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(realm.state, null, 2));
       });
     }
   });

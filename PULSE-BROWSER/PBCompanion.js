@@ -145,14 +145,14 @@ const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 let FAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["faviconCaches"], (res) => {
-  if (res.faviconCaches) {
-    FAVICON_CACHE = res.faviconCaches;
+chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
+  if (res.ModuleFaviconCaches) {
+    FAVICON_CACHE = res.ModuleFaviconCaches;
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
+  chrome.storage.local.set({ ModuleFaviconCaches: FAVICON_CACHE });
 }
 
 // ---------------------------------------------------------
