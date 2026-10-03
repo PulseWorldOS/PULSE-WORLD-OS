@@ -80,6 +80,7 @@ self.addEventListener("install", event => {
 async function pbWarmBoot() {
   await pbHomeWarmBoot();
   await pbModuleWarmBoot();
+  broadcastRealmState();
 }
 
 self.addEventListener("activate", (event) => {
@@ -144,14 +145,14 @@ const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 let FAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["faviconCaches2"], (res) => {
-  if (res.faviconCaches2) {
-    FAVICON_CACHE = res.faviconCaches2;
+chrome.storage.local.get(["faviconCaches"], (res) => {
+  if (res.faviconCaches) {
+    FAVICON_CACHE = res.faviconCaches;
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ faviconCaches2: FAVICON_CACHE });
+  chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
 }
 
 // ---------------------------------------------------------
@@ -686,7 +687,7 @@ async function pbWarmPath(origin) {
 
   const siblingPaths = [
     "/", "/privacy", "/data", "/termsofuse", "/cookies",
-    "/404", "/realm", "/band", "/map", "/os"
+    "/404", "/about"
   ];
 
   const siblingURLs = siblingPaths.map((p) => origin + p);
@@ -1097,27 +1098,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PULSE_OS_CLEAR_PULSE_CACHES":
       clearPulseCaches().then(() => sendResponse({ ok: true }));
-      PulseRealmState = {
-        lastPing: Date.now(),
-        lastPage: null,
-        lastURL: null,
-        lastDomainClass: null,
-        bands: {},
-        navHistory: [],
-        perfEntries: [],
-        mutationCount: 0,
-        imagesDecoded: 0,
-        gpuWarmCount: 0,
-        warmPathsTriggered: 0,
-        warmAssetsTriggered: 0,
-        flags: {
-          hudActive: true,
-          contentRuntimeActive: true,
-          acceleratorActive: true,
-          routerActive: true,
-          navigatorActive: true
-        }
-      };
       return true;
 
     // ---------------------------------------------------------
@@ -1199,9 +1179,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const origin = new URL(msg.url).origin;
         const origins = [origin];
         chrome.runtime.sendMessage({ type: "PBACC_WARMPATH_EVENT", origins });
-        if (typeof PBUniversalBoost2?.warmOrigin === "function") {
-          PBUniversalBoost2.warmOrigin(origin);
-        }
       }
       sendResponse({ ok: true });
       break;

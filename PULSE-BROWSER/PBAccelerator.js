@@ -218,7 +218,7 @@ async function pbWarmPath(origin) {
 
   const siblingPaths = [
     "/", "/privacy", "/data", "/termsofuse", "/cookies",
-    "/404"
+    "/404", "/about"
   ];
 
   const siblingURLs = siblingPaths.map((p) => origin + p);

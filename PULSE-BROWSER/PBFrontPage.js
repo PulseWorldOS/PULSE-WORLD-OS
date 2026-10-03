@@ -169,12 +169,12 @@ const PBUniversalBoost = {
 // Local in-memory mirror for speed
 let FAVICON_CACHE = {};
 
-// // Load cache from storage at startup
-// chrome.storage.local.get(["faviconCaches"], (res) => {
-//   if (res.faviconCaches) {
-//     FAVICON_CACHE = res.faviconCaches;
-//   }
-// });
+// Load cache from storage at startup
+chrome.storage.local.get(["faviconCaches"], (res) => {
+  if (res.faviconCaches) {
+    FAVICON_CACHE = res.faviconCaches;
+  }
+});
 
 function saveCache() {
   chrome.storage.local.set({ faviconCaches: FAVICON_CACHE });
@@ -218,6 +218,15 @@ async function compressImageTinyPNGStyle(blob) {
   });
 }
 
+function receiveRealmState() {
+  chrome.tabs.query({}, (tabs) => {
+    for (const tab of tabs) {
+      chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realm) => {
+        write("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(realm.state, null, 2));
+      });
+    }
+  });
+}
 
 // ---------------------------------------------------------
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
@@ -330,15 +339,15 @@ async function getFavicon(url, flags = {}) {
 
 
   const PB_HOMES = [
-    "pulseworld.me",
-    "pulseworld.net",
-    "pulseworld.money",
-    "pulseworld.biz",
-    "binaryos.net",
-    "booleanlogic.net",
-    "gpuprocessing.net",
-    "serviceworker.net",
-    "orbitalmap.net"
+    "www.pulseworld.net",
+    "www.pulseworld.me",
+    "www.pulseworld.money",
+    "www.pulseworld.biz",
+    "www.binaryos.net",
+    "www.booleanlogic.net",
+    "www.gpuprocessing.net",
+    "www.serviceworker.net",
+    "www.orbitalmap.net"
   ];
 
   try {
@@ -662,8 +671,8 @@ async function updateModuleIcons() {
   pbModuleWarmBoot(settings).catch(() => {});
 
   const PB_HOMES = [
-    "https://www.pulseworld.me",
     "https://www.pulseworld.net",
+    "https://www.pulseworld.me",
     "https://www.pulseworld.money",
     "https://www.pulseworld.biz",
     "https://www.binaryos.net",
@@ -1538,8 +1547,8 @@ setInterval(() => {
     oldSettings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
-      "https://www.pulseworld.me",
       "https://www.pulseworld.net",
+      "https://www.pulseworld.me",
       "https://www.pulseworld.money",
       "https://www.pulseworld.biz",
       "https://www.binaryos.net",
@@ -1584,10 +1593,12 @@ setInterval(() => {
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
     if (Links.length > 0) pbPreconnect(Links);
     if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
+    receiveRealmState();
   }
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
+      receiveRealmState();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 

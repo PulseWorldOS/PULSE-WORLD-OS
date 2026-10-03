@@ -35,8 +35,8 @@ const PB_HOME = [
 // SIBLING ROUTES (Warm-path targets)
 // ---------------------------------------------------------------------------
 const PB_SIBLINGS = [
-  "/", "/home", "/world", "/engine", "/about",
-  "/pulse", "/realm", "/band", "/map", "/os"
+  "/", "/privacy", "/data", "/termsofuse", "/cookies",
+  "/404", "/about"
 ];
 
 // ---------------------------------------------------------------------------
