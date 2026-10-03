@@ -13,14 +13,12 @@ const PulseRealmState = {
   lastURL: null,
   lastDomainClass: null,
   // Bands (PulseWorld / OS)
-  bands: {
-    pulseBand: null,
-    accelBand: null,
-    routerBand: null,
-    gpuBand: null,
-    decodeBand: null,
-    worldBand: null
-  },
+  band: "PulseBand",
+    // accelBand: null,
+    // routerBand: null,
+    // gpuBand: null,
+    // decodeBand: null,
+    // worldBand: null
   navHistory: [],
   perfEntries: [],
   mutationCount: 0,
@@ -970,7 +968,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBREALM_UPDATE":
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
-      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
       PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true });
       break;
@@ -1063,7 +1060,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBREALM_UPDATE_FULL":
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
-      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
       PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true });
       break;

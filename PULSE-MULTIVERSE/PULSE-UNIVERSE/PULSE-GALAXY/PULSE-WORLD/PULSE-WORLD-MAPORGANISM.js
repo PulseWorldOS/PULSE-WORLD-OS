@@ -680,7 +680,14 @@ function attachRuntimeToSnapshot(snapshot) {
       universes: {},
       worlds: {},
       regions: {},
-      bands: {},
+      bands: {
+        pulseBand: "v40.0",
+        accelBand: null,
+        routerBand: null,
+        gpuBand: null,
+        decodeBand: null,
+        worldBand: null
+      },
       satellites: {},
       routes: [],
 
@@ -939,7 +946,14 @@ export function getPulseOrganismMapV32() {
     universes: {},
     worlds: {},
     regions: {},
-    bands: {},
+    bands: {
+      pulseBand: "v40.0",
+      accelBand: null,
+      routerBand: null,
+      gpuBand: null,
+      decodeBand: null,
+      worldBand: null
+    },
     satellites: {},
     routes: [],
 
@@ -1007,7 +1021,14 @@ export async function savePulseOrganismMapSnapshotV32(snapshot) {
       universes: {},
       worlds: {},
       regions: {},
-      bands: {},
+      bands: {
+        pulseBand: "v40.0",
+        accelBand: null,
+        routerBand: null,
+        gpuBand: null,
+        decodeBand: null,
+        worldBand: null
+      },
       satellites: {},
       routes: [],
 

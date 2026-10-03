@@ -89,7 +89,7 @@ function updateKernel(realm) {
     url: ${realm.lastURL || "-"}<br/>
     domain: ${realm.lastDomainClass || "-"}<br/>
     lastPing: ${realm.lastPing || "-"}<br/>
-    bands: ${Object.keys(realm.bands || {}).length}<br/>
+    bands: ${realm.band}<br/>
   `;
 }
 
