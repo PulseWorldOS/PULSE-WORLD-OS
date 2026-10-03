@@ -1031,6 +1031,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     // -------------------------------------------------------
+    // ASSET LIST (Frontpage)
+    // -------------------------------------------------------
+    case "PB_ASSET_LIST_FRONT":
+      try {
+        const origin = new URL(msg.pageUrl).origin;
+        PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
+        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
+        PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
+      } catch (_) {}
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
     // CONTENT WARM-PATH
     // -------------------------------------------------------
     case "PBCONTENT_WARMPATH":

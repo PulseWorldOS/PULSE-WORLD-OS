@@ -107,8 +107,35 @@ function decodeWarmExtra() {
   });
 }
 
-
 setTimeout(decodeWarmExtra, 900);
+
+
+// ============================================================================
+// 12. PBAssetCollectorContent — Collect scripts/styles/images → Kernel
+// ============================================================================
+
+function collectPageAssets() {
+  const assets = [];
+
+  // Scripts
+  document.querySelectorAll("script[src]").forEach(el => assets.push(el.src));
+
+  // Stylesheets
+  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => assets.push(el.href));
+
+  // Images
+  document.querySelectorAll("img[src]").forEach(el => assets.push(el.src));
+
+  chrome.runtime.sendMessage({
+    type: "PB_ASSET_LIST_FRONT",
+    pageUrl: window.location.href,
+    assets
+  });
+}
+
+setTimeout(collectPageAssets, 150);
+
+document.addEventListener("DOMContentLoaded", collectPageAssets);
 
 // Normalize identity to domain or subdomain level
 function normalizeIdentity(url) {
@@ -1592,7 +1619,6 @@ setInterval(() => {
       index = (index + 1) % images.length;
     }, 1500);
   }
-
   
   setInterval(swap, 15000);
       
