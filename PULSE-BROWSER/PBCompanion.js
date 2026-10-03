@@ -1458,9 +1458,9 @@ const PBTemporalCache = {
     for (const url of set) {
       try {
         fetch(url, { cache: "force-cache" }).catch(() => {});
+        PulseRealmState.warmAssetsTriggered += 1;
       } catch (_) {}
     }
-    PulseRealmState.warmAssetsTriggered += set.size;
     console.log("[PBTemporalCache] Warmed recent assets for", origin, set.size);
   }
 };
@@ -1508,9 +1508,9 @@ const PBGlobalAssetMap = {
     for (const url of urlsToWarm) {
       try {
         fetch(url, { cache: "force-cache" }).catch(() => {});
+        PulseRealmState.warmAssetsTriggered += 1;
       } catch (_) {}
     }
-    PulseRealmState.warmAssetsTriggered += urlsToWarm.length;
     console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, urlsToWarm.length);
   }
 };

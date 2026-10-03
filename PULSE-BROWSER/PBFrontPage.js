@@ -11,6 +11,8 @@ let searchEngineActivated = "*Google.com";
 let temporaryLinks = [];
 let engineURL = buildSearchURL("google.com");
 let url = engineURL;
+let PulseRealm = {};
+let PulseRealmSettings = null;
 
 const timerBtn = document.getElementById("timerBtn");
 
@@ -222,7 +224,8 @@ function receiveRealmState() {
   chrome.tabs.query({}, (tabs) => {
     for (const tab of tabs) {
       chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realm) => {
-        console.log("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(realm.state, null, 2));
+        PulseRealm = realm.state || {};
+        console.log("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(PulseRealm, null, 2));
       });
     }
   });
@@ -503,11 +506,10 @@ async function pbModuleWarmBoot(settings) {
 let keyIsDown = false;
 let keyHoldTimer = null;
 let keyHold2Timer = null;
-let oldSettings = null;
 
 async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
-  oldSettings = settings;
+  PulseRealmSettings = settings;
   
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
@@ -767,15 +769,15 @@ async function pulseTeleportKey(event) {
   if (key === "`") {
     link = "https://www.pulseworld.net";
   } else if (key === "b") {
-    link = oldSettings.externalBankLink;
+    link = PulseRealmSettings.externalBankLink;
   } else if (key === "m") {
-    link = oldSettings.externalEmailLink;
+    link = PulseRealmSettings.externalEmailLink;
   } else if (key === "s") {
-    link = oldSettings.externalSocialLink;
+    link = PulseRealmSettings.externalSocialLink;
   } else if (key === "w") {
-    link = oldSettings.externalWorkLink;
+    link = PulseRealmSettings.externalWorkLink;
   } else if (key === "t") {
-    link = oldSettings.externalStreamingLink;
+    link = PulseRealmSettings.externalStreamingLink;
   }
 
   chrome.runtime.sendMessage({
@@ -1142,7 +1144,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
 document.getElementById("moduleEmail").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] Email module clicked. Settings:", settings);
 
@@ -1184,7 +1186,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
 document.getElementById("moduleBank").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] Bank module clicked. Settings:", settings);
 
@@ -1225,7 +1227,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
 document.getElementById("moduleSocial").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] Social Media module clicked. Settings:", settings);
 
@@ -1265,7 +1267,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
 document.getElementById("moduleWork").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] Work module clicked. Settings:", settings);
 
@@ -1305,7 +1307,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
 document.getElementById("moduleStream").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] Streaming module clicked. Settings:", settings);
 
@@ -1346,7 +1348,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 document.getElementById("moduleFav1").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] moduleFav1Icon module clicked. Settings:", settings);
 
@@ -1370,7 +1372,7 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
 document.getElementById("moduleFav2").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] moduleFav2Icon module clicked. Settings:", settings);
 
@@ -1394,7 +1396,7 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
 document.getElementById("moduleFav3").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] moduleFav3Icon module clicked. Settings:", settings);
 
@@ -1418,7 +1420,7 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
 document.getElementById("moduleFav4").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] moduleFav4Icon module clicked. Settings:", settings);
 
@@ -1442,7 +1444,7 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
 document.getElementById("moduleFav5").addEventListener("click", async () => {
 
     const settings = await pbLoadExtensionSettings();
-    oldSettings = settings;
+    PulseRealmSettings = settings;
 
     console.log("[FrontPage] moduleFav5Icon module clicked. Settings:", settings);
 
@@ -1544,7 +1546,7 @@ setInterval(() => {
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
 
-    oldSettings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
       "https://www.pulseworld.net",
@@ -1560,17 +1562,17 @@ setInterval(() => {
 
     const Links = [
       "https://www.google.com",
-      oldSettings.externalBankLink,
-      oldSettings.externalEmailLink,
-      oldSettings.externalSocialLink,
-      oldSettings.externalWorkLink,
-      oldSettings.externalStreamingLink,
-      oldSettings.externalSearchLink,
-      oldSettings.acceleratedModule1Link,
-      oldSettings.acceleratedModule2Link,
-      oldSettings.acceleratedModule3Link,
-      oldSettings.acceleratedModule4Link,
-      oldSettings.acceleratedModule5Link
+      PulseRealmSettings.externalBankLink,
+      PulseRealmSettings.externalEmailLink,
+      PulseRealmSettings.externalSocialLink,
+      PulseRealmSettings.externalWorkLink,
+      PulseRealmSettings.externalStreamingLink,
+      PulseRealmSettings.externalSearchLink,
+      PulseRealmSettings.acceleratedModule1Link,
+      PulseRealmSettings.acceleratedModule2Link,
+      PulseRealmSettings.acceleratedModule3Link,
+      PulseRealmSettings.acceleratedModule4Link,
+      PulseRealmSettings.acceleratedModule5Link
     ].filter(u => u && u.startsWith("http"));
 
     const container = document.getElementById("pbWarmContainer");
@@ -1578,21 +1580,28 @@ setInterval(() => {
 
     container.innerHTML = "";
 
-    PB_HOMES.forEach(url => {
+    PB_HOMES.forEach(url => {      
+      PulseRealm.warmPathsTriggered += 1;
+      PulseRealm.lastWarmOrigin = url;
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     Links.forEach(url => {
+      PulseRealm.warmPathsTriggered += 1;
+      PulseRealm.lastWarmOrigin = url;
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     temporaryLinks.forEach(url => {
+      PulseRealm.warmPathsTriggered += 1;
+      PulseRealm.lastWarmOrigin = url;
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
     if (Links.length > 0) pbPreconnect(Links);
     if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
+    
     receiveRealmState();
   }
 
