@@ -133,12 +133,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // IMAGE DECODE WARM-PATH (from PBContent)
     // ---------------------------------------------------------
     case "PBCONTENT_DECODEWARM":
-      PulseRealmState.imagesDecoded++;
+      PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
     case "PBCONTENT_DECODEWARM_EXTRA":
-      PulseRealmState.imagesDecoded++;
+      PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
@@ -146,12 +146,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // WARM-PATH TRIGGERED (from PBAccelerator)
     // ---------------------------------------------------------
     case "PBACC_WARMPATH_EVENT":
-      PulseRealmState.warmPathsTriggered++;
+      PulseRealmState.warmPathsTriggered += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
     case "PBACC_WARMPATH":
-      PulseRealmState.warmPathsTriggered++;
+      PulseRealmState.warmPathsTriggered += msg.count || 1;
       sendResponse({ ok: true });
       break;
 

@@ -229,7 +229,7 @@ async function pbWarmPath(origin) {
   if (S.accelRealmWarm)  pbRealmWarm(origin);
 
   // 🔥 Realm + HUD integration
-  PulseRealmState.warmPathsTriggered++;
+  PulseRealmState.warmPathsTriggered += 1;
   PulseRealmState.lastWarmOrigin = origin;
 
   console.log(

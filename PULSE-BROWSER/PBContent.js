@@ -917,12 +917,19 @@ setTimeout(gpuWarmExtra, 1200);
 // ============================================================================
 
 function decodeWarmExtra() {
-  document.querySelectorAll("img").forEach(img => {
+  const imgs = document.querySelectorAll("img");
+  const count = imgs.length;
+
+  imgs.forEach(img => {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
 
-  chrome.runtime.sendMessage({ type: "PBCONTENT_DECODEWARM_EXTRA" });
+  chrome.runtime.sendMessage({
+    type: "PBCONTENT_DECODEWARM_EXTRA",
+    count
+  });
 }
+
 
 setTimeout(decodeWarmExtra, 900);
 

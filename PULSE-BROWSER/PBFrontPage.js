@@ -220,18 +220,6 @@ async function compressImageTinyPNGStyle(blob) {
   });
 }
 
-
-function receiveRealmState() {
-  chrome.tabs.query({}, (tabs) => {
-    for (const tab of tabs) {
-      chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realm) => {
-        PulseRealm = realm.state || {};
-        console.log("Pulse HUD refreshed.\nRealm:\n" + JSON.stringify(PulseRealm, null, 2));
-      });
-    }
-  });
-}
-
 // ---------------------------------------------------------
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
@@ -471,9 +459,16 @@ function pbTLSWarm(origin) {
 
 
 async function pbModuleWarmBoot(settings) {
-
-  // Collect all accelerated module links directly from settings
   const warmTargets = [
+    "https://www.pulseworld.net",
+    "https://www.pulseworld.me",
+    "https://www.pulseworld.money",
+    "https://www.pulseworld.biz",
+    "https://www.binaryos.net",
+    "https://www.booleanlogic.net",
+    "https://www.gpuprocessing.net",
+    "https://www.serviceworker.net",
+    "https://www.orbitalmap.net",
     "https://www.google.com",
     settings.externalBankLink,
     settings.externalEmailLink,
@@ -1582,33 +1577,34 @@ setInterval(() => {
     container.innerHTML = "";
 
     PB_HOMES.forEach(url => {      
-      PulseRealm.warmPathsTriggered += 1;
-      PulseRealm.lastWarmOrigin = url;
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     Links.forEach(url => {
-      PulseRealm.warmPathsTriggered += 1;
-      PulseRealm.lastWarmOrigin = url;
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     temporaryLinks.forEach(url => {
-      PulseRealm.warmPathsTriggered += 1;
-      PulseRealm.lastWarmOrigin = url;
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
     if (Links.length > 0) pbPreconnect(Links);
     if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
-    
-    receiveRealmState();
+
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: PB_HOMES
+    });
+
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: Links
+    });
   }
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
-      receiveRealmState();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 

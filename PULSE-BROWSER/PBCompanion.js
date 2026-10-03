@@ -688,7 +688,7 @@ async function pbWarmPath(origin) {
   if (S.accelRealmWarm)  pbRealmWarm(origin);
   
   // 🔥 Realm + HUD integration
-  PulseRealmState.warmPathsTriggered++;
+  PulseRealmState.warmPathsTriggered += 1;
   PulseRealmState.lastWarmOrigin = origin;  
 
   console.log(
@@ -853,8 +853,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH_EVENT":
       if (Array.isArray(msg.origins)) {
         pbWarmPaths(msg.origins);
-        PulseRealmState.warmPathsTriggered += msg.origins.length;
-        PulseRealmState.lastWarmOrigin = msg.origins[msg.origins.length - 1];
       }
       sendResponse({ ok: true });
       break;
@@ -862,8 +860,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
-        PulseRealmState.warmPathsTriggered += 1;
-        PulseRealmState.lastWarmOrigin = msg.origin;
       }
       sendResponse({ ok: true });
       break;
@@ -879,8 +875,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBACC_HOME_WARMBOOT":
       pbHomeWarmBoot();
-      PulseRealmState.warmPathsTriggered += 10;
-      PulseRealmState.lastWarmOrigin = "https://www.pulseworld.net";
       sendResponse({ ok: true });
       break;
 
@@ -927,13 +921,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_GPUWARM":
     case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount++;
+      PulseRealmState.gpuWarmCount ++;
       sendResponse({ ok: true });
       break;
 
     case "PBCONTENT_DECODEWARM":
     case "PBCONTENT_DECODEWARM_EXTRA":
-      PulseRealmState.imagesDecoded++;
+      PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
@@ -954,8 +948,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.url) {
         const origin = new URL(msg.url).origin;
         chrome.runtime.sendMessage({
-          type: "PBACC_WARMPATH_EVENT",
-          origins: [origin]
+          type: "PBACC_WARMPATH",
+          origin
         });
       }
       sendResponse({ ok: true });
