@@ -58,15 +58,39 @@ function pbTLSWarm(origin) {
 
 
 // ---------------------------------------------------------------------------
-// 5. DECODE WARM-PATH (images) — SAFE VERSION
+// 5. DECODE WARM-PATH (images) — FULL SPECTRUM VERSION
 // ---------------------------------------------------------------------------
 
-// Warm decode function (unchanged)
+// Decode a single image safely
 function warmImageDecode(img) {
-  if (!img || !img.complete) return;
-  try {
-    img.decode().catch(() => {});
-  } catch (_) {}
+  if (!img) return;
+  try { img.decode?.().catch(() => {}); } catch (_) {}
+}
+
+// Extract CSS background-image URLs
+function extractCSSImageURLs() {
+  const urls = [];
+
+  document.querySelectorAll("*").forEach(el => {
+    const bg = getComputedStyle(el).backgroundImage;
+    if (!bg || bg === "none") return;
+
+    const match = bg.match(/url\(["']?(.*?)["']?\)/);
+    if (match && match[1]) urls.push(match[1]);
+  });
+
+  return urls;
+}
+
+// Decode CSS background images by creating synthetic Image objects
+function warmCSSImages() {
+  const urls = extractCSSImageURLs();
+
+  urls.forEach(src => {
+    const img = new Image();
+    img.src = src;
+    warmImageDecode(img);
+  });
 }
 
 // Safe startup wrapper
@@ -77,13 +101,12 @@ function warmImageDecode(img) {
     return;
   }
 
-  // Otherwise start ASAP, not at DOMContentLoaded
+  // Start ASAP even before DOMContentLoaded
   startWarmPath();
 
-  // And also run again at DOMContentLoaded for late images
+  // And run again at DOMContentLoaded for late images
   document.addEventListener("DOMContentLoaded", startWarmPath);
 })();
-
 
 function startWarmPath() {
   // If body still doesn't exist, retry shortly
@@ -92,21 +115,25 @@ function startWarmPath() {
     return;
   }
 
-  // Run warm decode on existing images
+  // Warm HTML <img> elements
   document.querySelectorAll("img").forEach(warmImageDecode);
+
+  // Warm CSS background images
+  warmCSSImages();
 
   // MutationObserver for future images
   const imgObserver = new MutationObserver(() => {
     document.querySelectorAll("img").forEach(warmImageDecode);
+    warmCSSImages();
   });
-  
-  // Example content script usage (PBContent.js):
-  PBQuantumPrefetch.attachToDocument();
 
   imgObserver.observe(document.body, {
     childList: true,
     subtree: true
   });
+
+  // Attach Quantum Prefetch
+  PBQuantumPrefetch.attachToDocument();
 }
 
 
@@ -870,7 +897,7 @@ function collectPageAssets() {
   document.querySelectorAll("img[src]").forEach(el => assets.push(el.src));
 
   chrome.runtime.sendMessage({
-    type: "PB_ASSET_LIST",
+    type: "PB_ASSET_LIST_CONTENT",
     pageUrl: location.href,
     assets
   });
@@ -900,14 +927,36 @@ setTimeout(triggerWarmPaths, 300);
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
 
-function gpuWarmExtra() {
-  document.querySelectorAll("canvas, video").forEach(el => {
+async function gpuWarmExtra() {
+  const elements = document.querySelectorAll("canvas, video");
+
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
     try { el.getContext?.("webgl") || el.getContext?.("webgl2"); } catch (_) {}
+    try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
   });
 
+  // Warm WebGPU (if available)
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) {
+        const device = await adapter.requestDevice();
+        // Create a tiny GPU workload to warm the queue
+        const queue = device.queue;
+        const buffer = device.createBuffer({
+          size: 4,
+          usage: GPUBufferUsage.COPY_DST
+        });
+        queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+      }
+    }
+  } catch (_) {}
+
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA" });
 }
+
 
 setTimeout(gpuWarmExtra, 1200);
 
@@ -917,10 +966,30 @@ setTimeout(gpuWarmExtra, 1200);
 // ============================================================================
 
 function decodeWarmExtra() {
-  const imgs = document.querySelectorAll("img");
-  const count = imgs.length;
+  const imgs = [...document.querySelectorAll("img")];
 
-  imgs.forEach(img => {
+  // CSS background images
+  const bgImgs = [...document.querySelectorAll("*")]
+    .map(el => getComputedStyle(el).backgroundImage)
+    .filter(bg => bg && bg !== "none")
+    .map(bg => {
+      // background-image: url("https://example.com/image.jpg")
+      const match = bg.match(/url\(["']?(.*?)["']?\)/);
+      return match ? match[1] : null;
+    })
+    .filter(Boolean);
+
+  // Create synthetic Image objects for CSS backgrounds
+  const syntheticImgs = bgImgs.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+
+  const allImgs = [...imgs, ...syntheticImgs];
+  const count = allImgs.length;
+
+  allImgs.forEach(img => {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
 

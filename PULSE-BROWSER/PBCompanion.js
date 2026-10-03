@@ -133,10 +133,10 @@ self.addEventListener('fetch', event => {
 
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
-const now = new Date().toLocaleString();
+let now = new Date().toLocaleString();
 console.log("[PULSEWORLD OS KERNEL] Initializing PulseWorld with Accelerated Modules:", now);
 
-const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
 
 
 // Persistent favicon cache stored in chrome.storage.local
@@ -742,8 +742,8 @@ async function pbHomeWarmBoot() {
 
 async function pbLoadExtensionSettings() {
   try {
-    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
-    const settings = result[EXTENSION_SETTINGS_KEY2] || {};
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+    const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
     console.log("pbLoadExtensionSettings()", settings);
 
@@ -893,7 +893,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "PULSE_OS_PING":
-      PulseRealmState.lastPing = Date.now();
+      now = new Date();
+      PulseRealmState.lastPing = now.toLocaleString();
       sendResponse({ ok: true, ts: PulseRealmState.lastPing });
       break;
 
@@ -936,7 +937,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBACC_ASSETWARM_EVENT":
     case "PBACC_ASSETWARM":
-    case "PB_ASSET_LIST":
       PulseRealmState.warmAssetsTriggered += msg.count || 1;
       sendResponse({ ok: true });
       break;
@@ -969,7 +969,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBREALM_UPDATE":
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      PulseRealmState.lastPing = Date.now();
+      now = new Date();
+      PulseRealmState.lastPing = now.toLocaleString();
       sendResponse({ ok: true });
       break;
 
@@ -1024,6 +1025,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
         PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
+        PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1046,7 +1048,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      PulseRealmState.lastPing = Date.now();
+      now = new Date();
+      PulseRealmState.lastPing = now.toLocaleString();
       sendResponse({ ok: true });
       break;
 
@@ -1059,7 +1062,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 // ============================================================================
 //  SECTION 2 — SETTINGS (Full OS Registry)
 // ============================================================================
-const PB_DEFAULT_SETTINGS2 = {
+const PB_DEFAULT_SETTINGS = {
   enableInterceptor: true,
   enableAccelerator: true,
   enableNavigator: true,
@@ -1113,8 +1116,8 @@ const PB_DEFAULT_SETTINGS2 = {
   experimentalMeshAwareness: false,
 
   homeUniverse: [
-    "pulseworld.me",
     "pulseworld.net",
+    "pulseworld.me",
     "pulseworld.money",
     "pulseworld.biz",
     "binaryos.net",
@@ -1127,8 +1130,8 @@ const PB_DEFAULT_SETTINGS2 = {
 
 function pbLoadSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(PB_DEFAULT_SETTINGS2, (data) => {
-      resolve(data || PB_DEFAULT_SETTINGS2);
+    chrome.storage.sync.get(PB_DEFAULT_SETTINGS, (data) => {
+      resolve(data || PB_DEFAULT_SETTINGS);
     });
   });
 }

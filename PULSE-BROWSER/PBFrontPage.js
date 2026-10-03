@@ -25,6 +25,91 @@ chrome.storage.local.get("pulseTabs", data => {
   }
 });
 
+// ---------------------------------------------------------------------------
+// 1. KERNEL HANDSHAKE
+// ---------------------------------------------------------------------------
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+  if (chrome.runtime.lastError) return;
+});
+
+// ============================================================================
+// 14. PBContentGPUWarm++ — Additional GPU warm triggers
+// ============================================================================
+
+async function gpuWarmExtra() {
+  const elements = document.querySelectorAll("canvas, video");
+
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
+    try { el.getContext?.("webgl") || el.getContext?.("webgl2"); } catch (_) {}
+    try { el.getContext?.("2d"); } catch (_) {}
+    try { el.play?.().catch(() => {}); } catch (_) {}
+  });
+
+  // Warm WebGPU (if available)
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) {
+        const device = await adapter.requestDevice();
+        // Create a tiny GPU workload to warm the queue
+        const queue = device.queue;
+        const buffer = device.createBuffer({
+          size: 4,
+          usage: GPUBufferUsage.COPY_DST
+        });
+        queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+      }
+    }
+  } catch (_) {}
+
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA" });
+}
+
+
+setTimeout(gpuWarmExtra, 1200);
+
+// ============================================================================
+// 15. PBContentDecodeWarm++ — Aggressive decode warm
+// ============================================================================
+
+function decodeWarmExtra() {
+  const imgs = [...document.querySelectorAll("img")];
+
+  // CSS background images
+  const bgImgs = [...document.querySelectorAll("*")]
+    .map(el => getComputedStyle(el).backgroundImage)
+    .filter(bg => bg && bg !== "none")
+    .map(bg => {
+      // background-image: url("https://example.com/image.jpg")
+      const match = bg.match(/url\(["']?(.*?)["']?\)/);
+      return match ? match[1] : null;
+    })
+    .filter(Boolean);
+
+  // Create synthetic Image objects for CSS backgrounds
+  const syntheticImgs = bgImgs.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+
+  const allImgs = [...imgs, ...syntheticImgs];
+  const count = allImgs.length;
+
+  allImgs.forEach(img => {
+    try { img.decode?.().catch(() => {}); } catch (_) {}
+  });
+
+  chrome.runtime.sendMessage({
+    type: "PBCONTENT_DECODEWARM_EXTRA",
+    count
+  });
+}
+
+
+setTimeout(decodeWarmExtra, 900);
+
 // Normalize identity to domain or subdomain level
 function normalizeIdentity(url) {
   try {
@@ -1539,6 +1624,12 @@ setInterval(() => {
   }
 
   async function pbRefreshWarmDocument() {
+    // ---------------------------------------------------------------------------
+    // 1. KERNEL HANDSHAKE
+    // ---------------------------------------------------------------------------
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+      if (chrome.runtime.lastError) return;
+    });
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
 
@@ -1570,6 +1661,8 @@ setInterval(() => {
       PulseRealmSettings.acceleratedModule4Link,
       PulseRealmSettings.acceleratedModule5Link
     ].filter(u => u && u.startsWith("http"));
+
+    decodeWarmExtra();
 
     const container = document.getElementById("pbWarmContainer");
     if (!container) return;
@@ -1605,6 +1698,12 @@ setInterval(() => {
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
+      // ---------------------------------------------------------------------------
+      // 1. KERNEL HANDSHAKE
+      // ---------------------------------------------------------------------------
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+        if (chrome.runtime.lastError) return;
+      });
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
