@@ -159,7 +159,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // ASSET WARM-PATH TRIGGERED
     // ---------------------------------------------------------
     case "PBACC_ASSETWARM_EVENT":
-      PulseRealmState.warmAssetsTriggered++;
+      PulseRealmState.warmAssetsTriggered += msg.count || 0;
       sendResponse({ ok: true });
       break;
 

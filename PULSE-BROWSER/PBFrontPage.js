@@ -220,6 +220,7 @@ async function compressImageTinyPNGStyle(blob) {
   });
 }
 
+
 function receiveRealmState() {
   chrome.tabs.query({}, (tabs) => {
     for (const tab of tabs) {

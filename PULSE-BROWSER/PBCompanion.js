@@ -80,7 +80,6 @@ self.addEventListener("install", event => {
 async function pbWarmBoot() {
   await pbHomeWarmBoot();
   await pbModuleWarmBoot();
-  broadcastRealmState();
 }
 
 self.addEventListener("activate", (event) => {
@@ -640,19 +639,10 @@ function pbRealmWarm(origin) {
     origin + "/404.html",
     origin + "/"
   ];
+  pbPrefetch(urls);
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
 
-function broadcastRealmState() {
-  chrome.tabs.query({}, (tabs) => {
-    for (const tab of tabs) {
-      chrome.tabs.sendMessage(tab.id, {
-        type: "PBREALM_STATE_UPDATE",
-        realm: PulseRealmState
-      });
-    }
-  });
-}
 
 async function pbWarmPaths(origins) {
   // Ignore chrome:// and extension pages EXCEPT newtab
@@ -807,9 +797,6 @@ async function pbModuleWarmBoot() {
 
 setInterval(pbWarmBoot, 45000);
 
-// ---------------------------------------------------------------------------
-// MESSAGE CHANNEL (buttons optional; auto-nav is primary)
-// ---------------------------------------------------------------------------
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
@@ -819,14 +806,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // NAVIGATION EVENT → automatic acceleration
     // -------------------------------------------------------
     case "PBNAV_EVENT":
-      if (msg.url) {
-        pbAccelerate(msg.url);
-      }
+      if (msg.url) pbAccelerate(msg.url);
       sendResponse({ ok: true });
       break;
 
     // -------------------------------------------------------
-    // Manual hooks (DevOverlay / popup) — optional
+    // Manual hooks (DevOverlay / popup)
     // -------------------------------------------------------
     case "PBACC_PREFETCH":
       if (Array.isArray(msg.urls)) pbPrefetch(msg.urls);
@@ -853,61 +838,229 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       break;
 
-    case "PBACC_REALMWARM": {
+    // -------------------------------------------------------
+    // REALM + WARM-PATH PHYSICS
+    // -------------------------------------------------------
+    case "PBACC_REALMWARM":
       if (msg.origin) {
         pbRealmWarm(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;
-        PulseRealmState.lastWarmOrigin = msg.origin;  
+        PulseRealmState.lastWarmOrigin = msg.origin;
       }
       sendResponse({ ok: true });
       break;
-    }
 
-    case "PBACC_WARMPATH_EVENT": {
+    case "PBACC_WARMPATH_EVENT":
       if (Array.isArray(msg.origins)) {
         pbWarmPaths(msg.origins);
-
-        // Increment warm-path count by number of origins warmed
         PulseRealmState.warmPathsTriggered += msg.origins.length;
-
-        // Set lastWarmOrigin to the last origin in the array
         PulseRealmState.lastWarmOrigin = msg.origins[msg.origins.length - 1];
       }
-
       sendResponse({ ok: true });
       break;
-    }
 
-
-    case "PBACC_WARMPATH": {
+    case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
-        PulseRealmState.warmPathsTriggered += 1;        
-        PulseRealmState.lastWarmOrigin = msg.origin;  
+        PulseRealmState.warmPathsTriggered += 1;
+        PulseRealmState.lastWarmOrigin = msg.origin;
       }
       sendResponse({ ok: true });
       break;
-    }
 
-    case "PBACC_ACCELERATE": {
+    case "PBACC_ACCELERATE":
       if (msg.url) {
         pbAccelerate(msg.url);
         PulseRealmState.warmPathsTriggered += 1;
-        PulseRealmState.lastWarmOrigin = msg.url;  
+        PulseRealmState.lastWarmOrigin = msg.url;
       }
       sendResponse({ ok: true });
       break;
-    }
-
 
     case "PBACC_HOME_WARMBOOT":
       pbHomeWarmBoot();
       PulseRealmState.warmPathsTriggered += 10;
-      PulseRealmState.lastWarmOrigin = "www.pulseworld.net"; 
+      PulseRealmState.lastWarmOrigin = "https://www.pulseworld.net";
       sendResponse({ ok: true });
       break;
+
+    // -------------------------------------------------------
+    // CACHE + OS PING + SETTINGS
+    // -------------------------------------------------------
+    case "GET_CACHE_LIST":
+      (async () => {
+        try {
+          const cacheNames = await caches.keys();
+          sendResponse({ ok: true, caches: cacheNames });
+        } catch (err) {
+          sendResponse({ ok: false, error: err.toString() });
+        }
+      })();
+      return true;
+
+    case "PULSE_OS_PING":
+      PulseRealmState.lastPing = Date.now();
+      sendResponse({ ok: true, ts: PulseRealmState.lastPing });
+      break;
+
+    case "PULSE_OS_CLEAR_PULSE_CACHES":
+      clearPulseCaches().then(() => sendResponse({ ok: true }));
+      return true;
+
+    // -------------------------------------------------------
+    // PERFORMANCE + MUTATION EVENTS
+    // -------------------------------------------------------
+    case "PBCONTENT_PERF":
+      PulseRealmState.perfEntries = msg.entries || [];
+      PulseRealmState.perfLastNavigation = msg.ts || Date.now();
+      sendResponse({ ok: true });
+      break;
+
+    case "PBCONTENT_MUTATION":
+      PulseRealmState.mutationCount += msg.count || 0;
+      PulseRealmState.lastMutationTS = msg.ts || Date.now();
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // GPU + DECODE WARM
+    // -------------------------------------------------------
+    case "PBCONTENT_GPUWARM":
+    case "PBCONTENT_GPUWARM_EXTRA":
+      PulseRealmState.gpuWarmCount++;
+      sendResponse({ ok: true });
+      break;
+
+    case "PBCONTENT_DECODEWARM":
+    case "PBCONTENT_DECODEWARM_EXTRA":
+      PulseRealmState.imagesDecoded++;
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // ASSET WARM-PATH
+    // -------------------------------------------------------
+    case "PBACC_ASSETWARM_EVENT":
+    case "PBACC_ASSETWARM":
+    case "PB_ASSET_LIST":
+      PulseRealmState.warmAssetsTriggered += msg.count || 1;
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // ACCELERATE → WARM-PATH EVENT (fallback)
+    // -------------------------------------------------------
+    case "PBACC_ACCELERATE_EVENT":
+      if (msg.url) {
+        const origin = new URL(msg.url).origin;
+        chrome.runtime.sendMessage({
+          type: "PBACC_WARMPATH_EVENT",
+          origins: [origin]
+        });
+      }
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // OPEN PULSEWORLD
+    // -------------------------------------------------------
+    case "PBNAV_OPEN_PULSEWORLD":
+      chrome.tabs.create({ url: msg.url || "https://www.pulseworld.net" });
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // REALM STATE UPDATES
+    // -------------------------------------------------------
+    case "PBREALM_UPDATE":
+      PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
+      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
+      PulseRealmState.lastPing = Date.now();
+      sendResponse({ ok: true });
+      break;
+
+    case "PBREALM_GET":
+      sendResponse({ ok: true, state: PulseRealmState });
+      break;
+
+    // -------------------------------------------------------
+    // SETTINGS + CONSOLE
+    // -------------------------------------------------------
+    case "PBSETTINGS_GET":
+      pbLoadSettings().then(settings => sendResponse({ ok: true, settings }));
+      return true;
+
+    case "PBSETTINGS_SET":
+      pbSaveSettings(msg.settings || {}).then(() => sendResponse({ ok: true }));
+      return true;
+
+    case "PBCONSOLE_SET":
+      pbSaveConsole(msg.console || {}).then(() => sendResponse({ ok: true }));
+      return true;
+
+    case "PBCONSOLE_GET":
+      pbLoadConsole().then(console => sendResponse({ ok: true, console }));
+      return true;
+
+    // -------------------------------------------------------
+    // DEV STATUS
+    // -------------------------------------------------------
+    case "PBDEV_STATUS":
+      pbLogKernelStatus();
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // HOVER PREFETCH
+    // -------------------------------------------------------
+    case "PB_HOVER_PREFETCH":
+      if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
+        pbPreconnect([msg.href]);
+        PBQuantumPrefetch.prefetchLink();
+      }
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // ASSET LIST (content)
+    // -------------------------------------------------------
+    case "PB_ASSET_LIST_CONTENT":
+      try {
+        const origin = new URL(msg.pageUrl).origin;
+
+        PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
+        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
+      } catch (_) {}
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // CONTENT WARM-PATH
+    // -------------------------------------------------------
+    case "PBCONTENT_WARMPATH":
+      try {
+        const origin = new URL(msg.url).origin;
+        PBUniversalBoost2?.warmOrigin?.(origin);
+      } catch (_) {}
+      sendResponse({ ok: true });
+      break;
+
+    // -------------------------------------------------------
+    // FULL REALM UPDATE
+    // -------------------------------------------------------
+    case "PBREALM_UPDATE_FULL":
+      PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
+      PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
+      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
+      PulseRealmState.lastPing = Date.now();
+      sendResponse({ ok: true });
+      break;
+
+    default:
+      console.log("[PULSEWORLD OS KERNEL] Unknown Event:", msg);
   }
 });
+
 
 // ============================================================================
 //  SECTION 2 — SETTINGS (Full OS Registry)
@@ -1100,214 +1253,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 });
 
-// ============================================================================
-//  SECTION 6 — MESSAGE BUS (Popup + Content + DevTools)
-// ============================================================================
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (!msg || !msg.type) return;
-
-  switch (msg.type) {
-    
-    case "GET_CACHE_LIST":
-      (async () => {
-        try {
-          const cacheNames = await caches.keys();
-          sendResponse({ ok: true, caches: cacheNames });
-        } catch (err) {
-          sendResponse({ ok: false, error: err.toString() });
-        }
-      })();
-
-      return true; // ⭐ REQUIRED for async response
-  
-    case "PULSE_OS_PING":
-      PulseRealmState.lastPing = Date.now();
-      sendResponse({ ok: true, ts: PulseRealmState.lastPing });
-      break;
-
-    case "PULSE_OS_CLEAR_PULSE_CACHES":
-      clearPulseCaches().then(() => sendResponse({ ok: true }));
-      return true;
-
-    // ---------------------------------------------------------
-    // PERFORMANCE EVENTS (from PBContent)
-    // ---------------------------------------------------------
-    case "PBCONTENT_PERF":
-      PulseRealmState.perfEntries = msg.entries || [];
-      PulseRealmState.perfLastNavigation = msg.ts || Date.now();
-      sendResponse({ ok: true });
-      break;
-
-    // ---------------------------------------------------------
-    // MUTATION EVENTS (from PBContent)
-    // ---------------------------------------------------------
-    case "PBCONTENT_MUTATION":
-      PulseRealmState.mutationCount += msg.count || 0;
-      PulseRealmState.lastMutationTS = msg.ts || Date.now();
-      sendResponse({ ok: true });
-      break;
-
-    // ---------------------------------------------------------
-    // GPU WARM-PATH (from PBContent / PBAccelerator)
-    // ---------------------------------------------------------
-    case "PBCONTENT_GPUWARM":
-      PulseRealmState.gpuWarmCount++;
-      sendResponse({ ok: true });
-      break;
-
-    case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount++;
-      sendResponse({ ok: true });
-      break;
-    // ---------------------------------------------------------
-    // IMAGE DECODE WARM-PATH (from PBContent)
-    // ---------------------------------------------------------
-    case "PBCONTENT_DECODEWARM":
-      PulseRealmState.imagesDecoded++;
-      sendResponse({ ok: true });
-      break;
-
-    case "PBCONTENT_DECODEWARM_EXTRA":
-      PulseRealmState.imagesDecoded++;
-      sendResponse({ ok: true });
-      break;
-
-    // ---------------------------------------------------------
-    // WARM-PATH TRIGGERED (from PBAccelerator)
-    // ---------------------------------------------------------
-    case "PBACC_WARMPATH_EVENT":
-      PulseRealmState.warmPathsTriggered++;
-      sendResponse({ ok: true });
-      break;
-
-    case "PBACC_WARMPATH":
-      PulseRealmState.warmPathsTriggered++;
-      sendResponse({ ok: true });
-      break;
-
-    // ---------------------------------------------------------
-    // ASSET WARM-PATH TRIGGERED
-    // ---------------------------------------------------------
-    case "PBACC_ASSETWARM_EVENT":
-      PulseRealmState.warmAssetsTriggered++;
-      sendResponse({ ok: true });
-      break;
-
-    case "PBACC_ASSETWARM":
-      PulseRealmState.warmAssetsTriggered++;
-      sendResponse({ ok: true });
-      break;
-
-    case "PB_ASSET_LIST":
-      PulseRealmState.warmAssetsTriggered++;
-      sendResponse({ ok: true });
-      break;
-
-    case "PBACC_ACCELERATE":
-      if (msg.url) {
-        const origin = new URL(msg.url).origin;
-        const origins = [origin];
-        chrome.runtime.sendMessage({ type: "PBACC_WARMPATH_EVENT", origins });
-      }
-      sendResponse({ ok: true });
-      break;
-      
-    case  "PBNAV_OPEN_PULSEWORLD":
-      chrome.tabs.create({ url: msg.url || "https://www.pulseworld.net" });
-      sendResponse({ ok: true });
-      break;
-
-    case "PBREALM_UPDATE":
-      PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
-      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      PulseRealmState.lastPing = Date.now();
-      sendResponse({ ok: true });
-      break;
-
-    case "PBREALM_GET":
-      sendResponse({ ok: true, state: PulseRealmState });
-      break;
-
-    case "PBSETTINGS_GET":
-      pbLoadSettings().then((settings) => sendResponse({ ok: true, settings }));
-      return true;
-
-    case "PBSETTINGS_SET":
-      pbSaveSettings(msg.settings || {}).then(() => sendResponse({ ok: true }));
-      return true;
-    
-    case "PBCONSOLE_SET":
-      pbSaveConsole(msg.console || {}).then(() => sendResponse({ ok: true }));
-      return true;
-    
-    case "PBCONSOLE_GET":
-      pbLoadConsole().then((console) => sendResponse({ ok: true, console }));
-      return true;
-
-    case "PBDEV_STATUS":
-      pbLogKernelStatus();
-      sendResponse({ ok: true });
-      break;
-
-    // -------------------------------------------------------
-    // PBQuantumPrefetch — hover prefetch from content
-    // -------------------------------------------------------
-    case "PB_HOVER_PREFETCH":
-      if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
-        const links = [msg.href];
-        pbPreconnect(links);
-        PBQuantumPrefetch.prefetchLink();
-        console.log("Quantum Prefetching Enabled: " + msg.href);
-      }      
-      sendResponse?.({ ok: true });
-      break;
-
-    // -------------------------------------------------------
-    // PBAssetCollector — asset list from content
-    // -------------------------------------------------------
-    case "PB_ASSET_LIST":
-      try {
-        const origin = new URL(msg.pageUrl).origin;
-
-        if (typeof PBGlobalAssetMap?.scanAndWarm === "function") {
-          PBGlobalAssetMap.scanAndWarm(origin, msg.assets || []);
-        }
-
-        if (typeof PBTemporalCache?.noteAsset === "function") {
-          (msg.assets || []).forEach(a => PBTemporalCache.noteAsset(origin, a));
-        }
-      } catch (_) {}
-      sendResponse?.({ ok: true });
-      break;
-
-    // -------------------------------------------------------
-    // Warm-path trigger from content
-    // -------------------------------------------------------
-    case "PBCONTENT_WARMPATH":
-      try {
-        const origin = new URL(msg.url).origin;
-        if (typeof PBUniversalBoost2?.warmOrigin === "function") {
-          PBUniversalBoost2.warmOrigin(origin);
-        }
-      } catch (_) {}
-      sendResponse?.({ ok: true });
-      break;
-
-    // -------------------------------------------------------
-    // Realm full update from content
-    // -------------------------------------------------------
-    case "PBREALM_UPDATE_FULL":
-      PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
-      PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
-      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      PulseRealmState.lastPing = Date.now();
-      sendResponse?.({ ok: true });
-      break;
-
-    default:
-      console.log("[PULSEWORLD OS KERNEL] Navigation Event:", msg);
-  }
-});
 
 // ============================================================================
 //  SECTION 7 — CACHE CONTROL
