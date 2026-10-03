@@ -61,19 +61,19 @@ function updateOverlay() {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
-      const realm = realmRes.state || {};
-      const settings = settingsRes.settings || {};
+      PulseRealm = realmRes.state || {};
+      PulseRealmSettings = settingsRes.settings || {};
 
-      updateKernel(realm);
-      updateRouter(settings);
-      updateNavigator(settings, realm);
-      updateAccelerator(settings, realm);
-      updatePerformance(realm);
-      updateWarm(realm);
-      updateGPU(realm);
-      updateSettings(settings);
-      updateExperimental(settings);
-      updateFlags(realm.flags);
+      updateKernel(PulseRealm);
+      updateRouter(PulseRealmSettings);
+      updateNavigator(PulseRealmSettings, PulseRealm);
+      updateAccelerator(PulseRealmSettings, PulseRealm);
+      updatePerformance(PulseRealm);
+      updateWarm(PulseRealm);
+      updateGPU(PulseRealm);
+      updateSettings(PulseRealmSettings);
+      updateExperimental(PulseRealmSettings);
+      updateFlags(PulseRealm.flags);
     });
   });
 }

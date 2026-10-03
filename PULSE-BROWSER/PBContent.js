@@ -3,7 +3,8 @@
 //  Full DOM physics engine: warm-path, GPU, decode, mutation, performance,
 //  realm sync, HUD, world-band extraction, kernel bridge.
 // ============================================================================
-
+let PulseRealm = {};
+let PulseRealmSettings = {};
 
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -334,8 +335,8 @@ function updateHUD() {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
-      const realm = realmRes.state || {};
-      const settings = settingsRes.settings || {};
+      PulseRealm = realmRes.state || {};
+      PulseRealmSettings = settingsRes.settings || {};
 
       // ---------------------------------------------
       // ⭐ DOM & LOAD TIMES
@@ -351,20 +352,20 @@ function updateHUD() {
       // ⭐ WORKLOAD CALCULATION (KB)
       // ---------------------------------------------
       const workloadKB =
-        (realm.mutationCount * 0.002) +        // DOM mutations
-        (realm.gpuWarmCount * 50) +            // GPU warm cost
-        (realm.imagesDecoded * 20) +           // decode warm cost
-        (realm.warmPathsTriggered * 200);      // warm-path cost
+        (PulseRealm.mutationCount * 0.002) +        // DOM mutations
+        (PulseRealm.gpuWarmCount * 50) +            // GPU warm cost
+        (PulseRealm.imagesDecoded * 20) +           // decode warm cost
+        (PulseRealm.warmPathsTriggered * 200);      // warm-path cost
       const workloadMB = workloadKB / 1024;
 
       // ---------------------------------------------
       // ⭐ OPS/ms (operations per millisecond)
       // ---------------------------------------------
-      const ops = realm.mutationCount +
-                  realm.gpuWarmCount +
-                  realm.imagesDecoded +
-                  realm.warmPathsTriggered +
-                  realm.warmAssetsTriggered;
+      const ops = PulseRealm.mutationCount +
+                  PulseRealm.gpuWarmCount +
+                  PulseRealm.imagesDecoded +
+                  PulseRealm.warmPathsTriggered +
+                  PulseRealm.warmAssetsTriggered;
 
       const opsPerMs = domTime > 0 ? (ops / domTime).toFixed(2) : "-";
 
@@ -522,8 +523,8 @@ function updateHUD() {
       // ---------------------------------------------
       // PulseWorld URL / Hashtag Splitter
       // ---------------------------------------------
-      let displayURL = realm.lastURL || "-";
-      let displayPage = realm.lastPage || "-";
+      let displayURL = PulseRealm.lastURL || "-";
+      let displayPage = PulseRealm.lastPage || "-";
 
       if (displayURL.includes("pulseworld") && displayURL.includes("#")) {
         const [base, hash] = displayURL.split("#");
@@ -542,7 +543,7 @@ function updateHUD() {
         <font color="#0FF">Current World:</font> <font color="white">${currentEngine}</font><br/>
         <font color="#0FF">About:</font> <font color="gold">${engineDescriptor}</font><br/>
         <font color="#0FF">Last Page:</font> ${displayPage}<br/>
-        <font color="#0FF">Domain:</font> ${realm.lastDomainClass || "-"}<br/>
+        <font color="#0FF">Domain:</font> ${PulseRealm.lastDomainClass || "-"}<br/>
         <font color="#0FF">Messages:</font> <font color="red">${"No Active Messages"}</font><br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">
         <b><font color="white">Local PulseBrowser Tab Stats</font></b><br/>
@@ -554,16 +555,17 @@ function updateHUD() {
         <font color="#0FF">Pulse Ops/MS:</font> ${opsPerMs}<br/>
         <font color="#0FF">Pulse Efficiency:</font> ${PEI}<br/>
         <font color="#0FF">Workload:</font> ${workloadMB.toFixed(2)} MB<br/>
-        <font color="#0FF">Mutations:</font> ${realm.mutationCount}<br/>
-        <font color="#0FF">GPUWarm:</font> ${realm.gpuWarmCount}<br/>
-        <font color="#0FF">DecodeWarm:</font> ${realm.imagesDecoded}<br/>
-        <font color="#0FF">WarmPaths:</font> ${realm.warmPathsTriggered}<br/>
+        <font color="#0FF">Mutations:</font> ${PulseRealm.mutationCount}<br/>
+        <font color="#0FF">GPUWarm:</font> ${PulseRealm.gpuWarmCount}<br/>
+        <font color="#0FF">DecodeWarm:</font> ${PulseRealm.imagesDecoded}<br/>
+        <font color="#0FF">WarmAssets:</font> ${PulseRealm.warmAssetsTriggered}<br/>
+        <font color="#0FF">WarmPaths:</font> ${PulseRealm.warmPathsTriggered}<br/>
         <font color="#0FF">TS:</font> <font color="white">${new Date().toLocaleTimeString()}</font>
       `;
     });
   });
 }
-broadcastRealmState()
+
 // ---------------------------------------------------------------------------
 // 3. DOM MUTATION PHYSICS
 // ---------------------------------------------------------------------------

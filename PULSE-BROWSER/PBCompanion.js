@@ -853,28 +853,57 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       break;
 
-    case "PBACC_REALMWARM":
-      if (msg.origin) pbRealmWarm(msg.origin);
+    case "PBACC_REALMWARM": {
+      if (msg.origin) {
+        pbRealmWarm(msg.origin);
+        PulseRealmState.warmPathsTriggered += 1;
+        PulseRealmState.lastWarmOrigin = msg.origin;  
+      }
       sendResponse({ ok: true });
       break;
+    }
 
-    case "PBACC_WARMPATH_EVENT":
-      if (Array.isArray(msg.origins)) pbWarmPaths(msg.origins);
-      sendResponse({ ok: true });
-      break;
+    case "PBACC_WARMPATH_EVENT": {
+      if (Array.isArray(msg.origins)) {
+        pbWarmPaths(msg.origins);
 
-    case "PBACC_WARMPATH":
-      if (msg.origin) pbWarmPath(msg.origin);
-      sendResponse({ ok: true });
-      break;
+        // Increment warm-path count by number of origins warmed
+        PulseRealmState.warmPathsTriggered += msg.origins.length;
 
-    case "PBACC_ACCELERATE":
-      if (msg.url) pbAccelerate(msg.url);
+        // Set lastWarmOrigin to the last origin in the array
+        PulseRealmState.lastWarmOrigin = msg.origins[msg.origins.length - 1];
+      }
+
       sendResponse({ ok: true });
       break;
+    }
+
+
+    case "PBACC_WARMPATH": {
+      if (msg.origin) {
+        pbWarmPath(msg.origin);
+        PulseRealmState.warmPathsTriggered += 1;        
+        PulseRealmState.lastWarmOrigin = msg.origin;  
+      }
+      sendResponse({ ok: true });
+      break;
+    }
+
+    case "PBACC_ACCELERATE": {
+      if (msg.url) {
+        pbAccelerate(msg.url);
+        PulseRealmState.warmPathsTriggered += 1;
+        PulseRealmState.lastWarmOrigin = msg.url;  
+      }
+      sendResponse({ ok: true });
+      break;
+    }
+
 
     case "PBACC_HOME_WARMBOOT":
       pbHomeWarmBoot();
+      PulseRealmState.warmPathsTriggered += 10;
+      PulseRealmState.lastWarmOrigin = "www.pulseworld.net"; 
       sendResponse({ ok: true });
       break;
   }
@@ -1431,7 +1460,7 @@ const PBTemporalCache = {
         fetch(url, { cache: "force-cache" }).catch(() => {});
       } catch (_) {}
     }
-    PulseRealmState.warmAssetsTriggered = PulseRealmState.warmAssetsTriggered + set.size;
+    PulseRealmState.warmAssetsTriggered += set.size;
     console.log("[PBTemporalCache] Warmed recent assets for", origin, set.size);
   }
 };
@@ -1481,7 +1510,7 @@ const PBGlobalAssetMap = {
         fetch(url, { cache: "force-cache" }).catch(() => {});
       } catch (_) {}
     }
-    PulseRealmState.warmAssetsTriggered = PulseRealmState.warmAssetsTriggered + urlsToWarm.length;
+    PulseRealmState.warmAssetsTriggered += urlsToWarm.length;
     console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, urlsToWarm.length);
   }
 };

@@ -2,6 +2,8 @@
 //  PBPopup.js — PulseBrowser OS Control Console (Ultra Edition v6.0)
 //  Full OS cockpit • subsystem toggles • diagnostics • warm-path triggers
 // ============================================================================
+let PulseRealm = {};
+let PulseRealmSettings = {};
 
 const PBUniversalBoost = {
   async warmOrigin(origin) {
@@ -488,8 +490,8 @@ function updateHUD() {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
-      const realm = realmRes.state || {};
-      const settings = settingsRes.settings || {};
+      PulseRealm = realmRes.state || {};
+      PulseRealmSettings = settingsRes.settings || {};
 
       // ---------------------------------------------
       // ⭐ PAGE LOAD TIME (ms)
@@ -529,17 +531,17 @@ function updateHUD() {
 
 
       body.innerHTML = `
-        Page: ${realm.lastPage || "-"}<br/>
-        URL: ${realm.lastURL || "-"}<br/>
-        Domain: ${realm.lastDomainClass || "-"}<br/>
-        Ping: ${realm.lastPing || "-"}<br/>
-        Mutations: ${realm.mutationCount}<br/>
-        GPUWarm: ${realm.gpuWarmCount}<br/>
-        DecodeWarm: ${realm.imagesDecoded}<br/>
-        WarmPaths: ${realm.warmPathsTriggered}<br/>
-        Accel: ${settings.enableAccelerator}<br/>
-        NAV: ${settings.enableNavigator}<br/>
-        Intercept: ${settings.enableInterceptor}<br/>
+        Page: ${PulseRealm.lastPage || "-"}<br/>
+        URL: ${PulseRealm.lastURL || "-"}<br/>
+        Domain: ${PulseRealm.lastDomainClass || "-"}<br/>
+        Ping: ${PulseRealm.lastPing || "-"}<br/>
+        Mutations: ${PulseRealm.mutationCount}<br/>
+        GPUWarm: ${PulseRealm.gpuWarmCount}<br/>
+        DecodeWarm: ${PulseRealm.imagesDecoded}<br/>
+        WarmPaths: ${PulseRealm.warmPathsTriggered}<br/>
+        Accel: ${PulseRealmSettings.enableAccelerator}<br/>
+        NAV: ${PulseRealmSettings.enableNavigator}<br/>
+        Intercept: ${PulseRealmSettings.enableInterceptor}<br/>
         DOM: ${domTime}ms<br/>
         Load: ${loadTime}ms<br/>
         TS: ${new Date().toLocaleTimeString()}
