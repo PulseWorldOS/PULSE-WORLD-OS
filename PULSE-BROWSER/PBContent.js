@@ -661,7 +661,7 @@ const perfObserver = new PerformanceObserver((list) => {
 
   chrome.runtime.sendMessage({
     type: "PBCONTENT_PERF",
-    ts: Date.now(),
+    ts: new Date().toLocaleString(),
     entries: entries.map((e) => ({
       name: e.name,
       duration: e.duration,

@@ -287,17 +287,17 @@ const PBUniversalBoost = {
 
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
-let FAVICON_CACHE = {};
+let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
 chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
   if (res.ModuleFaviconCaches) {
-    FAVICON_CACHE = res.ModuleFaviconCaches;
+    PBFAVICON_CACHE = res.ModuleFaviconCaches;
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ ModuleFaviconCaches: FAVICON_CACHE });
+  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
 }
 
 // ---------------------------------------------------------
@@ -351,13 +351,10 @@ async function fetchAndStoreIcon(host, iconUrl) {
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
       console.warn("Empty favicon blob, falling back:", iconUrl);
-      FAVICON_CACHE[host] = iconUrl;
+      PBFAVICON_CACHE[host] = iconUrl;
       saveCache();
       return iconUrl;
     }
-
-    // ⭐ Compress the blob (TinyPNG-style)
-    blob = await compressImageTinyPNGStyle(blob);
 
     const reader = new FileReader();
 
@@ -374,21 +371,21 @@ async function fetchAndStoreIcon(host, iconUrl) {
           base64.startsWith("data:text")
         ) {
           console.warn("Invalid Base64 favicon, falling back:", iconUrl);
-          FAVICON_CACHE[host] = iconUrl;
+          PBFAVICON_CACHE[host] = iconUrl;
           saveCache();
           resolve(iconUrl);
           return;
         }
 
         // ⭐ Save compressed Base64
-        FAVICON_CACHE[host] = base64;
+        PBFAVICON_CACHE[host] = base64;
         saveCache();
         resolve(base64);
       };
 
       reader.onerror = () => {
         console.warn("FileReader failed, falling back:", iconUrl);
-        FAVICON_CACHE[host] = iconUrl;
+        PBFAVICON_CACHE[host] = iconUrl;
         saveCache();
         resolve(iconUrl);
       };
@@ -400,7 +397,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     console.warn("Favicon fetch failed:", iconUrl, err);
 
     // ⭐ Last resort fallback
-    FAVICON_CACHE[host] = iconUrl;
+    PBFAVICON_CACHE[host] = iconUrl;
     saveCache();
     return iconUrl;
   }
@@ -439,61 +436,57 @@ async function getFavicon(url, flags = {}) {
   }
 
   // ⭐ If cached → return instantly
-  if (FAVICON_CACHE[host]) {
+  if (PBFAVICON_CACHE[host]) {
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
     );
-    return FAVICON_CACHE[host];
+    return PBFAVICON_CACHE[host];
   }
 
 
   const PB_HOMES = [
-    "www.pulseworld.net",
-    "www.pulseworld.me",
-    "www.pulseworld.money",
-    "www.pulseworld.biz",
-    "www.binaryos.net",
-    "www.booleanlogic.net",
-    "www.gpuprocessing.net",
-    "www.serviceworker.net",
-    "www.orbitalmap.net"
+    "pulseworld.me",
+    "pulseworld.net",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net"
   ];
 
   try {
     // Special cases
     if (host.includes("office.com")) {
       icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      const IconURL = icon;
-      icon = await fetchAndStoreIcon(host, IconURL);
-      FAVICON_CACHE[host] = icon;
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("github.com")) {
       icon = "https://github.githubassets.com/favicons/favicon.svg";
-      const IconURL = icon;
-      icon = await fetchAndStoreIcon(host, IconURL);
-      FAVICON_CACHE[host] = icon;
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("youtube.com")) {
       icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      const IconURL = icon;
-      icon = await fetchAndStoreIcon(host, IconURL);
-      FAVICON_CACHE[host] = icon;
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("discord.com")) {
       icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      const IconURL = icon;
-      icon = await fetchAndStoreIcon(host, IconURL);
-      FAVICON_CACHE[host] = icon;
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -511,24 +504,19 @@ async function getFavicon(url, flags = {}) {
       else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
       else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
       else icon = `${u.origin}/PWFavIcon.ico`;
-      const IconURL = icon;
-      icon = await fetchAndStoreIcon(host, IconURL);
+      icon = await fetchAndStoreIcon(host, icon);
 
-      FAVICON_CACHE[host] = icon;
+      PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
-    const IconURL = icon;
-    icon = await fetchAndStoreIcon(host, IconURL);
-
-    FAVICON_CACHE[host] = icon;
+    PBFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
 
   } catch {
-    
-    FAVICON_CACHE[host] = icon;
+    PBFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
   }
