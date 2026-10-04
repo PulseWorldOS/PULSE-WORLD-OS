@@ -1710,15 +1710,6 @@ setInterval(() => {
       origins: PB_HOMES
     });
 
-    chrome.runtime.sendMessage({
-      type: "PBACC_WARMPATH_EVENT",
-      origins: Links
-    });
-
-    chrome.runtime.sendMessage({
-      type: "PBACC_WARMPATH_EVENT",
-      origins: temporaryLinks
-    });
   }
 
   document.addEventListener("visibilitychange", () => {

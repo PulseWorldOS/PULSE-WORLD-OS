@@ -32,8 +32,8 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   `;
 
   wrap.innerHTML = `
-    <div style="font-weight:bold; font-size:13px; margin-bottom:6px;">
-      PulseBrowser OS HUD
+    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-bottom:6px;">
+      PulseBrowser OS Overlay
     </div>
 
     <div id="pb-hud-kernel"></div>
@@ -86,10 +86,12 @@ function updateKernel(realm) {
   el.innerHTML = `
     <div class="pb-hud-title">Kernel</div>
     page: ${realm.lastPage || "-"}<br/>
+    title: ${realm.lastTitle || "-"}<br/>
     url: ${realm.lastURL || "-"}<br/>
     domain: ${realm.lastDomainClass || "-"}<br/>
     lastPing: ${realm.lastPing || "-"}<br/>
-    bands: ${realm.band}<br/>
+    band: ${realm.band}<br/>
+    sessionStart: ${realm.sessionStart || "-"}<br/>
   `;
 }
 

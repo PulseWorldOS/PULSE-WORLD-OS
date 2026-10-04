@@ -614,6 +614,8 @@ function updateHUD() {
 // ---------------------------------------------------------------------------
 let pendingMutations = 0;
 let lastSend = 0;
+let pendingPerf = 0;
+let lastSendPerf = 0;
 
 const mutationObserver = new MutationObserver((mutations) => {
   pendingMutations += mutations.length;
@@ -651,6 +653,7 @@ mutationObserver.observe(document.documentElement, {
 // ---------------------------------------------------------------------------
 const perfObserver = new PerformanceObserver((list) => {
   const entries = list.getEntries();
+  const now = performance.now();
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -659,15 +662,19 @@ const perfObserver = new PerformanceObserver((list) => {
     return;
   }
 
-  chrome.runtime.sendMessage({
-    type: "PBCONTENT_PERF",
-    ts: new Date().toLocaleString(),
-    entries: entries.map((e) => ({
-      name: e.name,
-      duration: e.duration,
-      initiatorType: e.initiatorType,
-    })),
-  });
+  if (now - lastSendPerf > 1000) {
+    chrome.runtime.sendMessage({
+      type: "PBCONTENT_PERF",
+      ts: new Date().toLocaleString(),
+      entries: entries.map((e) => ({
+        name: e.name,
+        duration: e.duration,
+        initiatorType: e.initiatorType,
+      })),
+    });
+    pendingPerf = 0;
+    lastSendPerf = now;
+  }
 });
 
 perfObserver.observe({ entryTypes: ["resource", "navigation"] });

@@ -8,9 +8,11 @@ const CACHE_NAME = "pb-companion-cache";
 //  SECTION 1 — INTERNAL STATE (Realm)
 // ============================================================================
 const PulseRealmState = {
+  sessionStart: null,
   lastPing: null,
   lastPage: null,
   lastURL: null,
+  lastTitle: null,
   lastDomainClass: null,
   // Bands (PulseWorld / OS)
   band: "PulseBand",
@@ -80,11 +82,12 @@ async function pbWarmBoot() {
   await pbModuleWarmBoot();
 }
 
+setTimeout(pbWarmBoot, 600);
+
 self.addEventListener("activate", (event) => {
   console.log("%c[PULSEWORLD OS KERNEL] Activated",
     "color:#00FF9C; font-weight:bold; font-family:monospace;");
   event.waitUntil(self.clients.claim());
-  pbWarmBoot();
 });
 
 self.addEventListener('fetch', event => {
@@ -774,11 +777,6 @@ async function pbModuleWarmBoot() {
     pbRealmWarm(origin);
   });
 
-  chrome.runtime.sendMessage({
-    type: "PBACC_WARMPATH_EVENT",
-    origins: warmTargets
-  });
-
   console.log(
     "%c[PBAccelerator] Module Warm-Boot executed",
     "color:#00C8FF; font-weight:bold;"
@@ -894,7 +892,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "PULSE_OS_PING":
-      PulseRealmState.lastPing = new Date().toLocaleString();
+      PulseRealmState.lastPing = new Date().toLocaleString();      
+      if (!PulseRealmState.sessionStart) PulseRealmState.sessionStart = now;
       sendResponse({ ok: true, ts: PulseRealmState.lastPing });
       break;
 
@@ -1060,6 +1059,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBREALM_UPDATE_FULL":
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
+      PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
       PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true });
       break;
