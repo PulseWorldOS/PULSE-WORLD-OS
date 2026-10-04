@@ -671,6 +671,7 @@ const perfObserver = new PerformanceObserver((list) => {
         duration: e.duration,
         initiatorType: e.initiatorType,
       })),
+      origin: location.hostname
     });
     pendingPerf = 0;
     lastSendPerf = now;

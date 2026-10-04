@@ -991,6 +991,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_PERF":
       PulseRealmState.perfEntries = msg.entries || [];
       PulseRealmState.perfLastNavigation = msg.ts || now;
+      PulseRealmState.lastWarmOrigin = msg.origin;
       sendResponse({ ok: true });
       break;
     
@@ -1108,7 +1109,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
-        PulseRealmState.imagesDecoded += msg.decodeCount || 1;
+        PulseRealmState.imagesDecoded += msg.decodeCount || 1;        
+        PulseRealmState.lastWarmOrigin = origin;
       } catch (_) {}
       sendResponse({ ok: true });
       break;
