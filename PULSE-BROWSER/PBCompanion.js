@@ -280,7 +280,6 @@ async function getFavicon(url, flags = {}) {
 
   // ⭐ Build favicon URL using hostname (preserves www)
   let icon = `https://${host}/favicon.ico`;
-  const IconURL = icon;
 
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
@@ -291,9 +290,49 @@ async function getFavicon(url, flags = {}) {
     }
   }
 
+  
+  try {
+    // Special cases
+    if (host.includes("office.com")) {
+      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("github.com")) {
+      icon = "https://github.githubassets.com/favicons/favicon.svg";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("youtube.com")) {
+      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("discord.com")) {
+      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    } catch {
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
   // ⭐ If cached → return instantly
   if (PBFAVICON_CACHE[host]) {
-    icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -304,50 +343,17 @@ async function getFavicon(url, flags = {}) {
 
   const PB_HOMES = [
     "pulseworld.me",
-    "pulseworld.net",
     "pulseworld.money",
     "pulseworld.biz",
     "binaryos.net",
     "booleanlogic.net",
     "gpuprocessing.net",
     "serviceworker.net",
-    "orbitalmap.net"
+    "orbitalmap.net",
+    "pulseworld.net"
   ];
 
   try {
-    // Special cases
-    if (host.includes("office.com")) {
-      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
-    if (host.includes("github.com")) {
-      icon = "https://github.githubassets.com/favicons/favicon.svg";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
-    if (host.includes("youtube.com")) {
-      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
-    if (host.includes("discord.com")) {
-      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
     // PulseWorld module-aware switching
     const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
 
@@ -361,7 +367,7 @@ async function getFavicon(url, flags = {}) {
       else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
       else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
       else icon = `${u.origin}/PWFavIcon.ico`;
-      icon = await fetchAndStoreIcon(host, IconURL);
+      icon = await fetchAndStoreIcon(host, icon);
 
       PBFAVICON_CACHE[host] = icon;
       saveCache();
@@ -385,7 +391,6 @@ async function getFavicon(url, flags = {}) {
 // ---------------------------------------------------------------------------
 const PB_HOMES = [
   "www.pulseworld.me",
-  "www.pulseworld.net",
   "www.pulseworld.money",
   "www.pulseworld.biz",
   "www.binaryos.net",
@@ -393,6 +398,7 @@ const PB_HOMES = [
   "www.gpuprocessing.net",
   "www.serviceworker.net",
   "www.orbitalmap.net",
+  "www.pulseworld.net"
 ];
 
 // ---------------------------------------------------------------------------
@@ -682,7 +688,7 @@ async function pbWarmPath(origin) {
   
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered += 1;
-  PulseRealmState.lastWarmOrigin = origin;  
+  PulseRealmState.lastWarmOrigin = origin;
 
   console.log(
     "%c[PBAccelerator] Warm-path (full):",
@@ -785,11 +791,88 @@ async function pbModuleWarmBoot() {
 
 setInterval(pbWarmBoot, 45000);
 
+const PB_LOG = {
+  info(label, data) {
+    console.log(
+      `%c[PBCompanion][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBCompanion][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBCompanion][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBCompanion][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBCompanion][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
   switch (msg.type) {
+
+    
+    case "PBEXTSETTINGS_GET":
+      pbLoadExtensionSettings().then((settings) => {
+        sendResponse({ ok: true, settings });
+      });
+      return true;
+
+    case "PBSETTINGS_GET":
+      pbLoadSettings().then((settings) => {
+        sendResponse({ ok: true, settings });
+      });
+      return true;
+
+    case "PBSETTINGS_SET":
+      pbSaveSettings(msg.settings || {}).then(() => {
+        PB_LOG.info("PBSETTINGS_SET", msg.settings);
+        sendResponse({ ok: true });
+      });
+      return true;
+
+    case "PBCONSOLE_SET":
+      pbSaveConsole(msg.console || {}).then(() => {
+        PB_LOG.info("PBCONSOLE_SET", msg.console);
+        sendResponse({ ok: true });
+      });
+      return true;
+
+    case "PBSETTINGS_RESET":
+      pbSaveSettings(PB_SW_SETTINGS).then(() => {
+        PB_LOG.info("PBSETTINGS_RESET", "Defaults Restored");
+        sendResponse({ ok: true });
+      });
+      return true;
 
     // -------------------------------------------------------
     // NAVIGATION EVENT → automatic acceleration
@@ -836,6 +919,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
+      
 
     // -------------------------------------------------------
     // REALM + WARM-PATH PHYSICS
@@ -844,7 +928,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.origin) {
         pbRealmWarm(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;
-        PulseRealmState.lastWarmOrigin = msg.origin;
       }
       sendResponse({ ok: true });
       break;
@@ -859,6 +942,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
+        PulseRealmState.warmPathsTriggered += 1;     
       }
       sendResponse({ ok: true });
       break;
@@ -1008,7 +1092,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PB_HOVER_PREFETCH":
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         pbPreconnect([msg.href]);
-        PBQuantumPrefetch.prefetchLink();
+        PBQuantumPrefetch.prefetchLink();        
+        PulseRealmState.lastWarmOrigin = msg.href;
       }
       sendResponse({ ok: true });
       break;
@@ -1048,7 +1133,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_WARMPATH":
       try {
         const origin = new URL(msg.url).origin;
-        PBUniversalBoost2?.warmOrigin?.(origin);
+        PBUniversalBoost2?.warmOrigin?.(origin);                
+        PulseRealmState.lastWarmOrigin = origin;
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1321,7 +1407,7 @@ const PBUniversalBoost2 = {
     }
 
     const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
-    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css", "/engine.wasm"];
+    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"];
 
     const urls = []
       .concat(paths.map((p) => origin + p))

@@ -73,7 +73,6 @@ function updateOverlay() {
       updateGPU(PulseRealm);
       updateSettings(PulseRealmSettings);
       updateExperimental(PulseRealmSettings);
-      updateFlags(PulseRealm.flags);
     });
   });
 }
@@ -124,7 +123,6 @@ function updateNavigator(settings, realm) {
     warmAssets: ${settings.navWarmAssets}<br/>
     warmGlobal: ${settings.navWarmGlobalSites}<br/>
     pulsePriority: ${settings.navPulseWorldPriority}<br/>
-    lastNav: ${realm.navHistory.slice(-1)[0] || "-"}<br/>
   `;
 }
 
@@ -142,8 +140,6 @@ function updateAccelerator(settings, realm) {
     warmPath: ${settings.accelWarmPath}<br/>
     gpuWarm: ${settings.accelGPUWarm}<br/>
     decodeWarm: ${settings.accelDecodeWarm}<br/>
-    warmPaths: ${realm.warmPathsTriggered}<br/>
-    warmAssets: ${realm.warmAssetsTriggered}<br/>
   `;
 }
 
@@ -154,12 +150,19 @@ function updatePerformance(realm) {
   const el = document.getElementById("pb-hud-performance");
   const perf = realm.perfEntries || [];
 
+  const lastPerf = perf.length > 0 ? perf[perf.length - 1] : null;
+
   el.innerHTML = `
-    <div class="pb-hud-title">Performance</div>
-    entries: ${perf.length}<br/>
+    <div class="pb-hud-title">Tab Performance</div>
+    mutations: ${realm.mutationCount}<br/>
+    lastMutationTS: ${realm.lastMutationTS || "-"}<br/>
+    perf entries: ${perf.length}<br/>
+    entry speed: ${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}<br/>
+    lastNav: ${realm.navHistory.slice(-1)[0] || "-"}<br/>
     lastNavTS: ${realm.perfLastNavigation || "-"}<br/>
   `;
 }
+
 
 // ---------------------------------------------------------------------------
 // SECTION: Warm-Path
@@ -167,9 +170,10 @@ function updatePerformance(realm) {
 function updateWarm(realm) {
   const el = document.getElementById("pb-hud-warm");
   el.innerHTML = `
-    <div class="pb-hud-title">Warm-Path</div>
-    mutations: ${realm.mutationCount}<br/>
-    lastMutationTS: ${realm.lastMutationTS || "-"}<br/>
+    <div class="pb-hud-title">Warm-Universe</div>
+    lastWarmOrigin: ${realm.lastWarmOrigin}<br/>
+    warmPaths: ${realm.warmPathsTriggered}<br/>
+    warmAssets: ${realm.warmAssetsTriggered}<br/>
     imagesDecoded: ${realm.imagesDecoded}<br/>
   `;
 }
@@ -217,20 +221,6 @@ function updateExperimental(settings) {
   `;
 }
 
-// ---------------------------------------------------------------------------
-// SECTION: Flags
-// ---------------------------------------------------------------------------
-function updateFlags(flags = {}) {
-  const el = document.getElementById("pb-hud-flags");
-  el.innerHTML = `
-    <div class="pb-hud-title">Flags</div>
-    hudActive: ${flags.hudActive}<br/>
-    contentRuntimeActive: ${flags.contentRuntimeActive}<br/>
-    acceleratorActive: ${flags.acceleratorActive}<br/>
-    routerActive: ${flags.routerActive}<br/>
-    navigatorActive: ${flags.navigatorActive}<br/>
-  `;
-}
 
 // ---------------------------------------------------------------------------
 // STYLE: Section Titles

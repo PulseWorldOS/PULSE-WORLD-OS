@@ -23,14 +23,14 @@ async function getSettings() {
 // HOME UNIVERSE (Your 9 domains)
 const PB_HOME = [
   "pulseworld.me",
-  "pulseworld.net",
   "pulseworld.money",
   "pulseworld.biz",
   "binaryos.net",
   "booleanlogic.net",
   "gpuprocessing.net",
   "serviceworker.net",
-  "orbitalmap.net"
+  "orbitalmap.net",
+  "pulseworld.net"
 ];
 
 // TRACKERS / JUNK / SLOW PATHS

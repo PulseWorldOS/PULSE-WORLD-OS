@@ -36,7 +36,7 @@ const PBUniversalBoost = {
     }
 
     const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
-    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css", "/engine.wasm"];
+    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"];
 
     const urls = []
       .concat(paths.map((p) => origin + p))
@@ -775,7 +775,6 @@ async function getFavicon(url, flags = {}) {
 
   // ⭐ Build favicon URL using hostname (preserves www)
   let icon = `https://${host}/favicon.ico`;
-  const IconURL = icon;
 
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
@@ -786,9 +785,49 @@ async function getFavicon(url, flags = {}) {
     }
   }
 
+  
+  try {
+    // Special cases
+    if (host.includes("office.com")) {
+      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("github.com")) {
+      icon = "https://github.githubassets.com/favicons/favicon.svg";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("youtube.com")) {
+      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("discord.com")) {
+      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      icon = await fetchAndStoreIcon(host, icon);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    } catch {
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
   // ⭐ If cached → return instantly
   if (PBFAVICON_CACHE[host]) {
-    icon = await fetchAndStoreIcon(host, IconURL);
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
@@ -799,50 +838,17 @@ async function getFavicon(url, flags = {}) {
 
   const PB_HOMES = [
     "pulseworld.me",
-    "pulseworld.net",
     "pulseworld.money",
     "pulseworld.biz",
     "binaryos.net",
     "booleanlogic.net",
     "gpuprocessing.net",
     "serviceworker.net",
-    "orbitalmap.net"
+    "orbitalmap.net",
+    "pulseworld.net"
   ];
 
   try {
-    // Special cases
-    if (host.includes("office.com")) {
-      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
-    if (host.includes("github.com")) {
-      icon = "https://github.githubassets.com/favicons/favicon.svg";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
-    if (host.includes("youtube.com")) {
-      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
-    if (host.includes("discord.com")) {
-      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      icon = await fetchAndStoreIcon(host, IconURL);
-      PBFAVICON_CACHE[host] = icon;
-      saveCache();
-      return icon;
-    }
-
     // PulseWorld module-aware switching
     const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
 
@@ -856,7 +862,7 @@ async function getFavicon(url, flags = {}) {
       else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
       else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
       else icon = `${u.origin}/PWFavIcon.ico`;
-      icon = await fetchAndStoreIcon(host, IconURL);
+      icon = await fetchAndStoreIcon(host, icon);
 
       PBFAVICON_CACHE[host] = icon;
       saveCache();

@@ -21,14 +21,14 @@ async function getSettings() {
 // ---------------------------------------------------------------------------
 const PB_HOME2 = [
   "pulseworld.me",
-  "pulseworld.net",
   "pulseworld.money",
   "pulseworld.biz",
   "binaryos.net",
   "booleanlogic.net",
   "gpuprocessing.net",
   "serviceworker.net",
-  "orbitalmap.net"
+  "orbitalmap.net",
+  "pulseworld.net"
 ];
 
 // ---------------------------------------------------------------------------

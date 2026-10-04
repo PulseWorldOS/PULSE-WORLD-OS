@@ -261,7 +261,7 @@ const PBUniversalBoost = {
     }
 
     const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
-    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css", "/engine.wasm"];
+    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"];
 
     const urls = []
       .concat(paths.map((p) => origin + p))
@@ -435,28 +435,7 @@ async function getFavicon(url, flags = {}) {
     }
   }
 
-  // ⭐ If cached → return instantly
-  if (PBFAVICON_CACHE[host]) {
-    console.log(
-      "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
-      "color:#00FF9C; font-weight:bold; font-family:monospace;"
-    );
-    return PBFAVICON_CACHE[host];
-  }
-
-
-  const PB_HOMES = [
-    "pulseworld.me",
-    "pulseworld.net",
-    "pulseworld.money",
-    "pulseworld.biz",
-    "binaryos.net",
-    "booleanlogic.net",
-    "gpuprocessing.net",
-    "serviceworker.net",
-    "orbitalmap.net"
-  ];
-
+  
   try {
     // Special cases
     if (host.includes("office.com")) {
@@ -491,6 +470,35 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
+    } catch {
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+  // ⭐ If cached → return instantly
+  if (PBFAVICON_CACHE[host]) {
+    console.log(
+      "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
+      "color:#00FF9C; font-weight:bold; font-family:monospace;"
+    );
+    return PBFAVICON_CACHE[host];
+  }
+
+
+  const PB_HOMES = [
+    "pulseworld.me",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net",
+    "pulseworld.net"
+  ];
+
+  try {
     // PulseWorld module-aware switching
     const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
 
@@ -523,9 +531,8 @@ async function getFavicon(url, flags = {}) {
 }
 
 
-window.addEventListener("DOMContentLoaded", () => {
-  updateModuleIcons();
-});
+setTimeout(updateModuleIcons, 300);
+
 
 // ---------------------------------------------------------------------------
 // PRECONNECT (DNS/TLS/TCP warm-path)
@@ -775,7 +782,6 @@ async function updateModuleIcons() {
   pbModuleWarmBoot(settings).catch(() => {});
 
   const PB_HOMES = [
-    "https://www.pulseworld.net",
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
     "https://www.pulseworld.biz",
@@ -783,7 +789,8 @@ async function updateModuleIcons() {
     "https://www.booleanlogic.net",
     "https://www.gpuprocessing.net",
     "https://www.serviceworker.net",
-    "https://www.orbitalmap.net"
+    "https://www.orbitalmap.net",
+    "https://www.pulseworld.net"
   ];
 
   const Links = [
@@ -1656,7 +1663,6 @@ setInterval(() => {
     PulseRealmSettings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
-      "https://www.pulseworld.net",
       "https://www.pulseworld.me",
       "https://www.pulseworld.money",
       "https://www.pulseworld.biz",
@@ -1664,7 +1670,8 @@ setInterval(() => {
       "https://www.booleanlogic.net",
       "https://www.gpuprocessing.net",
       "https://www.serviceworker.net",
-      "https://www.orbitalmap.net"
+      "https://www.orbitalmap.net",
+      "https://www.pulseworld.net",
     ];
 
     const Links = [

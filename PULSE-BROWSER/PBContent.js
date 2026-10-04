@@ -764,14 +764,14 @@ chrome.runtime.onMessage.addListener((msg) => {
 // ---------------------------------------------------------------------------
 const PB_HOME = [
   "www.pulseworld.me",
-  "www.pulseworld.net",
   "www.pulseworld.money",
   "www.pulseworld.biz",
   "www.binaryos.net",
   "www.booleanlogic.net",
   "www.gpuprocessing.net",
   "www.serviceworker.net",
-  "www.orbitalmap.net"
+  "www.orbitalmap.net",
+  "www.pulseworld.net"
 ];
 
 // ---------------------------------------------------------------------------

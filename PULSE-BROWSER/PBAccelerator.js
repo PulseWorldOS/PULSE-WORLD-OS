@@ -37,17 +37,17 @@ async function getSettings() {
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
 // ---------------------------------------------------------------------------
-const PB_HOME = [
-  "pulseworld.me",
-  "pulseworld.net",
-  "pulseworld.money",
-  "pulseworld.biz",
-  "binaryos.net",
-  "booleanlogic.net",
-  "gpuprocessing.net",
-  "serviceworker.net",
-  "orbitalmap.net"
-];
+const PB_HOMES = [
+    "pulseworld.me",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net",
+    "pulseworld.net"
+  ];
 
 // ---------------------------------------------------------------------------
 // ASSET TARGETS (JS/CSS/WASM/JSON)
@@ -55,7 +55,7 @@ const PB_HOME = [
 const PB_ASSETS = [
   "/", "/main.js", "/app.js", "/engine.js", "/runtime.js",
   "/styles.css", "/pulse.css", "/world.css",
-  "/config.json", "/manifest.json", "/engine.wasm"
+  "/config.json", "/manifest.json"
 ];
 
 
@@ -188,7 +188,7 @@ function pbRealmWarm(origin) {
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
 function pbDomainClass(url) {
-  for (const domain of PB_HOME) {
+  for (const domain of PB_HOMES) {
     if (url.includes(domain)) return "PulseWorld";
   }
   return "WWW";
@@ -230,7 +230,6 @@ async function pbWarmPath(origin) {
 
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered += 1;
-  PulseRealmState.lastWarmOrigin = origin;
 
   console.log(
     "%c[PBAccelerator] Warm-path (full):",
@@ -266,7 +265,7 @@ async function pbHomeWarmBoot() {
   const S = await getSettings();
   if (!S.accelHomeWarmBoot) return;
 
-  const origins = PB_HOME.map((d) => "https://" + d);
+  const origins = PB_HOMES.map((d) => "https://" + d);
   pbPreconnect(origins);
 
   origins.forEach((origin) => {
@@ -276,7 +275,7 @@ async function pbHomeWarmBoot() {
 
   chrome.runtime.sendMessage({
     type: "PBACC_WARMPATH_EVENT",
-    origins: PB_HOME
+    origins: PB_HOMES
   });
 
   console.log("%c[PBAccelerator] Home Warm-Boot executed",

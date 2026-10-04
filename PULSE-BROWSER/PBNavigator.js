@@ -21,14 +21,14 @@ async function getSettings() {
 // ---------------------------------------------------------------------------
 const PB_HOME = [
   "pulseworld.me",
-  "pulseworld.net",
   "pulseworld.money",
   "pulseworld.biz",
   "binaryos.net",
   "booleanlogic.net",
   "gpuprocessing.net",
   "serviceworker.net",
-  "orbitalmap.net"
+  "orbitalmap.net",
+  "pulseworld.net"
 ];
 
 // ---------------------------------------------------------------------------
@@ -45,7 +45,7 @@ const PB_SIBLINGS = [
 const PB_ASSETS = [
   "/main.js", "/app.js", "/engine.js", "/runtime.js",
   "/styles.css", "/pulse.css", "/world.css",
-  "/config.json", "/manifest.json", "/engine.wasm"
+  "/config.json", "/manifest.json"
 ];
 
 // ---------------------------------------------------------------------------
