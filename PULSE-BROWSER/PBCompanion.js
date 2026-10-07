@@ -688,7 +688,8 @@ async function pbWarmPath(origin) {
   
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered += 1;
-  PulseRealmState.lastWarmOrigin = origin;
+  const originA = new URL(origin).origin;
+  PulseRealmState.lastWarmOrigin = originA;
 
   console.log(
     "%c[PBAccelerator] Warm-path (full):",
@@ -879,6 +880,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBNAV_EVENT":
       if (msg.url) pbAccelerate(msg.url);
+      PB_LOG.info("PBNAV_EVENT", msg.url);
       sendResponse({ ok: true });
       break;
 
@@ -897,6 +899,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBACC_PRELOAD":
       if (msg.origin) pbPreload(msg.origin);
+      PB_LOG.info("PBACC_PRELOAD", msg.origin);
       sendResponse({ ok: true });
       break;
 
@@ -929,6 +932,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         pbRealmWarm(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;
       }
+      PB_LOG.info("PBACC_REALMWARM", msg.origin);
       sendResponse({ ok: true });
       break;
 
@@ -936,6 +940,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (Array.isArray(msg.origins)) {
         pbWarmPaths(msg.origins);
       }
+      PB_LOG.info("PBACC_WARMPATH_EVENT", msg.origins);
       sendResponse({ ok: true });
       break;
 
@@ -944,15 +949,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         pbWarmPath(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;     
       }
+      PB_LOG.info("PBACC_WARMPATH", msg.origin);
       sendResponse({ ok: true });
       break;
 
     case "PBACC_ACCELERATE":
       if (msg.url) {
         pbAccelerate(msg.url);
+        const origin = new URL(msg.url).origin;
         PulseRealmState.warmPathsTriggered += 1;
-        PulseRealmState.lastWarmOrigin = msg.url;
+        PulseRealmState.lastWarmOrigin = origin;
       }
+      PB_LOG.info("PBACC_ACCELERATE", origin);
       sendResponse({ ok: true });
       break;
 
@@ -968,6 +976,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       (async () => {
         try {
           const cacheNames = await caches.keys();
+          PB_LOG.info("GET_CACHE_LIST", cacheNames);
           sendResponse({ ok: true, caches: cacheNames });
         } catch (err) {
           sendResponse({ ok: false, error: err.toString() });
@@ -1035,6 +1044,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           type: "PBACC_WARMPATH",
           origin
         });
+        PB_LOG.info("PBACC_ACCELERATE_EVENT", origin);
       }
       sendResponse({ ok: true });
       break;
@@ -1060,21 +1070,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true, state: PulseRealmState });
       break;
 
-    // -------------------------------------------------------
-    // SETTINGS + CONSOLE
-    // -------------------------------------------------------
-    case "PBSETTINGS_GET":
-      pbLoadSettings().then(settings => sendResponse({ ok: true, settings }));
-      return true;
-
-    case "PBSETTINGS_SET":
-      pbSaveSettings(msg.settings || {}).then(() => sendResponse({ ok: true }));
-      return true;
-
-    case "PBCONSOLE_SET":
-      pbSaveConsole(msg.console || {}).then(() => sendResponse({ ok: true }));
-      return true;
-
     case "PBCONSOLE_GET":
       pbLoadConsole().then(console => sendResponse({ ok: true, console }));
       return true;
@@ -1093,9 +1088,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PB_HOVER_PREFETCH":
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         pbPreconnect([msg.href]);
-        PBQuantumPrefetch.prefetchLink();        
-        PulseRealmState.lastWarmOrigin = msg.href;
+        PBQuantumPrefetch.prefetchLink();
+        const origin = new URL(msg.href).origin;
+        PulseRealmState.lastWarmOrigin = origin;
       }
+      PB_LOG.info("PB_HOVER_PREFETCH", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1111,6 +1108,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
         PulseRealmState.imagesDecoded += msg.decodeCount || 1;        
         PulseRealmState.lastWarmOrigin = origin;
+        PB_LOG.info("PB_ASSET_LIST_CONTENT", origin);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1125,6 +1123,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(originfile, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
         PulseRealmState.imagesDecoded += msg.decodeCount || 1;
+        PB_LOG.info("PB_ASSET_LIST_FRONT", originfile);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1137,6 +1136,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const origin = new URL(msg.url).origin;
         PBUniversalBoost2?.warmOrigin?.(origin);                
         PulseRealmState.lastWarmOrigin = origin;
+        PB_LOG.info("PBCONTENT_WARMPATH", origin);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1313,10 +1313,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (!S.enableNavigator) return;
   if (changeInfo.status !== "complete" || !tab.url) return;
 
-  const url = tab.url;
+  let url = tab.url;
   const origin = new URL(url).origin;
   const domainClass = S.homeUniverse.some((d) => url.includes(d)) ? "PulseWorld" : "WWW";
 
+  if (url.includes("newtab")) {
+    url = "impulse://newtab"
+  }
   PulseRealmState.lastURL = url;
   PulseRealmState.lastDomainClass = domainClass;
   PulseRealmState.navHistory.push(url);

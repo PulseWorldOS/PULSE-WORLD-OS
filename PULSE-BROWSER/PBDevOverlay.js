@@ -84,12 +84,12 @@ function updateKernel(realm) {
   const el = document.getElementById("pb-hud-kernel");
   el.innerHTML = `
     <div class="pb-hud-title">Kernel</div>
-    page: ${realm.lastPage || "-"}<br/>
-    title: ${realm.lastTitle || "-"}<br/>
-    url: ${realm.lastURL || "-"}<br/>
-    domain: ${realm.lastDomainClass || "-"}<br/>
-    lastPing: ${realm.lastPing || "-"}<br/>
-    band: ${realm.band}<br/>
+    last page: ${realm.lastPage || "-"}<br/>
+    last title: ${realm.lastTitle || "-"}<br/>
+    last url: ${realm.lastURL || "-"}<br/>
+    domain class: ${realm.lastDomainClass || "-"}<br/>
+    last Ping: ${realm.lastPing || "-"}<br/>
+    data band: ${realm.band}<br/>
     sessionStart: ${realm.sessionStart || "-"}<br/>
   `;
 }

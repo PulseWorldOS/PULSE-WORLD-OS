@@ -571,7 +571,9 @@ function pbTLSWarm(origin) {
 }
 
 
-async function pbModuleWarmBoot(settings) {
+async function pbModuleWarmBoot() {
+  const settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
   const warmTargets = [
     "https://www.pulseworld.net",
     "https://www.pulseworld.me",
@@ -582,18 +584,18 @@ async function pbModuleWarmBoot(settings) {
     "https://www.gpuprocessing.net",
     "https://www.serviceworker.net",
     "https://www.orbitalmap.net",
-    "https://www.google.com",
-    settings.externalBankLink,
-    settings.externalEmailLink,
-    settings.externalSocialLink,
-    settings.externalWorkLink,
-    settings.externalStreamingLink,
-    settings.externalSearchLink,
-    settings.acceleratedModule1Link,
-    settings.acceleratedModule2Link,
-    settings.acceleratedModule3Link,
-    settings.acceleratedModule4Link,
-    settings.acceleratedModule5Link
+    PulseRealmSettings.externalBankLink,
+    PulseRealmSettings.externalEmailLink,
+    PulseRealmSettings.externalSocialLink,
+    PulseRealmSettings.externalWorkLink,
+    PulseRealmSettings.externalStreamingLink,
+    PulseRealmSettings.externalSearchLink,
+    PulseRealmSettings.acceleratedModule1Link,
+    PulseRealmSettings.acceleratedModule2Link,
+    PulseRealmSettings.acceleratedModule3Link,
+    PulseRealmSettings.acceleratedModule4Link,
+    PulseRealmSettings.acceleratedModule5Link,
+    "https://www.google.com"
   ].filter(u => u && u.startsWith("http"));
 
   if (warmTargets.length === 0) return;
@@ -611,6 +613,7 @@ async function pbModuleWarmBoot(settings) {
     "color:#00C8FF; font-weight:bold;"
   );
 }
+
 
 let keyIsDown = false;
 let keyHoldTimer = null;
@@ -778,9 +781,6 @@ async function updateModuleIcons() {
     }
   }
 
-  // Run home warm-boot once when accelerator loads
-  pbModuleWarmBoot(settings).catch(() => {});
-
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
@@ -861,6 +861,8 @@ async function updateModuleIcons() {
     }
   });
 }
+
+setTimeout(pbModuleWarmBoot, 3000)
 
 async function pulseConsoleKey(event) {
   const key = event.key.toLowerCase();
@@ -1727,6 +1729,7 @@ setInterval(() => {
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
+      gpuWarmExtra();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 

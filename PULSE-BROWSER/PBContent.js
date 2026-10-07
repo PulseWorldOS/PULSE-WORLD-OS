@@ -1018,7 +1018,7 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
-        count += 1;
+        count += 2;
         // Create a tiny GPU workload to warm the queue
         const queue = device.queue;
         const buffer = device.createBuffer({
@@ -1045,9 +1045,16 @@ function emitFullPageContext() {
     type: "PBREALM_UPDATE_FULL",
     page: location.pathname,
     url: location.href,
-    title: document.title,
+    title: documentTitle(),
     bands: extractWorldBands()
   });
+}
+
+function documentTitle() {
+  if (document.title.includes("newtab")) {
+    document.title = "impulse://newtab"
+  }
+  return document.title;
 }
 
 setTimeout(emitFullPageContext, 400);
