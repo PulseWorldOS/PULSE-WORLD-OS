@@ -115,12 +115,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // GPU WARM-PATH (from PBContent / PBAccelerator)
     // ---------------------------------------------------------
     case "PBCONTENT_GPUWARM":
-      PulseRealmState.gpuWarmCount += msg.count || 1;
+      PulseRealmState.gpuEnabled = msg.gpuEnabled;
       sendResponse({ ok: true });
       break;
 
     case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount += msg.count || 1;
+      PulseRealmState.gpuEnabled = msg.gpuEnabled;
       sendResponse({ ok: true });
       break;
     // ---------------------------------------------------------

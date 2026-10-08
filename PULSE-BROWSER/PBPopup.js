@@ -483,72 +483,72 @@ document.getElementById("mod-stream").onclick = async () => {
 //   });
 // };
 
-function updateHUD() {
-  const body = document.getElementById("pb-hud-body");
-  if (!body) return;
+// function updateHUD() {
+//   const body = document.getElementById("pb-hud-body");
+//   if (!body) return;
 
-  chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
-    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
+//   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
+//     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
-      PulseRealm = realmRes.state || {};
-      PulseRealmSettings = settingsRes.settings || {};
+//       PulseRealm = realmRes.state || {};
+//       PulseRealmSettings = settingsRes.settings || {};
 
-      // ---------------------------------------------
-      // ⭐ PAGE LOAD TIME (ms)
-      // ---------------------------------------------
-      let loadTime = "-";
+//       // ---------------------------------------------
+//       // ⭐ PAGE LOAD TIME (ms)
+//       // ---------------------------------------------
+//       let loadTime = "-";
 
-      try {
-        const nav = performance.getEntriesByType("navigation")[0];
-        if (nav) {
-          loadTime = Math.round(nav.loadEventEnd);
-        } else {
-          // fallback for older browsers
-          const t = performance.timing;
-          loadTime = Math.round(t.loadEventEnd - t.navigationStart);
-        }
-      } catch (e) {
-        loadTime = "-";
-      }
+//       try {
+//         const nav = performance.getEntriesByType("navigation")[0];
+//         if (nav) {
+//           loadTime = Math.round(nav.loadEventEnd);
+//         } else {
+//           // fallback for older browsers
+//           const t = performance.timing;
+//           loadTime = Math.round(t.loadEventEnd - t.navigationStart);
+//         }
+//       } catch (e) {
+//         loadTime = "-";
+//       }
 
-      // ---------------------------------------------
-      // ⭐ DOM CONTENT LOADED TIME (ms)
-      // ---------------------------------------------
-      let domTime = "-";
+//       // ---------------------------------------------
+//       // ⭐ DOM CONTENT LOADED TIME (ms)
+//       // ---------------------------------------------
+//       let domTime = "-";
 
-      try {
-        const nav = performance.getEntriesByType("navigation")[0];
-        if (nav) {
-          domTime = Math.round(nav.domContentLoadedEventEnd);
-        } else {
-          // fallback for older browsers
-          const t = performance.timing;
-          domTime = Math.round(t.domContentLoadedEventEnd - t.navigationStart);
-        }
-      } catch (e) {
-        domTime = "-";
-      }
+//       try {
+//         const nav = performance.getEntriesByType("navigation")[0];
+//         if (nav) {
+//           domTime = Math.round(nav.domContentLoadedEventEnd);
+//         } else {
+//           // fallback for older browsers
+//           const t = performance.timing;
+//           domTime = Math.round(t.domContentLoadedEventEnd - t.navigationStart);
+//         }
+//       } catch (e) {
+//         domTime = "-";
+//       }
 
 
-      body.innerHTML = `
-        Page: ${PulseRealm.lastPage || "-"}<br/>
-        URL: ${PulseRealm.lastURL || "-"}<br/>
-        Domain: ${PulseRealm.lastDomainClass || "-"}<br/>
-        Ping: ${PulseRealm.lastPing || "-"}<br/>
-        Mutations: ${PulseRealm.mutationCount}<br/>
-        GPUWarm: ${PulseRealm.gpuWarmCount}<br/>
-        DecodeWarm: ${PulseRealm.imagesDecoded}<br/>
-        WarmPaths: ${PulseRealm.warmPathsTriggered}<br/>
-        Accel: ${PulseRealmSettings.enableAccelerator}<br/>
-        NAV: ${PulseRealmSettings.enableNavigator}<br/>
-        Intercept: ${PulseRealmSettings.enableInterceptor}<br/>
-        DOM: ${domTime}ms<br/>
-        Load: ${loadTime}ms<br/>
-        TS: ${new Date().toLocaleTimeString()}
-      `;
-    });
-  });
-}
+//       body.innerHTML = `
+//         Page: ${PulseRealm.lastPage || "-"}<br/>
+//         URL: ${PulseRealm.lastURL || "-"}<br/>
+//         Domain: ${PulseRealm.lastDomainClass || "-"}<br/>
+//         Ping: ${PulseRealm.lastPing || "-"}<br/>
+//         Mutations: ${PulseRealm.mutationCount}<br/>
+//         GPUWarm: ${PulseRealm.gpuEnabled}<br/>
+//         DecodeWarm: ${PulseRealm.imagesDecoded}<br/>
+//         WarmPaths: ${PulseRealm.warmPathsTriggered}<br/>
+//         Accel: ${PulseRealmSettings.enableAccelerator}<br/>
+//         NAV: ${PulseRealmSettings.enableNavigator}<br/>
+//         Intercept: ${PulseRealmSettings.enableInterceptor}<br/>
+//         DOM: ${domTime}ms<br/>
+//         Load: ${loadTime}ms<br/>
+//         TS: ${new Date().toLocaleTimeString()}
+//       `;
+//     });
+//   });
+// }
 
 setTimeout(loadWorld,450);
 

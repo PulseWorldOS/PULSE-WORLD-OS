@@ -45,7 +45,7 @@ async function pbLogKernelStatus() {
 
     logKV("Mutation Count", state.mutationCount);
     logKV("Images Decoded", state.imagesDecoded);
-    logKV("GPU Warm Count", state.gpuWarmCount);
+    logKV("GPU Warm Enabled", state.gpuEnabled);
 
     logKV("Warm Paths Triggered", state.warmPathsTriggered);
     logKV("Warm Assets Triggered", state.warmAssetsTriggered);

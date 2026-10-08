@@ -36,14 +36,15 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
 
+
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let count = 0;
+  let gpuEnabled = null;
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try { 
       el.getContext?.("webgl") || el.getContext?.("webgl2");
-      count += 1;
+      gpuEnabled = "WebGL";
      } catch (_) {}
     try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
@@ -55,7 +56,7 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
-        count += 1;
+        gpuEnabled = "WebGPU";
         // Create a tiny GPU workload to warm the queue
         const queue = device.queue;
         const buffer = device.createBuffer({
@@ -67,7 +68,7 @@ async function gpuWarmExtra() {
     }
   } catch (_) {}
 
-  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM_EXTRA", count });
+  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM_EXTRA", gpuEnabled });
 }
 
 
@@ -1661,7 +1662,6 @@ setInterval(() => {
     });
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
-
     PulseRealmSettings = await pbLoadExtensionSettings();
 
     const PB_HOMES = [
@@ -1673,7 +1673,7 @@ setInterval(() => {
       "https://www.gpuprocessing.net",
       "https://www.serviceworker.net",
       "https://www.orbitalmap.net",
-      "https://www.pulseworld.net",
+      "https://www.pulseworld.net"
     ];
 
     const Links = [
@@ -1714,11 +1714,17 @@ setInterval(() => {
     if (Links.length > 0) pbPreconnect(Links);
     if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
 
+    const count = Links.length + temporaryLinks.length;
+
     chrome.runtime.sendMessage({
       type: "PBACC_WARMPATH_EVENT",
       origins: PB_HOMES
     });
 
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EXTERNAL",
+      count
+    });
   }
 
   document.addEventListener("visibilitychange", () => {
@@ -1730,6 +1736,7 @@ setInterval(() => {
         if (chrome.runtime.lastError) return;
       });
       gpuWarmExtra();
+      updateOverlay();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 

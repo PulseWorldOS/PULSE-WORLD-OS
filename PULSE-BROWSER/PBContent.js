@@ -396,7 +396,7 @@ function updateHUD() {
       // ---------------------------------------------
       const workloadKB =
         (PulseRealm.mutationCount * 0.002) +        // DOM mutations
-        (PulseRealm.gpuWarmCount * 50) +            // GPU warm cost
+        (PulseRealm.warmAssetsTriggered * 50) +            // GPU warm cost
         (PulseRealm.imagesDecoded * 20) +           // decode warm cost
         (PulseRealm.warmPathsTriggered * 200);      // warm-path cost
       const workloadMB = workloadKB / 1024;
@@ -405,7 +405,6 @@ function updateHUD() {
       // ⭐ OPS/ms (operations per millisecond)
       // ---------------------------------------------
       const ops = PulseRealm.mutationCount +
-                  PulseRealm.gpuWarmCount +
                   PulseRealm.imagesDecoded +
                   PulseRealm.warmPathsTriggered +
                   PulseRealm.warmAssetsTriggered;
@@ -599,7 +598,7 @@ function updateHUD() {
         <font color="#0FF">Pulse Efficiency:</font> ${PEI}<br/>
         <font color="#0FF">Workload:</font> ${workloadMB.toFixed(2)} MB<br/>
         <font color="#0FF">Mutations:</font> ${PulseRealm.mutationCount}<br/>
-        <font color="#0FF">GPUWarm:</font> ${PulseRealm.gpuWarmCount}<br/>
+        <font color="#0FF">GPUWarm:</font> ${PulseRealm.gpuEnabled}<br/>
         <font color="#0FF">DecodeWarm:</font> ${PulseRealm.imagesDecoded}<br/>
         <font color="#0FF">WarmAssets:</font> ${PulseRealm.warmAssetsTriggered}<br/>
         <font color="#0FF">WarmPaths:</font> ${PulseRealm.warmPathsTriggered}<br/>
@@ -1001,12 +1000,12 @@ setTimeout(triggerWarmPaths, 300);
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let count = 0;
+  let gpuEnabled = null;
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try { 
       el.getContext?.("webgl") || el.getContext?.("webgl2");
-      count += 1;
+      gpuEnabled = "WebGL";
      } catch (_) {}
     try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
@@ -1018,7 +1017,7 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
-        count += 2;
+        gpuEnabled = "WebGPU";
         // Create a tiny GPU workload to warm the queue
         const queue = device.queue;
         const buffer = device.createBuffer({
@@ -1030,7 +1029,7 @@ async function gpuWarmExtra() {
     }
   } catch (_) {}
 
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", count });
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
 setTimeout(gpuWarmExtra, 900);

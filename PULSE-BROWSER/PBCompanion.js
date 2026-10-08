@@ -3,6 +3,7 @@
 //  Manifest V3 Service Worker — full OS kernel
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
+const now = new Date().toLocaleString();
 const CACHE_NAME = "pb-companion-cache";
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -16,6 +17,7 @@ const PulseRealmState = {
   lastDomainClass: null,
   // Bands (PulseWorld / OS)
   band: "PulseBand",
+  gpuEnabled: null,
     // accelBand: null,
     // routerBand: null,
     // gpuBand: null,
@@ -25,10 +27,11 @@ const PulseRealmState = {
   perfEntries: [],
   mutationCount: 0,
   imagesDecoded: 0,
-  gpuWarmCount: 0,
   warmPathsTriggered: 0,
   warmAssetsTriggered: 0,
   lastWarmOrigin: null,
+  // Settings snapshot
+  settings: {},
   flags: {
     hudActive: true,
     contentRuntimeActive: true,
@@ -36,6 +39,76 @@ const PulseRealmState = {
     routerActive: true,
     navigatorActive: true
   }
+};
+
+
+// ============================================================================
+//  SECTION 2 — SETTINGS (Full OS Registry)
+// ============================================================================
+const PB_SW_SETTINGS = {
+  enableInterceptor: true,
+  enableAccelerator: true,
+  enableNavigator: true,
+  enableRouter: true,
+  enablePulseGPU: true,
+  enablePulseDecode: true,
+  enableContentRuntime: true,
+  enableDevOverlay: true,
+
+  blockTrackers: true,
+  blockAnalytics: true,
+  blockAds: true,
+  blockFingerprinting: false,
+
+  upgradeHTTPtoHTTPS: true,
+  forceHTTP2: false,
+  forceHTTP3: false,
+  forceQUIC: false,
+
+  accelPreconnect: true,
+  accelPrefetch: true,
+  accelPreload: true,
+  accelWarmPath: true,
+  accelGPUWarm: true,
+  accelDecodeWarm: true,
+  accelDNSWarm: true,
+  accelTLSWarm: true,
+  accelRealmWarm: true,
+
+  navWarmSiblings: true,
+  navWarmAssets: true,
+  navWarmGlobalSites: true,
+  navPulseWorldPriority: true,
+
+  routerPrioritizeCDN: true,
+  routerPrioritizeAssets: true,
+  routerPrioritizeHomeUniverse: true,
+  routerLatencyScan: true,
+  routerRealmScan: true,
+  routerFallbackScan: true,
+  routerAdaptiveRouting: true,
+
+  experimentalGPUPaths: false,
+  experimentalDecodePaths: false,
+  experimentalRouteGraph: false,
+  experimentalAIWarmPath: false,
+  experimentalTemporalNavigation: false,
+  experimentalPredictivePrefetch: true,
+  experimentalQuantumRouting: true,
+  experimentalPortalTransitions: false,
+  experimentalMeshAwareness: false,
+
+  homeUniverse: [
+    "pulseworld.net",
+    "pulseworld.me",
+    "pulseworld.money",
+    "pulseworld.biz",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "serviceworker.net",
+    "orbitalmap.net"
+  ]
 };
 
 // ============================================================================
@@ -134,7 +207,7 @@ self.addEventListener('fetch', event => {
 
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
-let now = new Date().toLocaleString();
+
 console.log("[PULSEWORLD OS KERNEL] Initializing PulseWorld with Accelerated Modules:", now);
 
 const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
@@ -424,6 +497,8 @@ function safeSendMessage(msg) {
 }
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  const S = await pbLoadSettings();
+  if (!S.enableNavigator) return;
   const tab = await chrome.tabs.get(activeInfo.tabId);
   // Universal boost warm-path
   if (typeof PBUniversalBoost2?.warmTab === "function") {
@@ -688,8 +763,7 @@ async function pbWarmPath(origin) {
   
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered += 1;
-  const originA = new URL(origin).origin;
-  PulseRealmState.lastWarmOrigin = originA;
+  
 
   console.log(
     "%c[PBAccelerator] Warm-path (full):",
@@ -729,11 +803,6 @@ async function pbHomeWarmBoot() {
   origins.forEach((origin) => {
     pbPreload(origin);
     pbHomeRealmWarm(origin);
-  });
-
-  chrome.runtime.sendMessage({
-    type: "PBACC_WARMPATH_EVENT",
-    origins: PB_HOMES
   });
 
   console.log("%c[PBAccelerator] Home Warm-Boot executed",
@@ -850,6 +919,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBSETTINGS_GET":
       pbLoadSettings().then((settings) => {
+        PulseRealmState.settings = settings || {};
         sendResponse({ ok: true, settings });
       });
       return true;
@@ -904,12 +974,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBACC_GPUWARM":
-      PulseRealmState.gpuWarmCount += msg.count || 1;
+      PulseRealmState.gpuEnabled = msg.gpuEnabled;
       sendResponse({ ok: true });
       break;
 
     case "PBACC_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount += msg.count || 1;
+      PulseRealmState.gpuEnabled = msg.gpuEnabled;
       sendResponse({ ok: true });
       break;
 
@@ -944,10 +1014,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       break;
 
+    case "PBACC_WARMPATH_EXTERNAL":
+      PulseRealmState.warmPathsTriggered += msg.count || 1;
+      sendResponse({ ok: true });
+      break;
+
     case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
-        PulseRealmState.warmPathsTriggered += 1;     
+        PulseRealmState.warmPathsTriggered += 1;
+        PulseRealmState.lastWarmOrigin = msg.origin;
       }
       PB_LOG.info("PBACC_WARMPATH", msg.origin);
       sendResponse({ ok: true });
@@ -1015,7 +1091,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_GPUWARM":
     case "PBCONTENT_GPUWARM_EXTRA":
-      PulseRealmState.gpuWarmCount += msg.count || 1;
+      PulseRealmState.gpuEnabled = msg.gpuEnabled;
       sendResponse({ ok: true });
       break;
 
@@ -1061,8 +1137,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // REALM STATE UPDATES
     // -------------------------------------------------------
     case "PBREALM_UPDATE":
-      PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastPing = new Date().toLocaleString();
+      PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       sendResponse({ ok: true });
       break;
 
@@ -1073,6 +1149,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONSOLE_GET":
       pbLoadConsole().then(console => sendResponse({ ok: true, console }));
       return true;
+
+    // ---------------------------------------------------------
+    // SETTINGS SNAPSHOT (from PBSettings kernel)
+    // ---------------------------------------------------------
+    case "PBSETTINGS_SNAPSHOT":
+      PulseRealmState.settings = msg.settings || {};
+      sendResponse({ ok: true });
+      break;
+
+    // ---------------------------------------------------------
+    // FLAGS UPDATE (DevOverlay / kernel)
+    // ---------------------------------------------------------
+    case "PBREALM_FLAGS_UPDATE":
+      PulseRealmState.flags = Object.assign({}, PulseRealmState.flags, msg.flags || {});
+      sendResponse({ ok: true });
+      break;
 
     // -------------------------------------------------------
     // DEV STATUS
@@ -1145,10 +1237,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // FULL REALM UPDATE
     // -------------------------------------------------------
     case "PBREALM_UPDATE_FULL":
+      PulseRealmState.lastPing = new Date().toLocaleString();
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
-      PulseRealmState.lastPing = new Date().toLocaleString();
       sendResponse({ ok: true });
       break;
 
@@ -1157,75 +1249,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-
-// ============================================================================
-//  SECTION 2 — SETTINGS (Full OS Registry)
-// ============================================================================
-const PB_SW_SETTINGS = {
-  enableInterceptor: true,
-  enableAccelerator: true,
-  enableNavigator: true,
-  enableRouter: true,
-  enablePulseGPU: true,
-  enablePulseDecode: true,
-  enableContentRuntime: true,
-  enableDevOverlay: true,
-
-  blockTrackers: true,
-  blockAnalytics: true,
-  blockAds: true,
-  blockFingerprinting: false,
-
-  upgradeHTTPtoHTTPS: true,
-  forceHTTP2: false,
-  forceHTTP3: false,
-  forceQUIC: false,
-
-  accelPreconnect: true,
-  accelPrefetch: true,
-  accelPreload: true,
-  accelWarmPath: true,
-  accelGPUWarm: true,
-  accelDecodeWarm: true,
-  accelDNSWarm: true,
-  accelTLSWarm: true,
-  accelRealmWarm: true,
-
-  navWarmSiblings: true,
-  navWarmAssets: true,
-  navWarmGlobalSites: true,
-  navPulseWorldPriority: true,
-
-  routerPrioritizeCDN: true,
-  routerPrioritizeAssets: true,
-  routerPrioritizeHomeUniverse: true,
-  routerLatencyScan: true,
-  routerRealmScan: true,
-  routerFallbackScan: true,
-  routerAdaptiveRouting: true,
-
-  experimentalGPUPaths: false,
-  experimentalDecodePaths: false,
-  experimentalRouteGraph: false,
-  experimentalPredictivePrefetch: true,
-  experimentalAIWarmPath: false,
-  experimentalTemporalNavigation: false,
-  experimentalQuantumRouting: false,
-  experimentalPortalTransitions: false,
-  experimentalMeshAwareness: false,
-
-  homeUniverse: [
-    "pulseworld.net",
-    "pulseworld.me",
-    "pulseworld.money",
-    "pulseworld.biz",
-    "binaryos.net",
-    "booleanlogic.net",
-    "gpuprocessing.net",
-    "serviceworker.net",
-    "orbitalmap.net"
-  ]
-};
 
 function pbLoadSettings() {
   return new Promise((resolve) => {
@@ -1316,13 +1339,16 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   let url = tab.url;
   const origin = new URL(url).origin;
   const domainClass = S.homeUniverse.some((d) => url.includes(d)) ? "PulseWorld" : "WWW";
-
-  if (url.includes("newtab")) {
-    url = "impulse://newtab"
-  }
   PulseRealmState.lastURL = url;
   PulseRealmState.lastDomainClass = domainClass;
-  PulseRealmState.navHistory.push(url);
+  if (url.includes("newtab")) {
+    url = "impulse://newtab"
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastPage = "NewTab";
+    PulseRealmState.lastTitle = "PulseBrowser OS Console";
+  } else {
+    PulseRealmState.navHistory.push(url);
+  }
 
   // Temporal navigation warm
   if (typeof PBTemporalCache?.noteNavigation === "function") {
@@ -1371,7 +1397,7 @@ async function clearPulseCaches() {
 //  SECTION 8 — DEVTOOLS
 // ============================================================================
 function pbLogKernelStatus() {
-  console.log("%c[PBDevTools] Kernel Status @ " + new Date().toISOString(),
+  console.log("%c[PBDevTools] Kernel Status @ " + now,
     "color:#FF4444; font-weight:bold;");
   console.log("[PBDevTools] Realm:", PulseRealmState);
   pbLoadSettings().then((settings) => console.log("[PBDevTools] Settings:", settings));

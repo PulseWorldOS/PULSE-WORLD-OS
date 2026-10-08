@@ -11,38 +11,33 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
 // CREATE OVERLAY
 // ---------------------------------------------------------------------------
 (function createOverlay() {
-  if (document.getElementById("pulsebrowser-dev-overlay")) return;
 
-  const wrap = document.createElement("div");
-  wrap.id = "pulsebrowser-dev-overlay";
+  const wrap = document.getElementById("side-panel right-panel");
   wrap.style.cssText = `
     position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 340px;
-    background: rgba(0,0,0,0.85);
-    color: #00FF9C;
-    font-family: monospace;
-    font-size: 11px;
-    padding: 10px;
-    border-radius: 6px;
-    z-index: 999999999;
-    pointer-events: none;
-    backdrop-filter: blur(4px);
+    margin: 20px 20px;
+    top: 0;
+    bottom: 0;
+    width: clamp(280px, 12vw, 350px);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+    z-index: 5;
   `;
 
   wrap.innerHTML = `
-    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-bottom:6px;">
+    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 10px; margin-bottom:6px;">
       PulseBrowser OS Overlay
     </div>
 
     <div id="pb-hud-kernel"></div>
-    <div id="pb-hud-router"></div>
+    <div id="pb-hud-warm"></div>
+    <div id="pb-hud-performance"></div>
     <div id="pb-hud-navigator"></div>
     <div id="pb-hud-accelerator"></div>
-    <div id="pb-hud-performance"></div>
-    <div id="pb-hud-warm"></div>
-    <div id="pb-hud-gpu"></div>
     <div id="pb-hud-settings"></div>
     <div id="pb-hud-experimental"></div>
     <div id="pb-hud-flags"></div>
@@ -65,12 +60,10 @@ function updateOverlay() {
       PulseRealmSettings = settingsRes.settings || {};
 
       updateKernel(PulseRealm);
-      updateRouter(PulseRealmSettings);
+      updateWarm(PulseRealm);
+      updatePerformance(PulseRealm);
       updateNavigator(PulseRealmSettings, PulseRealm);
       updateAccelerator(PulseRealmSettings, PulseRealm);
-      updatePerformance(PulseRealm);
-      updateWarm(PulseRealm);
-      updateGPU(PulseRealm);
       updateSettings(PulseRealmSettings);
       updateExperimental(PulseRealmSettings);
     });
@@ -88,9 +81,9 @@ function updateKernel(realm) {
     last title: ${realm.lastTitle || "-"}<br/>
     last url: ${realm.lastURL || "-"}<br/>
     domain class: ${realm.lastDomainClass || "-"}<br/>
-    last Ping: ${realm.lastPing || "-"}<br/>
-    data band: ${realm.band}<br/>
-    sessionStart: ${realm.sessionStart || "-"}<br/>
+    last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
+    data band: ${realm.band || "-"}<br/>
+    sessionStart: <font color="yellow">${realm.sessionStart || "-"}</font><br/>
   `;
 }
 
@@ -101,13 +94,13 @@ function updateRouter(settings) {
   const el = document.getElementById("pb-hud-router");
   el.innerHTML = `
     <div class="pb-hud-title">Router</div>
-    enabled: ${settings.enableRouter}<br/>
-    home: ${settings.routerPrioritizeHomeUniverse}<br/>
-    cdn: ${settings.routerPrioritizeCDN}<br/>
-    assets: ${settings.routerPrioritizeAssets}<br/>
-    latencyScan: ${settings.routerLatencyScan}<br/>
-    realmScan: ${settings.routerRealmScan}<br/>
-    fallbackScan: ${settings.routerFallbackScan}<br/>
+    enabled: <font color="#0FF">${settings.enableRouter}</font><br/>
+    home: <font color="#0FF">${settings.routerPrioritizeHomeUniverse}</font><br/>
+    cdn: <font color="#0FF">${settings.routerPrioritizeCDN}</font><br/>
+    assets: <font color="#0FF">${settings.routerPrioritizeAssets}</font><br/>
+    latencyScan: <font color="#0FF">${settings.routerLatencyScan}</font><br/>
+    realmScan: <font color="#0FF">${settings.routerRealmScan}</font><br/>
+    fallbackScan: <font color="#0FF">${settings.routerFallbackScan}</font><br/>
   `;
 }
 
@@ -118,11 +111,11 @@ function updateNavigator(settings, realm) {
   const el = document.getElementById("pb-hud-navigator");
   el.innerHTML = `
     <div class="pb-hud-title">Navigator</div>
-    enabled: ${settings.enableNavigator}<br/>
-    warmSiblings: ${settings.navWarmSiblings}<br/>
-    warmAssets: ${settings.navWarmAssets}<br/>
-    warmGlobal: ${settings.navWarmGlobalSites}<br/>
-    pulsePriority: ${settings.navPulseWorldPriority}<br/>
+    enabled: <font color="#0FF">${settings.enableNavigator}</font><br/>
+    warmSiblings: <font color="#0FF">${settings.navWarmSiblings}</font><br/>
+    warmAssets: <font color="#0FF">${settings.navWarmAssets}</font><br/>
+    warmGlobal: <font color="#0FF">${settings.navWarmGlobalSites}</font><br/>
+    pulsePriority: <font color="#0FF">${settings.navPulseWorldPriority}</font><br/>
   `;
 }
 
@@ -133,13 +126,13 @@ function updateAccelerator(settings, realm) {
   const el = document.getElementById("pb-hud-accelerator");
   el.innerHTML = `
     <div class="pb-hud-title">Accelerator</div>
-    enabled: ${settings.enableAccelerator}<br/>
-    preconnect: ${settings.accelPreconnect}<br/>
-    prefetch: ${settings.accelPrefetch}<br/>
-    preload: ${settings.accelPreload}<br/>
-    warmPath: ${settings.accelWarmPath}<br/>
-    gpuWarm: ${settings.accelGPUWarm}<br/>
-    decodeWarm: ${settings.accelDecodeWarm}<br/>
+    enabled: <font color="#0FF">${settings.enableAccelerator}</font><br/>
+    preconnect: <font color="#0FF">${settings.accelPreconnect}</font><br/>
+    prefetch: <font color="#0FF">${settings.accelPrefetch}</font><br/>
+    preload: <font color="#0FF">${settings.accelPreload}</font><br/>
+    warmPath: <font color="#0FF">${settings.accelWarmPath}</font><br/>
+    gpuWarm: <font color="#0FF">${settings.accelGPUWarm}</font><br/>
+    decodeWarm: <font color="#0FF">${settings.accelDecodeWarm}</font><br/>
   `;
 }
 
@@ -154,12 +147,13 @@ function updatePerformance(realm) {
 
   el.innerHTML = `
     <div class="pb-hud-title">Tab Performance</div>
-    mutations: ${realm.mutationCount}<br/>
-    lastMutationTS: ${realm.lastMutationTS || "-"}<br/>
-    perf entries: ${perf.length}<br/>
-    entry speed: ${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}<br/>
-    lastNav: ${realm.navHistory.slice(-1)[0] || "-"}<br/>
-    lastNavTS: ${realm.perfLastNavigation || "-"}<br/>
+    mutations: <font color="#0FF">${realm.mutationCount || "-"}</font><br/>
+    lastMutationTS: <font color="#0FF">${realm.lastMutationTS || "-"}</font><br/>
+    perf entries: <font color="#0FF">${perf.length || "-"}</font><br/>
+    entry speed: <font color="#0FF">${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}</font><br/>
+    lastNav: <font color="#0FF">${realm.navHistory.slice(-1)[0] || "-"}</font><br/>
+    lastNavTS: <font color="#0FF">${realm.perfLastNavigation || "-"}</font><br/>
+    lastWarmOrigin: <font color="#0FF">${realm.lastWarmOrigin || "-"}</font><br/>
   `;
 }
 
@@ -171,10 +165,11 @@ function updateWarm(realm) {
   const el = document.getElementById("pb-hud-warm");
   el.innerHTML = `
     <div class="pb-hud-title">Warm-Universe</div>
-    lastWarmOrigin: ${realm.lastWarmOrigin}<br/>
-    warmPaths: ${realm.warmPathsTriggered}<br/>
-    warmAssets: ${realm.warmAssetsTriggered}<br/>
-    imagesDecoded: ${realm.imagesDecoded}<br/>
+    warmPaths: <font color="#0FF">${realm.warmPathsTriggered || "-"}</font><br/>
+    warmAssets: <font color="#0FF">${realm.warmAssetsTriggered || "-"}</font><br/>
+    imagesDecoded: <font color="#0FF">${realm.imagesDecoded || "-"}</font><br/>
+    warmGPUEnabled: <font color="#0FF">${realm.gpuEnabled || "-"}</font><br/>
+    WarmUniverse: <font color="yellow">PulseBrowser OS Modules</font><br/>
   `;
 }
 
@@ -184,8 +179,8 @@ function updateWarm(realm) {
 function updateGPU(realm) {
   const el = document.getElementById("pb-hud-gpu");
   el.innerHTML = `
-    <div class="pb-hud-title">GPU</div>
-    gpuWarmCount: ${realm.gpuWarmCount}<br/>
+    <div class="pb-hud-title">Warm GPU</div>
+    warmGPUEnabled: <font color="#0FF">${realm.gpuEnabled || "-"}</font><br/>
   `;
 }
 
@@ -196,11 +191,11 @@ function updateSettings(settings) {
   const el = document.getElementById("pb-hud-settings");
   el.innerHTML = `
     <div class="pb-hud-title">Settings</div>
-    interceptor: ${settings.enableInterceptor}<br/>
-    accelerator: ${settings.enableAccelerator}<br/>
-    navigator: ${settings.enableNavigator}<br/>
-    devOverlay: ${settings.enableDevOverlay}<br/>
-    contentRuntime: ${settings.enableContentRuntime}<br/>
+    interceptor: <font color="#0FF">${settings.enableInterceptor}</font><br/>
+    accelerator: <font color="#0FF">${settings.enableAccelerator}</font><br/>
+    navigator: <font color="#0FF">${settings.enableNavigator}</font><br/>
+    devOverlay: <font color="#0FF">${settings.enableDevOverlay}</font><br/>
+    contentRuntime: <font color="#0FF">${settings.enableContentRuntime}</font><br/>
   `;
 }
 
@@ -209,15 +204,16 @@ function updateSettings(settings) {
 // ---------------------------------------------------------------------------
 function updateExperimental(settings) {
   const el = document.getElementById("pb-hud-experimental");
+  
   el.innerHTML = `
     <div class="pb-hud-title">Experimental</div>
-    gpuPaths: ${settings.experimentalGPUPaths}<br/>
-    decodePaths: ${settings.experimentalDecodePaths}<br/>
-    routeGraph: ${settings.experimentalRouteGraph}<br/>
-    predictivePrefetch: ${settings.experimentalPredictivePrefetch}<br/>
-    aiWarmPath: ${settings.experimentalAIWarmPath}<br/>
-    temporalNav: ${settings.experimentalTemporalNavigation}<br/>
-    quantumRouting: ${settings.experimentalQuantumRouting}<br/>
+    gpuPaths: <font color="#0FF">${settings.experimentalGPUPaths}</font><br/>
+    decodePaths: <font color="#0FF">${settings.experimentalDecodePaths}</font><br/>
+    routeGraph: <font color="#0FF">${settings.experimentalRouteGraph}</font><br/>
+    predictivePrefetch: <font color="#0FF">${true}</font><br/>
+    aiWarmPath: <font color="#0FF">${settings.experimentalAIWarmPath}</font><br/>
+    temporalNav: <font color="#0FF">${settings.experimentalTemporalNavigation}</font><br/>
+    quantumRouting: <font color="#0FF">${settings.experimentalQuantumRouting}</font><br/>
   `;
 }
 

@@ -28,6 +28,8 @@ async function getSettings() {
       S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
+      S.experimentalPredictivePrefetch = S.experimentalPredictivePrefetch !== false; // auto warm boot for home universe
+      S.experimentalQuantumRouting = S.experimentalQuantumRouting !== false; // auto warm boot for home universe
 
       resolve(S);
     });
