@@ -124,6 +124,69 @@ async function saveExtensionSettingsUI() {
   const before = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
 
   const settings = {
+    enableInterceptor: true,
+    enableAccelerator: true,
+    enableNavigator: true,
+    enableRouter: true,
+    enablePulseGPU: true,
+    enablePulseDecode: true,
+    enableContentRuntime: true,
+    enableDevOverlay: true,
+
+    blockTrackers: true,
+    blockAnalytics: true,
+    blockAds: true,
+    blockFingerprinting: false,
+
+    upgradeHTTPtoHTTPS: true,
+    forceHTTP2: false,
+    forceHTTP3: false,
+    forceQUIC: false,
+
+    accelPreconnect: true,
+    accelPrefetch: true,
+    accelPreload: true,
+    accelWarmPath: true,
+    accelGPUWarm: true,
+    accelDecodeWarm: true,
+    accelDNSWarm: true,
+    accelTLSWarm: true,
+    accelRealmWarm: true,
+
+    navWarmSiblings: true,
+    navWarmAssets: true,
+    navWarmGlobalSites: true,
+    navPulseWorldPriority: true,
+
+    routerPrioritizeCDN: true,
+    routerPrioritizeAssets: true,
+    routerPrioritizeHomeUniverse: true,
+    routerLatencyScan: true,
+    routerRealmScan: true,
+    routerFallbackScan: true,
+    routerAdaptiveRouting: true,
+
+    experimentalGPUPaths: false,
+    experimentalDecodePaths: false,
+    experimentalRouteGraph: false,
+    experimentalAIWarmPath: false,
+    experimentalTemporalNavigation: false,
+    experimentalPredictivePrefetch: true,
+    experimentalQuantumRouting: true,
+    experimentalPortalTransitions: false,
+    experimentalMeshAwareness: false,
+
+    homeUniverse: [
+      "pulseworld.net",
+      "pulseworld.me",
+      "pulseworld.money",
+      "pulseworld.biz",
+      "binaryos.net",
+      "booleanlogic.net",
+      "gpuprocessing.net",
+      "serviceworker.net",
+      "orbitalmap.net"
+    ],
     emailMode: document.getElementById("emailMode").value,
     externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
     acceleratedModule1Link: document.getElementById("acceleratedModule1Link").value.trim(),
@@ -253,7 +316,7 @@ async function updateStorageStats() {
   }
 }
 
-function updateLinkedPWInputs() {
+async function updateLinkedPWInputs() {
   // Find all selects
   const selects = document.querySelectorAll(".pw-select");
 
@@ -276,6 +339,7 @@ function updateLinkedPWInputs() {
       linkedInput.classList.remove("pw-input-disabled");
     }
   });
+  await saveExtensionSettingsUI();
 }
 
 // ============================================================================
@@ -352,7 +416,7 @@ if (location.href.includes("PBSettings.html")) {
   })();
 }
 
-setTimeout(updateLinkedPWInputs, 150);
+setTimeout(updateLinkedPWInputs, 250);
 
 // Run whenever ANY pw-select changes
 document.addEventListener("change", (e) => {

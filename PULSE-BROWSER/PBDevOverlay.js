@@ -210,7 +210,7 @@ function updateExperimental(settings) {
     gpuPaths: <font color="#0FF">${settings.experimentalGPUPaths}</font><br/>
     decodePaths: <font color="#0FF">${settings.experimentalDecodePaths}</font><br/>
     routeGraph: <font color="#0FF">${settings.experimentalRouteGraph}</font><br/>
-    predictivePrefetch: <font color="#0FF">${true}</font><br/>
+    predictivePrefetch: <font color="#0FF">${settings.experimentalPredictivePrefetch}</font><br/>
     aiWarmPath: <font color="#0FF">${settings.experimentalAIWarmPath}</font><br/>
     temporalNav: <font color="#0FF">${settings.experimentalTemporalNavigation}</font><br/>
     quantumRouting: <font color="#0FF">${settings.experimentalQuantumRouting}</font><br/>
