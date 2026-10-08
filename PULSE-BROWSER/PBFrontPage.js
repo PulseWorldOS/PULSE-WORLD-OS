@@ -12,6 +12,7 @@ let temporaryLinks = [];
 let engineURL = buildSearchURL("google.com");
 let url = engineURL;
 let PulseRealm = {};
+let PulseModuleCount = 0;
 let PulseRealmSettings = null;
 
 const timerBtn = document.getElementById("timerBtn");
@@ -791,17 +792,17 @@ async function updateModuleIcons() {
     "https://www.gpuprocessing.net",
     "https://www.serviceworker.net",
     "https://www.orbitalmap.net",
-    "https://www.pulseworld.net"
-  ];
+    "https://www.pulseworld.net",
+    "https://www.google.com",
+    settings.externalSearchLink
+  ].filter(u => u && u.startsWith("http"));
 
   const Links = [
-    "https://www.google.com",
     settings.externalBankLink,
     settings.externalEmailLink,
     settings.externalSocialLink,
     settings.externalWorkLink,
     settings.externalStreamingLink,
-    settings.externalSearchLink,
     settings.acceleratedModule1Link,
     settings.acceleratedModule2Link,
     settings.acceleratedModule3Link,
@@ -1648,7 +1649,9 @@ setInterval(() => {
   }
 
   function getWarmInterval(links, homes, temp) {
-    const allTargets = [...links, ...homes, ...temp];
+    const allTargets = [...links, ...homes, ...temp].filter(u => u && u.startsWith("http"));
+    const externalTargets = [...links, ...temp].filter(u => u && u.startsWith("http"));
+    PulseModuleCount = externalTargets.length;
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
     return hasEnterprise ? 45000 : 30000; // 15s for enterprise, 8s for normal
   }
@@ -1662,7 +1665,8 @@ setInterval(() => {
     });
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
-    PulseRealmSettings = await pbLoadExtensionSettings();
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
 
     const PB_HOMES = [
       "https://www.pulseworld.me",

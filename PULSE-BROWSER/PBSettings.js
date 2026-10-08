@@ -168,8 +168,8 @@ async function saveExtensionSettingsUI() {
 
     experimentalGPUPaths: false,
     experimentalDecodePaths: false,
-    experimentalRouteGraph: false,
     experimentalAIWarmPath: false,
+    experimentalPerpFresh: true,
     experimentalTemporalNavigation: true,
     experimentalPredictivePrefetch: true,
     experimentalQuantumRouting: true,

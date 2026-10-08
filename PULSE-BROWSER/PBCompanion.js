@@ -90,8 +90,8 @@ const PB_SW_SETTINGS = {
 
   experimentalGPUPaths: false,
   experimentalDecodePaths: false,
-  experimentalRouteGraph: false,
   experimentalAIWarmPath: false,
+  experimentalPerpFresh: true,
   experimentalTemporalNavigation: true,
   experimentalPredictivePrefetch: true,
   experimentalQuantumRouting: true,
@@ -505,9 +505,10 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     PBUniversalBoost2.warmTab(tab);
   }
   const url = tab.url;
-  if (!url.includes("newtab")) {
+  if (!url.includes("chrome:")) {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastTitle = tab.title;
+    PulseRealmState.lastPage = tab.page;
   }
   chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
@@ -1232,8 +1233,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const origin = new URL(msg.url).origin;
         PBUniversalBoost2?.warmOrigin?.(origin);                
         PulseRealmState.lastWarmOrigin = origin;
-        PB_LOG.info("PBCONTENT_WARMPATH", origin);
       } catch (_) {}
+        PB_LOG.info("PBCONTENT_WARMPATH", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1341,16 +1342,22 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;
 
   let url = tab.url;
+  let title = tab.title;
+  let page = tab.page;
   const origin = new URL(url).origin;
   const domainClass = S.homeUniverse.some((d) => url.includes(d)) ? "PulseWorld" : "WWW";
-  PulseRealmState.lastURL = url;
-  PulseRealmState.lastDomainClass = domainClass;
+  
   if (url.includes("newtab")) {
     url = "impulse://newtab"
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = "NewTab";
+    PulseRealmState.lastDomainClass = "PulseWorld";
     PulseRealmState.lastTitle = "PulseBrowser OS Console";
   } else {
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastPage = page;
+    PulseRealmState.lastDomainClass = domainClass;
+    PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
   }
 

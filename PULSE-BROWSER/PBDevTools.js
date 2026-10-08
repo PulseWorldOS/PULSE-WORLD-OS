@@ -196,7 +196,7 @@ function pbLogExperimentalStatus() {
 
     logKV("GPU Paths", s.experimentalGPUPaths);
     logKV("Decode Paths", s.experimentalDecodePaths);
-    logKV("Route Graph", s.experimentalRouteGraph);
+    logKV("Perpetual Freshness", s.experimentalPerpFresh);
     logKV("Predictive Prefetch", s.experimentalPredictivePrefetch);
     logKV("AI Warm Path", s.experimentalAIWarmPath);
     logKV("Temporal Navigation", s.experimentalTemporalNavigation);

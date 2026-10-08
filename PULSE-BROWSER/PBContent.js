@@ -593,16 +593,16 @@ function updateHUD() {
         <font color="#0FF">PageReady:</font> ${domTime}ms <font color="gold">(Where We Help!)</font><br/>
         <font color="#0FF">PageLoad:</font> ${loadTime}ms <font color="white">(Where We Can't!)</font><br/>
         <font color="#0FF">Type:</font> ${refreshType}<br/>
+        <font color="#0FF">GPUWarm:</font> ${PulseRealm.gpuEnabled}<br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">
         <b><font color="white">Global PulseBrowser OS Stats</font></b><br/>
         <font color="#0FF">Pulse Ops/MS:</font> ${opsPerMs}<br/>
         <font color="#0FF">Pulse Efficiency:</font> ${PEI}<br/>
         <font color="#0FF">Workload:</font> ${workloadMB.toFixed(2)} MB<br/>
         <font color="#0FF">Mutations:</font> ${PulseRealm.mutationCount}<br/>
-        <font color="#0FF">GPUWarm:</font> ${PulseRealm.gpuEnabled}<br/>
-        <font color="#0FF">DecodeWarm:</font> ${PulseRealm.imagesDecoded}<br/>
-        <font color="#0FF">WarmAssets:</font> ${PulseRealm.warmAssetsTriggered}<br/>
         <font color="#0FF">WarmPaths:</font> ${PulseRealm.warmPathsTriggered}<br/>
+        <font color="#0FF">WarmAssets:</font> ${PulseRealm.warmAssetsTriggered}<br/>
+        <font color="#0FF">DecodeWarm:</font> ${PulseRealm.imagesDecoded}<br/>
         <font color="#0FF">TS:</font> <font color="white">${new Date().toLocaleTimeString()}</font>
       `;
     });
