@@ -395,10 +395,11 @@ function updateHUD() {
       // ⭐ WORKLOAD CALCULATION (KB)
       // ---------------------------------------------
       const workloadKB =
-        (PulseRealm.mutationCount * 0.002) +        // DOM mutations
-        (PulseRealm.warmAssetsTriggered * 50) +            // GPU warm cost
-        (PulseRealm.imagesDecoded * 20) +           // decode warm cost
-        (PulseRealm.warmPathsTriggered * 200);      // warm-path cost
+        (PulseRealm.mutationCount * 0.002) +   // DOM mutations (tiny)
+        (PulseRealm.warmAssetsTriggered * 5) + // micro-warm events (light)
+        (PulseRealm.imagesDecoded * 20) +      // decode warm cost (heavy)
+        (PulseRealm.warmPathsTriggered * 200); // warm-path cost (very heavy)
+
       const workloadMB = workloadKB / 1024;
 
       // ---------------------------------------------

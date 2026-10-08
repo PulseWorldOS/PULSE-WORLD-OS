@@ -92,7 +92,7 @@ const PB_SW_SETTINGS = {
   experimentalDecodePaths: false,
   experimentalRouteGraph: false,
   experimentalAIWarmPath: false,
-  experimentalTemporalNavigation: false,
+  experimentalTemporalNavigation: true,
   experimentalPredictivePrefetch: true,
   experimentalQuantumRouting: true,
   experimentalPortalTransitions: false,
@@ -504,7 +504,11 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   if (typeof PBUniversalBoost2?.warmTab === "function") {
     PBUniversalBoost2.warmTab(tab);
   }
-
+  const url = tab.url;
+  if (!url.includes("newtab")) {
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastTitle = tab.title;
+  }
   chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
     tabId: tab.id,

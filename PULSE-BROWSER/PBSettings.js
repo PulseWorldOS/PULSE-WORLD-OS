@@ -170,7 +170,7 @@ async function saveExtensionSettingsUI() {
     experimentalDecodePaths: false,
     experimentalRouteGraph: false,
     experimentalAIWarmPath: false,
-    experimentalTemporalNavigation: false,
+    experimentalTemporalNavigation: true,
     experimentalPredictivePrefetch: true,
     experimentalQuantumRouting: true,
     experimentalPortalTransitions: false,
@@ -339,7 +339,6 @@ async function updateLinkedPWInputs() {
       linkedInput.classList.remove("pw-input-disabled");
     }
   });
-  await saveExtensionSettingsUI();
 }
 
 // ============================================================================
@@ -411,6 +410,8 @@ if (location.href.includes("PBSettings.html")) {
         saveExtensionSettingsUI();
       });
     });
+    
+    saveExtensionSettingsUI();
 
     PB_LOG.info("Settings Page Ready");
   })();

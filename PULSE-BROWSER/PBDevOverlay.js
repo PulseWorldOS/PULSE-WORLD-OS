@@ -16,6 +16,7 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   wrap.style.cssText = `
     position: fixed;
     margin: 20px 20px;
+    padding: 6px;
     top: 0;
     bottom: 0;
     width: clamp(280px, 12vw, 350px);
@@ -49,15 +50,20 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   setInterval(updateOverlay, 1500);
 })();
 
+function tfColor(v) {
+  return v ? "#0FF" : "#FF0";   // teal for true, yellow for false
+}
+function experimentalColor(v) {
+  return v ? "#FF0" : "#0FF";   // yellow for true, teal for false
+}
+
+
 // ---------------------------------------------------------------------------
 // UPDATE OVERLAY
 // ---------------------------------------------------------------------------
 function updateOverlay() {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
-    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
-
       PulseRealm = realmRes.state || {};
-      PulseRealmSettings = settingsRes.settings || {};
 
       updateKernel(PulseRealm);
       updateWarm(PulseRealm);
@@ -67,7 +73,6 @@ function updateOverlay() {
       updateSettings(PulseRealmSettings);
       updateExperimental(PulseRealmSettings);
     });
-  });
 }
 
 // ---------------------------------------------------------------------------
@@ -77,12 +82,12 @@ function updateKernel(realm) {
   const el = document.getElementById("pb-hud-kernel");
   el.innerHTML = `
     <div class="pb-hud-title">Kernel</div>
-    last page: ${realm.lastPage || "-"}<br/>
-    last title: ${realm.lastTitle || "-"}<br/>
-    last url: ${realm.lastURL || "-"}<br/>
-    domain class: ${realm.lastDomainClass || "-"}<br/>
+    last page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
+    last title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
+    last url: <font color="#0FF">${realm.lastURL || "-"}</font><br/>
+    domain class: <font color="#0FF">${realm.lastDomainClass || "-"}</font><br/>
     last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
-    data band: ${realm.band || "-"}<br/>
+    data band: <font color="#0FF">${realm.band || "-"}</font><br/>
     sessionStart: <font color="yellow">${realm.sessionStart || "-"}</font><br/>
   `;
 }
@@ -104,37 +109,6 @@ function updateRouter(settings) {
   `;
 }
 
-// ---------------------------------------------------------------------------
-// SECTION: Navigator
-// ---------------------------------------------------------------------------
-function updateNavigator(settings, realm) {
-  const el = document.getElementById("pb-hud-navigator");
-  el.innerHTML = `
-    <div class="pb-hud-title">Navigator</div>
-    enabled: <font color="#0FF">${settings.enableNavigator}</font><br/>
-    warmSiblings: <font color="#0FF">${settings.navWarmSiblings}</font><br/>
-    warmAssets: <font color="#0FF">${settings.navWarmAssets}</font><br/>
-    warmGlobal: <font color="#0FF">${settings.navWarmGlobalSites}</font><br/>
-    pulsePriority: <font color="#0FF">${settings.navPulseWorldPriority}</font><br/>
-  `;
-}
-
-// ---------------------------------------------------------------------------
-// SECTION: Accelerator
-// ---------------------------------------------------------------------------
-function updateAccelerator(settings, realm) {
-  const el = document.getElementById("pb-hud-accelerator");
-  el.innerHTML = `
-    <div class="pb-hud-title">Accelerator</div>
-    enabled: <font color="#0FF">${settings.enableAccelerator}</font><br/>
-    preconnect: <font color="#0FF">${settings.accelPreconnect}</font><br/>
-    prefetch: <font color="#0FF">${settings.accelPrefetch}</font><br/>
-    preload: <font color="#0FF">${settings.accelPreload}</font><br/>
-    warmPath: <font color="#0FF">${settings.accelWarmPath}</font><br/>
-    gpuWarm: <font color="#0FF">${settings.accelGPUWarm}</font><br/>
-    decodeWarm: <font color="#0FF">${settings.accelDecodeWarm}</font><br/>
-  `;
-}
 
 // ---------------------------------------------------------------------------
 // SECTION: Performance
@@ -147,13 +121,13 @@ function updatePerformance(realm) {
 
   el.innerHTML = `
     <div class="pb-hud-title">Tab Performance</div>
-    mutations: <font color="#0FF">${realm.mutationCount || "-"}</font><br/>
-    lastMutationTS: <font color="#0FF">${realm.lastMutationTS || "-"}</font><br/>
-    perf entries: <font color="#0FF">${perf.length || "-"}</font><br/>
-    entry speed: <font color="#0FF">${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}</font><br/>
-    lastNav: <font color="#0FF">${realm.navHistory.slice(-1)[0] || "-"}</font><br/>
-    lastNavTS: <font color="#0FF">${realm.perfLastNavigation || "-"}</font><br/>
-    lastWarmOrigin: <font color="#0FF">${realm.lastWarmOrigin || "-"}</font><br/>
+    mutations: <font color="lightgreen">${realm.mutationCount || "-"}</font><br/>
+    lastMutationTS: <font color="yellow">${realm.lastMutationTS || "-"}</font><br/>
+    perf entries: <font color="lightgreen">${perf.length || "-"}</font><br/>
+    entry speed: <font color="lightgreen">${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}</font><br/>
+    lastNav: <font color="lightgreen">${realm.navHistory.slice(-1)[0] || "-"}</font><br/>
+    lastNavTS: <font color="yellow">${realm.perfLastNavigation || "-"}</font><br/>
+    lastWarmOrigin: <font color="lightgreen">${realm.lastWarmOrigin || "-"}</font><br/>
   `;
 }
 
@@ -185,37 +159,72 @@ function updateGPU(realm) {
 }
 
 // ---------------------------------------------------------------------------
+// SECTION: Navigator
+// ---------------------------------------------------------------------------
+function updateNavigator(settings, realm) {
+  const el = document.getElementById("pb-hud-navigator");
+  el.innerHTML = `
+    <div class="pb-hud-title">Navigator</div>
+    enabled: <font color="${tfColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
+    warmSiblings: <font color="${tfColor(settings.navWarmSiblings)}">${settings.navWarmSiblings}</font><br/>
+    warmAssets: <font color="${tfColor(settings.navWarmAssets)}">${settings.navWarmAssets}</font><br/>
+    warmGlobal: <font color="${tfColor(settings.navWarmGlobalSites)}">${settings.navWarmGlobalSites}</font><br/>
+    pulsePriority: <font color="${tfColor(settings.navPulseWorldPriority)}">${settings.navPulseWorldPriority}</font><br/>
+  `;
+}
+
+
+// ---------------------------------------------------------------------------
+// SECTION: Accelerator
+// ---------------------------------------------------------------------------
+function updateAccelerator(settings, realm) {
+  const el = document.getElementById("pb-hud-accelerator");
+  el.innerHTML = `
+    <div class="pb-hud-title">Accelerator</div>
+    enabled: <font color="${tfColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
+    preconnect: <font color="${tfColor(settings.accelPreconnect)}">${settings.accelPreconnect}</font><br/>
+    prefetch: <font color="${tfColor(settings.accelPrefetch)}">${settings.accelPrefetch}</font><br/>
+    preload: <font color="${tfColor(settings.accelPreload)}">${settings.accelPreload}</font><br/>
+    warmPath: <font color="${tfColor(settings.accelWarmPath)}">${settings.accelWarmPath}</font><br/>
+    gpuWarm: <font color="${tfColor(settings.accelGPUWarm)}">${settings.accelGPUWarm}</font><br/>
+    decodeWarm: <font color="${tfColor(settings.accelDecodeWarm)}">${settings.accelDecodeWarm}</font><br/>
+  `;
+}
+
+
+// ---------------------------------------------------------------------------
 // SECTION: Settings
 // ---------------------------------------------------------------------------
 function updateSettings(settings) {
   const el = document.getElementById("pb-hud-settings");
   el.innerHTML = `
     <div class="pb-hud-title">Settings</div>
-    interceptor: <font color="#0FF">${settings.enableInterceptor}</font><br/>
-    accelerator: <font color="#0FF">${settings.enableAccelerator}</font><br/>
-    navigator: <font color="#0FF">${settings.enableNavigator}</font><br/>
-    devOverlay: <font color="#0FF">${settings.enableDevOverlay}</font><br/>
-    contentRuntime: <font color="#0FF">${settings.enableContentRuntime}</font><br/>
+    interceptor: <font color="${tfColor(settings.enableInterceptor)}">${settings.enableInterceptor}</font><br/>
+    accelerator: <font color="${tfColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
+    navigator: <font color="${tfColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
+    devOverlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
+    contentRuntime: <font color="${tfColor(settings.enableContentRuntime)}">${settings.enableContentRuntime}</font><br/>
   `;
 }
+
 
 // ---------------------------------------------------------------------------
 // SECTION: Experimental
 // ---------------------------------------------------------------------------
 function updateExperimental(settings) {
   const el = document.getElementById("pb-hud-experimental");
-  
   el.innerHTML = `
     <div class="pb-hud-title">Experimental</div>
-    gpuPaths: <font color="#0FF">${settings.experimentalGPUPaths}</font><br/>
-    decodePaths: <font color="#0FF">${settings.experimentalDecodePaths}</font><br/>
-    routeGraph: <font color="#0FF">${settings.experimentalRouteGraph}</font><br/>
-    predictivePrefetch: <font color="#0FF">${settings.experimentalPredictivePrefetch}</font><br/>
-    aiWarmPath: <font color="#0FF">${settings.experimentalAIWarmPath}</font><br/>
-    temporalNav: <font color="#0FF">${settings.experimentalTemporalNavigation}</font><br/>
-    quantumRouting: <font color="#0FF">${settings.experimentalQuantumRouting}</font><br/>
+    gpuPaths: <font color="${experimentalColor(settings.experimentalGPUPaths)}">${settings.experimentalGPUPaths}</font><br/>
+    decodePaths: <font color="${experimentalColor(settings.experimentalDecodePaths)}">${settings.experimentalDecodePaths}</font><br/>
+    routeGraph: <font color="${experimentalColor(settings.experimentalRouteGraph)}">${settings.experimentalRouteGraph}</font><br/>
+    aiWarmPath: <font color="${experimentalColor(settings.experimentalAIWarmPath)}">${settings.experimentalAIWarmPath}</font><br/>
+    temporalNav: <font color="${experimentalColor(settings.experimentalTemporalNavigation)}">${settings.experimentalTemporalNavigation}</font><br/>
+    predictivePrefetch: <font color="${experimentalColor(settings.experimentalPredictivePrefetch)}">${settings.experimentalPredictivePrefetch}</font><br/>
+    quantumRouting: <font color="${experimentalColor(settings.experimentalQuantumRouting)}">${settings.experimentalQuantumRouting}</font><br/>
   `;
 }
+
 
 
 // ---------------------------------------------------------------------------
