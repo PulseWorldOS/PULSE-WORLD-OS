@@ -920,7 +920,7 @@ async function pbModuleWarmBoot() {
 function getWarmInterval() {
     const base = 45000;
 // ⭐ Add human-like jitter (±20%)
-    const jitterRange = base * 0.20;
+    const jitterRange = base * 0.17;
     const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
     // ⭐ Final interval
@@ -929,8 +929,23 @@ function getWarmInterval() {
     return Math.floor(interval);
 }
 
-const interval = getWarmInterval();
-setInterval(pbWarmBoot, interval);
+function startWarmBootLoop() {
+  async function loop() {
+    try {
+      await pbWarmBoot();
+    } catch (_) {}
+
+    const interval = getWarmInterval();
+    console.log("[PBWarmBootLoop] Next warm in", interval, "ms");
+
+    setTimeout(loop, interval);
+  }
+
+  loop(); // start immediately
+}
+
+startWarmBootLoop();
+
 
 const PB_LOG = {
   info(label, data) {

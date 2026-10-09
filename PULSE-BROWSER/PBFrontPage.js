@@ -833,9 +833,22 @@ async function updateModuleIcons() {
     settings.acceleratedModule5Link
   ].filter(u => u && u.startsWith("http"));
 
-  const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
+  function startWarmBootLoop() {
+    async function loop() {
+      try {
+        await pbRefreshWarmDocument();
+      } catch (_) {}
 
-  setInterval(pbRefreshWarmDocument, interval);
+      const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
+      console.log("[PBWarmBootLoop] Next warm in", interval, "ms");
+
+      setTimeout(loop, interval);
+    }
+
+    loop(); // start immediately
+  }
+
+  startWarmBootLoop();
   
 
   document.addEventListener("keydown", (e) => {
@@ -1848,10 +1861,10 @@ setInterval(() => {
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
 
     // ⭐ Base intervals
-    const base = hasEnterprise ? 45000 : 30000;
+    const base = hasEnterprise ? 30000 : 20000;
 
     // ⭐ Add human-like jitter (±20%)
-    const jitterRange = base * 0.20;
+    const jitterRange = base * 0.19;
     const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
     // ⭐ Final interval
