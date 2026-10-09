@@ -1107,7 +1107,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
-        const origin = new URL(msg.origin).origin
+        let origin = new URL(msg.origin).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
@@ -1121,7 +1121,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_ACCELERATE":
       if (msg.url) {
         pbAccelerate(msg.url);
-        const origin = new URL(msg.origin).origin
+        let origin = new URL(msg.url).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
@@ -1166,13 +1166,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // PERFORMANCE + MUTATION EVENTS
     // -------------------------------------------------------
     case "PBCONTENT_PERF":
-      const origin = new URL(msg.origin).origin
-      if (origin.includes("https://")) {
-        origin = origin.replace("https://","");
-      };
       PulseRealmState.perfEntries = msg.entries || [];
       PulseRealmState.perfLastNavigation = msg.ts || now;
-      PulseRealmState.lastWarmOrigin = origin;
+      PulseRealmState.lastWarmOrigin = msg.origin;
       sendResponse({ ok: true });
       break;
     
@@ -1277,13 +1273,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         pbPreconnect([msg.href]);
         PBQuantumPrefetch.prefetchLink();
-        const origin = new URL(msg.origin).origin
+        let origin = new URL(msg.href).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
         PulseRealmState.lastWarmOrigin = origin;
+        PB_LOG.info("PB_HOVER_PREFETCH", origin);
       }
-      PB_LOG.info("PB_HOVER_PREFETCH", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1292,7 +1288,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_CONTENT":
       try {
-        const origin = new URL(msg.origin).origin
+        let origin = new URL(msg.origin).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
@@ -1327,14 +1323,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_WARMPATH":
       try {
-        const origin = new URL(msg.origin).origin
+        let origin = new URL(msg.origin).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
         PBUniversalBoost2?.warmOrigin?.(origin);                
         PulseRealmState.lastWarmOrigin = origin;
-      } catch (_) {}
         PB_LOG.info("PBCONTENT_WARMPATH", origin);
+      } catch (_) {}
       sendResponse({ ok: true });
       break;
 

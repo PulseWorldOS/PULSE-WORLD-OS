@@ -833,22 +833,9 @@ async function updateModuleIcons() {
     settings.acceleratedModule5Link
   ].filter(u => u && u.startsWith("http"));
 
-  function startWarmBootLoop2() {
-    async function loop() {
-      try {
-        await pbRefreshWarmDocument();
-      } catch (_) {}
+  const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
 
-      const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
-      console.log("[PBWarmBootLoop] Next warm in", interval, "ms");
-
-      setTimeout(loop, interval);
-    }
-
-    setTimeout(loop, 30000);
-  }
-
-  startWarmBootLoop2();
+  setInterval(pbRefreshWarmDocument, interval);
   
 
   document.addEventListener("keydown", (e) => {
@@ -1857,22 +1844,9 @@ setInterval(() => {
     const allTargets = [...links, ...homes, ...temp].filter(u => u && u.startsWith("http"));
     const externalTargets = [...links, ...temp].filter(u => u && u.startsWith("http"));
     PulseModuleCount = externalTargets.length;
-
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
-
-    // ⭐ Base intervals
-    const base = hasEnterprise ? 30000 : 20000;
-
-    // ⭐ Add human-like jitter (±20%)
-    const jitterRange = base * 0.19;
-    const jitter = (Math.random() * jitterRange * 2) - jitterRange;
-
-    // ⭐ Final interval
-    const interval = Math.max(5000, base + jitter); // never below 5s
-
-    return Math.floor(interval);
+    return hasEnterprise ? 30000 : 20000; // 15s for enterprise, 8s for normal
   }
-
 
   async function pbRefreshWarmDocument() {
     // ---------------------------------------------------------------------------

@@ -987,7 +987,7 @@ function triggerWarmPaths() {
   chrome.runtime.sendMessage({
     type: "PBCONTENT_WARMPATH",
     ts: Date.now(),
-    url: location.href
+    origin: location.href
   });
 }
 
