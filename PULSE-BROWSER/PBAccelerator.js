@@ -326,7 +326,6 @@ async function pbModuleWarmBoot() {
 
   // Warm each module target
   warmTargets.forEach(origin => {
-    pbPreload(origin);
     pbRealmWarm(origin);
   });
 

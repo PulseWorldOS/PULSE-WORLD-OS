@@ -906,7 +906,6 @@ async function pbModuleWarmBoot() {
 
   // Warm each module target
   warmTargets.forEach(origin => {
-    pbPreload(origin);
     pbRealmWarm(origin);
   });
 
@@ -1310,7 +1309,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_FRONT":
       try {
-        const originfile = new URL(msg.pageUrl).origin + "/PBFrontPage.html";
+        const originfile = new URL(msg.pageUrl).origin;
         PBGlobalAssetMap?.scanAndWarm?.(originfile, msg.assets || []);
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(originfile, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
