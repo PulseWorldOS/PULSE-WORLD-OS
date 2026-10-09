@@ -1025,17 +1025,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
+        const origin = new URL(msg.origin).origin.replace("https://","");
         PulseRealmState.warmPathsTriggered += 1;
-        PulseRealmState.lastWarmOrigin = msg.origin;
+        PulseRealmState.lastWarmOrigin = origin;
       }
-      PB_LOG.info("PBACC_WARMPATH", msg.origin);
+      PB_LOG.info("PBACC_WARMPATH", origin);
       sendResponse({ ok: true });
       break;
 
     case "PBACC_ACCELERATE":
       if (msg.url) {
         pbAccelerate(msg.url);
-        const origin = new URL(msg.url).origin;
+        const origin = new URL(msg.url).origin.replace("https://","");
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
       }
@@ -1077,9 +1078,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // PERFORMANCE + MUTATION EVENTS
     // -------------------------------------------------------
     case "PBCONTENT_PERF":
+      const origin = new URL(msg.origin).origin.replace("https://","");
       PulseRealmState.perfEntries = msg.entries || [];
       PulseRealmState.perfLastNavigation = msg.ts || now;
-      PulseRealmState.lastWarmOrigin = msg.origin;
+      PulseRealmState.lastWarmOrigin = origin;
       sendResponse({ ok: true });
       break;
     
@@ -1184,7 +1186,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         pbPreconnect([msg.href]);
         PBQuantumPrefetch.prefetchLink();
-        const origin = new URL(msg.href).origin;
+        const origin = new URL(msg.href).origin.replace("https://","");
         PulseRealmState.lastWarmOrigin = origin;
       }
       PB_LOG.info("PB_HOVER_PREFETCH", origin);
@@ -1196,7 +1198,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_CONTENT":
       try {
-        const origin = new URL(msg.pageUrl).origin;
+        const origin = new URL(msg.pageUrl).origin.replace("https://","");
 
         PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
@@ -1228,7 +1230,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_WARMPATH":
       try {
-        const origin = new URL(msg.url).origin;
+        const origin = new URL(msg.url).origin.replace("https://","");
         PBUniversalBoost2?.warmOrigin?.(origin);                
         PulseRealmState.lastWarmOrigin = origin;
       } catch (_) {}
@@ -1418,6 +1420,27 @@ const PBUniversalBoost2 = {
   async warmOrigin(origin) {
     if (!origin) return;
 
+    // ⭐ Load permanent warm-cache + permanent fail-cache
+    const store = await chrome.storage.local.get([
+      "pb_warm_cache",
+      "pb_fail_cache"
+    ]);
+
+    const warmed = store.pb_warm_cache || {};
+    const fails = store.pb_fail_cache || {};
+
+    // ⭐ If origin already failed twice → PERMANENT BLACKLIST
+    if (fails[origin] >= 2) {
+      console.log("[PBUniversalBoost2] PERMANENT SKIP (2× 404):", origin);
+      return;
+    }
+
+    // ⭐ If origin already warmed → skip forever
+    if (warmed[origin]) {
+      console.log("[PBUniversalBoost2] Skipped (already warmed):", origin);
+      return;
+    }
+
     // ⭐ HARD BLOCK: skip all non-web origins
     const forbidden = [
       "chrome://",
@@ -1432,30 +1455,55 @@ const PBUniversalBoost2 = {
     ];
 
     for (const prefix of forbidden) {
-      if (origin.startsWith(prefix)) {
-        
-        return;
-      }
+      if (origin.startsWith(prefix)) return;
     }
 
     // ⭐ Only warm http/https origins
     if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
-      
       return;
     }
 
-    const paths = ["/", "/index.html", "/home", "/about", "/contact", "/manifest.json"];
-    const assets = ["/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"];
+    const paths = [
+      "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"
+    ];
+    const assets = [
+      "/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"
+    ];
 
     const urls = []
       .concat(paths.map((p) => origin + p))
       .concat(assets.map((p) => origin + p));
 
+    let failCount = fails[origin] || 0;
+
+    // ⭐ Attempt fetch ONCE per origin
     for (const url of urls) {
       try {
-        fetch(url, { cache: "force-cache" }).catch(() => {});
+        const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
+
+        // ⭐ Count 404s
+        if (res && res.status === 404) {
+          failCount++;
+          console.log("[PBUniversalBoost2] 404 for", url);
+
+          // ⭐ If 404 twice → PERMANENT BLACKLIST
+          if (failCount >= 2) {
+            fails[origin] = failCount;
+            await chrome.storage.local.set({ pb_fail_cache: fails });
+            console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", origin);
+            return;
+          }
+        }
       } catch (_) {}
     }
+
+    // ⭐ Mark origin as permanently warmed
+    warmed[origin] = true;
+    await chrome.storage.local.set({ pb_warm_cache: warmed });
+
+    // ⭐ Save updated fail count
+    fails[origin] = failCount;
+    await chrome.storage.local.set({ pb_fail_cache: fails });
 
     console.log("[PBUniversalBoost2] Warmed publish directory for", origin, urls);
   },

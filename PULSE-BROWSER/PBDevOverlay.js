@@ -102,13 +102,13 @@ function updateKernel(realm) {
   const lastURL = realm.lastURL?.slice(0, 75);
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
+    Session Start: <font color="yellow">${realm.sessionStart || "-"}</font><br/>
     Last Page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
     Last Title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
     Last URL: <font color="#0FF">${lastURL || "-"}</font><br/>
     Domain Class: <font color="#0FF">${realm.lastDomainClass || "-"}</font><br/>
-    Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
     Data Band: <font color="#0FF">${realm.band || "-"}</font><br/>
-    Session Start: <font color="yellow">${realm.sessionStart || "-"}</font><br/>
+    Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
   `;
 }
 
