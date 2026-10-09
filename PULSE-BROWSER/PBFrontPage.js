@@ -277,7 +277,6 @@ const PBUniversalBoost = {
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
       if (fails[url] >= 2) {
-        console.log("[PBUniversalBoost2] PERMANENT SKIP (2× 404):", url);
         continue;
       }
 
@@ -286,12 +285,11 @@ const PBUniversalBoost = {
 
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
-          console.log("[PBUniversalBoost2] 404 for", url);
 
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-            console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", url);
+            console.log("[PBUniversalBoost] PERMANENT BLACKLIST:", url);
           }
         }
       } catch (_) {}
@@ -300,7 +298,7 @@ const PBUniversalBoost = {
     // ⭐ Save updated fail-cache
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
-    console.log("[PBUniversalBoost2] Warmed publish directory for", origin);
+    console.log("[PBUniversalBoost] Warmed publish directory for", origin);
   },
 
   async warmTab(tab) {

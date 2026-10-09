@@ -621,23 +621,6 @@ function pbTLSWarm(origin) {
   } catch (_) {}
 }
 
-
-// ---------------------------------------------------------------------------
-// PREFETCH (network warm-path) + Realm counter
-// ---------------------------------------------------------------------------
-function pbPrefetch(urls = []) {
-  urls.forEach((url) => {
-    try { fetch(url, { cache: "force-cache" }).catch(() => {}); } catch (_) {}
-  });
-
-  // Asset warm-path counter
-  if (urls.length > 0) {
-    chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: urls.length });
-  }
-  
-  console.log("%c[PBAccelerator] Prefetch:", "color:#00C8FF;", urls);
-}
-
 // ---------------------------------------------------------------------------
 // PRECONNECT (DNS/TLS/TCP warm-path)
 // ---------------------------------------------------------------------------
@@ -650,22 +633,99 @@ function pbPreconnect(origins = []) {
 }
 
 // ---------------------------------------------------------------------------
+// PREFETCH (network warm-path) + Realm counter
+// ---------------------------------------------------------------------------
+async function pbPrefetch(urls = []) {
+  if (!urls || urls.length === 0) return;
+
+  // ⭐ Load permanent per-URL fail-cache
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
+  const fails = store.pb_fail_cache || {};
+
+  let warmedCount = 0;
+
+  for (const url of urls) {
+    if (!url) continue;
+
+    // ⭐ Skip permanently failed URLs
+    if (fails[url] >= 2) {
+      continue;
+    }
+
+    try {
+      const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
+
+      if (res && res.status === 404) {
+        fails[url] = (fails[url] || 0) + 1;
+
+        if (fails[url] >= 2) {
+          await chrome.storage.local.set({ pb_fail_cache: fails });
+          console.log("[PBAccelerator] PERMANENT BLACKLIST:", url);
+        }
+      } else {
+        warmedCount++;
+      }
+    } catch (_) {}
+  }
+
+  // ⭐ Save updated fail-cache
+  await chrome.storage.local.set({ pb_fail_cache: fails });
+
+  if (warmedCount > 0) {
+    chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+  }
+
+  console.log("%c[PBAccelerator] Prefetch:", "color:#00C8FF;", warmedCount);
+}
+
+// ---------------------------------------------------------------------------
 // PRELOAD (asset warm-path) + Realm counter
 // ---------------------------------------------------------------------------
-function pbPreload(origin) {
+async function pbPreload(origin) {
+  if (!origin) return;
+
   const urls = isPulseWorld(origin)
     ? PB_ASSETS.map(p => origin + p)
     : PB_GENERIC_ASSETS.map(p => origin + p);
 
-  urls.forEach(url => {
-    try { fetch(url, { cache: "force-cache" }).catch(() => {}); } catch (_) {}
-  });
+  // ⭐ Load permanent per-URL fail-cache
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
+  const fails = store.pb_fail_cache || {};
 
-  if (urls.length > 0) {
-    chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: urls.length });
+  let warmedCount = 0;
+
+  for (const url of urls) {
+    if (!url) continue;
+
+    // ⭐ Skip permanently failed URLs
+    if (fails[url] >= 2) {
+      continue;
+    }
+
+    try {
+      const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
+
+      if (res && res.status === 404) {
+        fails[url] = (fails[url] || 0) + 1;
+
+        if (fails[url] >= 2) {
+          await chrome.storage.local.set({ pb_fail_cache: fails });
+          console.log("[PBAccelerator] PERMANENT BLACKLIST:", url);
+        }
+      } else {
+        warmedCount++;
+      }
+    } catch (_) {}
   }
 
-  console.log("%c[PBAccelerator] Preload:", "color:#00C8FF;", urls);
+  // ⭐ Save updated fail-cache
+  await chrome.storage.local.set({ pb_fail_cache: fails });
+
+  if (warmedCount > 0) {
+    chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+  }
+
+  console.log("%c[PBAccelerator] Preload:", "color:#00C8FF;", warmedCount);
 }
 
 
@@ -1025,7 +1085,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH":
       if (msg.origin) {
         pbWarmPath(msg.origin);
-        const origin = new URL(msg.origin).origin.replace("https://","");
+        const origin = new URL(msg.origin).origin
+        if (origin.includes("https://")) {
+          origin = origin.replace("https://","");
+        };
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
       }
@@ -1036,7 +1099,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_ACCELERATE":
       if (msg.url) {
         pbAccelerate(msg.url);
-        const origin = new URL(msg.url).origin.replace("https://","");
+        const origin = new URL(msg.origin).origin
+        if (origin.includes("https://")) {
+          origin = origin.replace("https://","");
+        };
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
       }
@@ -1078,7 +1144,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // PERFORMANCE + MUTATION EVENTS
     // -------------------------------------------------------
     case "PBCONTENT_PERF":
-      const origin = new URL(msg.origin).origin.replace("https://","");
+      const origin = new URL(msg.origin).origin
+      if (origin.includes("https://")) {
+        origin = origin.replace("https://","");
+      };
       PulseRealmState.perfEntries = msg.entries || [];
       PulseRealmState.perfLastNavigation = msg.ts || now;
       PulseRealmState.lastWarmOrigin = origin;
@@ -1186,7 +1255,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
         pbPreconnect([msg.href]);
         PBQuantumPrefetch.prefetchLink();
-        const origin = new URL(msg.href).origin.replace("https://","");
+        const origin = new URL(msg.origin).origin
+        if (origin.includes("https://")) {
+          origin = origin.replace("https://","");
+        };
         PulseRealmState.lastWarmOrigin = origin;
       }
       PB_LOG.info("PB_HOVER_PREFETCH", origin);
@@ -1198,7 +1270,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_CONTENT":
       try {
-        const origin = new URL(msg.pageUrl).origin.replace("https://","");
+        const origin = new URL(msg.origin).origin
+        if (origin.includes("https://")) {
+          origin = origin.replace("https://","");
+        };
 
         PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
@@ -1230,7 +1305,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBCONTENT_WARMPATH":
       try {
-        const origin = new URL(msg.url).origin.replace("https://","");
+        const origin = new URL(msg.origin).origin
+        if (origin.includes("https://")) {
+          origin = origin.replace("https://","");
+        };
         PBUniversalBoost2?.warmOrigin?.(origin);                
         PulseRealmState.lastWarmOrigin = origin;
       } catch (_) {}
@@ -1460,7 +1538,6 @@ const PBUniversalBoost2 = {
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
       if (fails[url] >= 2) {
-        console.log("[PBUniversalBoost2] PERMANENT SKIP (2× 404):", url);
         continue;
       }
 
@@ -1469,7 +1546,6 @@ const PBUniversalBoost2 = {
 
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
-          console.log("[PBUniversalBoost2] 404 for", url);
 
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
