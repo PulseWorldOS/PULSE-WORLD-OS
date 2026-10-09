@@ -15,7 +15,7 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   const wrap = document.getElementById("side-panel right-panel");
   wrap.style.cssText = `
     position: fixed;
-    margin: 20px 20px;
+    margin: 14px 20px;
     padding: 3px 6px;
     top: 0;
     bottom: 0;
@@ -102,7 +102,7 @@ function updateKernel(realm) {
   const lastURL = realm.lastURL?.slice(0, 75);
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
-    Session Start: <font color="yellow">${realm.sessionStart || "-"}</font><br/>
+    Session Start: <font color="gold">${realm.sessionStart || "-"}</font><br/>
     Last Page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
     Last Title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
     Last URL: <font color="#0FF">${lastURL || "-"}</font><br/>
@@ -236,8 +236,8 @@ function updateExperimental(settings) {
   const el = document.getElementById("pb-hud-experimental");
   el.innerHTML = `
     <div class="pb-hud-title">PulseBrowser Experimental</div>
-    GPU Paths: <font color="${experimentalColor(settings.experimentalGPUPaths)}">${settings.experimentalGPUPaths}</font><br/>
-    Decode Paths: <font color="${experimentalColor(settings.experimentalDecodePaths)}">${settings.experimentalDecodePaths}</font><br/>
+    Realm Continuity: <font color="${experimentalColor(settings.experimentalRealmPerservere)}">${settings.experimentalRealmPerservere}</font><br/>
+    Learned Paths: <font color="${experimentalColor(settings.experimentalLearnPaths)}">${settings.experimentalLearnPaths}</font><br/>
     Perpetual Flow: <font color="${experimentalColor(settings.experimentalPerpFresh)}">${settings.experimentalPerpFresh}</font><br/>
     Predictive Prefetch: <font color="${experimentalColor(settings.experimentalPredictivePrefetch)}">${settings.experimentalPredictivePrefetch}</font><br/>
     Temporal NAV: <font color="${experimentalColor(settings.experimentalTemporalNavigation)}">${settings.experimentalTemporalNavigation}</font><br/>

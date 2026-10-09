@@ -166,9 +166,9 @@ async function saveExtensionSettingsUI() {
     routerFallbackScan: true,
     routerAdaptiveRouting: true,
 
-    experimentalGPUPaths: false,
-    experimentalDecodePaths: false,
     experimentalAIWarmPath: false,
+    experimentalRealmPerservere: true,
+    experimentalLearnPaths: true,
     experimentalPerpFresh: true,
     experimentalTemporalNavigation: true,
     experimentalPredictivePrefetch: true,

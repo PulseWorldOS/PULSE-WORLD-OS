@@ -194,8 +194,8 @@ function pbLogExperimentalStatus() {
   chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
     const s = res.settings;
 
-    logKV("GPU Paths", s.experimentalGPUPaths);
-    logKV("Decode Paths", s.experimentalDecodePaths);
+    logKV("Realm Perserverance", s.experimentalRealmPerservere);
+    logKV("Learned Paths", s.experimentalLearnPaths);
     logKV("Perpetual Freshness", s.experimentalPerpFresh);
     logKV("Predictive Prefetch", s.experimentalPredictivePrefetch);
     logKV("AI Warm Path", s.experimentalAIWarmPath);

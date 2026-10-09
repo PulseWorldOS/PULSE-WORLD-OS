@@ -172,12 +172,6 @@ function openNamedTab(name, url) {
     const identity = normalizeIdentity(url);
     const existing = pulseTabs[identity];
 
-    // Lightweight warm‑state hint (safe, non‑blocking)
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: url
-    });
-
     try {
       fetch(url, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
@@ -1936,6 +1930,7 @@ setInterval(() => {
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
+      
       gpuWarmExtra();
       updateOverlay();
       // Force Chrome to rebuild the GPU layer
@@ -1951,4 +1946,30 @@ setInterval(() => {
     }
   });
 
+  function extractWorldBands() {
+    const bands = {};
+
+    document.querySelectorAll("[data-band]").forEach((el) => {
+      const name = el.getAttribute("data-band");
+      bands[name] = bands[name] || 0;
+      bands[name]++;
+    });
+
+    return bands;
+  }
+
+  
+function emitFullPageContext() {
+  chrome.runtime.sendMessage({
+    type: "PBREALM_UPDATE_FULL",
+    page: "NewTab",
+    url: "impulse://newtab",
+    title: documentTitle(),
+    bands: extractWorldBands()
+  });
+}
+
+function documentTitle() {
+  return document.title;
+}
   

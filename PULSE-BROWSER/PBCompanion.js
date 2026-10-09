@@ -88,9 +88,9 @@ const PB_SW_SETTINGS = {
   routerFallbackScan: true,
   routerAdaptiveRouting: true,
 
-  experimentalGPUPaths: false,
-  experimentalDecodePaths: false,
   experimentalAIWarmPath: false,
+  experimentalRealmPerservere: true,
+  experimentalLearnPaths: true,
   experimentalPerpFresh: true,
   experimentalTemporalNavigation: true,
   experimentalPredictivePrefetch: true,
@@ -1153,7 +1153,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "PULSE_OS_PING":
-      PulseRealmState.lastPing = new Date().toLocaleString();      
+      PulseRealmState.lastPing = new Date().toLocaleString(); 
       if (!PulseRealmState.sessionStart) PulseRealmState.sessionStart = now;
       sendResponse({ ok: true, ts: PulseRealmState.lastPing });
       break;
@@ -1231,6 +1231,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBREALM_UPDATE":
       PulseRealmState.lastPing = new Date().toLocaleString();
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
+      PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
+      PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
       sendResponse({ ok: true });
       break;
 
@@ -1329,7 +1331,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         };
         PBUniversalBoost2?.warmOrigin?.(origin);                
         PulseRealmState.lastWarmOrigin = origin;
-        PB_LOG.info("PBCONTENT_WARMPATH", origin);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1549,6 +1550,8 @@ const PBUniversalBoost2 = {
       "/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"
     ];
 
+    let warmedCount = 0;
+
     const urls = []
       .concat(paths.map((p) => origin + p))
       .concat(assets.map((p) => origin + p));
@@ -1569,7 +1572,9 @@ const PBUniversalBoost2 = {
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
             console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", url);
-          }
+          }        
+        } else {
+          warmedCount++;
         }
       } catch (_) {}
     }
@@ -1578,6 +1583,9 @@ const PBUniversalBoost2 = {
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
     console.log("[PBUniversalBoost2] Warmed publish directory for", origin);
+    if (warmedCount > 0) {
+      chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+    }
   },
 
   async warmTab(tab) {
@@ -1738,6 +1746,8 @@ const PBGlobalAssetMap = {
       urlsToWarm.splice(0, urlsToWarm.length - this.maxAssetsPerOrigin);
     }
 
+    let warmedCount = 0;
+
     // ⭐ Warm each asset
     for (const url of urlsToWarm) {
       try {
@@ -1752,7 +1762,7 @@ const PBGlobalAssetMap = {
             console.log("[PBGlobalAssetMap] PERMANENT BLACKLIST:", url);
           }
         } else {
-          PulseRealmState.warmAssetsTriggered += 1;
+          warmedCount++;
         }
       } catch (_) {}
     }
@@ -1760,7 +1770,10 @@ const PBGlobalAssetMap = {
     // ⭐ Save updated fail-cache
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
-    console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, urlsToWarm.length);
+    console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, warmedCount);
+    if (warmedCount > 0) {
+      chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+    }
   }
 };
 
