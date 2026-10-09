@@ -940,7 +940,7 @@ function startWarmBootLoop() {
     setTimeout(loop, interval);
   }
 
-  loop(); // start immediately
+  setTimeout(loop, 600);
 }
 
 startWarmBootLoop();

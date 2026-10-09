@@ -845,7 +845,7 @@ async function updateModuleIcons() {
       setTimeout(loop, interval);
     }
 
-    loop(); // start immediately
+    setTimeout(loop, 30000);
   }
 
   startWarmBootLoop2();
