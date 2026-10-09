@@ -1290,7 +1290,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_CONTENT":
       try {
-        let origin = new URL(msg.origin).origin
+        let origin = new URL(msg.pageUrl).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
