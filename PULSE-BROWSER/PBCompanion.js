@@ -674,8 +674,6 @@ async function pbPrefetch(urls = []) {
   if (warmedCount > 0) {
     chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
   }
-
-  console.log("%c[PBAccelerator] Prefetch:", "color:#00C8FF;", warmedCount);
 }
 
 // ---------------------------------------------------------------------------
@@ -724,8 +722,6 @@ async function pbPreload(origin) {
   if (warmedCount > 0) {
     chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
   }
-
-  console.log("%c[PBAccelerator] Preload:", "color:#00C8FF;", warmedCount);
 }
 
 
