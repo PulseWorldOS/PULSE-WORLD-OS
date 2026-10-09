@@ -1844,9 +1844,22 @@ setInterval(() => {
     const allTargets = [...links, ...homes, ...temp].filter(u => u && u.startsWith("http"));
     const externalTargets = [...links, ...temp].filter(u => u && u.startsWith("http"));
     PulseModuleCount = externalTargets.length;
+
     const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
-    return hasEnterprise ? 45000 : 30000; // 15s for enterprise, 8s for normal
+
+    // ⭐ Base intervals
+    const base = hasEnterprise ? 45000 : 30000;
+
+    // ⭐ Add human-like jitter (±20%)
+    const jitterRange = base * 0.20;
+    const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+    // ⭐ Final interval
+    const interval = Math.max(5000, base + jitter); // never below 5s
+
+    return Math.floor(interval);
   }
+
 
   async function pbRefreshWarmDocument() {
     // ---------------------------------------------------------------------------
