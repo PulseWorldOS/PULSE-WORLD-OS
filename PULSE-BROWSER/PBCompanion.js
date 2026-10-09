@@ -773,7 +773,6 @@ function pbRealmWarm(origin) {
     origin + "/"
   ];
   pbPrefetch(urls);
-  console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
 
 
