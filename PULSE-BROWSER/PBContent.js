@@ -145,10 +145,8 @@ function startWarmPath() {
 // Unified warm function
 function warmAllImages() {
   // Warm HTML <img>
-  document.querySelectorAll("img").forEach(warmImageDecode);
+  collectAndWarmAssetsContent();
   triggerWarmPaths();
-  // Warm CSS backgrounds
-  warmCSSImages();
 }
 
 
@@ -976,7 +974,7 @@ function collectAndWarmAssetsContent() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", collectAndWarmAssetsContent);
+setTimeout(collectAndWarmAssetsContent, 600);
 
 
 // ============================================================================
