@@ -47,9 +47,11 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
 
   document.body.appendChild(wrap);
 
-  updateOverlay();
-  setInterval(updateOverlay, 800);
+  updateRealmOverlay();
+  setTimeout(updateOverlay, 200);
+  setInterval(updateOverlay, 1500);
 })();
+
 function enabledColor(v) {
   return v ? "lightgreen" : "#FF0";   // teal for true, yellow for false
 }
@@ -65,8 +67,6 @@ function experimentalColor(v) {
 // UPDATE OVERLAY
 // ---------------------------------------------------------------------------
 async function updateOverlay() {
-  const settings = await pbLoadExtensionSettings();
-  PulseRealmSettings = settings;
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
       PulseRealm = realmRes.state || {};
 
@@ -78,6 +78,19 @@ async function updateOverlay() {
       updateRouter(PulseRealmSettings);
       updateSettings(PulseRealmSettings);
       updateExperimental(PulseRealmSettings);
+    });
+}
+
+// ---------------------------------------------------------------------------
+// UPDATE OVERLAY
+// ---------------------------------------------------------------------------
+async function updateRealmOverlay() {
+  chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
+      PulseRealm = realmRes.state || {};
+
+      updateKernel(PulseRealm);
+      updateWarm(PulseRealm);
+      updatePerformance(PulseRealm);
     });
 }
 
@@ -151,7 +164,8 @@ function updateWarm(realm) {
     Warm Assets: <font color="#0FF">${realm.warmAssetsTriggered || "-"}</font><br/>
     Images Decoded: <font color="#0FF">${realm.imagesDecoded || "-"}</font><br/>
     Warm-GPU Enabled: <font color="#0FF">${realm.gpuEnabled || "-"}</font><br/>
-    Warm-Galaxy: <font color="yellow">PulseBrowser OS Modules (<font color="#0FF">${PulseModuleCount || "-"}</font>)</font><br/>
+    Warm-Galaxy: <font color="yellow">${PulseModuleCount ? `PulseBrowser OS Modules (<font color="#0FF">${PulseModuleCount}</font>)` : "-"}</font><br/>
+    Warm-Nova: <font color="gold">${PulseTempModuleCount ? `PulseBrowser Temp Modules (<font color="#0FF">${PulseTempModuleCount}</font>)` : "-"}</font><br/>
   `;
 }
 
@@ -224,7 +238,6 @@ function updateExperimental(settings) {
     <div class="pb-hud-title">PulseBrowser Experimental</div>
     GPU Paths: <font color="${experimentalColor(settings.experimentalGPUPaths)}">${settings.experimentalGPUPaths}</font><br/>
     Decode Paths: <font color="${experimentalColor(settings.experimentalDecodePaths)}">${settings.experimentalDecodePaths}</font><br/>
-    AI Warm Path: <font color="${experimentalColor(settings.experimentalAIWarmPath)}">${settings.experimentalAIWarmPath}</font><br/>
     Perpetual Flow: <font color="${experimentalColor(settings.experimentalPerpFresh)}">${settings.experimentalPerpFresh}</font><br/>
     Predictive Prefetch: <font color="${experimentalColor(settings.experimentalPredictivePrefetch)}">${settings.experimentalPredictivePrefetch}</font><br/>
     Temporal NAV: <font color="${experimentalColor(settings.experimentalTemporalNavigation)}">${settings.experimentalTemporalNavigation}</font><br/>

@@ -146,7 +146,7 @@ function startWarmPath() {
 function warmAllImages() {
   // Warm HTML <img>
   document.querySelectorAll("img").forEach(warmImageDecode);
-
+  triggerWarmPaths();
   // Warm CSS backgrounds
   warmCSSImages();
 }

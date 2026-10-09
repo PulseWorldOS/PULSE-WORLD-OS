@@ -497,8 +497,6 @@ function safeSendMessage(msg) {
 }
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
-  const S = await pbLoadSettings();
-  if (!S.enableNavigator) return;
   const tab = await chrome.tabs.get(activeInfo.tabId);
   // Universal boost warm-path
   if (typeof PBUniversalBoost2?.warmTab === "function") {
@@ -1337,15 +1335,13 @@ async function pbHandleRequest(details) {
 //  SECTION 5 — NAVIGATOR (Tab Physics)
 // ============================================================================
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  const S = await pbLoadSettings();
-  if (!S.enableNavigator) return;
   if (changeInfo.status !== "complete" || !tab.url) return;
 
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;
   const origin = new URL(url).origin;
-  const domainClass = S.homeUniverse.some((d) => url.includes(d)) ? "PulseWorld" : "WWW";
+  const domainClass = pbDomainClass(url);
   
   if (url.includes("newtab")) {
     url = "impulse://newtab"

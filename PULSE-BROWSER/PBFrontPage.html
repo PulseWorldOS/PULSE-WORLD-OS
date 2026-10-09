@@ -407,6 +407,22 @@
       box-shadow: 0 0 30px #33bbffcc;
       transform: scale(1.05);
     }
+
+    /* FIXED BUTTON — now an anchor */
+    .about {
+      bottom: 6px;
+      left: 10px;
+      margin-top: 8px;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      position: fixed;
+    }
+
     .shimmer {
       position: absolute;
       width: 400%;
@@ -649,7 +665,6 @@
   </div>
 
   <div class="core">
-
     <!-- Logo + Title -->
     <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" />
 
@@ -681,11 +696,13 @@
 
     </div>
 
+    <div class="about" id="about">About PulseBrowser OS</div>
+
     <!-- Main Navigation Buttons -->
     <div class="main-links">
-      <a class="engage" id="engage" href="https://www.pulseworld.biz">💼 PulseBusiness</a>
-      <a class="enter" id="enter" href="https://www.pulseworld.net">🌐 Enter PulseWorld</a>
-      <a class="setup" id="setup" href="https://www.pulseworld.me">🧑‍🎨 PulseIdentity</a>
+      <div class="engage" id="engage">💼 PulseBusiness</div>
+      <div class="enter" id="enter">🌐 Enter PulseWorld</div>
+      <div class="setup" id="setup">🧑‍🎨 PulseIdentity</div>
     </div>
 
     <div id="pbWarmContainer" style="display:none"></div>

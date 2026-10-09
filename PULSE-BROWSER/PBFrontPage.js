@@ -13,6 +13,7 @@ let engineURL = buildSearchURL("google.com");
 let url = engineURL;
 let PulseRealm = {};
 let PulseModuleCount = 0;
+let PulseTempModuleCount = 0;
 let PulseRealmSettings = null;
 
 const timerBtn = document.getElementById("timerBtn");
@@ -533,7 +534,7 @@ async function getFavicon(url, flags = {}) {
 }
 
 
-setTimeout(updateModuleIcons, 300);
+setTimeout(updateModuleIcons, 150);
 
 
 // ---------------------------------------------------------------------------
@@ -1252,7 +1253,176 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
   }
 });
 
+const aboutBtn = document.getElementById("about");
+const engageBtn = document.getElementById("engage");
+const enterBtn = document.getElementById("enter");
+const setupBtn = document.getElementById("setup");
 
+let hoverTimer = null;
+
+aboutBtn.addEventListener("mouseover", () => {
+  const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
+
+  // Clear any previous timer
+  if (hoverTimer) clearTimeout(hoverTimer);
+
+  // Start 250ms hover timer
+  hoverTimer = setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+  }, 250);
+});
+
+// Cancel prefetch if mouse leaves early
+aboutBtn.addEventListener("mouseout", () => {
+  if (hoverTimer) clearTimeout(hoverTimer);
+  hoverTimer = null;
+});
+
+// Click logic stays the same
+aboutBtn.addEventListener("click", async () => {
+  const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
+
+  chrome.runtime.sendMessage({
+    type: "PB_HOVER_PREFETCH",
+    href: link
+  });
+
+  try {
+    fetch(link, { mode: "no-cors" }).catch(() => {});
+  } catch (_) {}
+
+  await PBUniversalBoost.warmOrigin(link);
+  openNamedTab("PulseBrowserOS", link);
+});
+
+engageBtn.addEventListener("mouseover", () => {
+  const link = "https://www.pulseworld.biz";
+
+  // Clear any previous timer
+  if (hoverTimer) clearTimeout(hoverTimer);
+
+  // Start 250ms hover timer
+  hoverTimer = setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+  }, 250);
+});
+
+// Cancel prefetch if mouse leaves early
+engageBtn.addEventListener("mouseout", () => {
+  if (hoverTimer) clearTimeout(hoverTimer);
+  hoverTimer = null;
+});
+
+engageBtn.addEventListener("click", async () => {
+    let link = "https://www.pulseworld.biz";
+
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    await PBUniversalBoost.warmOrigin(link);
+    openNamedTab("PulseBusiness", link);
+});
+
+
+enterBtn.addEventListener("mouseover", () => {
+  const link = "https://www.pulseworld.net";
+
+  // Clear any previous timer
+  if (hoverTimer) clearTimeout(hoverTimer);
+
+  // Start 250ms hover timer
+  hoverTimer = setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+  }, 250);
+});
+
+// Cancel prefetch if mouse leaves early
+enterBtn.addEventListener("mouseout", () => {
+  if (hoverTimer) clearTimeout(hoverTimer);
+  hoverTimer = null;
+});
+
+enterBtn.addEventListener("click", async () => {
+    let link = "https://www.pulseworld.net";
+
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    await PBUniversalBoost.warmOrigin(link);
+    openNamedTab("PulseBusiness", link);
+});
+
+
+setupBtn.addEventListener("mouseover", () => {
+  const link = "https://www.pulseworld.me";
+
+  // Clear any previous timer
+  if (hoverTimer) clearTimeout(hoverTimer);
+
+  // Start 250ms hover timer
+  hoverTimer = setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+  }, 250);
+});
+
+// Cancel prefetch if mouse leaves early
+setupBtn.addEventListener("mouseout", () => {
+  if (hoverTimer) clearTimeout(hoverTimer);
+  hoverTimer = null;
+});
+
+setupBtn.addEventListener("click", async () => {
+    let link = "https://www.pulseworld.me";
+
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    await PBUniversalBoost.warmOrigin(link);
+    openNamedTab("PulseBusiness", link);
+});
 
 document.getElementById("moduleEmail").addEventListener("click", async () => {
 
@@ -1677,22 +1847,22 @@ setInterval(() => {
       "https://www.gpuprocessing.net",
       "https://www.serviceworker.net",
       "https://www.orbitalmap.net",
-      "https://www.pulseworld.net"
-    ];
+      "https://www.pulseworld.net",
+      "https://www.google.com",
+      settings.externalSearchLink
+    ].filter(u => u && u.startsWith("http"));
 
     const Links = [
-      "https://www.google.com",
-      PulseRealmSettings.externalBankLink,
-      PulseRealmSettings.externalEmailLink,
-      PulseRealmSettings.externalSocialLink,
-      PulseRealmSettings.externalWorkLink,
-      PulseRealmSettings.externalStreamingLink,
-      PulseRealmSettings.externalSearchLink,
-      PulseRealmSettings.acceleratedModule1Link,
-      PulseRealmSettings.acceleratedModule2Link,
-      PulseRealmSettings.acceleratedModule3Link,
-      PulseRealmSettings.acceleratedModule4Link,
-      PulseRealmSettings.acceleratedModule5Link
+      settings.externalBankLink,
+      settings.externalEmailLink,
+      settings.externalSocialLink,
+      settings.externalWorkLink,
+      settings.externalStreamingLink,
+      settings.acceleratedModule1Link,
+      settings.acceleratedModule2Link,
+      settings.acceleratedModule3Link,
+      settings.acceleratedModule4Link,
+      settings.acceleratedModule5Link
     ].filter(u => u && u.startsWith("http"));
 
     collectAndWarmAssetsFront();
@@ -1713,6 +1883,11 @@ setInterval(() => {
     temporaryLinks.forEach(url => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
+
+    const externalTargets = [...Links].filter(u => u && u.startsWith("http"));
+    PulseModuleCount = externalTargets.length;
+    const externalTempTargets = [...temporaryLinks].filter(u => u && u.startsWith("http"));
+    PulseTempModuleCount = externalTempTargets.length;
 
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
     if (Links.length > 0) pbPreconnect(Links);
