@@ -155,7 +155,6 @@ async function pbWarmBoot() {
   await pbModuleWarmBoot();
 }
 
-setTimeout(pbWarmBoot, 600);
 
 self.addEventListener("activate", (event) => {
   console.log("%c[PULSEWORLD OS KERNEL] Activated",

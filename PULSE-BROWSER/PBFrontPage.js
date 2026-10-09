@@ -833,7 +833,7 @@ async function updateModuleIcons() {
     settings.acceleratedModule5Link
   ].filter(u => u && u.startsWith("http"));
 
-  function startWarmBootLoop() {
+  function startWarmBootLoop2() {
     async function loop() {
       try {
         await pbRefreshWarmDocument();
@@ -848,7 +848,7 @@ async function updateModuleIcons() {
     loop(); // start immediately
   }
 
-  startWarmBootLoop();
+  startWarmBootLoop2();
   
 
   document.addEventListener("keydown", (e) => {
