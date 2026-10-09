@@ -237,26 +237,9 @@ const PBUniversalBoost = {
   async warmOrigin(origin) {
     if (!origin) return;
 
-    // ⭐ Load permanent warm-cache + permanent fail-cache
-    const store = await chrome.storage.local.get([
-      "pb_warm_cache",
-      "pb_fail_cache"
-    ]);
-
-    const warmed = store.pb_warm_cache || {};
+    // ⭐ Load permanent per-URL fail-cache
+    const store = await chrome.storage.local.get(["pb_fail_cache"]);
     const fails = store.pb_fail_cache || {};
-
-    // ⭐ If origin already failed twice → PERMANENT BLACKLIST
-    if (fails[origin] >= 2) {
-      console.log("[PBUniversalBoost2] PERMANENT SKIP (2× 404):", origin);
-      return;
-    }
-
-    // ⭐ If origin already warmed → skip forever
-    if (warmed[origin]) {
-      console.log("[PBUniversalBoost2] Skipped (already warmed):", origin);
-      return;
-    }
 
     // ⭐ HARD BLOCK: skip all non-web origins
     const forbidden = [
@@ -291,38 +274,33 @@ const PBUniversalBoost = {
       .concat(paths.map((p) => origin + p))
       .concat(assets.map((p) => origin + p));
 
-    let failCount = fails[origin] || 0;
-
-    // ⭐ Attempt fetch ONCE per origin
     for (const url of urls) {
+      // ⭐ If THIS SPECIFIC URL failed twice → skip forever
+      if (fails[url] >= 2) {
+        console.log("[PBUniversalBoost2] PERMANENT SKIP (2× 404):", url);
+        continue;
+      }
+
       try {
         const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
 
-        // ⭐ Count 404s
         if (res && res.status === 404) {
-          failCount++;
+          fails[url] = (fails[url] || 0) + 1;
           console.log("[PBUniversalBoost2] 404 for", url);
 
-          // ⭐ If 404 twice → PERMANENT BLACKLIST
-          if (failCount >= 2) {
-            fails[origin] = failCount;
+          // ⭐ If this URL hit 404 twice → permanently skip it
+          if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-            console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", origin);
-            return;
+            console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", url);
           }
         }
       } catch (_) {}
     }
 
-    // ⭐ Mark origin as permanently warmed
-    warmed[origin] = true;
-    await chrome.storage.local.set({ pb_warm_cache: warmed });
-
-    // ⭐ Save updated fail count
-    fails[origin] = failCount;
+    // ⭐ Save updated fail-cache
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
-    console.log("[PBUniversalBoost2] Warmed publish directory for", origin, urls);
+    console.log("[PBUniversalBoost2] Warmed publish directory for", origin);
   },
 
   async warmTab(tab) {
