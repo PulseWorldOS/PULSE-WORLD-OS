@@ -503,16 +503,19 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     PBUniversalBoost2.warmTab(tab);
   }
   const url = tab.url;
+  const domainClass = pbDomainClass(url);
+
   if (!url.includes("chrome:")) {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastTitle = tab.title;
     PulseRealmState.lastPage = tab.page;
+    PulseRealmState.lastDomainClass = domainClass;
   }
   chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
     tabId: tab.id,
-    url: tab.url,
-    domainClass: pbDomainClass(tab.url),
+    url,
+    domainClass: domainClass,
     ts: Date.now()
   });
   
@@ -1562,7 +1565,7 @@ const PBUniversalBoost2 = {
 
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
-      if (fails[url] >= 2 && !isPulseWorld(url)) {
+      if (fails[url] >= 2) {
         continue;
       }
 
@@ -1573,7 +1576,7 @@ const PBUniversalBoost2 = {
           fails[url] = (fails[url] || 0) + 1;
 
           // ⭐ If this URL hit 404 twice → permanently skip it
-          if (fails[url] >= 2 && !isPulseWorld(url)) {
+          if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
             console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", url);
           }        

@@ -564,28 +564,11 @@ function updateHUD() {
 
 
       // ---------------------------------------------
-      // PulseWorld URL / Hashtag Splitter
-      // ---------------------------------------------
-      let displayURL = PulseRealm.lastURL || "-";
-      let displayPage = PulseRealm.lastPage || "-";
-
-      if (displayURL.includes("pulseworld") && displayURL.includes("#")) {
-        const [base, hash] = displayURL.split("#");
-
-        // base URL goes to URL field
-        displayURL = base;
-
-        // hashtag becomes the Page identity
-        displayPage = hash || displayPage;
-      }
-
-      // ---------------------------------------------
       // ⭐ HUD OUTPUT
       // ---------------------------------------------
       body.innerHTML = `
         <font color="#0FF">Current World:</font> <font color="white">${currentEngine}</font><br/>
         <font color="#0FF">About:</font> <font color="gold">${engineDescriptor}</font><br/>
-        <font color="#0FF">Last Page:</font> ${displayPage}<br/>
         <font color="#0FF">Domain:</font> ${PulseRealm.lastDomainClass || "-"}<br/>
         <font color="#0FF">Messages:</font> <font color="red">${"No Active Messages"}</font><br/>
         <hr style="border:0;border-top:1px solid #0FF;margin:6px 0;">

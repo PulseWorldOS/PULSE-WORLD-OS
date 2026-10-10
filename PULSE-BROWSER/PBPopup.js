@@ -60,7 +60,7 @@ const PBUniversalBoost = {
 
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
-      if (fails[url] >= 2 && !isPulseWorld(url)) {
+      if (fails[url] >= 2) {
         continue;
       }
 
@@ -71,7 +71,7 @@ const PBUniversalBoost = {
           fails[url] = (fails[url] || 0) + 1;
 
           // ⭐ If this URL hit 404 twice → permanently skip it
-          if (fails[url] >= 2 && !isPulseWorld(url)) {
+          if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
             console.log("[PBUniversalBoost] PERMANENT BLACKLIST:", url);
           }
