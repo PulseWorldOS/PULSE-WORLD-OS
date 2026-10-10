@@ -696,7 +696,7 @@ async function pbPreload(origin) {
     if (!url) continue;
 
     // ⭐ Skip permanently failed URLs
-    if (fails[url] >= 2) {
+    if (fails[url] >= 2 && !isPulseWorld(url)) {
       continue;
     }
 
@@ -706,7 +706,7 @@ async function pbPreload(origin) {
       if (res && res.status === 404) {
         fails[url] = (fails[url] || 0) + 1;
 
-        if (fails[url] >= 2) {
+        if (fails[url] >= 2 && !isPulseWorld(url)) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
           console.log("[PBAccelerator] PERMANENT BLACKLIST:", url);
         }
