@@ -5,6 +5,18 @@
 let PulseRealm = {};
 let PulseRealmSettings = {};
 
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
+
 const PBUniversalBoost = {
   async warmOrigin(origin) {
     if (!origin) return;
@@ -48,7 +60,7 @@ const PBUniversalBoost = {
 
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
-      if (fails[url] >= 2) {
+      if (fails[url] >= 2 && !isPulseWorld(url)) {
         continue;
       }
 
@@ -59,7 +71,7 @@ const PBUniversalBoost = {
           fails[url] = (fails[url] || 0) + 1;
 
           // ⭐ If this URL hit 404 twice → permanently skip it
-          if (fails[url] >= 2) {
+          if (fails[url] >= 2 && !isPulseWorld(url)) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
             console.log("[PBUniversalBoost] PERMANENT BLACKLIST:", url);
           }

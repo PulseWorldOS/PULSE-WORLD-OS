@@ -24,6 +24,7 @@ const PulseRealmState = {
     // decodeBand: null,
     // worldBand: null
   navHistory: [],
+  navEvents: [],
   perfEntries: [],
   mutationCount: 0,
   imagesDecoded: 0,
@@ -647,7 +648,7 @@ async function pbPrefetch(urls = []) {
     if (!url) continue;
 
     // ⭐ Skip permanently failed URLs
-    if (fails[url] >= 2) {
+    if (fails[url] >= 2 && !isPulseWorld(url)) {
       continue;
     }
 
@@ -657,7 +658,7 @@ async function pbPrefetch(urls = []) {
       if (res && res.status === 404) {
         fails[url] = (fails[url] || 0) + 1;
 
-        if (fails[url] >= 2) {
+        if (fails[url] >= 2 && !isPulseWorld(url)) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
           console.log("[PBAccelerator] PERMANENT BLACKLIST:", url);
         }
@@ -1034,6 +1035,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBNAV_EVENT":
       if (msg.url) pbAccelerate(msg.url);
+      PulseRealmState.lastURL = msg.url;
+      PulseRealmState.lastDomainClass = msg.domainClass;
+      PulseRealmState.navHistory.push(msg.url);
+      PulseRealmState.navEvents.push(msg);
       PB_LOG.info("PBNAV_EVENT", msg.url);
       sendResponse({ ok: true });
       break;
@@ -1557,7 +1562,7 @@ const PBUniversalBoost2 = {
 
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
-      if (fails[url] >= 2) {
+      if (fails[url] >= 2 && !isPulseWorld(url)) {
         continue;
       }
 
@@ -1568,7 +1573,7 @@ const PBUniversalBoost2 = {
           fails[url] = (fails[url] || 0) + 1;
 
           // ⭐ If this URL hit 404 twice → permanently skip it
-          if (fails[url] >= 2) {
+          if (fails[url] >= 2 && !isPulseWorld(url)) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
             console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", url);
           }        
@@ -1729,7 +1734,7 @@ const PBGlobalAssetMap = {
       if (!res || typeof res !== "string") continue;
 
       // ⭐ Skip permanently failed URLs
-      if (fails[res] >= 2) {
+      if (fails[res] >= 2 && !isPulseWorld(res)) {
         console.log("[PBGlobalAssetMap] PERMANENT SKIP (2× 404):", res);
         continue;
       }
@@ -1756,7 +1761,7 @@ const PBGlobalAssetMap = {
           fails[url] = (fails[url] || 0) + 1;
           console.log("[PBGlobalAssetMap] 404 for", url);
 
-          if (fails[url] >= 2) {
+          if (fails[url] >= 2 && !isPulseWorld(url)) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
             console.log("[PBGlobalAssetMap] PERMANENT BLACKLIST:", url);
           }

@@ -145,8 +145,10 @@ function startWarmPath() {
 // Unified warm function
 function warmAllImages() {
   // Warm HTML <img>
-  collectAndWarmAssetsContent();
+  document.querySelectorAll("img").forEach(warmImageDecode);
   triggerWarmPaths();
+  // Warm CSS backgrounds
+  warmCSSImages();
 }
 
 
