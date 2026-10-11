@@ -121,83 +121,58 @@ function savePulseTabs() {
 }
 
 function openNamedTab(name, url) {
-
-  // ⭐ ALWAYS pull latest storage BEFORE using pulseTabs
   chrome.storage.local.get("pulseTabs", data => {
     if (data && data.pulseTabs) {
       pulseTabs = data.pulseTabs;
     }
 
-    // ⭐ Normalize identity
     const identity = normalizeIdentity(url);
     const existing = pulseTabs[identity];
 
-    // Lightweight warm‑state hint (safe, non‑blocking)
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: url
-    });
-
-    try {
-      fetch(url, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
+    try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
     if (existing) {
-      chrome.tabs.update(existing, { url, active: true }, tab => {
+      chrome.tabs.update(existing.id, { url, active: true }, tab => {
         if (chrome.runtime.lastError) {
-          // Tab no longer exists → recreate it
           chrome.tabs.create({ url }, newTab => {
-            pulseTabs[identity] = newTab.id;
-            // Universal boost warm-path
-            if (typeof PBUniversalBoost?.warmTab === "function") {
-              PBUniversalBoost.warmTab(tab);
-            }
+            pulseTabs[identity] = { id: newTab.id, realm: identity };
+            if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(newTab);
             savePulseTabs();
           });
         } else {
-          // Tab updated successfully
-          pulseTabs[identity] = tab.id;
-          // Universal boost warm-path
-          if (typeof PBUniversalBoost?.warmTab === "function") {
-            PBUniversalBoost.warmTab(tab);
-          }
+          pulseTabs[identity] = { id: tab.id, realm: identity };
+          if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
           savePulseTabs();
         }
       });
       return;
     }
 
-    // Create new named tab
     chrome.tabs.create({ url }, tab => {
-      pulseTabs[identity] = tab.id;
-      // Universal boost warm-path
-      if (typeof PBUniversalBoost?.warmTab === "function") {
-        PBUniversalBoost.warmTab(tab);
-      }
+      pulseTabs[identity] = { id: tab.id, realm: identity };
+      if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
       savePulseTabs();
     });
   });
 }
 
+
 // Remove dead tabs from registry
 chrome.tabs.onRemoved.addListener((tabId) => {
   for (const identity in pulseTabs) {
-    if (pulseTabs[identity].id === tabId) {
+    const entry = pulseTabs[identity];
 
-      // Get the realm stored for this tab
-      const realm = pulseTabs[identity].realm;
+    if (entry.id === tabId) {
+      const realm = entry.realm;
       const snapshotKey = `pulse_snapshot_${realm}`;
 
-      // Remove only this realm's snapshot
       chrome.storage.local.remove(snapshotKey);
 
-      // Remove tab from registry
       delete pulseTabs[identity];
+      savePulseTabs();
     }
   }
 });
-
-
 
 const out = document.getElementById("output");
 // WORK MODULE
