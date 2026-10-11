@@ -242,6 +242,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       if (PulseSnapshotView === realm) {
         PulseSnapshot = false;
         PulseSnapshotView = null;
+        renderSnapshot(PulseSnapshotView);
       }
       // Remove tab from registry
       delete pulseTabs[identity];
@@ -2019,6 +2020,10 @@ function renderSnapshot(snapshot) {
     if (!div) div = document.createElement("div");
     div.className = "PulseBrowser-OS-Snapshot";
     div.id = "PulseBrowser-OS-Snapshot";
-    div.innerHTML = snapshot.html;
-    document.body.appendChild(div);
+    if (snapshot) {
+      div.innerHTML = snapshot.html;
+      document.body.appendChild(div);
+    } else {
+      document.body.removeChild(div);
+    }
 }
