@@ -15,6 +15,8 @@ let PulseRealm = {};
 let PulseModuleCount = 0;
 let PulseTempModuleCount = 0;
 let PulseRealmSettings = null;
+let PulseSnapshot = false;
+let PulseSnapshotView = null;
 
 const timerBtn = document.getElementById("timerBtn");
 
@@ -160,8 +162,18 @@ function savePulseTabs() {
   chrome.storage.local.set({ pulseTabs });
 }
 
-function openNamedTab(name, url) {
+function latestSnapshot(realm) {
+  const snapshotKey = `pulse_snapshot_${realm}`;
+  PulseSnapshot = true;
+  PulseSnapshotView = realm;
+  chrome.storage.local.get(snapshotKey, (items) => {
+    const snap = items[snapshotKey];
+    if (snap) renderSnapshot(snap);
+  });
+}
 
+
+function openNamedTab(name, url) {
   // ⭐ ALWAYS pull latest storage BEFORE using pulseTabs
   chrome.storage.local.get("pulseTabs", data => {
     if (data && data.pulseTabs) {
@@ -211,16 +223,29 @@ function openNamedTab(name, url) {
       savePulseTabs();
     });
   });
+  const realm = new URL(url).hostname;
+  setTimeout(() => latestSnapshot(realm), 3500);
+
 }
 
 // Remove dead tabs from registry
 chrome.tabs.onRemoved.addListener((tabId) => {
   for (const identity in pulseTabs) {
-    if (pulseTabs[identity] === tabId) {
+    if (pulseTabs[identity].id === tabId) {
+
+      // Get the realm stored for this tab
+      const realm = pulseTabs[identity].realm;
+      const snapshotKey = `pulse_snapshot_${realm}`;
+
+      // Remove only this realm's snapshot
+      chrome.storage.local.remove(snapshotKey);
+
+      // Remove tab from registry
       delete pulseTabs[identity];
     }
   }
 });
+
 
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
@@ -1863,6 +1888,7 @@ setInterval(() => {
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
     const settings = await pbLoadExtensionSettings();
     PulseRealmSettings = settings;
+    if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
 
     const PB_HOMES = [
       "https://www.pulseworld.me",
@@ -1982,4 +2008,13 @@ function emitFullPageContext() {
 function documentTitle() {
   return document.title;
 }
-  
+
+
+function renderSnapshot(snapshot) {
+    let div = document.getElementById("PulseBrowser-OS-Snapshot");
+    if (!div) div = document.createElement("div");
+    div.className = "PulseBrowser-OS-Snapshot";
+    div.id = "PulseBrowser-OS-Snapshot";
+    div.innerHTML = snapshot.html;
+    document.body.appendChild(div);
+}

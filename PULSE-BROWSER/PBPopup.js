@@ -182,11 +182,21 @@ function openNamedTab(name, url) {
 // Remove dead tabs from registry
 chrome.tabs.onRemoved.addListener((tabId) => {
   for (const identity in pulseTabs) {
-    if (pulseTabs[identity] === tabId) {
+    if (pulseTabs[identity].id === tabId) {
+
+      // Get the realm stored for this tab
+      const realm = pulseTabs[identity].realm;
+      const snapshotKey = `pulse_snapshot_${realm}`;
+
+      // Remove only this realm's snapshot
+      chrome.storage.local.remove(snapshotKey);
+
+      // Remove tab from registry
       delete pulseTabs[identity];
     }
   }
 });
+
 
 
 const out = document.getElementById("output");

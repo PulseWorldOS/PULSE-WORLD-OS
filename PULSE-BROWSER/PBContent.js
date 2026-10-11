@@ -191,7 +191,7 @@ async function injectHUD() {
       setTimeout(() => {
         flag.textContent = "PulseBrowser OS";
         flag.style.background = "#00C8FF";
-      }, 2000);
+      }, 4000);
     }
   }
 
@@ -227,8 +227,10 @@ async function injectHUD() {
 
 
   updateHUD();
+  setTimeout(DomScan, 1000);
   setInterval(updateHUD, 1200);
-  setInterval(fadeHUD, 4000);
+  setTimeout(fadeHUD, 4000);
+  setTimeout(DomScan, 3000);
 }
 
 
@@ -270,12 +272,14 @@ function showPulseStreamPrompt(video) {
   // Prevent duplicates
   if (document.getElementById("pulseStreamPrompt")) return;
 
+  const flag = document.getElementById("pulseworld-flag");
+  
   const box = document.createElement("div");
   box.id = "pulseStreamPrompt";
   box.style.cssText = `
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 290px;
     width: 260px;
     background: rgba(0,0,0,0.88);
     color: #00FF9C;
@@ -318,7 +322,7 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">Don’t ask again</button>
+    ">Cancel</button>
   `;
 
   document.body.appendChild(box);
@@ -336,6 +340,9 @@ function showPulseStreamPrompt(video) {
 
   // Enable PIP
   document.getElementById("pipEnableBtn").onclick = () => {
+    // await video.requestPictureInPicture();
+    flag.textContent = "PulseBrowser OS => [PIP MODE]";
+    flag.style.background = "#00FF9C";
     clearTimeout(autoClose);
     video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
     box.remove();
@@ -343,19 +350,12 @@ function showPulseStreamPrompt(video) {
 
   // Disable future prompts
   document.getElementById("pipDisableBtn").onclick = () => {
+    flag.textContent = "PulseBrowser OS (PIP Available)";
+    flag.style.background = "#00FF9C";
     clearTimeout(autoClose);
-
-    // Update settings through extension messaging
-    chrome.runtime.sendMessage({
-      type: "PBSETTINGS_UPDATE",
-      key: "pulseStreamToggle",
-      value: false
-    });
-
     box.remove();
   };
 }
-
 
 function fadeHUD() {
   const body = document.getElementById("pb-hud-body");
@@ -365,9 +365,11 @@ function fadeHUD() {
   wrap.style.display = "none";
   body.style.display = "none";
 }
+
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
   if (!body) return;
+  DomScan();
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -851,7 +853,7 @@ function injectPulseFlag() {
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
               flag.style.background = "#00C8FF";
-            }, 2000);
+            }, 4000);
             return;
           }
 
@@ -861,7 +863,7 @@ function injectPulseFlag() {
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
               flag.style.background = "#00C8FF";
-            }, 2000);
+            }, 4000);
             return;
           }
           // ⭐ Toggle PIP
@@ -872,11 +874,9 @@ function injectPulseFlag() {
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
               flag.style.background = "#00C8FF";
-            }, 2000);
+            }, 4000);
           } else {
-            await video.requestPictureInPicture();
-            flag.textContent = "PulseBrowser OS => [PIP MODE]";
-            flag.style.background = "#00FF9C";
+            showPulseStreamPrompt(video);
           }
 
         } catch (e) {
@@ -1041,3 +1041,35 @@ function documentTitle() {
 }
 
 setTimeout(emitFullPageContext, 400);
+
+// Create your preview panel
+function DomScan() {
+  const preview = document.createElement("div");
+  preview.style.position = "fixed";
+  preview.style.top = "0";
+  preview.style.left = "0";
+  preview.style.width = "100%";
+  preview.style.background = "rgba(0,0,0,0.8)";
+  preview.style.color = "white";
+  preview.style.padding = "10px";
+  preview.style.zIndex = "999999999";
+  preview.style.fontFamily = "Arial";
+  preview.innerText = `PulseBrowser OS Preview: ${document.title}`;
+
+  // Add it to the page
+  document.body.appendChild(preview);
+
+  // Remove preview after user interacts
+  window.addEventListener("click", () => preview.remove(), { once: true });
+
+  const snapshotKey = `pulse_snapshot_${location.hostname}`;
+
+  const snapshot = {
+    url: location.href,
+    title: document.title,
+    html: document.documentElement.innerHTML,
+    realm: location.hostname
+  };
+
+  chrome.storage.local.set({ [snapshotKey]: snapshot });
+}
