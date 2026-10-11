@@ -239,7 +239,10 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
       // Remove only this realm's snapshot
       chrome.storage.local.remove(snapshotKey);
-
+      if (PulseSnapshotView === realm) {
+        PulseSnapshot = false;
+        PulseSnapshotView = null;
+      }
       // Remove tab from registry
       delete pulseTabs[identity];
     }
@@ -1827,6 +1830,7 @@ document.getElementById("timerBtn").textContent = timerX;
 
 setInterval(() => {
   timerX++;
+  if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 61) {
     window.location.href = "https://www.pulseworld.net";
