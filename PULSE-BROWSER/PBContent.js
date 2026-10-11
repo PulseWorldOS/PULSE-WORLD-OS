@@ -35,7 +35,7 @@ async function pbLoadExtensionSettings() {
 const PBQuantumPrefetch = {
   lastHoverLink: null,
   hoverTimeout: null,
-  prefetchDelayMs: 250,
+  prefetchDelayMs: 500,
 
   attachToDocument() {
     document.addEventListener("mouseover", (e) => {

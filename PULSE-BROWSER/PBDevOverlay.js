@@ -47,8 +47,7 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
 
   document.body.appendChild(wrap);
 
-  updateRealmOverlay();
-  setTimeout(updateOverlay, 200);
+  updateOverlay();
   setInterval(updateOverlay, 1500);
 })();
 
