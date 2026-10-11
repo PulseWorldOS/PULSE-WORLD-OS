@@ -127,19 +127,23 @@ function openNamedTab(name, url) {
     }
 
     const identity = normalizeIdentity(url);
-    const existing = pulseTabs[identity];
+    const existingEntry = pulseTabs[identity];   // { id, realm } or undefined
 
     try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
-    if (existing) {
-      chrome.tabs.update(existing.id, { url, active: true }, tab => {
+    // ⭐ If tab already exists → update THAT tab
+    if (existingEntry) {
+      chrome.tabs.update(existingEntry.id, { url, active: true }, tab => {
+
         if (chrome.runtime.lastError) {
+          // Tab died → recreate it
           chrome.tabs.create({ url }, newTab => {
             pulseTabs[identity] = { id: newTab.id, realm: identity };
             if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(newTab);
             savePulseTabs();
           });
         } else {
+          // Tab updated successfully
           pulseTabs[identity] = { id: tab.id, realm: identity };
           if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
           savePulseTabs();
@@ -148,13 +152,16 @@ function openNamedTab(name, url) {
       return;
     }
 
+    // ⭐ No existing tab → create a new named tab
     chrome.tabs.create({ url }, tab => {
       pulseTabs[identity] = { id: tab.id, realm: identity };
       if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
       savePulseTabs();
     });
   });
+
 }
+
 
 
 // Remove dead tabs from registry

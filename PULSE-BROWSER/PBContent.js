@@ -5,6 +5,7 @@
 // ============================================================================
 let PulseRealm = {};
 let PulseRealmSettings = {};
+let PulseDomScan = false;
 
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -227,10 +228,11 @@ async function injectHUD() {
 
 
   updateHUD();
-  setTimeout(DomScan, 1000);
+  PulseBrowserPreview();
   setInterval(updateHUD, 1200);
+  setTimeout(PulseBrowserDomScan, 3000);  
+  PulseDomScan = true;
   setTimeout(fadeHUD, 4000);
-  setTimeout(DomScan, 3000);
 }
 
 
@@ -369,7 +371,7 @@ function fadeHUD() {
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
   if (!body) return;
-  DomScan();
+  if (PulseDomScan = true) PulseBrowserDomScan();
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -840,7 +842,10 @@ function injectPulseFlag() {
     body.style.display = "block";
     flag.textContent = "PulseBrowser OS";
     flag.style.background = "#00FF9C";
-  
+
+    setTimeout(() => {
+      fadeHUD();
+    }, 6000);
 
     if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
@@ -1043,15 +1048,16 @@ function documentTitle() {
 setTimeout(emitFullPageContext, 400);
 
 // Create your preview panel
-function DomScan() {
+function PulseBrowserPreview() {
   const preview = document.createElement("div");
+  preview.className = "PulseBrowser-Preview";
   preview.style.position = "fixed";
   preview.style.top = "0";
   preview.style.left = "0";
   preview.style.width = "100%";
   preview.style.background = "rgba(0,0,0,0.8)";
   preview.style.color = "white";
-  preview.style.padding = "10px";
+  preview.style.padding = "4px";
   preview.style.zIndex = "999999999";
   preview.style.fontFamily = "Arial";
   preview.innerText = `PulseBrowser OS Preview: ${document.title}`;
@@ -1061,7 +1067,9 @@ function DomScan() {
 
   // Remove preview after user interacts
   window.addEventListener("click", () => preview.remove(), { once: true });
+}
 
+function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
 
   const snapshot = {
