@@ -68,17 +68,20 @@ function experimentalColor(v) {
 // ---------------------------------------------------------------------------
 async function updateOverlay() {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
+    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
       PulseRealm = realmRes.state || {};
+      PulseBrowserSettings = settingsRes.settings || {};
 
       updateKernel(PulseRealm);
       updateWarm(PulseRealm);
       updatePerformance(PulseRealm);
-      updateNavigator(PulseRealmSettings, PulseRealm);
-      updateAccelerator(PulseRealmSettings, PulseRealm);
-      updateRouter(PulseRealmSettings);
-      updateSettings(PulseRealmSettings);
-      updateExperimental(PulseRealmSettings);
+      updateNavigator(PulseBrowserSettings, PulseRealm);
+      updateAccelerator(PulseBrowserSettings, PulseRealm);
+      updateRouter(PulseBrowserSettings);
+      updateSettings(PulseBrowserSettings);
+      updateExperimental(PulseBrowserSettings);
     });
+  });
 }
 
 // ---------------------------------------------------------------------------

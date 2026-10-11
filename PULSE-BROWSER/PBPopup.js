@@ -77,7 +77,6 @@ const PBUniversalBoost = {
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-            console.log("[PBUniversalBoost] PERMANENT BLACKLIST:", url);
           }
         }
       } catch (_) {}

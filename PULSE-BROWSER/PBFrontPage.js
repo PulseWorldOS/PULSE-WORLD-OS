@@ -15,6 +15,7 @@ let PulseRealm = {};
 let PulseModuleCount = 0;
 let PulseTempModuleCount = 0;
 let PulseRealmSettings = null;
+let PulseBrowserSettings = null;
 let PulseSnapshot = false;
 let PulseSnapshotView = null;
 
@@ -28,6 +29,30 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   chrome.storage.local.set({ originalTabId });
   pulseRehydrateTabs();
 });
+
+
+async function getSettings() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(null, (data) => {
+      const S = data || {};
+
+      // Force all acceleration systems ON by default
+      S.accelDNSWarm      = S.accelDNSWarm      !== false;
+      S.accelTLSWarm      = S.accelTLSWarm      !== false;
+      S.accelPreconnect   = S.accelPreconnect   !== false;
+      S.accelPreload      = S.accelPreload      !== false;
+      S.accelPrefetch     = S.accelPrefetch     !== false;
+      S.accelGPUWarm      = S.accelGPUWarm      !== false;
+      S.accelDecodeWarm   = S.accelDecodeWarm   !== false;
+      S.accelRealmWarm    = S.accelRealmWarm    !== false;
+      S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
+      S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
+      S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
+
+      resolve(S);
+    });
+  });
+}
 
 function pulseRehydrateTabs() {
   chrome.tabs.query({}, tabs => {
@@ -362,7 +387,6 @@ const PBUniversalBoost = {
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-            console.log("[PBUniversalBoost] PERMANENT BLACKLIST:", url);
           }
         }
       } catch (_) {}
@@ -720,7 +744,8 @@ let keyHold2Timer = null;
 async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
-  
+  PulseBrowserSettings = getSettings();
+
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
   socialMediaActiveLink = settings.externalSocialLink;
@@ -1955,6 +1980,7 @@ setInterval(() => {
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
     const settings = await pbLoadExtensionSettings();
     PulseRealmSettings = settings;
+    PulseBrowserSettings = getSettings();
     if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
 
     const PB_HOMES = [

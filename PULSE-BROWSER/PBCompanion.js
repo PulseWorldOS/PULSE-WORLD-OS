@@ -5,6 +5,7 @@
 // ============================================================================
 const now = new Date().toLocaleString();
 const CACHE_NAME = "pb-companion-cache";
+let PulseRealmSettings = null;
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
 // ============================================================================
@@ -152,8 +153,8 @@ self.addEventListener("install", event => {
 });
 
 async function pbWarmBoot() {
-  await pbHomeWarmBoot();
   await pbModuleWarmBoot();
+  await pbHomeWarmBoot();
 }
 
 
@@ -536,7 +537,7 @@ console.log("%c[PULSEBROWSER] PBAccelerator (Ultra Edition v10.0) loaded",
 // ---------------------------------------------------------------------------
 async function getSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
+    chrome.storage.sync.get(null, (data) => {
       const S = data || {};
 
       // Force all acceleration systems ON by default
@@ -663,7 +664,6 @@ async function pbPrefetch(urls = []) {
 
         if (fails[url] >= 2 && !isPulseWorld(url)) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
-          console.log("[PBAccelerator] PERMANENT BLACKLIST:", url);
         }
       } else {
         warmedCount++;
@@ -711,7 +711,6 @@ async function pbPreload(origin) {
 
         if (fails[url] >= 2 && !isPulseWorld(url)) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
-          console.log("[PBAccelerator] PERMANENT BLACKLIST:", url);
         }
       } else {
         warmedCount++;
@@ -887,7 +886,8 @@ async function pbLoadExtensionSettings() {
 
 async function pbModuleWarmBoot() {
   const settings = await pbLoadExtensionSettings();
-
+  PulseRealmSettings = settings;
+  pbSaveSettings(PulseRealmSettings);
   // Collect all accelerated module links directly from settings
   const warmTargets = [
     settings.externalBankLink,
@@ -1578,7 +1578,6 @@ const PBUniversalBoost2 = {
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-            console.log("[PBUniversalBoost2] PERMANENT BLACKLIST:", url);
           }        
         } else {
           warmedCount++;
@@ -1766,7 +1765,6 @@ const PBGlobalAssetMap = {
 
           if (fails[url] >= 2 && !isPulseWorld(url)) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-            console.log("[PBGlobalAssetMap] PERMANENT BLACKLIST:", url);
           }
         } else {
           warmedCount++;
