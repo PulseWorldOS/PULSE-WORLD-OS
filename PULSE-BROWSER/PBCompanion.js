@@ -536,7 +536,7 @@ console.log("%c[PULSEBROWSER] PBAccelerator (Ultra Edition v10.0) loaded",
 // ---------------------------------------------------------------------------
 async function getSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(null, (data) => {
+    chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
       const S = data || {};
 
       // Force all acceleration systems ON by default
