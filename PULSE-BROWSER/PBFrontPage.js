@@ -164,8 +164,7 @@ function savePulseTabs() {
 
 function latestSnapshot(realm) {
   const snapshotKey = `pulse_snapshot_${realm}`;
-  PulseSnapshot = true;
-  PulseSnapshotView = realm;
+
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
     if (snap) renderSnapshot(snap);
@@ -223,8 +222,9 @@ function openNamedTab(name, url) {
       savePulseTabs();
     });
   });
-  const realm = new URL(url).hostname;
-  setTimeout(() => latestSnapshot(realm), 3500);
+  PulseSnapshot = true;
+  PulseSnapshotView = new URL(url).hostname;
+  setTimeout(() => latestSnapshot(PulseSnapshotView), 3500);
 
 }
 
