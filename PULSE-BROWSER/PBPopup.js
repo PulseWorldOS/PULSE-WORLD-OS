@@ -5,6 +5,10 @@
 let PulseRealm = {};
 let PulseRealmSettings = {};
 
+document.addEventListener("keydown", (e) => {
+  pulseConsoleKey(e);
+});
+
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
@@ -100,71 +104,111 @@ console.log("%c[PULSEBROWSER] PBPopup (Ultra Edition v6.0) loaded",
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 
-chrome.storage.local.get("pulseTabs", data => {
-  if (data && data.pulseTabs) {
-    pulseTabs = data.pulseTabs;
-  }
+chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+  const originalTabId = tabs[0].id;
+  chrome.storage.local.set({ originalTabId });
+  pulseRehydrateTabs();
 });
-
-// Normalize identity to domain or subdomain level
-function normalizeIdentity(url) {
-  try {
-    const u = new URL(url);
-    return u.origin; // scheme + host (perfect for Gmail, Chase, BridgeBase)
-  } catch {
-    return url; // fallback
-  }
-}
 
 function savePulseTabs() {
   chrome.storage.local.set({ pulseTabs });
 }
 
-function openNamedTab(name, url) {
-  chrome.storage.local.get("pulseTabs", data => {
-    if (data && data.pulseTabs) {
-      pulseTabs = data.pulseTabs;
+function pulseRehydrateTabs() {
+  chrome.tabs.query({}, tabs => {
+    const rebuilt = {};
+
+    for (const tab of tabs) {
+      if (!tab.url) continue;
+
+      try {
+        const urlObj = new URL(tab.url);
+        const identity = normalizeIdentity(urlObj.hostname);
+
+        rebuilt[identity] = {
+          id: tab.id,
+          realm: identity
+        };
+      } catch (e) {
+        // Skip invalid URLs (chrome://, about:, etc.)
+      }
     }
 
-    const identity = normalizeIdentity(url);
-    const existingEntry = pulseTabs[identity];   // { id, realm } or undefined
+    pulseTabs = rebuilt;
+    chrome.storage.local.set({ pulseTabs: rebuilt });
+    console.log(pulseTabs);
+  });
+}
+// Normalize identity to domain or subdomain level
+function normalizeIdentity(url) {
+  try {
+    const u = new URL(url);
+    return u.hostname; // scheme + host (perfect for Gmail, Chase, BridgeBase)
+  } catch {
+    return url; // fallback
+  }
+}
 
-    try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
+function openNamedTab(name, url) {
+  // ⭐ Rebuild pulseTabs from actual running tabs
+  const identity = normalizeIdentity(url);
+  const existingEntry = pulseTabs[identity];
 
-    // ⭐ If tab already exists → JUST SELECT IT (NO REFRESH)
-    if (existingEntry) {
-      chrome.tabs.get(existingEntry.id, tab => {
-        if (!tab) {
-          // Tab died → recreate it
-          chrome.tabs.create({ url }, newTab => {
-            pulseTabs[identity] = { id: newTab.id, realm: identity };
-            if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(newTab);
-            savePulseTabs();
-          });
-          return;
-        }
+  try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
-        // ⭐ PURE SELECT — NO RELOAD, NO UPDATE
-        chrome.tabs.highlight({ tabs: [tab.index] });
+  // ⭐ If tab already exists → try PURE SELECT first
+  if (existingEntry) {
+    const tabId = Number(existingEntry.id);
 
-        // Keep registry fresh
-        pulseTabs[identity] = { id: tab.id, realm: identity };
+    // ⭐ If ID is corrupted → recreate immediately
+    if (!Number.isInteger(tabId)) {
+      chrome.tabs.create({ url }, newTab => {
+        pulseTabs[identity] = { id: newTab.id, realm: identity };
         savePulseTabs();
       });
-
       return;
     }
 
-    // ⭐ No existing tab → create a new named tab
-    chrome.tabs.create({ url }, tab => {
+    chrome.tabs.get(tabId, tab => {
+      // ⭐ If get() fails → fallback to update()
+      if (chrome.runtime.lastError || !tab) {
+        chrome.tabs.update(tabId, { url, active: true }, updated => {
+          if (chrome.runtime.lastError || !updated) {
+            // ⭐ update() also failed → recreate tab
+            chrome.tabs.create({ url }, newTab => {
+              pulseTabs[identity] = { id: newTab.id, realm: identity };
+              savePulseTabs();
+            });
+            return;
+          }
+
+          // ⭐ update() succeeded → store fresh ID
+          pulseTabs[identity] = { id: updated.id, realm: identity };
+          savePulseTabs();
+        });
+        return;
+      }
+
+      // ⭐ PURE SELECT — NO RELOAD
+      chrome.tabs.highlight({
+        windowId: tab.windowId,
+        tabs: [tab.index]
+      });
+
+      // ⭐ Keep registry fresh
       pulseTabs[identity] = { id: tab.id, realm: identity };
-      if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
       savePulseTabs();
     });
+
+    return;
+  }
+
+  // ⭐ No existing tab → create a new named tab
+  chrome.tabs.create({ url }, tab => {
+    pulseTabs[identity] = { id: tab.id, realm: identity };
+    savePulseTabs();
   });
-
 }
-
 
 
 
@@ -183,6 +227,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       savePulseTabs();
     }
   }
+  pulseRehydrateTabs();
 });
 
 const out = document.getElementById("output");
@@ -582,11 +627,6 @@ document.getElementById("mod-stream").onclick = async () => {
 // }
 
 setTimeout(loadWorld,450);
-
-
-document.addEventListener("keydown", (e) => {
-  pulseConsoleKey(e);
-});
 
 let oldSettings = null;
 

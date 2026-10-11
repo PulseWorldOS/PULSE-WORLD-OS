@@ -287,6 +287,8 @@ async function pbHomeWarmBoot() {
 // Run home warm-boot once when accelerator loads
 pbHomeWarmBoot().catch(() => {});
 
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+
 async function pbLoadExtensionSettings() {
   try {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);

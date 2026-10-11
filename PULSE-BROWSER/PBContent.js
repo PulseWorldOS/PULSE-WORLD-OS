@@ -7,12 +7,26 @@ let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
 
+
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
-  
-// Example kernel hook (inside PBCompanion.js tab update):
-// if (domainClass === "home" || domainClass === "global") PBUniversalBoost.warmTab(tab);
+
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+
+async function pbLoadExtensionSettings() {
+  try {
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+
+    console.log("pbLoadExtensionSettings()", settings);
+
+    return settings;
+  } catch (err) {
+    console.error("pbLoadExtensionSettings() FAILED", err);
+    return {};
+  }
+}
 
 // ============================================================================
 //  PBQuantumPrefetch.js — AI-ish navigation prediction (lightweight heuristic)
@@ -131,7 +145,7 @@ function warmCSSImages() {
 }
 
 // Safe startup wrapper
-(function safeWarmPathStart() {
+(async function safeWarmPathStart() {
   // Start immediately if DOM is already interactive or complete
   if (document.readyState !== "loading") {
     startWarmPath();
@@ -143,7 +157,11 @@ function warmCSSImages() {
 
   // And run again at DOMContentLoaded for late images
   document.addEventListener("DOMContentLoaded", startWarmPath);
+
+  const settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
 })();
+
 
 // Intelligent throttle window
 let lastWarm = 0;
@@ -154,7 +172,6 @@ function startWarmPath() {
     setTimeout(startWarmPath, 50);
     return;
   }
-
   // Initial warm
   warmAllImages();
 
