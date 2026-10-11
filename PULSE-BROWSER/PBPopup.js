@@ -52,7 +52,7 @@ const PBUniversalBoost = {
     }
 
     const paths = [
-      "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"
+      "/", "/home", "/about", "/contact", "/manifest.json"
     ];
     const assets = [
       "/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"
@@ -163,6 +163,7 @@ function openNamedTab(name, url) {
     if (!Number.isInteger(tabId)) {
       chrome.tabs.create({ url }, newTab => {
         pulseTabs[identity] = { id: newTab.id, realm: identity };
+        pulseRehydrateTabs();
         savePulseTabs();
       });
       return;
@@ -176,6 +177,7 @@ function openNamedTab(name, url) {
             // ⭐ update() also failed → recreate tab
             chrome.tabs.create({ url }, newTab => {
               pulseTabs[identity] = { id: newTab.id, realm: identity };
+              pulseRehydrateTabs();
               savePulseTabs();
             });
             return;
@@ -183,6 +185,7 @@ function openNamedTab(name, url) {
 
           // ⭐ update() succeeded → store fresh ID
           pulseTabs[identity] = { id: updated.id, realm: identity };
+          pulseRehydrateTabs();
           savePulseTabs();
         });
         return;
@@ -196,6 +199,7 @@ function openNamedTab(name, url) {
 
       // ⭐ Keep registry fresh
       pulseTabs[identity] = { id: tab.id, realm: identity };
+      pulseRehydrateTabs();
       savePulseTabs();
     });
 
@@ -205,6 +209,7 @@ function openNamedTab(name, url) {
   // ⭐ No existing tab → create a new named tab
   chrome.tabs.create({ url }, tab => {
     pulseTabs[identity] = { id: tab.id, realm: identity };
+    pulseRehydrateTabs();
     savePulseTabs();
   });
 }

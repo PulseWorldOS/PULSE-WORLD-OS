@@ -6,6 +6,7 @@
 const now = new Date().toLocaleString();
 const CACHE_NAME = "pb-companion-cache";
 let PulseRealmSettings = null;
+let PulseBrowserSettings = null;
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
 // ============================================================================
@@ -535,6 +536,7 @@ console.log("%c[PULSEBROWSER] PBAccelerator (Ultra Edition v10.0) loaded",
 // ---------------------------------------------------------------------------
 // SETTINGS LOADER (but we force sane defaults ON)
 // ---------------------------------------------------------------------------
+
 async function getSettings() {
   return new Promise((resolve) => {
     chrome.storage.sync.get(null, (data) => {
@@ -552,7 +554,7 @@ async function getSettings() {
       S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
-
+      
       resolve(S);
     });
   });
@@ -779,6 +781,7 @@ function pbRealmWarm(origin) {
 
 
 async function pbWarmPaths(origins) {
+  PulseBrowserSettings = await getSettings();
   // Ignore chrome:// and extension pages EXCEPT newtab
   origins.forEach((origin) => {
     pbWarmPath(origin);
@@ -802,12 +805,12 @@ async function pbWarmPath(origin) {
     PBUniversalBoost2.warmOrigin(origin);
   }
 
-  const S = await getSettings();
+  PulseBrowserSettings = await getSettings();
 
-  if (S.accelDNSWarm)      pbDNSWarm(origin);
-  if (S.accelTLSWarm)      pbTLSWarm(origin);
-  if (S.accelPreconnect)   pbPreconnect([origin]);
-  if (S.accelPreload)      pbPreload(origin);
+  if (PulseBrowserSettings.accelDNSWarm)      pbDNSWarm(origin);
+  if (PulseBrowserSettings.accelTLSWarm)      pbTLSWarm(origin);
+  if (PulseBrowserSettings.accelPreconnect)   pbPreconnect([origin]);
+  if (PulseBrowserSettings.accelPreload)      pbPreload(origin);
 
   const siblingPaths = [
     "/", "/privacy", "/data", "/termsofuse", "/cookies",
@@ -815,11 +818,11 @@ async function pbWarmPath(origin) {
   ];
 
   const siblingURLs = siblingPaths.map((p) => origin + p);
-  if (S.accelPrefetch) pbPrefetch(siblingURLs);
+  if (PulseBrowserSettings.accelPrefetch) pbPrefetch(siblingURLs);
 
-  if (S.accelGPUWarm)    pbGPUWarm();
-  if (S.accelDecodeWarm) pbDecodeWarm();
-  if (S.accelRealmWarm)  pbRealmWarm(origin);
+  if (PulseBrowserSettings.accelGPUWarm)    pbGPUWarm();
+  if (PulseBrowserSettings.accelDecodeWarm) pbDecodeWarm();
+  if (PulseBrowserSettings.accelRealmWarm)  pbRealmWarm(origin);
   
   // 🔥 Realm + HUD integration
   PulseRealmState.warmPathsTriggered += 1;
@@ -837,7 +840,6 @@ async function pbWarmPath(origin) {
 // MAIN ACCELERATION HOOK (automatic on navigation)
 // ---------------------------------------------------------------------------
 async function pbAccelerate(url) {
-  const S = await getSettings();
   const domainClass = pbDomainClass(url);
   const origin = new URL(url).origin;
 
@@ -847,8 +849,8 @@ async function pbAccelerate(url) {
     await pbWarmPath(origin);
   } else {
     // WWW acceleration: preconnect + basic prefetch
-    if (S.accelPreconnect) pbPreconnect([origin]);
-    if (S.accelPrefetch)   pbPrefetch([origin + "/", origin + "/about"]);
+    if (PulseBrowserSettings.accelPreconnect) pbPreconnect([origin]);
+    if (PulseBrowserSettings.accelPrefetch)   pbPrefetch([origin + "/", origin + "/about"]);
   }
 }
 
@@ -1614,29 +1616,54 @@ const PBUniversalBoost2 = {
 const PBQuantumPrefetch = {
   lastHoverLink: null,
   hoverTimeout: null,
-  prefetchDelayMs: 250,
+  prefetchDelayMs: 400,
+
+  cooldownMs: 2000,          // 3 seconds per link
+  linkCooldowns: new Map(),  // href → timestamp
 
   attachToDocument() {
     document.addEventListener("mouseover", (e) => {
       const a = e.target.closest("a[href]");
       if (!a) return;
+
       this.lastHoverLink = a.href;
       const link = [a.href];
-      pbPreconnect(link);
+
       if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
+
+      this.hoverTimeout = setTimeout(() => {
+        this.tryPrefetch(link);
+      }, this.prefetchDelayMs);
     });
   },
 
-  prefetchLink() {
-    const href = this.lastHoverLink;
-    if (!href) return;
-    try {
-      fetch(href, { cache: "force-cache" }).catch(() => {});
-      console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
-    } catch (_) {}
+  tryPrefetch(link) {
+    const href = link[0];
+    const now = Date.now();
+
+    const lastTime = this.linkCooldowns.get(href) || 0;
+
+    // If SAME link is still cooling down → skip
+    if (now - lastTime < this.cooldownMs) {
+      return;
+    }
+
+    // Update cooldown timestamp for THIS link only
+    this.linkCooldowns.set(href, now);
+
+    // Perform the prefetch
+    letsgo(link);
   }
 };
+
+
+function letsgo(link) {
+  pbPreconnect(link);
+  try {
+    fetch(link, { cache: "force-cache" }).catch(() => {});
+    console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
+  } catch (_) {}
+}
 
 // Example content script usage (PBContent.js):
 // PBQuantumPrefetch.attachToDocument(document);

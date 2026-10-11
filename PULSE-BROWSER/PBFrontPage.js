@@ -31,29 +31,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
 });
 
 
-async function getSettings() {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(null, (data) => {
-      const S = data || {};
-
-      // Force all acceleration systems ON by default
-      S.accelDNSWarm      = S.accelDNSWarm      !== false;
-      S.accelTLSWarm      = S.accelTLSWarm      !== false;
-      S.accelPreconnect   = S.accelPreconnect   !== false;
-      S.accelPreload      = S.accelPreload      !== false;
-      S.accelPrefetch     = S.accelPrefetch     !== false;
-      S.accelGPUWarm      = S.accelGPUWarm      !== false;
-      S.accelDecodeWarm   = S.accelDecodeWarm   !== false;
-      S.accelRealmWarm    = S.accelRealmWarm    !== false;
-      S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
-      S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
-      S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
-
-      resolve(S);
-    });
-  });
-}
-
 function pulseRehydrateTabs() {
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
@@ -362,7 +339,7 @@ const PBUniversalBoost = {
     }
 
     const paths = [
-      "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"
+      "/", "/home", "/about", "/contact", "/manifest.json"
     ];
     const assets = [
       "/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"
@@ -744,7 +721,7 @@ let keyHold2Timer = null;
 async function updateModuleIcons() {
   const settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
-  PulseBrowserSettings = getSettings();
+  PulseBrowserSettings = await getSettings();
 
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
@@ -1980,7 +1957,7 @@ setInterval(() => {
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
     const settings = await pbLoadExtensionSettings();
     PulseRealmSettings = settings;
-    PulseBrowserSettings = getSettings();
+    PulseBrowserSettings = await getSettings();
     if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
 
     const PB_HOMES = [

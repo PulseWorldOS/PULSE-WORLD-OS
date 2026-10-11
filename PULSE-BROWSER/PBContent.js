@@ -37,27 +37,53 @@ const PBQuantumPrefetch = {
   hoverTimeout: null,
   prefetchDelayMs: 500,
 
+  cooldownMs: 3000,          // 3 seconds per link
+  linkCooldowns: new Map(),  // href → timestamp
+
   attachToDocument() {
     document.addEventListener("mouseover", (e) => {
       const a = e.target.closest("a[href]");
       if (!a) return;
+
       this.lastHoverLink = a.href;
       const link = [a.href];
-      pbPreconnect(link);
+
       if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
+
+      this.hoverTimeout = setTimeout(() => {
+        this.tryPrefetch(link);
+      }, this.prefetchDelayMs);
     });
   },
 
-  prefetchLink() {
-    const href = this.lastHoverLink;
-    if (!href) return;
-    try {
-      fetch(href, { cache: "force-cache" }).catch(() => {});
-      console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
-    } catch (_) {}
+  tryPrefetch(link) {
+    const href = link[0];
+    const now = Date.now();
+
+    const lastTime = this.linkCooldowns.get(href) || 0;
+
+    // If SAME link is still cooling down → skip
+    if (now - lastTime < this.cooldownMs) {
+      return;
+    }
+
+    // Update cooldown timestamp for THIS link only
+    this.linkCooldowns.set(href, now);
+
+    // Perform the prefetch
+    letsgo(link);
   }
 };
+
+
+function letsgo(link) {
+  pbPreconnect(link);
+  try {
+    fetch(link, { cache: "force-cache" }).catch(() => {});
+    console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
+  } catch (_) {}
+}
+
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------

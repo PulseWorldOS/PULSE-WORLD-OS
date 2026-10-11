@@ -49,6 +49,30 @@ const PB_LOG = {
 
 PB_LOG.info("PBSettings (Ultra Edition v7.1) loaded");
 
+
+async function getSettings() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(null, (data) => {
+      const S = data || {};
+
+      // Force all acceleration systems ON by default
+      S.accelDNSWarm      = S.accelDNSWarm      !== false;
+      S.accelTLSWarm      = S.accelTLSWarm      !== false;
+      S.accelPreconnect   = S.accelPreconnect   !== false;
+      S.accelPreload      = S.accelPreload      !== false;
+      S.accelPrefetch     = S.accelPrefetch     !== false;
+      S.accelGPUWarm      = S.accelGPUWarm      !== false;
+      S.accelDecodeWarm   = S.accelDecodeWarm   !== false;
+      S.accelRealmWarm    = S.accelRealmWarm    !== false;
+      S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
+      S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
+      S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
+      console.log("getSettings()", S);
+      resolve(S);
+    });
+  });
+}
+
 // ============================================================================
 //  SECTION 2 — EXTENSION SETTINGS (SEPARATE STORAGE)
 // ============================================================================
@@ -68,6 +92,7 @@ async function pbLoadExtensionSettings() {
     return {};
   }
 }
+
 async function loadExtensionSettingsUI() {
   const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
   const settings = result[EXTENSION_SETTINGS_KEY] || {};
