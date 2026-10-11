@@ -10,6 +10,40 @@ let PulseDomScan = false;
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
+  
+// Example kernel hook (inside PBCompanion.js tab update):
+// if (domainClass === "home" || domainClass === "global") PBUniversalBoost.warmTab(tab);
+
+// ============================================================================
+//  PBQuantumPrefetch.js — AI-ish navigation prediction (lightweight heuristic)
+// ============================================================================
+
+const PBQuantumPrefetch = {
+  lastHoverLink: null,
+  hoverTimeout: null,
+  prefetchDelayMs: 250,
+
+  attachToDocument() {
+    document.addEventListener("mouseover", (e) => {
+      const a = e.target.closest("a[href]");
+      if (!a) return;
+      this.lastHoverLink = a.href;
+      const link = [a.href];
+      pbPreconnect(link);
+      if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
+    });
+  },
+
+  prefetchLink() {
+    const href = this.lastHoverLink;
+    if (!href) return;
+    try {
+      fetch(href, { cache: "force-cache" }).catch(() => {});
+      console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
+    } catch (_) {}
+  }
+};
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
@@ -230,45 +264,15 @@ async function injectHUD() {
   updateHUD();
   PulseBrowserPreview();
   setInterval(updateHUD, 1200);
-  setTimeout(PulseBrowserDomScan, 3000);  
-  PulseDomScan = true;
+  setTimeout(PulseBrowserDomScan, 3000);
   setTimeout(fadeHUD, 4000);
+  setTimeout(DomScanPreview, 4000);
 }
 
-
-// Example kernel hook (inside PBCompanion.js tab update):
-// if (domainClass === "home" || domainClass === "global") PBUniversalBoost.warmTab(tab);
-
-// ============================================================================
-//  PBQuantumPrefetch.js — AI-ish navigation prediction (lightweight heuristic)
-// ============================================================================
-
-const PBQuantumPrefetch = {
-  lastHoverLink: null,
-  hoverTimeout: null,
-  prefetchDelayMs: 250,
-
-  attachToDocument() {
-    document.addEventListener("mouseover", (e) => {
-      const a = e.target.closest("a[href]");
-      if (!a) return;
-      this.lastHoverLink = a.href;
-      const link = [a.href];
-      pbPreconnect(link);
-      if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = setTimeout(() => this.prefetchLink(), this.prefetchDelayMs);
-    });
-  },
-
-  prefetchLink() {
-    const href = this.lastHoverLink;
-    if (!href) return;
-    try {
-      fetch(href, { cache: "force-cache" }).catch(() => {});
-      console.log("[PBQuantumPrefetch] Prefetched hovered link:", href);
-    } catch (_) {}
-  }
-};
+function DomScanPreview() {
+  PulseDomScan = true;
+  PulseBrowserPreview("PulseBrowser OS has taken a local-only Ghost Echo for your future (" + location.hostname + ") browsing experiences!");
+}
 
 function showPulseStreamPrompt(video) {
   // Prevent duplicates
@@ -376,9 +380,9 @@ function updateHUD() {
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
       location.protocol === "chrome-extension:"
-    ) {
-      return;
-    }
+  ) {
+    return;
+  }
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
@@ -1048,9 +1052,11 @@ function documentTitle() {
 setTimeout(emitFullPageContext, 400);
 
 // Create your preview panel
-function PulseBrowserPreview() {
-  const preview = document.createElement("div");
+function PulseBrowserPreview(text) {
+  let preview = document.createElement("div");
+  if (text) preview = document.getElementById("PulseBrowser-Preview");
   preview.className = "PulseBrowser-Preview";
+  preview.id = "PulseBrowser-Preview";
   preview.style.position = "fixed";
   preview.style.top = "0";
   preview.style.left = "0";
@@ -1061,13 +1067,21 @@ function PulseBrowserPreview() {
   preview.style.zIndex = "999999999";
   preview.style.fontFamily = "Arial";
   preview.innerText = `PulseBrowser OS Preview: ${document.title}`;
-
+  if (text) preview.innerText = text;
   // Add it to the page
   document.body.appendChild(preview);
 
-  // Remove preview after user interacts
-  window.addEventListener("click", () => preview.remove(), { once: true });
+  if (text) setTimeout(PreviewListener(preview), 8000)
 }
+
+function PreviewListener(preview) {
+  // Remove preview after user interacts
+  window.addEventListener("mousemove", () => preview.remove(), { once: true });
+}
+
+// function RemovePreview(preview) {
+//   preview.remove()
+// }
 
 function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;

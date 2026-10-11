@@ -29,6 +29,12 @@ chrome.storage.local.get("pulseTabs", data => {
   }
 });
 
+chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+  const originalTabId = tabs[0].id;
+  chrome.storage.local.set({ originalTabId });
+});
+
+
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
@@ -182,24 +188,27 @@ function openNamedTab(name, url) {
 
     try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
-    // ⭐ If tab already exists → update THAT tab
+    // ⭐ If tab already exists → JUST SELECT IT (NO REFRESH)
     if (existingEntry) {
-      chrome.tabs.update(existingEntry.id, { url, active: true }, tab => {
-
-        if (chrome.runtime.lastError) {
+      chrome.tabs.get(existingEntry.id, tab => {
+        if (!tab) {
           // Tab died → recreate it
           chrome.tabs.create({ url }, newTab => {
             pulseTabs[identity] = { id: newTab.id, realm: identity };
             if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(newTab);
             savePulseTabs();
           });
-        } else {
-          // Tab updated successfully
-          pulseTabs[identity] = { id: tab.id, realm: identity };
-          if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
-          savePulseTabs();
+          return;
         }
+
+        // ⭐ PURE SELECT — NO RELOAD, NO UPDATE
+        chrome.tabs.highlight({ tabs: [tab.index] });
+
+        // Keep registry fresh
+        pulseTabs[identity] = { id: tab.id, realm: identity };
+        savePulseTabs();
       });
+
       return;
     }
 
@@ -216,7 +225,6 @@ function openNamedTab(name, url) {
   PulseSnapshotView = new URL(url).hostname;
   setTimeout(() => latestSnapshot(PulseSnapshotView), 3500);
 }
-
 
 
 // Remove dead tabs from registry
@@ -1428,7 +1436,7 @@ enterBtn.addEventListener("click", async () => {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
     await PBUniversalBoost.warmOrigin(link);
-    openNamedTab("PulseBusiness", link);
+    openNamedTab("PulseWorld", link);
 });
 
 
@@ -1469,7 +1477,7 @@ setupBtn.addEventListener("click", async () => {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
     await PBUniversalBoost.warmOrigin(link);
-    openNamedTab("PulseBusiness", link);
+    openNamedTab("PulseIdentity", link);
 });
 
 document.getElementById("moduleEmail").addEventListener("click", async () => {
@@ -1795,6 +1803,27 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     openNamedTab("PulseModule5", link);
 });
 
+function backToOriginal() {
+  chrome.storage.local.get("originalTabId", data => {
+    if (data.originalTabId) {
+      chrome.tabs.update(data.originalTabId, { active: true });
+    }
+  });
+}
+
+function selectPulseTab(identity) {
+  const entry = pulseTabs[identity];
+  if (!entry) return;
+
+  chrome.tabs.get(entry.id, tab => {
+    if (!tab) return;
+
+    chrome.tabs.highlight({ tabs: [tab.index] });
+  });
+}
+
+
+
 const images = [
   "PulseWorldEntrancePulseGPUPulseEarn.png",
   "PulseWorldRoute.png",
@@ -1826,9 +1855,10 @@ setInterval(() => {
   timerX++;
   if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
   document.getElementById("timerBtn").textContent = timerX;
-  if (!userInteracted && timerX === 61) {
-    window.location.href = "https://www.pulseworld.net";
-    timerX = 0;
+  if (!userInteracted && timerX === 21) {
+    enterBtn.click();
+    setTimeout(backToOriginal, 4000);
+    document.getElementById("timerBtn").style.display = "none";
   } else if (userInteracted) {
     document.getElementById("timerBtn").style.display = "none";
     timerX = 0;

@@ -7136,6 +7136,10 @@ async function enableBootVideo(isMobile) {
   }
 }
 
+// ⭐ Global logging throttle (prevents DevTools quota explosions)
+let PULSEWORLD_LOG_THROTTLE = 0;
+const PULSEWORLD_LOG_LIMIT = 20; // max logs per scan
+
 async function domScanPromise() {
   return new Promise(resolve => {
 
@@ -7151,8 +7155,7 @@ async function domScanPromise() {
         count++;
 
         // Store references
-        out.byId[id] = el;
-        out.byId[id].__classes = classes;
+        out.byId[id] = { el, classes };
 
         // Class mapping
         for (const cls of classes) {
@@ -7175,31 +7178,32 @@ async function domScanPromise() {
         } catch {}
       }
 
-      // Console output
-      console.groupCollapsed(
-        "%c[PulseWorld::StrandedDNA:Present] Scanned Global DOM Expressions Found!",
-        "color:#00FFCC; font-weight:bold; font-family:monospace;"
-      );
+      // ⭐ SAFE LOGGING SECTION — NO GROUPS, NO TABLES, NO STYLES
+      if (PULSEWORLD_LOG_THROTTLE < PULSEWORLD_LOG_LIMIT) {
+        console.log("[PulseWorld::DOMScan] Total elements:", count);
 
-      console.log("Total:", count);
+        console.log("[PulseWorld::DOMScan] Unique IDs:", Object.keys(out.byId).length);
+        console.log("[PulseWorld::DOMScan] Unique Classes:", Object.keys(out.byClass).length);
 
-      console.groupCollapsed("%cBy Pulse ID", "color:#00FFCC; font-family:monospace;");
-      console.table(out.byId);
-      console.groupEnd();
+        // ⭐ Print only summaries, not full tables
+        console.log("[PulseWorld::DOMScan] Sample IDs:", Object.keys(out.byId).slice(0, 10));
+        console.log("[PulseWorld::DOMScan] Sample Classes:", Object.keys(out.byClass).slice(0, 10));
 
-      console.groupCollapsed("%cBy Pulse Class", "color:#00FFCC; font-family:monospace;");
-      console.table(out.byClass);
-      console.groupEnd();
-
-      console.groupEnd();
+        PULSEWORLD_LOG_THROTTLE++;
+      }
 
       resolve(out);
     };
 
-    // ⭐ DOM is already ready → run immediately
     runScan();
   });
 }
+
+// ⭐ Reset throttle every few seconds
+setInterval(() => {
+  PULSEWORLD_LOG_THROTTLE = 0;
+}, 3000);
+
 
 function PulseBandReadSelf() {
   const raw = document.cookie

@@ -106,10 +106,10 @@ console.log(
 
 // ⭐ Activity console (rate-limited + max reports)
 let PULSE_ACTIVITY_LAST = performance.now();
-const PULSE_ACTIVITY_INTERVAL = 2500; // ms
+const PULSE_ACTIVITY_INTERVAL = 8000; // 8 seconds
 
 let PULSE_ACTIVITY_REPORT_COUNT = 0;
-const PULSE_ACTIVITY_MAX_REPORTS = 10;
+const PULSE_ACTIVITY_MAX_REPORTS = 5;
 
 function pulseActivityReport() {
   if (PULSE_ACTIVITY_REPORT_COUNT >= PULSE_ACTIVITY_MAX_REPORTS) return;

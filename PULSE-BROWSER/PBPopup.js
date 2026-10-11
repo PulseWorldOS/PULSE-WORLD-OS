@@ -131,24 +131,27 @@ function openNamedTab(name, url) {
 
     try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
-    // ⭐ If tab already exists → update THAT tab
+    // ⭐ If tab already exists → JUST SELECT IT (NO REFRESH)
     if (existingEntry) {
-      chrome.tabs.update(existingEntry.id, { url, active: true }, tab => {
-
-        if (chrome.runtime.lastError) {
+      chrome.tabs.get(existingEntry.id, tab => {
+        if (!tab) {
           // Tab died → recreate it
           chrome.tabs.create({ url }, newTab => {
             pulseTabs[identity] = { id: newTab.id, realm: identity };
             if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(newTab);
             savePulseTabs();
           });
-        } else {
-          // Tab updated successfully
-          pulseTabs[identity] = { id: tab.id, realm: identity };
-          if (typeof PBUniversalBoost?.warmTab === "function") PBUniversalBoost.warmTab(tab);
-          savePulseTabs();
+          return;
         }
+
+        // ⭐ PURE SELECT — NO RELOAD, NO UPDATE
+        chrome.tabs.highlight({ tabs: [tab.index] });
+
+        // Keep registry fresh
+        pulseTabs[identity] = { id: tab.id, realm: identity };
+        savePulseTabs();
       });
+
       return;
     }
 
@@ -161,6 +164,7 @@ function openNamedTab(name, url) {
   });
 
 }
+
 
 
 
