@@ -418,7 +418,6 @@ function fadeHUD() {
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
   if (!body) return;
-  if (PulseDomScan = true) PulseBrowserDomScan();
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -1122,19 +1121,124 @@ function PreviewListener(preview) {
   window.addEventListener("mousemove", () => preview.remove(), { once: true });
 }
 
-// function RemovePreview(preview) {
-//   preview.remove()
-// }
-
 function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
+
+  // Clone DOM so we can safely modify it
+  const clone = document.documentElement.cloneNode(true);
+
+  // Remove all <script> tags
+  clone.querySelectorAll("script").forEach(el => el.remove());
+
+  // --- Helpful, tiny additions ---
+  // Meta description
+  const metaDesc =
+    clone.querySelector('meta[name="description"]')?.content ||
+    clone.querySelector('meta[property="og:description"]')?.content ||
+    null;
+
+  const ogTitle =
+    clone.querySelector('meta[property="og:title"]')?.content ||
+    document.title ||
+    null;
+
+  const ogImage =
+    clone.querySelector('meta[property="og:image"]')?.content ||
+    tinyImages[0]?.src ||
+    null;
+
+
+  // Viewport + scroll signals
+  const viewport = {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+
+  const scroll = {
+    top: document.documentElement.scrollTop || document.body.scrollTop || 0,
+    height: document.documentElement.scrollHeight || document.body.scrollHeight || 0
+  };
+
+  // Visibility + focus signals
+  const visibility = document.visibilityState;
+  const focused = document.hasFocus();
+
+  // Tiny structural counts (super helpful, super tiny)
+  const counts = {
+    divs: clone.querySelectorAll("div").length,
+    links: clone.querySelectorAll("a").length,
+    images: clone.querySelectorAll("img").length
+  };
+
+  // Tiny link preview (first 10 links only)
+  const tinyLinks = [...clone.querySelectorAll("a[href]")]
+    .slice(0, 10)
+    .map(a => ({
+      href: a.href,
+      text: a.innerText.trim().slice(0, 60)
+    }));
+
+  // Tiny image preview (first 5 images only)
+  const tinyImages = [...clone.querySelectorAll("img[src]")]
+    .slice(0, 5)
+    .map(img => ({
+      src: img.src,
+      alt: img.alt?.slice(0, 60) || null
+    }));
+
+  // --- Favicon extraction (tiny, safe, perfect) ---
+  let favicon = null;
+
+  const iconSelectors = [
+    'link[rel="icon"]',
+    'link[rel="shortcut icon"]',
+    'link[rel="apple-touch-icon"]',
+    'link[rel="mask-icon"]'
+  ];
+
+  for (const sel of iconSelectors) {
+    const el = clone.querySelector(sel);
+    if (el?.href) {
+      favicon = el.href;
+      break;
+    }
+  }
+
+  // Fallback: default favicon.ico
+  if (!favicon) {
+    favicon = `${location.origin}/favicon.ico`;
+  }
 
   const snapshot = {
     url: location.href,
     title: document.title,
-    html: document.documentElement.innerHTML,
-    realm: location.hostname
+    realm: location.hostname,
+
+    // NEW tiny, helpful signals
+    meta: {
+      description: metaDesc,
+      ogTitle,
+      ogImage
+    },
+
+    viewport,
+    scroll,
+    visibility,
+    focused,
+    counts,
+    links: tinyLinks,
+    images: tinyImages,
+
+    // NEW: favicon from the tab itself
+    favicon,
+
+    // Script-free DOM
+    html: clone.innerHTML
   };
+
+  console.log("Ghost Echo Initiated for Local-Only Future Uses: ", snapshot);
 
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 }
+
+
