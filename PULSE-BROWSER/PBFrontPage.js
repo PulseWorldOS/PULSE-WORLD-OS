@@ -53,7 +53,6 @@ function pulseRehydrateTabs() {
 
     pulseTabs = rebuilt;
     chrome.storage.local.set({ pulseTabs: rebuilt });
-    console.log(pulseTabs);
   });
 }
 
@@ -177,14 +176,14 @@ function collectAndWarmAssetsFront() {
 
 setTimeout(collectAndWarmAssetsFront, 600);
 
-// function latestSnapshot(realm) {
-//   const snapshotKey = `pulse_snapshot_${realm}`;
+function latestSnapshot(realm) {
+  const snapshotKey = `pulse_snapshot_${realm}`;
 
-//   chrome.storage.local.get(snapshotKey, (items) => {
-//     // const snap = items[snapshotKey];
-//     // if (snap) renderSnapshot(snap);
-//   });
-// }
+  chrome.storage.local.get(snapshotKey, (items) => {
+    // const snap = items[snapshotKey];
+    // if (snap) renderSnapshot(snap);
+  });
+}
 
 function savePulseTabs() {
   chrome.storage.local.set({ pulseTabs });

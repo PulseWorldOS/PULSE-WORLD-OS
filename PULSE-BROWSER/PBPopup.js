@@ -135,7 +135,6 @@ function pulseRehydrateTabs() {
 
     pulseTabs = rebuilt;
     chrome.storage.local.set({ pulseTabs: rebuilt });
-    console.log(pulseTabs);
   });
 }
 // Normalize identity to domain or subdomain level

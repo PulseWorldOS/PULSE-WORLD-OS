@@ -1281,9 +1281,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // HOVER PREFETCH
     // -------------------------------------------------------
     case "PB_HOVER_PREFETCH":
-      if (msg.href && typeof PBQuantumPrefetch?.prefetchLink === "function") {
+      if (msg.href && typeof PBQuantumPrefetch?.tryPrefetch === "function") {
         pbPreconnect([msg.href]);
-        PBQuantumPrefetch.prefetchLink();
+        PBQuantumPrefetch.tryPrefetch(msg.href);
         let origin = new URL(msg.href).origin
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");

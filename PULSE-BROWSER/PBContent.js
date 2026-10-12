@@ -1114,7 +1114,7 @@ function PulseBrowserPreview(text) {
   // Add it to the page
   document.body.appendChild(preview);
 
-  if (text) setTimeout(PreviewListener(preview), 8000)
+  if (text) setTimeout(PreviewListener(preview), 10000)
 }
 
 function PreviewListener(preview) {

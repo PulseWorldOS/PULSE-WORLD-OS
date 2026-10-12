@@ -144,7 +144,7 @@ function updatePerformance(realm) {
 
   el.innerHTML = `
     <div class="pb-hud-title">Realm Performance (Tab)</div>
-    Warm-Realm: <font color="lightgreen">${realm.lastWarmOrigin || "-"}</font><br/>
+    Last Warm-Realm: <font color="lightgreen">${realm.lastWarmOrigin || "-"}</font><br/>
     Background Activity: <font color="#0FF">${realm.mutationCount || "-"}</font><br/>
     Last Activity Event: <font color="yellow">${realm.lastMutationTS || "-"}</font><br/>
     Realm Perf Entries: <font color="lightgreen">${perf.length || "-"}</font><br/>
