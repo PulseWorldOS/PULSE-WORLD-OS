@@ -18,8 +18,53 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let PulseSnapshot = false;
 let PulseSnapshotView = null;
-
+let PulseURL = null;
+const leftpanel = document.getElementById("side-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
+
+const PB_LOG3 = {
+  info(label, data) {
+    console.log(
+      `%c[PBSettings][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBSettings][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBSettings][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBSettings][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBSettings][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
 
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
@@ -57,7 +102,7 @@ function pulseRehydrateTabs() {
       try {
         const urlObj = new URL(tab.url);
         const identity = normalizeIdentity(urlObj.hostname);
-
+        latestSnapshot(identity, urlObj);
         rebuilt[identity] = {
           id: tab.id,
           realm: identity
@@ -192,12 +237,19 @@ function collectAndWarmAssetsFront() {
 
 setTimeout(collectAndWarmAssetsFront, 600);
 
-function latestSnapshot(realm) {
+function latestSnapshot(realm, link) {
   const snapshotKey = `pulse_snapshot_${realm}`;
-
+  
   chrome.storage.local.get(snapshotKey, (items) => {
-    // const snap = items[snapshotKey];
-    // if (snap) renderSnapshot(snap);
+    const snap = items[snapshotKey];
+    if (snap) renderSnapshot(snap);
+    const bubble = document.querySelector(".PulseBrowser-OS-Snapshot");
+    if (bubble) bubble.classList.add("warm");
+    if (bubble) {
+      bubble.addEventListener("click", (event) => {
+        openNamedTab("PulseMail", link)
+      });
+    }
   });
 }
 
@@ -232,6 +284,10 @@ function openNamedTab(name, url) {
         pulseTabs[identity] = { id: newTab.id, realm: identity };
         savePulseTabs();
       });
+      PulseSnapshot = true;
+      PulseURL = url;
+      PulseSnapshotView = new URL(url).hostname;
+      setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
       return;
     }
 
@@ -245,6 +301,11 @@ function openNamedTab(name, url) {
               pulseTabs[identity] = { id: newTab.id, realm: identity };
               savePulseTabs();
             });
+            // ⭐ Snapshot logic
+            PulseSnapshot = true;
+            PulseURL = url;
+            PulseSnapshotView = new URL(url).hostname;
+            setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
             return;
           }
 
@@ -252,6 +313,11 @@ function openNamedTab(name, url) {
           pulseTabs[identity] = { id: updated.id, realm: identity };
           savePulseTabs();
         });
+        // ⭐ Snapshot logic
+        PulseSnapshot = true;
+        PulseURL = url;
+        PulseSnapshotView = new URL(url).hostname;
+        setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
         return;
       }
 
@@ -265,7 +331,11 @@ function openNamedTab(name, url) {
       pulseTabs[identity] = { id: tab.id, realm: identity };
       savePulseTabs();
     });
-
+    // ⭐ Snapshot logic
+    PulseSnapshot = true;
+    PulseURL = url;
+    PulseSnapshotView = new URL(url).hostname;
+    setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
     return;
   }
 
@@ -277,8 +347,9 @@ function openNamedTab(name, url) {
 
   // ⭐ Snapshot logic
   PulseSnapshot = true;
+  PulseURL = url;
   PulseSnapshotView = new URL(url).hostname;
-  setTimeout(() => latestSnapshot(PulseSnapshotView), 3500);
+  setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
 }
 
 
@@ -296,7 +367,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       if (PulseSnapshotView === realm) {
         PulseSnapshot = false;
         PulseSnapshotView = null;
-        renderSnapshot(null);
+        PulseURL = null;
       }
 
       delete pulseTabs[identity];
@@ -304,6 +375,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     }
   }
   pulseRehydrateTabs();
+  renderSnapshot(null);
 });
 
 
@@ -536,6 +608,33 @@ async function getFavicon(url, flags = {}) {
   let icon = iconURL;
   
   try {
+    // Google (main domain)
+    if (host.includes("google.com")) {
+      iconURL = "https://www.google.com/favicon.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // Gmail (mail.google.com)
+    if (host.includes("mail.google.com") || host.includes("gmail.com")) {
+      iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // Chase Bank
+    if (host.includes("chase.com")) {
+      iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
     // Special cases
     if (host.includes("office.com")) {
       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
@@ -728,7 +827,7 @@ async function pbLoadExtensionSettings() {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
-    console.log("pbLoadExtensionSettings()", settings);
+    PB_LOG3.load("pbLoadExtensionSettings()", settings);
 
     return settings;
   } catch (err) {
@@ -933,8 +1032,7 @@ async function updateModuleIcons() {
 
   const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
 
-  setInterval(pbRefreshWarmDocument, interval);
-  
+  setInterval(pbRefreshWarmDocument, interval);  
 
   document.addEventListener("keydown", (e) => {
     const key = e.key.toLowerCase();
@@ -1564,7 +1662,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
         await PBUniversalBoost.warmOrigin(internalURL);
-        openNamedTab("PulseEmail", internalURL);
+        openNamedTab("PulseMail", internalURL);
         // chrome.tabs.create({ url: internalURL });
         return;
     }
@@ -1582,7 +1680,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}    
     await PBUniversalBoost.warmOrigin(link);
-    openNamedTab("PulseEmail", link);
+    openNamedTab("PulseMail", link);
 });
 
 
@@ -1917,7 +2015,6 @@ document.getElementById("timerBtn").textContent = timerX;
 
 setInterval(() => {
   timerX++;
-  if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 21) {
     enterBtn.click();
@@ -1937,8 +2034,11 @@ setInterval(() => {
       index = (index + 1) % images.length;
     }, 1500);
   }
-  
-  setInterval(swap, 15000);
+
+  setInterval(() => {
+    swap();
+    if (PulseSnapshot) latestSnapshot(PulseSnapshotView, PulseURL);
+  }, 15000);
       
   const ENTERPRISE_DOMAINS = [
     "microsoft.com",
@@ -1981,7 +2081,7 @@ setInterval(() => {
     const settings = await pbLoadExtensionSettings();
     PulseRealmSettings = settings;
     PulseBrowserSettings = await getSettings();
-    if (PulseSnapshot) latestSnapshot(PulseSnapshotView);
+    if (PulseSnapshot) latestSnapshot(PulseSnapshotView, PulseURL);
 
     const PB_HOMES = [
       "https://www.pulseworld.me",
@@ -2102,16 +2202,75 @@ function documentTitle() {
   return document.title;
 }
 
+// function renderSnapshot(snapshot) {
+//     let div = document.getElementById("PulseBrowser-OS-Snapshot");
+//     if (!div) {
+//         div = document.createElement("div");
+//         div.id = "PulseBrowser-OS-Snapshot";
+//         div.className = "PulseBrowser-OS-Snapshot";
+//     }
+
+//     if (snapshot) {
+
+//         // ---------------------------------------------
+//         // ⭐ REMOVE <body> TAG FROM SNAPSHOT HTML
+//         // ---------------------------------------------
+//         let html = snapshot.html;
+
+//         // Replace opening <body ...> with Injected-Body wrapper
+//         html = html.replace(/<body[^>]*>/i, '<div class="Injected-Body">');
+
+//         // Replace closing </body> with closing div
+//         html = html.replace(/<\/body>/i, '</div>');
+
+//         // ---------------------------------------------
+//         // ⭐ Inject into the bubble viewport wrapper
+//         // ---------------------------------------------
+//         div.innerHTML = `
+//             <div class="Snapshot-Viewport">
+//                 ${html}
+//             </div>
+//         `;
+
+//         // Attach bubble to page
+//         document.body.appendChild(div);
+
+//         // Move your left panel down
+//         leftpanel.style.top = "300px";
+
+//     } else {
+//         // Remove bubble
+//         if (div) div.remove();
+
+//         // Reset left panel
+//         leftpanel.style.top = "0";
+//     }
+// }
 
 function renderSnapshot(snapshot) {
     let div = document.getElementById("PulseBrowser-OS-Snapshot");
-    if (!div) div = document.createElement("div");
-    div.className = "PulseBrowser-OS-Snapshot";
-    div.id = "PulseBrowser-OS-Snapshot";
+    if (!div) {
+        div = document.createElement("div");
+        div.id = "PulseBrowser-OS-Snapshot";
+        div.className = "PulseBrowser-OS-Snapshot";
+    }
+
     if (snapshot) {
-      div.innerHTML = snapshot.html;
-      document.body.appendChild(div);
+
+        // ---------------------------------------------
+        // ⭐ Inject ONLY the favicon (big, centered)
+        // ---------------------------------------------
+        div.innerHTML = `
+            <div class="Snapshot-Viewport">
+                <img class="Snapshot-Favicon" src="${snapshot.favicon}" alt="favicon">
+            </div>
+        `;
+
+        document.body.appendChild(div);
+        leftpanel.style.top = "300px";
+
     } else {
-      document.body.removeChild(div);
+        if (div) div.remove();
+        leftpanel.style.top = "0";
     }
 }

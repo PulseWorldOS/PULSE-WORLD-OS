@@ -307,7 +307,7 @@ async function injectHUD() {
   updateHUD();
   PulseBrowserPreview();
   setInterval(updateHUD, 1200);
-  setTimeout(PulseBrowserDomScan, 3000);
+  setTimeout(PulseBrowserDomScan, 1500);
   setTimeout(fadeHUD, 4000);
   setTimeout(DomScanPreview, 4000);
 }
@@ -1130,7 +1130,29 @@ function PulseBrowserDomScan() {
   // Remove all <script> tags
   clone.querySelectorAll("script").forEach(el => el.remove());
 
-  // --- Helpful, tiny additions ---
+  // Remove all <iframe> tags
+  clone.querySelectorAll("iframe").forEach(el => el.remove());
+
+  // Remove all external stylesheets
+  clone.querySelectorAll('link[rel="stylesheet"]').forEach(el => el.remove());
+
+  // Remove all <meta http-equiv="refresh">
+  clone.querySelectorAll('meta[http-equiv="refresh"]').forEach(el => el.remove());
+
+  // Remove all heavy media
+  clone.querySelectorAll("video, audio, source, object, embed").forEach(el => el.remove());
+
+  // Remove all <img> tags (we only keep tiny previews separately)
+  clone.querySelectorAll("img").forEach(el => el.remove());
+
+  // Tiny image preview (first 5 images only)
+  const tinyImages = [...document.querySelectorAll("img[src]")]
+    .slice(0, 5)
+    .map(img => ({
+      src: img.src,
+      alt: img.alt?.slice(0, 60) || null
+    }));
+
   // Meta description
   const metaDesc =
     clone.querySelector('meta[name="description"]')?.content ||
@@ -1147,7 +1169,6 @@ function PulseBrowserDomScan() {
     tinyImages[0]?.src ||
     null;
 
-
   // Viewport + scroll signals
   const viewport = {
     width: window.innerWidth,
@@ -1163,14 +1184,14 @@ function PulseBrowserDomScan() {
   const visibility = document.visibilityState;
   const focused = document.hasFocus();
 
-  // Tiny structural counts (super helpful, super tiny)
+  // Tiny structural counts
   const counts = {
     divs: clone.querySelectorAll("div").length,
     links: clone.querySelectorAll("a").length,
-    images: clone.querySelectorAll("img").length
+    images: tinyImages.length
   };
 
-  // Tiny link preview (first 10 links only)
+  // Tiny link preview
   const tinyLinks = [...clone.querySelectorAll("a[href]")]
     .slice(0, 10)
     .map(a => ({
@@ -1178,17 +1199,8 @@ function PulseBrowserDomScan() {
       text: a.innerText.trim().slice(0, 60)
     }));
 
-  // Tiny image preview (first 5 images only)
-  const tinyImages = [...clone.querySelectorAll("img[src]")]
-    .slice(0, 5)
-    .map(img => ({
-      src: img.src,
-      alt: img.alt?.slice(0, 60) || null
-    }));
-
-  // --- Favicon extraction (tiny, safe, perfect) ---
+  // Favicon extraction
   let favicon = null;
-
   const iconSelectors = [
     'link[rel="icon"]',
     'link[rel="shortcut icon"]',
@@ -1204,7 +1216,6 @@ function PulseBrowserDomScan() {
     }
   }
 
-  // Fallback: default favicon.ico
   if (!favicon) {
     favicon = `${location.origin}/favicon.ico`;
   }
@@ -1214,7 +1225,6 @@ function PulseBrowserDomScan() {
     title: document.title,
     realm: location.hostname,
 
-    // NEW tiny, helpful signals
     meta: {
       description: metaDesc,
       ogTitle,
@@ -1228,11 +1238,8 @@ function PulseBrowserDomScan() {
     counts,
     links: tinyLinks,
     images: tinyImages,
-
-    // NEW: favicon from the tab itself
     favicon,
 
-    // Script-free DOM
     html: clone.innerHTML
   };
 

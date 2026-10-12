@@ -368,6 +368,33 @@ async function getFavicon(url, flags = {}) {
   let icon = iconURL;
   
   try {
+    // Google (main domain)
+    if (host.includes("google.com")) {
+      iconURL = "https://www.google.com/favicon.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // Gmail (mail.google.com)
+    if (host.includes("mail.google.com") || host.includes("gmail.com")) {
+      iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // Chase Bank
+    if (host.includes("chase.com")) {
+      iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
     // Special cases
     if (host.includes("office.com")) {
       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
@@ -522,7 +549,6 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     domainClass: domainClass,
     ts: Date.now()
   });
-  
 });
 
 // ============================================================================
@@ -875,7 +901,7 @@ async function pbLoadExtensionSettings() {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
-    console.log("pbLoadExtensionSettings()", settings);
+    PB_LOG2.load("pbLoadExtensionSettings()", settings);
 
     return settings;
   } catch (err) {
@@ -950,7 +976,7 @@ function startWarmBootLoop() {
 startWarmBootLoop();
 
 
-const PB_LOG = {
+const PB_LOG2 = {
   info(label, data) {
     console.log(
       `%c[PBCompanion][INFO][${new Date().toLocaleTimeString()}] ${label}`,
@@ -1015,21 +1041,21 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBSETTINGS_SET":
       pbSaveSettings(msg.settings || {}).then(() => {
-        PB_LOG.info("PBSETTINGS_SET", msg.settings);
+        PB_LOG2.info("PBSETTINGS_SET", msg.settings);
         sendResponse({ ok: true });
       });
       return true;
 
     case "PBCONSOLE_SET":
       pbSaveConsole(msg.console || {}).then(() => {
-        PB_LOG.info("PBCONSOLE_SET", msg.console);
+        PB_LOG2.info("PBCONSOLE_SET", msg.console);
         sendResponse({ ok: true });
       });
       return true;
 
     case "PBSETTINGS_RESET":
       pbSaveSettings(PB_SW_SETTINGS).then(() => {
-        PB_LOG.info("PBSETTINGS_RESET", "Defaults Restored");
+        PB_LOG2.info("PBSETTINGS_RESET", "Defaults Restored");
         sendResponse({ ok: true });
       });
       return true;
@@ -1046,7 +1072,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastWarmOrigin = origin;
       PulseRealmState.navHistory.push(msg.url);
       PulseRealmState.navEvents.push(msg);
-      PB_LOG.info("PBNAV_EVENT", msg.url);
+      PB_LOG2.info("PBNAV_EVENT", msg.url);
       sendResponse({ ok: true });
       break;
 
@@ -1065,7 +1091,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBACC_PRELOAD":
       if (msg.origin) pbPreload(msg.origin);
-      PB_LOG.info("PBACC_PRELOAD", msg.origin);
+      PB_LOG2.info("PBACC_PRELOAD", msg.origin);
       sendResponse({ ok: true });
       break;
 
@@ -1098,7 +1124,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         pbRealmWarm(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;
       }
-      PB_LOG.info("PBACC_REALMWARM", msg.origin);
+      PB_LOG2.info("PBACC_REALMWARM", msg.origin);
       sendResponse({ ok: true });
       break;
 
@@ -1108,7 +1134,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // 🔥 Realm + HUD integration
         PulseRealmState.warmPathsTriggered += msg.origins.length || 1;
       }
-      PB_LOG.info("PBACC_WARMPATH_EVENT", msg.origins);
+      PB_LOG2.info("PBACC_WARMPATH_EVENT", msg.origins);
       sendResponse({ ok: true });
       break;
 
@@ -1122,7 +1148,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (Array.isArray(msg.origins)) {
         pbWarmPaths(msg.origins);
       }
-      PB_LOG.info("FIRSTPOST_WARMPATH_EVENT", msg.origins);
+      PB_LOG2.info("FIRSTPOST_WARMPATH_EVENT", msg.origins);
       sendResponse({ ok: true });
       break;
 
@@ -1141,7 +1167,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
       }
-      PB_LOG.info("PBACC_WARMPATH", origin);
+      PB_LOG2.info("PBACC_WARMPATH", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1155,7 +1181,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
       }
-      PB_LOG.info("PBACC_ACCELERATE", origin);
+      PB_LOG2.info("PBACC_ACCELERATE", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1171,7 +1197,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       (async () => {
         try {
           const cacheNames = await caches.keys();
-          PB_LOG.info("GET_CACHE_LIST", cacheNames);
+          PB_LOG2.info("GET_CACHE_LIST", cacheNames);
           sendResponse({ ok: true, caches: cacheNames });
         } catch (err) {
           sendResponse({ ok: false, error: err.toString() });
@@ -1239,7 +1265,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           type: "PBACC_WARMPATH",
           origin
         });
-        PB_LOG.info("PBACC_ACCELERATE_EVENT", origin);
+        PB_LOG2.info("PBACC_ACCELERATE_EVENT", origin);
       }
       sendResponse({ ok: true });
       break;
@@ -1307,7 +1333,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           origin = origin.replace("https://","");
         };
         PulseRealmState.lastWarmOrigin = origin;
-        PB_LOG.info("PB_HOVER_PREFETCH", origin);
+        PB_LOG2.info("PB_HOVER_PREFETCH", origin);
       }
       sendResponse({ ok: true });
       break;
@@ -1327,7 +1353,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
         PulseRealmState.imagesDecoded += msg.decodeCount || 1;        
         PulseRealmState.lastWarmOrigin = origin;
-        PB_LOG.info("PB_ASSET_LIST_CONTENT", origin);
+        PB_LOG2.info("PB_ASSET_LIST_CONTENT", origin);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1342,7 +1368,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(originfile, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
         PulseRealmState.imagesDecoded += msg.decodeCount || 1;
-        PB_LOG.info("PB_ASSET_LIST_FRONT", originfile);
+        PB_LOG2.info("PB_ASSET_LIST_FRONT", originfile);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1508,7 +1534,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     domainClass,
     ts: Date.now()
   });
-
 });
 
 
@@ -1676,7 +1701,7 @@ const PBQuantumPrefetch = {
 
 
 function letsgo(link) {
-  pbPreconnect(link);
+  pbPreconnect([link]);
   try {
     fetch(link, { cache: "force-cache" }).catch(() => {});
     console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);

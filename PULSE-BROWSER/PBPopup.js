@@ -857,6 +857,33 @@ async function getFavicon(url, flags = {}) {
   let icon = iconURL;
   
   try {
+    // Google (main domain)
+    if (host.includes("google.com")) {
+      iconURL = "https://www.google.com/favicon.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // Gmail (mail.google.com)
+    if (host.includes("mail.google.com") || host.includes("gmail.com")) {
+      iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // Chase Bank
+    if (host.includes("chase.com")) {
+      iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
+      PBFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
     // Special cases
     if (host.includes("office.com")) {
       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
@@ -1012,7 +1039,7 @@ async function loadWorld() {
       workIcon.innerText = "💼";      // your original emoji
       workIcon.style.backgroundImage = "";
   } else {        
-    const favA = getFavicon(PulseRealmSettings.externalWorkLink);
+    const favA = await getFavicon(PulseRealmSettings.externalWorkLink);
     if (favA) {
       workIcon.innerText = "⚡";
       workIcon.style.backgroundImage = `url(${favA})`;
@@ -1024,7 +1051,7 @@ async function loadWorld() {
       streamIcon.innerText = "📺";      // your original emoji
       streamIcon.style.backgroundImage = "";
   } else {        
-    const favB = getFavicon(PulseRealmSettings.externalStreamingLink);
+    const favB = await getFavicon(PulseRealmSettings.externalStreamingLink);
     if (favB) {
       streamIcon.innerText = "⚡";
       streamIcon.style.backgroundImage = `url(${favB})`;
@@ -1036,7 +1063,7 @@ async function loadWorld() {
       socialIcon.innerText = "🎭";      // your original emoji
       socialIcon.style.backgroundImage = "";
   } else {        
-    const favC = getFavicon(PulseRealmSettings.externalSocialLink);
+    const favC = await getFavicon(PulseRealmSettings.externalSocialLink);
     if (favC) {
       socialIcon.innerText = "⚡";
       socialIcon.style.backgroundImage = `url(${favC})`;
@@ -1048,7 +1075,7 @@ async function loadWorld() {
   if (PulseRealmSettings.acceleratedModule1Link) {
     const moduleFav1Link = document.getElementById("mod1");
     const moduleFav1Icon = document.getElementById("module1");
-    const fav1 = getFavicon(PulseRealmSettings.acceleratedModule1Link);
+    const fav1 = await getFavicon(PulseRealmSettings.acceleratedModule1Link);
     if (fav1) {
       moduleFav1Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule1Link) + " ";
       moduleFav1Icon.innerText = "⚡";
@@ -1062,7 +1089,7 @@ async function loadWorld() {
   if (PulseRealmSettings.acceleratedModule2Link) {
     const moduleFav2Link = document.getElementById("mod2");
     const moduleFav2Icon = document.getElementById("module2");
-    const fav2 = getFavicon(PulseRealmSettings.acceleratedModule2Link);
+    const fav2 = await getFavicon(PulseRealmSettings.acceleratedModule2Link);
     if (fav2) {
       moduleFav2Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule2Link) + " ";
       moduleFav2Icon.innerText = "⚡";
@@ -1076,7 +1103,7 @@ async function loadWorld() {
   if (PulseRealmSettings.acceleratedModule3Link) {
     const moduleFav3Link = document.getElementById("mod3");
     const moduleFav3Icon = document.getElementById("module3");
-    const fav3 = getFavicon(PulseRealmSettings.acceleratedModule3Link);
+    const fav3 = await getFavicon(PulseRealmSettings.acceleratedModule3Link);
     if (fav3) {
       moduleFav3Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule3Link) + " ";
       moduleFav3Icon.innerText = "⚡";
@@ -1090,7 +1117,7 @@ async function loadWorld() {
   if (PulseRealmSettings.acceleratedModule4Link) {
     const moduleFav4Link = document.getElementById("mod4");
     const moduleFav4Icon = document.getElementById("module4");
-    const fav4 = getFavicon(PulseRealmSettings.acceleratedModule4Link);
+    const fav4 = await getFavicon(PulseRealmSettings.acceleratedModule4Link);
     if (fav4) {
       moduleFav4Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule4Link) + " ";
       moduleFav4Icon.innerText = "⚡";
@@ -1103,7 +1130,7 @@ async function loadWorld() {
   if (PulseRealmSettings.acceleratedModule5Link) {
     const moduleFav5Link = document.getElementById("mod5");
     const moduleFav5Icon = document.getElementById("module5");
-    const fav5 = getFavicon(PulseRealmSettings.acceleratedModule5Link);
+    const fav5 = await getFavicon(PulseRealmSettings.acceleratedModule5Link);
     if (fav5) {
       moduleFav5Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule5Link) + " ";
       moduleFav5Icon.innerText = "⚡";

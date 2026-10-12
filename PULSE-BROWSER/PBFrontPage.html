@@ -65,14 +65,59 @@
     }
 
     .PulseBrowser-OS-Snapshot {
-      position: absolute;
-      width: 440px;
-      height: 440px;
-      border-radius: 30px;
+      position: fixed;
+      width: 80px;
+      height: 80px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
       box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-      animation: pulseGlow 3.5s ease-in-out infinite;
-      top: 20px;
-      left: 20px;
+      
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloat 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 80px;
+      left: 80px;
+    }
+
+    /* ⭐ Viewport layer */
+    .Snapshot-Viewport {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ⭐ Big favicon */
+    .Snapshot-Favicon {
+      width: 40%;      /* adjust size here */
+      height: 40%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+    }
+
+    @keyframes bubbleFloat {
+      0%   { transform: translate(0px, 0px); }
+      15%   { transform: translate(4px, 4px); }
+      25%  { transform: translate(12px, -8px); }
+      50%  { transform: translate(-10px, 14px); }
+      75%  { transform: translate(8px, -6px); }
+      85% { transform: translate(3px, 3px); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    .PulseBrowser-OS-Snapshot.warm {
+      box-shadow: 
+        0 0 40px #ff444488,
+        0 0 80px #ff444444;
+      background: #330000aa;
     }
 
     .logo {

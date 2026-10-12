@@ -67,7 +67,7 @@ async function getSettings() {
       S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
-      console.log("getSettings()", S);
+      PB_LOG.load("getSettings()", S);
       resolve(S);
     });
   });
