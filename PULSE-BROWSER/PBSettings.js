@@ -77,12 +77,12 @@ async function getSettings() {
 //  SECTION 2 — EXTENSION SETTINGS (SEPARATE STORAGE)
 // ============================================================================
 
-const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+const EXTENSION_SETTINGS_KEY2 = "pulseworldSettings";
 
 async function pbLoadExtensionSettings() {
   try {
-    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
-    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
+    const settings = result[EXTENSION_SETTINGS_KEY2] || {};
 
     PB_LOG.load("pbLoadExtensionSettings()", settings);
 
@@ -94,8 +94,8 @@ async function pbLoadExtensionSettings() {
 }
 
 async function loadExtensionSettingsUI() {
-  const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
-  const settings = result[EXTENSION_SETTINGS_KEY] || {};
+  const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
+  const settings = result[EXTENSION_SETTINGS_KEY2] || {};
 
   PB_LOG.load("Extension Settings Loaded", settings);
 
@@ -146,7 +146,7 @@ async function loadExtensionSettingsUI() {
 }
 
 async function saveExtensionSettingsUI() {
-  const before = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+  const before = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
 
   const settings = {
     emailMode: document.getElementById("emailMode").value,
@@ -182,9 +182,9 @@ async function saveExtensionSettingsUI() {
     programmaticBanking: document.getElementById("programmaticBanking").checked
   };
 
-  await chrome.storage.local.set({ [EXTENSION_SETTINGS_KEY]: settings });
+  await chrome.storage.local.set({ [EXTENSION_SETTINGS_KEY2]: settings });
 
-  PB_LOG.change("Extension Settings Saved", before[EXTENSION_SETTINGS_KEY], settings);
+  PB_LOG.change("Extension Settings Saved", before[EXTENSION_SETTINGS_KEY2], settings);
 }
 
 

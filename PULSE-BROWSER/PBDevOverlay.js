@@ -48,7 +48,7 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   document.body.appendChild(wrap);
 
   updateOverlay();
-  setInterval(updateOverlay, 1500);
+  setInterval(updateOverlay, 500);
 })();
 
 function enabledColor(v) {

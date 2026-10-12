@@ -391,6 +391,7 @@ let PBFAVICON_CACHE = {};
 chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
   if (res.ModuleFaviconCaches) {
     PBFAVICON_CACHE = res.ModuleFaviconCaches;
+    console.log(PBFAVICON_CACHE);
   }
 });
 
@@ -502,7 +503,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
 }
 
 
-
 async function getFavicon(url, flags = {}) {
   let u;
 
@@ -522,56 +522,57 @@ async function getFavicon(url, flags = {}) {
   }
 
   // ⭐ Build favicon URL using hostname (preserves www)
-  let icon = `https://${host}/favicon.ico`;
+  let iconURL = `https://${host}/favicon.ico`;
 
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
   if (parts.length > 2) {
     if (parts[0] !== "www") {
       const root = parts.slice(parts.length - 2).join(".");
-      icon = `https://${root}/favicon.ico`;
+      iconURL = `https://${root}/favicon.ico`;
     }
   }
-
+  
+  let icon = iconURL;
   
   try {
     // Special cases
     if (host.includes("office.com")) {
-      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("github.com")) {
-      icon = "https://github.githubassets.com/favicons/favicon.svg";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://github.githubassets.com/favicons/favicon.svg";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("youtube.com")) {
-      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("discord.com")) {
-      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     } catch {
-      PBFAVICON_CACHE[host] = icon;
+      PBFAVICON_CACHE[host] = iconURL;
       saveCache();
-      return icon;
+      return iconURL;
     }
 
   // ⭐ If cached → return instantly
@@ -617,14 +618,15 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
+    icon = await fetchAndStoreIcon(host, icon);
     PBFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
 
   } catch {
-    PBFAVICON_CACHE[host] = icon;
+    PBFAVICON_CACHE[host] = iconURL;
     saveCache();
-    return icon;
+    return iconURL;
   }
 }
 
@@ -702,9 +704,16 @@ async function pbModuleWarmBoot() {
   pbPreconnect(warmTargets);
 
   chrome.runtime.sendMessage({
-    type: "PBACC_WARMPATH_EVENT",
+    type: "FIRSTPRE_WARMPATH_EVENT",
     origins: warmTargets
   });
+
+  setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "FIRSTPOST_WARMPATH_EVENT",
+      origins: warmTargets
+    });
+  }, 3000);
 
   console.log(
     "%c[PBAccelerator] Module Warm-Boot executed",
@@ -712,6 +721,21 @@ async function pbModuleWarmBoot() {
   );
 }
 
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+
+async function pbLoadExtensionSettings() {
+  try {
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+
+    console.log("pbLoadExtensionSettings()", settings);
+
+    return settings;
+  } catch (err) {
+    console.error("pbLoadExtensionSettings() FAILED", err);
+    return {};
+  }
+}
 
 let keyIsDown = false;
 let keyHoldTimer = null;
@@ -961,7 +985,7 @@ async function updateModuleIcons() {
   });
 }
 
-setTimeout(pbModuleWarmBoot, 3000)
+pbModuleWarmBoot();
 
 async function pulseConsoleKey(event) {
   const key = event.key.toLowerCase();

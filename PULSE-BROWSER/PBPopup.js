@@ -5,6 +5,22 @@
 let PulseRealm = {};
 let PulseRealmSettings = {};
 
+// Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
+let PBFAVICON_CACHE = {};
+
+// Load cache from storage at startup
+chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
+  if (res.ModuleFaviconCaches) {
+    PBFAVICON_CACHE = res.ModuleFaviconCaches;
+    console.log(PBFAVICON_CACHE);
+  }
+});
+
+function saveCache() {
+  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
+}
+
 document.addEventListener("keydown", (e) => {
   pulseConsoleKey(e);
 });
@@ -361,12 +377,12 @@ document.getElementById("btn-open-business").onclick = async () => {
 
 document.getElementById("btn-open-email").onclick = async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Email module clicked. Settings:", settings);
+    console.log("[FrontPage] Email module clicked. Settings:", PulseRealmSettings);
 
     // INTERNAL MODE → open PulseWorld Email on the real domain
-    if (settings.emailMode === "internal") {
+    if (PulseRealmSettings.emailMode === "internal") {
         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
         console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
         openNamedTab("PulseMail", internalURL);
@@ -375,7 +391,7 @@ document.getElementById("btn-open-email").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
+    const link =PulseRealmSettings.externalEmailLink?.trim() || "https://mail.google.com/";
 
     console.log("[FrontPage] Opening External Email Provider:", link);
     openNamedTab("PulseMail", link);
@@ -385,12 +401,12 @@ document.getElementById("btn-open-email").onclick = async () => {
 
 document.getElementById("btn-open-bank").onclick = async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Bank module clicked. Settings:", settings);
+    console.log("[FrontPage] Bank module clicked. Settings:", PulseRealmSettings);
 
     // INTERNAL MODE → open PulseWorld Bank on the real domain
-    if (settings.bankMode === "internal") {
+    if (PulseRealmSettings.bankMode === "internal") {
         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
         console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
         openNamedTab("PulseBank", internalURL);
@@ -399,7 +415,7 @@ document.getElementById("btn-open-bank").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
+    const link =PulseRealmSettings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
 
     console.log("[FrontPage] Opening External Bank Provider:", link);
     openNamedTab("PulseBank", link);
@@ -410,12 +426,12 @@ document.getElementById("btn-open-bank").onclick = async () => {
 
 document.getElementById("mod-social").onclick = async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Social Media module clicked. Settings:", settings);
+    console.log("[FrontPage] Social Media module clicked. Settings:", PulseRealmSettings);
 
     // INTERNAL MODE → open PulseWorld on the real domain
-    if (settings.socialMode === "internal") {
+    if (PulseRealmSettings.socialMode === "internal") {
         const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldMessenger";
         console.log("[FrontPage] Opening Internal PulseMessenger:", internalURL);
         openNamedTab("PulseMessenger", internalURL);
@@ -424,7 +440,7 @@ document.getElementById("mod-social").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalSocialLink?.trim() || "https://www.facebook.com/";
+    const link =PulseRealmSettings.externalSocialLink?.trim() || "https://www.facebook.com/";
 
     console.log("[FrontPage] Opening External Social Media Provider:", link);
     openNamedTab("PulseMessenger", link);
@@ -433,12 +449,12 @@ document.getElementById("mod-social").onclick = async () => {
 
 document.getElementById("mod-work").onclick = async () => {
     
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Work module clicked. Settings:", settings);
+    console.log("[FrontPage] Work module clicked. Settings:", PulseRealmSettings);
 
     // INTERNAL MODE → open PulseWorld Work on the real domain
-    if (settings.workMode === "internal") {
+    if (PulseRealmSettings.workMode === "internal") {
         const internalURL = "https://www.pulseworld.biz";
         console.log("[FrontPage] Opening Internal PulseWork:", internalURL);
         openNamedTab("PulseWork", internalURL);
@@ -447,7 +463,7 @@ document.getElementById("mod-work").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
+    const link =PulseRealmSettings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
 
     console.log("[FrontPage] Opening External Work Provider:", link);
     openNamedTab("PulseWork", link);
@@ -457,12 +473,12 @@ document.getElementById("mod-work").onclick = async () => {
 
 document.getElementById("mod-1").addEventListener("click", async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] PulseModule1 module clicked. Settings:", settings);
+    console.log("[FrontPage] PulseModule1 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com/";
+    const link =PulseRealmSettings.acceleratedModule1Link?.trim() || "https://www.onedrive.com/";
 
     console.log("[FrontPage] Opening External PulseModule1 Provider:", link);
     openNamedTab("PulseModule1", link);
@@ -472,12 +488,12 @@ document.getElementById("mod-1").addEventListener("click", async () => {
 
 document.getElementById("mod-2").addEventListener("click", async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] PulseModule2 module clicked. Settings:", settings);
+    console.log("[FrontPage] PulseModule2 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule2Link?.trim() || "https://www.office.com/";
+    const link =PulseRealmSettings.acceleratedModule2Link?.trim() || "https://www.office.com/";
 
     console.log("[FrontPage] Opening External PulseModule2 Provider:", link);
     openNamedTab("PulseModule2", link);
@@ -487,12 +503,12 @@ document.getElementById("mod-2").addEventListener("click", async () => {
 
 document.getElementById("mod-3").addEventListener("click", async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] PulseModule3 module clicked. Settings:", settings);
+    console.log("[FrontPage] PulseModule3 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com/";
+    const link =PulseRealmSettings.acceleratedModule3Link?.trim() || "https://www.amazon.com/";
 
     console.log("[FrontPage] Opening External PulseModule3 Provider:", link);
     openNamedTab("PulseModule3", link);
@@ -502,12 +518,12 @@ document.getElementById("mod-3").addEventListener("click", async () => {
 
 document.getElementById("mod-4").addEventListener("click", async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] PulseModule4 module clicked. Settings:", settings);
+    console.log("[FrontPage] PulseModule4 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com/";
+    const link =PulseRealmSettings.acceleratedModule4Link?.trim() || "https://www.coinbase.com/";
 
     console.log("[FrontPage] Opening External PulseModule4 Provider:", link);
     openNamedTab("PulseModule4", link);
@@ -517,12 +533,12 @@ document.getElementById("mod-4").addEventListener("click", async () => {
 
 document.getElementById("mod-5").addEventListener("click", async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] PulseModule5 module clicked. Settings:", settings);
+    console.log("[FrontPage] PulseModule5 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com/";
+    const link =PulseRealmSettings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com/";
 
     console.log("[FrontPage] Opening External PulseModule5 Provider:", link);
     openNamedTab("PulseModule5", link);
@@ -532,12 +548,12 @@ document.getElementById("mod-5").addEventListener("click", async () => {
 
 document.getElementById("mod-stream").onclick = async () => {
 
-    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = await pbLoadExtensionSettings();
 
-    console.log("[FrontPage] Streaming module clicked. Settings:", settings);
+    console.log("[FrontPage] Streaming module clicked. Settings:", PulseRealmSettings);
 
     // INTERNAL MODE → open PulseWorld Streaming on the real domain
-    if (settings.streamMode === "internal") {
+    if (PulseRealmSettings.streamMode === "internal") {
         const internalURL = "https://www.netflix.com";
         console.log("[FrontPage] Opening Internal Streaming Module:", internalURL);
         openNamedTab("PulseStreaming", internalURL);
@@ -546,7 +562,7 @@ document.getElementById("mod-stream").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalStreamingLink?.trim() || "https://www.netflix.com";
+    const link =PulseRealmSettings.externalStreamingLink?.trim() || "https://www.netflix.com";
 
     console.log("[FrontPage] Opening External Streaming Provider:", link);
     openNamedTab("PulseStreaming", link);
@@ -629,10 +645,6 @@ document.getElementById("mod-stream").onclick = async () => {
 //   });
 // }
 
-setTimeout(loadWorld,450);
-
-let oldSettings = null;
-
 async function pulseConsoleKey(event) {
   const key = event.key.toLowerCase();
   const moduleKeys = ["`","b","m","s","w","t"];
@@ -650,15 +662,15 @@ async function pulseConsoleKey(event) {
   if (key === "`") {
     link = null;
   } else if (key === "b") {
-    link = oldSettings.externalBankLink;
+    link = PulseRealmSettings.externalBankLink;
   } else if (key === "m") {
-    link = oldSettings.externalEmailLink;
+    link = PulseRealmSettings.externalEmailLink;
   } else if (key === "s") {
-    link = oldSettings.externalSocialLink;
+    link = PulseRealmSettings.externalSocialLink;
   } else if (key === "w") {
-    link = oldSettings.externalWorkLink;
+    link = PulseRealmSettings.externalWorkLink;
   } else if (key === "t") {
-    link = oldSettings.externalStreamingLink;
+    link = PulseRealmSettings.externalStreamingLink;
   }
 
   chrome.runtime.sendMessage({
@@ -706,22 +718,6 @@ async function pulseConsoleKey(event) {
 //     });
 //   });
 // };
-
-
-// Persistent favicon cache stored in chrome.storage.local
-// Local in-memory mirror for speed
-let PBFAVICON_CACHE = {};
-
-// Load cache from storage at startup
-chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
-  if (res.ModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.ModuleFaviconCaches;
-  }
-});
-
-function saveCache() {
-  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
-}
 
 // ---------------------------------------------------------
 // ⭐ TINYPNG-STYLE COMPRESSION (Canvas → WebP)
@@ -828,7 +824,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
 }
 
 
-
 async function getFavicon(url, flags = {}) {
   let u;
 
@@ -848,56 +843,57 @@ async function getFavicon(url, flags = {}) {
   }
 
   // ⭐ Build favicon URL using hostname (preserves www)
-  let icon = `https://${host}/favicon.ico`;
+  let iconURL = `https://${host}/favicon.ico`;
 
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
   if (parts.length > 2) {
     if (parts[0] !== "www") {
       const root = parts.slice(parts.length - 2).join(".");
-      icon = `https://${root}/favicon.ico`;
+      iconURL = `https://${root}/favicon.ico`;
     }
   }
-
+  
+  let icon = iconURL;
   
   try {
     // Special cases
     if (host.includes("office.com")) {
-      icon = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("github.com")) {
-      icon = "https://github.githubassets.com/favicons/favicon.svg";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://github.githubassets.com/favicons/favicon.svg";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("youtube.com")) {
-      icon = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("discord.com")) {
-      icon = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      icon = await fetchAndStoreIcon(host, icon);
+      iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      icon = await fetchAndStoreIcon(host, iconURL);
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     } catch {
-      PBFAVICON_CACHE[host] = icon;
+      PBFAVICON_CACHE[host] = iconURL;
       saveCache();
-      return icon;
+      return iconURL;
     }
 
   // ⭐ If cached → return instantly
@@ -943,14 +939,15 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
+    icon = await fetchAndStoreIcon(host, icon);
     PBFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
 
   } catch {
-    PBFAVICON_CACHE[host] = icon;
+    PBFAVICON_CACHE[host] = iconURL;
     saveCache();
-    return icon;
+    return iconURL;
   }
 }
 
@@ -986,7 +983,21 @@ function getReadableName(url) {
 //     write("PulseBrowser OS settings reset to defaults.");
 //   });
 // };
+const EXTENSION_SETTINGS_KEY3 = "pulseworldSettings";
 
+async function pbLoadExtensionSettings() {
+  try {
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY3]);
+    const settings = result[EXTENSION_SETTINGS_KEY3] || {};
+
+    PB_LOG.load("pbLoadExtensionSettings() NEW" , settings);
+
+    return settings;
+  } catch (err) {
+    PB_LOG.error("pbLoadExtensionSettings() FAILED", err);
+    return {};
+  }
+}
 
 // Utility: load settings
 async function loadWorld() {
@@ -994,52 +1005,52 @@ async function loadWorld() {
   const streamIcon = document.getElementById("moduleStreamIcon");
   const socialIcon = document.getElementById("moduleSocialIcon");
     
-  const settings = await pbLoadExtensionSettings();
-  oldSettings = settings;
+  PulseRealmSettings = await pbLoadExtensionSettings();
+
   // INTERNAL MODE → open PulseWorld Work on the real domain
-  if (settings.workMode === "internal") {
+  if (PulseRealmSettings.workMode === "internal") {
       workIcon.innerText = "💼";      // your original emoji
       workIcon.style.backgroundImage = "";
   } else {        
-    const fav = getFavicon(settings.externalWorkLink);
-    if (fav) {
+    const favA = getFavicon(PulseRealmSettings.externalWorkLink);
+    if (favA) {
       workIcon.innerText = "⚡";
-      workIcon.style.backgroundImage = `url(${fav})`;
+      workIcon.style.backgroundImage = `url(${favA})`;
       workIcon.style.backgroundSize = "contain";
       workIcon.style.backgroundRepeat = "no-repeat";
     }
   }
-  if (settings.streamMode === "internal") {
+  if (PulseRealmSettings.streamMode === "internal") {
       streamIcon.innerText = "📺";      // your original emoji
       streamIcon.style.backgroundImage = "";
   } else {        
-    const fav = getFavicon(settings.externalStreamingLink);
-    if (fav) {
+    const favB = getFavicon(PulseRealmSettings.externalStreamingLink);
+    if (favB) {
       streamIcon.innerText = "⚡";
-      streamIcon.style.backgroundImage = `url(${fav})`;
+      streamIcon.style.backgroundImage = `url(${favB})`;
       streamIcon.style.backgroundSize = "contain";
       streamIcon.style.backgroundRepeat = "no-repeat";
     }
   }
-  if (settings.socialMode === "internal") {
+  if (PulseRealmSettings.socialMode === "internal") {
       socialIcon.innerText = "🎭";      // your original emoji
       socialIcon.style.backgroundImage = "";
   } else {        
-    const fav = getFavicon(settings.externalSocialLink);
-    if (fav) {
+    const favC = getFavicon(PulseRealmSettings.externalSocialLink);
+    if (favC) {
       socialIcon.innerText = "⚡";
-      socialIcon.style.backgroundImage = `url(${fav})`;
+      socialIcon.style.backgroundImage = `url(${favC})`;
       socialIcon.style.backgroundSize = "contain";
       socialIcon.style.backgroundRepeat = "no-repeat";
     }
   }
   
-  if (settings.acceleratedModule1Link) {
+  if (PulseRealmSettings.acceleratedModule1Link) {
     const moduleFav1Link = document.getElementById("mod1");
     const moduleFav1Icon = document.getElementById("module1");
-    const fav1 = getFavicon(settings.acceleratedModule1Link);
+    const fav1 = getFavicon(PulseRealmSettings.acceleratedModule1Link);
     if (fav1) {
-      moduleFav1Link.innerText = getReadableName(settings.acceleratedModule1Link) + " ";
+      moduleFav1Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule1Link) + " ";
       moduleFav1Icon.innerText = "⚡";
       moduleFav1Icon.style.backgroundImage = `url(${fav1})`;
       moduleFav1Icon.style.backgroundSize = "contain";
@@ -1048,12 +1059,12 @@ async function loadWorld() {
   }
 
 
-  if (settings.acceleratedModule2Link) {
+  if (PulseRealmSettings.acceleratedModule2Link) {
     const moduleFav2Link = document.getElementById("mod2");
     const moduleFav2Icon = document.getElementById("module2");
-    const fav2 = getFavicon(settings.acceleratedModule2Link);
+    const fav2 = getFavicon(PulseRealmSettings.acceleratedModule2Link);
     if (fav2) {
-      moduleFav2Link.innerText = getReadableName(settings.acceleratedModule2Link) + " ";
+      moduleFav2Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule2Link) + " ";
       moduleFav2Icon.innerText = "⚡";
       moduleFav2Icon.style.backgroundImage = `url(${fav2})`;
       moduleFav2Icon.style.backgroundSize = "contain";
@@ -1062,12 +1073,12 @@ async function loadWorld() {
   }
 
 
-  if (settings.acceleratedModule3Link) {
+  if (PulseRealmSettings.acceleratedModule3Link) {
     const moduleFav3Link = document.getElementById("mod3");
     const moduleFav3Icon = document.getElementById("module3");
-    const fav3 = getFavicon(settings.acceleratedModule3Link);
+    const fav3 = getFavicon(PulseRealmSettings.acceleratedModule3Link);
     if (fav3) {
-      moduleFav3Link.innerText = getReadableName(settings.acceleratedModule3Link) + " ";
+      moduleFav3Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule3Link) + " ";
       moduleFav3Icon.innerText = "⚡";
       moduleFav3Icon.style.backgroundImage = `url(${fav3})`;
       moduleFav3Icon.style.backgroundSize = "contain";
@@ -1076,12 +1087,12 @@ async function loadWorld() {
   }
 
 
-  if (settings.acceleratedModule4Link) {
+  if (PulseRealmSettings.acceleratedModule4Link) {
     const moduleFav4Link = document.getElementById("mod4");
     const moduleFav4Icon = document.getElementById("module4");
-    const fav4 = getFavicon(settings.acceleratedModule4Link);
+    const fav4 = getFavicon(PulseRealmSettings.acceleratedModule4Link);
     if (fav4) {
-      moduleFav4Link.innerText = getReadableName(settings.acceleratedModule4Link) + " ";
+      moduleFav4Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule4Link) + " ";
       moduleFav4Icon.innerText = "⚡";
       moduleFav4Icon.style.backgroundImage = `url(${fav4})`;
       moduleFav4Icon.style.backgroundSize = "contain";
@@ -1089,12 +1100,12 @@ async function loadWorld() {
     }
   }
 
-  if (settings.acceleratedModule5Link) {
+  if (PulseRealmSettings.acceleratedModule5Link) {
     const moduleFav5Link = document.getElementById("mod5");
     const moduleFav5Icon = document.getElementById("module5");
-    const fav5 = getFavicon(settings.acceleratedModule5Link);
+    const fav5 = getFavicon(PulseRealmSettings.acceleratedModule5Link);
     if (fav5) {
-      moduleFav5Link.innerText = getReadableName(settings.acceleratedModule5Link) + " ";
+      moduleFav5Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule5Link) + " ";
       moduleFav5Icon.innerText = "⚡";
       moduleFav5Icon.style.backgroundImage = `url(${fav5})`;
       moduleFav5Icon.style.backgroundSize = "contain";
@@ -1102,3 +1113,5 @@ async function loadWorld() {
     }
   }
 }
+
+setTimeout(loadWorld, 500);
