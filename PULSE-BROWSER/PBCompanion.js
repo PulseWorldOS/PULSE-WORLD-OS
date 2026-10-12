@@ -16,7 +16,7 @@ let PBFAVICON_CACHE = {};
 chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
   if (res.ModuleFaviconCaches) {
     PBFAVICON_CACHE = res.ModuleFaviconCaches;
-    console.log(PBFAVICON_CACHE);
+    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 

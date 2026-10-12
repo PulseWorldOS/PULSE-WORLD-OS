@@ -31,6 +31,22 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
 });
 
 
+// Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
+let PBFAVICON_CACHE = {};
+
+// Load cache from storage at startup
+chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
+  if (res.ModuleFaviconCaches) {
+    PBFAVICON_CACHE = res.ModuleFaviconCaches;
+    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
+  }
+});
+
+function saveCache() {
+  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
+}
+
 function pulseRehydrateTabs() {
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
@@ -382,22 +398,6 @@ const PBUniversalBoost = {
     } catch (_) {}
   }
 };
-
-// Persistent favicon cache stored in chrome.storage.local
-// Local in-memory mirror for speed
-let PBFAVICON_CACHE = {};
-
-// Load cache from storage at startup
-chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
-  if (res.ModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.ModuleFaviconCaches;
-    console.log(PBFAVICON_CACHE);
-  }
-});
-
-function saveCache() {
-  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
-}
 
 // ---------------------------------------------------------
 // ⭐ TINYPNG-STYLE COMPRESSION (Canvas → WebP)
