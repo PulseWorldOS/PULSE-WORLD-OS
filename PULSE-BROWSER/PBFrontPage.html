@@ -64,26 +64,165 @@
       to { opacity: 1; }
     }
 
-    .PulseBrowser-OS-Snapshot {
+    
+    .side-panel {
       position: fixed;
-      width: 80px;
-      height: 80px;
+      margin: 20px 20px;
+      top: 0;
+      bottom: 0;
+      width: clamp(280px, 12vw, 350px);
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+    .left-panel {
+      left: 0;
+      top: 300px;
+    }
+
+    .right-panel {
+      right: 0;
+    }
+    
+    .top-panel {
+      position: fixed;
+      margin: 20px 20px;
+      top: 0;
+      height: 280px;
+      width: clamp(280px, 12vw, 350px);
+
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(24px);
+
+      background-image: url("PulseOSTabs.png");
+      background-repeat: no-repeat;
+      background-size: 55%;        /* 1/3 the size */
+      background-position: center; /* centered perfectly */
+
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+
+    .hotkey {
+      text-decoration: underline;
+    }
+
+    .PulseBrowser-OS-Snapshot1 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
       border-radius: 999px;
       overflow: hidden;
       background: #000000aa;
       backdrop-filter: blur(6px);
-      box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-      
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
 
-      animation: bubbleFloat 15s ease-in-out infinite,
+      animation: bubbleFloatExplorer 15s ease-in-out infinite,
                 pulseGlow 3.5s ease-in-out infinite;
 
-      top: 80px;
-      left: 80px;
+      top: 30px;
+      left: 30px;
+    }
+
+    .PulseBrowser-OS-Snapshot2 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatMinion 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 70px;
+      left: 120px;
+    }
+
+    .PulseBrowser-OS-Snapshot3 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatHeartbeat 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 30px;
+      left: 210px;
+    }
+
+    .PulseBrowser-OS-Snapshot4 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatOrbit 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 140px;
+      left: 30px;
+    }
+
+    .PulseBrowser-OS-Snapshot5 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatDrifter 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 170px;
+      left: 120px;
     }
 
     /* ⭐ Viewport layer */
@@ -97,27 +236,96 @@
 
     /* ⭐ Big favicon */
     .Snapshot-Favicon {
-      width: 40%;      /* adjust size here */
-      height: 40%;
+      width: 60%;      /* adjust size here */
+      height: 60%;
       object-fit: contain;
       filter: drop-shadow(0 0 10px #00aaffaa);
     }
 
+    .PulseBrowser-OS-Snapshot1.electrify,
+    .PulseBrowser-OS-Snapshot2.electrify,
+    .PulseBrowser-OS-Snapshot3.electrify,
+    .PulseBrowser-OS-Snapshot4.electrify,
+    .PulseBrowser-OS-Snapshot5.electrify {
+      animation: bubbleElectrify 3.2s ease-out;
+      background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000 70%);
+      box-shadow:
+        0 0 4px rgba(0, 150, 255, 0.7),
+        0 0 10px rgba(0, 200, 255, 0.6),
+        inset 0 0 6px rgba(0, 180, 255, 0.8);
+      filter: brightness(1.35) contrast(1.3) saturate(1.7);
+    }
+
+
+
+    @keyframes bubbleElectrify {
+      0%   { transform: translate(0px, 0px) scale(1); }
+      20%  { transform: translate(6px, -6px) scale(1.05); }
+      40%  { transform: translate(-6px, 6px) scale(0.95); }
+      60%  { transform: translate(8px, 4px) scale(1.07); }
+      80%  { transform: translate(-4px, -8px) scale(0.93); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+
     @keyframes bubbleFloat {
       0%   { transform: translate(0px, 0px); }
-      15%   { transform: translate(4px, 4px); }
-      25%  { transform: translate(12px, -8px); }
-      50%  { transform: translate(-10px, 14px); }
-      75%  { transform: translate(8px, -6px); }
-      85% { transform: translate(3px, 3px); }
+      10%  { transform: translate(3px, -2px); }
+      20%  { transform: translate(-2px, 4px); }
+      30%  { transform: translate(4px, 3px); }
+      40%  { transform: translate(-3px, -4px); }
+      50%  { transform: translate(2px, 5px); }
+      60%  { transform: translate(-4px, 2px); }
+      70%  { transform: translate(3px, -3px); }
+      80%  { transform: translate(-2px, 4px); }
+      90%  { transform: translate(4px, -1px); }
       100% { transform: translate(0px, 0px); }
     }
 
-    .PulseBrowser-OS-Snapshot.warm {
-      box-shadow: 
-        0 0 40px #ff444488,
-        0 0 80px #ff444444;
-      background: #330000aa;
+    @keyframes bubbleFloatDrifter {
+      0%   { transform: translate(0px, 0px); }
+      12%  { transform: translate(2px, -1px); }
+      25%  { transform: translate(-3px, 2px); }
+      38%  { transform: translate(4px, 1px); }
+      52%  { transform: translate(-2px, -3px); }
+      67%  { transform: translate(3px, 3px); }
+      82%  { transform: translate(-1px, 2px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes bubbleFloatExplorer {
+      0%   { transform: translate(0px, 0px); }
+      10%  { transform: translate(4px, -3px); }
+      20%  { transform: translate(-5px, 4px); }
+      35%  { transform: translate(6px, 2px); }
+      50%  { transform: translate(-4px, -5px); }
+      65%  { transform: translate(5px, 3px); }
+      80%  { transform: translate(-3px, 5px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes bubbleFloatMinion {
+      0%   { transform: translate(0px, 0px); }
+      8%   { transform: translate(2px, -3px); }
+      16%  { transform: translate(-1px, 2px); }
+      24%  { transform: translate(3px, 1px); }
+      32%  { transform: translate(-2px, -2px); }
+      48%  { transform: translate(4px, 3px); }
+      64%  { transform: translate(-3px, 1px); }
+      80%  { transform: translate(2px, -4px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes bubbleFloatHeartbeat {
+      0%   { transform: translate(0px, 0px) scale(1); }
+      20%  { transform: translate(2px, -2px) scale(1.03); }
+      40%  { transform: translate(-3px, 3px) scale(0.98); }
+      60%  { transform: translate(4px, 1px) scale(1.04); }
+      80%  { transform: translate(-2px, -3px) scale(0.99); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    @keyframes bubbleFloatOrbit {
+      0%   { transform: translate(0px, 0px); }
+      25%  { transform: translate(4px, 2px); }
+      50%  { transform: translate(0px, 4px); }
+      75%  { transform: translate(-4px, 2px); }
+      100% { transform: translate(0px, 0px); }
     }
 
     .logo {
@@ -652,6 +860,29 @@
       transform: scale(1.08);
     }
     
+    .PulseWorldIcon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .PulseBusinessIcon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .PulseIdentityIcon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
 
     .module-icon {
       width: 28px;
@@ -675,35 +906,6 @@
       font-size: 15px;
     }
 
-    .side-panel {
-      position: fixed;
-      margin: 20px 20px;
-      top: 0;
-      bottom: 0;
-      width: clamp(280px, 12vw, 350px);
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(12px);
-      border-left: 1px solid rgba(255, 255, 255, 0.15);
-      border-right: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 5;
-    }
-
-    .left-panel {
-      left: 0;
-    }
-
-    .right-panel {
-      right: 0;
-    }
-
-    .hotkey {
-      text-decoration: underline;
-    }
-
-
-
   </style>
 </head>
 <body>
@@ -712,6 +914,9 @@
   <div class="nebula" id="nebula"></div>
   <div class="shimmer"></div>
 
+  <div class="top-panel left-panel" id="top-panel left-panel">
+    <!-- Left panel content -->
+  </div>
   <div class="side-panel left-panel" id="side-panel left-panel">
     <!-- Left panel content -->
   </div>
@@ -757,9 +962,15 @@
 
     <!-- Main Navigation Buttons -->
     <div class="main-links">
-      <div class="engage" id="engage">💼 PulseBusiness</div>
-      <div class="enter" id="enter">🌐 Enter PulseWorld</div>
-      <div class="setup" id="setup">🧑‍🎨 PulseIdentity</div>
+      <div class="engage" id="engage">
+        <span class="PulseBusinessIcon" id="PulseBusinessIcon">💼</span> PulseBusiness
+      </div>
+      <div class="enter" id="enter">
+        <span class="PulseWorldIcon" id="PulseWorldIcon">🌐</span> Enter PulseWorld
+      </div>
+      <div class="setup" id="setup">
+        <span class="PulseIdentityIcon" id="PulseIdentityIcon">🧑‍🎨</span> PulseIdentity
+      </div>
     </div>
 
     <div id="pbWarmContainer" style="display:none"></div>

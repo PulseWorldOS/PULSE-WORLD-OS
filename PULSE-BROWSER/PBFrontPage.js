@@ -19,7 +19,7 @@ let PulseBrowserSettings = null;
 let PulseSnapshot = false;
 let PulseSnapshotView = null;
 let PulseURL = null;
-const leftpanel = document.getElementById("side-panel left-panel");
+const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 
 const PB_LOG3 = {
@@ -69,46 +69,58 @@ const PB_LOG3 = {
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 
-chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-  const originalTabId = tabs[0].id;
-  chrome.storage.local.set({ originalTabId });
-  pulseRehydrateTabs();
-});
-
-
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
-  if (res.ModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.ModuleFaviconCaches;
+chrome.storage.local.get(["PulseModuleFaviconCaches"], (res) => {
+  if (res.PulseModuleFaviconCaches) {
+    PBFAVICON_CACHE = res.PulseModuleFaviconCaches;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseModuleFaviconCaches: PBFAVICON_CACHE });
 }
 
 function pulseRehydrateTabs() {
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
+    let snapIndex = 1; // 1–5
 
     for (const tab of tabs) {
       if (!tab.url) continue;
+      if (snapIndex > 5) break; // only 5 bubbles
 
       try {
         const urlObj = new URL(tab.url);
         const identity = normalizeIdentity(urlObj.hostname);
-        latestSnapshot(identity, urlObj);
+
+        // ⭐ Skip NEW TAB — do NOT assign a bubble
+        if (identity === "newtab") {
+          rebuilt[identity] = {
+            id: tab.id,
+            realm: identity,
+            snapshot: null
+          };
+          continue; // ⭐ Do NOT increment snapIndex
+        }
+
+        // ⭐ Normal tab → assign bubble
+        latestSnapshot(identity, urlObj, snapIndex);
+
         rebuilt[identity] = {
           id: tab.id,
-          realm: identity
+          realm: identity,
+          snapshot: snapIndex
         };
+
+        snapIndex++;
+
       } catch (e) {
-        // Skip invalid URLs (chrome://, about:, etc.)
+        // Skip invalid URLs
       }
     }
 
@@ -116,6 +128,13 @@ function pulseRehydrateTabs() {
     chrome.storage.local.set({ pulseTabs: rebuilt });
   });
 }
+
+
+chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+  const originalTabId = tabs[0].id;
+  chrome.storage.local.set({ originalTabId });
+  savePulseTabs();
+});
 
 
 // ---------------------------------------------------------------------------
@@ -237,24 +256,8 @@ function collectAndWarmAssetsFront() {
 
 setTimeout(collectAndWarmAssetsFront, 600);
 
-function latestSnapshot(realm, link) {
-  const snapshotKey = `pulse_snapshot_${realm}`;
-  
-  chrome.storage.local.get(snapshotKey, (items) => {
-    const snap = items[snapshotKey];
-    if (snap) renderSnapshot(snap);
-    const bubble = document.querySelector(".PulseBrowser-OS-Snapshot");
-    if (bubble) bubble.classList.add("warm");
-    if (bubble) {
-      bubble.addEventListener("click", (event) => {
-        openNamedTab("PulseMail", link)
-      });
-    }
-  });
-}
-
 function savePulseTabs() {
-  chrome.storage.local.set({ pulseTabs });
+  pulseRehydrateTabs();
 }
 
 // Normalize identity to domain or subdomain level
@@ -268,90 +271,107 @@ function normalizeIdentity(url) {
 }
 
 function openNamedTab(name, url) {
-  // ⭐ Rebuild pulseTabs from actual running tabs
   const identity = normalizeIdentity(url);
   const existingEntry = pulseTabs[identity];
-  
+
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
-  // ⭐ If tab already exists → try PURE SELECT first
+  // ⭐ If tab already exists → PURE SELECT
   if (existingEntry) {
     const tabId = Number(existingEntry.id);
 
-    // ⭐ If ID is corrupted → recreate immediately
     if (!Number.isInteger(tabId)) {
       chrome.tabs.create({ url }, newTab => {
         pulseTabs[identity] = { id: newTab.id, realm: identity };
         savePulseTabs();
       });
+
       PulseSnapshot = true;
       PulseURL = url;
       PulseSnapshotView = new URL(url).hostname;
-      setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
+
+      setTimeout(() => pulseRehydrateTabs(), 2500);
       return;
     }
 
     chrome.tabs.get(tabId, tab => {
-      // ⭐ If get() fails → fallback to update()
       if (chrome.runtime.lastError || !tab) {
         chrome.tabs.update(tabId, { url, active: true }, updated => {
           if (chrome.runtime.lastError || !updated) {
-            // ⭐ update() also failed → recreate tab
             chrome.tabs.create({ url }, newTab => {
               pulseTabs[identity] = { id: newTab.id, realm: identity };
               savePulseTabs();
             });
-            // ⭐ Snapshot logic
+
             PulseSnapshot = true;
             PulseURL = url;
             PulseSnapshotView = new URL(url).hostname;
-            setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
+
+            setTimeout(() => pulseRehydrateTabs(), 2500);
             return;
           }
 
-          // ⭐ update() succeeded → store fresh ID
           pulseTabs[identity] = { id: updated.id, realm: identity };
           savePulseTabs();
         });
-        // ⭐ Snapshot logic
+
         PulseSnapshot = true;
         PulseURL = url;
         PulseSnapshotView = new URL(url).hostname;
-        setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
+
+        setTimeout(() => pulseRehydrateTabs(), 2500);
         return;
       }
 
-      // ⭐ PURE SELECT — NO RELOAD
       chrome.tabs.highlight({
         windowId: tab.windowId,
         tabs: [tab.index]
       });
 
-      // ⭐ Keep registry fresh
       pulseTabs[identity] = { id: tab.id, realm: identity };
       savePulseTabs();
     });
-    // ⭐ Snapshot logic
+
     PulseSnapshot = true;
     PulseURL = url;
     PulseSnapshotView = new URL(url).hostname;
-    setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
+
+    setTimeout(() => pulseRehydrateTabs(), 2500);
     return;
   }
 
-  // ⭐ No existing tab → create a new named tab
+  // ⭐ No existing tab → create new
   chrome.tabs.create({ url }, tab => {
     pulseTabs[identity] = { id: tab.id, realm: identity };
     savePulseTabs();
   });
 
-  // ⭐ Snapshot logic
   PulseSnapshot = true;
   PulseURL = url;
   PulseSnapshotView = new URL(url).hostname;
-  setTimeout(() => latestSnapshot(PulseSnapshotView, PulseURL), 2500);
+
+  setTimeout(() => pulseRehydrateTabs(), 2500);
 }
 
+
+function latestSnapshot(realm, link, snapIndex) {
+  const snapshotKey = `pulse_snapshot_${realm}`;
+
+  chrome.storage.local.get(snapshotKey, (items) => {
+    const snap = items[snapshotKey];
+    if (snap) renderSnapshot(snap, snapIndex);
+
+    // Build the correct bubble selector
+    const bubbleSelector = `.PulseBrowser-OS-Snapshot${snapIndex}`;
+    const bubble = document.querySelector(bubbleSelector);
+
+    if (bubble) {
+      bubble.addEventListener("click", () => {
+        openNamedTab(realm, link);
+      });
+    }
+  });
+}
 
 // Remove dead tabs from registry
 chrome.tabs.onRemoved.addListener((tabId) => {
@@ -360,23 +380,45 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
     if (entry.id === tabId) {
       const realm = entry.realm;
+      const snapIndex = entry.snapshot;   // ⭐ Get the correct bubble index
       const snapshotKey = `pulse_snapshot_${realm}`;
 
+      // Remove stored snapshot
       chrome.storage.local.remove(snapshotKey);
 
+      // Reset active snapshot view if needed
       if (PulseSnapshotView === realm) {
         PulseSnapshot = false;
         PulseSnapshotView = null;
         PulseURL = null;
       }
 
+      // Remove bubble DOM
+      renderSnapshot(null, snapIndex);     // ⭐ Remove correct bubble
+
+      // Remove from registry
       delete pulseTabs[identity];
       savePulseTabs();
     }
   }
-  pulseRehydrateTabs();
-  renderSnapshot(null);
+  // Rehydrate remaining tabs
+  savePulseTabs();
 });
+
+function getNextSnapshotIndex() {
+  const used = new Set();
+
+  for (const identity in pulseTabs) {
+    const entry = pulseTabs[identity];
+    if (entry.snapshot) used.add(entry.snapshot);
+  }
+
+  for (let i = 1; i <= 5; i++) {
+    if (!used.has(i)) return i;
+  }
+
+  return 1; // fallback
+}
 
 
 
@@ -574,7 +616,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
   }
 }
 
-
 async function getFavicon(url, flags = {}) {
   let u;
 
@@ -586,29 +627,25 @@ async function getFavicon(url, flags = {}) {
 
   let host = u.hostname;
 
-  // ⭐ If the URL explicitly contains "://www.", preserve www
-  if (url.includes("www.")) {
-    if (!host.startsWith("www.")) {
-      host = "www." + host;
-    }
+  // ⭐ Preserve www if explicitly present
+  if (url.includes("www.") && !host.startsWith("www.")) {
+    host = "www." + host;
   }
 
-  // ⭐ Build favicon URL using hostname (preserves www)
+  // ⭐ Default favicon URL
   let iconURL = `https://${host}/favicon.ico`;
 
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
-  if (parts.length > 2) {
-    if (parts[0] !== "www") {
-      const root = parts.slice(parts.length - 2).join(".");
-      iconURL = `https://${root}/favicon.ico`;
-    }
+  if (parts.length > 2 && parts[0] !== "www") {
+    const root = parts.slice(parts.length - 2).join(".");
+    iconURL = `https://${root}/favicon.ico`;
   }
-  
+
   let icon = iconURL;
-  
+
+  // ⭐ Special external cases
   try {
-    // Google (main domain)
     if (host.includes("google.com")) {
       iconURL = "https://www.google.com/favicon.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -617,7 +654,6 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // Gmail (mail.google.com)
     if (host.includes("mail.google.com") || host.includes("gmail.com")) {
       iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -626,7 +662,6 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // Chase Bank
     if (host.includes("chase.com")) {
       iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -635,7 +670,6 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // Special cases
     if (host.includes("office.com")) {
       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -668,13 +702,13 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    } catch {
-      PBFAVICON_CACHE[host] = iconURL;
-      saveCache();
-      return iconURL;
-    }
+  } catch {
+    PBFAVICON_CACHE[host] = iconURL;
+    saveCache();
+    return iconURL;
+  }
 
-  // ⭐ If cached → return instantly
+  // ⭐ Cached → return instantly
   if (PBFAVICON_CACHE[host]) {
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
@@ -683,41 +717,33 @@ async function getFavicon(url, flags = {}) {
     return PBFAVICON_CACHE[host];
   }
 
+  // ⭐ PulseWorld realm detection (automatic)
+  const PW_REALMS = {
+    "pulseworld.net": "PWFavIcon.ico",
+    "pulseworld.biz": "PWBFavIcon.ico",
+    "pulseworld.me": "PWIFavIcon.ico",
+    "pulseworld.money": "PWMFavIcon.ico",
+    "binaryos.net": "BOFavIcon.ico",
+    "booleanlogic.net": "BLFavIcon.ico",
+    "gpuprocessing.net": "GPFavIcon.ico",
+    "serviceworker.net": "SWFavIcon.ico",
+    "orbitalmap.net": "OMFavIcon.ico"
+  };
 
-  const PB_HOMES = [
-    "pulseworld.me",
-    "pulseworld.money",
-    "pulseworld.biz",
-    "binaryos.net",
-    "booleanlogic.net",
-    "gpuprocessing.net",
-    "serviceworker.net",
-    "orbitalmap.net",
-    "pulseworld.net"
-  ];
+  const realmKey = Object.keys(PW_REALMS).find(domain => host.endsWith(domain));
 
   try {
-    // PulseWorld module-aware switching
-    const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
-
-    if (isPulseWorld) {
-      if (flags.isSW) icon = `${u.origin}/SWFavIcon.ico`;
-      else if (flags.isBinaryOS) icon = `${u.origin}/BOFavIcon.ico`;
-      else if (flags.isGPU) icon = `${u.origin}/GPFavIcon.ico`;
-      else if (flags.isLogic) icon = `${u.origin}/BLFavIcon.ico`;
-      else if (flags.isOrb) icon = `${u.origin}/OMFavIcon.ico`;
-      else if (flags.isBiz) icon = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
-      else icon = `${u.origin}/PWFavIcon.ico`;
-      icon = await fetchAndStoreIcon(host, icon);
+    if (realmKey) {
+      iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
+      icon = await fetchAndStoreIcon(host, iconURL);
 
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
-    icon = await fetchAndStoreIcon(host, icon);
+    // ⭐ Normal external favicon fetch
+    icon = await fetchAndStoreIcon(host, iconURL);
     PBFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
@@ -728,6 +754,7 @@ async function getFavicon(url, flags = {}) {
     return iconURL;
   }
 }
+
 
 
 setTimeout(updateModuleIcons, 150);
@@ -860,6 +887,31 @@ async function updateModuleIcons() {
     engineURL = buildSearchURL(settings.externalSearchLink);
   }
 
+  const PulseWorldIcon = document.getElementById("PulseWorldIcon");
+  const PulseWorldFav = await getFavicon("https://www.pulseworld.net");
+  if (PulseWorldFav) {
+    PulseWorldIcon.innerText = "";
+    PulseWorldIcon.style.backgroundImage = `url(${PulseWorldFav})`;
+    PulseWorldIcon.style.backgroundSize = "contain";
+    PulseWorldIcon.style.backgroundRepeat = "no-repeat";
+  }
+  const PulseBusinessIcon = document.getElementById("PulseBusinessIcon");
+  const PulseBusinessFav = await getFavicon("https://www.pulseworld.biz");
+  if (PulseBusinessFav) {
+    PulseBusinessIcon.innerText = "";
+    PulseBusinessIcon.style.backgroundImage = `url(${PulseBusinessFav})`;
+    PulseBusinessIcon.style.backgroundSize = "contain";
+    PulseBusinessIcon.style.backgroundRepeat = "no-repeat";
+  }
+  const PulseIdentityIcon = document.getElementById("PulseIdentityIcon");
+  const PulseIdentityFav = await getFavicon("https://www.pulseworld.me");
+  if (PulseIdentityFav) {
+    PulseIdentityIcon.innerText = "";
+    PulseIdentityIcon.style.backgroundImage = `url(${PulseIdentityFav})`;
+    PulseIdentityIcon.style.backgroundSize = "contain";
+    PulseIdentityIcon.style.backgroundRepeat = "no-repeat";
+  }
+  
   // EMAIL MODULE
   const emailIcon = document.getElementById("moduleEmailIcon");
   if (settings.emailMode === "internal") {
@@ -874,7 +926,7 @@ async function updateModuleIcons() {
       emailIcon.style.backgroundRepeat = "no-repeat";
     }
   }
-
+  
   // BANK MODULE
   const bankIcon = document.getElementById("moduleBankIcon");
   if (settings.bankMode === "internal") {
@@ -2037,7 +2089,7 @@ setInterval(() => {
 
   setInterval(() => {
     swap();
-    if (PulseSnapshot) latestSnapshot(PulseSnapshotView, PulseURL);
+    if (PulseSnapshot) savePulseTabs();
   }, 15000);
       
   const ENTERPRISE_DOMAINS = [
@@ -2081,7 +2133,7 @@ setInterval(() => {
     const settings = await pbLoadExtensionSettings();
     PulseRealmSettings = settings;
     PulseBrowserSettings = await getSettings();
-    if (PulseSnapshot) latestSnapshot(PulseSnapshotView, PulseURL);
+    if (PulseSnapshot) savePulseTabs();
 
     const PB_HOMES = [
       "https://www.pulseworld.me",
@@ -2149,6 +2201,15 @@ setInterval(() => {
       type: "PBACC_WARMPATH_EXTERNAL",
       count
     });
+
+    document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
+      bubble.classList.add('electrify');
+
+      setTimeout(() => {
+        bubble.classList.remove('electrify');
+      }, 3000);
+    });
+
   }
 
   document.addEventListener("visibilitychange", () => {
@@ -2202,7 +2263,7 @@ function documentTitle() {
   return document.title;
 }
 
-// function renderSnapshot(snapshot) {
+// function renderHTMLSnapshot(snapshot) {
 //     let div = document.getElementById("PulseBrowser-OS-Snapshot");
 //     if (!div) {
 //         div = document.createElement("div");
@@ -2247,30 +2308,36 @@ function documentTitle() {
 //     }
 // }
 
-function renderSnapshot(snapshot) {
-    let div = document.getElementById("PulseBrowser-OS-Snapshot");
+function renderSnapshot(snapshot, snapIndex) {
+  const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+  // Build the correct bubble ID and class
+  if (snapshot) {
     if (!div) {
-        div = document.createElement("div");
-        div.id = "PulseBrowser-OS-Snapshot";
-        div.className = "PulseBrowser-OS-Snapshot";
+      div = document.createElement("div");
+      div.id = bubbleId;
+      div.className = bubbleId;
     }
+    // ---------------------------------------------
+    // ⭐ Inject ONLY the favicon (big, centered)
+    // ---------------------------------------------
+    div.innerHTML = `
+      <div class="Snapshot-Viewport">
+        <img class="Snapshot-Favicon" src="${snapshot.favicon}" alt="favicon">
+      </div>
+    `;
 
-    if (snapshot) {
+    document.body.appendChild(div);
 
-        // ---------------------------------------------
-        // ⭐ Inject ONLY the favicon (big, centered)
-        // ---------------------------------------------
-        div.innerHTML = `
-            <div class="Snapshot-Viewport">
-                <img class="Snapshot-Favicon" src="${snapshot.favicon}" alt="favicon">
-            </div>
-        `;
+    // Chamber awakens
+    toppanel.style.backdropFilter = "blur(8px)";
+    toppanel.style.backgroundImage = "none";
 
-        document.body.appendChild(div);
-        leftpanel.style.top = "300px";
-
-    } else {
-        if (div) div.remove();
-        leftpanel.style.top = "0";
-    }
+  } else {
+    // Chamber collapses
+    if (div) div.remove();
+    toppanel.style.backdropFilter = "blur(24px)";
+    toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
+  }
 }
+

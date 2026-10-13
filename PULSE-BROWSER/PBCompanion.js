@@ -13,15 +13,15 @@ let PulseBrowserSettings = null;
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["ModuleFaviconCaches"], (res) => {
-  if (res.ModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.ModuleFaviconCaches;
+chrome.storage.local.get(["PulseModuleFaviconCaches"], (res) => {
+  if (res.PulseModuleFaviconCaches) {
+    PBFAVICON_CACHE = res.PulseModuleFaviconCaches;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ ModuleFaviconCaches: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseModuleFaviconCaches: PBFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -346,29 +346,25 @@ async function getFavicon(url, flags = {}) {
 
   let host = u.hostname;
 
-  // ⭐ If the URL explicitly contains "://www.", preserve www
-  if (url.includes("www.")) {
-    if (!host.startsWith("www.")) {
-      host = "www." + host;
-    }
+  // ⭐ Preserve www if explicitly present
+  if (url.includes("www.") && !host.startsWith("www.")) {
+    host = "www." + host;
   }
 
-  // ⭐ Build favicon URL using hostname (preserves www)
+  // ⭐ Default favicon URL
   let iconURL = `https://${host}/favicon.ico`;
 
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
-  if (parts.length > 2) {
-    if (parts[0] !== "www") {
-      const root = parts.slice(parts.length - 2).join(".");
-      iconURL = `https://${root}/favicon.ico`;
-    }
+  if (parts.length > 2 && parts[0] !== "www") {
+    const root = parts.slice(parts.length - 2).join(".");
+    iconURL = `https://${root}/favicon.ico`;
   }
-  
+
   let icon = iconURL;
-  
+
+  // ⭐ Special external cases
   try {
-    // Google (main domain)
     if (host.includes("google.com")) {
       iconURL = "https://www.google.com/favicon.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -377,7 +373,6 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // Gmail (mail.google.com)
     if (host.includes("mail.google.com") || host.includes("gmail.com")) {
       iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -386,7 +381,6 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // Chase Bank
     if (host.includes("chase.com")) {
       iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -395,7 +389,6 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    // Special cases
     if (host.includes("office.com")) {
       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
@@ -428,13 +421,13 @@ async function getFavicon(url, flags = {}) {
       return icon;
     }
 
-    } catch {
-      PBFAVICON_CACHE[host] = iconURL;
-      saveCache();
-      return iconURL;
-    }
+  } catch {
+    PBFAVICON_CACHE[host] = iconURL;
+    saveCache();
+    return iconURL;
+  }
 
-  // ⭐ If cached → return instantly
+  // ⭐ Cached → return instantly
   if (PBFAVICON_CACHE[host]) {
     console.log(
       "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
@@ -443,41 +436,33 @@ async function getFavicon(url, flags = {}) {
     return PBFAVICON_CACHE[host];
   }
 
+  // ⭐ PulseWorld realm detection (automatic)
+  const PW_REALMS = {
+    "pulseworld.net": "PWFavIcon.ico",
+    "pulseworld.biz": "PWBFavIcon.ico",
+    "pulseworld.me": "PWIFavIcon.ico",
+    "pulseworld.money": "PWMFavIcon.ico",
+    "binaryos.net": "BOFavIcon.ico",
+    "booleanlogic.net": "BLFavIcon.ico",
+    "gpuprocessing.net": "GPFavIcon.ico",
+    "serviceworker.net": "SWFavIcon.ico",
+    "orbitalmap.net": "OMFavIcon.ico"
+  };
 
-  const PB_HOMES = [
-    "pulseworld.me",
-    "pulseworld.money",
-    "pulseworld.biz",
-    "binaryos.net",
-    "booleanlogic.net",
-    "gpuprocessing.net",
-    "serviceworker.net",
-    "orbitalmap.net",
-    "pulseworld.net"
-  ];
+  const realmKey = Object.keys(PW_REALMS).find(domain => host.endsWith(domain));
 
   try {
-    // PulseWorld module-aware switching
-    const isPulseWorld = PB_HOMES.some(domain => host.endsWith(domain));
-
-    if (isPulseWorld) {
-      if (flags.isSW) icon = `${u.origin}/SWFavIcon.ico`;
-      else if (flags.isBinaryOS) icon = `${u.origin}/BOFavIcon.ico`;
-      else if (flags.isGPU) icon = `${u.origin}/GPFavIcon.ico`;
-      else if (flags.isLogic) icon = `${u.origin}/BLFavIcon.ico`;
-      else if (flags.isOrb) icon = `${u.origin}/OMFavIcon.ico`;
-      else if (flags.isBiz) icon = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isSettings) icon = `${u.origin}/PWBFavIcon.ico`;
-      else if (flags.isMoney) icon = `${u.origin}/PWMFavIcon.ico`;
-      else icon = `${u.origin}/PWFavIcon.ico`;
-      icon = await fetchAndStoreIcon(host, icon);
+    if (realmKey) {
+      iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
+      icon = await fetchAndStoreIcon(host, iconURL);
 
       PBFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
-    icon = await fetchAndStoreIcon(host, icon);
+    // ⭐ Normal external favicon fetch
+    icon = await fetchAndStoreIcon(host, iconURL);
     PBFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
@@ -488,7 +473,6 @@ async function getFavicon(url, flags = {}) {
     return iconURL;
   }
 }
-
 
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
