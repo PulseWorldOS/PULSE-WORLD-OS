@@ -191,7 +191,7 @@ function warmCSSImages() {
 
 // Intelligent throttle window
 let lastWarm = 0;
-const WARM_COOLDOWN = 500; // ms
+const WARM_COOLDOWN = 1000; // ms
 
 function startWarmPath() {
   if (!document.body) {
