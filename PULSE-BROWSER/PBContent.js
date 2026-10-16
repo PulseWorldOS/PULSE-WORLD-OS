@@ -887,20 +887,31 @@ function AttemptPulseSteam(videoElement) {
 function getPrimaryVideo() {
   const videos = [...document.querySelectorAll("video")];
 
-  // Filter to only videos that are actually playing or loaded
+  // Filter to only videos that are actually loaded/playing
   const candidates = videos.filter(v =>
     v.videoWidth > 0 &&
     v.videoHeight > 0 &&
     v.readyState >= 2
   );
 
-  // Pick the largest video (usually the main one)
-  candidates.sort((a, b) =>
-    (b.videoWidth * b.videoHeight) - (a.videoWidth * a.videoHeight)
-  );
+  // If no real videos, fallback to first <video>
+  if (candidates.length === 0) {
+    return videos[0] || null;
+  }
 
-  return candidates[0] || videos[videos.length - 2] || null;
+  // If exactly one real video → use it
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+
+  // If multiple real videos → use the second one
+  if (candidates.length >= 2) {
+    return candidates[candidates.length - 2];
+  }
+
+  return null;
 }
+
 
 
 function fallbackPIP() {
@@ -981,17 +992,14 @@ async function saveVideoToMemory(videoElement) {
   }
 }
 
-
-
-document.addEventListener("click", e => {
-  const vid = e.target.closest("video");
-  if (vid) AttemptPulseSteam(vid);
-  setTimeout(() => {
-    const realStory = getPrimaryVideo();
-    if (realStory) AttemptPulseSteam(realStory);
-  }, 2500);
-});
-
+// document.addEventListener("click", e => {
+//   const vid = e.target.closest("video");
+//   const realStory = getPrimaryVideo();
+//   setTimeout(() => {
+//     if (vid) AttemptPulseSteam(vid);
+//     if (realStory && !vid) AttemptPulseSteam(realStory);
+//   }, 2500);
+// });
 
 function injectPulseFlag() {
   // const STREAMING_SITES = [
@@ -1025,11 +1033,19 @@ function injectPulseFlag() {
   const realStory = getPrimaryVideo();
 
   if (!realStory) { 
-    flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
+    flag.textContent = "PulseBrowser OS (PIP Hidden)";
     flag.style.background = "rosybrown";
+    setTimeout(() => {
+      flag.textContent = "PulseBrowser OS";
+      flag.style.background = "rosybrown";
+    }, 4000);
   } else if (realStory.disablePictureInPicture) {
     flag.textContent = "PulseBrowser OS (PIP Disabled)";
     flag.style.background = "rosybrown";
+    setTimeout(() => {
+      flag.textContent = "PulseBrowser OS";
+      flag.style.background = "rosybrown";
+    }, 4000);
   }
 
   flag.onclick = () => {    
@@ -1051,11 +1067,11 @@ function injectPulseFlag() {
       (async () => {
         try {
           if (!realStory) { 
-            flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
+            flag.textContent = "PulseBrowser OS (PIP Hidden)";
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00C8FF";
+              flag.style.background = "rosybrown";
             }, 4000);
             return;
           }
@@ -1065,7 +1081,7 @@ function injectPulseFlag() {
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00C8FF";
+              flag.style.background = "rosybrown";
             }, 4000);
             return;
           }

@@ -84,7 +84,62 @@ function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
 }
 
-function pulseRehydrateTabs() {
+// Request cache list from background service worker
+async function pbRequestCacheList2() {
+  PB_LOG.info("Requesting cache list from PBCompanion…");
+
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
+      if (!response || !response.ok) {
+        PB_LOG.info("Cache list unavailable or error", response);
+        resolve(null);
+        return;
+      }
+
+      PB_LOG.load("Cache list received", response.caches);
+      resolve(response.caches);
+    });
+  });
+}
+
+async function pbRenderCacheList2() {
+  const listEl = document.getElementById("cacheList");
+  const result = await pbRequestCacheList2();
+  if (!listEl) return;
+
+  if (!result || !result.caches) {
+    listEl.innerHTML = "<li>Cache API unavailable in extension pages.</li>";
+    return;
+  }
+
+  const caches = result.caches;
+
+  if (caches.length === 0) {
+    listEl.innerHTML = "<li>No cached files detected.</li>";
+    return;
+  }
+
+  listEl.innerHTML = "";
+
+  caches.forEach(cache => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <strong>${cache.name}</strong><br>
+      Entries: ${cache.entries}<br>
+      Weight: ${cache.weightClass}<br>
+      PulseScore: ${cache.pulseScore}<br>
+      First: ${cache.firstEntry || "none"}<br>
+      Last: ${cache.lastEntry || "none"}
+    `;
+
+    listEl.appendChild(li);
+  });
+
+  PB_LOG.info("Cache list rendered", caches);
+}
+
+async function pulseRehydrateTabs() {
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     let snapIndex = 1; // 1–5
@@ -126,14 +181,7 @@ function pulseRehydrateTabs() {
     pulseTabs = rebuilt;
     chrome.storage.local.set({ pulseTabs: rebuilt });
   });
-  chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
-    if (!response || !response.ok) {
-      PB_LOG3.info("Cache list unavailable or error", response);
-      return;
-    }
-
-    PB_LOG3.load("Cache list received", response.caches);
-  });
+  await pbRenderCacheList2();
 }
 
 
@@ -154,192 +202,31 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 function getPrimaryVideo() {
   const videos = [...document.querySelectorAll("video")];
 
-  // Filter to only videos that are actually playing or loaded
+  // Filter to only videos that are actually loaded/playing
   const candidates = videos.filter(v =>
     v.videoWidth > 0 &&
     v.videoHeight > 0 &&
     v.readyState >= 2
   );
 
-  // Pick the largest video (usually the main one)
-  candidates.sort((a, b) =>
-    (b.videoWidth * b.videoHeight) - (a.videoWidth * a.videoHeight)
-  );
-
-  return candidates[0] || videos[0] || null;
-}
-
-function injectPulseFlag() {
-  // const STREAMING_SITES = [
-  //   "netflix.com","hulu.com","disneyplus.com","primevideo.com","sling.com", "facebook.com",
-  //   "amazon.com","hbomax.com","max.com","paramountplus.com",
-  //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
-  // ];
-
-  const flag = document.createElement("div");
-  flag.id = "pulseworld-flag";
-  flag.style.cssText = `
-    position: fixed;
-    bottom: 10px;
-    left: 30px;
-    background: #00FF9C;
-    color: black;
-    font-weight: 600;
-    padding: 6px 10px;
-    font-size: 12px;
-    font-family: monospace;
-    border-radius: 4px;
-    z-index: 999999999;
-    opacity: 0.85;
-  `;
-  flag.textContent = "PulseBrowser OS";
-  
-  // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-  //   flag.textContent = "PulseBrowser OS";
-  //   flag.style.background = "#00C8FF";
-  // }
-  const realStory = getPrimaryVideo();
-
-  if (!realStory) { 
-    flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
-    flag.style.background = "rosybrown";
-  } else if (realStory.disablePictureInPicture) {
-    flag.textContent = "PulseBrowser OS (PIP Disabled)";
-    flag.style.background = "rosybrown";
+  // If no real videos, fallback to first <video>
+  if (candidates.length === 0) {
+    return videos[0] || null;
   }
 
-  flag.onclick = () => {    
-    flag.textContent = "PulseBrowser OS";
-    flag.style.background = "#00FF9C";
+  // If exactly one real video → use it
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
 
-    // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
+  // If multiple real videos → use the second one
+  if (candidates.length >= 2) {
+    return candidates[candidates.length - 2];
+  }
 
-      (async () => {
-        try {
-          if (!realStory) { 
-            flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
-            flag.style.background = "rosybrown";
-            setTimeout(() => {
-              flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00C8FF";
-            }, 4000);
-            return;
-          }
-
-          if (realStory.disablePictureInPicture) {
-            flag.textContent = "PulseBrowser OS (PIP Disabled)";
-            flag.style.background = "rosybrown";
-            setTimeout(() => {
-              flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00C8FF";
-            }, 4000);
-            return;
-          }
-          // ⭐ Toggle PIP
-          if (document.pictureInPictureElement) {
-            await document.exitPictureInPicture();
-            flag.textContent = "PulseBrowser OS";
-            flag.style.background = "#00C8FF";
-          } else {
-            showPulseStreamPrompt(realStory);
-          }
-
-        } catch (e) {
-          console.warn("PulseStream Error:", e);
-        }
-      })();
-  };
-
-  document.body.appendChild(flag);
+  return null;
 }
 
-function showPulseStreamPrompt(video) {
-  // Prevent duplicates
-  if (document.getElementById("pulseStreamPrompt")) return;
-
-  const flag = document.getElementById("pulseworld-flag");
-  
-  const box = document.createElement("div");
-  box.id = "pulseStreamPrompt";
-  box.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    left: 290px;
-    width: 260px;
-    background: rgba(0,0,0,0.88);
-    color: #00FF9C;
-    padding: 16px 20px;
-    border-radius: 16px;
-    border: 1px solid #0FF;
-    font-family: monospace;
-    font-size: 12px;
-    z-index: 999999999;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 0 14px #0FF;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.35s ease-out;
-  `;
-
-  box.innerHTML = `
-    <div style="font-weight:600; margin-bottom:6px; color:#0FF;">
-      🎥 PulseStream
-    </div>
-    <div style="margin-bottom:12px;">
-      Watch while you browse?
-    </div>
-
-    <button id="pipEnableBtn" style="
-      background:#0FF;
-      color:#000;
-      border:none;
-      padding:6px 12px;
-      border-radius:6px;
-      font-weight:600;
-      cursor:pointer;
-      margin-right:10px;
-    ">Enable PIP</button>
-
-    <button id="pipDisableBtn" style="
-      background:#222;
-      color:#0FF;
-      border:1px solid #0FF;
-      padding:6px 12px;
-      border-radius:6px;
-      cursor:pointer;
-    ">Cancel</button>
-  `;
-
-  document.body.appendChild(box);
-
-  // Animate in
-  requestAnimationFrame(() => {
-    box.style.opacity = "1";
-    box.style.transform = "translateY(0)";
-  });
-
-  // Auto-dismiss after 12 seconds
-  const autoClose = setTimeout(() => {
-    if (box) box.remove();
-  }, 12000);
-
-  // Enable PIP
-  document.getElementById("pipEnableBtn").onclick = () => {
-    flag.textContent = "PulseBrowser OS => [PIP MODE]";
-    flag.style.background = "#00FF9C";
-    clearTimeout(autoClose);
-    AttemptPulseSteam(video);
-    box.remove();
-  };
-
-  // Disable future prompts
-  document.getElementById("pipDisableBtn").onclick = () => {
-    flag.textContent = "PulseBrowser OS (PIP Available)";
-    flag.style.background = "#00FF9C";
-    clearTimeout(autoClose);
-    box.remove();
-  };
-}
 
 function AttemptPulseSteam(videoElement) {
   try {
@@ -360,7 +247,6 @@ function AttemptPulseSteam(videoElement) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", injectPulseFlag);
 
 // ============================================================================
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
@@ -699,7 +585,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   }
   savePulseTabs();
   // injectPulseScreenFromMemory();
-  // location.reload();
+  location.reload();
   // ⭐ REHYDRATE WITH CLEAN INDICES
   pulseRehydrateTabs();
 });
@@ -2360,6 +2246,7 @@ window.addEventListener("blur", () => {
   userInteracted = true;
   document.getElementById("subtitle").style.color = "yellow"
   document.getElementById("subsubtitle").style.color = "yellow"
+  pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
 }, { once: true });
 

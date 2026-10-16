@@ -210,33 +210,43 @@ async function pbRequestCacheList() {
   });
 }
 
-// Render cache list into PBSettings.html
 async function pbRenderCacheList() {
   const listEl = document.getElementById("cacheList");
+  const result = await pbRequestCacheList();
   if (!listEl) return;
 
-  const cacheNames = await pbRequestCacheList();
-
-  if (!cacheNames) {
+  if (!result || !result.caches) {
     listEl.innerHTML = "<li>Cache API unavailable in extension pages.</li>";
     return;
   }
 
-  if (cacheNames.length === 0) {
+  const caches = result.caches;
+
+  if (caches.length === 0) {
     listEl.innerHTML = "<li>No cached files detected.</li>";
     return;
   }
 
   listEl.innerHTML = "";
 
-  cacheNames.forEach(name => {
+  caches.forEach(cache => {
     const li = document.createElement("li");
-    li.textContent = `Cache: ${name}`;
+
+    li.innerHTML = `
+      <strong>${cache.name}</strong><br>
+      Entries: ${cache.entries}<br>
+      Weight: ${cache.weightClass}<br>
+      PulseScore: ${cache.pulseScore}<br>
+      First: ${cache.firstEntry || "none"}<br>
+      Last: ${cache.lastEntry || "none"}
+    `;
+
     listEl.appendChild(li);
   });
 
-  PB_LOG.info("Cache list rendered", cacheNames);
+  PB_LOG.info("Cache list rendered", caches);
 }
+
 
 async function updateStorageStats() {
   const el = document.getElementById("storageStats");
