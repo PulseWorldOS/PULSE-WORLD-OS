@@ -884,6 +884,25 @@ function AttemptPulseSteam(videoElement) {
   }
 }
 
+function getPrimaryVideo() {
+  const videos = [...document.querySelectorAll("video")];
+
+  // Filter to only videos that are actually playing or loaded
+  const candidates = videos.filter(v =>
+    v.videoWidth > 0 &&
+    v.videoHeight > 0 &&
+    v.readyState >= 2
+  );
+
+  // Pick the largest video (usually the main one)
+  candidates.sort((a, b) =>
+    (b.videoWidth * b.videoHeight) - (a.videoWidth * a.videoHeight)
+  );
+
+  return candidates[0] || videos[videos.length - 2] || null;
+}
+
+
 function fallbackPIP() {
   getLastMemoryVideo(memVideo => {
     if (memVideo) {
@@ -892,9 +911,7 @@ function fallbackPIP() {
       return;
     }
 
-    const video = document.querySelector("video");
-    const stories = [...document.querySelectorAll("video")];
-    const realStory = stories[stories.length - 2] ?? video;
+    const realStory = getPrimaryVideo();
 
     if (realStory) {
       realStory.requestPictureInPicture()
@@ -902,10 +919,10 @@ function fallbackPIP() {
         .catch(err => console.warn("Fresh PIP Error:", err));
     }
 
-    console.log(stories);
-    console.log(realStory);
+    console.log("Primary video:", realStory);
   });
 }
+
 
 
 function getLastMemoryVideo(callback) {
@@ -939,10 +956,16 @@ async function saveVideoToMemory(videoElement) {
   try {
     const response = await fetch(videoElement.src);
     const blob = await response.blob();
+
+    const width = videoElement.videoWidth;
+    const height = videoElement.videoHeight;
+
     const blobUrl = URL.createObjectURL(blob);
 
     const entry = {
       blobUrl,
+      width,
+      height,
       currentTime: videoElement.currentTime || 0,
       timestamp: Date.now()
     };
@@ -959,13 +982,13 @@ async function saveVideoToMemory(videoElement) {
 }
 
 
+
 document.addEventListener("click", e => {
   const vid = e.target.closest("video");
-  const stories = [...document.querySelectorAll("video")];
-  const realStory = stories[stories.length - 2] ?? vid;
+  if (vid) AttemptPulseSteam(vid);
   setTimeout(() => {
-    if (vid) AttemptPulseSteam(vid);
-    if (realStory && !vid) AttemptPulseSteam(realStory);
+    const realStory = getPrimaryVideo();
+    if (realStory) AttemptPulseSteam(realStory);
   }, 2500);
 });
 
@@ -999,11 +1022,7 @@ function injectPulseFlag() {
   //   flag.textContent = "PulseBrowser OS";
   //   flag.style.background = "#00C8FF";
   // }
-  const video = document.querySelector("video");
-  const stories = [...document.querySelectorAll("video")];
-  const realStory = stories[stories.length - 2] ?? video;
-  console.log(stories);
-  console.log(realStory);
+  const realStory = getPrimaryVideo();
 
   if (!realStory) { 
     flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
