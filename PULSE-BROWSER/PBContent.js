@@ -1016,7 +1016,7 @@ function injectPulseFlag() {
           console.log(realStory);
 
           if (!realStory) { 
-            flag.textContent = "PulseBrowser OS (PIP No Video Yet)";
+            flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
