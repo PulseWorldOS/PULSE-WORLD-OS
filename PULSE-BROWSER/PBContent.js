@@ -268,28 +268,46 @@ function warmAllImages() {
   }
 })();
 
+// ---------------------------------------------------------------------------
+// 10. BRANDING FLAG
+// ---------------------------------------------------------------------------
+(function safeInjectPulseFlag() {
+  if (
+      location.protocol === "chrome:" ||
+      location.href.startsWith("chrome://") ||
+      location.protocol === "chrome-extension:"
+    ) {
+      return;
+    }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectPulseFlag);
+  } else {
+    injectPulseFlag();
+  }
+})();
+
 async function injectHUD() {
-  const STREAMING_SITES = [
-    "netflix.com","hulu.com","disneyplus.com","primevideo.com",
-    "amazon.com","hbomax.com","max.com","paramountplus.com",
-    "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
-  ];
+  // const STREAMING_SITES = [
+  //   "netflix.com","hulu.com","disneyplus.com","primevideo.com",
+  //   "amazon.com","hbomax.com","max.com","paramountplus.com",
+  //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
+  // ];
 
   if (document.getElementById("pulsebrowser-dev-overlay")) return;
   if (!document.body) return setTimeout(injectHUD, 50);
 
-  if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
+  // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
-    const flag = document.getElementById("pulseworld-flag");
-    if (flag) {
-      flag.textContent = "PulseBrowser OS (PIP Available)";
-      setTimeout(() => {
-        flag.textContent = "PulseBrowser OS";
-        flag.style.background = "#00C8FF";
-      }, 4000);
-    }
-  }
-
+  //   const flag = document.getElementById("pulseworld-flag");
+  //   if (flag) {
+  //     flag.textContent = "PulseBrowser OS (PIP Available)";
+  //     setTimeout(() => {
+  //       flag.textContent = "PulseBrowser OS";
+  //       flag.style.background = "#00C8FF";
+  //     }, 4000);
+  //   }
+  // }
 
   const wrap = document.createElement("div");
   wrap.id = "pulsebrowser-dev-overlay";
@@ -845,24 +863,6 @@ document.addEventListener("PulseDocumentChanged", (ev) => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// 10. BRANDING FLAG
-// ---------------------------------------------------------------------------
-(function safeInjectPulseFlag() {
-  if (
-      location.protocol === "chrome:" ||
-      location.href.startsWith("chrome://") ||
-      location.protocol === "chrome-extension:"
-    ) {
-      return;
-    }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", injectPulseFlag);
-  } else {
-    injectPulseFlag();
-  }
-})();
 
 function AttemptPulseSteam(videoElement) {
   try {
@@ -994,11 +994,11 @@ function injectPulseFlag() {
   const realStory = stories[stories.length - 2] ?? video;
   console.log(stories);
   console.log(realStory);
-  
+
   if (!realStory) { 
     flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
     flag.style.background = "rosybrown";
-  } else {
+  } else if (realStory.disablePictureInPicture) {
     flag.textContent = "PulseBrowser OS (PIP Disabled)";
     flag.style.background = "rosybrown";
   }

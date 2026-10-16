@@ -245,7 +245,7 @@ async function gpuWarmExtra() {
 }
 
 
-setTimeout(fallbackPIP, 300);
+setTimeout(fallbackPIP, 100);
 setTimeout(gpuWarmExtra, 900);
 
 // ============================================================================
@@ -477,7 +477,7 @@ async function renderSnapshot(snapshot, snapIndex) {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   let removedSnapshotIndex = null;
-
+  
   // Find and remove the entry
   for (const identity in pulseTabs) {
     const entry = pulseTabs[identity];
@@ -508,10 +508,10 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     entry.snapshot = newIndex;      // rewrite snapshot index
     newIndex++;
   }
-
   savePulseTabs();
+  fallbackPIP();
   location.reload();
-
+  fallbackPIP();
   // ⭐ REHYDRATE WITH CLEAN INDICES
   pulseRehydrateTabs();
 });
