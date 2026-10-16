@@ -67,19 +67,29 @@ const PBQuantumPrefetch = {
     const href = link[0];
     const now = Date.now();
 
+    // Only prefetch if same domain
+    try {
+      const linkURL = new URL(href);
+      if (linkURL.hostname !== location.hostname) {
+        return; // cross-domain → skip
+      }
+    } catch {
+      return; // invalid URL → skip
+    }
+
     const lastTime = this.linkCooldowns.get(href) || 0;
 
-    // If SAME link is still cooling down → skip
+    // Cooldown for THIS link only
     if (now - lastTime < this.cooldownMs) {
       return;
     }
 
-    // Update cooldown timestamp for THIS link only
     this.linkCooldowns.set(href, now);
 
-    // Perform the prefetch
+    // Safe prefetch
     letsgo(link);
   }
+
 };
 
 
@@ -320,7 +330,6 @@ async function injectHUD() {
 }
 
 function DomScanPreview() {
-  PulseBrowserDomScan();
   PulseDomScan = true;
   PulseBrowserPreview("PulseBrowser OS has taken a local-only Ghost Echo for your future (" + location.hostname + ") browsing experiences!");
 }
@@ -397,11 +406,10 @@ function showPulseStreamPrompt(video) {
 
   // Enable PIP
   document.getElementById("pipEnableBtn").onclick = () => {
-    // await video.requestPictureInPicture();
     flag.textContent = "PulseBrowser OS => [PIP MODE]";
     flag.style.background = "#00FF9C";
     clearTimeout(autoClose);
-    video.requestPictureInPicture().catch(err => console.warn("PIP Error:", err));
+    AttemptPulseSteam(video);
     box.remove();
   };
 
@@ -858,16 +866,28 @@ document.addEventListener("PulseDocumentChanged", (ev) => {
 
 function AttemptPulseSteam(videoElement) {
   try {
-    videoElement.requestPictureInPicture()
-      .catch(err => console.warn("PIP Error:", err));
+    videoElement.requestPictureInPicture().catch(err => {
+      console.warn("PIP Error:", err);
+    });
   } catch (e) {
     console.warn("PulseStream Error:", e);
+    const video = document.querySelector("video");
+    const stories = [...document.querySelectorAll("video")];
+    const realStory = stories[stories.length - 2] ?? video;
+    if (realStory) realStory.requestPictureInPicture();
+    console.log(stories);
+    console.log(realStory);
   }
 }
 
 document.addEventListener("click", e => {
   const vid = e.target.closest("video");
-  if (vid) AttemptPulseSteam(vid);
+  const stories = [...document.querySelectorAll("video")];
+  const realStory = stories[stories.length - 2] ?? vid;
+  setTimeout(() => {
+    if (vid) AttemptPulseSteam(vid);
+    if (realStory && !vid) AttemptPulseSteam(realStory);
+  }, 2500);
 });
 
 
@@ -921,7 +941,12 @@ function injectPulseFlag() {
       (async () => {
         try {
           const video = document.querySelector("video");
-          if (!video) { 
+          const stories = [...document.querySelectorAll("video")];
+          const realStory = stories[stories.length - 2] ?? video;
+          console.log(stories);
+          console.log(realStory);
+
+          if (!realStory) { 
             flag.textContent = "PulseBrowser OS (PIP Disabled)";
             flag.style.background = "rosybrown";
             setTimeout(() => {
@@ -931,7 +956,7 @@ function injectPulseFlag() {
             return;
           }
 
-          if (video.disablePictureInPicture) {
+          if (realStory.disablePictureInPicture) {
             flag.textContent = "PulseBrowser OS (PIP Disabled)";
             flag.style.background = "rosybrown";
             setTimeout(() => {
@@ -950,7 +975,7 @@ function injectPulseFlag() {
               flag.style.background = "#00C8FF";
             }, 4000);
           } else {
-            showPulseStreamPrompt(video);
+            showPulseStreamPrompt(realStory);
           }
 
         } catch (e) {
