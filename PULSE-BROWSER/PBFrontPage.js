@@ -154,53 +154,30 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 // ============================================================================
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
-function getLastMemoryVideo(callback) {
-  loadVideoMemory(list => {
-    if (!list.length) {
-      callback(null);
-      return;
-    }
+function loadLastSavedVideo(callback) {
+  chrome.storage.local.get(["pipMemory"], data => {
+    const list = data.pipMemory || [];
+    if (!list.length) return callback(null);
 
     const last = list[list.length - 1];
-    const videos = [...document.querySelectorAll("video")];
-
-    const match = videos.find(v => v.src === last.src);
-
-    if (match) {
-      try { match.currentTime = last.currentTime; } catch (_) {}
-      callback(match);
-    } else {
-      callback(null);
-    }
+    callback(last);
   });
 }
 
-function fallbackPIP() {
-  getLastMemoryVideo(memVideo => {
-    if (memVideo) {
-      memVideo.requestPictureInPicture()
-        .catch(err => console.warn("Memory PIP Error:", err));
-      return;
-    }
+function injectPulseScreenFromMemory() {
+  loadLastSavedVideo(entry => {
+    if (!entry) return;
 
-    const video = document.querySelector("video");
-    const stories = [...document.querySelectorAll("video")];
-    const realStory = stories[stories.length - 2] ?? video;
+    const video = document.getElementById("pbPulseScreen");
+    if (!video) return;
 
-    if (realStory) {
-      realStory.requestPictureInPicture()
-        .then(() => saveVideoToMemory(realStory))
-        .catch(err => console.warn("Fresh PIP Error:", err));
-    }
+    video.src = entry.blobUrl;
+    video.currentTime = entry.currentTime || 0;
 
-    console.log(stories);
-    console.log(realStory);
-  });
-}
+    video.style.display = "block";
 
-function loadVideoMemory(callback) {
-  chrome.storage.local.get(["pipMemory"], data => {
-    callback(data.pipMemory || []);
+    video.requestPictureInPicture()
+      .catch(err => console.warn("PulseScreen PIP Error:", err));
   });
 }
 
@@ -244,8 +221,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
-
-setTimeout(fallbackPIP, 100);
+setTimeout(injectPulseScreenFromMemory, 50);
 setTimeout(gpuWarmExtra, 900);
 
 // ============================================================================
@@ -509,9 +485,8 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     newIndex++;
   }
   savePulseTabs();
-  fallbackPIP();
-  location.reload();
-  fallbackPIP();
+  injectPulseScreenFromMemory();
+  // location.reload();
   // ⭐ REHYDRATE WITH CLEAN INDICES
   pulseRehydrateTabs();
 });

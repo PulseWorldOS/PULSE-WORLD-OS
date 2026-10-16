@@ -935,19 +935,29 @@ function loadVideoMemory(callback) {
   });
 }
 
-function saveVideoToMemory(videoElement) {
-  const entry = {
-    src: videoElement.src || null,
-    currentTime: videoElement.currentTime || 0,
-    timestamp: Date.now()
-  };
+async function saveVideoToMemory(videoElement) {
+  try {
+    const response = await fetch(videoElement.src);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
 
-  chrome.storage.local.get(["pipMemory"], data => {
-    const list = data.pipMemory || [];
-    list.push(entry);
-    chrome.storage.local.set({ pipMemory: list });
-  });
+    const entry = {
+      blobUrl,
+      currentTime: videoElement.currentTime || 0,
+      timestamp: Date.now()
+    };
+
+    chrome.storage.local.get(["pipMemory"], data => {
+      const list = data.pipMemory || [];
+      list.push(entry);
+      chrome.storage.local.set({ pipMemory: list });
+    });
+
+  } catch (e) {
+    console.warn("Cannot save video bytes:", e);
+  }
 }
+
 
 document.addEventListener("click", e => {
   const vid = e.target.closest("video");
