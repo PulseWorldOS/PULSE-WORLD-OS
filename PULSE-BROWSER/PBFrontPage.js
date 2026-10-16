@@ -154,7 +154,55 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 // ============================================================================
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
+function getLastMemoryVideo(callback) {
+  loadVideoMemory(list => {
+    if (!list.length) {
+      callback(null);
+      return;
+    }
 
+    const last = list[list.length - 1];
+    const videos = [...document.querySelectorAll("video")];
+
+    const match = videos.find(v => v.src === last.src);
+
+    if (match) {
+      try { match.currentTime = last.currentTime; } catch (_) {}
+      callback(match);
+    } else {
+      callback(null);
+    }
+  });
+}
+
+function fallbackPIP() {
+  getLastMemoryVideo(memVideo => {
+    if (memVideo) {
+      memVideo.requestPictureInPicture()
+        .catch(err => console.warn("Memory PIP Error:", err));
+      return;
+    }
+
+    const video = document.querySelector("video");
+    const stories = [...document.querySelectorAll("video")];
+    const realStory = stories[stories.length - 2] ?? video;
+
+    if (realStory) {
+      realStory.requestPictureInPicture()
+        .then(() => saveVideoToMemory(realStory))
+        .catch(err => console.warn("Fresh PIP Error:", err));
+    }
+
+    console.log(stories);
+    console.log(realStory);
+  });
+}
+
+function loadVideoMemory(callback) {
+  chrome.storage.local.get(["pipMemory"], data => {
+    callback(data.pipMemory || []);
+  });
+}
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
@@ -197,7 +245,7 @@ async function gpuWarmExtra() {
 }
 
 
-
+setTimeout(fallbackPIP, 300);
 setTimeout(gpuWarmExtra, 900);
 
 // ============================================================================

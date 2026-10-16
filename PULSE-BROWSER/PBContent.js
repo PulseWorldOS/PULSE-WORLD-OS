@@ -866,18 +866,87 @@ document.addEventListener("PulseDocumentChanged", (ev) => {
 
 function AttemptPulseSteam(videoElement) {
   try {
-    videoElement.requestPictureInPicture().catch(err => {
-      console.warn("PIP Error:", err);
-    });
+    if (videoElement) {
+      videoElement.requestPictureInPicture()
+        .then(() => saveVideoToMemory(videoElement))
+        .catch(err => {
+          console.warn("PIP Error:", err);
+          fallbackPIP();
+        });
+      return;
+    }
+
+    fallbackPIP();
+
   } catch (e) {
     console.warn("PulseStream Error:", e);
+    fallbackPIP();
+  }
+}
+
+function fallbackPIP() {
+  getLastMemoryVideo(memVideo => {
+    if (memVideo) {
+      memVideo.requestPictureInPicture()
+        .catch(err => console.warn("Memory PIP Error:", err));
+      return;
+    }
+
     const video = document.querySelector("video");
     const stories = [...document.querySelectorAll("video")];
     const realStory = stories[stories.length - 2] ?? video;
-    if (realStory) realStory.requestPictureInPicture();
+
+    if (realStory) {
+      realStory.requestPictureInPicture()
+        .then(() => saveVideoToMemory(realStory))
+        .catch(err => console.warn("Fresh PIP Error:", err));
+    }
+
     console.log(stories);
     console.log(realStory);
-  }
+  });
+}
+
+
+function getLastMemoryVideo(callback) {
+  loadVideoMemory(list => {
+    if (!list.length) {
+      callback(null);
+      return;
+    }
+
+    const last = list[list.length - 1];
+    const videos = [...document.querySelectorAll("video")];
+
+    const match = videos.find(v => v.src === last.src);
+
+    if (match) {
+      try { match.currentTime = last.currentTime; } catch (_) {}
+      callback(match);
+    } else {
+      callback(null);
+    }
+  });
+}
+
+function loadVideoMemory(callback) {
+  chrome.storage.local.get(["pipMemory"], data => {
+    callback(data.pipMemory || []);
+  });
+}
+
+function saveVideoToMemory(videoElement) {
+  const entry = {
+    src: videoElement.src || null,
+    currentTime: videoElement.currentTime || 0,
+    timestamp: Date.now()
+  };
+
+  chrome.storage.local.get(["pipMemory"], data => {
+    const list = data.pipMemory || [];
+    list.push(entry);
+    chrome.storage.local.set({ pipMemory: list });
+  });
 }
 
 document.addEventListener("click", e => {
@@ -947,7 +1016,7 @@ function injectPulseFlag() {
           console.log(realStory);
 
           if (!realStory) { 
-            flag.textContent = "PulseBrowser OS (PIP Disabled)";
+            flag.textContent = "PulseBrowser OS (PIP No Video Yet)";
             flag.style.background = "rosybrown";
             setTimeout(() => {
               flag.textContent = "PulseBrowser OS";
@@ -968,12 +1037,8 @@ function injectPulseFlag() {
           // ⭐ Toggle PIP
           if (document.pictureInPictureElement) {
             await document.exitPictureInPicture();
-            flag.textContent = "PulseBrowser OS (PIP Available)";
-            flag.style.background = "#00FF9C";
-            setTimeout(() => {
-              flag.textContent = "PulseBrowser OS";
-              flag.style.background = "#00C8FF";
-            }, 4000);
+            flag.textContent = "PulseBrowser OS";
+            flag.style.background = "#00C8FF";
           } else {
             showPulseStreamPrompt(realStory);
           }
