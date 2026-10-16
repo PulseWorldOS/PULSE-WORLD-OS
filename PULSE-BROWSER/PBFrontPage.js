@@ -16,7 +16,6 @@ let PulseModuleCount = 0;
 let PulseTempModuleCount = 0;
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
-let PulseSnapshot = false;
 let PulseSnapshotView = null;
 let PulseURL = null;
 const toppanel = document.getElementById("top-panel left-panel");
@@ -74,15 +73,15 @@ let pulseTabs = {};
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseModuleFaviconCaches"], (res) => {
-  if (res.PulseModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.PulseModuleFaviconCaches;
+chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
+  if (res.PulseBrowserFaviconCaches) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseModuleFaviconCaches: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
 }
 
 function pulseRehydrateTabs() {
@@ -92,7 +91,7 @@ function pulseRehydrateTabs() {
 
     for (const tab of tabs) {
       if (!tab.url) continue;
-      if (snapIndex > 5) break; // only 5 bubbles
+      if (snapIndex > 6) break; // only 5 bubbles
 
       try {
         const urlObj = new URL(tab.url);
@@ -127,13 +126,21 @@ function pulseRehydrateTabs() {
     pulseTabs = rebuilt;
     chrome.storage.local.set({ pulseTabs: rebuilt });
   });
+  chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG3.info("Cache list unavailable or error", response);
+      return;
+    }
+
+    PB_LOG3.load("Cache list received", response.caches);
+  });
 }
 
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const originalTabId = tabs[0].id;
   chrome.storage.local.set({ originalTabId });
-  savePulseTabs();
+  pulseRehydrateTabs();
 });
 
 
@@ -151,13 +158,15 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let gpuEnabled = null;
+  let gpuEnabled = "No GPU";
+
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
-    try { 
-      el.getContext?.("webgl") || el.getContext?.("webgl2");
-      gpuEnabled = "WebGL";
-     } catch (_) {}
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
     try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
   });
@@ -168,20 +177,25 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
-        gpuEnabled = "WebGPU";
-        // Create a tiny GPU workload to warm the queue
-        const queue = device.queue;
-        const buffer = device.createBuffer({
-          size: 4,
-          usage: GPUBufferUsage.COPY_DST
-        });
-        queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        if (device) {
+          gpuEnabled = "WebGPU";
+          const queue = device.queue;
+          const buffer = device.createBuffer({
+            size: 4,
+            usage: GPUBufferUsage.COPY_DST
+          });
+          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        }
       }
     }
-  } catch (_) {}
+  } catch (_) {
+    // WebGPU failed — leave gpuEnabled as-is
+  }
 
-  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM_EXTRA", gpuEnabled });
+  console.log("GPU Warmed!");
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
+
 
 
 setTimeout(gpuWarmExtra, 900);
@@ -257,7 +271,7 @@ function collectAndWarmAssetsFront() {
 setTimeout(collectAndWarmAssetsFront, 600);
 
 function savePulseTabs() {
-  pulseRehydrateTabs();
+  chrome.storage.local.set({ pulseTabs });
 }
 
 // Normalize identity to domain or subdomain level
@@ -273,7 +287,6 @@ function normalizeIdentity(url) {
 function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
   const existingEntry = pulseTabs[identity];
-
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
   // ⭐ If tab already exists → PURE SELECT
@@ -286,11 +299,12 @@ function openNamedTab(name, url) {
         savePulseTabs();
       });
 
-      PulseSnapshot = true;
       PulseURL = url;
       PulseSnapshotView = new URL(url).hostname;
 
-      setTimeout(() => pulseRehydrateTabs(), 2500);
+      setTimeout(() => {
+         pulseRehydrateTabs();
+      }, 3000);
       return;
     }
 
@@ -303,11 +317,12 @@ function openNamedTab(name, url) {
               savePulseTabs();
             });
 
-            PulseSnapshot = true;
             PulseURL = url;
             PulseSnapshotView = new URL(url).hostname;
 
-            setTimeout(() => pulseRehydrateTabs(), 2500);
+            setTimeout(() => {
+              pulseRehydrateTabs();
+            }, 3000);
             return;
           }
 
@@ -315,11 +330,12 @@ function openNamedTab(name, url) {
           savePulseTabs();
         });
 
-        PulseSnapshot = true;
         PulseURL = url;
         PulseSnapshotView = new URL(url).hostname;
 
-        setTimeout(() => pulseRehydrateTabs(), 2500);
+        setTimeout(() => {
+         pulseRehydrateTabs();
+        }, 3000);
         return;
       }
 
@@ -332,11 +348,12 @@ function openNamedTab(name, url) {
       savePulseTabs();
     });
 
-    PulseSnapshot = true;
     PulseURL = url;
     PulseSnapshotView = new URL(url).hostname;
 
-    setTimeout(() => pulseRehydrateTabs(), 2500);
+    setTimeout(() => {
+      pulseRehydrateTabs();
+    }, 3000);
     return;
   }
 
@@ -346,11 +363,12 @@ function openNamedTab(name, url) {
     savePulseTabs();
   });
 
-  PulseSnapshot = true;
   PulseURL = url;
   PulseSnapshotView = new URL(url).hostname;
-
-  setTimeout(() => pulseRehydrateTabs(), 2500);
+  
+  setTimeout(() => {
+    pulseRehydrateTabs();
+  }, 3000);
 }
 
 
@@ -361,49 +379,95 @@ function latestSnapshot(realm, link, snapIndex) {
     const snap = items[snapshotKey];
     if (snap) renderSnapshot(snap, snapIndex);
 
-    // Build the correct bubble selector
     const bubbleSelector = `.PulseBrowser-OS-Snapshot${snapIndex}`;
     const bubble = document.querySelector(bubbleSelector);
 
     if (bubble) {
-      bubble.addEventListener("click", () => {
+      // ⭐ Replace any existing listener instead of stacking new ones
+      bubble.onclick = () => {
+        pbPreconnect([link]);
         openNamedTab(realm, link);
-      });
+      };
     }
   });
 }
 
-// Remove dead tabs from registry
+async function renderSnapshot(snapshot, snapIndex) {
+  const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+  
+  // Build the correct bubble ID and class
+  if (snapshot) {
+    if (!div) {
+      div = document.createElement("div");
+      div.id = bubbleId;
+      div.className = bubbleId;
+    }
+    // ---------------------------------------------
+    // ⭐ Inject ONLY the favicon (big, centered)
+    // ---------------------------------------------
+    div.innerHTML = `
+      <div class="Snapshot-Viewport">
+        <img class="Snapshot-Favicon" src="${snapshot.favicon}" alt="favicon">
+      </div>
+    `;
+
+    document.body.appendChild(div);
+
+    // Chamber awakens
+    toppanel.style.backdropFilter = "blur(8px)";
+    toppanel.style.backgroundImage = "none";
+
+  } else {
+    // Chamber collapses
+    if (div) div.remove();
+    toppanel.style.backdropFilter = "blur(24px)";
+    toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
+  }
+}
+
+
 chrome.tabs.onRemoved.addListener((tabId) => {
+  let removedSnapshotIndex = null;
+
+  // Find and remove the entry
   for (const identity in pulseTabs) {
     const entry = pulseTabs[identity];
 
     if (entry.id === tabId) {
       const realm = entry.realm;
-      const snapIndex = entry.snapshot;   // ⭐ Get the correct bubble index
-      const snapshotKey = `pulse_snapshot_${realm}`;
+      removedSnapshotIndex = entry.snapshot;
 
-      // Remove stored snapshot
+      const snapshotKey = `pulse_snapshot_${realm}`;
       chrome.storage.local.remove(snapshotKey);
 
-      // Reset active snapshot view if needed
       if (PulseSnapshotView === realm) {
-        PulseSnapshot = false;
         PulseSnapshotView = null;
         PulseURL = null;
       }
 
-      // Remove bubble DOM
-      renderSnapshot(null, snapIndex);     // ⭐ Remove correct bubble
+      renderSnapshot(null, removedSnapshotIndex);
 
-      // Remove from registry
       delete pulseTabs[identity];
-      savePulseTabs();
+      break;
     }
   }
-  // Rehydrate remaining tabs
+
+  // ⭐ REINDEX ALL REMAINING TABS
+  let newIndex = 0;
+  for (const identity in pulseTabs) {
+    const entry = pulseTabs[identity];
+    entry.snapshot = newIndex;      // rewrite snapshot index
+    newIndex++;
+  }
+
   savePulseTabs();
+  location.reload();
+
+  // ⭐ REHYDRATE WITH CLEAN INDICES
+  pulseRehydrateTabs();
 });
+
 
 function getNextSnapshotIndex() {
   const used = new Set();
@@ -413,7 +477,7 @@ function getNextSnapshotIndex() {
     if (entry.snapshot) used.add(entry.snapshot);
   }
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 6; i++) {
     if (!used.has(i)) return i;
   }
 
@@ -2089,7 +2153,7 @@ setInterval(() => {
 
   setInterval(() => {
     swap();
-    if (PulseSnapshot) savePulseTabs();
+    pulseRehydrateTabs();
   }, 15000);
       
   const ENTERPRISE_DOMAINS = [
@@ -2133,7 +2197,6 @@ setInterval(() => {
     const settings = await pbLoadExtensionSettings();
     PulseRealmSettings = settings;
     PulseBrowserSettings = await getSettings();
-    if (PulseSnapshot) savePulseTabs();
 
     const PB_HOMES = [
       "https://www.pulseworld.me",
@@ -2201,7 +2264,8 @@ setInterval(() => {
       type: "PBACC_WARMPATH_EXTERNAL",
       count
     });
-
+    
+    pulseRehydrateTabs();
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       bubble.classList.add('electrify');
 
@@ -2209,7 +2273,11 @@ setInterval(() => {
         bubble.classList.remove('electrify');
       }, 3000);
     });
-
+    let topPanel = document.querySelector(".top-panel");
+    topPanel.classList.add('electrify');
+    setTimeout(() => {
+      topPanel.classList.remove('electrify');
+    }, 2700);
   }
 
   document.addEventListener("visibilitychange", () => {
@@ -2220,7 +2288,7 @@ setInterval(() => {
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
-      
+      pulseRehydrateTabs();
       gpuWarmExtra();
       updateOverlay();
       // Force Chrome to rebuild the GPU layer
@@ -2307,37 +2375,4 @@ function documentTitle() {
 //         leftpanel.style.top = "0";
 //     }
 // }
-
-function renderSnapshot(snapshot, snapIndex) {
-  const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
-  let div = document.getElementById(bubbleId);
-  // Build the correct bubble ID and class
-  if (snapshot) {
-    if (!div) {
-      div = document.createElement("div");
-      div.id = bubbleId;
-      div.className = bubbleId;
-    }
-    // ---------------------------------------------
-    // ⭐ Inject ONLY the favicon (big, centered)
-    // ---------------------------------------------
-    div.innerHTML = `
-      <div class="Snapshot-Viewport">
-        <img class="Snapshot-Favicon" src="${snapshot.favicon}" alt="favicon">
-      </div>
-    `;
-
-    document.body.appendChild(div);
-
-    // Chamber awakens
-    toppanel.style.backdropFilter = "blur(8px)";
-    toppanel.style.backgroundImage = "none";
-
-  } else {
-    // Chamber collapses
-    if (div) div.remove();
-    toppanel.style.backdropFilter = "blur(24px)";
-    toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
-  }
-}
 

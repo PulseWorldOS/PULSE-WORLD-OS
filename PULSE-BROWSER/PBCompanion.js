@@ -13,15 +13,15 @@ let PulseBrowserSettings = null;
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseModuleFaviconCaches"], (res) => {
-  if (res.PulseModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.PulseModuleFaviconCaches;
+chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
+  if (res.PulseBrowserFaviconCaches) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseModuleFaviconCaches: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -513,19 +513,32 @@ function safeSendMessage(msg) {
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
+  let url = tab.url;
+  let title = tab.title;
+  let page = tab.page;
+  let origin = url;
+  const domainClass = pbDomainClass(url);
+  
+  if (!url.includes("chrome:")) {
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastPage = page;
+    PulseRealmState.lastDomainClass = domainClass;
+    PulseRealmState.lastTitle = title;
+    PulseRealmState.navHistory.push(url);
+  }
+
+  // Temporal navigation warm
+  if (typeof PBTemporalCache?.noteNavigation === "function") {
+    PBTemporalCache.noteNavigation(url);
+  }
+  if (typeof PBTemporalCache?.warmRecentAssets === "function") {
+    PBTemporalCache.warmRecentAssets(origin);
+  }
   // Universal boost warm-path
   if (typeof PBUniversalBoost2?.warmTab === "function") {
     PBUniversalBoost2.warmTab(tab);
   }
-  const url = tab.url;
-  const domainClass = pbDomainClass(url);
-
-  if (!url.includes("chrome:")) {
-    PulseRealmState.lastURL = url;
-    PulseRealmState.lastTitle = tab.title;
-    PulseRealmState.lastPage = tab.page;
-    PulseRealmState.lastDomainClass = domainClass;
-  }
+  
   chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
     tabId: tab.id,
@@ -1008,7 +1021,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
   switch (msg.type) {
-
+    case "PULSE_OS_NOTIFY":
+      console.log("%c[PULSEWORLD CONTENT] Kernel Notification:",
+        "color:#00C8FF; font-family:monospace;", msg.text);
+      break;
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {
@@ -1179,15 +1195,76 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "GET_CACHE_LIST":
       (async () => {
+        const ts = Date.now();  // ⭐ Timestamp for diagnostics
+
         try {
           const cacheNames = await caches.keys();
-          PB_LOG2.info("GET_CACHE_LIST", cacheNames);
-          sendResponse({ ok: true, caches: cacheNames });
+          const cacheDetails = [];
+
+          for (const name of cacheNames) {
+            try {
+              const cache = await caches.open(name);
+              const requests = await cache.keys();
+              const count = requests.length;
+
+              // ⭐ Weight class (small words)
+              let weightClass = "light";
+              if (count > 50) weightClass = "medium";
+              if (count > 300) weightClass = "heavy";
+              if (count > 1000) weightClass = "massive";
+
+              // ⭐ Optional PulseScore (tiny heuristic)
+              const pulseScore = Math.min(100, Math.floor(count / 10));
+
+              cacheDetails.push({
+                name,
+                entries: count,
+                weightClass,        // ⭐ NEW
+                pulseScore,         // ⭐ NEW (optional fun metric)
+                firstEntry: requests[0]?.url || null,
+                lastEntry: requests[count - 1]?.url || null
+              });
+
+            } catch (innerErr) {
+              cacheDetails.push({
+                name,
+                entries: null,
+                weightClass: "unknown",
+                error: innerErr.toString()
+              });
+            }
+          }
+
+          PB_LOG2.info("GET_CACHE_LIST", {
+            ts,
+            totalCaches: cacheNames.length,
+            cacheDetails
+          });
+
+          sendResponse({
+            ok: true,
+            ts,
+            totalCaches: cacheNames.length,
+            caches: cacheDetails
+          });
+
         } catch (err) {
-          sendResponse({ ok: false, error: err.toString() });
+          PB_LOG2.error("GET_CACHE_LIST_ERROR", {
+            ts,
+            error: err.toString()
+          });
+
+          sendResponse({
+            ok: false,
+            ts,
+            error: err.toString()
+          });
         }
       })();
+
       return true;
+
+
 
     case "PULSE_OS_PING":
       PulseRealmState.lastPing = new Date().toLocaleString(); 
@@ -1525,15 +1602,63 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 //  SECTION 7 — CACHE CONTROL
 // ============================================================================
 async function clearPulseCaches() {
+  const ts = Date.now();  // ⭐ Timestamp for diagnostics
   const keys = await caches.keys();
+
+  let deleted = [];
+  let skipped = [];
+
   for (const key of keys) {
-    if (key.includes("Pulse")) {
-      await caches.delete(key);
-      console.log("%c[PULSEWORLD OS KERNEL] Deleted Cache: " + key,
-        "color:#FF5555; font-weight:bold;");
+    // ⭐ PulseBrowser OS cache naming convention
+    const isPulseCache =
+      key.includes("Pulse") ||
+      key.includes("PB") ||
+      key.startsWith("pulse_") ||
+      key.startsWith("pb_");
+
+    if (isPulseCache) {
+      try {
+        await caches.delete(key);
+
+        deleted.push(key);
+
+        console.log(
+          "%c[PULSEWORLD OS KERNEL] Deleted Cache: " + key,
+          "color:#FF5555; font-weight:bold;"
+        );
+      } catch (err) {
+        console.log(
+          "%c[PULSEWORLD OS KERNEL] Failed to Delete Cache: " + key +
+          " → " + err.toString(),
+          "color:#FF0000; font-weight:bold;"
+        );
+      }
+    } else {
+      skipped.push(key);
     }
   }
+
+  // ⭐ Summary log (PulseBrowser OS style)
+  console.log("%c[PULSEWORLD OS KERNEL] Cache Purge Summary",
+    "color:#00FFFF; font-weight:bold;");
+
+  console.log({
+    ts,
+    totalCaches: keys.length,
+    deletedCount: deleted.length,
+    skippedCount: skipped.length,
+    deleted,
+    skipped
+  });
+
+  return {
+    ok: true,
+    ts,
+    deleted,
+    skipped
+  };
 }
+
 
 // ============================================================================
 //  SECTION 8 — DEVTOOLS

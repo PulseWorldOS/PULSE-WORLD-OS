@@ -10,15 +10,15 @@ let PulseRealmSettings = {};
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseModuleFaviconCaches"], (res) => {
-  if (res.PulseModuleFaviconCaches) {
-    PBFAVICON_CACHE = res.PulseModuleFaviconCaches;
+chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
+  if (res.PulseBrowserFaviconCaches) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseModuleFaviconCaches: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
 }
 
 document.addEventListener("keydown", (e) => {
@@ -145,7 +145,7 @@ function pulseRehydrateTabs() {
 }
 
 function savePulseTabs() {
-  pulseRehydrateTabs();
+  chrome.storage.local.set({ pulseTabs });
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
@@ -182,7 +182,6 @@ function getNextSnapshotIndex() {
 function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
   const existingEntry = pulseTabs[identity];
-
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
   // ⭐ If tab already exists → PURE SELECT
@@ -194,6 +193,10 @@ function openNamedTab(name, url) {
         pulseTabs[identity] = { id: newTab.id, realm: identity };
         savePulseTabs();
       });
+
+      setTimeout(() => {
+         pulseRehydrateTabs();
+      }, 3000);
       return;
     }
 
@@ -205,12 +208,20 @@ function openNamedTab(name, url) {
               pulseTabs[identity] = { id: newTab.id, realm: identity };
               savePulseTabs();
             });
+
+            setTimeout(() => {
+              pulseRehydrateTabs();
+            }, 3000);
             return;
           }
 
           pulseTabs[identity] = { id: updated.id, realm: identity };
           savePulseTabs();
         });
+
+        setTimeout(() => {
+         pulseRehydrateTabs();
+        }, 3000);
         return;
       }
 
@@ -223,6 +234,9 @@ function openNamedTab(name, url) {
       savePulseTabs();
     });
 
+    setTimeout(() => {
+      pulseRehydrateTabs();
+    }, 3000);
     return;
   }
 
@@ -231,26 +245,43 @@ function openNamedTab(name, url) {
     pulseTabs[identity] = { id: tab.id, realm: identity };
     savePulseTabs();
   });
+
+  setTimeout(() => {
+    pulseRehydrateTabs();
+  }, 3000);
 }
 
-
-
-// Remove dead tabs from registry
 chrome.tabs.onRemoved.addListener((tabId) => {
+  let removedSnapshotIndex = null;
+
+  // Find and remove the entry
   for (const identity in pulseTabs) {
     const entry = pulseTabs[identity];
 
     if (entry.id === tabId) {
       const realm = entry.realm;
-      const snapshotKey = `pulse_snapshot_${realm}`;
+      removedSnapshotIndex = entry.snapshot;
 
+      const snapshotKey = `pulse_snapshot_${realm}`;
       chrome.storage.local.remove(snapshotKey);
 
       delete pulseTabs[identity];
-      savePulseTabs();
+      break;
     }
   }
+
+  // ⭐ REINDEX ALL REMAINING TABS
+  let newIndex = 0;
+  for (const identity in pulseTabs) {
+    const entry = pulseTabs[identity];
+    entry.snapshot = newIndex;      // rewrite snapshot index
+    newIndex++;
+  }
+
   savePulseTabs();
+
+  // ⭐ REHYDRATE WITH CLEAN INDICES
+  pulseRehydrateTabs();
 });
 
 const out = document.getElementById("output");

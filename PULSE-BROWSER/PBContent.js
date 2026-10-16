@@ -6,11 +6,18 @@
 let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
-
+let PBFAVICON_CACHE = {};
 
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
+// Load cache from storage at startup
+chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
+  if (res.PulseBrowserFaviconCaches) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches;
+    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
+  }
+});
 
 const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
 
@@ -307,12 +314,13 @@ async function injectHUD() {
   updateHUD();
   PulseBrowserPreview();
   setInterval(updateHUD, 1200);
-  setTimeout(PulseBrowserDomScan, 1500);
-  setTimeout(fadeHUD, 4000);
+  setTimeout(PulseBrowserDomScan, 2000);
   setTimeout(DomScanPreview, 4000);
+  setTimeout(fadeHUD, 4000);
 }
 
 function DomScanPreview() {
+  PulseBrowserDomScan();
   PulseDomScan = true;
   PulseBrowserPreview("PulseBrowser OS has taken a local-only Ghost Echo for your future (" + location.hostname + ") browsing experiences!");
 }
@@ -848,9 +856,24 @@ document.addEventListener("PulseDocumentChanged", (ev) => {
   }
 })();
 
+function AttemptPulseSteam(videoElement) {
+  try {
+    videoElement.requestPictureInPicture()
+      .catch(err => console.warn("PIP Error:", err));
+  } catch (e) {
+    console.warn("PulseStream Error:", e);
+  }
+}
+
+document.addEventListener("click", e => {
+  const vid = e.target.closest("video");
+  if (vid) AttemptPulseSteam(vid);
+});
+
+
 function injectPulseFlag() {
   const STREAMING_SITES = [
-    "netflix.com","hulu.com","disneyplus.com","primevideo.com","sling.com",
+    "netflix.com","hulu.com","disneyplus.com","primevideo.com","sling.com", "facebook.com",
     "amazon.com","hbomax.com","max.com","paramountplus.com",
     "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   ];
@@ -1035,13 +1058,15 @@ setTimeout(triggerWarmPaths, 300);
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let gpuEnabled = null;
+  let gpuEnabled = "No GPU";
+
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
-    try { 
-      el.getContext?.("webgl") || el.getContext?.("webgl2");
-      gpuEnabled = "WebGL";
-     } catch (_) {}
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
     try { el.getContext?.("2d"); } catch (_) {}
     try { el.play?.().catch(() => {}); } catch (_) {}
   });
@@ -1052,20 +1077,25 @@ async function gpuWarmExtra() {
       const adapter = await navigator.gpu.requestAdapter();
       if (adapter) {
         const device = await adapter.requestDevice();
-        gpuEnabled = "WebGPU";
-        // Create a tiny GPU workload to warm the queue
-        const queue = device.queue;
-        const buffer = device.createBuffer({
-          size: 4,
-          usage: GPUBufferUsage.COPY_DST
-        });
-        queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        if (device) {
+          gpuEnabled = "WebGPU";
+          const queue = device.queue;
+          const buffer = device.createBuffer({
+            size: 4,
+            usage: GPUBufferUsage.COPY_DST
+          });
+          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        }
       }
     }
-  } catch (_) {}
+  } catch (_) {
+    // WebGPU failed — leave gpuEnabled as-is
+  }
 
+  console.log("GPU Warmed!");
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
+
 
 setTimeout(gpuWarmExtra, 900);
 
@@ -1113,7 +1143,9 @@ function PulseBrowserPreview(text) {
   // Add it to the page
   document.body.appendChild(preview);
 
-  if (text) setTimeout(PreviewListener(preview), 10000)
+  if (text) setTimeout(() => {
+    PreviewListener(preview);
+  }, 10000)
 }
 
 function PreviewListener(preview) {
@@ -1121,7 +1153,7 @@ function PreviewListener(preview) {
   window.addEventListener("mousemove", () => preview.remove(), { once: true });
 }
 
-function PulseBrowserDomScan() {
+async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
 
   // Clone DOM so we can safely modify it
@@ -1140,14 +1172,14 @@ function PulseBrowserDomScan() {
   clone.querySelectorAll('meta[http-equiv="refresh"]').forEach(el => el.remove());
 
   // Remove all heavy media
-  clone.querySelectorAll("video, audio, source, object, embed").forEach(el => el.remove());
+  clone.querySelectorAll("audio, source, object, embed").forEach(el => el.remove());
 
   // Remove all <img> tags (we only keep tiny previews separately)
   clone.querySelectorAll("img").forEach(el => el.remove());
 
   // Tiny image preview (first 5 images only)
   const tinyImages = [...document.querySelectorAll("img[src]")]
-    .slice(0, 5)
+    .slice(0, 15)
     .map(img => ({
       src: img.src,
       alt: img.alt?.slice(0, 60) || null
@@ -1219,6 +1251,7 @@ function PulseBrowserDomScan() {
   if (!favicon) {
     favicon = `${location.origin}/favicon.ico`;
   }
+  let icon = await fetchAndStoreIcon(location.hostname, favicon);
 
   const snapshot = {
     url: location.href,
@@ -1238,7 +1271,7 @@ function PulseBrowserDomScan() {
     counts,
     links: tinyLinks,
     images: tinyImages,
-    favicon,
+    favicon: icon,
 
     html: clone.innerHTML
   };
@@ -1248,4 +1281,69 @@ function PulseBrowserDomScan() {
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 }
 
+function saveCache() {
+  chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
+}
+
+async function fetchAndStoreIcon(host, iconUrl) {
+  try {
+    const response = await fetch(iconUrl);
+    if (!response.ok) throw new Error("Fetch failed");
+
+    let blob = await response.blob();
+
+    // ⭐ Fallback if blob is empty
+    if (!blob || blob.size === 0) {
+      console.warn("Empty favicon blob, falling back:", iconUrl);
+      PBFAVICON_CACHE[host] = iconUrl;
+      saveCache();
+      return iconUrl;
+    }
+
+    const reader = new FileReader();
+
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        const base64 = reader.result;
+
+        // ⭐ Validate Base64
+        if (
+          !base64 ||
+          typeof base64 !== "string" ||
+          base64.trim() === "" ||
+          (base64.startsWith("data:") && base64.length < 20) ||
+          base64.startsWith("data:text")
+        ) {
+          console.warn("Invalid Base64 favicon, falling back:", iconUrl);
+          PBFAVICON_CACHE[host] = iconUrl;
+          saveCache();
+          resolve(iconUrl);
+          return;
+        }
+
+        // ⭐ Save compressed Base64
+        PBFAVICON_CACHE[host] = base64;
+        saveCache();
+        resolve(base64);
+      };
+
+      reader.onerror = () => {
+        console.warn("FileReader failed, falling back:", iconUrl);
+        PBFAVICON_CACHE[host] = iconUrl;
+        saveCache();
+        resolve(iconUrl);
+      };
+
+      reader.readAsDataURL(blob);
+    });
+
+  } catch (err) {
+    console.warn("Favicon fetch failed:", iconUrl, err);
+
+    // ⭐ Last resort fallback
+    PBFAVICON_CACHE[host] = iconUrl;
+    saveCache();
+    return iconUrl;
+  }
+}
 
