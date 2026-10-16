@@ -2147,6 +2147,7 @@ window.addEventListener("blur", () => {
   userInteracted = true;
   document.getElementById("subtitle").style.color = "yellow"
   document.getElementById("subsubtitle").style.color = "yellow"
+  injectPulseScreenFromMemory();
 }, { once: true });
 
 let timerX = 0;
