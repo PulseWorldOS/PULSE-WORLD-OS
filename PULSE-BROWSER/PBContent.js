@@ -961,11 +961,11 @@ document.addEventListener("click", e => {
 
 
 function injectPulseFlag() {
-  const STREAMING_SITES = [
-    "netflix.com","hulu.com","disneyplus.com","primevideo.com","sling.com", "facebook.com",
-    "amazon.com","hbomax.com","max.com","paramountplus.com",
-    "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
-  ];
+  // const STREAMING_SITES = [
+  //   "netflix.com","hulu.com","disneyplus.com","primevideo.com","sling.com", "facebook.com",
+  //   "amazon.com","hbomax.com","max.com","paramountplus.com",
+  //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
+  // ];
 
   const flag = document.createElement("div");
   flag.id = "pulseworld-flag";
@@ -985,13 +985,25 @@ function injectPulseFlag() {
   `;
   flag.textContent = "PulseBrowser OS";
   
-  if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-    flag.textContent = "PulseBrowser OS";
-    flag.style.background = "#00C8FF";
+  // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
+  //   flag.textContent = "PulseBrowser OS";
+  //   flag.style.background = "#00C8FF";
+  // }
+  const video = document.querySelector("video");
+  const stories = [...document.querySelectorAll("video")];
+  const realStory = stories[stories.length - 2] ?? video;
+  console.log(stories);
+  console.log(realStory);
+  
+  if (!realStory) { 
+    flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
+    flag.style.background = "rosybrown";
+  } else {
+    flag.textContent = "PulseBrowser OS (PIP Disabled)";
+    flag.style.background = "rosybrown";
   }
 
-  flag.onclick = () => {
-    
+  flag.onclick = () => {    
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
@@ -1005,16 +1017,10 @@ function injectPulseFlag() {
       fadeHUD();
     }, 6000);
 
-    if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
+    // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
       (async () => {
         try {
-          const video = document.querySelector("video");
-          const stories = [...document.querySelectorAll("video")];
-          const realStory = stories[stories.length - 2] ?? video;
-          console.log(stories);
-          console.log(realStory);
-
           if (!realStory) { 
             flag.textContent = "PulseBrowser OS (PIP - No Video Found)";
             flag.style.background = "rosybrown";
@@ -1047,8 +1053,6 @@ function injectPulseFlag() {
           console.warn("PulseStream Error:", e);
         }
       })();
-
-    }
   };
 
   document.body.appendChild(flag);
