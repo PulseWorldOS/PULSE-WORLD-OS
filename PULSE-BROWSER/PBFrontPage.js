@@ -86,17 +86,17 @@ function saveCache() {
 }
 
 async function pbRequestCacheList2() {
-  PB_LOG.info("Requesting cache list from PBCompanion…");
+  PB_LOG3.info("Requesting cache list from PBCompanion…");
 
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
       if (!response || !response.ok) {
-        PB_LOG.info("Cache list unavailable or error", response);
+        PB_LOG3.info("Cache list unavailable or error", response);
         resolve(null);
         return;
       }
 
-      PB_LOG.load("Cache list received", response.caches);
+      PB_LOG3.load("Cache list received", response.caches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
@@ -179,7 +179,7 @@ async function pbRenderCacheList2() {
     best = true;
   });
 
-  PB_LOG.info("Cache list rendered", caches);
+  PB_LOG3.info("Cache list rendered", caches);
 }
 
 
@@ -2298,7 +2298,7 @@ setInterval(() => {
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 21) {
     enterBtn.click();
-    setTimeout(backToOriginal, 4000);
+    setTimeout(backToOriginal, 2500);
     document.getElementById("timerBtn").style.display = "none";
   } else if (userInteracted) {
     document.getElementById("timerBtn").style.display = "none";
@@ -2310,7 +2310,7 @@ setInterval(() => {
     nebula.style.opacity = 0;
     setTimeout(() => {
       nebula.style.backgroundImage = `url(${images[index]})`;
-      nebula.style.opacity = 0.65;
+      nebula.style.opacity = 0.75;
       index = (index + 1) % images.length;
     }, 1500);
   }
