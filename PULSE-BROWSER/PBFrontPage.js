@@ -587,8 +587,9 @@ async function renderSnapshot(snapshot, snapIndex) {
     toppanel.style.backgroundImage = "none";
 
   } else {
-    // Chamber collapses
-    if (div) div.remove();
+    document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
+      if (bubble) bubble.remove();
+    });
     toppanel.style.backdropFilter = "blur(24px)";
     toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
   }
@@ -631,7 +632,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   savePulseTabs();
   pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
-  location.reload();
+  // location.reload();
 });
 
 
