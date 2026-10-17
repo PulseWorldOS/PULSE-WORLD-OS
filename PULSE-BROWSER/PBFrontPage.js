@@ -145,6 +145,7 @@ async function pbRenderCacheList2() {
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
+      cursor: pointer;
     `;
 
     if (best === false) {
@@ -163,8 +164,14 @@ async function pbRenderCacheList2() {
         Weight: <font color="#0FF">${cache.weightClass}</font><br>
         PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
         First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-        Last: <font color="lightgreen">${cache.lastEntry || "none"}</font>
+        Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
       `;
+    }
+
+    if (cache.lastEntry) {
+      li.onclick = () => {
+        openNamedTab(location.hostname, cache.lastEntry);
+      };
     }
 
     listEl.appendChild(li);
@@ -359,7 +366,7 @@ async function gpuWarmExtra() {
 }
 
 setTimeout(gpuWarmExtra, 900);
-setTimeout(pulseRehydrateTabs, 50);
+setTimeout(pulseRehydrateTabs, 250);
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm

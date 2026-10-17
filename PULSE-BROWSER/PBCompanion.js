@@ -1123,6 +1123,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.origin) {
         pbRealmWarm(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;
+        PulseRealmState.lastWarmOrigin = msg.origin;
       }
       PB_LOG2.info("PBACC_REALMWARM", msg.origin);
       sendResponse({ ok: true });
@@ -1276,7 +1277,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_PERF":
       PulseRealmState.perfEntries = msg.entries || [];
       PulseRealmState.perfLastNavigation = msg.ts || now;
-      PulseRealmState.warmPathsTriggered += 1;
       PulseRealmState.lastWarmOrigin = msg.origin;
       sendResponse({ ok: true });
       break;
