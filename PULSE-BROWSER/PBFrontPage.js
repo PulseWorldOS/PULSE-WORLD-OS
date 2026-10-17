@@ -564,7 +564,7 @@ function latestSnapshot(realm, link, snapIndex) {
 async function renderSnapshot(snapshot, snapIndex) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
-  
+  let topPanel = document.querySelector(".top-panel");
   // Build the correct bubble ID and class
   if (snapshot) {
     if (!div) {
@@ -588,8 +588,8 @@ async function renderSnapshot(snapshot, snapIndex) {
     toppanel.style.backgroundImage = "none";
 
   } else {
-    let topPanel = document.querySelector(".top-panel");
     topPanel.classList.add('electrify');
+    if (div) div.classList.add('electrify');
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       if (bubble) bubble.remove();
     });
