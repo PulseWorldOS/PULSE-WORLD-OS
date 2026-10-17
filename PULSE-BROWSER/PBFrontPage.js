@@ -2298,7 +2298,7 @@ setInterval(() => {
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 21) {
     enterBtn.click();
-    setTimeout(backToOriginal, 2500);
+    setTimeout(backToOriginal, 1700);
     document.getElementById("timerBtn").style.display = "none";
   } else if (userInteracted) {
     document.getElementById("timerBtn").style.display = "none";
