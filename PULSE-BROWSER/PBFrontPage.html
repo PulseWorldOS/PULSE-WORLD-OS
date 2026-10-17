@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://www.pulseworld.biz" crossorigin>
   <link rel="preconnect" href="https://www.pulseworld.money" crossorigin>
   <!-- Preload Logo -->
-  <link rel="preload" fetchpriority="high" as="video" href="PulseBrowser5.mp4" type="video/mp4">
+  <link rel="preload" fetchpriority="high" as="video" href="PulseWorldOS.mp4" type="video/mp4">
   <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
   <link rel="preload" as="image" href="PulseWorldSplash512.png" />
 
@@ -286,6 +286,14 @@
         0 0 4px rgba(0, 150, 255, 0.7),
         0 0 10px rgba(0, 200, 255, 0.6),
         inset 0 0 6px rgba(0, 180, 255, 0.8);
+    }
+
+    
+    #pbPulseScreen {
+      width: 300px;
+      height: 180px;
+      background: black;
+      border-radius: 30px;
     }
 
     @keyframes bubbleElectrify {
@@ -936,12 +944,6 @@
       font-size: 15px;
     }
 
-    #pbPulseScreen {
-      width: 300px;
-      height: 180px;
-      background: black;
-      display: block;
-    }
 
   </style>
 </head>
@@ -966,6 +968,7 @@
   </div>
 
   <div class="core">
+    <video id="pbPulseScreen" src="PulseWorldOS.mp4" autoplay muted playsinline aria-label="pbPulseScreen"></video>
     <!-- Logo + Title -->
     <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" />
 
@@ -1014,7 +1017,6 @@
     </div>
 
     <div id="pbWarmContainer" style="display:none"></div>
-    <video id="pbPulseScreen" src="PulseBrowser5.mp4"></video>
 
     <!-- ⭐ PulseBrowser Modules Console -->
     <div class="module-console">
