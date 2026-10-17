@@ -1030,7 +1030,7 @@ function injectPulseFlag() {
   //   flag.textContent = "PulseBrowser OS";
   //   flag.style.background = "#00C8FF";
   // }
-  const realStory = getPrimaryVideo();
+  let realStory = getPrimaryVideo();
 
   if (!realStory) { 
     flag.textContent = "PulseBrowser OS (PIP Hidden)";
@@ -1048,7 +1048,7 @@ function injectPulseFlag() {
     }, 4000);
   }
 
-  flag.onclick = () => {    
+  flag.onclick = () => {
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
@@ -1065,6 +1065,7 @@ function injectPulseFlag() {
     // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
       (async () => {
+        realStory = getPrimaryVideo();
         try {
           if (!realStory) { 
             flag.textContent = "PulseBrowser OS (PIP Hidden)";

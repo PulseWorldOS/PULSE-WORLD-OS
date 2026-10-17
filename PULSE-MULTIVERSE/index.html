@@ -4765,9 +4765,9 @@ async function scanPulseWorld(device) {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
     pulsepalSpeak("Attempting Optimization Efforts! Either you Walked Away or you Left Camera Open! Initiating Optimization.");
     optimizationCountdown++;
-    if (optimizationCountdown === 5) {
-      location.reload();
-    }
+    // if (optimizationCountdown === 5) {
+    //   location.reload();
+    // }
   } else if (PulseRealm.PulseWebGPU === false) {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
     pulsepalSpeak("PulseEngine has Detected WebGPU Adapter is Offline.  This is just a Warning!");
@@ -8854,39 +8854,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   
 });
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden || document.visibilityState === "hidden") {
-    if (PulseRealm.TropicPulseScanner) {
-      PulseRealm.TropicPulseScanner.close();
-    }
+// document.addEventListener("visibilitychange", () => {
+//   if (document.hidden || document.visibilityState === "hidden") {
+//     if (PulseRealm.TropicPulseScanner) {
+//       PulseRealm.TropicPulseScanner.close();
+//     }
     
-    pbPanel.style.display = "none";
-    clearInterval(balanceBankTimer);
-    clearInterval(motionTickTimer);
-    clearInterval(PBIntervalFast);
-    clearInterval(StarlinkGhostProtocol);
-    clearInterval(SupabaseProtocol);
-  } else {
-    StarlinkGhostProtocol = setInterval(() => {
-      timeClock.textContent = pulseClock();
-      timeClock.style.color = "#0FF";
-      speedPulse.textContent = PulseRealm.PulseSpeed;
-      speedPulseX.textContent = PulseRealm.PulseSpeedX;
-      cacheStore.textContent = PulseRealm.PulseCacheStore;
-      cachePercent.textContent = PulseRealm.PulseCacheUsed;
-      capability.textContent = PulseRealm.PulseCapability;
-      if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
-      pulseStreamGhost();
-      loadPulseIdentityContinual();
-      pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
-      updateBackButtonVisibility();
-    }, 7000);
-    SupabaseProtocol = setInterval(() => {
-      console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-      pulseSupabaseSync();
-    }, 30000);
-  }
-});
+//     pbPanel.style.display = "none";
+//     clearInterval(balanceBankTimer);
+//     clearInterval(motionTickTimer);
+//     clearInterval(PBIntervalFast);
+//     clearInterval(StarlinkGhostProtocol);
+//     clearInterval(SupabaseProtocol);
+//   } else {
+//     StarlinkGhostProtocol = setInterval(() => {
+//       timeClock.textContent = pulseClock();
+//       timeClock.style.color = "#0FF";
+//       speedPulse.textContent = PulseRealm.PulseSpeed;
+//       speedPulseX.textContent = PulseRealm.PulseSpeedX;
+//       cacheStore.textContent = PulseRealm.PulseCacheStore;
+//       cachePercent.textContent = PulseRealm.PulseCacheUsed;
+//       capability.textContent = PulseRealm.PulseCapability;
+//       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
+//       pulseStreamGhost();
+//       loadPulseIdentityContinual();
+//       pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
+//       updateBackButtonVisibility();
+//     }, 7000);
+//     SupabaseProtocol = setInterval(() => {
+//       console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+//       pulseSupabaseSync();
+//     }, 30000);
+//   }
+// });
 
 // Close scanner when an internal document loads
 document.addEventListener("PulseDocumentChanged", () => {

@@ -192,7 +192,6 @@ async function saveExtensionSettingsUI() {
 //  SECTION X — CACHE LIST (via PBCompanion.js)
 // ============================================================================
 
-// Request cache list from background service worker
 async function pbRequestCacheList() {
   PB_LOG.info("Requesting cache list from PBCompanion…");
 
@@ -205,13 +204,14 @@ async function pbRequestCacheList() {
       }
 
       PB_LOG.load("Cache list received", response.caches);
-      resolve(response.caches);
+      resolve(response);   // ⭐ Return the WHOLE object
     });
   });
 }
 
+
 async function pbRenderCacheList() {
-  const listEl = document.getElementById("cacheList");
+  const listEl = document.getElementById("side-panel left-panel");
   const result = await pbRequestCacheList();
   if (!listEl) return;
 
@@ -220,6 +220,7 @@ async function pbRenderCacheList() {
     return;
   }
 
+  // ⭐ Extract caches
   const caches = result.caches;
 
   if (caches.length === 0) {
@@ -227,10 +228,27 @@ async function pbRenderCacheList() {
     return;
   }
 
+  // ⭐ SORT: biggest cache first
+  caches.sort((a, b) => (b.entries || 0) - (a.entries || 0));
+
   listEl.innerHTML = "";
 
   caches.forEach(cache => {
-    const li = document.createElement("li");
+    let li = document.getElementById("li");
+    if (!li) li = document.createElement("li");
+    li.style.cssText = `
+      margin: 14px 20px;
+      padding: 3px 6px;
+      top: 0;
+      bottom: 0;
+      max-width: clamp(245px, 12vw, 315px);
+      width: clamp(245px, 12vw, 315px);
+      z-index: 5;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+
+    `;
 
     li.innerHTML = `
       <strong>${cache.name}</strong><br>

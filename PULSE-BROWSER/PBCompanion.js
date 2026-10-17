@@ -1219,8 +1219,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               cacheDetails.push({
                 name,
                 entries: count,
-                weightClass,        // ⭐ NEW
-                pulseScore,         // ⭐ NEW (optional fun metric)
+                weightClass,
+                pulseScore,
                 firstEntry: requests[0]?.url || null,
                 lastEntry: requests[count - 1]?.url || null
               });
@@ -1235,35 +1235,29 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             }
           }
 
-          PB_LOG2.info("GET_CACHE_LIST", {
-            ts,
-            totalCaches: cacheNames.length,
-            cacheDetails
-          });
-
-          sendResponse({
+          const payload = {
             ok: true,
             ts,
             totalCaches: cacheNames.length,
-            caches: cacheDetails
-          });
+            caches: cacheDetails   // ⭐ FULL OBJECT
+          };
+
+          PB_LOG2.info("GET_CACHE_LIST", payload);
+          sendResponse(payload);
 
         } catch (err) {
-          PB_LOG2.error("GET_CACHE_LIST_ERROR", {
-            ts,
-            error: err.toString()
-          });
-
-          sendResponse({
+          const errorPayload = {
             ok: false,
             ts,
             error: err.toString()
-          });
+          };
+
+          PB_LOG2.error("GET_CACHE_LIST_ERROR", errorPayload);
+          sendResponse(errorPayload);
         }
       })();
 
       return true;
-
 
 
     case "PULSE_OS_PING":

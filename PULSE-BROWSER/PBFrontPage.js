@@ -84,7 +84,6 @@ function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
 }
 
-// Request cache list from background service worker
 async function pbRequestCacheList2() {
   PB_LOG.info("Requesting cache list from PBCompanion…");
 
@@ -97,13 +96,14 @@ async function pbRequestCacheList2() {
       }
 
       PB_LOG.load("Cache list received", response.caches);
-      resolve(response.caches);
+      resolve(response);   // ⭐ Return the WHOLE object
     });
   });
 }
 
+
 async function pbRenderCacheList2() {
-  const listEl = document.getElementById("cacheList");
+  const listEl = document.getElementById("side-panel left-panel");
   const result = await pbRequestCacheList2();
   if (!listEl) return;
 
@@ -112,6 +112,7 @@ async function pbRenderCacheList2() {
     return;
   }
 
+  // ⭐ Extract caches
   const caches = result.caches;
 
   if (caches.length === 0) {
@@ -119,10 +120,28 @@ async function pbRenderCacheList2() {
     return;
   }
 
+  // ⭐ SORT: biggest cache first
+  caches.sort((a, b) => (b.entries || 0) - (a.entries || 0));
+
   listEl.innerHTML = "";
 
   caches.forEach(cache => {
-    const li = document.createElement("li");
+    let li = document.getElementById("li");
+    if (!li) li = document.createElement("li");
+    li.className = "PulseCache";
+    li.style.cssText = `
+      margin: 14px 20px;
+      padding: 3px 6px;
+      top: 0;
+      bottom: 0;
+      max-width: clamp(245px, 12vw, 315px);
+      width: clamp(245px, 12vw, 315px);
+      z-index: 5;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+
+    `;
 
     li.innerHTML = `
       <strong>${cache.name}</strong><br>
@@ -138,6 +157,8 @@ async function pbRenderCacheList2() {
 
   PB_LOG.info("Cache list rendered", caches);
 }
+
+
 
 async function pulseRehydrateTabs() {
   chrome.tabs.query({}, tabs => {
@@ -322,6 +343,7 @@ async function gpuWarmExtra() {
 }
 
 setTimeout(gpuWarmExtra, 900);
+setTimeout(pulseRehydrateTabs, 50);
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
@@ -584,10 +606,9 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     newIndex++;
   }
   savePulseTabs();
+  pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
   location.reload();
-  // ⭐ REHYDRATE WITH CLEAN INDICES
-  pulseRehydrateTabs();
 });
 
 

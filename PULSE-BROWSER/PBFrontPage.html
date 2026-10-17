@@ -64,6 +64,9 @@
       to { opacity: 1; }
     }
 
+    #text {
+      max-width: clamp(280px, 12vw, 350px);
+    }
     
     .side-panel {
       position: fixed;
@@ -941,7 +944,6 @@
       display: block;
     }
 
-
   </style>
 </head>
 <body>
@@ -954,7 +956,6 @@
     <!-- Left panel content -->
   </div>
   <div class="side-panel left-panel" id="side-panel left-panel">
-    <div class="cacheList" id="cacheList"></div>
     <!-- Left panel content -->
   </div>
 

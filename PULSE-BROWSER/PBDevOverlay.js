@@ -27,6 +27,9 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
     border-radius: 30px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
     z-index: 5;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-all;
   `;
 
   wrap.innerHTML = `
@@ -48,7 +51,7 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   document.body.appendChild(wrap);
 
   updateOverlay();
-  setInterval(updateOverlay, 500);
+  setInterval(updateOverlay, 1000);
 })();
 
 function enabledColor(v) {
