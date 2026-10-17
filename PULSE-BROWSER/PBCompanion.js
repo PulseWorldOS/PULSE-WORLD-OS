@@ -4,7 +4,7 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 const now = new Date().toLocaleString();
-const CACHE_NAME = "PB-Companion-Cache";
+const CACHE_NAME = "PulseBrowser-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 
