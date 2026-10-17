@@ -1035,6 +1035,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBSETTINGS_GET":
       pbLoadSettings().then((settings) => {
         PulseRealmState.settings = settings || {};
+        PulseRealmSettings = settings || {};
         sendResponse({ ok: true, settings });
       });
       return true;
