@@ -105,6 +105,7 @@ async function pbRequestCacheList2() {
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("side-panel left-panel");
   const result = await pbRequestCacheList2();
+  
   if (!listEl) return;
 
   if (!result || !result.caches) {
@@ -123,7 +124,11 @@ async function pbRenderCacheList2() {
   // ⭐ SORT: biggest cache first
   caches.sort((a, b) => (b.entries || 0) - (a.entries || 0));
 
-  listEl.innerHTML = "";
+  let best = false;
+
+  listEl.innerHTML = `<div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+      PulseBrowser OS Caches
+    </div>`;
 
   caches.forEach(cache => {
     let li = document.getElementById("li");
@@ -140,19 +145,30 @@ async function pbRenderCacheList2() {
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
-
     `;
 
-    li.innerHTML = `
-      <font color="#FF8844"><strong>${cache.name}</strong></font><br>
-      Entries: <font color="#0FF">${cache.entries}</font><br>
-      Weight: <font color="#0FF">${cache.weightClass}</font><br>
-      PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
-      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-      Last: <font color="lightgreen">${cache.lastEntry || "none"}</font>
-    `;
+    if (best === false) {
+      li.innerHTML = `
+        <font color="gold"><strong>${cache.name}</strong></font><br>
+        Entries: <font color="#0FF">${cache.entries}</font><br>
+        Weight: <font color="#0FF">${cache.weightClass}</font><br>
+        PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
+        First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+        Last: <font color="lightgreen">${cache.lastEntry || "none"}</font>
+      `;
+    } else {
+      li.innerHTML = `
+        <font color="#FF8844"><strong>${cache.name}</strong></font><br>
+        Entries: <font color="#0FF">${cache.entries}</font><br>
+        Weight: <font color="#0FF">${cache.weightClass}</font><br>
+        PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
+        First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+        Last: <font color="lightgreen">${cache.lastEntry || "none"}</font>
+      `;
+    }
 
     listEl.appendChild(li);
+    best = true;
   });
 
   PB_LOG.info("Cache list rendered", caches);

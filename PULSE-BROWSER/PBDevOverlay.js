@@ -155,6 +155,15 @@ function updatePerformance(realm) {
     Last NAV: <font color="lightgreen">${lastNAV || "-"}</font><br/>
     Last NAV Time: <font color="yellow">${realm.perfLastNavigation || "-"}</font><br/>
   `;
+
+  if (lastNAV) {
+    el.style.cssText = `
+      cursor: pointer;
+    `;
+    el.onclick = () => {
+      openNamedTab(location.hostname, lastNAV);
+    };
+  }
 }
 
 
