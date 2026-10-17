@@ -4761,13 +4761,13 @@ async function scanPulseWorld(device) {
 
   if (PulseRealm.PulseLatency > 400) {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
-  } else if (PulseRealm.PulseStability === 0) {
-    pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
-    pulsepalSpeak("Attempting Optimization Efforts! Either you Walked Away or you Left Camera Open! Initiating Optimization.");
-    optimizationCountdown++;
-    // if (optimizationCountdown === 5) {
-    //   location.reload();
-    // }
+  // } else if (PulseRealm.PulseStability === 0) {
+  //   pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
+  //   pulsepalSpeak("Attempting Optimization Efforts! Either you Walked Away or you Left Camera Open! Initiating Optimization.");
+  //   optimizationCountdown++;
+  //   // if (optimizationCountdown === 5) {
+  //   //   location.reload();
+  //   // }
   } else if (PulseRealm.PulseWebGPU === false) {
     pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
     pulsepalSpeak("PulseEngine has Detected WebGPU Adapter is Offline.  This is just a Warning!");

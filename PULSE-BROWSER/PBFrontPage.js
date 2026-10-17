@@ -80,6 +80,7 @@ chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
   }
 });
 
+
 function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
 }
@@ -587,9 +588,14 @@ async function renderSnapshot(snapshot, snapIndex) {
     toppanel.style.backgroundImage = "none";
 
   } else {
+    let topPanel = document.querySelector(".top-panel");
+    topPanel.classList.add('electrify');
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       if (bubble) bubble.remove();
     });
+    setTimeout(() => {
+      topPanel.classList.remove('electrify');
+    }, 1500);
     toppanel.style.backdropFilter = "blur(24px)";
     toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
   }
@@ -2426,7 +2432,6 @@ setInterval(() => {
     pulseRehydrateTabs();
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       bubble.classList.add('electrify');
-
       setTimeout(() => {
         bubble.classList.remove('electrify');
       }, 3000);
