@@ -589,7 +589,6 @@ async function renderSnapshot(snapshot, snapIndex) {
 
   } else {
     topPanel.classList.add('electrify');
-    if (div) div.classList.add('electrify');
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       if (bubble) bubble.remove();
     });
