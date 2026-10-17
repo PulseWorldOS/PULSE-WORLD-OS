@@ -238,6 +238,7 @@ function updateSettings(settings) {
     PulseNavigator: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
     PulseRouter: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
     OS Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
+    OS Caches: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
     Content Runtime: <font color="${tfColor(settings.enableContentRuntime)}">${settings.enableContentRuntime}</font><br/>
   `;
 }

@@ -592,11 +592,11 @@ async function renderSnapshot(snapshot, snapIndex) {
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       if (bubble) bubble.remove();
     });
+    toppanel.style.backdropFilter = "blur(24px)";
+    toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
     setTimeout(() => {
       topPanel.classList.remove('electrify');
     }, 1500);
-    toppanel.style.backdropFilter = "blur(24px)";
-    toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
   }
 }
 

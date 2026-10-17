@@ -73,7 +73,7 @@ const PB_SW_SETTINGS = {
   enablePulseDecode: true,
   enableContentRuntime: true,
   enableDevOverlay: true,
-
+  enableDevCaches: true,
   blockTrackers: true,
   blockAnalytics: true,
   blockAds: true,
