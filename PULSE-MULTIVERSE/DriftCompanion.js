@@ -8,11 +8,30 @@ const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 
 // --- CONFIG ----------------------------------------------------
 
-const META_DB = "PulseWorldSWDriftDB";
-const META_STORE = "sw-meta";
-const META_KEY = "index-hash";
+const META_DB = "PulseWorld-Drift";
+const META_STORE = "PW-Companion";
+const META_KEY = "PulseWorld";
 
 const CACHE_NAME_PREFIX = "pulseworld-";
+
+
+// ============================================================
+// ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
+// ============================================================
+
+const SHARED_CACHE_NAME = "PulseWorld-Companion";
+
+async function getSharedResponse(req) {
+  const cache = await caches.open(SHARED_CACHE_NAME);
+  return cache.match(req);
+}
+
+async function putSharedResponse(req, res) {
+  const cache = await caches.open(SHARED_CACHE_NAME);
+  if (res && res.ok) {
+    await cache.put(req, res.clone());
+  }
+}
 
 // --- SIMPLE HASH (STRING-LEVEL, GOOD ENOUGH) -------------------
 async function hashText(text) {
@@ -189,25 +208,6 @@ function pulseInc(index, delta = 1) {
 
   pulseActivityReport();
 }
-
-// ============================================================
-// ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
-// ============================================================
-
-const SHARED_CACHE_NAME = "drift-companion-cache";
-
-async function getSharedResponse(req) {
-  const cache = await caches.open(SHARED_CACHE_NAME);
-  return cache.match(req);
-}
-
-async function putSharedResponse(req, res) {
-  const cache = await caches.open(SHARED_CACHE_NAME);
-  if (res && res.ok) {
-    await cache.put(req, res.clone());
-  }
-}
-
 
 // ============================================================
 // ⭐ MULTITHREADED MICRO-SCHEDULER (SAFE, PASSIVE, NON-INTRUSIVE)
