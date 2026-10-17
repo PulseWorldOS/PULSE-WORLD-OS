@@ -4,7 +4,7 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 const now = new Date().toLocaleString();
-const CACHE_NAME = "pb-companion-cache";
+const CACHE_NAME = "PB-Companion-Cache";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 
@@ -1276,6 +1276,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_PERF":
       PulseRealmState.perfEntries = msg.entries || [];
       PulseRealmState.perfLastNavigation = msg.ts || now;
+      PulseRealmState.warmPathsTriggered += 1;
       PulseRealmState.lastWarmOrigin = msg.origin;
       sendResponse({ ok: true });
       break;
@@ -1307,6 +1308,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_ASSETWARM_EVENT":
     case "PBACC_ASSETWARM":
       PulseRealmState.warmAssetsTriggered += msg.count || 1;
+      PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
 
@@ -1387,6 +1389,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
+        PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
         PB_LOG2.info("PB_HOVER_PREFETCH", origin);
       }
@@ -1437,7 +1440,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
-        PBUniversalBoost2?.warmOrigin?.(origin);                
+        PBUniversalBoost2?.warmOrigin?.(origin);
+        PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
       } catch (_) {}
       sendResponse({ ok: true });

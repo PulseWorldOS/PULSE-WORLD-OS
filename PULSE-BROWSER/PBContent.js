@@ -686,9 +686,7 @@ let lastSendPerf = 0;
 
 const mutationObserver = new MutationObserver((mutations) => {
   pendingMutations += mutations.length;
-
   const now = performance.now();
-
   
   if (
     location.protocol === "chrome:" ||
@@ -745,7 +743,20 @@ const perfObserver = new PerformanceObserver((list) => {
   }
 });
 
-perfObserver.observe({ entryTypes: ["resource", "navigation"] });
+perfObserver.observe({
+  entryTypes: [
+    "paint",
+    "largest-contentful-paint",
+    "first-input",
+    "layout-shift",
+    "longtask",
+    "measure",
+    "mark",
+    "resource",
+    "navigation"
+  ]
+});
+
 
 // ---------------------------------------------------------------------------
 // 6. GPU WARM-PATH (canvas + video)

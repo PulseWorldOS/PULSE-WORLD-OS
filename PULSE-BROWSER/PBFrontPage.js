@@ -144,12 +144,12 @@ async function pbRenderCacheList2() {
     `;
 
     li.innerHTML = `
-      <strong>${cache.name}</strong><br>
-      Entries: ${cache.entries}<br>
-      Weight: ${cache.weightClass}<br>
-      PulseScore: ${cache.pulseScore}<br>
-      First: ${cache.firstEntry || "none"}<br>
-      Last: ${cache.lastEntry || "none"}
+      <font color="#FF8844"><strong>${cache.name}</strong></font><br>
+      Entries: <font color="#0FF">${cache.entries}</font><br>
+      Weight: <font color="#0FF">${cache.weightClass}</font><br>
+      PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
+      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry || "none"}</font>
     `;
 
     listEl.appendChild(li);
@@ -1648,17 +1648,6 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
   const isDomainIntent = domainRegex.test(text);
 
   if (isDomainIntent) {
-    const origin = "https://" + text;
-        
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: origin
-    });
-    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
-    try {
-      fetch(origin, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-
     navigateIcon.style.display = "inline";
     navigateIcon.style.backgroundColor = "red";
     if (engineType === "videos") {
