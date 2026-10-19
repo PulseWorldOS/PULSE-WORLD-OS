@@ -297,6 +297,22 @@ async function injectHUD() {
   if (document.getElementById("pulsebrowser-dev-overlay")) return;
   if (!document.body) return setTimeout(injectHUD, 50);
 
+  const vid = document.createElement("video");
+  vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+  vid.autoplay = true;
+  vid.muted = true;
+  vid.style.cssText = `
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 270px;
+    height: 270px;
+    border-radius: 30px;
+    box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+    animation: pulseGlow 3.5s ease-in-out infinite;
+    z-index: 999999999;
+  `;
+
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
   //   const flag = document.getElementById("pulseworld-flag");
@@ -344,7 +360,9 @@ async function injectHUD() {
   setInterval(updateHUD, 1200);
   setTimeout(PulseBrowserDomScan, 2000);
   setTimeout(DomScanPreview, 4000);
-  setTimeout(fadeHUD, 4000);
+  setTimeout(() => {
+    fadeHUD(vid);
+  }, 4000);
 }
 
 function DomScanPreview() {
@@ -440,13 +458,17 @@ function showPulseStreamPrompt(video) {
   };
 }
 
-function fadeHUD() {
+function fadeHUD(vid) {
   const body = document.getElementById("pb-hud-body");
   const wrap = document.getElementById("pulsebrowser-dev-overlay");
   if (!body) return;
   if (!wrap) return;
   wrap.style.display = "none";
   body.style.display = "none";
+  
+  if (vid) document.body.appendChild(vid);
+
+  if (vid) setTimeout(() => vid.remove(), 5000);
 }
 
 function updateHUD() {
@@ -1018,7 +1040,6 @@ function injectPulseFlag() {
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
   //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   // ];
-
   const flag = document.createElement("div");
   flag.id = "pulseworld-flag";
   flag.style.cssText = `
@@ -1295,7 +1316,7 @@ function PulseBrowserPreview(text) {
 
   if (text) setTimeout(() => {
     PreviewListener(preview);
-  }, 10000)
+  }, 7000)
 }
 
 function PreviewListener(preview) {
@@ -1329,7 +1350,7 @@ async function PulseBrowserDomScan() {
 
   // Tiny image preview (first 5 images only)
   const tinyImages = [...document.querySelectorAll("img[src]")]
-    .slice(0, 15)
+    .slice(0, 25)
     .map(img => ({
       src: img.src,
       alt: img.alt?.slice(0, 60) || null

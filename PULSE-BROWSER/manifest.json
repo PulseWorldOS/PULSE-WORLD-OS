@@ -92,7 +92,8 @@
       "PBRouter.js",
       "PBPopup.js",      
       "PBCompanion.js",
-      "PBSettings.js"
+      "PBSettings.js",
+      "PulseWorldOS.mp4"
     ],
     "matches": ["<all_urls>"]
   }
