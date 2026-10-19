@@ -157,7 +157,7 @@ function updatePerformance(realm) {
   `;
 
   if (lastNAV) {
-    el.style.cssText = `
+    el.style.cssText = el.style.cssText + `
       cursor: pointer;
     `;
     el.onclick = () => {

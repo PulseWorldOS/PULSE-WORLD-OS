@@ -146,7 +146,6 @@ async function pbRenderCacheList2() {
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
-      cursor: pointer;
     `;
 
     if (best === false) {
@@ -156,7 +155,7 @@ async function pbRenderCacheList2() {
         Weight: <font color="#0FF">${cache.weightClass}</font><br>
         PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
         First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-        Last: <font color="lightgreen">${cache.lastEntry || "none"}</font>
+        Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
       `;
     } else {
       li.innerHTML = `
@@ -170,6 +169,9 @@ async function pbRenderCacheList2() {
     }
 
     if (cache.lastEntry) {
+      li.style.cssText = li.style.cssText + `
+        cursor: pointer;
+      `;
       li.onclick = () => {
         openNamedTab(location.hostname, cache.lastEntry);
       };
@@ -328,7 +330,7 @@ function injectPulseScreenFromMemory() {
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let gpuEnabled = "No GPU";
+  let gpuEnabled = "GPU Driver Error";
 
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
@@ -453,8 +455,24 @@ function normalizeIdentity(url) {
   }
 }
 
-function openNamedTab(name, url) {
+function getNextInstanceIndex() {
+  const used = new Set();
+
+  for (const identity in pulseTabs) {
+    const entry = pulseTabs[identity];
+    if (entry.snapshot) used.add(entry.snapshot);
+  }
+
+  for (let i = 1; i <= 6; i++) {
+    if (!used.has(i)) return i;
+  }
+
+  return 1; // fallback
+}
+
+function openNamedTab(name, url, next) {
   const identity = normalizeIdentity(url);
+  const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
@@ -464,7 +482,7 @@ function openNamedTab(name, url) {
 
     if (!Number.isInteger(tabId)) {
       chrome.tabs.create({ url }, newTab => {
-        pulseTabs[identity] = { id: newTab.id, realm: identity };
+        pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
         savePulseTabs();
       });
 
@@ -482,7 +500,7 @@ function openNamedTab(name, url) {
         chrome.tabs.update(tabId, { url, active: true }, updated => {
           if (chrome.runtime.lastError || !updated) {
             chrome.tabs.create({ url }, newTab => {
-              pulseTabs[identity] = { id: newTab.id, realm: identity };
+              pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
               savePulseTabs();
             });
 
@@ -495,7 +513,7 @@ function openNamedTab(name, url) {
             return;
           }
 
-          pulseTabs[identity] = { id: updated.id, realm: identity };
+          pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex };
           savePulseTabs();
         });
 
@@ -513,7 +531,7 @@ function openNamedTab(name, url) {
         tabs: [tab.index]
       });
 
-      pulseTabs[identity] = { id: tab.id, realm: identity };
+      pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex };
       savePulseTabs();
     });
 
@@ -528,7 +546,7 @@ function openNamedTab(name, url) {
 
   // ⭐ No existing tab → create new
   chrome.tabs.create({ url }, tab => {
-    pulseTabs[identity] = { id: tab.id, realm: identity };
+    pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex };
     savePulseTabs();
   });
 
@@ -555,7 +573,7 @@ function latestSnapshot(realm, link, snapIndex) {
       // ⭐ Replace any existing listener instead of stacking new ones
       bubble.onclick = () => {
         pbPreconnect([link]);
-        openNamedTab(realm, link);
+        openNamedTab(realm, link, true);
       };
     }
   });
@@ -589,11 +607,20 @@ async function renderSnapshot(snapshot, snapIndex) {
 
   } else {
     topPanel.classList.add('electrify');
+    // Remove the bubble
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
-      if (bubble) bubble.remove();
+      if (bubble === div) bubble.remove();
     });
-    toppanel.style.backdropFilter = "blur(24px)";
-    toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
+    // Now check if any bubbles remain
+    const remaining = document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+    if (remaining === 0) {
+      toppanel.style.backdropFilter = "blur(24px)";
+      toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
+    } else {
+      // ⭐ There are still bubbles
+      console.log(`There are ${remaining} bubbles left.`);
+    }
+
     setTimeout(() => {
       topPanel.classList.remove('electrify');
     }, 1500);
@@ -639,23 +666,6 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   // injectPulseScreenFromMemory();
   // location.reload();
 });
-
-
-function getNextSnapshotIndex() {
-  const used = new Set();
-
-  for (const identity in pulseTabs) {
-    const entry = pulseTabs[identity];
-    if (entry.snapshot) used.add(entry.snapshot);
-  }
-
-  for (let i = 1; i <= 6; i++) {
-    if (!used.has(i)) return i;
-  }
-
-  return 1; // fallback
-}
-
 
 
 function isPulseWorld(origin) {
@@ -704,7 +714,7 @@ const PBUniversalBoost = {
     }
 
     const paths = [
-      "/", "/home", "/about", "/contact", "/manifest.json"
+      "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"
     ];
     const assets = [
       "/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"
@@ -714,11 +724,13 @@ const PBUniversalBoost = {
       .concat(paths.map((p) => origin + p))
       .concat(assets.map((p) => origin + p));
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
-      if (fails[url] >= 2) {
-        continue;
-      }
+      if (fails[url] >= 2) continue;
 
       try {
         const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
@@ -726,14 +738,18 @@ const PBUniversalBoost = {
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
 
-          // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
           }
+        } else {
+          warmedCount++;
         }
       } catch (_) {}
-    }
 
+      // ⭐ Add delay between warm-fetches
+      await sleep(200);   // ← 150–200ms recommended
+    }
+    
     // ⭐ Save updated fail-cache
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
@@ -1573,8 +1589,8 @@ document.getElementById("navigate").addEventListener("click", () => {
   const isDomainIntent = domainRegex.test(text);
 
   if (isDomainIntent) {
-
-    const origin = "https://" + text;
+    const originlink = "https://" + text;
+    const origin = new URL(originlink).origin;
     
     if (!temporaryLinks.includes(origin)) {
       temporaryLinks.push(origin);
@@ -1639,7 +1655,8 @@ document.getElementById("search").addEventListener("click", (event) => {
   const isPureDomain = domainRegex.test(cleaned);
 
   if (isPureDomain) {
-    const origin = "https://" + cleaned;
+    const originlink = "https://" + cleaned;
+    const origin = new URL(originlink).origin;
     
     if (!temporaryLinks.includes(origin)) {
       temporaryLinks.push(origin);
@@ -1672,7 +1689,9 @@ document.getElementById("search").addEventListener("click", (event) => {
     url = engineURL + encodeURIComponent(text);
   }
 
-  openNamedTab("PulseSearchLink", url);
+  if (url) {
+    openNamedTab("PulseSearchLink", url);
+  }
   // window.location.href = url;
 });
 
@@ -1735,7 +1754,8 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     let url;
 
     if (isDomainIntent) {
-      const origin = "https://" + text;
+      const originlink = "https://" + text;
+      const origin = new URL(originlink).origin;
       
       if (!temporaryLinks.includes(origin)) {
         temporaryLinks.push(origin);
@@ -1766,7 +1786,9 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
       url = engineURL + encodeURIComponent(text);
     }
 
-    openNamedTab("PulseSearchLink", url);
+    if (url) {
+      openNamedTab("PulseSearchLink", url);
+    }
     // window.location.href = url;
   }
 });
@@ -2273,18 +2295,6 @@ function backToOriginal() {
   });
 }
 
-function selectPulseTab(identity) {
-  const entry = pulseTabs[identity];
-  if (!entry) return;
-
-  chrome.tabs.get(entry.id, tab => {
-    if (!tab) return;
-
-    chrome.tabs.highlight({ tabs: [tab.index] });
-  });
-}
-
-
 
 const images = [
   "PulseWorldEntrancePulseGPUPulseEarn.png",
@@ -2332,9 +2342,9 @@ setInterval(() => {
     nebula.style.opacity = 0;
     setTimeout(() => {
       nebula.style.backgroundImage = `url(${images[index]})`;
-      nebula.style.opacity = 0.75;
+      nebula.style.opacity = 0.9;
       index = (index + 1) % images.length;
-    }, 1500);
+    }, 1000);
   }
 
   setInterval(() => {

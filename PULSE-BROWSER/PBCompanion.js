@@ -1422,12 +1422,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PB_ASSET_LIST_FRONT":
       try {
-        const originfile = new URL(msg.pageUrl).origin;
-        PBGlobalAssetMap?.scanAndWarm?.(originfile, msg.assets || []);
-        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(originfile, a));
+        PBGlobalAssetMap?.scanAndWarm?.(msg.pageUrl, msg.assets || []);
+        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(msg.pageUrl, a));
         PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
         PulseRealmState.imagesDecoded += msg.decodeCount || 1;
-        PB_LOG2.info("PB_ASSET_LIST_FRONT", originfile);
+        PB_LOG2.info("PB_ASSET_LIST_FRONT", msg.pageUrl);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1716,11 +1715,13 @@ const PBUniversalBoost2 = {
       .concat(paths.map((p) => origin + p))
       .concat(assets.map((p) => origin + p));
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     for (const url of urls) {
       // ⭐ If THIS SPECIFIC URL failed twice → skip forever
-      if (fails[url] >= 2) {
-        continue;
-      }
+      if (fails[url] >= 2) continue;
 
       try {
         const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
@@ -1728,14 +1729,16 @@ const PBUniversalBoost2 = {
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
 
-          // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
-          }        
+          }
         } else {
           warmedCount++;
         }
       } catch (_) {}
+
+      // ⭐ Add delay between warm-fetches
+      await sleep(200);   // ← 150–200ms recommended
     }
 
     // ⭐ Save updated fail-cache
@@ -1828,7 +1831,7 @@ const PBTemporalCache = {
   history: [],
   assets: new Map(), // key: origin, value: Set of asset URLs
   maxHistory: 200,
-  maxAssetsPerOrigin: 10, // ⭐ limit recent assets
+  maxAssetsPerOrigin: 20, // ⭐ limit recent assets
 
   noteNavigation(url) {
     if (!url) return;
@@ -1899,7 +1902,7 @@ const PBGlobalAssetMap = {
     /fonts\.gstatic\.com/
   ],
 
-  maxAssetsPerOrigin: 10, // ⭐ limit warmed assets per origin
+  maxAssetsPerOrigin: 20, // ⭐ limit warmed assets per origin
 
   async scanAndWarm(origin, resourceList = []) {
     if (!origin) return;

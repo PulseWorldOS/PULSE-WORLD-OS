@@ -164,7 +164,8 @@ function normalizeIdentity(url) {
   }
 }
 
-function getNextSnapshotIndex() {
+
+function getNextInstanceIndex() {
   const used = new Set();
 
   for (const identity in pulseTabs) {
@@ -172,15 +173,17 @@ function getNextSnapshotIndex() {
     if (entry.snapshot) used.add(entry.snapshot);
   }
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 6; i++) {
     if (!used.has(i)) return i;
   }
 
   return 1; // fallback
 }
 
-function openNamedTab(name, url) {
+function openNamedTab(name, url, next) {
   const identity = normalizeIdentity(url);
+  let instanceIndex = 1;
+  if (next) instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
@@ -190,7 +193,7 @@ function openNamedTab(name, url) {
 
     if (!Number.isInteger(tabId)) {
       chrome.tabs.create({ url }, newTab => {
-        pulseTabs[identity] = { id: newTab.id, realm: identity };
+        pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
         savePulseTabs();
       });
 
@@ -205,7 +208,7 @@ function openNamedTab(name, url) {
         chrome.tabs.update(tabId, { url, active: true }, updated => {
           if (chrome.runtime.lastError || !updated) {
             chrome.tabs.create({ url }, newTab => {
-              pulseTabs[identity] = { id: newTab.id, realm: identity };
+              pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
               savePulseTabs();
             });
 
@@ -215,7 +218,7 @@ function openNamedTab(name, url) {
             return;
           }
 
-          pulseTabs[identity] = { id: updated.id, realm: identity };
+          pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex };
           savePulseTabs();
         });
 
@@ -230,7 +233,7 @@ function openNamedTab(name, url) {
         tabs: [tab.index]
       });
 
-      pulseTabs[identity] = { id: tab.id, realm: identity };
+      pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex };
       savePulseTabs();
     });
 
@@ -242,7 +245,7 @@ function openNamedTab(name, url) {
 
   // ⭐ No existing tab → create new
   chrome.tabs.create({ url }, tab => {
-    pulseTabs[identity] = { id: tab.id, realm: identity };
+    pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex };
     savePulseTabs();
   });
 

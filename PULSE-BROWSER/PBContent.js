@@ -1095,7 +1095,6 @@ function injectPulseFlag() {
               flag.textContent = "PulseBrowser OS";
               flag.style.background = "rosybrown";
             }, 4000);
-            return;
           }
           // ⭐ Toggle PIP
           if (document.pictureInPictureElement) {
@@ -1209,7 +1208,7 @@ setTimeout(triggerWarmPaths, 300);
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let gpuEnabled = "No GPU";
+  let gpuEnabled = "GPU Driver Error";
 
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
