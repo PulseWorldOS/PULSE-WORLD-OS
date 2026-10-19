@@ -184,43 +184,47 @@ self.addEventListener("activate", (event) => {
 self.addEventListener('fetch', event => {
   const req = event.request;
 
-  // Only cache GET requests
   if (req.method !== 'GET') return;
 
-  // // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.startsWith('chrome://extensions/')) {
-     return; // Let the browser handle extension assets normally
+  if (req.url.startsWith('chrome-extension://') ||
+      req.url.startsWith('chrome://') ||
+      req.url.startsWith('edge://') ||
+      req.url.startsWith('about:') ||
+      req.url.startsWith('moz-extension://')) {
+    return;
   }
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
 
-    // Try cache first
-    const cached = await cache.match(req);
-    if (cached) {
-      return cached; // Warm-state: instant return
+    // ⭐ Add timestamp if this cache has no birth record
+    const birthCheck = await cache.match("__pulse_created_at__");
+    if (!birthCheck) {
+      await cache.put("__pulse_created_at__", new Response(Date.now().toString()));
     }
 
-    // Network fallback
+    // ⭐ Warm-state
+    const cached = await cache.match(req);
+    if (cached) return cached;
+
     try {
       const net = await fetch(req, { cache: 'no-store' });
 
-      // Only store good GET 200 responses
-      if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
+      if (net && net.ok) {
         cache.put(req, net.clone());
       }
 
       return net;
+
     } catch (err) {
-      // Offline fallback: return last known cached version
       const fallback = await cache.match(req);
       if (fallback) return fallback;
 
-      // Final fallback: offline message
       return new Response("Offline", { status: 503 });
     }
   })());
 });
+
 
 
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
@@ -1197,7 +1201,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "GET_CACHE_LIST":
       (async () => {
-        const ts = Date.now();  // ⭐ Timestamp for diagnostics
+        const ts = Date.now();  // ⭐ Diagnostic timestamp
 
         try {
           const cacheNames = await caches.keys();
@@ -1209,13 +1213,30 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const requests = await cache.keys();
               const count = requests.length;
 
-              // ⭐ Weight class (small words)
-              let weightClass = "light";
-              if (count > 50) weightClass = "medium";
-              if (count > 300) weightClass = "heavy";
-              if (count > 1000) weightClass = "massive";
+              // ⭐ Read cache birth timestamp (if exists)
+              const createdAtReq = await cache.match("__pulse_created_at__");
+              const createdAt = createdAtReq ? Number(await createdAtReq.text()) : null;
 
-              // ⭐ Optional PulseScore (tiny heuristic)
+              // ⭐ Compute age + rate
+              let ageDays = null;
+              let rate = null;
+
+              if (createdAt) {
+                const ageMs = ts - createdAt;
+                ageDays = ageMs / (1000 * 60 * 60 * 24);
+                rate = count / Math.max(ageDays, 0.01);   // ⭐ entries per day
+              }
+
+              // ⭐ NEW TIME-AWARE WEIGHT CLASS (rate-based)
+              let weightClass = "light";
+
+              if (rate !== null) {
+                if (rate > 10)  weightClass = "medium";     // 10 entries/day
+                if (rate > 100) weightClass = "heavy";      // 100 entries/day
+                if (rate > 1000) weightClass = "massive";   // 1000 entries/day
+              }
+
+              // ⭐ PulseScore (unchanged)
               const pulseScore = Math.min(100, Math.floor(count / 10));
 
               cacheDetails.push({
@@ -1223,6 +1244,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 entries: count,
                 weightClass,
                 pulseScore,
+                ageDays,
+                rate,
                 firstEntry: requests[0]?.url || null,
                 lastEntry: requests[count - 1]?.url || null
               });
@@ -1241,7 +1264,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             ok: true,
             ts,
             totalCaches: cacheNames.length,
-            caches: cacheDetails   // ⭐ FULL OBJECT
+            caches: cacheDetails
           };
 
           PB_LOG2.info("GET_CACHE_LIST", payload);

@@ -303,11 +303,12 @@ async function injectHUD() {
   vid.muted = true;
   vid.style.cssText = `
     position: fixed;
+    display: block;
     top: 10px;
     right: 10px;
-    width: 270px;
-    height: 270px;
-    border-radius: 30px;
+    width: 250px;
+    height: 250px;
+    border-radius: 999px;
     box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
     animation: pulseGlow 3.5s ease-in-out infinite;
     z-index: 999999999;
@@ -465,10 +466,12 @@ function fadeHUD(vid) {
   if (!wrap) return;
   wrap.style.display = "none";
   body.style.display = "none";
-  
+  if (vid) vid.style.display = "block";
   if (vid) document.body.appendChild(vid);
 
-  if (vid) setTimeout(() => vid.remove(), 5000);
+  setTimeout(() => {
+    if (vid) vid.style.display = "none";
+  }, 5000);
 }
 
 function updateHUD() {
