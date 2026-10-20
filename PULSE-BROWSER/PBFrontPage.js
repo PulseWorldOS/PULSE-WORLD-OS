@@ -239,7 +239,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   pulseRehydrateTabs();
 });
 
-
+const pbPulseScreen = document.getElementById("pbPulseScreen");
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
@@ -313,26 +313,17 @@ function injectPulseScreenFromMemory() {
   loadLastSavedVideo(entry => {
     if (!entry) return;
 
-    const video = document.getElementById("pbPulseScreen");
-    if (!video) return;
-
-    video.width = entry.width;
-    video.height = entry.height;
-    video.src = entry.blobUrl;
-    if (!entry.blobUrl) video.src = "";
-    video.currentTime = entry.currentTime || 0;
-
-    video.style.display = "block";
-
-    video.requestPictureInPicture()
-      .catch(err => console.warn("PulseScreen PIP Error:", err));
+    pbPulseScreen.width = entry.width;
+    pbPulseScreen.height = entry.height;
+    pbPulseScreen.src = entry.source;
+    pbPulseScreen.currentTime = entry.currentTime || 0;
   });
 }
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   let gpuEnabled = "GPU Driver Error";
-
+  
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try {
@@ -366,10 +357,13 @@ async function gpuWarmExtra() {
   }
 
   console.log("GPU Warmed!");
+  if (gpuEnabled === "GPU Driver Error") {
+    pbPulseScreen.src = "PulseWorldOS-Older.mp4";
+  }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
-setTimeout(gpuWarmExtra, 900);
+setTimeout(gpuWarmExtra, 100);
 setTimeout(pulseRehydrateTabs, 250);
 
 // ============================================================================
@@ -2303,7 +2297,19 @@ function getSyncInterval2() {
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
   // ⭐ Final interval
-  const interval = Math.max(5000, base + jitter); // never below 5s
+  const interval = Math.max(1000, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+function getCharacterInterval() {
+  const base = 5000;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.15;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(1000, base + jitter); // never below 5s
 
   return Math.floor(interval);
 }
@@ -2340,7 +2346,7 @@ const sync = getSyncInterval2();
 setInterval(() => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
-  if (!userInteracted && timerX === 21) {
+  if (!userInteracted && timerX === 18) {
     enterBtn.click();
     setTimeout(backToOriginal, 1700);
     document.getElementById("timerBtn").style.display = "none";
@@ -2349,6 +2355,11 @@ setInterval(() => {
     timerX = 0;
   }
 }, sync);
+
+  const interval3 = getCharacterInterval();
+  setInterval(() => {
+    injectPulseScreenFromMemory();
+  }, interval3);
 
   function swap() {
     nebula.style.opacity = 0;
@@ -2362,11 +2373,11 @@ setInterval(() => {
   function getWarmInterval2() {
     const base = 15000;
   // ⭐ Add human-like jitter (±20%)
-    const jitterRange = base * 0.22;
+    const jitterRange = base * 0.27;
     const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
     // ⭐ Final interval
-    const interval = Math.max(5000, base + jitter); // never below 5s
+    const interval = Math.max(3000, base + jitter); // never below 5s
 
     return Math.floor(interval);
   }
