@@ -311,20 +311,31 @@ function getSyncInterval() {
   return Math.floor(interval);
 }
 
+function loadLastSavedVideo(callback) {
+  chrome.storage.local.get(["pipMemory"], data => {
+    const list = data.pipMemory || [];
+    if (!list.length) return callback(null);
+    const last = list[list.length - 1];
+    callback(last);
+  });
+}
+
 async function injectHUD() {
   // const STREAMING_SITES = [
   //   "netflix.com","hulu.com","disneyplus.com","primevideo.com",
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
   //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   // ];
-
+  
   if (document.getElementById("pulsebrowser-dev-overlay")) return;
   if (!document.body) return setTimeout(injectHUD, 50);
 
   const vid = document.createElement("video");
-  vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
-  vid.autoplay = true;
-  vid.muted = true;
+  loadLastSavedVideo(entry => {
+    if (!entry) return;
+    if (!entry.source) return;
+    if (vid.src !== entry.source) vid.src = entry.source;
+  });
   vid.style.cssText = `
     position: fixed;
     display: block;
@@ -490,6 +501,9 @@ function fadeHUD(vid) {
   if (!wrap) return;
   wrap.style.display = "none";
   body.style.display = "none";
+  vid.currentTime = 0;
+  vid.autoplay = true;
+  vid.muted = true;
   if (vid) vid.style.display = "block";
   if (vid) document.body.appendChild(vid);
 
@@ -1056,11 +1070,20 @@ async function saveVideoToMemory(videoElement) {
 if (pbDomainClass(location.href)) {
   document.addEventListener("click", e => {
     const vid = e.target.closest("video");
-    setTimeout(() => {
-      if (vid) AttemptPulseSteam(vid);
-    }, 2500);
+    if (!vid) return;
+
+    // ⭐ Calculate aspect ratio
+    const ratio = vid.videoWidth / vid.videoHeight;
+
+    // ⭐ Only trigger if ratio is roughly 1:1 (square)
+    const isIdentityVideo = ratio < 1.4;
+
+    if (isIdentityVideo) {
+      setTimeout(() => AttemptPulseSteam(vid), 2500);
+    }
   });
 }
+
 
 function injectPulseFlag() {
   // const STREAMING_SITES = [
