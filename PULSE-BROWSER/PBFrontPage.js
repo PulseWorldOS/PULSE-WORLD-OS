@@ -312,6 +312,7 @@ function loadLastSavedVideo(callback) {
 function injectPulseScreenFromMemory() {
   loadLastSavedVideo(entry => {
     if (!entry) return;
+    if (!entry.source) return;
 
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;

@@ -1025,18 +1025,13 @@ function loadVideoMemory(callback) {
 
 async function saveVideoToMemory(videoElement) {
   try {
-    const response = await fetch(videoElement.src);
-    const blob = await response.blob();
-    const bytes = await response.bytes();
+    
     const source = videoElement.src;
     const width = videoElement.videoWidth;
     const height = videoElement.videoHeight;
 
-    const blobUrl = URL.createObjectURL(blob);
 
     const entry = {
-      blobUrl,
-      bytes,
       source,
       width,
       height,
