@@ -1027,6 +1027,7 @@ async function saveVideoToMemory(videoElement) {
   try {
     const response = await fetch(videoElement.src);
     const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
     const source = videoElement.src;
     const width = videoElement.videoWidth;
     const height = videoElement.videoHeight;
@@ -1034,7 +1035,7 @@ async function saveVideoToMemory(videoElement) {
 
     const entry = {
       source,
-      blob,
+      blobUrl,
       width,
       height,
       currentTime: currentTime || 0,
