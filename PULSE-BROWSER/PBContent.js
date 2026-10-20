@@ -315,6 +315,7 @@ function loadLastSavedVideo(callback) {
   chrome.storage.local.get(["pipMemory"], data => {
     const list = data.pipMemory || [];
     if (!list.length) return callback(null);
+
     const last = list[list.length - 1];
     callback(last);
   });
@@ -335,6 +336,7 @@ async function injectHUD() {
     if (!entry) return;
     if (!entry.source) return;
     if (vid.src !== entry.source) vid.src = entry.source;
+    if (!entry.source) chrome.runtime.getURL("PulseWorldOS.mp4");
   });
   vid.style.cssText = `
     position: fixed;
@@ -501,11 +503,11 @@ function fadeHUD(vid) {
   if (!wrap) return;
   wrap.style.display = "none";
   body.style.display = "none";
+  if (vid) document.body.appendChild(vid);
   vid.currentTime = 0;
   vid.autoplay = true;
   vid.muted = true;
   if (vid) vid.style.display = "block";
-  if (vid) document.body.appendChild(vid);
 
   setTimeout(() => {
     if (vid) vid.style.display = "none";
