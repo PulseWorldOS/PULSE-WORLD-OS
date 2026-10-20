@@ -607,6 +607,29 @@ document.getElementById("mod-stream").onclick = async () => {
     // chrome.tabs.create({ url: link });
 };
 
+document.getElementById("mod-shopping").onclick = async () => {
+
+    PulseRealmSettings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] Shopping module clicked. Settings:", PulseRealmSettings);
+
+    // INTERNAL MODE → open PulseWorld Streaming on the real domain
+    if (PulseRealmSettings.shoppingMode === "internal") {
+        const internalURL = "https://www.amazon.com";
+        console.log("[FrontPage] Opening Internal Shopping Module:", internalURL);
+        openNamedTab("PulseShopping", internalURL);
+        // chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link =PulseRealmSettings.externalShoppingLink?.trim() || "https://www.amazon.com";
+
+    console.log("[FrontPage] Opening External Shopping Provider:", link);
+    openNamedTab("PulseShopping", link);
+    // chrome.tabs.create({ url: link });
+};
+
 // // ---------------------------------------------------------------------------
 // // BUTTON: Refresh HUD (Realm Snapshot)
 // // ---------------------------------------------------------------------------
@@ -709,6 +732,8 @@ async function pulseConsoleKey(event) {
     link = PulseRealmSettings.externalWorkLink;
   } else if (key === "t") {
     link = PulseRealmSettings.externalStreamingLink;
+  } else if (key === "e") {
+    link = PulseRealmSettings.externalShoppingLink;
   }
 
   chrome.runtime.sendMessage({
@@ -1054,6 +1079,7 @@ async function loadWorld() {
   const workIcon = document.getElementById("moduleWorkIcon");
   const streamIcon = document.getElementById("moduleStreamIcon");
   const socialIcon = document.getElementById("moduleSocialIcon");
+  const shoppingIcon = document.getElementById("moduleShoppingIcon");
     
   PulseRealmSettings = await pbLoadExtensionSettings();
 
@@ -1092,6 +1118,19 @@ async function loadWorld() {
       socialIcon.style.backgroundImage = `url(${favC})`;
       socialIcon.style.backgroundSize = "contain";
       socialIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  if (PulseRealmSettings.shoppingMode === "internal") {
+      shoppingIcon.innerText = "🎭";      // your original emoji
+      shoppingIcon.style.backgroundImage = "";
+  } else {        
+    const favC = await getFavicon(PulseRealmSettings.externalShoppingLink);
+    if (favC) {
+      shoppingIcon.innerText = "⚡";
+      shoppingIcon.style.backgroundImage = `url(${favC})`;
+      shoppingIcon.style.backgroundSize = "contain";
+      shoppingIcon.style.backgroundRepeat = "no-repeat";
     }
   }
   

@@ -336,7 +336,7 @@ async function injectHUD() {
     if (!entry) return;
     if (!entry.source) return;
     if (vid.src !== entry.source) vid.src = entry.source;
-    if (!entry.source) chrome.runtime.getURL("PulseWorldOS.mp4");
+    // if (!vid.src) chrome.runtime.getURL("PulseWorldOS.mp4");
   });
   vid.style.cssText = `
     position: fixed;
@@ -1081,7 +1081,7 @@ if (pbDomainClass(location.href)) {
     const isIdentityVideo = ratio < 1.4;
 
     if (isIdentityVideo) {
-      setTimeout(() => AttemptPulseSteam(vid), 2500);
+      setTimeout(() => AttemptPulseSteam(vid), 1500);
     }
   });
 }

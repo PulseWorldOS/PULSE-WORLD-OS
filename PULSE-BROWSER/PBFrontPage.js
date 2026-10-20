@@ -560,7 +560,7 @@ function latestSnapshot(realm, link, snapIndex) {
 
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap) renderSnapshot(snap, snapIndex);
+    if (snap) renderSnapshot(snap, snapIndex, realm);
 
     const bubbleSelector = `.PulseBrowser-OS-Snapshot${snapIndex}`;
     const bubble = document.querySelector(bubbleSelector);
@@ -575,7 +575,7 @@ function latestSnapshot(realm, link, snapIndex) {
   });
 }
 
-async function renderSnapshot(snapshot, snapIndex) {
+async function renderSnapshot(snapshot, snapIndex, realm) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
@@ -585,6 +585,10 @@ async function renderSnapshot(snapshot, snapIndex) {
       div = document.createElement("div");
       div.id = bubbleId;
       div.className = bubbleId;
+    }
+    if (!snapshot.favicon) {
+      const realmURL = new URL(realm);
+      snapshot.favicon = getFavicon(realmURL);
     }
     // ---------------------------------------------
     // ⭐ Inject ONLY the favicon (big, centered)
@@ -643,7 +647,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
         PulseURL = null;
       }
 
-      renderSnapshot(null, removedSnapshotIndex);
+      renderSnapshot(null, removedSnapshotIndex, realm);
 
       delete pulseTabs[identity];
       break;
@@ -1063,6 +1067,7 @@ async function pbModuleWarmBoot() {
     PulseRealmSettings.externalSocialLink,
     PulseRealmSettings.externalWorkLink,
     PulseRealmSettings.externalStreamingLink,
+    PulseRealmSettings.externalShoppingLink,
     PulseRealmSettings.externalSearchLink,
     PulseRealmSettings.acceleratedModule1Link,
     PulseRealmSettings.acceleratedModule2Link,
@@ -1258,6 +1263,21 @@ async function updateModuleIcons() {
     }
   }
 
+  // WORK MODULE
+  const shoppingIcon = document.getElementById("moduleShoppingIcon");
+  if (settings.shoppingMode === "internal") {
+    shoppingIcon.innerText = "📺";      // your original emoji
+    shoppingIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalShoppingLink);
+    if (fav) {
+      shoppingIcon.innerText = "⚡";
+      shoppingIcon.style.backgroundImage = `url(${fav})`;
+      shoppingIcon.style.backgroundSize = "contain";
+      shoppingIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
   if (settings.acceleratedModule1Link) {
     const moduleFav1Link = document.getElementById("moduleFav1Link");
     const moduleFav1Icon = document.getElementById("moduleFav1Icon");
@@ -1346,6 +1366,7 @@ async function updateModuleIcons() {
     settings.externalSocialLink,
     settings.externalWorkLink,
     settings.externalStreamingLink,
+    settings.externalShoppingLink,
     settings.acceleratedModule1Link,
     settings.acceleratedModule2Link,
     settings.acceleratedModule3Link,
@@ -1433,6 +1454,8 @@ async function pulseTeleportKey(event) {
     link = PulseRealmSettings.externalWorkLink;
   } else if (key === "t") {
     link = PulseRealmSettings.externalStreamingLink;
+  } else if (key === "e") {
+    link = PulseRealmSettings.externalShoppingLink;
   }
 
   chrome.runtime.sendMessage({
@@ -2163,6 +2186,46 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     await PBUniversalBoost.warmOrigin(link);
 });
 
+document.getElementById("moduleShopping").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Shopping module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Streaming on the real domain
+    if (settings.shoppingMode === "internal") {
+        const internalURL = "https://www.amazon.com";
+        console.log("[FrontPage] Opening Internal Amazon:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+        openNamedTab("PulseShopping", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.externalShoppingLink?.trim() || "https://www.amazon.com";
+
+    console.log("[FrontPage] Opening External Shopping Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    openNamedTab("PulseStream", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
 
 document.getElementById("moduleFav1").addEventListener("click", async () => {
 
@@ -2452,6 +2515,7 @@ setInterval(() => {
       settings.externalSocialLink,
       settings.externalWorkLink,
       settings.externalStreamingLink,
+      settings.externalShoppingLink,
       settings.acceleratedModule1Link,
       settings.acceleratedModule2Link,
       settings.acceleratedModule3Link,
