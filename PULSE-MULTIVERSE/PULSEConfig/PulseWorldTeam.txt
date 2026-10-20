@@ -196,6 +196,12 @@ teamVideo = document.getElementById("teamVideo");
     badge2.classList.add("talking");
     setTimeout(() => badge2.classList.remove("talking"), 12000); // hides after 3s
   }
+  const videos = [...document.querySelectorAll("video")];
+  setTimeout(() => {
+    videos.forEach(vid => {
+      vid.currentTime = 0;
+    });
+  }, 5000);
   pulsepalSpeak("Welcome to the Team's Domain — the thinkers who engineered PulseWorld’s Intent, its Vision, and its built in Empathetic Informational View for the World.");
 PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");

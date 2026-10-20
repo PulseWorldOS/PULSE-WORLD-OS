@@ -316,8 +316,12 @@ function injectPulseScreenFromMemory() {
     
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
-    if (pbPulseScreen.src !== entry.source) pbPulseScreen.src = entry.source;
-    pbPulseScreen.currentTime = entry.currentTime || 0;
+    if (pbPulseScreen.src !== entry.source) {
+      pbPulseScreen.src = entry.source;
+      pbPulseScreen.currentTime = entry.currentTime || 0;
+    } else {
+      pbPulseScreen.currentTime = 0;
+    }
   });
 }
 
