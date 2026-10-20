@@ -312,11 +312,12 @@ function loadLastSavedVideo(callback) {
 function injectPulseScreenFromMemory() {
   loadLastSavedVideo(entry => {
     if (!entry) return;
-    if (!entry.source) return;
-
+    if (!entry.blob) return;
+    const blobUrl = URL.createObjectURL(entry.blob);
+    
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
-    pbPulseScreen.src = entry.source;
+    if (pbPulseScreen.src !== blobUrl) pbPulseScreen.src = blobUrl;
     pbPulseScreen.currentTime = entry.currentTime || 0;
   });
 }
@@ -2358,6 +2359,7 @@ setInterval(() => {
 }, sync);
 
   const interval3 = getCharacterInterval();
+  injectPulseScreenFromMemory();
   setInterval(() => {
     injectPulseScreenFromMemory();
   }, interval3);

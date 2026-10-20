@@ -1025,17 +1025,19 @@ function loadVideoMemory(callback) {
 
 async function saveVideoToMemory(videoElement) {
   try {
-    
+    const response = await fetch(videoElement.src);
+    const blob = await response.blob();
     const source = videoElement.src;
     const width = videoElement.videoWidth;
     const height = videoElement.videoHeight;
-
+    const currentTime = videoElement.currentTime;
 
     const entry = {
       source,
+      blob,
       width,
       height,
-      currentTime: videoElement.currentTime || 0,
+      currentTime: currentTime || 0,
       timestamp: Date.now()
     };
 
@@ -1050,14 +1052,14 @@ async function saveVideoToMemory(videoElement) {
   }
 }
 
-// document.addEventListener("click", e => {
-//   const vid = e.target.closest("video");
-//   const realStory = getPrimaryVideo();
-//   setTimeout(() => {
-//     if (vid) AttemptPulseSteam(vid);
-//     if (realStory && !vid) AttemptPulseSteam(realStory);
-//   }, 2500);
-// });
+if (pbDomainClass(location.href)) {
+  document.addEventListener("click", e => {
+    const vid = e.target.closest("video");
+    setTimeout(() => {
+      if (vid) AttemptPulseSteam(vid);
+    }, 2500);
+  });
+}
 
 function injectPulseFlag() {
   // const STREAMING_SITES = [
