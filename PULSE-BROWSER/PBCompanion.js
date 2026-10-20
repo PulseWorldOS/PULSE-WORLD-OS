@@ -184,47 +184,43 @@ self.addEventListener("activate", (event) => {
 self.addEventListener('fetch', event => {
   const req = event.request;
 
+  // Only cache GET requests
   if (req.method !== 'GET') return;
 
-  if (req.url.startsWith('chrome-extension://') ||
-      req.url.startsWith('chrome://') ||
-      req.url.startsWith('edge://') ||
-      req.url.startsWith('about:') ||
-      req.url.startsWith('moz-extension://')) {
-    return;
+  // // Skip chrome-extension:// URLs (cannot be cached)
+  if (req.url.startsWith('chrome://extensions/')) {
+     return; // Let the browser handle extension assets normally
   }
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
 
-    // ⭐ Add timestamp if this cache has no birth record
-    const birthCheck = await cache.match("__pulse_created_at__");
-    if (!birthCheck) {
-      await cache.put("__pulse_created_at__", new Response(Date.now().toString()));
+    // Try cache first
+    const cached = await cache.match(req);
+    if (cached) {
+      return cached; // Warm-state: instant return
     }
 
-    // ⭐ Warm-state
-    const cached = await cache.match(req);
-    if (cached) return cached;
-
+    // Network fallback
     try {
       const net = await fetch(req, { cache: 'no-store' });
 
-      if (net && net.ok) {
+      // Only store good GET 200 responses
+      if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
         cache.put(req, net.clone());
       }
 
       return net;
-
     } catch (err) {
+      // Offline fallback: return last known cached version
       const fallback = await cache.match(req);
       if (fallback) return fallback;
 
+      // Final fallback: offline message
       return new Response("Offline", { status: 503 });
     }
   })());
 });
-
 
 
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
@@ -1217,62 +1213,32 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const createdAtReq = await cache.match("__pulse_created_at__");
               const createdAt = createdAtReq ? Number(await createdAtReq.text()) : null;
 
-              // ⭐ Compute age + rate
+              // ⭐ Compute age (only if timestamp exists)
               let ageDays = null;
               let rate = null;
 
               if (createdAt) {
                 const ageMs = ts - createdAt;
                 ageDays = ageMs / (1000 * 60 * 60 * 24);
-                rate = count / Math.max(ageDays, 0.01);   // ⭐ entries per day
+                rate = count / Math.max(ageDays, 0.01);
               }
 
-              // ⭐ Weight class (time-aware OR fallback)
+              // ⭐ Weight class (CURRENT STATIC VERSION)
               let weightClass = "light";
+              if (count > 50) weightClass = "medium";
+              if (count > 300) weightClass = "heavy";
+              if (count > 1000) weightClass = "massive";
 
-              if (rate !== null) {
-                // ⭐ Time-aware physics
-                if (rate > 10)  weightClass = "medium";
-                if (rate > 100) weightClass = "heavy";
-                if (rate > 1000) weightClass = "massive";
-              } else {
-                // ⭐ Fallback physics (count-based)
-                if (count > 50) weightClass = "medium";
-                if (count > 300) weightClass = "heavy";
-                if (count > 1000) weightClass = "massive";
-              }
-
-              // ⭐ PulseScore (time-aware OR fallback)
-              let pulseScore = 0;
-
-              if (rate !== null) {
-                // ⭐ Time-aware granularity
-                const LIGHT_MAX = 10;
-                const MEDIUM_MAX = 100;
-                const HEAVY_MAX = 1000;
-
-                if (rate <= LIGHT_MAX) {
-                  pulseScore = Math.floor((rate / LIGHT_MAX) * 100);
-                } else if (rate <= MEDIUM_MAX) {
-                  pulseScore = Math.floor(((rate - LIGHT_MAX) / (MEDIUM_MAX - LIGHT_MAX)) * 100);
-                } else if (rate <= HEAVY_MAX) {
-                  pulseScore = Math.floor(((rate - MEDIUM_MAX) / (HEAVY_MAX - MEDIUM_MAX)) * 100);
-                } else {
-                  pulseScore = 100;
-                }
-
-              } else {
-                // ⭐ Fallback granularity (count-based)
-                pulseScore = Math.min(100, Math.floor(count / 10));
-              }
+              // ⭐ PulseScore (unchanged)
+              const pulseScore = Math.min(100, Math.floor(count / 10));
 
               cacheDetails.push({
                 name,
                 entries: count,
                 weightClass,
                 pulseScore,
-                ageDays,
-                rate,
+                ageDays,     // ⭐ Will be null until timestamps exist
+                rate,        // ⭐ Will be null until timestamps exist
                 firstEntry: requests[0]?.url || null,
                 lastEntry: requests[count - 1]?.url || null
               });

@@ -187,6 +187,7 @@ async function pbRenderCacheList2() {
 
 
 async function pulseRehydrateTabs() {
+  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     let snapIndex = 1; // 1–5
@@ -2295,6 +2296,17 @@ function backToOriginal() {
   });
 }
 
+function getSyncInterval2() {
+  const base = 1200;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.11;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(5000, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
 
 const images = [
   "PulseWorldEntrancePulseGPUPulseEarn.png",
@@ -2324,7 +2336,7 @@ window.addEventListener("blur", () => {
 
 let timerX = 0;
 document.getElementById("timerBtn").textContent = timerX;
-
+const sync = getSyncInterval2();
 setInterval(() => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
@@ -2336,7 +2348,7 @@ setInterval(() => {
     document.getElementById("timerBtn").style.display = "none";
     timerX = 0;
   }
-}, 1000);
+}, sync);
 
   function swap() {
     nebula.style.opacity = 0;
@@ -2347,10 +2359,23 @@ setInterval(() => {
     }, 1000);
   }
 
+  function getWarmInterval2() {
+    const base = 15000;
+  // ⭐ Add human-like jitter (±20%)
+    const jitterRange = base * 0.22;
+    const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+    // ⭐ Final interval
+    const interval = Math.max(5000, base + jitter); // never below 5s
+
+    return Math.floor(interval);
+  }
+
+  const interval = getWarmInterval2();
   setInterval(() => {
     swap();
     pulseRehydrateTabs();
-  }, 15000);
+  }, interval);
       
   const ENTERPRISE_DOMAINS = [
     "microsoft.com",
@@ -2460,8 +2485,6 @@ setInterval(() => {
       type: "PBACC_WARMPATH_EXTERNAL",
       count
     });
-    
-    pulseRehydrateTabs();
     document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
       bubble.classList.add('electrify');
       setTimeout(() => {
@@ -2473,6 +2496,7 @@ setInterval(() => {
     setTimeout(() => {
       topPanel.classList.remove('electrify');
     }, 2700);
+    pulseRehydrateTabs();
   }
 
   document.addEventListener("visibilitychange", () => {

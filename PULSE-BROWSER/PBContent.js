@@ -287,6 +287,30 @@ function warmAllImages() {
   }
 })();
 
+function getWarmInterval() {
+  const base = 5000;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.22;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(5000, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+function getSyncInterval() {
+  const base = 1200;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.11;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(5000, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
 async function injectHUD() {
   // const STREAMING_SITES = [
   //   "netflix.com","hulu.com","disneyplus.com","primevideo.com",
@@ -304,13 +328,12 @@ async function injectHUD() {
   vid.style.cssText = `
     position: fixed;
     display: block;
-    top: 10px;
-    right: 10px;
-    width: 250px;
-    height: 250px;
+    top: 50px;
+    right: 30px;
+    width: 260px;
     border-radius: 999px;
     box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-    animation: pulseGlow 3.5s ease-in-out infinite;
+    animation: pulseGlow 1.5s ease-in-out infinite;
     z-index: 999999999;
   `;
 
@@ -330,8 +353,8 @@ async function injectHUD() {
   wrap.id = "pulsebrowser-dev-overlay";
   wrap.style.cssText = `
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 50px;
+    right: 30px;
     width: 260px;
     line-height: normal;
     display: flex;
@@ -355,11 +378,12 @@ async function injectHUD() {
 
   document.body.appendChild(wrap);
 
-
+  const interval = getWarmInterval();
+  const sync = getSyncInterval();
   updateHUD();
   PulseBrowserPreview();
-  setInterval(updateHUD, 1200);
-  setTimeout(PulseBrowserDomScan, 2000);
+  setInterval(updateHUD, sync);
+  setInterval(PulseBrowserDomScan, interval);
   setTimeout(DomScanPreview, 4000);
   setTimeout(() => {
     fadeHUD(vid);

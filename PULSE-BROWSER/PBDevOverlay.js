@@ -7,6 +7,17 @@
 console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   "color:#FF8844; font-weight:bold; font-family:monospace;");
 
+function getSyncInterval() {
+  const base = 1200;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.11;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(5000, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
 // ---------------------------------------------------------------------------
 // CREATE OVERLAY
 // ---------------------------------------------------------------------------
@@ -49,9 +60,9 @@ console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   `;
 
   document.body.appendChild(wrap);
-
+  const sync = getSyncInterval();
   updateOverlay();
-  setInterval(updateOverlay, 1000);
+  setInterval(updateOverlay, sync);
 })();
 
 function enabledColor(v) {
