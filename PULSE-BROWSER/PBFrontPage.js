@@ -1270,7 +1270,7 @@ async function updateModuleIcons() {
   // WORK MODULE
   const shoppingIcon = document.getElementById("moduleShoppingIcon");
   if (settings.shoppingMode === "internal") {
-    shoppingIcon.innerText = "📺";      // your original emoji
+    shoppingIcon.innerText = "💳";      // your original emoji
     shoppingIcon.style.backgroundImage = "";
   } else {
     const fav = await getFavicon(settings.externalShoppingLink);

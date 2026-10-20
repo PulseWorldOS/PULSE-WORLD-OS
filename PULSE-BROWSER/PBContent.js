@@ -1076,15 +1076,21 @@ if (pbDomainClass(location.href)) {
 
     // ⭐ Calculate aspect ratio
     const ratio = vid.videoWidth / vid.videoHeight;
-
-    // ⭐ Only trigger if ratio is roughly 1:1 (square)
     const isIdentityVideo = ratio < 1.4;
 
-    if (isIdentityVideo) {
+    // ⭐ Exclude PulseStatus and PulseStatus2 videos
+    const src = vid.src || "";
+    const isPulseStatus =
+      src.includes("PulseStatus") ||
+      src.includes("PulseStatus2");
+
+    // ⭐ Trigger ONLY if identity video AND NOT PulseStatus
+    if (isIdentityVideo && !isPulseStatus) {
       setTimeout(() => AttemptPulseSteam(vid), 1500);
     }
   });
 }
+
 
 
 function injectPulseFlag() {

@@ -1122,7 +1122,7 @@ async function loadWorld() {
   }
 
   if (PulseRealmSettings.shoppingMode === "internal") {
-      shoppingIcon.innerText = "🎭";      // your original emoji
+      shoppingIcon.innerText = "💳";      // your original emoji
       shoppingIcon.style.backgroundImage = "";
   } else {        
     const favC = await getFavicon(PulseRealmSettings.externalShoppingLink);
