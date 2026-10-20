@@ -1227,17 +1227,44 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 rate = count / Math.max(ageDays, 0.01);   // ⭐ entries per day
               }
 
-              // ⭐ NEW TIME-AWARE WEIGHT CLASS (rate-based)
+              // ⭐ Weight class (time-aware OR fallback)
               let weightClass = "light";
 
               if (rate !== null) {
-                if (rate > 10)  weightClass = "medium";     // 10 entries/day
-                if (rate > 100) weightClass = "heavy";      // 100 entries/day
-                if (rate > 1000) weightClass = "massive";   // 1000 entries/day
+                // ⭐ Time-aware physics
+                if (rate > 10)  weightClass = "medium";
+                if (rate > 100) weightClass = "heavy";
+                if (rate > 1000) weightClass = "massive";
+              } else {
+                // ⭐ Fallback physics (count-based)
+                if (count > 50) weightClass = "medium";
+                if (count > 300) weightClass = "heavy";
+                if (count > 1000) weightClass = "massive";
               }
 
-              // ⭐ PulseScore (unchanged)
-              const pulseScore = Math.min(100, Math.floor(count / 10));
+              // ⭐ PulseScore (time-aware OR fallback)
+              let pulseScore = 0;
+
+              if (rate !== null) {
+                // ⭐ Time-aware granularity
+                const LIGHT_MAX = 10;
+                const MEDIUM_MAX = 100;
+                const HEAVY_MAX = 1000;
+
+                if (rate <= LIGHT_MAX) {
+                  pulseScore = Math.floor((rate / LIGHT_MAX) * 100);
+                } else if (rate <= MEDIUM_MAX) {
+                  pulseScore = Math.floor(((rate - LIGHT_MAX) / (MEDIUM_MAX - LIGHT_MAX)) * 100);
+                } else if (rate <= HEAVY_MAX) {
+                  pulseScore = Math.floor(((rate - MEDIUM_MAX) / (HEAVY_MAX - MEDIUM_MAX)) * 100);
+                } else {
+                  pulseScore = 100;
+                }
+
+              } else {
+                // ⭐ Fallback granularity (count-based)
+                pulseScore = Math.min(100, Math.floor(count / 10));
+              }
 
               cacheDetails.push({
                 name,
