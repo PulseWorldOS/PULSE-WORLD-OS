@@ -247,6 +247,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
 });
 
 const pbPulseScreen = document.getElementById("pbPulseScreen");
+const pbWrapper = document.getElementById("pbWrapper");
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
@@ -328,6 +329,8 @@ function injectPulseScreenFromMemory(play) {
     
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
+    pbWrapper.width = pbPulseScreen.width;
+    pbWrapper.height = pbPulseScreen.height;
     if (pbPulseScreen.src !== entry.source) {
       pbPulseScreen.src = entry.source;
       pbPulseScreen.currentTime = entry.currentTime || 0;
@@ -2638,6 +2641,7 @@ setInterval(() => {
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
+      updateOverlay();
       injectPulseScreenFromMemory(true);
       const interval3 = getCharacterInterval();
       setTimeout(() => {
@@ -2647,7 +2651,6 @@ setInterval(() => {
       }, interval3);
       pulseRehydrateTabs();
       gpuWarmExtra();
-      updateOverlay();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
