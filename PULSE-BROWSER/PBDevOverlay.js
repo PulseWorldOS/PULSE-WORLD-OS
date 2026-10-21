@@ -14,7 +14,7 @@ function getSyncInterval() {
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
   // ⭐ Final interval
-  const interval = Math.max(5000, base + jitter); // never below 5s
+  const interval = Math.max(1200, base + jitter); // never below 5s
 
   return Math.floor(interval);
 }
