@@ -332,12 +332,27 @@ async function injectHUD() {
   if (!document.body) return setTimeout(injectHUD, 50);
 
   const vid = document.createElement("video");
+
   loadLastSavedVideo(entry => {
     if (!entry) return;
     if (!entry.source) return;
-    if (vid.src !== entry.source) vid.src = entry.source;
-    // if (!vid.src) chrome.runtime.getURL("PulseWorldOS.mp4");
+
+    // Try to use the PulseWorld video
+    vid.src = entry.source;
+
+    // Detect CSP block
+    vid.addEventListener("error", () => {
+      // Fallback to extension video
+      vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+    });
+
+    // Optional: detect successful load
+    vid.addEventListener("loadedmetadata", () => {
+      // PulseWorld video allowed
+      // You can log or pulse a flag here if needed
+    });
   });
+
   vid.style.cssText = `
     position: fixed;
     display: block;
