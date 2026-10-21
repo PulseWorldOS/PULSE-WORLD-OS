@@ -191,9 +191,48 @@ async function pbRenderCacheList2() {
     listEl.appendChild(li);
     best = true;
   });
-
+  
   PB_LOG3.info("Cache list rendered", caches);
+
+  // ⭐ Append storage stats below the cache list
+  const statsHTML = await pbRenderStorageStats();
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
+
 }
+
+async function pbRenderStorageStats() {
+  if (!navigator.storage || !navigator.storage.estimate) {
+    return `
+      <div style="margin-top:10px; color:#FF4444; font-size:12px;">
+        StorageManager API not supported.
+      </div>
+    `;
+  }
+
+  const estimate = await navigator.storage.estimate();
+  const used = estimate.usage || 0;
+  const quota = estimate.quota || 1;
+
+  const usedMB = (used / (1024 * 1024)).toFixed(2);
+  const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
+  const percent = ((used / quota) * 100).toFixed(2);
+
+  const isPersistent = await navigator.storage.persisted();
+
+  return `
+    <div style="margin-top:12px; padding:8px; border-radius:8px;
+                background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
+      <strong>PulseWorld Memory Usage</strong><br>
+      Used: <span style="color:lightgreen">${usedMB} MB</span><br>
+      Quota: <span style="color:lightgreen">${quotaGB} GB</span><br>
+      Percent Used: <span style="color:gold">${percent}%</span><br>
+      Persistent Storage: <span style="color:${isPersistent ? "lightgreen" : "orange"}">
+        ${isPersistent}
+      </span>
+    </div>
+  `;
+}
+
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const originalTabId = tabs[0].id;
@@ -2442,7 +2481,7 @@ function getSyncInterval2() {
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
   // ⭐ Final interval
-  const interval = Math.max(1200, base + jitter); // never below 5s
+  const interval = Math.max(base, base + jitter); // never below 5s
 
   return Math.floor(interval);
 }
@@ -2514,7 +2553,7 @@ setInterval(() => {
     const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
     // ⭐ Final interval
-    const interval = Math.max(15000, base + jitter); // never below 5s
+    const interval = Math.max(base, base + jitter); // never below 5s
 
     return Math.floor(interval);
   }
