@@ -288,13 +288,13 @@ function warmAllImages() {
 })();
 
 function getWarmInterval() {
-  const base = 8000;
+  const base = 10000;
 // ⭐ Add human-like jitter (±20%)
   const jitterRange = base * 0.22;
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
   // ⭐ Final interval
-  const interval = Math.max(8000, base + jitter); // never below 5s
+  const interval = Math.max(10000, base + jitter); // never below 5s
 
   return Math.floor(interval);
 }
@@ -363,7 +363,6 @@ async function injectHUD() {
     }
   });
 
-
   vid.style.cssText = `
     position: fixed;
     display: block;
@@ -421,9 +420,15 @@ async function injectHUD() {
   updateHUD();
   PulseBrowserPreview();
   setInterval(updateHUD, sync);
-  setTimeout(PulseBrowserDomScan, 2000);
-  setInterval(PulseBrowserDomScan, interval);
-  setTimeout(DomScanPreview, 4000);
+  setTimeout(() => {
+    PulseBrowserDomScan();
+  }, 2000);
+  setInterval(() => {
+    PulseBrowserDomScan();
+  }, interval);
+  setTimeout(() => {
+    DomScanPreview();
+  }, 4000);
   setTimeout(() => {
     fadeHUD(vid);
   }, 4000);
