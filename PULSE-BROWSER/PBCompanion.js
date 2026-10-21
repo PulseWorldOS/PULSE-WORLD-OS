@@ -341,7 +341,7 @@ async function getFavicon(url, flags = {}) {
   try {
     u = new URL(url);
   } catch {
-    return;
+    return null;
   }
 
   let host = u.hostname;

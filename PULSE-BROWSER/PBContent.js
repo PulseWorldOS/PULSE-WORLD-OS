@@ -288,7 +288,7 @@ function warmAllImages() {
 })();
 
 function getWarmInterval() {
-  const base = 10000;
+  const base = 20000;
 // ⭐ Add human-like jitter (±20%)
   const jitterRange = base * 0.22;
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
@@ -322,6 +322,7 @@ function loadLastSavedVideo(callback) {
 }
 
 async function injectHUD() {
+  gpuWarmExtra();
   // const STREAMING_SITES = [
   //   "netflix.com","hulu.com","disneyplus.com","primevideo.com",
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
@@ -1318,7 +1319,7 @@ setTimeout(triggerWarmPaths, 300);
 // ============================================================================
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
-let gpuEnabled = null;
+let gpuEnabled = "GPU Driver Error";
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");

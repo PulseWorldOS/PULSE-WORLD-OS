@@ -899,7 +899,7 @@ async function getFavicon(url, flags = {}) {
   try {
     u = new URL(url);
   } catch {
-    return;
+    return null;
   }
 
   let host = u.hostname;
@@ -1175,6 +1175,7 @@ async function updateModuleIcons() {
   socialMode = settings.socialMode;
   workActiveLink = settings.externalWorkLink;
   workMode = settings.workMode;
+  
 
   if (settings.searchMode === "internal") {
     engineURL = "https://www.google.com/search?q=";
