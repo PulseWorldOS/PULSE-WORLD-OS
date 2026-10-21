@@ -1404,6 +1404,9 @@ async function updateModuleIcons() {
 }
 
 async function setTheStage() {
+  const settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
+  PulseBrowserSettings = await getSettings();
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
