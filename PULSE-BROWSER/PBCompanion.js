@@ -559,6 +559,11 @@ function safeSendMessage(msg) {
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
+  chrome.sidePanel.setOptions({
+    tabId: activeInfo.tabId,
+    path: "PBSettings.html",
+    enabled: true
+  });
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;
@@ -1020,6 +1025,11 @@ function startWarmBootLoop() {
 
 startWarmBootLoop();
 
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+});
+
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
@@ -1309,6 +1319,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       break;
 
+    case "OPEN_PULSEWORLD_PANEL":
+      (async () => {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        chrome.sidePanel.open({
+          windowId: tab.windowId
+        });
+      })();
+      return true;
+
     // -------------------------------------------------------
     // ASSET WARM-PATH
     // -------------------------------------------------------
@@ -1553,7 +1572,11 @@ async function pbHandleRequest(details) {
 // ============================================================================
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;
-
+  chrome.sidePanel.setOptions({
+    tabId,
+    path: "PBSettings.html",
+    enabled: true
+  });
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;

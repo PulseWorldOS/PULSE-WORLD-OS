@@ -335,6 +335,7 @@ async function injectHUD() {
   const vid = document.createElement("video");
 
   loadLastSavedVideo(entry => {
+    vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
     if (!entry) return;
 
     // Attach listeners FIRST

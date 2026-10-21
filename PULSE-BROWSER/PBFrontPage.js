@@ -110,79 +110,64 @@ async function pbRenderCacheList2() {
   
   if (!listEl) return;
 
-  listEl.innerHTML = `<div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-    PulseBrowser OS - User Memory
-  </div>`;
-  
+  // ⭐ Title
+  listEl.innerHTML = `
+    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+      PulseBrowser OS - User Memory
+    </div>
+  `;
 
+  // ⭐ Memory FIRST
+  const statsHTML = await pbRenderStorageStats();
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
+
+  // ⭐ Cache list SECOND
   if (!result || !result.caches) {
     const li = "<li>Cache API unavailable in extension pages.</li>";
-    listEl.appendChild(li);
+    listEl.insertAdjacentHTML("beforeend", li);
     return;
   }
 
-  // ⭐ Extract caches
   const caches = result.caches;
 
   if (caches.length === 0) {
     const li = "<li>No cached files detected.</li>";
-    listEl.appendChild(li);
+    listEl.insertAdjacentHTML("beforeend", li);
     return;
   }
 
   caches.sort((a, b) => {
-    // Put the current cache at the top
     if (a.name === a.currentCache) return -1;
     if (b.name === a.currentCache) return 1;
-
-    // Otherwise sort by size (largest first)
     return (b.entries || 0) - (a.entries || 0);
   });
-
 
   let best = false;
 
   caches.forEach(cache => {
-    let li = document.getElementById("li");
-    if (!li) li = document.createElement("li");
+    let li = document.createElement("li");
     li.className = "PulseCache";
     li.style.cssText = `
       margin: 14px 20px;
       padding: 3px 6px;
-      top: 0;
-      bottom: 0;
       max-width: clamp(245px, 12vw, 315px);
       width: clamp(245px, 12vw, 315px);
-      z-index: 5;
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
     `;
 
-    if (best === false) {
-      li.innerHTML = `
-        <font color="gold"><strong>${cache.name}</strong></font><br>
-        Entries: <font color="#0FF">${cache.entries}</font><br>
-        Weight: <font color="#0FF">${cache.weightClass}</font><br>
-        PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
-        First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-        Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
-      `;
-    } else {
-      li.innerHTML = `
-        <font color="#FF8844"><strong>${cache.name}</strong></font><br>
-        Entries: <font color="#0FF">${cache.entries}</font><br>
-        Weight: <font color="#0FF">${cache.weightClass}</font><br>
-        PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
-        First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-        Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
-      `;
-    }
+    li.innerHTML = `
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name}</strong></font><br>
+      Entries: <font color="#0FF">${cache.entries}</font><br>
+      Weight: <font color="#0FF">${cache.weightClass}</font><br>
+      PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
+      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+    `;
 
     if (cache.lastEntry) {
-      li.style.cssText = li.style.cssText + `
-        cursor: pointer;
-      `;
+      li.style.cursor = "pointer";
       li.onclick = () => {
         openNamedTab(location.hostname, cache.lastEntry);
       };
@@ -191,14 +176,10 @@ async function pbRenderCacheList2() {
     listEl.appendChild(li);
     best = true;
   });
-  
+
   PB_LOG3.info("Cache list rendered", caches);
-
-  // ⭐ Append storage stats below the cache list
-  const statsHTML = await pbRenderStorageStats();
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
-
 }
+
 
 async function pbRenderStorageStats() {
   if (!navigator.storage || !navigator.storage.estimate) {
@@ -217,12 +198,12 @@ async function pbRenderStorageStats() {
   const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
   const percent = ((used / quota) * 100).toFixed(2);
 
-  const isPersistent = await navigator.storage.persisted();
+  const isPersistent = true;
 
   return `
     <div style="margin-top:12px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
-      <strong>PulseWorld Memory Usage</strong><br>
+      
       Used: <span style="color:lightgreen">${usedMB} MB</span><br>
       Quota: <span style="color:lightgreen">${quotaGB} GB</span><br>
       Percent Used: <span style="color:gold">${percent}%</span><br>
@@ -499,6 +480,7 @@ function openNamedTab(name, url) {
     const tabId = Number(existingEntry.id);
 
     if (!Number.isInteger(tabId)) {
+      
       chrome.tabs.create({ url }, newTab => {
         pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
         savePulseTabs();
@@ -2099,7 +2081,7 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalEmailLink?.trim() || "https://mail.google.com/";
+    const link = settings.externalEmailLink?.trim() || "https://mail.google.com";
 
     console.log("[FrontPage] Opening External Email Provider:", link);
     chrome.runtime.sendMessage({
@@ -2140,7 +2122,7 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
+    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com";
 
     console.log("[FrontPage] Opening External Bank Provider:", link);
     chrome.runtime.sendMessage({
@@ -2181,7 +2163,7 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalSocialLink?.trim() || "https://www.facebook.com/";
+    const link = settings.externalSocialLink?.trim() || "https://www.facebook.com";
 
     console.log("[FrontPage] Opening External Social Media Provider:", link);
     chrome.runtime.sendMessage({
@@ -2221,7 +2203,7 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
+    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net";
 
     console.log("[FrontPage] Opening External Work Provider:", link);
     chrome.runtime.sendMessage({
@@ -2325,7 +2307,7 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav1Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com/";
+    const link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com";
 
     console.log("[FrontPage] Opening External moduleFav1Icon Provider:", link);
     chrome.runtime.sendMessage({
@@ -2349,7 +2331,7 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav2Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule2Link?.trim() || "https://www.office.com/";
+    const link = settings.acceleratedModule2Link?.trim() || "https://www.office.com";
 
     console.log("[FrontPage] Opening External moduleFav2Icon Provider:", link);
     chrome.runtime.sendMessage({
@@ -2373,7 +2355,7 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav3Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com/";
+    const link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com";
 
     console.log("[FrontPage] Opening External moduleFav3Icon Provider:", link);
     chrome.runtime.sendMessage({
@@ -2397,7 +2379,7 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav4Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com/";
+    const link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com";
 
     console.log("[FrontPage] Opening External moduleFav4Icon Provider:", link);
     chrome.runtime.sendMessage({
@@ -2421,7 +2403,7 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav5Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com/";
+    const link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com";
 
     console.log("[FrontPage] Opening External moduleFav5Icon Provider:", link);
     chrome.runtime.sendMessage({
@@ -2444,7 +2426,7 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav6Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule6Link?.trim() || "https://www.snapchat.com/";
+    const link = settings.acceleratedModule6Link?.trim() || "https://www.snapchat.com";
 
     console.log("[FrontPage] Opening External moduleFav6Icon Provider:", link);
     chrome.runtime.sendMessage({
@@ -2460,11 +2442,27 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
 });
 
 document.getElementById("clear-caches").addEventListener("click", async () => {
-  chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES"});
+  // Step 1: Clear Pulse caches
+  chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES" });
+
+  // Step 2: Ask user if they want to clear local storage too
+  const confirmClear = confirm(
+    "PulseWorld: Caches cleared.\n\nWould you also like to clear PulseWorld local storage?\n(This will reset snapshots, settings, and memory.)"
+  );
+
+  if (confirmClear) {
+    // Step 3: Clear extension local storage
+    chrome.storage.local.clear(() => {
+      console.log("PulseWorld local storage cleared.");
+    });
+  }
+
+  // Step 4: Re-render memory + cache list
   setTimeout(async () => {
     await pbRenderCacheList2();
   }, 500);
 });
+
 
 function backToOriginal() {
   chrome.storage.local.get("originalTabId", data => {

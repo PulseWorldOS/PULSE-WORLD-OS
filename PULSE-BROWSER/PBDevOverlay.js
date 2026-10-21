@@ -183,16 +183,34 @@ function updatePerformance(realm) {
 // ---------------------------------------------------------------------------
 function updateWarm(realm) {
   const el = document.getElementById("pb-hud-warm");
+
   el.innerHTML = `
     <div class="pb-hud-title">Warm-Universe (Browser)</div>
     Warm Paths: <font color="#0FF">${realm.warmPathsTriggered || "-"}</font><br/>
     Warm Assets: <font color="#0FF">${realm.warmAssetsTriggered || "-"}</font><br/>
     Images Decoded: <font color="#0FF">${realm.imagesDecoded || "-"}</font><br/>
     Warm-GPU Enabled: <font color="#0FF">${realm.gpuEnabled || "-"}</font><br/>
-    Warm-Galaxy: <font color="yellow">${PulseModuleCount ? `PulseBrowser OS Modules (<font color="#0FF">${PulseModuleCount}</font>)` : "-"}</font><br/>
-    Warm-Nova: <font color="gold">${PulseTempModuleCount ? `PulseBrowser Temp Modules (<font color="#0FF">${PulseTempModuleCount}</font>)` : "-"}</font><br/>
+    Warm-Galaxy: <font color="yellow">
+      ${PulseModuleCount ? `PulseBrowser OS Modules (<font color="#0FF">${PulseModuleCount}</font>)` : "Setup your Galaxy"}
+    </font><br/>
+    Warm-Nova: <font color="gold">
+      ${PulseTempModuleCount ? `PulseBrowser Temp Modules (<font color="#0FF">${PulseTempModuleCount}</font>)` : "-"}
+    </font><br/>
   `;
 }
+
+// ⭐ If Galaxy is not set up → clicking opens the side panel
+if (!PulseModuleCount) {
+  const el = document.getElementById("pb-hud-warm");
+  el.style.cssText = el.style.cssText + `
+    cursor: pointer;
+  `;
+  el.onclick = () => {
+    chrome.runtime.sendMessage({ type: "OPEN_PULSEWORLD_PANEL" });
+  };
+
+}
+
 
 // ---------------------------------------------------------------------------
 // SECTION: GPU

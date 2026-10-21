@@ -429,7 +429,7 @@ document.getElementById("btn-open-email").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.externalEmailLink?.trim() || "https://mail.google.com/";
+    const link =PulseRealmSettings.externalEmailLink?.trim() || "https://mail.google.com";
 
     console.log("[FrontPage] Opening External Email Provider:", link);
     openNamedTab("PulseMail", link);
@@ -453,7 +453,7 @@ document.getElementById("btn-open-bank").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.externalBankLink?.trim() || "https://www.bankofamerica.com/";
+    const link =PulseRealmSettings.externalBankLink?.trim() || "https://www.bankofamerica.com";
 
     console.log("[FrontPage] Opening External Bank Provider:", link);
     openNamedTab("PulseBank", link);
@@ -478,7 +478,7 @@ document.getElementById("mod-social").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.externalSocialLink?.trim() || "https://www.facebook.com/";
+    const link =PulseRealmSettings.externalSocialLink?.trim() || "https://www.facebook.com";
 
     console.log("[FrontPage] Opening External Social Media Provider:", link);
     openNamedTab("PulseMessenger", link);
@@ -501,7 +501,7 @@ document.getElementById("mod-work").onclick = async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.externalWorkLink?.trim() || "https://www.pulseworld.net/";
+    const link =PulseRealmSettings.externalWorkLink?.trim() || "https://www.pulseworld.net";
 
     console.log("[FrontPage] Opening External Work Provider:", link);
     openNamedTab("PulseWork", link);
@@ -516,7 +516,7 @@ document.getElementById("mod-1").addEventListener("click", async () => {
     console.log("[FrontPage] PulseModule1 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.acceleratedModule1Link?.trim() || "https://www.onedrive.com/";
+    const link =PulseRealmSettings.acceleratedModule1Link?.trim() || "https://www.onedrive.com";
 
     console.log("[FrontPage] Opening External PulseModule1 Provider:", link);
     openNamedTab("PulseModule1", link);
@@ -531,7 +531,7 @@ document.getElementById("mod-2").addEventListener("click", async () => {
     console.log("[FrontPage] PulseModule2 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.acceleratedModule2Link?.trim() || "https://www.office.com/";
+    const link =PulseRealmSettings.acceleratedModule2Link?.trim() || "https://www.office.com";
 
     console.log("[FrontPage] Opening External PulseModule2 Provider:", link);
     openNamedTab("PulseModule2", link);
@@ -546,7 +546,7 @@ document.getElementById("mod-3").addEventListener("click", async () => {
     console.log("[FrontPage] PulseModule3 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.acceleratedModule3Link?.trim() || "https://www.amazon.com/";
+    const link =PulseRealmSettings.acceleratedModule3Link?.trim() || "https://www.amazon.com";
 
     console.log("[FrontPage] Opening External PulseModule3 Provider:", link);
     openNamedTab("PulseModule3", link);
@@ -561,7 +561,7 @@ document.getElementById("mod-4").addEventListener("click", async () => {
     console.log("[FrontPage] PulseModule4 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.acceleratedModule4Link?.trim() || "https://www.coinbase.com/";
+    const link =PulseRealmSettings.acceleratedModule4Link?.trim() || "https://www.coinbase.com";
 
     console.log("[FrontPage] Opening External PulseModule4 Provider:", link);
     openNamedTab("PulseModule4", link);
@@ -576,7 +576,7 @@ document.getElementById("mod-5").addEventListener("click", async () => {
     console.log("[FrontPage] PulseModule5 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com/";
+    const link =PulseRealmSettings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com";
 
     console.log("[FrontPage] Opening External PulseModule5 Provider:", link);
     openNamedTab("PulseModule5", link);
@@ -590,7 +590,7 @@ document.getElementById("mod-6").addEventListener("click", async () => {
     console.log("[FrontPage] PulseModule6 module clicked. Settings:", PulseRealmSettings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link =PulseRealmSettings.acceleratedModule6Link?.trim() || "https://www.snapchat.com/";
+    const link =PulseRealmSettings.acceleratedModule6Link?.trim() || "https://www.snapchat.com";
 
     console.log("[FrontPage] Opening External PulseModule6 Provider:", link);
     openNamedTab("PulseModule6", link);

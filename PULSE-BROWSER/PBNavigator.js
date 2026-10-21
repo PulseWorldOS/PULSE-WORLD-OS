@@ -138,7 +138,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 // OPEN PULSEWORLD (API)
 // ---------------------------------------------------------------------------
 function openPulseWorld(url) {
-  const target = url || "https://www.pulseworld.net/";
+  const target = url || "https://www.pulseworld.net";
   chrome.tabs.create({ url: target });
 }
 
