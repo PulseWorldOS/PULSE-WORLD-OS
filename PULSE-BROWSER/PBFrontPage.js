@@ -2424,11 +2424,8 @@ setInterval(() => {
   }
 }, sync);
 
-  const interval3 = getCharacterInterval();
+  
   injectPulseScreenFromMemory();
-  setInterval(() => {
-    injectPulseScreenFromMemory();
-  }, interval3);
 
   function swap() {
     nebula.style.opacity = 0;
@@ -2582,6 +2579,8 @@ setInterval(() => {
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
+      updateOverlay();
+      injectPulseScreenFromMemory();
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
@@ -2590,7 +2589,6 @@ setInterval(() => {
       });
       pulseRehydrateTabs();
       gpuWarmExtra();
-      updateOverlay();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
