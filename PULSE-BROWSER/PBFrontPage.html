@@ -873,6 +873,16 @@
       text-shadow: 0 0 10px #00aaff;
     }
 
+    .clear-caches {
+      cursor: pointer;
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
     .module-setting2 {
       position: absolute;
       top: -12px;
@@ -999,10 +1009,13 @@
     <!-- Left panel content -->
   </div>
   <div class="side-panel left-panel" id="side-panel left-panel">
-    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
-      PulseBrowser OS - User Memory
+    <div class="cache-panel" id="cache-panel">
+      <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
+        PulseBrowser OS - User Memory
+      </div>
+      <!-- Left panel content -->
     </div>
-    <!-- Left panel content -->
+    <div class="clear-caches" id="clear-caches">Restart Memory</div>
   </div>
 
   <div class="side-panel right-panel" id="side-panel right-panel">

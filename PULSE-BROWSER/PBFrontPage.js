@@ -74,16 +74,16 @@ let pulseTabs = {};
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
-  if (res.PulseBrowserFaviconCaches) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches;
+chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
+  if (res.PulseBrowserFaviconCaches1) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches1;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
 }
 
 async function pbRequestCacheList2() {
@@ -105,7 +105,7 @@ async function pbRequestCacheList2() {
 
 
 async function pbRenderCacheList2() {
-  const listEl = document.getElementById("side-panel left-panel");
+  const listEl = document.getElementById("cache-panel");
   const result = await pbRequestCacheList2();
   
   if (!listEl) return;
@@ -2415,6 +2415,13 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
     } catch (_) {}
     openNamedTab("PulseModule6", link);
     await PBUniversalBoost.warmOrigin(link);
+});
+
+document.getElementById("clear-caches").addEventListener("click", async () => {
+  chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES"});
+  setTimeout(async () => {
+    await pbRenderCacheList2();
+  }, 500);
 });
 
 function backToOriginal() {
