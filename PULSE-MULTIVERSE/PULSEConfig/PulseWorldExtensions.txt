@@ -717,6 +717,16 @@
             <li>Internal: Pre-buffered streams, GPU compositing, and world-layer media routing.</li>
           </ul>
         </article>
+
+        <article class="card">
+          <h3 class="card-title">Shopping Module</h3>
+          <p class="card-subtitle">Unified commerce pathways.</p>
+          <ul class="card-list">
+            <li>External: Accelerated access for Amazon, eBay, Walmart, and niche storefronts.</li>
+            <li>Internal: Identity‑anchored carts, pre‑cached product grids, and stabilized checkout flows.</li>
+          </ul>
+        </article>
+
       </div>
     </section>
 
