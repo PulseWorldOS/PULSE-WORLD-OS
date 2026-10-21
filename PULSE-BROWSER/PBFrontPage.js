@@ -394,7 +394,7 @@ async function gpuWarmExtra() {
 }
 
 setTimeout(gpuWarmExtra, 100);
-// setTimeout(pulseRehydrateTabs, 250);
+setTimeout(pulseRehydrateTabs, 250);
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
@@ -589,7 +589,7 @@ function latestSnapshot(realm, link, snapIndex) {
 
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap) renderSnapshot(snap, snapIndex, realm);
+    if (snap) renderSnapshot(snap, snapIndex);
 
     const bubbleSelector = `.PulseBrowser-OS-Snapshot${snapIndex}`;
     const bubble = document.querySelector(bubbleSelector);
@@ -604,7 +604,7 @@ function latestSnapshot(realm, link, snapIndex) {
   });
 }
 
-async function renderSnapshot(snapshot, snapIndex, realm) {
+async function renderSnapshot(snapshot, snapIndex) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
@@ -615,10 +615,10 @@ async function renderSnapshot(snapshot, snapIndex, realm) {
       div.id = bubbleId;
       div.className = bubbleId;
     }
-    if (!snapshot.favicon) {
-      const realmURL = new URL(realm);
-      snapshot.favicon = getFavicon(realmURL);
-    }
+    // if (!snapshot.favicon) {
+    //   const realmURL = new URL(realm);
+    //   snapshot.favicon = getFavicon(realmURL);
+    // }
     // ---------------------------------------------
     // ⭐ Inject ONLY the favicon (big, centered)
     // ---------------------------------------------
@@ -676,7 +676,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
         PulseURL = null;
       }
 
-      renderSnapshot(null, removedSnapshotIndex, realm);
+      renderSnapshot(null, removedSnapshotIndex);
 
       delete pulseTabs[identity];
       break;

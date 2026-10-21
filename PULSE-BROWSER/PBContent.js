@@ -369,7 +369,7 @@ async function injectHUD() {
     display: block;
     top: 50px;
     right: 30px;
-    width: 260px;
+    width: 220px;
     border-radius: 999px;
     box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
     z-index: 999999999;

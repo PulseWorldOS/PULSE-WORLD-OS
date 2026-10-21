@@ -55,7 +55,7 @@
       animation: fadeIn 2s ease forwards;
       opacity: 0;
       width: 900px;
-      max-width: 90%;
+      max-width: 95%;
       margin-left: clamp(140px, 12vw, 240px);
       margin-right: clamp(140px, 12vw, 240px);
     }
@@ -752,7 +752,7 @@
       min-height: 60px;
       
       width: 600px;
-      max-width: 90%;
+      max-width: 95%;
       background: rgba(10, 10, 10, 0.85);
       color: #eee;
 
@@ -786,7 +786,7 @@
       ============================ */
 
     .search-area {
-      margin-top: 30px;
+      margin-top: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -834,7 +834,7 @@
     .module-console {
       margin-top: 25px;
       padding: 20px;
-      width: 1050px;
+      width: 900px;
       max-width: 95%;
 
       background: rgba(0, 0, 0, 0.55);
@@ -846,6 +846,40 @@
 
       margin-left: auto;
       margin-right: auto;
+    }
+
+    .search-console {
+      margin-top: 25px;
+      width: 600px;
+      height: 140px;
+      max-width: 95%;
+
+     
+      border-radius: 16px;
+
+      
+      backdrop-filter: blur(0px);
+
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .module-setting {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
+    .module-setting2 {
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
     }
 
     .module-title {
@@ -987,28 +1021,29 @@
       Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness
     </div>
     
-    
     <!-- Search Area -->
-    <div class="search-area" id="search-area">
+    <div class="search-console">
+      <div class="module-setting2">Warm-Nova</div>
+      <div class="search-area" id="search-area">
+        <div class="search-row">
+          <div id="searchengineTextbox"
+              class="search-engine-textbox"
+              contenteditable="true"
+              role="textbox"
+              aria-label="Search Engine TextBox"></div>
+        </div>
 
-      <div class="search-row">
-        <div id="searchengineTextbox"
-             class="search-engine-textbox"
-             contenteditable="true"
-             role="textbox"
-             aria-label="Search Engine TextBox"></div>
+        <div class="search-actions">
+          <!-- Intent Icons -->
+          <a class="navigate" id="navigate">🔗</a>
+          <a class="images" id="images">🖼️</a>
+          <a class="videos" id="videos">🎬</a>
+          <a class="text" id="text">📄</a>
+          <a class="search" id="search">🔍 Pulse Search Engine</a>
+          <a class="searchus" id="searchus">Who We Are? 🧑</a>
+        </div>
+
       </div>
-
-      <div class="search-actions">
-        <!-- Intent Icons -->
-        <a class="navigate" id="navigate">🔗</a>
-        <a class="images" id="images">🖼️</a>
-        <a class="videos" id="videos">🎬</a>
-        <a class="text" id="text">📄</a>
-        <a class="search" id="search">🔍 Pulse Search Engine</a>
-        <a class="searchus" id="searchus">Who We Are? 🧑</a>
-      </div>
-
     </div>
 
     <div class="about" id="about">About PulseBrowser OS</div>
@@ -1030,7 +1065,7 @@
 
     <!-- ⭐ PulseBrowser Modules Console -->
     <div class="module-console">
-
+      <div class="module-setting">Warm-Galaxy</div>
       <div class="module-title">Your PulseBrowser OS Accelerated Modules</div>
 
       <div class="module-row">
