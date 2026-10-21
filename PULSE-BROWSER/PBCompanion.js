@@ -1209,26 +1209,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const cache = await caches.open(name);
               const requests = await cache.keys();
               const count = requests.length;
-
-              // ⭐ Read cache birth timestamp (if exists)
-              const createdAtReq = await cache.match("__pulse_created_at__");
-              const createdAt = createdAtReq ? Number(await createdAtReq.text()) : null;
-
-              // ⭐ Compute age (only if timestamp exists)
-              let ageDays = null;
-              let rate = null;
-
-              if (createdAt) {
-                const ageMs = ts - createdAt;
-                ageDays = ageMs / (1000 * 60 * 60 * 24);
-                rate = count / Math.max(ageDays, 0.01);
-              }
+              const currentCache = CACHE_NAME;
 
               // ⭐ Weight class (CURRENT STATIC VERSION)
               let weightClass = "light";
-              if (count > 50) weightClass = "medium";
-              if (count > 300) weightClass = "heavy";
-              if (count > 1000) weightClass = "massive";
+              if (count > 300) weightClass = "medium";
+              if (count > 1000) weightClass = "heavy";
+              if (count > 3000) weightClass = "massive";
 
               // ⭐ PulseScore (unchanged)
               const pulseScore = Math.min(100, Math.floor(count / 10));
@@ -1238,8 +1225,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 entries: count,
                 weightClass,
                 pulseScore,
-                ageDays,     // ⭐ Will be null until timestamps exist
-                rate,        // ⭐ Will be null until timestamps exist
+                currentCache,
                 firstEntry: requests[0]?.url || null,
                 lastEntry: requests[count - 1]?.url || null
               });

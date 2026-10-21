@@ -122,8 +122,15 @@ async function pbRenderCacheList2() {
     return;
   }
 
-  // ⭐ SORT: biggest cache first
-  caches.sort((a, b) => (b.entries || 0) - (a.entries || 0));
+  caches.sort((a, b) => {
+    // Put the current cache at the top
+    if (a.name === a.currentCache) return -1;
+    if (b.name === a.currentCache) return 1;
+
+    // Otherwise sort by size (largest first)
+    return (b.entries || 0) - (a.entries || 0);
+  });
+
 
   let best = false;
 
@@ -319,10 +326,12 @@ function injectPulseScreenFromMemory() {
     if (pbPulseScreen.src !== entry.source) {
       pbPulseScreen.src = entry.source;
       pbPulseScreen.currentTime = entry.currentTime || 0;
-    } else {
+    }
+    const interval3 = getCharacterInterval();
+    setTimeout(() => {
       pbPulseScreen.currentTime = 0;
       pbPulseScreen.play = false;
-    }
+    }, interval3);
   });
 }
 
@@ -2425,12 +2434,8 @@ setInterval(() => {
   }
 }, sync);
 
-  const interval3 = getCharacterInterval();
-  injectPulseScreenFromMemory();
-  setInterval(() => {
-    injectPulseScreenFromMemory();
-  }, interval3);
-
+  setTimeout(injectPulseScreenFromMemory, 100);
+  
   function swap() {
     nebula.style.opacity = 0;
     setTimeout(() => {
