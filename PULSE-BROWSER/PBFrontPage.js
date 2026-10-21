@@ -110,8 +110,14 @@ async function pbRenderCacheList2() {
   
   if (!listEl) return;
 
+  listEl.innerHTML = `<div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+    PulseBrowser OS - User Memory
+  </div>`;
+  
+
   if (!result || !result.caches) {
-    listEl.innerHTML = "<li>Cache API unavailable in extension pages.</li>";
+    const li = "<li>Cache API unavailable in extension pages.</li>";
+    listEl.appendChild(li);
     return;
   }
 
@@ -119,7 +125,8 @@ async function pbRenderCacheList2() {
   const caches = result.caches;
 
   if (caches.length === 0) {
-    listEl.innerHTML = "<li>No cached files detected.</li>";
+    const li = "<li>No cached files detected.</li>";
+    listEl.appendChild(li);
     return;
   }
 
@@ -134,10 +141,6 @@ async function pbRenderCacheList2() {
 
 
   let best = false;
-
-  listEl.innerHTML = `<div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-      PulseBrowser OS - User Memory
-    </div>`;
 
   caches.forEach(cache => {
     let li = document.getElementById("li");
@@ -589,7 +592,7 @@ function latestSnapshot(realm, link, snapIndex) {
 
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap) renderSnapshot(snap, snapIndex);
+    if (snap) renderSnapshot(snap, snapIndex, realm);
 
     const bubbleSelector = `.PulseBrowser-OS-Snapshot${snapIndex}`;
     const bubble = document.querySelector(bubbleSelector);
@@ -604,7 +607,7 @@ function latestSnapshot(realm, link, snapIndex) {
   });
 }
 
-async function renderSnapshot(snapshot, snapIndex) {
+async function renderSnapshot(snapshot, snapIndex, realm) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
@@ -615,10 +618,10 @@ async function renderSnapshot(snapshot, snapIndex) {
       div.id = bubbleId;
       div.className = bubbleId;
     }
-    // if (!snapshot.favicon) {
-    //   const realmURL = new URL(realm);
-    //   snapshot.favicon = getFavicon(realmURL);
-    // }
+    if (!snapshot.favicon) {
+      const realmURL = new URL(realm);
+      snapshot.favicon = await getFavicon(realmURL);
+    }
     // ---------------------------------------------
     // ⭐ Inject ONLY the favicon (big, centered)
     // ---------------------------------------------
@@ -676,7 +679,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
         PulseURL = null;
       }
 
-      renderSnapshot(null, removedSnapshotIndex);
+      renderSnapshot(null, removedSnapshotIndex, realm);
 
       delete pulseTabs[identity];
       break;
