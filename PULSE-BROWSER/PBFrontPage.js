@@ -135,7 +135,7 @@ async function pbRenderCacheList2() {
   let best = false;
 
   listEl.innerHTML = `<div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-      PulseBrowser OS Caches
+      PulseBrowser OS - User Memory
     </div>`;
 
   caches.forEach(cache => {
@@ -1414,12 +1414,14 @@ async function updateModuleIcons() {
   ].filter(u => u && u.startsWith("http"));
 
   const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
+}
 
+async function setTheStage() {
   setInterval(pbRefreshWarmDocument, interval);  
 
   document.addEventListener("keydown", (e) => {
     const key = e.key.toLowerCase();
-    const moduleKeys = ["`","b","m","s","w","t"];
+    const moduleKeys = ["`","b","m","s","w","t","e"];
     if (e.repeat) { 
       e.preventDefault();
       // ⭐ If NOT a module key → send key to search box
@@ -1466,6 +1468,7 @@ async function updateModuleIcons() {
   });
 }
 
+setTimeout(setTheStage, 150);
 setTimeout(updateModuleIcons, 150);
 
 setTimeout(pbModuleWarmBoot, 150);

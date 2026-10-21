@@ -722,8 +722,7 @@ document.getElementById("mod-shopping").onclick = async () => {
 
 async function pulseConsoleKey(event) {
   const key = event.key.toLowerCase();
-  const moduleKeys = ["`","b","m","s","w","t"];
-
+  const moduleKeys = ["`","b","m","s","w","t","e"];
 
   // ⭐ If NOT a module key → send key to search box
   if (!moduleKeys.includes(key)) {
@@ -759,8 +758,8 @@ async function pulseConsoleKey(event) {
     fetch(link, { mode: "no-cors" }).catch(() => {});
   } catch (_) {}
 
-  await PBUniversalBoost.warmOrigin(link);
   openNamedTab("PulseWorldModule", link);
+  await PBUniversalBoost.warmOrigin(link);
 }
 
 // // ---------------------------------------------------------------------------

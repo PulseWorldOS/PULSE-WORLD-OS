@@ -45,7 +45,7 @@ function getSyncInterval() {
 
   wrap.innerHTML = `
     <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
-      PulseBrowser OS Overlay
+      PulseBrowser OS - User Overlay
     </div>
 
     <div id="pb-hud-kernel"></div>
@@ -248,8 +248,8 @@ function updateSettings(settings) {
     PulseAccelerator: <font color="${enabledColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
     PulseNavigator: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
     PulseRouter: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
-    OS Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
-    OS Caches: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
+    OS User Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
+    OS User Memory: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
     Universal Runtime: <font color="${tfColor(settings.enableContentRuntime)}">${settings.enableContentRuntime}</font><br/>
   `;
 }
