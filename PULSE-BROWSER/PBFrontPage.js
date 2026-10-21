@@ -1032,11 +1032,6 @@ async function getFavicon(url, flags = {}) {
   }
 }
 
-
-
-setTimeout(updateModuleIcons, 150);
-
-
 // ---------------------------------------------------------------------------
 // PRECONNECT (DNS/TLS/TCP warm-path)
 // ---------------------------------------------------------------------------
@@ -1099,6 +1094,7 @@ async function pbModuleWarmBoot() {
     PulseRealmSettings.acceleratedModule3Link,
     PulseRealmSettings.acceleratedModule4Link,
     PulseRealmSettings.acceleratedModule5Link,
+    PulseRealmSettings.acceleratedModule6Link,
     "https://www.google.com"
   ].filter(u => u && u.startsWith("http"));
 
@@ -1371,6 +1367,19 @@ async function updateModuleIcons() {
     }
   }
 
+  if (settings.acceleratedModule6Link) {
+    const moduleFav6Link = document.getElementById("moduleFav6Link");
+    const moduleFav6Icon = document.getElementById("moduleFav6Icon");
+    const fav6 = await getFavicon(settings.acceleratedModule6Link);
+    if (fav6) {
+      moduleFav6Link.innerText = getReadableName(settings.acceleratedModule6Link) + " ";
+      moduleFav6Icon.innerText = "⚡";
+      moduleFav6Icon.style.backgroundImage = `url(${fav6})`;
+      moduleFav6Icon.style.backgroundSize = "contain";
+      moduleFav6Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
@@ -1396,7 +1405,8 @@ async function updateModuleIcons() {
     settings.acceleratedModule2Link,
     settings.acceleratedModule3Link,
     settings.acceleratedModule4Link,
-    settings.acceleratedModule5Link
+    settings.acceleratedModule5Link,
+    settings.acceleratedModule6Link
   ].filter(u => u && u.startsWith("http"));
 
   const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
@@ -1452,7 +1462,9 @@ async function updateModuleIcons() {
   });
 }
 
-pbModuleWarmBoot();
+setTimeout(updateModuleIcons, 150);
+
+setTimeout(pbModuleWarmBoot, 150);
 
 async function pulseConsoleKey(event) {
   const key = event.key.toLowerCase();
@@ -2371,6 +2383,29 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     await PBUniversalBoost.warmOrigin(link);
 });
 
+document.getElementById("moduleFav6").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav6Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link = settings.acceleratedModule6Link?.trim() || "https://www.snapchat.com/";
+
+    console.log("[FrontPage] Opening External moduleFav6Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    openNamedTab("PulseModule6", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
 function backToOriginal() {
   chrome.storage.local.get("originalTabId", data => {
     if (data.originalTabId) {
@@ -2467,6 +2502,7 @@ setInterval(() => {
   setInterval(() => {
     swap();
     pulseRehydrateTabs();
+    updateModuleIcons();
   }, interval);
       
   const ENTERPRISE_DOMAINS = [
@@ -2536,7 +2572,8 @@ setInterval(() => {
       settings.acceleratedModule2Link,
       settings.acceleratedModule3Link,
       settings.acceleratedModule4Link,
-      settings.acceleratedModule5Link
+      settings.acceleratedModule5Link,
+      settings.acceleratedModule6Link
     ].filter(u => u && u.startsWith("http"));
 
     collectAndWarmAssetsFront();

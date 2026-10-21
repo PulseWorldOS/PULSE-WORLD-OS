@@ -319,7 +319,8 @@ async function pbModuleWarmBoot() {
     settings.acceleratedModule2Link,
     settings.acceleratedModule3Link,
     settings.acceleratedModule4Link,
-    settings.acceleratedModule5Link
+    settings.acceleratedModule5Link,
+    settings.acceleratedModule6Link
   ];
 
   if (warmTargets.length === 0) return;

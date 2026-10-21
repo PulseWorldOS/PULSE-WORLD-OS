@@ -583,6 +583,20 @@ document.getElementById("mod-5").addEventListener("click", async () => {
     // chrome.tabs.create({ url: link });
 });
 
+document.getElementById("mod-6").addEventListener("click", async () => {
+
+    PulseRealmSettings = await pbLoadExtensionSettings();
+
+    console.log("[FrontPage] PulseModule6 module clicked. Settings:", PulseRealmSettings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    const link =PulseRealmSettings.acceleratedModule6Link?.trim() || "https://www.snapchat.com/";
+
+    console.log("[FrontPage] Opening External PulseModule6 Provider:", link);
+    openNamedTab("PulseModule6", link);
+    // chrome.tabs.create({ url: link });
+});
+
 
 document.getElementById("mod-stream").onclick = async () => {
 
@@ -1199,6 +1213,19 @@ async function loadWorld() {
       moduleFav5Icon.style.backgroundImage = `url(${fav5})`;
       moduleFav5Icon.style.backgroundSize = "contain";
       moduleFav5Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  if (PulseRealmSettings.acceleratedModule6Link) {
+    const moduleFav6Link = document.getElementById("mod6");
+    const moduleFav6Icon = document.getElementById("module6");
+    const fav6 = await getFavicon(PulseRealmSettings.acceleratedModule6Link);
+    if (fav6) {
+      moduleFav6Link.innerText = getReadableName(PulseRealmSettings.acceleratedModule6Link) + " ";
+      moduleFav6Icon.innerText = "⚡";
+      moduleFav6Icon.style.backgroundImage = `url(${fav6})`;
+      moduleFav6Icon.style.backgroundSize = "contain";
+      moduleFav6Icon.style.backgroundRepeat = "no-repeat";
     }
   }
 }

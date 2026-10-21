@@ -109,6 +109,7 @@ async function loadExtensionSettingsUI() {
     acceleratedModule3Link: "acceleratedModule3Link",
     acceleratedModule4Link: "acceleratedModule4Link",
     acceleratedModule5Link: "acceleratedModule5Link",
+    acceleratedModule6Link: "acceleratedModule6Link",
     bankMode: "bankMode",
     externalBankLink: "externalBankLink",
     businessLink: "businessLink",
@@ -158,7 +159,7 @@ async function saveExtensionSettingsUI() {
     acceleratedModule3Link: document.getElementById("acceleratedModule3Link").value.trim(),
     acceleratedModule4Link: document.getElementById("acceleratedModule4Link").value.trim(),
     acceleratedModule5Link: document.getElementById("acceleratedModule5Link").value.trim(),
-
+    acceleratedModule6Link: document.getElementById("acceleratedModule6Link").value.trim(),
     tetherCode: document.getElementById("tetherCode").value.trim(),
 
     bankMode: document.getElementById("bankMode").value,
@@ -355,6 +356,7 @@ if (location.href.includes("PBSettings.html")) {
       "acceleratedModule3Link",
       "acceleratedModule4Link",
       "acceleratedModule5Link",
+      "acceleratedModule6Link",
       "bankMode",
       "externalBankLink",
       "businessLink",
