@@ -339,7 +339,11 @@ async function injectHUD() {
     // Attach listeners FIRST
     vid.addEventListener("error", () => {
       // CSP blocked → fallback
-      vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+      if (gpuEnabled === "GPU Driver Error") {
+        vid.src = chrome.runtime.getURL("PulseWorldOS-Older.mp4");
+      } else {
+        vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+      }
     });
 
     vid.addEventListener("loadedmetadata", () => {
@@ -1298,11 +1302,11 @@ setTimeout(triggerWarmPaths, 300);
 // ============================================================================
 // 14. PBContentGPUWarm++ — Additional GPU warm triggers
 // ============================================================================
-
+let gpuEnabled = null;
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  let gpuEnabled = "GPU Driver Error";
+  gpuEnabled = "GPU Driver Error";
 
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
