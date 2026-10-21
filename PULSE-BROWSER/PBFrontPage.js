@@ -316,7 +316,19 @@ function loadLastSavedVideo(callback) {
   });
 }
 
-function injectPulseScreenFromMemory() {
+function getCharacterInterval() {
+  const base = 5000;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.15;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(5000, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+function injectPulseScreenFromMemory(play) {
   loadLastSavedVideo(entry => {
     if (!entry) return;
     if (!entry.source) return;
@@ -328,10 +340,16 @@ function injectPulseScreenFromMemory() {
       pbPulseScreen.currentTime = entry.currentTime || 0;
     }
     const interval3 = getCharacterInterval();
-    setTimeout(() => {
+    if (!play) {
+      setTimeout(() => {
+        pbPulseScreen.currentTime = 0;
+        pbPulseScreen.play = false;
+      }, interval3);
+    } else {
+      pbPulseScreen.src = entry.source;
       pbPulseScreen.currentTime = 0;
-      pbPulseScreen.play = false;
-    }, interval3);
+      pbPulseScreen.play = true;
+    }
   });
 }
 
@@ -2380,18 +2398,6 @@ function getSyncInterval2() {
   return Math.floor(interval);
 }
 
-function getCharacterInterval() {
-  const base = 5000;
-// ⭐ Add human-like jitter (±20%)
-  const jitterRange = base * 0.15;
-  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
-
-  // ⭐ Final interval
-  const interval = Math.max(5000, base + jitter); // never below 5s
-
-  return Math.floor(interval);
-}
-
 const images = [
   "PulseWorldEntrancePulseGPUPulseEarn.png",
   "PulseWorldRoute.png",
@@ -2424,7 +2430,7 @@ const sync = getSyncInterval2();
 setInterval(() => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
-  if (!userInteracted && timerX === 18) {
+  if (!userInteracted && timerX === 20) {
     enterBtn.click();
     setTimeout(backToOriginal, 1700);
     document.getElementById("timerBtn").style.display = "none";
@@ -2433,6 +2439,13 @@ setInterval(() => {
     timerX = 0;
   }
 }, sync);
+
+    const interval3 = getCharacterInterval();
+    setTimeout(() => {
+      pbPulseScreen.currentTime = 0;
+      pbPulseScreen.play = false;
+      injectPulseScreenFromMemory();
+    }, interval3);
 
   setTimeout(injectPulseScreenFromMemory, 100);
   
@@ -2594,7 +2607,13 @@ setInterval(() => {
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
-      injectPulseScreenFromMemory();
+      injectPulseScreenFromMemory(true);
+      const interval3 = getCharacterInterval();
+      setTimeout(() => {
+        pbPulseScreen.currentTime = 0;
+        pbPulseScreen.play = false;
+        injectPulseScreenFromMemory();
+      }, interval3);
       pulseRehydrateTabs();
       gpuWarmExtra();
       updateOverlay();

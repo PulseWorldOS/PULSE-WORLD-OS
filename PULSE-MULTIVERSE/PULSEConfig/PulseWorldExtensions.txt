@@ -262,6 +262,12 @@
       gap: 16px;
     }
 
+    .grid-6 {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 16px;
+    }
+
     .card {
       background: var(--bg-alt);
       border-radius: var(--radius-md);
@@ -478,6 +484,9 @@
     .grid-5 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .grid-6 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 640px) {
@@ -485,6 +494,9 @@
       grid-template-columns: minmax(0, 1fr);
     }
     .grid-5 {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .grid-6 {
       grid-template-columns: minmax(0, 1fr);
     }
   }
@@ -671,7 +683,7 @@
         and proximity-based presence, transforming everyday browsing into a structured world instead of a UI.
       </p>
 
-      <div class="grid-5">
+      <div class="grid-6">
         <article class="card">
           <h3 class="card-title">Email Module</h3>
           <p class="card-subtitle">Instant inbox pathways.</p>

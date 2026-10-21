@@ -346,7 +346,6 @@ async function injectHUD() {
     width: 260px;
     border-radius: 999px;
     box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-    animation: pulseGlow 1.5s ease-in-out infinite;
     z-index: 999999999;
   `;
 
