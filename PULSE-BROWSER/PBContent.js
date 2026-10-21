@@ -334,7 +334,7 @@ async function injectHUD() {
   const vid = document.createElement("video");
 
   loadLastSavedVideo(entry => {
-    if (!entry || !entry.source) return;
+    if (!entry) return;
 
     // Attach listeners FIRST
     vid.addEventListener("error", () => {
@@ -352,7 +352,15 @@ async function injectHUD() {
     });
 
     // THEN set the src
-    vid.src = entry.source;
+    if (entry.source) {
+      vid.src = entry.source;
+    } else {
+      if (gpuEnabled === "GPU Driver Error") {
+        vid.src = chrome.runtime.getURL("PulseWorldOS-Older.mp4");
+      } else {
+        vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+      }
+    }
   });
 
 
