@@ -11,6 +11,13 @@ let PulseBrowserSettings = null;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
+const potentialAI = [
+    "https://www.yahoo.com",
+    "https://www.brave.com",
+    "https://www.msn.com",
+    "https://www.bing.com",
+    "https://www.safari.com"
+];
 
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
@@ -19,6 +26,52 @@ chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
+
+
+
+const PB_LOG2 = {
+  info(label, data) {
+    console.log(
+      `%c[PBCompanion][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBCompanion][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBCompanion][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBCompanion][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBCompanion][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
 
 function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches: PBFAVICON_CACHE });
@@ -930,12 +983,19 @@ async function pbModuleWarmBoot() {
   ];
 
   if (warmTargets.length === 0) return;
+  if (potentialAI.length === 0) return;
 
   // Preconnect all module targets
   pbPreconnect(warmTargets);
+  pbPreconnect(potentialAI);
 
   // Warm each module target
   warmTargets.forEach(origin => {
+    pbRealmWarm(origin);
+  });
+
+  // Warm each module target
+  potentialAI.forEach(origin => {
     pbRealmWarm(origin);
   });
 
@@ -973,51 +1033,6 @@ function startWarmBootLoop() {
 }
 
 startWarmBootLoop();
-
-
-const PB_LOG2 = {
-  info(label, data) {
-    console.log(
-      `%c[PBCompanion][INFO][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#55BBFF; font-weight:bold;",
-      data || ""
-    );
-  },
-
-  change(label, before, after) {
-    console.groupCollapsed(
-      `%c[PBCompanion][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00FFAA; font-weight:bold;"
-    );
-    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
-    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
-    console.groupEnd();
-  },
-
-  save(label, data) {
-    console.log(
-      `%c[PBCompanion][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00DDFF; font-weight:bold;",
-      data
-    );
-  },
-
-  load(label, data) {
-    console.log(
-      `%c[PBCompanion][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FFD700; font-weight:bold;",
-      data
-    );
-  },
-
-  event(label, data) {
-    console.log(
-      `%c[PBCompanion][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FF55AA; font-weight:bold;",
-      data
-    );
-  }
-};
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
@@ -1213,10 +1228,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const currentCache = CACHE_NAME;
 
               // ⭐ Weight class (CURRENT STATIC VERSION)
-              let weightClass = "light";
-              if (count > 300) weightClass = "medium";
+              let weightClass = "very small";
+              if (count > 100) weightClass = "light";
+              if (count > 500) weightClass = "medium";
               if (count > 1000) weightClass = "heavy";
-              if (count > 3000) weightClass = "massive";
+              if (count > 2000) weightClass = "massive";
 
               // ⭐ PulseScore (unchanged)
               const pulseScore = Math.min(100, Math.floor(count / 10));
