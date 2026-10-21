@@ -288,14 +288,21 @@
         inset 0 0 6px rgba(0, 180, 255, 0.8);
     }
 
-    
-    #pbPulseScreen {
+    .pbWrapper {
+      display: inline-block;
       width: 240px;
       height: 240px;
       border-radius: 30px;
       box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+    }
+
+    #pbPulseScreen {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
       animation: pulseGlow 3.5s ease-in-out infinite;
     }
+
 
     @keyframes bubbleElectrify {
       0%   { transform: translate(0px, 0px) scale(1); }
@@ -969,7 +976,9 @@
   </div>
 
   <div class="core">
-    <video id="pbPulseScreen" class="pbPulseScreen" src="PulseWorldOS.mp4" autoplay muted playsinline aria-label="pbPulseScreen"></video>
+    <div class="pbWrapper">
+      <video id="pbPulseScreen" class="pbPulseScreen" src="PulseWorldOS.mp4" autoplay muted playsinline aria-label="pbPulseScreen"></video>
+    </div>
     <!-- Logo + Title -->
     <!-- <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" /> -->
 
