@@ -146,6 +146,7 @@ async function loadExtensionSettingsUI() {
 
     PB_LOG.info(`UI Field Loaded: ${id}`, value);
   }
+  
 }
 
 async function saveExtensionSettingsUI() {

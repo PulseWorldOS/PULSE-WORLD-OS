@@ -184,22 +184,27 @@
       box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.15), 0 0 10px rgba(0, 255, 255, 0.1);
     }
 
-    /* MODULES POPUP PANEL — bottom-up */
     #modules-popup {
       position: absolute;
-      right: 18%;        /* anchor to bottom */
+      right: 14%;
       bottom: 0;
-      left: 18%;
-      width: 64%;
-      height: 0;        /* start collapsed */
+      left: 14%;
+      width: 72%;
+      height: 0;
       overflow: hidden;
 
-      border-top-left-radius: 20px;       /* flipped */
+      border-top-left-radius: 20px;
       border-top-right-radius: 20px;
 
       transition: height 0.35s ease;
       z-index: 9999;
       padding-top: 4px;
+
+      /* ⭐ NEW: turn the popup into a 2-column grid */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: minmax(20px, auto);
+      gap: 8px;
     }
 
 
@@ -250,12 +255,12 @@
     <div class="module-btn" id="mod-work"><span class="module-icon" id="moduleWorkIcon">💼</span> WORK</div>
     <div class="module-btn" id="mod-stream"><span class="module-icon" id="moduleStreamIcon">📺</span> STREAM</div>
     <div class="module-btn" id="mod-shopping"><span class="module-icon" id="moduleShoppingIcon">💳</span> SHOPPING</div>
-    <div class="module-btn" id="mod-1"><span class="module-link" id="mod1">Accelerated 1</span><span class="module-icon" id="module1">⚡</span></div>
-    <div class="module-btn" id="mod-2"><span class="module-link" id="mod2">Accelerated 2</span><span class="module-icon" id="module2">⚡</span></div>
-    <div class="module-btn" id="mod-3"><span class="module-link" id="mod3">Accelerated 3</span><span class="module-icon" id="module3">⚡</span></div>
-    <div class="module-btn" id="mod-4"><span class="module-link" id="mod4">Accelerated 4</span><span class="module-icon" id="module4">⚡</span></div>
-    <div class="module-btn" id="mod-5"><span class="module-link" id="mod5">Accelerated 5</span><span class="module-icon" id="module5">⚡</span></div>
-    <div class="module-btn" id="mod-6"><span class="module-link" id="mod6">Accelerated 6</span><span class="module-icon" id="module6">⚡</span></div>
+    <div class="module-btn" id="mod-1"><span class="module-link" id="mod1">Realm 1</span><span class="module-icon" id="module1">⚡</span></div>
+    <div class="module-btn" id="mod-2"><span class="module-link" id="mod2">Realm 2</span><span class="module-icon" id="module2">⚡</span></div>
+    <div class="module-btn" id="mod-3"><span class="module-link" id="mod3">Realm 3</span><span class="module-icon" id="module3">⚡</span></div>
+    <div class="module-btn" id="mod-4"><span class="module-link" id="mod4">Realm 4</span><span class="module-icon" id="module4">⚡</span></div>
+    <div class="module-btn" id="mod-5"><span class="module-link" id="mod5">Realm 5</span><span class="module-icon" id="module5">⚡</span></div>
+    <div class="module-btn" id="mod-6"><span class="module-link" id="mod6">Realm 6</span><span class="module-icon" id="module6">⚡</span></div>
   </div>
 
   <!-- ========================= -->

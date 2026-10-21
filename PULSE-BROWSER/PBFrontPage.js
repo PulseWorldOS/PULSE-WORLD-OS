@@ -195,55 +195,6 @@ async function pbRenderCacheList2() {
   PB_LOG3.info("Cache list rendered", caches);
 }
 
-
-
-async function pulseRehydrateTabs() {
-  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
-  chrome.tabs.query({}, tabs => {
-    const rebuilt = {};
-    let snapIndex = 1; // 1–5
-
-    for (const tab of tabs) {
-      if (!tab.url) continue;
-      if (snapIndex > 6) break; // only 5 bubbles
-
-      try {
-        const urlObj = new URL(tab.url);
-        const identity = normalizeIdentity(urlObj.hostname);
-
-        // ⭐ Skip NEW TAB — do NOT assign a bubble
-        if (identity === "newtab") {
-          rebuilt[identity] = {
-            id: tab.id,
-            realm: identity,
-            snapshot: null
-          };
-          continue; // ⭐ Do NOT increment snapIndex
-        }
-
-        // ⭐ Normal tab → assign bubble
-        latestSnapshot(identity, urlObj, snapIndex);
-
-        rebuilt[identity] = {
-          id: tab.id,
-          realm: identity,
-          snapshot: snapIndex
-        };
-
-        snapIndex++;
-
-      } catch (e) {
-        // Skip invalid URLs
-      }
-    }
-
-    pulseTabs = rebuilt;
-    chrome.storage.local.set({ pulseTabs: rebuilt });
-  });
-  await pbRenderCacheList2();
-}
-
-
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const originalTabId = tabs[0].id;
   chrome.storage.local.set({ originalTabId });
@@ -498,7 +449,7 @@ function getNextInstanceIndex() {
   return 1; // fallback
 }
 
-function openNamedTab(name, url, next) {
+function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
@@ -587,6 +538,53 @@ function openNamedTab(name, url, next) {
 }
 
 
+async function pulseRehydrateTabs() {
+  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
+  chrome.tabs.query({}, tabs => {
+    const rebuilt = {};
+    let snapIndex = 1; // 1–5
+
+    for (const tab of tabs) {
+      if (!tab.url) continue;
+      if (snapIndex > 6) break; // only 5 bubbles
+
+      try {
+        const urlObj = new URL(tab.url);
+        const identity = normalizeIdentity(urlObj.hostname);
+
+        // ⭐ Skip NEW TAB — do NOT assign a bubble
+        if (identity === "newtab") {
+          rebuilt[identity] = {
+            id: tab.id,
+            realm: identity,
+            snapshot: null
+          };
+          continue; // ⭐ Do NOT increment snapIndex
+        }
+
+        // ⭐ Normal tab → assign bubble
+        latestSnapshot(identity, urlObj, snapIndex);
+
+        rebuilt[identity] = {
+          id: tab.id,
+          realm: identity,
+          snapshot: snapIndex
+        };
+
+        snapIndex++;
+
+      } catch (e) {
+        // Skip invalid URLs
+      }
+    }
+
+    pulseTabs = rebuilt;
+    chrome.storage.local.set({ pulseTabs: rebuilt });
+  });
+  await pbRenderCacheList2();
+}
+
+
 function latestSnapshot(realm, link, snapIndex) {
   const snapshotKey = `pulse_snapshot_${realm}`;
 
@@ -601,7 +599,7 @@ function latestSnapshot(realm, link, snapIndex) {
       // ⭐ Replace any existing listener instead of stacking new ones
       bubble.onclick = () => {
         pbPreconnect([link]);
-        openNamedTab(realm, link, true);
+        openNamedTab(realm, link);
       };
     }
   });
@@ -618,18 +616,19 @@ async function renderSnapshot(snapshot, snapIndex, realm) {
       div.id = bubbleId;
       div.className = bubbleId;
     }
-    if (!snapshot.favicon) {
-      const realmURL = new URL(realm);
-      snapshot.favicon = await getFavicon(realmURL);
-    }
+    
     // ---------------------------------------------
     // ⭐ Inject ONLY the favicon (big, centered)
     // ---------------------------------------------
     div.innerHTML = `
       <div class="Snapshot-Viewport">
-        <img class="Snapshot-Favicon" src="${snapshot.favicon}" alt="favicon">
+        <img class="Snapshot-Favicon"
+            src="${snapshot.favicon}"
+            alt="favicon"
+            onerror="this.src='${await getFavicon(realm)}'"
       </div>
     `;
+
 
     document.body.appendChild(div);
 
@@ -1554,6 +1553,7 @@ function buildSearchURL(engineURL, query) {
   if (query) query = cleanQuery(query);     // ← THIS removes the symbol
   const q = encodeURIComponent(query);
   
+  if (!engineURL) engineURL = "https://www.google.com/search?q=";
   // Normalize URL
   const url = engineURL.toLowerCase();
 

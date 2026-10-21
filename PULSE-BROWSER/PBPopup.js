@@ -382,7 +382,7 @@ modulesBtn.onclick = () => {
   modulesOpen = !modulesOpen;
 
   if (modulesOpen) {
-    modulesPopup.style.height = "178px"; // slide UP
+    modulesPopup.style.height = "158px"; // slide UP
   } else {
     modulesPopup.style.height = "0";     // slide DOWN (collapse)
   }

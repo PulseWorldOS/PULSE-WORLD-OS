@@ -424,7 +424,7 @@ async function injectHUD() {
   setTimeout(() => {
     PulseBrowserDomScan();
   }, 2000);
-  setInterval(() => {
+  setTimeout(() => {
     PulseBrowserDomScan();
   }, interval);
   setTimeout(() => {
