@@ -11,13 +11,6 @@ let PulseBrowserSettings = null;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
-const potentialAI = [
-    "https://www.yahoo.com",
-    "https://www.brave.com",
-    "https://www.msn.com",
-    "https://www.bing.com",
-    "https://www.safari.com"
-];
 
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconCaches"], (res) => {
@@ -983,19 +976,12 @@ async function pbModuleWarmBoot() {
   ];
 
   if (warmTargets.length === 0) return;
-  if (potentialAI.length === 0) return;
 
   // Preconnect all module targets
   pbPreconnect(warmTargets);
-  pbPreconnect(potentialAI);
 
   // Warm each module target
   warmTargets.forEach(origin => {
-    pbRealmWarm(origin);
-  });
-
-  // Warm each module target
-  potentialAI.forEach(origin => {
     pbRealmWarm(origin);
   });
 

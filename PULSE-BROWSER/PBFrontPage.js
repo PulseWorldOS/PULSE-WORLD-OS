@@ -18,13 +18,7 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
-const potentialAI = [
-    "https://www.yahoo.com",
-    "https://www.brave.com",
-    "https://www.msn.com",
-    "https://www.bing.com",
-    "https://www.safari.com"
-];
+
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 
@@ -1112,12 +1106,6 @@ async function pbModuleWarmBoot() {
 
   // Preconnect all module targets
   pbPreconnect(warmTargets);
-  pbPreconnect(potentialAI);
-
-  chrome.runtime.sendMessage({
-    type: "FIRSTPRE_WARMPATH_EVENT",
-    origins: potentialAI
-  });
 
   chrome.runtime.sendMessage({
     type: "FIRSTPRE_WARMPATH_EVENT",
@@ -1128,11 +1116,6 @@ async function pbModuleWarmBoot() {
     chrome.runtime.sendMessage({
       type: "FIRSTPOST_WARMPATH_EVENT",
       origins: warmTargets
-    });
-
-    chrome.runtime.sendMessage({
-      type: "FIRSTPOST_WARMPATH_EVENT",
-      origins: potentialAI
     });
   }, 3000);
 
@@ -2611,10 +2594,6 @@ setInterval(() => {
 
     container.innerHTML = "";
 
-    potentialAI.forEach(url => {      
-      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
-    });
-
     PB_HOMES.forEach(url => {      
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
@@ -2627,12 +2606,11 @@ setInterval(() => {
       container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
     });
 
-    const externalTargets = [...Links, ...potentialAI].filter(u => u && u.startsWith("http"));
+    const externalTargets = [...Links].filter(u => u && u.startsWith("http"));
     PulseModuleCount = externalTargets.length;
     const externalTempTargets = [...temporaryLinks].filter(u => u && u.startsWith("http"));
     PulseTempModuleCount = externalTempTargets.length;
 
-    if (potentialAI.length > 0) pbPreconnect(potentialAI);
     if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
     if (Links.length > 0) pbPreconnect(Links);
     if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
@@ -2660,10 +2638,12 @@ setInterval(() => {
       topPanel.classList.remove('electrify');
     }, 2700);
     pulseRehydrateTabs();
+    gpuWarmExtra();
   }
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
+      gpuWarmExtra();
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
@@ -2679,7 +2659,6 @@ setInterval(() => {
         injectPulseScreenFromMemory();
       }, interval3);
       pulseRehydrateTabs();
-      gpuWarmExtra();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
