@@ -1072,6 +1072,9 @@ function loadVideoMemory(callback) {
 
 async function saveVideoToMemory(videoElement) {
   try {
+    const ratio = videoElement.videoWidth / videoElement.videoHeight;
+    const isIdentityVideo = ratio < 1.4;
+    if (!isIdentityVideo) return;
     const response = await fetch(videoElement.src);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
