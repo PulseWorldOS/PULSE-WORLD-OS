@@ -2446,22 +2446,26 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
 });
 
 document.getElementById("clear-caches").addEventListener("click", async () => {
-  // Step 1: Clear Pulse caches
-  chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES" });
-
-  // Step 2: Ask user if they want to clear local storage too
+  // Ask user if they want to clear caches
   const confirmClear = confirm(
-    "PulseWorld: Caches cleared.\n\nWould you also like to clear PulseWorld local storage?\n(This will reset snapshots, settings, and memory.)"
+    "PulseBrowser OS: Would you like to clear PulseWorld cache files?"
   );
 
   if (confirmClear) {
-    // Step 3: Clear extension local storage
-    chrome.storage.local.clear(() => {
-      console.log("PulseWorld local storage cleared.");
-    });
+    // Tell background to clear caches
+    chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES" });
+
+    // Now ask about local storage
+    const confirmClear2 = confirm(
+      "PulseBrowser OS: Caches cleared.\n\nWould you also like to clear PulseWorld local storage?"
+    );
+
+    if (confirmClear2) {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
+    }
   }
 
-  // Step 4: Re-render memory + cache list
+  // Re-render after everything
   setTimeout(async () => {
     await pbRenderCacheList2();
   }, 500);

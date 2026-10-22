@@ -1318,7 +1318,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.imagesDecoded += msg.count || 1;
       sendResponse({ ok: true });
       break;
-
+      
+    case "PULSE_OS_CLEAR_LOCAL_STORAGE":
+      chrome.storage.local.clear(() => {
+        console.log("PulseWorld local storage cleared.");
+      });
+      break;
+      
     case "OPEN_PULSEWORLD_PANEL":
       (async () => {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
