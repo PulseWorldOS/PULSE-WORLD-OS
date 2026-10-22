@@ -212,9 +212,7 @@ function openNamedTab(name, url, next) {
         savePulseTabs();
       });
 
-      setTimeout(() => {
-         pulseRehydrateTabs();
-      }, 3000);
+      pulseRehydrateTabs();
       return;
     }
 
@@ -227,9 +225,7 @@ function openNamedTab(name, url, next) {
               savePulseTabs();
             });
 
-            setTimeout(() => {
-              pulseRehydrateTabs();
-            }, 3000);
+            pulseRehydrateTabs();
             return;
           }
 
@@ -237,9 +233,7 @@ function openNamedTab(name, url, next) {
           savePulseTabs();
         });
 
-        setTimeout(() => {
-         pulseRehydrateTabs();
-        }, 3000);
+        pulseRehydrateTabs();
         return;
       }
 
@@ -252,9 +246,7 @@ function openNamedTab(name, url, next) {
       savePulseTabs();
     });
 
-    setTimeout(() => {
-      pulseRehydrateTabs();
-    }, 3000);
+    pulseRehydrateTabs();
     return;
   }
 
@@ -264,9 +256,7 @@ function openNamedTab(name, url, next) {
     savePulseTabs();
   });
 
-  setTimeout(() => {
-    pulseRehydrateTabs();
-  }, 3000);
+  pulseRehydrateTabs();
 }
 
 chrome.tabs.onRemoved.addListener((tabId) => {

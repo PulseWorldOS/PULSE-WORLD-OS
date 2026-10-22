@@ -182,7 +182,7 @@ async function pbRenderCacheList2() {
     if (!best) lastActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
 
       Entries: <font color="#0FF">${cache.entries}</font><br>
       Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
@@ -261,7 +261,7 @@ async function pbRenderStorageStats() {
 
 
   return `
-    <div style="margin-top:12px; padding:8px; border-radius:8px;
+    <div style="margin: 14px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
       <strong>PulseBrowser-Storage (RAM)</strong><br><br>
@@ -284,7 +284,7 @@ async function pbRenderStorageStats() {
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
           <strong>Quota:</strong><br>
-          • <span style="color:lightgreen">${quotaGB} GB</span><br>
+          • <span style="color:lightgreen">${quotaGB} GB</span><br><br>
         </div>
 
       </div>
@@ -574,9 +574,7 @@ function openNamedTab(name, url) {
       PulseURL = url;
       PulseSnapshotView = new URL(url).hostname;
 
-      setTimeout(() => {
-         pulseRehydrateTabs();
-      }, 3000);
+      pulseRehydrateTabs();
       return;
     }
 
@@ -592,9 +590,7 @@ function openNamedTab(name, url) {
             PulseURL = url;
             PulseSnapshotView = new URL(url).hostname;
 
-            setTimeout(() => {
-              pulseRehydrateTabs();
-            }, 3000);
+            pulseRehydrateTabs();
             return;
           }
 
@@ -605,9 +601,7 @@ function openNamedTab(name, url) {
         PulseURL = url;
         PulseSnapshotView = new URL(url).hostname;
 
-        setTimeout(() => {
-         pulseRehydrateTabs();
-        }, 3000);
+        pulseRehydrateTabs();
         return;
       }
 
@@ -623,9 +617,7 @@ function openNamedTab(name, url) {
     PulseURL = url;
     PulseSnapshotView = new URL(url).hostname;
 
-    setTimeout(() => {
-      pulseRehydrateTabs();
-    }, 3000);
+    pulseRehydrateTabs();
     return;
   }
 
@@ -638,9 +630,7 @@ function openNamedTab(name, url) {
   PulseURL = url;
   PulseSnapshotView = new URL(url).hostname;
   
-  setTimeout(() => {
-    pulseRehydrateTabs();
-  }, 3000);
+  pulseRehydrateTabs();
 }
 
 
@@ -736,10 +726,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
 
   } else {
     topPanel.classList.add('electrify');
-    // Remove the bubble
-    document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
-      if (bubble === div) bubble.remove();
-    });
+    pulseRehydrateTabs();
     // Now check if any bubbles remain
     const remaining = document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
     if (remaining === 0) {
@@ -2805,8 +2792,8 @@ setInterval(() => {
     topPanel.classList.add('electrify');
     setTimeout(() => {
       topPanel.classList.remove('electrify');
+      pulseRehydrateTabs();
     }, 2700);
-    pulseRehydrateTabs();
     gpuWarmExtra();
   }
 
