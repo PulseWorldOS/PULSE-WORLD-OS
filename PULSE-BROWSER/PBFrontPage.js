@@ -600,6 +600,7 @@ function openNamedTab(name, url) {
 
 
 async function pulseRehydrateTabs() {
+  if (document.visibilityState !== "visible") return;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   await pbRenderCacheList2();
   chrome.tabs.query({}, tabs => {
