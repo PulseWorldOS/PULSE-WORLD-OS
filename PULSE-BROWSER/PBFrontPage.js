@@ -178,6 +178,7 @@ async function pbRenderCacheList2() {
     const personality = cache.personality || "Wanderer";
     const pulseRank = cache.pulseRank;
     const density = cache.density ?? 0;
+    const KBperEntry = (1024 / cache.density).toFixed(0);
   
     if (!best) lastActiveEntries = cache.entries ?? 0;
 
@@ -189,7 +190,7 @@ async function pbRenderCacheList2() {
 
       Weight: <font color="#0FF">${weightClass}</font><br>
       Personality: <font color="#0FF">${personality}</font><br>
-      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
@@ -638,7 +639,6 @@ async function pulseRehydrateTabs() {
   if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
-  await pbRenderCacheList2();
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     let snapIndex = 1; // 1–5
@@ -713,7 +713,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
         <img class="Snapshot-Favicon"
             src="${snapshot.favicon}"
             alt="favicon"
-            onerror="this.src='${await getFavicon(realm)}'"
+            onerror="this.src='${snapshot.regfavicon}'"
       </div>
     `;
 
@@ -750,6 +750,11 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
     };
   }
 }
+
+// Re-render after everything
+setInterval(async () => {
+  await pbRenderCacheList2();
+}, 8000);
 
 
 chrome.tabs.onRemoved.addListener((tabId) => {
@@ -1237,6 +1242,7 @@ async function pbModuleWarmBoot() {
     "%c[PBAccelerator] Module Warm-Boot executed",
     "color:#00C8FF; font-weight:bold;"
   );
+  await pbRenderCacheList2();
 }
 
 const EXTENSION_SETTINGS_KEY = "pulseworldSettings";

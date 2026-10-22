@@ -248,7 +248,62 @@ function warmAllImages() {
 }
 
 
+// ============================================================================
+// 14. PBContentGPUWarm++ — Additional GPU warm triggers
+// ============================================================================
+let gpuEnabled = "GPU Driver Error";
 
+function createPulseScreen() {
+  const vid = document.createElement("video");
+
+  loadLastSavedVideo(entry => {
+    if (!entry) {
+      vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+      return;
+    }
+
+    // Attach listeners FIRST
+    vid.addEventListener("error", () => {
+      // CSP blocked → fallback
+      if (gpuEnabled === "GPU Driver Error") {
+        vid.src = chrome.runtime.getURL("PulseWorldOS-Older.mp4");
+      } else {
+        vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+      }
+    });
+
+    vid.addEventListener("loadedmetadata", () => {
+      // PulseWorld video allowed
+      // Optional: mark presence or warm-state
+    });
+
+    // THEN set the src
+    if (entry.source) {
+      vid.src = entry.source;
+    } else {
+      if (gpuEnabled === "GPU Driver Error") {
+        vid.src = chrome.runtime.getURL("PulseWorldOS-Older.mp4");
+      } else {
+        vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
+      }
+    }
+  });
+
+  vid.style.cssText = `
+    position: fixed;
+    display: block;
+    top: 50px;
+    right: 30px;
+    width: 220px;
+    border-radius: 999px;
+    box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+    z-index: 999999999;
+  `;
+
+  setTimeout(() => {
+    fadeHUD(vid);
+  }, 4000);
+}
 
 // ---------------------------------------------------------------------------
 // 2. HUD INJECTION (DevOverlay) — SAFE VERSION
@@ -263,9 +318,13 @@ function warmAllImages() {
     }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", injectHUD);
+    document.addEventListener("DOMContentLoaded", async () => {
+      injectHUD();
+      createPulseScreen();
+    });
   } else {
     injectHUD();
+    createPulseScreen();
   }
 })();
 
@@ -323,10 +382,6 @@ function loadLastSavedVideo(callback) {
 }
 
 
-// ============================================================================
-// 14. PBContentGPUWarm++ — Additional GPU warm triggers
-// ============================================================================
-let gpuEnabled = "GPU Driver Error";
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
@@ -368,7 +423,6 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
-
 setTimeout(gpuWarmExtra, 900);
 
 async function injectHUD() {
@@ -379,51 +433,12 @@ async function injectHUD() {
   // ];
   
   if (document.getElementById("pulsebrowser-dev-overlay")) return;
-  if (!document.body) return setTimeout(injectHUD, 50);
-
-  const vid = document.createElement("video");
-
-  loadLastSavedVideo(entry => {
-    vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
-    if (!entry) return;
-
-    // Attach listeners FIRST
-    vid.addEventListener("error", () => {
-      // CSP blocked → fallback
-      if (gpuEnabled === "GPU Driver Error") {
-        vid.src = chrome.runtime.getURL("PulseWorldOS-Older.mp4");
-      } else {
-        vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
-      }
-    });
-
-    vid.addEventListener("loadedmetadata", () => {
-      // PulseWorld video allowed
-      // Optional: mark presence or warm-state
-    });
-
-    // THEN set the src
-    if (entry.source) {
-      vid.src = entry.source;
-    } else {
-      if (gpuEnabled === "GPU Driver Error") {
-        vid.src = chrome.runtime.getURL("PulseWorldOS-Older.mp4");
-      } else {
-        vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
-      }
-    }
-  });
-
-  vid.style.cssText = `
-    position: fixed;
-    display: block;
-    top: 50px;
-    right: 30px;
-    width: 220px;
-    border-radius: 999px;
-    box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-    z-index: 999999999;
-  `;
+  if (!document.body) {
+    setTimeout(() => {
+      injectHUD();
+    }, 50);
+    return;
+  }
 
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
@@ -479,9 +494,6 @@ async function injectHUD() {
   }, interval);
   setTimeout(() => {
     DomScanPreview();
-  }, 4000);
-  setTimeout(() => {
-    fadeHUD(vid);
   }, 4000);
 }
 
@@ -1624,7 +1636,7 @@ async function PulseBrowserDomScan() {
   if (!favicon) {
     favicon = `${location.origin}/favicon.ico`;
   }
-  let icon = await fetchAndStoreIcon(location.hostname, favicon);
+  let icon = await fetchAndStoreIcon(location.origin, favicon);
 
   const snapshot = {
     url: location.href,
