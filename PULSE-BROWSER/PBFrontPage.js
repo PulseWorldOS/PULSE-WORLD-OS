@@ -2742,7 +2742,6 @@ setInterval(() => {
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
-      gpuWarmExtra();
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
@@ -2751,6 +2750,7 @@ setInterval(() => {
       });
       updateOverlay();
       pulseRehydrateTabs();
+      gpuWarmExtra();
       injectPulseScreenFromMemory(true);
       const interval3 = getCharacterInterval();
       setTimeout(() => {
@@ -2768,8 +2768,6 @@ setInterval(() => {
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
       });
-    } else {
-      updateOverlay();
     }
   });
 

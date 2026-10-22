@@ -531,8 +531,8 @@
         <h1 class="hero-title">PulseBrowser OS - Tier 2</h1>
 
         <p class="hero-subtitle">
-          A world-layer performance engine for the browser. Tier 2 rebuilds the original favorites system into the five core
-          human modules — Email, Banking, Social, Work, and Streaming — each accelerated, cached, pre-connected, and identity-safe.
+          A world-layer performance engine for the browser. Tier 2 rebuilds the original favorites system into the six core
+          human modules — Email, Banking, Social, Work, Streaming, and Shopping — each accelerated, cached, pre-connected, and identity-safe.
           These modules become OS-level anchors that keep your essential digital life instantly available, always warm, and
           optimized through proximity-based presence and world-layer routing. By overlaying the browser with a world instead of
           a UI, Tier 2 transforms everyday browsing into a structured, living environment that understands what you use and
@@ -677,7 +677,7 @@
       </div>
 
       <p class="section-intro">
-        The five human modules — Email, Banking, Social, Work, and Streaming — form the foundation of Tier 2. 
+        The six human modules — Email, Banking, Social, Work, Streaming, and Shopping — form the foundation of Tier 2. 
         Each module can be connected as an external link accelerated by PulseBrowser, or as an internal world-layer 
         module for deeper integration. Internal modules gain identity anchoring, pre-warming, GPU-assisted rendering, 
         and proximity-based presence, transforming everyday browsing into a structured world instead of a UI.
