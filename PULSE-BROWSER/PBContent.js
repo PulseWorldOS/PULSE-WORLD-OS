@@ -1178,7 +1178,8 @@ async function saveVideoToMemory(videoElement) {
   }
 }
 
-if (pbDomainClass(location.href)) {
+const cls = pbDomainClass(location.href);
+if (cls === "PulseWorld" || cls === "Partner") {
   document.addEventListener("click", e => {
     const vid = e.target.closest("video");
     if (!vid) return;

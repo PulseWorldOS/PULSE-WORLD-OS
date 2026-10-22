@@ -1263,17 +1263,50 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 }
               }
 
-              const sizeMB = (totalBytes / (1024 * 1024)).toFixed(2);
+              const sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
+              const density = count / (sizeMB || 1);
 
-              // ⭐ Weight class (CURRENT STATIC VERSION)
-              let weightClass = "very small";
-              if (count > 100) weightClass = "light";
-              if (count > 500) weightClass = "medium";
-              if (count > 1000) weightClass = "heavy";
-              if (count > 2000) weightClass = "massive";
+              // ⭐ Diversity (unique hosts)
+              const diversity = new Set(requests.map(r => {
+                try { return new URL(r.url).hostname; }
+                catch { return "unknown"; }
+              })).size;
 
-              // ⭐ PulseScore (unchanged)
-              const pulseScore = Math.min(100, Math.floor(count / 10));
+              // ⭐ Weight class (unchanged)
+              let weightClass = "Very Small";
+              if (count > 100) weightClass = "Light";
+              if (count > 500) weightClass = "Medium";
+              if (count > 1000) weightClass = "Heavy";
+              if (count > 2000) weightClass = "Massive";
+
+              // ⭐ Freshness (minutes since last update)
+              const freshness = Date.now() - (cache.lastUpdated || Date.now());
+              const freshnessMinutes = freshness / 60000;
+
+              // ⭐ Raw PulseScore
+              const rawPulse =
+                (density * 2) +
+                (diversity * 3) +
+                (count / 50) -
+                (sizeMB / 10) -
+                (freshnessMinutes);
+
+              // ⭐ Final PulseScore (0–100)
+              const pulseScore = Math.max(0, Math.min(100, Math.floor(rawPulse)));
+              let pulseTier = "Quiet Load";
+              if (pulseScore >= 20) pulseTier = "Light Sway";
+              if (pulseScore >= 40) pulseTier = "Moderate Push";
+              if (pulseScore >= 60) pulseTier = "High Speed";
+              if (pulseScore >= 80) pulseTier = "Blazing Fast";
+              
+              // ⭐ Personality (style)
+              let personality = "Silent Ghost";
+              if (density > 50) personality = "Astral Explorer";
+              else if (density > 20) personality = "Active Voyager";
+              else if (density > 10) personality = "Balanced Traveler";
+              else if (density > 5) personality = "Calm Wanderer";
+
+              const pulseRank = `${pulseTier}`;
 
               cacheDetails.push({
                 name,
@@ -1281,7 +1314,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 sizeBytes: totalBytes,
                 sizeMB,
                 weightClass,
+                personality,
+                density,
                 pulseScore,
+                pulseTier,
+                pulseRank,
                 currentCache,
                 firstEntry: requests[0]?.url || null,
                 lastEntry: requests[count - 1]?.url || null

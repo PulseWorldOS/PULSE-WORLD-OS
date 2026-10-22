@@ -107,21 +107,23 @@ async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
 
-  listEl.innerHTML = ""; // wipe EVERYTHING first
+  // ⭐ Wipe panel completely
+  listEl.innerHTML = "";
 
   // ⭐ Title
-  listEl.innerHTML = `
+  listEl.insertAdjacentHTML("beforeend", `
     <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
       PulseBrowser OS - User Memory
     </div>
-  `;
+  `);
 
   // ⭐ Memory FIRST
   const statsHTML = await pbRenderStorageStats();
-  const result = await pbRequestCacheList2();
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
-  // ⭐ Cache list SECOND
+  // ⭐ Fetch cache list
+  const result = await pbRequestCacheList2();
+
   if (!result || !result.caches) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
@@ -144,7 +146,7 @@ async function pbRenderCacheList2() {
   let best = false;
 
   caches.forEach(cache => {
-    let li = document.createElement("li");
+    const li = document.createElement("li");
     li.className = "PulseCache";
     li.style.cssText = `
       margin: 14px 20px;
@@ -157,19 +159,30 @@ async function pbRenderCacheList2() {
     `;
 
     // ⭐ Cache size color logic
-    let sizeColor = "lightgreen";
     const sizeMB = parseFloat(cache.sizeMB || "0");
+    let sizeColor = "lightgreen";
 
     if (sizeMB >= 150) sizeColor = "gold";     // warming
     if (sizeMB >= 300) sizeColor = "orange";   // heavy
     if (sizeMB >= 600) sizeColor = "red";      // critical
 
+    // ⭐ Safe fallback values
+    const weightClass = cache.weightClass || "unknown";
+    const personality = cache.personality || "Wanderer";
+    const pulseRank = cache.pulseRank;
+    const density = cache.density ?? 0;
+
     li.innerHTML = `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name}</strong></font><br>
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
+
       Entries: <font color="#0FF">${cache.entries}</font><br>
       Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
-      Weight: <font color="#0FF">${cache.weightClass}</font><br>
-      PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
+
+      Weight: <font color="#0FF">${weightClass}</font><br>
+      Personality: <font color="#0FF">${personality}</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB</font><br>
+
+      PulseRank: <font color="gold">${pulseRank}</font><br>
       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
       Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
     `;
@@ -223,7 +236,7 @@ async function pbRenderStorageStats() {
   return `
     <div style="margin-top:12px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
-      
+      <strong>PulseBrowser-Storage (RAM)</strong><br>
       Used: <span style="color:lightgreen">${usedMB} MB</span><br>
       Quota: <span style="color:lightgreen">${quotaGB} GB</span><br>
 
@@ -588,6 +601,7 @@ function openNamedTab(name, url) {
 
 async function pulseRehydrateTabs() {
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
+  await pbRenderCacheList2();
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     let snapIndex = 1; // 1–5
@@ -629,8 +643,6 @@ async function pulseRehydrateTabs() {
     pulseTabs = rebuilt;
     chrome.storage.local.set({ pulseTabs: rebuilt });
   });
-
-  await pbRenderCacheList2();
 }
 
 
