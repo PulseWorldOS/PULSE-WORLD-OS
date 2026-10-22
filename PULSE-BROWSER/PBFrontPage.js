@@ -21,6 +21,7 @@ let PulseURL = null;
 let lastActiveEntries = null;
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
+let now = new Date().toLocaleString();
 
 const PB_LOG3 = {
   info(label, data) {
@@ -1195,6 +1196,7 @@ function pbTLSWarm(origin) {
 async function pbModuleWarmBoot() {
   const settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
+  PulseBrowserSettings = await getSettings();
   const warmTargets = [
     "https://www.pulseworld.net",
     "https://www.pulseworld.me",
@@ -1288,10 +1290,11 @@ async function getSettings() {
   });
 }
 
-async function updateModuleIcons() {
-  const settings = await pbLoadExtensionSettings();
+async function updateModuleIcons(settings, browser) {
+  if (!settings) settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
-  PulseBrowserSettings = await getSettings();
+  if (!browser) browser = await getSettings();
+  PulseBrowserSettings = browser;
 
   searchEngineActiveLink = settings.externalSearchLink;
   searchMode = settings.searchMode;
@@ -1507,8 +1510,7 @@ async function updateModuleIcons() {
 }
 
 async function setTheStage() {
-  const settings = await pbLoadExtensionSettings();
-  PulseRealmSettings = settings;
+  PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
   const PB_HOMES = [
     "https://www.pulseworld.me",
@@ -1521,22 +1523,22 @@ async function setTheStage() {
     "https://www.orbitalmap.net",
     "https://www.pulseworld.net",
     "https://www.google.com",
-    settings.externalSearchLink
+    PulseRealmSettings.externalSearchLink
   ].filter(u => u && u.startsWith("http"));
 
   const Links = [
-    settings.externalBankLink,
-    settings.externalEmailLink,
-    settings.externalSocialLink,
-    settings.externalWorkLink,
-    settings.externalStreamingLink,
-    settings.externalShoppingLink,
-    settings.acceleratedModule1Link,
-    settings.acceleratedModule2Link,
-    settings.acceleratedModule3Link,
-    settings.acceleratedModule4Link,
-    settings.acceleratedModule5Link,
-    settings.acceleratedModule6Link
+    PulseRealmSettings.externalBankLink,
+    PulseRealmSettings.externalEmailLink,
+    PulseRealmSettings.externalSocialLink,
+    PulseRealmSettings.externalWorkLink,
+    PulseRealmSettings.externalStreamingLink,
+    PulseRealmSettings.externalShoppingLink,
+    PulseRealmSettings.acceleratedModule1Link,
+    PulseRealmSettings.acceleratedModule2Link,
+    PulseRealmSettings.acceleratedModule3Link,
+    PulseRealmSettings.acceleratedModule4Link,
+    PulseRealmSettings.acceleratedModule5Link,
+    PulseRealmSettings.acceleratedModule6Link
   ].filter(u => u && u.startsWith("http"));
 
   const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
@@ -1590,10 +1592,11 @@ async function setTheStage() {
       keyHold2Timer = null;
     }
   });
+
+  updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 }
 
 setTimeout(setTheStage, 150);
-setTimeout(updateModuleIcons, 150);
 
 setTimeout(pbModuleWarmBoot, 150);
 
@@ -2667,7 +2670,7 @@ setInterval(() => {
     if (intervalId) return; // already running
 
     intervalId = setInterval(() => {
-      updateModuleIcons();
+      updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
       pulseRehydrateTabs(); // safe now
     }, interval);

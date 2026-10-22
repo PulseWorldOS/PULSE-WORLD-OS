@@ -1280,17 +1280,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               if (count > 1000) weightClass = "Heavy";
               if (count > 2000) weightClass = "Massive";
 
-              // ⭐ Freshness (minutes since last update)
-              const freshness = Date.now() - (cache.lastUpdated || Date.now());
-              const freshnessMinutes = freshness / 60000;
-
               // ⭐ Raw PulseScore
               const rawPulse =
                 (density * 2) +
                 (diversity * 3) +
                 (count / 50) -
-                (sizeMB / 10) -
-                (freshnessMinutes);
+                (sizeMB / 10);
 
               // ⭐ Final PulseScore (0–100)
               const pulseScore = Math.max(0, Math.min(100, Math.floor(rawPulse)));

@@ -18,6 +18,29 @@ function getSyncInterval() {
 
   return Math.floor(interval);
 }
+
+
+// ---------------------------------------------------------------------------
+// UPDATE OVERLAY
+// ---------------------------------------------------------------------------
+async function updateOverlay() {
+  chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
+    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
+      PulseRealm = realmRes.state || {};
+      PulseBrowserSettings = settingsRes.settings || {};
+      
+      updateKernel(PulseRealm, now);
+      updateWarm(PulseRealm);
+      updatePerformance(PulseRealm);
+      updateNavigator(PulseBrowserSettings, PulseRealm);
+      updateAccelerator(PulseBrowserSettings, PulseRealm);
+      updateRouter(PulseBrowserSettings);
+      updateSettings(PulseBrowserSettings);
+      updateExperimental(PulseBrowserSettings);
+    });
+  });
+}
+
 // ---------------------------------------------------------------------------
 // CREATE OVERLAY
 // ---------------------------------------------------------------------------
@@ -77,48 +100,14 @@ function experimentalColor(v) {
 
 
 // ---------------------------------------------------------------------------
-// UPDATE OVERLAY
-// ---------------------------------------------------------------------------
-async function updateOverlay() {
-  chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
-    chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
-      PulseRealm = realmRes.state || {};
-      PulseBrowserSettings = settingsRes.settings || {};
-
-      updateKernel(PulseRealm);
-      updateWarm(PulseRealm);
-      updatePerformance(PulseRealm);
-      updateNavigator(PulseBrowserSettings, PulseRealm);
-      updateAccelerator(PulseBrowserSettings, PulseRealm);
-      updateRouter(PulseBrowserSettings);
-      updateSettings(PulseBrowserSettings);
-      updateExperimental(PulseBrowserSettings);
-    });
-  });
-}
-
-// ---------------------------------------------------------------------------
-// UPDATE OVERLAY
-// ---------------------------------------------------------------------------
-async function updateRealmOverlay() {
-  chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
-      PulseRealm = realmRes.state || {};
-
-      updateKernel(PulseRealm);
-      updateWarm(PulseRealm);
-      updatePerformance(PulseRealm);
-    });
-}
-
-// ---------------------------------------------------------------------------
 // SECTION: Kernel
 // ---------------------------------------------------------------------------
-function updateKernel(realm) {
+function updateKernel(realm, SessionStart) {
   const el = document.getElementById("pb-hud-kernel");
   const lastURL = realm.lastURL?.slice(0, 75);
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
-    Session Start: <font color="gold">${realm.sessionStart || "-"}</font><br/>
+    Session Start: <font color="gold">${SessionStart}</font><br/>
     Last Page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
     Last Title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
     Last URL: <font color="#0FF">${lastURL || "-"}</font><br/>
@@ -162,7 +151,7 @@ function updatePerformance(realm) {
     Background Activity: <font color="#0FF">${realm.mutationCount || "-"}</font><br/>
     Last Activity Event: <font color="yellow">${realm.lastMutationTS || "-"}</font><br/>
     Realm Perf Entries: <font color="lightgreen">${perf.length || "-"}</font><br/>
-    Realm Entry Speed: <font color="#0FF">${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}</font><br/>
+    Realm Perf Speed: <font color="#0FF">${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}</font><br/>
     Last NAV: <font color="lightgreen">${lastNAV || "-"}</font><br/>
     Last NAV Time: <font color="yellow">${realm.perfLastNavigation || "-"}</font><br/>
   `;
