@@ -731,15 +731,6 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       break;
     }
   }
-
-  // ⭐ REINDEX ALL REMAINING TABS
-  let newIndex = 0;
-  for (const identity in pulseTabs) {
-    const entry = pulseTabs[identity];
-    entry.snapshot = newIndex;      // rewrite snapshot index
-    newIndex++;
-  }
-  savePulseTabs();
   pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
   // location.reload();
@@ -2619,8 +2610,8 @@ setInterval(() => {
 
   const interval = getWarmInterval2();
   setInterval(() => {
-    swap();
     pulseRehydrateTabs();
+    swap();
     updateModuleIcons();
   }, interval);
       
