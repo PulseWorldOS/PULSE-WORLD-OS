@@ -2668,11 +2668,22 @@ setInterval(() => {
   }
 
   const interval = getWarmInterval2();
-  setInterval(() => {
-    pulseRehydrateTabs();
-    swap();
-    updateModuleIcons();
-  }, interval);
+  let intervalId = null;
+
+  function startPulseLoop() {
+    if (intervalId) return; // already running
+
+    intervalId = setInterval(() => {
+      updateModuleIcons();
+      swap();
+      pulseRehydrateTabs(); // safe now
+    }, interval);
+  }
+
+  function stopPulseLoop() {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
       
   const ENTERPRISE_DOMAINS = [
     "microsoft.com",
@@ -2807,6 +2818,8 @@ setInterval(() => {
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
+      updateOverlay();
+      gpuWarmExtra();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
@@ -2816,9 +2829,9 @@ setInterval(() => {
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
+        pulseRehydrateTabs();
+        startPulseLoop();
       });
-      updateOverlay();
-      gpuWarmExtra();
       injectPulseScreenFromMemory(true);
       const interval3 = getCharacterInterval();
       setTimeout(() => {
@@ -2826,7 +2839,8 @@ setInterval(() => {
         pbPulseScreen.play = false;
         injectPulseScreenFromMemory();
       }, interval3);
-      pulseRehydrateTabs();
+    } else {
+      stopPulseLoop();
     }
   });
 
