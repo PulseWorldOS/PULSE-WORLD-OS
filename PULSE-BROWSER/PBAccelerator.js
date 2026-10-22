@@ -189,10 +189,21 @@ function pbRealmWarm(origin) {
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
+function IsPartner(origin) {
+  return origin.includes("fordfamilyretail")
+      || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smoke-shop")
+      || origin.includes("fordfamilymanagement");
+}
+
+// ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
 function pbDomainClass(url) {
   for (const domain of PB_HOMES) {
     if (url.includes(domain)) return "PulseWorld";
   }
+  if (IsPartner(url)) return "Partner";
   return "WWW";
 }
 

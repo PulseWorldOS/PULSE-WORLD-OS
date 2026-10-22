@@ -319,6 +319,25 @@ async function compressImageTinyPNGStyle(blob) {
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
+
+  // ⭐ 1. Check cache first
+  if (PBFAVICON_CACHE[host]) {
+    const cached = PBFAVICON_CACHE[host];
+
+    // Valid Base64 favicon
+    if (typeof cached === "string" &&
+        cached.startsWith("data:image") &&
+        cached.length > 50) {
+      return cached;
+    }
+
+    // Valid fallback URL
+    if (cached.startsWith("http")) {
+      return cached;
+    }
+  }
+
+  // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
     if (!response.ok) throw new Error("Fetch failed");
@@ -535,6 +554,13 @@ const PB_HOMES = [
   "www.pulseworld.net"
 ];
 
+function IsPartner(origin) {
+  return origin.includes("fordfamilyretail")
+      || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smoke-shop")
+      || origin.includes("fordfamilymanagement");
+}
+
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
@@ -542,6 +568,7 @@ function pbDomainClass(url) {
   for (const domain of PB_HOMES) {
     if (url.includes(domain)) return "PulseWorld";
   }
+  if (IsPartner(url)) return "Partner";
   return "WWW";
 }
 function safeSendMessage(msg) {
@@ -672,7 +699,6 @@ function isPulseWorld(origin) {
       || origin.includes("pulseworld.money")
       || origin.includes("pulseworld.biz");
 }
-
 
 // ---------------------------------------------------------------------------
 // DNS WARM (resolve domain early)
@@ -1324,7 +1350,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         console.log("PulseWorld local storage cleared.");
       });
       break;
-      
+
     case "OPEN_PULSEWORLD_PANEL":
       (async () => {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });

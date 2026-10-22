@@ -321,6 +321,55 @@ function loadLastSavedVideo(callback) {
   });
 }
 
+
+// ============================================================================
+// 14. PBContentGPUWarm++ — Additional GPU warm triggers
+// ============================================================================
+let gpuEnabled = "GPU Driver Error";
+
+async function gpuWarmExtra() {
+  const elements = document.querySelectorAll("canvas, video");
+  gpuEnabled = "GPU Driver Error";
+
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
+    try { el.getContext?.("2d"); } catch (_) {}
+    try { el.play?.().catch(() => {}); } catch (_) {}
+  });
+
+  // Warm WebGPU (if available)
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) {
+        const device = await adapter.requestDevice();
+        if (device) {
+          gpuEnabled = "WebGPU";
+          const queue = device.queue;
+          const buffer = device.createBuffer({
+            size: 4,
+            usage: GPUBufferUsage.COPY_DST
+          });
+          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        }
+      }
+    }
+  } catch (_) {
+    // WebGPU failed — leave gpuEnabled as-is
+  }
+
+  console.log("GPU Warmed!");
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+}
+
+
+setTimeout(gpuWarmExtra, 900);
+
 async function injectHUD() {
   gpuWarmExtra();
   // const STREAMING_SITES = [
@@ -954,10 +1003,21 @@ const PB_HOME = [
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
+function IsPartner(origin) {
+  return origin.includes("fordfamilyretail")
+      || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smoke-shop")
+      || origin.includes("fordfamilymanagement");
+}
+
+// ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
 function pbDomainClass(url) {
-  for (const domain of PB_HOME) {
+  for (const domain of PB_HOMES) {
     if (url.includes(domain)) return "PulseWorld";
   }
+  if (IsPartner(url)) return "Partner";
   return "WWW";
 }
 
@@ -1315,56 +1375,6 @@ function triggerWarmPaths() {
 
 setTimeout(triggerWarmPaths, 300);
 
-
-// ============================================================================
-// 14. PBContentGPUWarm++ — Additional GPU warm triggers
-// ============================================================================
-let gpuEnabled = "GPU Driver Error";
-
-async function gpuWarmExtra() {
-  const elements = document.querySelectorAll("canvas, video");
-  gpuEnabled = "GPU Driver Error";
-
-  // Warm WebGL + WebGL2 + Canvas2D + Video
-  elements.forEach(el => {
-    try {
-      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
-      if (gl) gpuEnabled = "WebGL";
-    } catch (_) {}
-
-    try { el.getContext?.("2d"); } catch (_) {}
-    try { el.play?.().catch(() => {}); } catch (_) {}
-  });
-
-  // Warm WebGPU (if available)
-  try {
-    if (navigator.gpu) {
-      const adapter = await navigator.gpu.requestAdapter();
-      if (adapter) {
-        const device = await adapter.requestDevice();
-        if (device) {
-          gpuEnabled = "WebGPU";
-          const queue = device.queue;
-          const buffer = device.createBuffer({
-            size: 4,
-            usage: GPUBufferUsage.COPY_DST
-          });
-          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
-        }
-      }
-    }
-  } catch (_) {
-    // WebGPU failed — leave gpuEnabled as-is
-  }
-
-  console.log("GPU Warmed!");
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-}
-
-
-setTimeout(gpuWarmExtra, 900);
-
-
 // ============================================================================
 // 16. PBContentRealmSync++ — More accurate page context
 // ============================================================================
@@ -1417,6 +1427,89 @@ function PreviewListener(preview) {
   // Remove preview after user interacts
   window.addEventListener("mousemove", () => preview.remove(), { once: true });
 }
+
+
+async function fetchAndStoreIcon(host, iconUrl) {
+
+  // ⭐ 1. Check cache first
+  if (PBFAVICON_CACHE[host]) {
+    const cached = PBFAVICON_CACHE[host];
+
+    // Valid Base64 favicon
+    if (typeof cached === "string" &&
+        cached.startsWith("data:image") &&
+        cached.length > 50) {
+      return cached;
+    }
+
+    // Valid fallback URL
+    if (cached.startsWith("http")) {
+      return cached;
+    }
+  }
+
+  // ⭐ 2. No valid cache → fetch
+  try {
+    const response = await fetch(iconUrl);
+    if (!response.ok) throw new Error("Fetch failed");
+
+    let blob = await response.blob();
+
+    // ⭐ Fallback if blob is empty
+    if (!blob || blob.size === 0) {
+      console.warn("Empty favicon blob, falling back:", iconUrl);
+      PBFAVICON_CACHE[host] = iconUrl;
+      saveCache();
+      return iconUrl;
+    }
+
+    const reader = new FileReader();
+
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        const base64 = reader.result;
+
+        // ⭐ Validate Base64
+        if (
+          !base64 ||
+          typeof base64 !== "string" ||
+          base64.trim() === "" ||
+          (base64.startsWith("data:") && base64.length < 20) ||
+          base64.startsWith("data:text")
+        ) {
+          console.warn("Invalid Base64 favicon, falling back:", iconUrl);
+          PBFAVICON_CACHE[host] = iconUrl;
+          saveCache();
+          resolve(iconUrl);
+          return;
+        }
+
+        // ⭐ Save compressed Base64
+        PBFAVICON_CACHE[host] = base64;
+        saveCache();
+        resolve(base64);
+      };
+
+      reader.onerror = () => {
+        console.warn("FileReader failed, falling back:", iconUrl);
+        PBFAVICON_CACHE[host] = iconUrl;
+        saveCache();
+        resolve(iconUrl);
+      };
+
+      reader.readAsDataURL(blob);
+    });
+
+  } catch (err) {
+    console.warn("Favicon fetch failed:", iconUrl, err);
+
+    // ⭐ Last resort fallback
+    PBFAVICON_CACHE[host] = iconUrl;
+    saveCache();
+    return iconUrl;
+  }
+}
+
 
 async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
@@ -1522,13 +1615,12 @@ async function PulseBrowserDomScan() {
     url: location.href,
     title: document.title,
     realm: location.hostname,
-
     meta: {
       description: metaDesc,
       ogTitle,
       ogImage
     },
-
+    html: clone.innerHTML,
     viewport,
     scroll,
     visibility,
@@ -1537,8 +1629,7 @@ async function PulseBrowserDomScan() {
     links: tinyLinks,
     images: tinyImages,
     favicon: icon,
-
-    html: clone.innerHTML
+    regfavicon: favicon
   };
 
   console.log("Ghost Echo Initiated for Local-Only Future Uses: ", snapshot);
@@ -1549,66 +1640,3 @@ async function PulseBrowserDomScan() {
 function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
 }
-
-async function fetchAndStoreIcon(host, iconUrl) {
-  try {
-    const response = await fetch(iconUrl);
-    if (!response.ok) throw new Error("Fetch failed");
-
-    let blob = await response.blob();
-
-    // ⭐ Fallback if blob is empty
-    if (!blob || blob.size === 0) {
-      console.warn("Empty favicon blob, falling back:", iconUrl);
-      PBFAVICON_CACHE[host] = iconUrl;
-      saveCache();
-      return iconUrl;
-    }
-
-    const reader = new FileReader();
-
-    return new Promise((resolve) => {
-      reader.onloadend = () => {
-        const base64 = reader.result;
-
-        // ⭐ Validate Base64
-        if (
-          !base64 ||
-          typeof base64 !== "string" ||
-          base64.trim() === "" ||
-          (base64.startsWith("data:") && base64.length < 20) ||
-          base64.startsWith("data:text")
-        ) {
-          console.warn("Invalid Base64 favicon, falling back:", iconUrl);
-          PBFAVICON_CACHE[host] = iconUrl;
-          saveCache();
-          resolve(iconUrl);
-          return;
-        }
-
-        // ⭐ Save compressed Base64
-        PBFAVICON_CACHE[host] = base64;
-        saveCache();
-        resolve(base64);
-      };
-
-      reader.onerror = () => {
-        console.warn("FileReader failed, falling back:", iconUrl);
-        PBFAVICON_CACHE[host] = iconUrl;
-        saveCache();
-        resolve(iconUrl);
-      };
-
-      reader.readAsDataURL(blob);
-    });
-
-  } catch (err) {
-    console.warn("Favicon fetch failed:", iconUrl, err);
-
-    // ⭐ Last resort fallback
-    PBFAVICON_CACHE[host] = iconUrl;
-    saveCache();
-    return iconUrl;
-  }
-}
-

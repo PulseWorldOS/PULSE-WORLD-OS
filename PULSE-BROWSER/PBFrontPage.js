@@ -612,25 +612,15 @@ function latestSnapshot(realm, link, snapIndex) {
 
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap) renderSnapshot(snap, snapIndex, realm);
-
-    const bubbleSelector = `.PulseBrowser-OS-Snapshot${snapIndex}`;
-    const bubble = document.querySelector(bubbleSelector);
-
-    if (bubble) {
-      // ⭐ Replace any existing listener instead of stacking new ones
-      bubble.onclick = () => {
-        pbPreconnect([link]);
-        openNamedTab(realm, link);
-      };
-    }
+    if (snap) renderSnapshot(snap, snapIndex, realm, link);
   });
 }
 
-async function renderSnapshot(snapshot, snapIndex, realm) {
+async function renderSnapshot(snapshot, snapIndex, realm, link) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
+
   // Build the correct bubble ID and class
   if (snapshot) {
     if (!div) {
@@ -677,6 +667,14 @@ async function renderSnapshot(snapshot, snapIndex, realm) {
     setTimeout(() => {
       topPanel.classList.remove('electrify');
     }, 1500);
+  }
+
+  if (div) {
+    // ⭐ Replace any existing listener instead of stacking new ones
+    div.onclick = () => {
+      pbPreconnect([link]);
+      openNamedTab(realm, link);
+    };
   }
 }
 
@@ -731,6 +729,21 @@ function isPulseWorld(origin) {
       || origin.includes("pulseworld.me")
       || origin.includes("pulseworld.money")
       || origin.includes("pulseworld.biz");
+}
+
+function IsPartner(origin) {
+  return origin.includes("fordfamilyretail")
+      || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smoke-shop")
+      || origin.includes("fordfamilymanagement");
+}
+
+function pbDomainClass(url) {
+  for (const domain of PB_HOMES) {
+    if (url.includes(domain)) return "PulseWorld";
+  }
+  if (IsPartner(url)) return "Partner";
+  return "WWW";
 }
 // ============================================================================
 //  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
@@ -860,6 +873,25 @@ async function compressImageTinyPNGStyle(blob) {
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
+
+  // ⭐ 1. Check cache first
+  if (PBFAVICON_CACHE[host]) {
+    const cached = PBFAVICON_CACHE[host];
+
+    // Valid Base64 favicon
+    if (typeof cached === "string" &&
+        cached.startsWith("data:image") &&
+        cached.length > 50) {
+      return cached;
+    }
+
+    // Valid fallback URL
+    if (cached.startsWith("http")) {
+      return cached;
+    }
+  }
+
+  // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
     if (!response.ok) throw new Error("Fetch failed");
@@ -920,6 +952,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     return iconUrl;
   }
 }
+
 
 async function getFavicon(url, flags = {}) {
   let u;

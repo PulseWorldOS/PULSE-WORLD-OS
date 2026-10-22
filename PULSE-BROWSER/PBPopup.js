@@ -37,6 +37,21 @@ function isPulseWorld(origin) {
       || origin.includes("pulseworld.biz");
 }
 
+function IsPartner(origin) {
+  return origin.includes("fordfamilyretail")
+      || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smoke-shop")
+      || origin.includes("fordfamilymanagement");
+}
+
+function pbDomainClass(url) {
+  for (const domain of PB_HOMES) {
+    if (url.includes(domain)) return "PulseWorld";
+  }
+  if (IsPartner(url)) return "Partner";
+  return "WWW";
+}
+
 const PBUniversalBoost = {
   async warmOrigin(origin) {
     if (!origin) return;
@@ -838,6 +853,25 @@ async function compressImageTinyPNGStyle(blob) {
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
+
+  // ⭐ 1. Check cache first
+  if (PBFAVICON_CACHE[host]) {
+    const cached = PBFAVICON_CACHE[host];
+
+    // Valid Base64 favicon
+    if (typeof cached === "string" &&
+        cached.startsWith("data:image") &&
+        cached.length > 50) {
+      return cached;
+    }
+
+    // Valid fallback URL
+    if (cached.startsWith("http")) {
+      return cached;
+    }
+  }
+
+  // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
     if (!response.ok) throw new Error("Fetch failed");
@@ -898,6 +932,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     return iconUrl;
   }
 }
+
 
 
 async function getFavicon(url, flags = {}) {
