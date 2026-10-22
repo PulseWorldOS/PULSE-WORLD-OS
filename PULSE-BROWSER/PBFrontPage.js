@@ -475,6 +475,7 @@ function openNamedTab(name, url) {
   const existingEntry = pulseTabs[identity];
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
+  
   // ⭐ If tab already exists → PURE SELECT
   if (existingEntry) {
     const tabId = Number(existingEntry.id);
@@ -1572,8 +1573,11 @@ function cleanQuery(query) {
 
 function buildSearchURL(engineURL, query) {
   if (query) query = cleanQuery(query);     // ← THIS removes the symbol
-  const q = encodeURIComponent(query);
-  
+  let q = encodeURIComponent(query);
+
+  // Remove ONLY leading "undefined"
+  q = q.replace(/^undefined/, "");
+
   if (!engineURL) engineURL = "https://www.google.com/search?q=";
   // Normalize URL
   const url = engineURL.toLowerCase();

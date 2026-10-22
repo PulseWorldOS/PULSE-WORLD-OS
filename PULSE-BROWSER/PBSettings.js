@@ -3,6 +3,9 @@
 //  Unified OS Registry + Extension Settings Page + MV3-Compliant Storage
 //  FULL DIAGNOSTIC MODE — Every change logged, color-coded, timestamped
 // ============================================================================
+const params = new URLSearchParams(location.search);
+const origin = params.get("from");
+
 const PB_LOG = {
   info(label, data) {
     console.log(
@@ -424,11 +427,23 @@ document.addEventListener("change", (e) => {
   }
 });
 
-if (document.getElementById("btn-back")) {
-    document.getElementById("btn-back").onclick = () => {
+const backBtn = document.getElementById("btn-back");
+
+if (backBtn) {
+  backBtn.onclick = () => {
+    if (origin === "popup") {
+      // Go back to popup
       window.location.href = chrome.runtime.getURL("PBPopup.html");
-    };
-};
+    } else if (origin === "newtab") {
+      // Go back to new tab override
+      window.location.href = chrome.runtime.getURL("PBFrontPage.html");
+    } else {
+      // Fallback: go to popup
+      window.location.href = chrome.runtime.getURL("PBPopup.html");
+    }
+  };
+}
+
 
 if (document.getElementById("tetherBtn")) {
   document.getElementById("tetherBtn").onclick = () => {

@@ -100,7 +100,8 @@
       "PBCompanion.js",
       "PBSettings.js",
       "PulseWorldOS.mp4",
-      "PulseWorldOS-Older.mp4"
+      "PulseWorldOS-Older.mp4",
+      "PulseWorldAuthority.html"
     ],
     "matches": ["<all_urls>"]
   }

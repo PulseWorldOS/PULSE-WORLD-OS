@@ -392,7 +392,7 @@ modulesBtn.onclick = () => {
 //   toggleSetting("enablePulseDecode", "PulseDecode");
 
 document.getElementById("btn-open-settings").onclick = () => {
-  window.location.href = chrome.runtime.getURL("PBSettings.html");
+  window.location.href = chrome.runtime.getURL("PBSettings.html?from=popup");
   write("Accessing PulseSettings..");
 };
 

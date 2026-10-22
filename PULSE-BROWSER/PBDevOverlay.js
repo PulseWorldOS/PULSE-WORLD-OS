@@ -206,7 +206,9 @@ if (!PulseModuleCount) {
     cursor: pointer;
   `;
   el.onclick = () => {
-    chrome.runtime.sendMessage({ type: "OPEN_PULSEWORLD_PANEL" });
+    // chrome.runtime.sendMessage({ type: "OPEN_PULSEWORLD_PANEL" });
+    window.location.href = chrome.runtime.getURL("PBSettings.html?from=newtab");
+    
   };
 
 }
