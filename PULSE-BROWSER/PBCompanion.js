@@ -1249,6 +1249,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const count = requests.length;
               const currentCache = CACHE_NAME;
 
+              // ⭐ Compute total cache size
+              let totalBytes = 0;
+              for (const req of requests) {
+                try {
+                  const res = await cache.match(req);
+                  if (res) {
+                    const buf = await res.arrayBuffer();
+                    totalBytes += buf.byteLength;
+                  }
+                } catch (e) {
+                  console.warn("Cache size read failed:", e);
+                }
+              }
+
+              const sizeMB = (totalBytes / (1024 * 1024)).toFixed(2);
+
               // ⭐ Weight class (CURRENT STATIC VERSION)
               let weightClass = "very small";
               if (count > 100) weightClass = "light";
@@ -1262,6 +1278,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               cacheDetails.push({
                 name,
                 entries: count,
+                sizeBytes: totalBytes,
+                sizeMB,
                 weightClass,
                 pulseScore,
                 currentCache,
@@ -1273,6 +1291,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               cacheDetails.push({
                 name,
                 entries: null,
+                sizeBytes: 0,
+                sizeMB: "0.00",
                 weightClass: "unknown",
                 error: innerErr.toString()
               });

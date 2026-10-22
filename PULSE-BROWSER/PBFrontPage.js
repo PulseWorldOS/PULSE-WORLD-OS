@@ -103,10 +103,10 @@ async function pbRequestCacheList2() {
   });
 }
 
-
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
+
   listEl.innerHTML = ""; // wipe EVERYTHING first
 
   // ⭐ Title
@@ -123,19 +123,18 @@ async function pbRenderCacheList2() {
 
   // ⭐ Cache list SECOND
   if (!result || !result.caches) {
-    const li = "<li>Cache API unavailable in extension pages.</li>";
-    listEl.insertAdjacentHTML("beforeend", li);
+    listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
 
   const caches = result.caches;
 
   if (caches.length === 0) {
-    const li = "<li>No cached files detected.</li>";
-    listEl.insertAdjacentHTML("beforeend", li);
+    listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
 
+  // ⭐ Sort: current cache first, then by entry count
   caches.sort((a, b) => {
     if (a.name === a.currentCache) return -1;
     if (b.name === a.currentCache) return 1;
@@ -157,9 +156,18 @@ async function pbRenderCacheList2() {
       word-break: break-all;
     `;
 
+    // ⭐ Cache size color logic
+    let sizeColor = "lightgreen";
+    const sizeMB = parseFloat(cache.sizeMB || "0");
+
+    if (sizeMB >= 150) sizeColor = "gold";     // warming
+    if (sizeMB >= 300) sizeColor = "orange";   // heavy
+    if (sizeMB >= 600) sizeColor = "red";      // critical
+
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name}</strong></font><br>
       Entries: <font color="#0FF">${cache.entries}</font><br>
+      Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
       Weight: <font color="#0FF">${cache.weightClass}</font><br>
       PulseScore: <font color="#0FF">${cache.pulseScore}</font><br>
       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
