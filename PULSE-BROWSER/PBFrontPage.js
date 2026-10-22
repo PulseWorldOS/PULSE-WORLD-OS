@@ -106,9 +106,8 @@ async function pbRequestCacheList2() {
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
-  const result = await pbRequestCacheList2();
-  
   if (!listEl) return;
+  listEl.innerHTML = ""; // wipe EVERYTHING first
 
   // ⭐ Title
   listEl.innerHTML = `
@@ -119,6 +118,7 @@ async function pbRenderCacheList2() {
 
   // ⭐ Memory FIRST
   const statsHTML = await pbRenderStorageStats();
+  const result = await pbRequestCacheList2();
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Cache list SECOND
@@ -198,6 +198,18 @@ async function pbRenderStorageStats() {
   const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
   const percent = ((used / quota) * 100).toFixed(2);
 
+  // ⭐ Dynamic color zones
+  let percentColor = "lightgreen";
+  if (percent >= 40) percentColor = "gold";
+  if (percent >= 70) percentColor = "orange";
+  if (percent >= 90) percentColor = "red";
+
+  // ⭐ Status text
+  let statusText = "Safe";
+  if (percent >= 40) statusText = "Warming";
+  if (percent >= 70) statusText = "High Load";
+  if (percent >= 90) statusText = "Critical Load";
+
   const isPersistent = true;
 
   return `
@@ -206,8 +218,14 @@ async function pbRenderStorageStats() {
       
       Used: <span style="color:lightgreen">${usedMB} MB</span><br>
       Quota: <span style="color:lightgreen">${quotaGB} GB</span><br>
-      Percent Used: <span style="color:gold">${percent}%</span><br>
-      Persistent Storage: <span style="color:${isPersistent ? "lightgreen" : "orange"}">
+
+      Percent Used: 
+      <span style="color:${percentColor}; font-weight:bold;">
+        ${percent}% (${statusText})
+      </span><br>
+
+      Persistent Storage: 
+      <span style="color:${isPersistent ? "lightgreen" : "orange"}">
         ${isPersistent}
       </span>
     </div>
@@ -603,6 +621,7 @@ async function pulseRehydrateTabs() {
     pulseTabs = rebuilt;
     chrome.storage.local.set({ pulseTabs: rebuilt });
   });
+
   await pbRenderCacheList2();
 }
 
@@ -738,13 +757,6 @@ function IsPartner(origin) {
       || origin.includes("fordfamilymanagement");
 }
 
-function pbDomainClass(url) {
-  for (const domain of PB_HOMES) {
-    if (url.includes(domain)) return "PulseWorld";
-  }
-  if (IsPartner(url)) return "Partner";
-  return "WWW";
-}
 // ============================================================================
 //  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
 // ============================================================================
@@ -2739,6 +2751,7 @@ setInterval(() => {
         if (chrome.runtime.lastError) return;
       });
       updateOverlay();
+      pulseRehydrateTabs();
       injectPulseScreenFromMemory(true);
       const interval3 = getCharacterInterval();
       setTimeout(() => {
@@ -2746,7 +2759,6 @@ setInterval(() => {
         pbPulseScreen.play = false;
         injectPulseScreenFromMemory();
       }, interval3);
-      pulseRehydrateTabs();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
@@ -2757,6 +2769,8 @@ setInterval(() => {
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
       });
+    } else {
+      updateOverlay();
     }
   });
 

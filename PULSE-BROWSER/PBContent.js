@@ -239,6 +239,7 @@ function startWarmPath() {
 
 // Unified warm function
 function warmAllImages() {
+  gpuWarmExtra();
   // Warm HTML <img>
   document.querySelectorAll("img").forEach(warmImageDecode);
   triggerWarmPaths();
@@ -371,7 +372,6 @@ async function gpuWarmExtra() {
 setTimeout(gpuWarmExtra, 900);
 
 async function injectHUD() {
-  gpuWarmExtra();
   // const STREAMING_SITES = [
   //   "netflix.com","hulu.com","disneyplus.com","primevideo.com",
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
@@ -1010,6 +1010,20 @@ function IsPartner(origin) {
       || origin.includes("fordfamilymanagement");
 }
 
+// ---------------------------------------------------------------------------
+// HOME UNIVERSE (Your 9 domains)
+// ---------------------------------------------------------------------------
+const PB_HOMES = [
+  "www.pulseworld.me",
+  "www.pulseworld.money",
+  "www.pulseworld.biz",
+  "www.binaryos.net",
+  "www.booleanlogic.net",
+  "www.gpuprocessing.net",
+  "www.serviceworker.net",
+  "www.orbitalmap.net",
+  "www.pulseworld.net"
+];
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
