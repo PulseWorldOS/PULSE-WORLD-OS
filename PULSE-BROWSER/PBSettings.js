@@ -219,100 +219,200 @@ async function pbRequestCacheList() {
 
 
 async function pbRenderCacheList() {
-  const listEl = document.getElementById("side-panel left-panel");
-  const result = await pbRequestCacheList();
+  const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
+  
+  // ⭐ Wipe panel completely
+  listEl.innerHTML = `
+    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+      PulseBrowser OS - User Memory
+    </div>
+  `;
 
+  // // ⭐ Title
+  // listEl.insertAdjacentHTML("beforeend", `
+  //   <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+  //     PulseBrowser OS - User Memory
+  //   </div>
+  // `);
+
+  // ⭐ Memory FIRST
+  const statsHTML = await pbRenderStorageStats();
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
+
+  // ⭐ Fetch cache list
+  const result = await pbRequestCacheList();
+  
   if (!result || !result.caches) {
-    listEl.innerHTML = "<li>Cache API unavailable in extension pages.</li>";
+    listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
 
-  // ⭐ Extract caches
+
   const caches = result.caches;
 
   if (caches.length === 0) {
-    listEl.innerHTML = "<li>No cached files detected.</li>";
+    listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
 
-  // ⭐ SORT: biggest cache first
-  caches.sort((a, b) => (b.entries || 0) - (a.entries || 0));
+  // ⭐ Sort: current cache first, then by entry count
+  caches.sort((a, b) => {
+    if (a.name === a.currentCache) return -1;
+    if (b.name === a.currentCache) return 1;
+    return (b.entries || 0) - (a.entries || 0);
+  });
 
-  listEl.innerHTML = "";
+  let best = false;
 
   caches.forEach(cache => {
     let li = document.getElementById("li");
     if (!li) li = document.createElement("li");
+    li.className = "PulseCache";
     li.style.cssText = `
       margin: 14px 20px;
       padding: 3px 6px;
-      top: 0;
-      bottom: 0;
       max-width: clamp(245px, 12vw, 315px);
       width: clamp(245px, 12vw, 315px);
-      z-index: 5;
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
-
     `;
+
+    // ⭐ Cache size color logic
+    const sizeMB = parseFloat(cache.sizeMB || "0");
+    let sizeColor = "lightgreen";
+
+    if (sizeMB >= 150) sizeColor = "gold";     // warming
+    if (sizeMB >= 300) sizeColor = "orange";   // heavy
+    if (sizeMB >= 600) sizeColor = "red";      // critical
+
+    // ⭐ Safe fallback values
+    const weightClass = cache.weightClass || "unknown";
+    const personality = cache.personality || "Wanderer";
+    const pulseRank = cache.pulseRank;
+    const density = cache.density ?? 0;
+  
+    if (!best) lastActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
-      <strong>${cache.name}</strong><br>
-      Entries: ${cache.entries}<br>
-      Weight: ${cache.weightClass}<br>
-      PulseScore: ${cache.pulseScore}<br>
-      First: ${cache.firstEntry || "none"}<br>
-      Last: ${cache.lastEntry || "none"}
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
+
+      Entries: <font color="#0FF">${cache.entries}</font><br>
+      Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
+
+      Weight: <font color="#0FF">${weightClass}</font><br>
+      Personality: <font color="#0FF">${personality}</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB</font><br>
+
+      PulseRank: <font color="gold">${pulseRank}</font><br>
+      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
     `;
+
+    if (cache.lastEntry) {
+      li.style.cursor = "pointer";
+      li.onclick = () => {
+        openNamedTab(location.hostname, cache.lastEntry);
+      };
+    }
 
     listEl.appendChild(li);
+    best = true;
   });
 
-  PB_LOG.info("Cache list rendered", caches);
+  PB_LOG3.info("Cache list rendered", caches);
 }
 
 
-async function updateStorageStats() {
-  const el = document.getElementById("storageStats");
-  if (!el) return;
-
+async function pbRenderStorageStats() {
   if (!navigator.storage || !navigator.storage.estimate) {
-    el.textContent = "Storage usage: StorageManager API not supported.";
-    return;
-  }
-
-  try {
-    // ⭐ Always request persistence
-    const persistenceRequest = await navigator.storage.persist();
-    const persistent = await navigator.storage.persisted();
-
-    const estimate = await navigator.storage.estimate();
-    const used = estimate.usage || 0;
-    const quota = estimate.quota || 0;
-
-    // Convert bytes → GB
-    const usedGB = (used / (1024 * 1024 * 1024)).toFixed(2);
-    const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
-    const percent = quota ? ((used / quota) * 100).toFixed(2) : "0";
-
-    el.innerHTML = `
-      <strong>Storage Usage:</strong><br>
-      • Used: ${usedGB} GB<br>
-      • Quota: ${quotaGB} GB<br>
-      • Utilization: ${percent}%<br>
-      • Persistence: ${persistent ? "Granted" : "Not Granted"}<br>
-      <span class="pw-note">
-        ${persistent 
-          ? "Your data is protected from eviction." 
-          : "Large quota is normal even without persistence — Chrome may deny persistence unless the site is installed or heavily used."}
-      </span>
+    return `
+      <div style="margin-top:10px; color:#FF4444; font-size:12px;">
+        StorageManager API not supported.
+      </div>
     `;
-  } catch (err) {
-    el.textContent = "Storage usage: error retrieving stats.";
   }
+
+  // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
+  const estimate = await navigator.storage.estimate();
+  const localUsed = estimate.usage || 0;
+  const localQuota = estimate.quota || 1;
+
+  // ⭐ SYNC STORAGE (chrome.storage.sync)
+  const syncItems = await new Promise(resolve =>
+    chrome.storage.sync.get(null, resolve)
+  );
+  const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
+
+  // ⭐ Combined totals
+  const totalUsed = localUsed + syncBytes;
+  const percent = ((totalUsed / localQuota) * 100).toFixed(2);
+
+  // ⭐ Conversions
+  const localMB = (localUsed / (1024 * 1024)).toFixed(2);
+  const syncMB = (syncBytes / (1024 * 1024)).toFixed(2);
+  const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
+  const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
+
+  // ⭐ Dynamic color zones
+  let percentColor = "lightgreen";
+  if (percent >= 40) percentColor = "gold";
+  if (percent >= 70) percentColor = "orange";
+  if (percent >= 90) percentColor = "red";
+
+  // ⭐ Status text
+  let statusText = "Safe";
+  if (percent >= 40) statusText = "Warming";
+  if (percent >= 70) statusText = "High Load";
+  if (percent >= 90) statusText = "Critical Load";
+
+  let syncDisplay;
+  if (syncBytes < 1024 * 1024) {
+    syncDisplay = (syncBytes / 1024).toFixed(2) + " KB";
+  } else {
+    syncDisplay = (syncBytes / (1024 * 1024)).toFixed(2) + " MB";
+  }
+
+
+  return `
+    <div style="margin-top:12px; padding:8px; border-radius:8px;
+                background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
+
+      <strong>PulseBrowser-Storage (RAM)</strong><br><br>
+
+      <!-- ⭐ Two-column layout -->
+      <div style="display:flex; gap:10px;">
+
+        <!-- Column 1 -->
+        <div style="flex:1;">
+          <strong>Local Storage:</strong><br>
+          • <span style="color:lightgreen">${localMB} MB</span><br>
+
+          <strong>Total Used:</strong><br>
+          • <span style="color:lightgreen">${totalMB} MB</span><br>
+        </div>
+
+        <!-- Column 2 -->
+        <div style="flex:1;">
+          <strong>Sync Storage:</strong><br>
+          • <span style="color:lightgreen">${syncDisplay}</span><br>
+
+          <strong>Quota:</strong><br>
+          • <span style="color:lightgreen">${quotaGB} GB</span><br>
+        </div>
+
+      </div>
+
+      <!-- ⭐ Full-width section -->
+      <strong>Percent Used:</strong>
+      <span style="color:${percentColor}; font-weight:bold;">
+        ${percent}% (${statusText})
+      </span><br>
+    </div>
+  `;
 }
+
 
 async function updateLinkedPWInputs() {
   // Find all selects
@@ -348,8 +448,7 @@ if (location.href.includes("PBSettings.html")) {
     PB_LOG.info("Initializing Settings Page");
 
     await loadExtensionSettingsUI();
-    await pbRenderCacheList();   // ← NEW
-    await updateStorageStats();
+    await pbRenderCacheList();
 
     const idsToWatch = [
       "emailMode",

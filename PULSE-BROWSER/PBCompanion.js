@@ -189,6 +189,7 @@ self.addEventListener("install", event => {
     "PBFrontPage.html",
     "PBPopup.html",
     "PBSettings.html",
+    "PulseWorldAuthority.html",
     "PBCompanion.js",
     "PBInterceptor.js",
     "PBAccelerator.js",

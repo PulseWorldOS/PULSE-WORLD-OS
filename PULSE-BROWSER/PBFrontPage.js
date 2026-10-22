@@ -18,7 +18,7 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
-
+let lastActiveEntries = null;
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 
@@ -96,26 +96,31 @@ async function pbRequestCacheList2() {
         resolve(null);
         return;
       }
-
+      
       PB_LOG3.load("Cache list received", response.caches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
 }
 
+
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
-
+  
   // ⭐ Wipe panel completely
-  listEl.innerHTML = "";
-
-  // ⭐ Title
-  listEl.insertAdjacentHTML("beforeend", `
+  listEl.innerHTML = `
     <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
       PulseBrowser OS - User Memory
     </div>
-  `);
+  `;
+
+  // // ⭐ Title
+  // listEl.insertAdjacentHTML("beforeend", `
+  //   <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+  //     PulseBrowser OS - User Memory
+  //   </div>
+  // `);
 
   // ⭐ Memory FIRST
   const statsHTML = await pbRenderStorageStats();
@@ -123,11 +128,12 @@ async function pbRenderCacheList2() {
 
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
-
+  
   if (!result || !result.caches) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
+  if (lastActiveEntries && lastActiveEntries === result.caches.entries) return;
 
   const caches = result.caches;
 
@@ -146,7 +152,8 @@ async function pbRenderCacheList2() {
   let best = false;
 
   caches.forEach(cache => {
-    const li = document.createElement("li");
+    let li = document.getElementById("li");
+    if (!li) li = document.createElement("li");
     li.className = "PulseCache";
     li.style.cssText = `
       margin: 14px 20px;
@@ -171,6 +178,8 @@ async function pbRenderCacheList2() {
     const personality = cache.personality || "Wanderer";
     const pulseRank = cache.pulseRank;
     const density = cache.density ?? 0;
+  
+    if (!best) lastActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
@@ -201,7 +210,6 @@ async function pbRenderCacheList2() {
   PB_LOG3.info("Cache list rendered", caches);
 }
 
-
 async function pbRenderStorageStats() {
   if (!navigator.storage || !navigator.storage.estimate) {
     return `
@@ -211,13 +219,26 @@ async function pbRenderStorageStats() {
     `;
   }
 
+  // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
   const estimate = await navigator.storage.estimate();
-  const used = estimate.usage || 0;
-  const quota = estimate.quota || 1;
+  const localUsed = estimate.usage || 0;
+  const localQuota = estimate.quota || 1;
 
-  const usedMB = (used / (1024 * 1024)).toFixed(2);
-  const quotaGB = (quota / (1024 * 1024 * 1024)).toFixed(2);
-  const percent = ((used / quota) * 100).toFixed(2);
+  // ⭐ SYNC STORAGE (chrome.storage.sync)
+  const syncItems = await new Promise(resolve =>
+    chrome.storage.sync.get(null, resolve)
+  );
+  const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
+
+  // ⭐ Combined totals
+  const totalUsed = localUsed + syncBytes;
+  const percent = ((totalUsed / localQuota) * 100).toFixed(2);
+
+  // ⭐ Conversions
+  const localMB = (localUsed / (1024 * 1024)).toFixed(2);
+  const syncMB = (syncBytes / (1024 * 1024)).toFixed(2);
+  const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
+  const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -231,24 +252,48 @@ async function pbRenderStorageStats() {
   if (percent >= 70) statusText = "High Load";
   if (percent >= 90) statusText = "Critical Load";
 
-  const isPersistent = true;
+  let syncDisplay;
+  if (syncBytes < 1024 * 1024) {
+    syncDisplay = (syncBytes / 1024).toFixed(2) + " KB";
+  } else {
+    syncDisplay = (syncBytes / (1024 * 1024)).toFixed(2) + " MB";
+  }
+
 
   return `
     <div style="margin-top:12px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
-      <strong>PulseBrowser-Storage (RAM)</strong><br>
-      Used: <span style="color:lightgreen">${usedMB} MB</span><br>
-      Quota: <span style="color:lightgreen">${quotaGB} GB</span><br>
 
-      Percent Used: 
+      <strong>PulseBrowser-Storage (RAM)</strong><br><br>
+
+      <!-- ⭐ Two-column layout -->
+      <div style="display:flex; gap:10px;">
+
+        <!-- Column 1 -->
+        <div style="flex:1;">
+          <strong>Local Storage:</strong><br>
+          • <span style="color:lightgreen">${localMB} MB</span><br>
+
+          <strong>Total Used:</strong><br>
+          • <span style="color:lightgreen">${totalMB} MB</span><br>
+        </div>
+
+        <!-- Column 2 -->
+        <div style="flex:1;">
+          <strong>Sync Storage:</strong><br>
+          • <span style="color:lightgreen">${syncDisplay}</span><br>
+
+          <strong>Quota:</strong><br>
+          • <span style="color:lightgreen">${quotaGB} GB</span><br>
+        </div>
+
+      </div>
+
+      <!-- ⭐ Full-width section -->
+      <strong>Percent Used:</strong>
       <span style="color:${percentColor}; font-weight:bold;">
         ${percent}% (${statusText})
       </span><br>
-
-      Persistent Storage: 
-      <span style="color:${isPersistent ? "lightgreen" : "orange"}">
-        ${isPersistent}
-      </span>
     </div>
   `;
 }
@@ -600,6 +645,7 @@ function openNamedTab(name, url) {
 
 
 async function pulseRehydrateTabs() {
+  if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   await pbRenderCacheList2();
@@ -2754,23 +2800,13 @@ setInterval(() => {
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
+    if (!document.hidden || document.visibilityState === "visible") {
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
         if (chrome.runtime.lastError) return;
       });
-      updateOverlay();
-      pulseRehydrateTabs();
-      gpuWarmExtra();
-      injectPulseScreenFromMemory(true);
-      const interval3 = getCharacterInterval();
-      setTimeout(() => {
-        pbPulseScreen.currentTime = 0;
-        pbPulseScreen.play = false;
-        injectPulseScreenFromMemory();
-      }, interval3);
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
@@ -2781,6 +2817,16 @@ setInterval(() => {
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
       });
+      updateOverlay();
+      gpuWarmExtra();
+      injectPulseScreenFromMemory(true);
+      const interval3 = getCharacterInterval();
+      setTimeout(() => {
+        pbPulseScreen.currentTime = 0;
+        pbPulseScreen.play = false;
+        injectPulseScreenFromMemory();
+      }, interval3);
+      pulseRehydrateTabs();
     }
   });
 
