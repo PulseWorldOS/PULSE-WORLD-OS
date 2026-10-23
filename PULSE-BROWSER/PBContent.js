@@ -7,6 +7,7 @@ let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
+let nowCT = new Date().toLocaleString();
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -104,7 +105,7 @@ function letsgo(link) {
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
-chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) => {
   if (chrome.runtime.lastError) return;
   console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
     "color:#00C8FF; font-family:monospace;", response);

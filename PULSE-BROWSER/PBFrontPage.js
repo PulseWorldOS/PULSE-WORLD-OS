@@ -19,9 +19,9 @@ let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
 let lastActiveEntries = null;
+let nowFP = new Date().toLocaleString();
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
-let now = new Date().toLocaleString();
 
 const PB_LOG3 = {
   info(label, data) {
@@ -456,7 +456,7 @@ const pbWrapper = document.getElementById("pbWrapper");
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
-chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
   if (chrome.runtime.lastError) return;
 });
 
@@ -2810,7 +2810,7 @@ setInterval(() => {
     // ---------------------------------------------------------------------------
     // 1. KERNEL HANDSHAKE
     // ---------------------------------------------------------------------------
-    chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
       if (chrome.runtime.lastError) return;
     });
     const now = new Date().toLocaleString();
@@ -2907,7 +2907,7 @@ setInterval(() => {
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
-      chrome.runtime.sendMessage({ type: "PULSE_OS_PING" }, (response) => {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
         if (chrome.runtime.lastError) return;
       });
       updateOverlay();

@@ -30,7 +30,7 @@ async function updateOverlay() {
       PulseRealm = realmRes.state || {};
       PulseBrowserSettings = settingsRes.settings || {};
       
-      updateKernel(PulseRealm, now);
+      updateKernel(PulseRealm, PulseRealm.sessionStart);
       updateWarm(PulseRealm);
       updatePerformance(PulseRealm);
       updateNavigator(PulseBrowserSettings, PulseRealm);

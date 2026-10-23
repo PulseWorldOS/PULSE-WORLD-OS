@@ -8,7 +8,12 @@ let PulseRealmSettings = {};
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
+let nowPP = new Date().toLocaleString();
 
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP  }, (res) => {
+  if (chrome.runtime.lastError) return write("Kernel unreachable.");
+  write("Kernel Response:\n" + JSON.stringify(res, null, 2));
+});
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
   if (res.PulseBrowserFaviconCaches1) {

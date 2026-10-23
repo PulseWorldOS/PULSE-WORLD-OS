@@ -3,7 +3,7 @@
 //  Manifest V3 Service Worker — full OS kernel
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
-const now = new Date().toLocaleString();
+let nowSW = new Date().toLocaleString();
 const CACHE_NAME = "PulseBrowser-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
@@ -572,29 +572,17 @@ function pbDomainClass(url) {
   if (IsPartner(url)) return "Partner";
   return "WWW";
 }
-function safeSendMessage(msg) {
-  chrome.runtime.sendMessage(msg, () => {
-    if (chrome.runtime.lastError) {
-      const m = chrome.runtime.lastError.message || "";
-      if (m.includes("Receiving end")) {
-        // Ignore this harmless SW-refresh error
-        return;
-      }
-      console.warn("[PULSEWORLD] Message error:", m);
-    }
-  });
-}
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
-  if (!tab.url.includes("newtab")) {
+  let url = tab.url;
+  if (url.includes("http")) {
     chrome.sidePanel.setOptions({
       tabId: activeInfo.tabId,
       path: "PBPopup.html",
       enabled: true
     });
   }
-  let url = tab.url;
   let title = tab.title;
   let page = tab.page;
   let origin = url;
@@ -620,13 +608,15 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     PBUniversalBoost2.warmTab(tab);
   }
   
-  chrome.runtime.sendMessage({
-    type: "PBNAV_EVENT",
-    tabId: tab.id,
-    url,
-    domainClass: domainClass,
-    ts: Date.now()
-  });
+  if (!url.includes("newtab")) {
+    if (url) pbAccelerate(url);
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastDomainClass = domainClass;
+    PulseRealmState.warmPathsTriggered += 1;
+    PulseRealmState.lastWarmOrigin = origin;
+    PulseRealmState.navHistory.push(url);
+    PB_LOG2.info("PBNAV_EVENT", url);
+  }
 });
 
 // ============================================================================
@@ -833,20 +823,11 @@ async function pbPreload(origin) {
   }
 }
 
-
-// ---------------------------------------------------------------------------
-// GPU WARM (decode shaders early) + Realm counter
-// ---------------------------------------------------------------------------
-function pbGPUWarm() {
-  chrome.runtime.sendMessage({ type: "PBACC_GPUWARM" });
-  console.log("%c[PBAccelerator] GPU Warm", "color:#00C8FF;");
-}
-
 // ---------------------------------------------------------------------------
 // DECODE WARM (image decode warm-path) + Realm counter
 // ---------------------------------------------------------------------------
 function pbDecodeWarm() {
-  chrome.runtime.sendMessage({ type: "PBACC_DECODEWARM" });
+  PulseRealmState.imagesDecoded += 1;
   console.log("%c[PBAccelerator] Decode Warm", "color:#00C8FF;");
 }
 
@@ -872,6 +853,7 @@ function pbHomeRealmWarm(origin) {
     origin + "/PULSEConfig/PULSE-ENGINE-BLOCK.txt",
     origin + "/PULSEConfig/PulseWorldBusiness.txt"
   ];
+  pbPrefetch(urls);
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
 
@@ -910,7 +892,7 @@ async function pbWarmPath(origin) {
     PBUniversalBoost2.warmOrigin(origin);
   }
 
-  PulseBrowserSettings = await getSettings();
+  if (!PulseBrowserSettings) PulseBrowserSettings = await getSettings();
 
   if (PulseBrowserSettings.accelDNSWarm)      pbDNSWarm(origin);
   if (PulseBrowserSettings.accelTLSWarm)      pbTLSWarm(origin);
@@ -925,7 +907,6 @@ async function pbWarmPath(origin) {
   const siblingURLs = siblingPaths.map((p) => origin + p);
   if (PulseBrowserSettings.accelPrefetch) pbPrefetch(siblingURLs);
 
-  if (PulseBrowserSettings.accelGPUWarm)    pbGPUWarm();
   if (PulseBrowserSettings.accelDecodeWarm) pbDecodeWarm();
   if (PulseBrowserSettings.accelRealmWarm)  pbRealmWarm(origin);
   
@@ -950,6 +931,7 @@ async function pbAccelerate(url) {
   if (domainClass === "PulseWorld") {
     await pbWarmPath(origin);
   } else {
+    if (!PulseBrowserSettings) PulseBrowserSettings = await getSettings();
     // WWW acceleration: preconnect + basic prefetch
     if (PulseBrowserSettings.accelPreconnect) pbPreconnect([origin]);
     if (PulseBrowserSettings.accelPrefetch)   pbPrefetch([origin + "/", origin + "/about"]);
@@ -1426,11 +1408,27 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
 
-    case "PULSE_OS_PING":
-      PulseRealmState.lastPing = new Date().toLocaleString(); 
-      if (!PulseRealmState.sessionStart) PulseRealmState.sessionStart = now;
+    case "PULSE_OS_PING": {
+      if (msg.time) {
+        PulseRealmState.lastPing = new Date().toLocaleString();
+
+        const incoming = msg.time; // realm timestamp
+
+        // If sessionStart doesn't exist yet, set it to the earliest of the two
+        if (!PulseRealmState.sessionStart) {
+          PulseRealmState.sessionStart = Math.min(nowSW, incoming);
+        } else {
+          // If sessionStart exists, update it ONLY if the incoming time is earlier
+          if (incoming < PulseRealmState.sessionStart) {
+            PulseRealmState.sessionStart = incoming;
+          }
+        }
+      }
+
       sendResponse({ ok: true, ts: PulseRealmState.lastPing });
       break;
+    }
+
 
     case "PULSE_OS_CLEAR_PULSE_CACHES":
       clearPulseCaches().then(() => sendResponse({ ok: true }));
@@ -1498,10 +1496,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_ACCELERATE_EVENT":
       if (msg.url) {
         const origin = new URL(msg.url).origin;
-        chrome.runtime.sendMessage({
-          type: "PBACC_WARMPATH",
-          origin
-        });
+        pbWarmPath(origin);
+        if (origin.includes("https://")) {
+          origin = origin.replace("https://","");
+        };
+        PulseRealmState.warmPathsTriggered += 1;
+        PulseRealmState.lastWarmOrigin = origin;
         PB_LOG2.info("PBACC_ACCELERATE_EVENT", origin);
       }
       sendResponse({ ok: true });
@@ -1701,7 +1701,13 @@ async function pbHandleRequest(details) {
   }
 
   if (decision.accelerate && S.enableAccelerator) {
-    chrome.runtime.sendMessage({ type: "PBACC_ACCELERATE", url });
+    pbAccelerate(url);
+    let origin = new URL(url).origin
+    if (origin.includes("https://")) {
+      origin = origin.replace("https://","");
+    };
+    PulseRealmState.warmPathsTriggered += 1;
+    PulseRealmState.lastWarmOrigin = origin;
   }
 
   return {};
@@ -1712,14 +1718,14 @@ async function pbHandleRequest(details) {
 // ============================================================================
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;
-  if (!tab.url.includes("newtab")) {
+  let url = tab.url;
+  if (url.includes("http")) {
     chrome.sidePanel.setOptions({
       tabId,
       path: "PBPopup.html",
       enabled: true
     });
   }
-  let url = tab.url;
   let title = tab.title;
   let page = tab.page;
   const origin = new URL(url).origin;
@@ -1752,18 +1758,15 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PBUniversalBoost2.warmTab(tab);
   }
 
-  // Existing accel hook
-  if (domainClass === "PulseWorld") {
-    chrome.runtime.sendMessage({ type: "PBACC_ACCELERATE", url });
+  if (!url.includes("newtab")) {
+    if (url) pbAccelerate(url);
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastDomainClass = domainClass;
+    PulseRealmState.warmPathsTriggered += 1;
+    PulseRealmState.lastWarmOrigin = origin;
+    PulseRealmState.navHistory.push(url);
+    PB_LOG2.info("PBNAV_EVENT", url);
   }
-
-  chrome.runtime.sendMessage({
-    type: "PBNAV_EVENT",
-    tabId,
-    url,
-    domainClass,
-    ts: Date.now()
-  });
 });
 
 
