@@ -587,11 +587,11 @@ function safeSendMessage(msg) {
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
-  // chrome.sidePanel.setOptions({
-  //   tabId: activeInfo.tabId,
-  //   path: "PBSettings.html",
-  //   enabled: true
-  // });
+  chrome.sidePanel.setOptions({
+    tabId: activeInfo.tabId,
+    path: "PBSettings.html",
+    enabled: true
+  });
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;
@@ -780,7 +780,8 @@ async function pbPrefetch(urls = []) {
   await chrome.storage.local.set({ pb_fail_cache: fails });
 
   if (warmedCount > 0) {
-    chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+    PulseRealmState.warmAssetsTriggered += warmedCount || 1;
+    PulseRealmState.imagesDecoded += warmedCount || 1;
   }
 }
 
@@ -827,7 +828,8 @@ async function pbPreload(origin) {
   await chrome.storage.local.set({ pb_fail_cache: fails });
 
   if (warmedCount > 0) {
-    chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+    PulseRealmState.warmAssetsTriggered += warmedCount || 1;
+    PulseRealmState.imagesDecoded += warmedCount || 1;
   }
 }
 
@@ -1052,9 +1054,10 @@ function startWarmBootLoop() {
 
 startWarmBootLoop();
 
-// chrome.runtime.onInstalled.addListener(() => {
-//   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-// });
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+});
+
 let __PULSE_CACHE_FILE = null;
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -1723,11 +1726,11 @@ async function pbHandleRequest(details) {
 // ============================================================================
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;
-  // chrome.sidePanel.setOptions({
-  //   tabId,
-  //   path: "PBSettings.html",
-  //   enabled: true
-  // });
+  chrome.sidePanel.setOptions({
+    tabId,
+    path: "PBSettings.html",
+    enabled: true
+  });
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;
@@ -1930,7 +1933,8 @@ const PBUniversalBoost2 = {
 
     console.log("[PBUniversalBoost2] Warmed publish directory for", origin);
     if (warmedCount > 0) {
-      chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
+      PulseRealmState.warmAssetsTriggered += warmedCount || 1;
+      PulseRealmState.imagesDecoded += warmedCount || 1;
     }
   },
 
@@ -2141,9 +2145,6 @@ const PBGlobalAssetMap = {
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
     console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, warmedCount);
-    if (warmedCount > 0) {
-      chrome.runtime.sendMessage({ type: "PBACC_ASSETWARM_EVENT", count: warmedCount });
-    }
   }
 };
 

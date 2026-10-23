@@ -446,9 +446,8 @@ async function pulseRehydrateTabs() {
   });
 }
 
-
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-  const originalTabId = tabs[0].id;
+  let originalTabId = tabs[0].id;
   chrome.storage.local.set({ originalTabId });
   pulseRehydrateTabs();
 });

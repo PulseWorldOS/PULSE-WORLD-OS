@@ -255,7 +255,7 @@ let gpuEnabled = "GPU Driver Error";
 
 function createPulseScreen() {
   const vid = document.createElement("video");
-
+  if (window.innerHeight < 200 || window.innerWidth < 200) return;
   loadLastSavedVideo(entry => {
     if (!entry) {
       vid.src = chrome.runtime.getURL("PulseWorldOS.mp4");
@@ -439,7 +439,7 @@ async function injectHUD() {
     }, 50);
     return;
   }
-
+  if (window.innerHeight < 200 || window.innerWidth < 200) return;
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
   //   const flag = document.getElementById("pulseworld-flag");

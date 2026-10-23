@@ -181,6 +181,20 @@ function updateWarm(realm) {
     Warm-Galaxy: <font color="yellow">${PulseModuleCount ? `PulseBrowser OS Modules (<font color="#0FF">${PulseModuleCount}</font>)` : "Setup your Galaxy in Settings!"}</font><br/>
     Warm-Nova: <font color="gold">${PulseTempModuleCount ? `PulseBrowser Temp Modules (<font color="#0FF">${PulseTempModuleCount}</font>)` : "Search the World for New Realms!"}</font><br/>
   `;
+
+  if (PulseModuleCount) {
+    el.style.cssText = el.style.cssText + `
+      cursor: pointer;
+    `;
+    el.onclick = () => {
+      (async () => {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        chrome.sidePanel.open({
+          windowId: tab.windowId
+        });
+      })();
+    };
+  }
 }
 
 // ---------------------------------------------------------------------------
