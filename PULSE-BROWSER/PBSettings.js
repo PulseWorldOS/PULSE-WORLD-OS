@@ -241,9 +241,9 @@ async function pbRenderCacheList() {
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
   console.log(history);
-  
-  const statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
+  const statsHTML = await pbRenderStorageStats2(history);
+  
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Fetch cache list
@@ -397,11 +397,11 @@ async function pbRenderStorageStats2(history) {
         const secondsUntilFull = remaining / rate;
 
         if (secondsUntilFull > 86400) {
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days!`;
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days`;
         } else if (secondsUntilFull > 3600) {
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours!`;
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours`;
         } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} seconds!`;
+          predictionText = `~${secondsUntilFull.toFixed(0)} seconds`;
         }
       }
     }
@@ -415,7 +415,7 @@ async function pbRenderStorageStats2(history) {
     }
   });
 
-  if (predictionText === "Running Stable...") predictionText = "Running Stable";
+  if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
 
   // ⭐ Render UI
   return `

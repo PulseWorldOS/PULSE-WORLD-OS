@@ -162,7 +162,7 @@ async function pulseRehydrateTabs() {
 
     for (const tab of tabs) {
       if (!tab.url) continue;
-      if (snapIndex > 6) break; // only 5 bubbles
+      if (snapIndex > 9) break; // only 5 bubbles
 
       try {
         const urlObj = new URL(tab.url);
@@ -226,7 +226,7 @@ function getNextInstanceIndex() {
     if (entry.snapshot) used.add(entry.snapshot);
   }
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 9; i++) {
     if (!used.has(i)) return i;
   }
 
@@ -327,17 +327,6 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       break;
     }
   }
-
-  // ⭐ REINDEX ALL REMAINING TABS
-  let newIndex = 0;
-  for (const identity in pulseTabs) {
-    const entry = pulseTabs[identity];
-    entry.snapshot = newIndex;      // rewrite snapshot index
-    newIndex++;
-  }
-
-  savePulseTabs();
-
   // ⭐ REHYDRATE WITH CLEAN INDICES
   pulseRehydrateTabs();
 });

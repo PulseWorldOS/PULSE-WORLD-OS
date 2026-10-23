@@ -131,9 +131,9 @@ async function pbRenderCacheList2() {
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
   console.log(history);
-  
-  const statsHTML = await pbRenderStorageStats(history);
   predictionText = predictionText + ".";
+  const statsHTML = await pbRenderStorageStats(history);
+  
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Fetch cache list
@@ -318,11 +318,11 @@ async function pbRenderStorageStats(history) {
         const secondsUntilFull = remaining / rate;
 
         if (secondsUntilFull > 86400) {
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days!`;
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days`;
         } else if (secondsUntilFull > 3600) {
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours!`;
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours`;
         } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} seconds!`;
+          predictionText = `~${secondsUntilFull.toFixed(0)} seconds`;
         }
       }
     }
@@ -336,7 +336,7 @@ async function pbRenderStorageStats(history) {
     }
   });
 
-  if (predictionText === "Running Stable...") predictionText = "Running Stable";
+  if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
 
   // ⭐ Render UI
   return `
@@ -409,7 +409,7 @@ async function pulseRehydrateTabs() {
 
     for (const tab of tabs) {
       if (!tab.url) continue;
-      if (snapIndex > 6) break; // only 5 bubbles
+      if (snapIndex > 9) break; // only 5 bubbles
 
       try {
         const urlObj = new URL(tab.url);
@@ -694,7 +694,7 @@ function getNextInstanceIndex() {
     if (entry.snapshot) used.add(entry.snapshot);
   }
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 9; i++) {
     if (!used.has(i)) return i;
   }
 

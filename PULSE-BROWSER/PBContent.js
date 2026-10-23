@@ -594,9 +594,9 @@ function fadeHUD(vid) {
   wrap.style.display = "none";
   body.style.display = "none";
   if (vid) document.body.appendChild(vid);
-  vid.currentTime = 0;
-  vid.autoplay = true;
-  vid.muted = true;
+  if (vid) vid.currentTime = 0;
+  if (vid) vid.autoplay = true;
+  if (vid) vid.muted = true;
   if (vid) vid.style.display = "block";
 
   setTimeout(() => {
@@ -660,9 +660,9 @@ function updateHUD() {
       // ⭐ Refresh Classification
       // ---------------------------------------------
       const refreshType =
-        domTime < 100 ? "🔥 HOT REFRESH" :
-        domTime < 200 ? "🌡️ WARM REFRESH" :
-        domTime < 400 ? "💨 COOL REFRESH" :
+        domTime < 200 ? "🔥 HOT REFRESH" :
+        domTime < 400 ? "🌡️ WARM REFRESH" :
+        domTime < 600 ? "💨 COOL REFRESH" :
         "🧊 COLD REFRESH";
 
       const currentEngine = location.hostname.toLowerCase();
@@ -1261,7 +1261,7 @@ function injectPulseFlag() {
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
-    
+    updateHUD();
     wrap.style.display = "block";
     body.style.display = "block";
     flag.textContent = "PulseBrowser OS";
