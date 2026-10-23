@@ -1055,7 +1055,7 @@ startWarmBootLoop();
 // chrome.runtime.onInstalled.addListener(() => {
 //   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
 // });
-
+let __PULSE_CACHE_FILE = null;
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
@@ -1353,6 +1353,72 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           sendResponse(errorPayload);
         }
       })();
+
+      return true;
+
+    case "GRAB_CACHE_FILE":
+      (async () => {
+        try {
+          const url = msg.url;
+
+          const cache = await caches.open(CACHE_NAME);
+          const requests = await cache.keys();
+
+          const req = requests.find(r => r.url === url);
+
+          if (!req) {
+            sendResponse({ ok: false, error: "Artifact not found in cache" });
+            return;
+          }
+
+          const res = await cache.match(req);
+          if (!res) {
+            sendResponse({ ok: false, error: "Artifact found but response missing" });
+            return;
+          }
+
+          const blob = await res.blob();
+          const buffer = await blob.arrayBuffer();
+
+          // ⭐ Store the REAL file bytes
+          __PULSE_CACHE_FILE = {
+            type: blob.type,
+            size: blob.size,
+            data: new Uint8Array(buffer)
+          };
+
+          sendResponse({ ok: true });
+
+        } catch (err) {
+          sendResponse({ ok: false, error: err.toString() });
+        }
+      })();
+
+      return true;
+
+    case "SEND_CACHE_FILE":
+      try {
+        if (!__PULSE_CACHE_FILE) {
+          sendResponse({ ok: false, error: "No cached file stored" });
+          return;
+        }
+
+        const { type, size, data } = __PULSE_CACHE_FILE;
+
+        // ⭐ Send raw bytes (transferable)
+        sendResponse(
+          {
+            ok: true,
+            type,
+            size,
+            data
+          },
+          [data.buffer] // ⭐ REQUIRED
+        );
+
+      } catch (err) {
+        sendResponse({ ok: false, error: err.toString() });
+      }
 
       return true;
 

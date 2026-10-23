@@ -195,6 +195,17 @@ function getNextInstanceIndex() {
   return 1; // fallback
 }
 
+
+chrome.downloads.onCreated.addListener(download => {
+  const name = download.filename;
+
+  if (name.includes("_VIDEOS") && name.includes("_EXPRESSIONS")) {
+    chrome.downloads.update(download.id, {
+      filename: name + ".mp4"
+    });
+  }
+});
+
 function openNamedTab(name, url, next) {
   const identity = normalizeIdentity(url);
   let instanceIndex = 1;

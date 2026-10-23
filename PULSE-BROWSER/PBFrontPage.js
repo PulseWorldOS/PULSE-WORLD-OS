@@ -201,16 +201,6 @@ async function pbRenderCacheList2() {
     if (cache.lastEntry) {
       let entry = cache.lastEntry;
 
-      // VIDEO FIX: Add .mp4 for PulseWorld binary videos
-      if (entry.includes("_VIDEOS") && !entry.endsWith(".mp4")) {
-        entry += ".mp4";
-      }
-
-      // IMAGE FIX: Strip .pex so browsers display instead of download
-      if (entry.endsWith(".pex")) {
-        entry = entry.replace(".pex", "");
-      }
-
       li.style.cursor = "pointer";
       li.onclick = () => {
         openNamedTab(location.hostname, entry);

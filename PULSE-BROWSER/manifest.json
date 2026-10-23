@@ -47,8 +47,9 @@
 
   "permissions": [
     "tabs",
+    "downloads",
     "storage",
-    "side_panel",
+    "sidePanel",
     "scripting",
     "webNavigation",
     "activeTab",
