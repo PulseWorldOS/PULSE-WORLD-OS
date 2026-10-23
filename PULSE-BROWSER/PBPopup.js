@@ -152,18 +152,16 @@ function pulseRestoreTabs() {
 }
 
 async function pulseRehydrateTabs() {
+  if (document.hidden) return;
+  if (document.visibilityState !== "visible") return;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
-
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
-    const tabList = [];   // ⭐ NEW — full list of tab URLs
-
+    
     let snapIndex = 1; // 1–5
 
     for (const tab of tabs) {
       if (!tab.url) continue;
-      tabList.push(tab.url);   // ⭐ Save every tab URL
-
       if (snapIndex > 6) break; // only 5 bubbles
 
       try {
@@ -194,12 +192,7 @@ async function pulseRehydrateTabs() {
     }
 
     pulseTabs = rebuilt;
-
-    // ⭐ Save both bubble‑map AND full tab list
-    chrome.storage.local.set({
-      pulseTabs: rebuilt,
-      pulseTabList: tabList
-    });
+    chrome.storage.local.set({ pulseTabs: rebuilt });
   });
 }
 
@@ -243,8 +236,9 @@ function getNextInstanceIndex() {
 
 chrome.downloads.onCreated.addListener(download => {
   const name = download.filename;
-
+  console.log("DOWNLOAD ATTEMPTED I HAVE NO CLUE WHAT THIS MEANS LET ME KNOW WHEN YOU DO!!");
   if (name.includes("_VIDEOS") && name.includes("_EXPRESSIONS")) {
+    console.log("DOWNLOAD ATTEMPTED WITH ONE OF MY VIDEOS!!! I HAVE NO CLUE WHAT THIS MEANS LET ME KNOW WHEN YOU DO!!");
     chrome.downloads.update(download.id, {
       filename: name + ".mp4"
     });

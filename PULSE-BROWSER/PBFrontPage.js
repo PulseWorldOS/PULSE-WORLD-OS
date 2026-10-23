@@ -104,6 +104,8 @@ async function pbRequestCacheList2() {
   });
 }
 
+let predictionText = "Running Stable";
+
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
@@ -124,7 +126,14 @@ async function pbRenderCacheList2() {
   // `);
 
   // ⭐ Memory FIRST
-  const statsHTML = await pbRenderStorageStats();
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );
+  console.log(history);
+  
+  const statsHTML = await pbRenderStorageStats(history);
+  predictionText = predictionText + ".";
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Fetch cache list
@@ -214,8 +223,36 @@ async function pbRenderCacheList2() {
 
   PB_LOG3.info("Cache list rendered", caches);
 }
+// function writeBigBlob() {
+//   return new Promise((resolve, reject) => {
+//     const req = indexedDB.open("PulseWorldTestDB", 2);
 
-async function pbRenderStorageStats() {
+//     req.onupgradeneeded = () => {
+//       const db = req.result;
+//       if (!db.objectStoreNames.contains("store")) {
+//         db.createObjectStore("store");
+//       }
+//     };
+
+//     req.onsuccess = () => {
+//       const db = req.result;
+//       const tx = db.transaction("store", "readwrite");
+//       const store = tx.objectStore("store");
+
+//       const bigBlob = new Blob([new Array(10_000_000).fill("x").join("")]);
+
+//       const putReq = store.put(bigBlob, "bigblob");
+
+//       putReq.onsuccess = () => resolve(true);
+//       putReq.onerror = () => reject(putReq.error);
+//     };
+
+//     req.onerror = () => reject(req.error);
+//   });
+// }
+
+
+async function pbRenderStorageStats(history) {
   if (!navigator.storage || !navigator.storage.estimate) {
     return `
       <div style="margin-top:10px; color:#FF4444; font-size:12px;">
@@ -223,7 +260,7 @@ async function pbRenderStorageStats() {
       </div>
     `;
   }
-
+    
   // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
   const estimate = await navigator.storage.estimate();
   const localUsed = estimate.usage || 0;
@@ -264,14 +301,7 @@ async function pbRenderStorageStats() {
   } else {
     syncDisplay = syncMB + " MB";
   }
-
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );
-
-  let predictionText = "Stable";
-
+  
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
     const { lastCheck, lastUsed } = history.pulseStorageHistory;
@@ -279,7 +309,7 @@ async function pbRenderStorageStats() {
     const now = Date.now();
     const deltaTime = (now - lastCheck) / 1000; // seconds
     const deltaUsed = totalUsed - lastUsed;
-
+    
     if (deltaUsed > 0 && deltaTime > 0) {
       const rate = deltaUsed / deltaTime; // bytes per second
       const remaining = localQuota - totalUsed;
@@ -288,11 +318,11 @@ async function pbRenderStorageStats() {
         const secondsUntilFull = remaining / rate;
 
         if (secondsUntilFull > 86400) {
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days until full`;
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days!`;
         } else if (secondsUntilFull > 3600) {
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours until full`;
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours!`;
         } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} seconds until full`;
+          predictionText = `~${secondsUntilFull.toFixed(0)} seconds!`;
         }
       }
     }
@@ -305,6 +335,8 @@ async function pbRenderStorageStats() {
       lastUsed: totalUsed
     }
   });
+
+  if (predictionText === "Running Stable...") predictionText = "Running Stable";
 
   // ⭐ Render UI
   return `
@@ -369,19 +401,14 @@ function pulseRestoreTabs() {
 async function pulseRehydrateTabs() {
   if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
-
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
-
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
-    const tabList = [];   // ⭐ NEW — full list of tab URLs
-
+    
     let snapIndex = 1; // 1–5
 
     for (const tab of tabs) {
       if (!tab.url) continue;
-      tabList.push(tab.url);   // ⭐ Save every tab URL
-
       if (snapIndex > 6) break; // only 5 bubbles
 
       try {
@@ -415,12 +442,7 @@ async function pulseRehydrateTabs() {
     }
 
     pulseTabs = rebuilt;
-
-    // ⭐ Save both bubble‑map AND full tab list
-    chrome.storage.local.set({
-      pulseTabs: rebuilt,
-      pulseTabList: tabList
-    });
+    chrome.storage.local.set({ pulseTabs: rebuilt });
   });
 }
 
@@ -2632,6 +2654,15 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
     // Now ask about local storage
     const confirmClear2 = confirm(
       "PulseBrowser OS: Caches cleared.\n\nWould you also like to clear PulseWorld local storage?"
+    );
+
+    if (confirmClear2) {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
+    }
+  } else {
+    // Now ask about local storage
+    const confirmClear2 = confirm(
+      "PulseBrowser OS: Would you like to clear PulseWorld local storage?"
     );
 
     if (confirmClear2) {

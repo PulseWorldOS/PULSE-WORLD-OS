@@ -481,7 +481,6 @@ async function injectHUD() {
 
   document.body.appendChild(wrap);
 
-  const interval = getWarmInterval();
   const sync = getSyncInterval();
   updateHUD();
   PulseBrowserPreview();
@@ -489,9 +488,6 @@ async function injectHUD() {
   setTimeout(() => {
     PulseBrowserDomScan();
   }, 2000);
-  setTimeout(() => {
-    PulseBrowserDomScan();
-  }, interval);
   setTimeout(() => {
     DomScanPreview();
   }, 4000);
@@ -1537,32 +1533,22 @@ async function fetchAndStoreIcon(host, iconUrl) {
   }
 }
 
-
 async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
 
-  // Clone DOM so we can safely modify it
+  // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
 
-  // Remove all <script> tags
-  clone.querySelectorAll("script").forEach(el => el.remove());
+  // Strip heavy elements
+  ["script", "iframe", "audio", "source", "object", "embed", "img"].forEach(tag =>
+    clone.querySelectorAll(tag).forEach(el => el.remove())
+  );
 
-  // Remove all <iframe> tags
-  clone.querySelectorAll("iframe").forEach(el => el.remove());
+  // Strip external stylesheets + refresh metas
+  clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
+       .forEach(el => el.remove());
 
-  // Remove all external stylesheets
-  clone.querySelectorAll('link[rel="stylesheet"]').forEach(el => el.remove());
-
-  // Remove all <meta http-equiv="refresh">
-  clone.querySelectorAll('meta[http-equiv="refresh"]').forEach(el => el.remove());
-
-  // Remove all heavy media
-  clone.querySelectorAll("audio, source, object, embed").forEach(el => el.remove());
-
-  // Remove all <img> tags (we only keep tiny previews separately)
-  clone.querySelectorAll("img").forEach(el => el.remove());
-
-  // Tiny image preview (first 5 images only)
+  // Tiny image preview (first 10)
   const tinyImages = [...document.querySelectorAll("img[src]")]
     .slice(0, 10)
     .map(img => ({
@@ -1570,7 +1556,7 @@ async function PulseBrowserDomScan() {
       alt: img.alt?.slice(0, 60) || null
     }));
 
-  // Meta description
+  // Meta signals
   const metaDesc =
     clone.querySelector('meta[name="description"]')?.content ||
     clone.querySelector('meta[property="og:description"]')?.content ||
@@ -1586,7 +1572,7 @@ async function PulseBrowserDomScan() {
     tinyImages[0]?.src ||
     null;
 
-  // Viewport + scroll signals
+  // Viewport + scroll
   const viewport = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -1597,18 +1583,18 @@ async function PulseBrowserDomScan() {
     height: document.documentElement.scrollHeight || document.body.scrollHeight || 0
   };
 
-  // Visibility + focus signals
+  // Visibility + focus
   const visibility = document.visibilityState;
   const focused = document.hasFocus();
 
-  // Tiny structural counts
+  // Structural counts
   const counts = {
     divs: clone.querySelectorAll("div").length,
     links: clone.querySelectorAll("a").length,
     images: tinyImages.length
   };
 
-  // Tiny link preview
+  // Tiny link preview (first 10)
   const tinyLinks = [...clone.querySelectorAll("a[href]")]
     .slice(0, 10)
     .map(a => ({
@@ -1636,18 +1622,18 @@ async function PulseBrowserDomScan() {
   if (!favicon) {
     favicon = `${location.origin}/favicon.ico`;
   }
-  let icon = await fetchAndStoreIcon(location.origin, favicon);
+
+  const icon = await fetchAndStoreIcon(location.origin, favicon);
+
+  // ⭐ NEW: Tiny HTML summary instead of full DOM
+  const htmlSummary = clone.innerText.slice(0, 2000); // ~2KB max
 
   const snapshot = {
     url: location.href,
     title: document.title,
     realm: location.hostname,
-    meta: {
-      description: metaDesc,
-      ogTitle,
-      ogImage
-    },
-    html: clone.innerHTML,
+    meta: { description: metaDesc, ogTitle, ogImage },
+    htmlSummary, // ⭐ SAFE replacement
     viewport,
     scroll,
     visibility,
@@ -1659,10 +1645,11 @@ async function PulseBrowserDomScan() {
     regfavicon: favicon
   };
 
-  console.log("Ghost Echo Initiated for Local-Only Future Uses: ", snapshot);
+  console.log("Ghost Echo Initiated (Safe Mode): ", snapshot);
 
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 }
+
 
 function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });

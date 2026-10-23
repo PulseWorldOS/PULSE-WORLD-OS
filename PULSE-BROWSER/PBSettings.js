@@ -217,7 +217,6 @@ async function pbRequestCacheList() {
   });
 }
 
-
 async function pbRenderCacheList() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
@@ -237,7 +236,14 @@ async function pbRenderCacheList() {
   // `);
 
   // ⭐ Memory FIRST
-  const statsHTML = await pbRenderStorageStats2();
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );
+  console.log(history);
+  
+  const statsHTML = await pbRenderStorageStats2(history);
+  predictionText = predictionText + ".";
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Fetch cache list
@@ -325,7 +331,7 @@ async function pbRenderCacheList() {
   PB_LOG3.info("Cache list rendered", caches);
 }
 
-async function pbRenderStorageStats2() {
+async function pbRenderStorageStats2(history) {
   if (!navigator.storage || !navigator.storage.estimate) {
     return `
       <div style="margin-top:10px; color:#FF4444; font-size:12px;">
@@ -375,13 +381,6 @@ async function pbRenderStorageStats2() {
     syncDisplay = syncMB + " MB";
   }
 
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );
-
-  let predictionText = "Stable";
-
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
     const { lastCheck, lastUsed } = history.pulseStorageHistory;
@@ -398,11 +397,11 @@ async function pbRenderStorageStats2() {
         const secondsUntilFull = remaining / rate;
 
         if (secondsUntilFull > 86400) {
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days until full`;
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days!`;
         } else if (secondsUntilFull > 3600) {
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours until full`;
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours!`;
         } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} seconds until full`;
+          predictionText = `~${secondsUntilFull.toFixed(0)} seconds!`;
         }
       }
     }
@@ -415,6 +414,8 @@ async function pbRenderStorageStats2() {
       lastUsed: totalUsed
     }
   });
+
+  if (predictionText === "Running Stable...") predictionText = "Running Stable";
 
   // ⭐ Render UI
   return `
