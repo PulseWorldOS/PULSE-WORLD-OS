@@ -105,17 +105,28 @@ function experimentalColor(v) {
 // ---------------------------------------------------------------------------
 function updateKernel(realm, SessionStart) {
   const el = document.getElementById("pb-hud-kernel");
-  const lastURL = realm.lastURL?.slice(0, 75);
+  const lastURL = realm.lastURL;
+  const lastURLshort = lastURL.slice(0, 75);
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
     Session Start: <font color="gold">${SessionStart}</font><br/>
     Last Page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
     Last Title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
-    Last URL: <font color="#0FF">${lastURL || "-"}</font><br/>
+    Last URL: <font color="#0FF">${lastURLshort || "-"}</font><br/>
     Domain Class: <font color="#0FF">${realm.lastDomainClass || "-"}</font><br/>
     Data Band: <font color="#0FF">${realm.band || "-"}</font><br/>
     Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
   `;
+
+  if (lastURL) {
+    el.style.cssText = el.style.cssText + `
+      cursor: pointer;
+    `;
+    const u = new URL(lastURL);
+    el.onclick = () => {
+      openNamedTab(u.hostname, lastURL);
+    };
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -142,7 +153,8 @@ function updateRouter(settings) {
 function updatePerformance(realm) {
   const el = document.getElementById("pb-hud-performance");
   const perf = realm.perfEntries || [];
-  const lastNAV = realm.navHistory.slice(-1)[0]?.slice(0, 75);
+  const lastNAV = realm.navHistory.slice(-1)[0];
+  const lastNAVshort = lastNAV?.slice(0, 75);
 
   const lastPerf = perf.length > 0 ? perf[perf.length - 1] : null;
 
@@ -153,7 +165,7 @@ function updatePerformance(realm) {
     Last Activity Event: <font color="yellow">${realm.lastMutationTS || "-"}</font><br/>
     Realm Perf Entries: <font color="lightgreen">${perf.length || "-"}</font><br/>
     Realm Perf Speed: <font color="#0FF">${lastPerf ? lastPerf.duration.toFixed(2) + "ms" : "-"}</font><br/>
-    Last NAV: <font color="lightgreen">${lastNAV || "-"}</font><br/>
+    Last NAV: <font color="lightgreen">${lastNAVshort || "-"}</font><br/>
     Last NAV Time: <font color="yellow">${realm.perfLastNavigation || "-"}</font><br/>
   `;
 
@@ -161,8 +173,9 @@ function updatePerformance(realm) {
     el.style.cssText = el.style.cssText + `
       cursor: pointer;
     `;
+    const u = new URL(lastNAV);
     el.onclick = () => {
-      openNamedTab(location.hostname, lastNAV);
+      openNamedTab(u.hostname, lastNAV);
     };
   }
 }

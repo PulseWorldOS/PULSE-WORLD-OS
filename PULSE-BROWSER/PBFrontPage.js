@@ -209,8 +209,9 @@ async function pbRenderCacheList2() {
       let entry = cache.lastEntry;
 
       li.style.cursor = "pointer";
+      const u = new URL(entry);
       li.onclick = () => {
-        openNamedTab(location.hostname, entry);
+        openNamedTab(u.hostname, entry);
       };
     }
 
@@ -282,9 +283,13 @@ async function pbRenderStorageStats(history) {
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
+  let percentColor2 = "lightgreen";
   if (percent >= 40) percentColor = "gold";
   if (percent >= 70) percentColor = "orange";
   if (percent >= 90) percentColor = "red";
+  if (percent >= 40) percentColor2 = "gold";
+  if (percent >= 70) percentColor2 = "orange";
+  if (percent >= 90) percentColor2 = "red";
 
   // ⭐ Status text
   let statusText = "Safe";
@@ -334,7 +339,7 @@ async function pbRenderStorageStats(history) {
     }
   });
 
-  if (!predictionText.includes("Running")) percentColor = "#FF8844";
+  if (!predictionText.includes("Running")) percentColor2 = "#FF8844";
   if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
 
   // ⭐ Render UI
@@ -365,7 +370,7 @@ async function pbRenderStorageStats(history) {
       </div>
 
       <strong>Percent Used:</strong>
-      <span style="color:${percentColor}; font-weight:bold;">
+      <span style="color:${percentColor2}; font-weight:bold;">
         ${percent}% (${statusText})
       </span><br>
 
@@ -554,6 +559,23 @@ function injectPulseScreenFromMemory(play) {
   });
 }
 
+async function pulseGPUInspector(adapter, device) {
+  if (!adapter) adapter = await navigator.gpu?.requestAdapter();
+  if (!adapter) {
+    console.log("❌ WebGPU: No adapter available");
+    return;
+  }
+
+  if (!device) device = await adapter.requestDevice();
+
+  console.log("🎮 WebGPU Inspector");
+  console.log("Adapter:", adapter.name);
+  console.log("Features:", [...adapter.features]);
+  console.log("Limits:", adapter.limits);
+  console.log("Device:", device);
+}
+
+
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   let gpuEnabled = "GPU Driver Error";
@@ -576,6 +598,7 @@ async function gpuWarmExtra() {
       if (adapter) {
         const device = await adapter.requestDevice();
         if (device) {
+          pulseGPUInspector(adapter, device);
           gpuEnabled = "WebGPU";
           const queue = device.queue;
           const buffer = device.createBuffer({

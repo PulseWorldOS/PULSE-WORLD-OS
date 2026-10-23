@@ -318,9 +318,12 @@ async function pbRenderCacheList() {
     `;
 
     if (cache.lastEntry) {
+      let entry = cache.lastEntry;
+
       li.style.cursor = "pointer";
+      const u = new URL(entry);
       li.onclick = () => {
-        openNamedTab(location.hostname, cache.lastEntry);
+        openNamedTab(u.hostname, entry);
       };
     }
 
