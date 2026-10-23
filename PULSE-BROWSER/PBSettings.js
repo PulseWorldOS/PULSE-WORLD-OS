@@ -325,7 +325,6 @@ async function pbRenderCacheList() {
   PB_LOG3.info("Cache list rendered", caches);
 }
 
-
 async function pbRenderStorageStats2() {
   if (!navigator.storage || !navigator.storage.estimate) {
     return `
@@ -368,24 +367,64 @@ async function pbRenderStorageStats2() {
   if (percent >= 70) statusText = "High Load";
   if (percent >= 90) statusText = "Critical Load";
 
+  // ⭐ Sync display formatting
   let syncDisplay;
   if (syncBytes < 1024 * 1024) {
     syncDisplay = (syncBytes / 1024).toFixed(2) + " KB";
   } else {
-    syncDisplay = (syncBytes / (1024 * 1024)).toFixed(2) + " MB";
+    syncDisplay = syncMB + " MB";
   }
 
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );
 
+  let predictionText = "Stable";
+
+  // ⭐ Compute growth rate + projected fill time
+  if (history.pulseStorageHistory) {
+    const { lastCheck, lastUsed } = history.pulseStorageHistory;
+
+    const now = Date.now();
+    const deltaTime = (now - lastCheck) / 1000; // seconds
+    const deltaUsed = totalUsed - lastUsed;
+
+    if (deltaUsed > 0 && deltaTime > 0) {
+      const rate = deltaUsed / deltaTime; // bytes per second
+      const remaining = localQuota - totalUsed;
+
+      if (rate > 0) {
+        const secondsUntilFull = remaining / rate;
+
+        if (secondsUntilFull > 86400) {
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days until full`;
+        } else if (secondsUntilFull > 3600) {
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours until full`;
+        } else {
+          predictionText = `~${secondsUntilFull.toFixed(0)} seconds until full`;
+        }
+      }
+    }
+  }
+
+  // ⭐ Save new history snapshot
+  chrome.storage.local.set({
+    pulseStorageHistory: {
+      lastCheck: Date.now(),
+      lastUsed: totalUsed
+    }
+  });
+
+  // ⭐ Render UI
   return `
     <div style="margin: 14px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
       <strong>PulseBrowser-Storage (RAM)</strong><br><br>
 
-      <!-- ⭐ Two-column layout -->
       <div style="display:flex; gap:10px;">
 
-        <!-- Column 1 -->
         <div style="flex:1;">
           <strong>Local Storage:</strong><br>
           • <span style="color:lightgreen">${localMB} MB</span><br>
@@ -394,7 +433,6 @@ async function pbRenderStorageStats2() {
           • <span style="color:lightgreen">${totalMB} MB</span><br>
         </div>
 
-        <!-- Column 2 -->
         <div style="flex:1;">
           <strong>Sync Storage:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
@@ -405,14 +443,20 @@ async function pbRenderStorageStats2() {
 
       </div>
 
-      <!-- ⭐ Full-width section -->
       <strong>Percent Used:</strong>
       <span style="color:${percentColor}; font-weight:bold;">
         ${percent}% (${statusText})
       </span><br>
+
+      <strong>Projected Fill Time:</strong>
+      <span style="color:${percentColor}; font-weight:bold;">
+        ${predictionText}
+      </span><br>
+
     </div>
   `;
 }
+
 
 
 async function updateLinkedPWInputs() {

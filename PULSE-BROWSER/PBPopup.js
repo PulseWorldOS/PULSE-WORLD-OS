@@ -134,30 +134,75 @@ console.log("%c[PULSEBROWSER] PBPopup (Ultra Edition v6.0) loaded",
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 
-function pulseRehydrateTabs() {
+function pulseRestoreTabs() {
+  chrome.storage.local.get("pulseTabList", ({ pulseTabList }) => {
+    if (!pulseTabList) return;
+
+    for (const url of pulseTabList) {
+      try {
+        const urlObj = new URL(url);
+        const identity = normalizeIdentity(urlObj.hostname);
+
+        openNamedTab(identity, url);
+      } catch (e) {
+        // skip invalid URLs
+      }
+    }
+  });
+}
+
+async function pulseRehydrateTabs() {
+  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
+
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
+    const tabList = [];   // ⭐ NEW — full list of tab URLs
+
+    let snapIndex = 1; // 1–5
 
     for (const tab of tabs) {
       if (!tab.url) continue;
+      tabList.push(tab.url);   // ⭐ Save every tab URL
+
+      if (snapIndex > 6) break; // only 5 bubbles
 
       try {
         const urlObj = new URL(tab.url);
         const identity = normalizeIdentity(urlObj.hostname);
 
+        // ⭐ Skip NEW TAB — do NOT assign a bubble
+        if (identity === "newtab") {
+          rebuilt[identity] = {
+            id: tab.id,
+            realm: identity,
+            snapshot: null,
+          };
+          continue; // ⭐ Do NOT increment snapIndex
+        }
+
         rebuilt[identity] = {
           id: tab.id,
-          realm: identity
+          realm: identity,
+          snapshot: snapIndex
         };
+
+        snapIndex++;
+
       } catch (e) {
-        // Skip invalid URLs (chrome://, about:, etc.)
+        // Skip invalid URLs
       }
     }
 
     pulseTabs = rebuilt;
-    chrome.storage.local.set({ pulseTabs: rebuilt });
+
+    // ⭐ Save both bubble‑map AND full tab list
+    chrome.storage.local.set({
+      pulseTabs: rebuilt,
+      pulseTabList: tabList
+    });
   });
 }
+
 
 function savePulseTabs() {
   chrome.storage.local.set({ pulseTabs });

@@ -257,24 +257,64 @@ async function pbRenderStorageStats() {
   if (percent >= 70) statusText = "High Load";
   if (percent >= 90) statusText = "Critical Load";
 
+  // ⭐ Sync display formatting
   let syncDisplay;
   if (syncBytes < 1024 * 1024) {
     syncDisplay = (syncBytes / 1024).toFixed(2) + " KB";
   } else {
-    syncDisplay = (syncBytes / (1024 * 1024)).toFixed(2) + " MB";
+    syncDisplay = syncMB + " MB";
   }
 
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );
 
+  let predictionText = "Stable";
+
+  // ⭐ Compute growth rate + projected fill time
+  if (history.pulseStorageHistory) {
+    const { lastCheck, lastUsed } = history.pulseStorageHistory;
+
+    const now = Date.now();
+    const deltaTime = (now - lastCheck) / 1000; // seconds
+    const deltaUsed = totalUsed - lastUsed;
+
+    if (deltaUsed > 0 && deltaTime > 0) {
+      const rate = deltaUsed / deltaTime; // bytes per second
+      const remaining = localQuota - totalUsed;
+
+      if (rate > 0) {
+        const secondsUntilFull = remaining / rate;
+
+        if (secondsUntilFull > 86400) {
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days until full`;
+        } else if (secondsUntilFull > 3600) {
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours until full`;
+        } else {
+          predictionText = `~${secondsUntilFull.toFixed(0)} seconds until full`;
+        }
+      }
+    }
+  }
+
+  // ⭐ Save new history snapshot
+  chrome.storage.local.set({
+    pulseStorageHistory: {
+      lastCheck: Date.now(),
+      lastUsed: totalUsed
+    }
+  });
+
+  // ⭐ Render UI
   return `
     <div style="margin: 14px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong>PulseBrowser-Storage (RAM)</strong><br><br>
+      <strong><font color="#FF8844">PulseBrowser-Storage (RAM)</font></strong><br><br>
 
-      <!-- ⭐ Two-column layout -->
       <div style="display:flex; gap:10px;">
 
-        <!-- Column 1 -->
         <div style="flex:1;">
           <strong>Local Storage:</strong><br>
           • <span style="color:lightgreen">${localMB} MB</span><br>
@@ -283,7 +323,6 @@ async function pbRenderStorageStats() {
           • <span style="color:lightgreen">${totalMB} MB</span><br>
         </div>
 
-        <!-- Column 2 -->
         <div style="flex:1;">
           <strong>Sync Storage:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
@@ -294,13 +333,95 @@ async function pbRenderStorageStats() {
 
       </div>
 
-      <!-- ⭐ Full-width section -->
       <strong>Percent Used:</strong>
       <span style="color:${percentColor}; font-weight:bold;">
         ${percent}% (${statusText})
       </span><br>
+
+      <strong>Projected Fill Time:</strong>
+      <span style="color:${percentColor}; font-weight:bold;">
+        ${predictionText}
+      </span><br>
+
     </div>
   `;
+}
+
+
+function pulseRestoreTabs() {
+  chrome.storage.local.get("pulseTabList", ({ pulseTabList }) => {
+    if (!pulseTabList) return;
+
+    for (const url of pulseTabList) {
+      try {
+        const urlObj = new URL(url);
+        const identity = normalizeIdentity(urlObj.hostname);
+
+        openNamedTab(identity, url);
+      } catch (e) {
+        // skip invalid URLs
+      }
+    }
+  });
+}
+
+
+async function pulseRehydrateTabs() {
+  if (document.hidden) return;
+  if (document.visibilityState !== "visible") return;
+
+  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
+
+  chrome.tabs.query({}, tabs => {
+    const rebuilt = {};
+    const tabList = [];   // ⭐ NEW — full list of tab URLs
+
+    let snapIndex = 1; // 1–5
+
+    for (const tab of tabs) {
+      if (!tab.url) continue;
+      tabList.push(tab.url);   // ⭐ Save every tab URL
+
+      if (snapIndex > 6) break; // only 5 bubbles
+
+      try {
+        const urlObj = new URL(tab.url);
+        const identity = normalizeIdentity(urlObj.hostname);
+
+        // ⭐ Skip NEW TAB — do NOT assign a bubble
+        if (identity === "newtab") {
+          rebuilt[identity] = {
+            id: tab.id,
+            realm: identity,
+            snapshot: null,
+          };
+          continue; // ⭐ Do NOT increment snapIndex
+        }
+
+        // ⭐ Normal tab → assign bubble
+        latestSnapshot(identity, urlObj, snapIndex);
+
+        rebuilt[identity] = {
+          id: tab.id,
+          realm: identity,
+          snapshot: snapIndex
+        };
+
+        snapIndex++;
+
+      } catch (e) {
+        // Skip invalid URLs
+      }
+    }
+
+    pulseTabs = rebuilt;
+
+    // ⭐ Save both bubble‑map AND full tab list
+    chrome.storage.local.set({
+      pulseTabs: rebuilt,
+      pulseTabList: tabList
+    });
+  });
 }
 
 
@@ -637,55 +758,6 @@ function openNamedTab(name, url) {
   
   pulseRehydrateTabs();
 }
-
-
-async function pulseRehydrateTabs() {
-  if (document.hidden) return;
-  if (document.visibilityState !== "visible") return;
-  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
-  chrome.tabs.query({}, tabs => {
-    const rebuilt = {};
-    let snapIndex = 1; // 1–5
-
-    for (const tab of tabs) {
-      if (!tab.url) continue;
-      if (snapIndex > 6) break; // only 5 bubbles
-
-      try {
-        const urlObj = new URL(tab.url);
-        const identity = normalizeIdentity(urlObj.hostname);
-
-        // ⭐ Skip NEW TAB — do NOT assign a bubble
-        if (identity === "newtab") {
-          rebuilt[identity] = {
-            id: tab.id,
-            realm: identity,
-            snapshot: null
-          };
-          continue; // ⭐ Do NOT increment snapIndex
-        }
-
-        // ⭐ Normal tab → assign bubble
-        latestSnapshot(identity, urlObj, snapIndex);
-
-        rebuilt[identity] = {
-          id: tab.id,
-          realm: identity,
-          snapshot: snapIndex
-        };
-
-        snapIndex++;
-
-      } catch (e) {
-        // Skip invalid URLs
-      }
-    }
-
-    pulseTabs = rebuilt;
-    chrome.storage.local.set({ pulseTabs: rebuilt });
-  });
-}
-
 
 function latestSnapshot(realm, link, snapIndex) {
   const snapshotKey = `pulse_snapshot_${realm}`;
@@ -2837,6 +2909,7 @@ setInterval(() => {
         pbPulseScreen.currentTime = 0;
         pbPulseScreen.play = false;
         injectPulseScreenFromMemory();
+        pulseRehydrateTabs();
       }, interval3);
     } else {
       stopPulseLoop();
