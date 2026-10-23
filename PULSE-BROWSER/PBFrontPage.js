@@ -19,7 +19,7 @@ let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
 let lastActiveEntries = null;
-let nowFP = new Date().toLocaleString();
+let nowFP = Date.now(); // numeric timestamp
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 

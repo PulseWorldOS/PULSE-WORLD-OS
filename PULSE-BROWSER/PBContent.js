@@ -7,7 +7,7 @@ let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
-let nowCT = new Date().toLocaleString();
+let nowCT = Date.now(); // numeric timestamp
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");

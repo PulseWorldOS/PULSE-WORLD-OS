@@ -3,7 +3,8 @@
 //  Manifest V3 Service Worker — full OS kernel
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
-let nowSW = new Date().toLocaleString();
+let nowSW = Date.now(); // numeric timestamp
+let now = new Date().toLocaleString();
 const CACHE_NAME = "PulseBrowser-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
@@ -1407,20 +1408,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
       return true;
 
-
     case "PULSE_OS_PING": {
       if (msg.time) {
+
         PulseRealmState.lastPing = new Date().toLocaleString();
 
-        const incoming = msg.time; // realm timestamp
+        const incoming = Number(msg.time);   // numeric realm timestamp
 
-        // If sessionStart doesn't exist yet, set it to the earliest of the two
+        // If sessionStart doesn't exist yet, choose earliest realm
         if (!PulseRealmState.sessionStart) {
-          PulseRealmState.sessionStart = Math.min(nowSW, incoming);
+
+          let earliest = Math.min(nowSW, incoming);
+
+          PulseRealmState.sessionStart = new Date(earliest).toLocaleString();
+
         } else {
-          // If sessionStart exists, update it ONLY if the incoming time is earlier
-          if (incoming < PulseRealmState.sessionStart) {
-            PulseRealmState.sessionStart = incoming;
+
+          // Convert stored sessionStart back to number for comparison
+          const current = new Date(PulseRealmState.sessionStart).getTime();
+
+          // Update only if incoming is earlier
+          if (incoming < current) {
+            PulseRealmState.sessionStart = new Date(incoming).toLocaleString();
           }
         }
       }

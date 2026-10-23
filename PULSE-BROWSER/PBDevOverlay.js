@@ -27,8 +27,8 @@ function getSyncInterval() {
 async function updateOverlay() {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
-      PulseRealm = realmRes.state || {};
-      PulseBrowserSettings = settingsRes.settings || {};
+      PulseRealm = realmRes.state || PulseRealm || {};
+      PulseBrowserSettings = settingsRes.settings || PulseBrowserSettings || {};
       
       updateKernel(PulseRealm, PulseRealm.sessionStart);
       updateWarm(PulseRealm);
