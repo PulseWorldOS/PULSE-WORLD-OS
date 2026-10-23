@@ -105,12 +105,22 @@ async function pbRequestCacheList2() {
 }
 
 let predictionText = "Running Stable";
-
+let statsHTMLShell = null;
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
+  // ⭐ Fetch cache list
+  const result = await pbRequestCacheList2();
   
+  if (!result || !result.caches) {
+    listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
+    return;
+  }
+  
+  const caches = result.caches;
+  if (lastActiveEntries && lastActiveEntries === caches.entries) return;
+
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
     <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
@@ -131,22 +141,10 @@ async function pbRenderCacheList2() {
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
   console.log(history);
-  predictionText = predictionText + ".";
   const statsHTML = await pbRenderStorageStats(history);
-  
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
-
-  // ⭐ Fetch cache list
-  const result = await pbRequestCacheList2();
-  
-  if (!result || !result.caches) {
-    listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
-    return;
-  }
-  if (lastActiveEntries && lastActiveEntries === result.caches.entries) return;
-
-  const caches = result.caches;
-
+  predictionText = predictionText + ".";
+  if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
+  statsHTMLShell = statsHTML;
   if (caches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
@@ -190,7 +188,7 @@ async function pbRenderCacheList2() {
     const density = cache.density ?? 0;
     const KBperEntry = (1024 / cache.density).toFixed(0);
   
-    if (!best) lastActiveEntries = cache.entries ?? 0;
+    lastActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
@@ -336,7 +334,8 @@ async function pbRenderStorageStats(history) {
     }
   });
 
-  if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
+  if (!predictionText.includes("Running")) percentColor = "#FF8844";
+  if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
 
   // ⭐ Render UI
   return `
@@ -657,15 +656,10 @@ function collectAndWarmAssetsFront() {
   allImgs.forEach(img => {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
-  
-  // -------------------------------------------------------
-  // 6. Send unified front‑page report
-  // -------------------------------------------------------
+
   chrome.runtime.sendMessage({
-    type: "PB_ASSET_LIST_FRONT",
-    pageUrl: location.href,
-    assets,
-    decodeCount
+    type: "PBACC_DECODEWARM",
+    count: decodeCount
   });
 }
 
@@ -800,22 +794,19 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       div = document.createElement("div");
       div.id = bubbleId;
       div.className = bubbleId;
+      // ---------------------------------------------
+      // ⭐ Inject ONLY the favicon (big, centered)
+      // ---------------------------------------------
+      div.innerHTML = `
+        <div class="Snapshot-Viewport">
+          <img class="Snapshot-Favicon"
+              src="${snapshot.favicon}"
+              alt="favicon"
+              onerror="this.src='${snapshot.regfavicon}'"
+        </div>
+      `;
+      document.body.appendChild(div);
     }
-    
-    // ---------------------------------------------
-    // ⭐ Inject ONLY the favicon (big, centered)
-    // ---------------------------------------------
-    div.innerHTML = `
-      <div class="Snapshot-Viewport">
-        <img class="Snapshot-Favicon"
-            src="${snapshot.favicon}"
-            alt="favicon"
-            onerror="this.src='${snapshot.regfavicon}'"
-      </div>
-    `;
-
-
-    document.body.appendChild(div);
 
     // Chamber awakens
     toppanel.style.backdropFilter = "blur(8px)";

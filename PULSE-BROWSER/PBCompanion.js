@@ -587,11 +587,13 @@ function safeSendMessage(msg) {
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
-  chrome.sidePanel.setOptions({
-    tabId: activeInfo.tabId,
-    path: "PBSettings.html",
-    enabled: true
-  });
+  if (!tab.url.includes("newtab")) {
+    chrome.sidePanel.setOptions({
+      tabId: activeInfo.tabId,
+      path: "PBPopup.html",
+      enabled: true
+    });
+  }
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;
@@ -781,7 +783,6 @@ async function pbPrefetch(urls = []) {
 
   if (warmedCount > 0) {
     PulseRealmState.warmAssetsTriggered += warmedCount || 1;
-    PulseRealmState.imagesDecoded += warmedCount || 1;
   }
 }
 
@@ -829,7 +830,6 @@ async function pbPreload(origin) {
 
   if (warmedCount > 0) {
     PulseRealmState.warmAssetsTriggered += warmedCount || 1;
-    PulseRealmState.imagesDecoded += warmedCount || 1;
   }
 }
 
@@ -1597,20 +1597,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     // -------------------------------------------------------
-    // ASSET LIST (Frontpage)
-    // -------------------------------------------------------
-    case "PB_ASSET_LIST_FRONT":
-      try {
-        PBGlobalAssetMap?.scanAndWarm?.(msg.pageUrl, msg.assets || []);
-        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(msg.pageUrl, a));
-        PulseRealmState.warmAssetsTriggered += msg.assets.length || 1;
-        PulseRealmState.imagesDecoded += msg.decodeCount || 1;
-        PB_LOG2.info("PB_ASSET_LIST_FRONT", msg.pageUrl);
-      } catch (_) {}
-      sendResponse({ ok: true });
-      break;
-
-    // -------------------------------------------------------
     // CONTENT WARM-PATH
     // -------------------------------------------------------
     case "PBCONTENT_WARMPATH":
@@ -1726,11 +1712,13 @@ async function pbHandleRequest(details) {
 // ============================================================================
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;
-  chrome.sidePanel.setOptions({
-    tabId,
-    path: "PBSettings.html",
-    enabled: true
-  });
+  if (!tab.url.includes("newtab")) {
+    chrome.sidePanel.setOptions({
+      tabId,
+      path: "PBPopup.html",
+      enabled: true
+    });
+  }
   let url = tab.url;
   let title = tab.title;
   let page = tab.page;
@@ -1932,10 +1920,6 @@ const PBUniversalBoost2 = {
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
     console.log("[PBUniversalBoost2] Warmed publish directory for", origin);
-    if (warmedCount > 0) {
-      PulseRealmState.warmAssetsTriggered += warmedCount || 1;
-      PulseRealmState.imagesDecoded += warmedCount || 1;
-    }
   },
 
   async warmTab(tab) {

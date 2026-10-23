@@ -7,6 +7,7 @@
 console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   "color:#FF8844; font-weight:bold; font-family:monospace;");
 
+  
 function getSyncInterval() {
   const base = 1200;
 // ⭐ Add human-like jitter (±20%)
@@ -165,7 +166,6 @@ function updatePerformance(realm) {
     };
   }
 }
-
 
 // ---------------------------------------------------------------------------
 // SECTION: Warm-Path
