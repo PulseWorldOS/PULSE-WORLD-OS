@@ -5,9 +5,11 @@
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
+let lastnowSW = Date.now(); // numeric timestamp
 const CACHE_NAME = "PulseBrowser-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
+let GLOBALSTART = Date.now();
 
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
@@ -21,7 +23,28 @@ chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
   }
 });
 
+chrome.storage.local.get(["SessionStart"], (res) => {
+  if (isValid(res.SessionStart)) {
+    nowSW = res.SessionStart;
+    console.log("PulseBrowser OS Local Session Start: " + nowSW);
+  }
+});
 
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    chrome.storage.local.set({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+      console.log("PulseBrowser OS Session Start: " + nowSW);
+      console.log("PulseBrowser OS NewTab Start: " + lastnowSW);
+    } else {
+      GLOBALSTART = Date.now();
+    }
+  }
+});
 
 const PB_LOG2 = {
   info(label, data) {
@@ -1043,6 +1066,14 @@ chrome.runtime.onInstalled.addListener(() => {
 
 let __PULSE_CACHE_FILE = null;
 
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
 
@@ -1409,7 +1440,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "PULSE_OS_PING": {
-      if (msg.time) {
+      if (msg.time && isValid(msg.time)) {
 
         PulseRealmState.lastPing = new Date().toLocaleString();
 
@@ -1417,24 +1448,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
         // If sessionStart doesn't exist yet, choose earliest realm
         if (!PulseRealmState.sessionStart) {
-
           let earliest = Math.min(nowSW, incoming);
-
           PulseRealmState.sessionStart = new Date(earliest).toLocaleString();
-
+          nowSW = earliest;
+          chrome.storage.local.set({ SessionStart: nowSW });
+          PB_LOG2.info("PULSE_OS_SESSION_START", nowSW);
         } else {
-
           // Convert stored sessionStart back to number for comparison
           const current = new Date(PulseRealmState.sessionStart).getTime();
-
-          // Update only if incoming is earlier
           if (incoming < current) {
             PulseRealmState.sessionStart = new Date(incoming).toLocaleString();
+            nowSW = incoming;
+            chrome.storage.local.set({ SessionStart: nowSW });
           }
+          PB_LOG2.info("PULSE_OS_SESSION_EVOLVE", nowSW);
         }
       }
-
-      sendResponse({ ok: true, ts: PulseRealmState.lastPing });
+      
+      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart });
       break;
     }
 

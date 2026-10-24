@@ -8,6 +8,7 @@ let PulseRealmSettings = {};
 let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
+let lastnowCT = Date.now(); // numeric timestamp
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -102,6 +103,15 @@ function letsgo(link) {
   } catch (_) {}
 }
 
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
+}
+
+
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
@@ -109,6 +119,9 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) =
   if (chrome.runtime.lastError) return;
   console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
     "color:#00C8FF; font-family:monospace;", response);
+  if (response.time && isValid(response.time)) {
+      nowST = response.time;
+  }
 });
 
 

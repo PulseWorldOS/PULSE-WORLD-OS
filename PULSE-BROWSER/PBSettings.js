@@ -5,6 +5,45 @@
 // ============================================================================
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
+let nowST = Date.now(); // numeric timestamp
+let lastnowST = Date.now(); // numeric timestamp
+
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
+}
+
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowST }, (response) => {
+  if (chrome.runtime.lastError) return;
+  if (response.time && isValid(response.time)) {
+      nowST = response.time;
+  }
+});
+
+
+chrome.storage.local.get(["SessionStart"], (res) => {
+  if (isValid(res.SessionStart)) {
+    nowST = res.SessionStart;
+    console.log("PulseBrowser OS Local Session Start: " + nowST);
+  }
+});
+
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    chrome.storage.local.set({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+    } else {
+      GLOBALSTART = Date.now();
+    }
+  }
+});
 
 const PB_LOG = {
   info(label, data) {
@@ -413,10 +452,14 @@ async function pbRenderStorageStats2(history) {
   // ⭐ Save new history snapshot
   chrome.storage.local.set({
     pulseStorageHistory: {
-      lastCheck: Date.now(),
+      lastCheck: GLOBALSTART ?? nowST,
       lastUsed: totalUsed
     }
   });
+
+  console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+  console.log("PulseBrowser OS Session Start: " + nowST);
+  console.log("PulseBrowser OS Settings Start: " + lastnowST);
 
   if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
 

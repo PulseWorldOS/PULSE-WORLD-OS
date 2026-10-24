@@ -20,8 +20,39 @@ let PulseSnapshotView = null;
 let PulseURL = null;
 let lastActiveEntries = null;
 let nowFP = Date.now(); // numeric timestamp
+let lastnowFP = Date.now(); // numeric timestamp
+let GLOBALSTART = Date.now();
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
+
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
+}
+
+chrome.storage.local.get(["SessionStart"], (res) => {
+  if (isValid(res.SessionStart)) {
+    nowFP = res.SessionStart;
+    console.log("PulseBrowser OS Local Session Start: " + nowFP);
+  }
+});
+
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    chrome.storage.local.set({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+    } else {
+      GLOBALSTART = Date.now();
+    }
+  }
+});
 
 const PB_LOG3 = {
   info(label, data) {
@@ -197,7 +228,7 @@ async function pbRenderCacheList2() {
       Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
-      Personality: <font color="#0FF">${personality}</font><br>
+      Personality: <font color="gold">${personality}</font><br>
       Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
@@ -334,10 +365,14 @@ async function pbRenderStorageStats(history) {
   // ⭐ Save new history snapshot
   chrome.storage.local.set({
     pulseStorageHistory: {
-      lastCheck: Date.now(),
+      lastCheck: GLOBALSTART ?? nowFP,
       lastUsed: totalUsed
     }
   });
+
+  console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+  console.log("PulseBrowser OS Session Start: " + nowFP);  
+  console.log("PulseBrowser OS NewTab Start: " + lastnowFP);
 
   if (!predictionText.includes("Running")) percentColor2 = "#FF8844";
   if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
@@ -463,6 +498,9 @@ const pbWrapper = document.getElementById("pbWrapper");
 // ---------------------------------------------------------------------------
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
   if (chrome.runtime.lastError) return;
+  if (response.time && isValid(response.time)) {
+      nowFP = response.time;
+  }
 });
 
 function getPrimaryVideo() {
@@ -560,19 +598,52 @@ function injectPulseScreenFromMemory(play) {
 }
 
 async function pulseGPUInspector(adapter, device) {
+  // Acquire adapter
   if (!adapter) adapter = await navigator.gpu?.requestAdapter();
   if (!adapter) {
     console.log("❌ WebGPU: No adapter available");
     return;
   }
 
+  // Acquire device
   if (!device) device = await adapter.requestDevice();
 
+  // Basic info
   console.log("🎮 WebGPU Inspector");
-  console.log("Adapter:", adapter.name);
+  console.log("Adapter Name:", adapter.name);
+  console.log("Adapter Type:", adapter.isFallbackAdapter ? "Fallback" : "Primary");
   console.log("Features:", [...adapter.features]);
-  console.log("Limits:", adapter.limits);
-  console.log("Device:", device);
+
+  // Limits (Deep Telemetry)
+  const L = adapter.limits;
+  console.log("📊 GPU Limits:");
+  console.log("  Max Bind Groups:", L.maxBindGroups);
+  console.log("  Max Dynamic Uniform Buffers:", L.maxDynamicUniformBuffersPerPipelineLayout);
+  console.log("  Max Dynamic Storage Buffers:", L.maxDynamicStorageBuffersPerPipelineLayout);
+  console.log("  Max Storage Buffer Size:", L.maxStorageBufferBindingSize);
+  console.log("  Max Uniform Buffer Size:", L.maxUniformBufferBindingSize);
+  console.log("  Max Buffer Size:", L.maxBufferSize);
+  console.log("  Max Texture Dimension 1D:", L.maxTextureDimension1D);
+  console.log("  Max Texture Dimension 2D:", L.maxTextureDimension2D);
+  console.log("  Max Texture Dimension 3D:", L.maxTextureDimension3D);
+  console.log("  Max Compute Workgroup Size X:", L.maxComputeWorkgroupSizeX);
+  console.log("  Max Compute Workgroup Size Y:", L.maxComputeWorkgroupSizeY);
+  console.log("  Max Compute Workgroup Size Z:", L.maxComputeWorkgroupSizeZ);
+  console.log("  Max Compute Invocations:", L.maxComputeInvocationsPerWorkgroup);
+  console.log("  Max Compute Workgroups Per Dimension:", L.maxComputeWorkgroupsPerDimension);
+
+  // Device object
+  console.log("🔧 Device:", device);
+
+  // Context loss detection
+  device.lost.then((info) => {
+    console.warn("⚠️ GPU Context Lost:", info);
+  });
+
+  // Optional: Real-time heartbeat
+  setInterval(() => {
+    console.log("💓 GPU Heartbeat: device is alive");
+  }, 5000);
 }
 
 
@@ -2757,6 +2828,7 @@ setInterval(() => {
       pbPulseScreen.currentTime = 0;
       pbPulseScreen.play = false;
       injectPulseScreenFromMemory();
+      pulseRehydrateTabs();
     }, interval3);
 
   setTimeout(injectPulseScreenFromMemory, 100);
@@ -2835,6 +2907,9 @@ setInterval(() => {
     // ---------------------------------------------------------------------------
     chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
       if (chrome.runtime.lastError) return;
+      if (response.time && isValid(response.time)) {
+          nowFP = response.time;
+      }
     });
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
@@ -2932,6 +3007,9 @@ setInterval(() => {
       // ---------------------------------------------------------------------------
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
         if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
       });
       updateOverlay();
       gpuWarmExtra();

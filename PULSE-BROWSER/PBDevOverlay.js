@@ -4,9 +4,17 @@
 //  accelerator, performance, warm-path, GPU, decode, settings, experimental.
 // ============================================================================
 
+// ---------------------------------------------------------------------------
+// CREATE OVERLAY
+// ---------------------------------------------------------------------------
+(function createOverlay() {
+  const sync = getSyncInterval();
+  updateOverlay();
+  setInterval(updateOverlay, sync);
+})();
+
 console.log("%c[PULSEBROWSER] PBDevOverlay (Ultra Edition v7.0) loaded",
   "color:#FF8844; font-weight:bold; font-family:monospace;");
-
   
 function getSyncInterval() {
   const base = 1200;
@@ -41,53 +49,6 @@ async function updateOverlay() {
     });
   });
 }
-
-// ---------------------------------------------------------------------------
-// CREATE OVERLAY
-// ---------------------------------------------------------------------------
-(function createOverlay() {
-
-  const wrap = document.getElementById("side-panel right-panel");
-  wrap.style.cssText = `
-    position: fixed;
-    margin: 14px 20px;
-    padding: 3px 6px;
-    top: 0;
-    bottom: 0;
-    width: clamp(280px, 12vw, 350px);
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(12px);
-    border-left: 1px solid rgba(255, 255, 255, 0.15);
-    border-right: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 30px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-    z-index: 5;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    word-break: break-all;
-  `;
-
-  wrap.innerHTML = `
-    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
-      PulseBrowser OS - User Overlay
-    </div>
-
-    <div id="pb-hud-kernel"></div>
-    <div id="pb-hud-warm"></div>
-    <div id="pb-hud-performance"></div>
-    <div id="pb-hud-accelerator"></div>
-    <div id="pb-hud-navigator"></div>
-    <div id="pb-hud-router"></div>
-    <div id="pb-hud-settings"></div>
-    <div id="pb-hud-experimental"></div>
-    <div id="pb-hud-flags"></div>
-  `;
-
-  document.body.appendChild(wrap);
-  const sync = getSyncInterval();
-  updateOverlay();
-  setInterval(updateOverlay, sync);
-})();
 
 function enabledColor(v) {
   return v ? "lightgreen" : "#FF0";   // teal for true, yellow for false

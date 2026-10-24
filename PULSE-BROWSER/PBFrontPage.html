@@ -66,7 +66,8 @@
     
     .side-panel {
       position: fixed;
-      margin: 20px 20px;
+      margin: 14px 20px;
+      padding: 3px 6px;
       top: 0;
       bottom: 0;
       width: clamp(280px, 12vw, 350px);
@@ -1088,7 +1089,19 @@
   </div>
 
   <div class="side-panel right-panel" id="side-panel right-panel">
-    <!-- Right panel content -->
+    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
+      PulseBrowser OS - User Overlay
+    </div>
+
+    <div id="pb-hud-kernel"></div>
+    <div id="pb-hud-warm"></div>
+    <div id="pb-hud-performance"></div>
+    <div id="pb-hud-accelerator"></div>
+    <div id="pb-hud-navigator"></div>
+    <div id="pb-hud-router"></div>
+    <div id="pb-hud-settings"></div>
+    <div id="pb-hud-experimental"></div>
+    <div id="pb-hud-flags"></div>
   </div>
 
   <div class="core">

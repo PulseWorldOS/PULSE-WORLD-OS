@@ -9,10 +9,22 @@ let PulseRealmSettings = {};
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
 let nowPP = Date.now(); // numeric timestamp
+let lastnowPP = Date.now(); // numeric timestamp
 
-chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (res) => {
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
+}
+
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {
   if (chrome.runtime.lastError) return write("Kernel unreachable.");
   write("Kernel Response:\n" + JSON.stringify(res, null, 2));
+  if (response.time && isValid(response.time)) {
+      nowPP = response.time;
+  }
 });
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
