@@ -7,6 +7,7 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
+let totalUsed = 0;
 
 function isValid(t) {
   return (
@@ -39,6 +40,8 @@ chrome.storage.local.get(["globalStart"], (res) => {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
       console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+      console.log("PulseBrowser OS Session Start: " + nowST);
+      console.log("PulseBrowser OS NewTab Start: " + lastnowST);
     } else {
       GLOBALSTART = Date.now();
     }
@@ -394,7 +397,7 @@ async function pbRenderStorageStats2(history) {
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
 
   // ⭐ Combined totals
-  const totalUsed = localUsed + syncBytes;
+  totalUsed = localUsed + syncBytes;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
   // ⭐ Conversions
@@ -410,7 +413,7 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 90) percentColor = "red";
 
   // ⭐ Status text
-  let statusText = "Safe";
+  let statusText = "SAFE";
   if (percent >= 40) statusText = "Warming";
   if (percent >= 70) statusText = "High Load";
   if (percent >= 90) statusText = "Critical Load";

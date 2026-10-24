@@ -69,18 +69,19 @@ function updateKernel(realm, SessionStart) {
   const lastURL = realm.lastURL;
   let lastURLshort = lastURL;
   if (lastURL) lastURLshort = lastURL.slice(0, 75);
+  
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
     Session Start: <font color="gold">${SessionStart}</font><br/>
     Last Page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
     Last Title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
     Last URL: <font color="#0FF">${lastURLshort || "-"}</font><br/>
-    Domain Class: <font color="#0FF">${realm.lastDomainClass || "-"}</font><br/>
+    Domain Class: <font color="#0FF">${realm.lastDomainClass || "PulseWorld"}</font><br/>
     Data Band: <font color="#0FF">${realm.band || "-"}</font><br/>
     Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
   `;
 
-  if (lastURL) {
+  if (lastURL && !lastURL.includes("newtab")) {
     el.style.cssText = el.style.cssText + `
       cursor: pointer;
     `;
@@ -133,7 +134,7 @@ function updatePerformance(realm) {
     Last NAV Time: <font color="yellow">${realm.perfLastNavigation || "-"}</font><br/>
   `;
 
-  if (lastNAV) {
+  if (lastNAV && !lastNAV.includes("newtab")) {
     el.style.cssText = el.style.cssText + `
       cursor: pointer;
     `;

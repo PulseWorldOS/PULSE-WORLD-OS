@@ -771,7 +771,13 @@ async function pbPrefetch(urls = []) {
 
   for (const url of urls) {
     if (!url) continue;
-
+    if (
+      !url ||
+      (url.startsWith("chrome://") && !url.includes("newtab")) ||
+      url.startsWith("chrome-extension://")
+    ) {
+      return;
+    }
     // ⭐ Skip permanently failed URLs
     if (fails[url] >= 2 && !isPulseWorld(url)) {
       continue;
@@ -1460,8 +1466,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             PulseRealmState.sessionStart = new Date(incoming).toLocaleString();
             nowSW = incoming;
             chrome.storage.local.set({ SessionStart: nowSW });
+            PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current, PulseRealmState.sessionStart);
           }
-          PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", PulseRealmState.sessionStart);
         }
       }
       

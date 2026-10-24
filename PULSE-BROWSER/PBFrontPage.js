@@ -22,6 +22,7 @@ let lastActiveEntries = null;
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
+let totalUsed = 0;
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
@@ -45,18 +46,18 @@ chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
     GLOBALSTART = Date.now();
     const ItsTime = new Date(GLOBALSTART).toLocaleString();
-    startBtn.innerHTML = "Origin Consensus: " + ItsTime;
+    startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
     chrome.storage.local.set({ globalStart: GLOBALSTART });
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
       const ItsTime = new Date(GLOBALSTART).toLocaleString();
-      startBtn.innerHTML = "Origin Consensus: " + ItsTime;
+      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
       console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
     } else {
       GLOBALSTART = Date.now();
       const ItsTime = new Date(GLOBALSTART).toLocaleString();
-      startBtn.innerHTML = "Origin Consensus: " + ItsTime;
+      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
     }
   }
 });
@@ -310,7 +311,7 @@ async function pbRenderStorageStats(history) {
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
 
   // ⭐ Combined totals
-  const totalUsed = localUsed + syncBytes;
+  totalUsed = localUsed + syncBytes;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
   // ⭐ Conversions
@@ -330,7 +331,7 @@ async function pbRenderStorageStats(history) {
   if (percent >= 90) percentColor2 = "red";
 
   // ⭐ Status text
-  let statusText = "Safe";
+  let statusText = "SAFE";
   if (percent >= 40) statusText = "Warming";
   if (percent >= 70) statusText = "High Load";
   if (percent >= 90) statusText = "Critical Load";
@@ -358,13 +359,18 @@ async function pbRenderStorageStats(history) {
       if (rate > 0) {
         const secondsUntilFull = remaining / rate;
 
-        if (secondsUntilFull > 86400) {
+        if (secondsUntilFull > 31536000) { // 365 days
+          predictionText = `~${(secondsUntilFull / 31536000).toFixed(1)} Years`;
+        } else if (secondsUntilFull > 2592000) { // 30 days
+          predictionText = `~${(secondsUntilFull / 2592000).toFixed(1)} Months`;
+        } else if (secondsUntilFull > 86400) { // 1 day
           predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
-        } else if (secondsUntilFull > 3600) {
+        } else if (secondsUntilFull > 3600) { // 1 hour
           predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
         } else {
           predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
         }
+
       }
     }
   }
@@ -412,12 +418,12 @@ async function pbRenderStorageStats(history) {
       </div>
 
       <strong>Percent Used:</strong>
-      <span style="color:${percentColor2}; font-weight:bold;">
+      <span style="color:${percentColor}; font-weight:bold;">
         ${percent}% (${statusText})
       </span><br>
 
       <strong>Projected Fill Time:</strong>
-      <span style="color:${percentColor}; font-weight:bold;">
+      <span style="color:${percentColor2}; font-weight:bold;">
         ${predictionText}
       </span><br>
 
@@ -646,13 +652,13 @@ async function pulseGPUInspector(adapter, device) {
   device.lost.then((info) => {
     console.warn("⚠️ GPU Context Lost:", info);
   });
-
-  // Optional: Real-time heartbeat
-  setInterval(() => {
-    console.log("💓 GPU Heartbeat: device is alive");
-  }, 5000);
 }
 
+
+// Optional: Real-time heartbeat
+setInterval(() => {
+  console.log("💓 GPU Heartbeat: device is alive");
+}, 5000);
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
