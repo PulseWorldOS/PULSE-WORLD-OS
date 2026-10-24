@@ -439,11 +439,11 @@ async function pbRenderStorageStats2(history) {
         const secondsUntilFull = remaining / rate;
 
         if (secondsUntilFull > 86400) {
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days`;
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
         } else if (secondsUntilFull > 3600) {
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours`;
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
         } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} seconds`;
+          predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
         }
       }
     }

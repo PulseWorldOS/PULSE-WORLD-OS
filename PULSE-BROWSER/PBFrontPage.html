@@ -67,7 +67,6 @@
     .side-panel {
       position: fixed;
       margin: 14px 20px;
-      padding: 3px 6px;
       top: 0;
       bottom: 0;
       width: clamp(280px, 12vw, 350px);
@@ -789,8 +788,23 @@
     }
 
     /* FIXED BUTTON — now an anchor */
+    .start {
+      bottom: 1px;
+      right: 10px;
+      margin-top: 8px;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      position: fixed;
+    }
+
+    /* FIXED BUTTON — now an anchor */
     .about {
-      bottom: 6px;
+      bottom: 1px;
       left: 10px;
       margin-top: 8px;
       color: white;
@@ -1142,6 +1156,7 @@
     </div>
 
     <div class="about" id="about">About PulseBrowser OS</div>
+    <div class="start" id="start">PulseBrowser Origin Consensus</div>
 
     <!-- Main Navigation Buttons -->
     <div class="main-links">

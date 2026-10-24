@@ -22,6 +22,7 @@ let lastActiveEntries = null;
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
+const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 
@@ -43,13 +44,19 @@ chrome.storage.local.get(["SessionStart"], (res) => {
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
     GLOBALSTART = Date.now();
+    const ItsTime = new Date(GLOBALSTART).toLocaleString();
+    startBtn.innerHTML = "Origin Consensus: " + ItsTime;
     chrome.storage.local.set({ globalStart: GLOBALSTART });
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
+      const ItsTime = new Date(GLOBALSTART).toLocaleString();
+      startBtn.innerHTML = "Origin Consensus: " + ItsTime;
       console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
     } else {
       GLOBALSTART = Date.now();
+      const ItsTime = new Date(GLOBALSTART).toLocaleString();
+      startBtn.innerHTML = "Origin Consensus: " + ItsTime;
     }
   }
 });
@@ -352,11 +359,11 @@ async function pbRenderStorageStats(history) {
         const secondsUntilFull = remaining / rate;
 
         if (secondsUntilFull > 86400) {
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} days`;
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
         } else if (secondsUntilFull > 3600) {
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} hours`;
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
         } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} seconds`;
+          predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
         }
       }
     }
@@ -2174,7 +2181,6 @@ const enterBtn = document.getElementById("enter");
 const setupBtn = document.getElementById("setup");
 
 let hoverTimer = null;
-
 aboutBtn.addEventListener("mouseover", () => {
   const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
 

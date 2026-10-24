@@ -67,7 +67,8 @@ function experimentalColor(v) {
 function updateKernel(realm, SessionStart) {
   const el = document.getElementById("pb-hud-kernel");
   const lastURL = realm.lastURL;
-  const lastURLshort = lastURL.slice(0, 75);
+  let lastURLshort = lastURL;
+  if (lastURL) lastURLshort = lastURL.slice(0, 75);
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
     Session Start: <font color="gold">${SessionStart}</font><br/>
@@ -114,8 +115,10 @@ function updateRouter(settings) {
 function updatePerformance(realm) {
   const el = document.getElementById("pb-hud-performance");
   const perf = realm.perfEntries || [];
-  const lastNAV = realm.navHistory.slice(-1)[0];
-  const lastNAVshort = lastNAV?.slice(0, 75);
+  let lastNAV = realm.navHistory;
+  if (lastNAV) lastNAV = realm.navHistory.slice(-1)[0];
+  let lastNAVshort = lastNAV;
+  if (lastNAV) lastNAVshort = lastNAV?.slice(0, 75);
 
   const lastPerf = perf.length > 0 ? perf[perf.length - 1] : null;
 

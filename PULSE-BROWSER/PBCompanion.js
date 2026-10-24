@@ -23,12 +23,12 @@ chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
   }
 });
 
-chrome.storage.local.get(["SessionStart"], (res) => {
-  if (isValid(res.SessionStart)) {
-    nowSW = res.SessionStart;
-    console.log("PulseBrowser OS Local Session Start: " + nowSW);
-  }
-});
+// chrome.storage.local.get(["SessionStart"], (res) => {
+//   if (isValid(res.SessionStart)) {
+//     nowSW = res.SessionStart;
+//     console.log("PulseBrowser OS Local Session Start: " + nowSW);
+//   }
+// });
 
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
@@ -1452,7 +1452,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           PulseRealmState.sessionStart = new Date(earliest).toLocaleString();
           nowSW = earliest;
           chrome.storage.local.set({ SessionStart: nowSW });
-          PB_LOG2.info("PULSE_OS_SESSION_START", nowSW);
+          PB_LOG2.save("PULSE_OS_SESSION_START", PulseRealmState.sessionStart);
         } else {
           // Convert stored sessionStart back to number for comparison
           const current = new Date(PulseRealmState.sessionStart).getTime();
@@ -1461,7 +1461,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             nowSW = incoming;
             chrome.storage.local.set({ SessionStart: nowSW });
           }
-          PB_LOG2.info("PULSE_OS_SESSION_EVOLVE", nowSW);
+          PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", PulseRealmState.sessionStart);
         }
       }
       
