@@ -26,6 +26,15 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) =>
       nowPP = response.time;
   }
 });
+
+chrome.storage.local.get(["SessionStart"], (res) => {
+  if (isValid(res.SessionStart)) {
+    nowPP = res.SessionStart;
+    console.log("PulseBrowser OS Local Session Start: " + nowPP);
+  }
+});
+
+
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
   if (res.PulseBrowserFaviconCaches1) {
@@ -57,6 +66,10 @@ function isPulseWorld(origin) {
 function IsPartner(origin) {
   return origin.includes("fordfamilyretail")
       || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smokeshop")
+      || origin.includes("peacesmoke-shop")
+      || origin.includes("chromewebstore")
+      || origin.includes("fordfamilydistribution")
       || origin.includes("peace-smoke-shop")
       || origin.includes("fordfamilymanagement");
 }
@@ -96,6 +109,17 @@ const PBUniversalBoost = {
 
     // ⭐ Only warm http/https origins
     if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
+      return;
+    }
+
+    // ⭐ Skip warming any URL with a query string
+    if (origin.includes("?")) {
+      return;
+    }
+
+    // ⭐ Skip warming if the FULL URL already ends with a file extension
+    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(origin)) {
+      console.log("[PBUniversalBoost] Skipped (direct file):", origin);
       return;
     }
 
@@ -386,7 +410,6 @@ function saveConsole(console, cb) {
     cb && cb();
   });
 }
-
 
 // // ---------------------------------------------------------------------------
 // // BUTTON: Kernel Ping

@@ -7,7 +7,6 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
-let totalUsed = 0;
 
 function isValid(t) {
   return (
@@ -32,21 +31,6 @@ chrome.storage.local.get(["SessionStart"], (res) => {
   }
 });
 
-chrome.storage.local.get(["globalStart"], (res) => {
-  if (!res.globalStart) {
-    GLOBALSTART = Date.now();
-    chrome.storage.local.set({ globalStart: GLOBALSTART });
-  } else {
-    if (isValid(res.globalStart)) {
-      GLOBALSTART = res.globalStart;
-      console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-      console.log("PulseBrowser OS Session Start: " + nowST);
-      console.log("PulseBrowser OS NewTab Start: " + lastnowST);
-    } else {
-      GLOBALSTART = Date.now();
-    }
-  }
-});
 
 const PB_LOG = {
   info(label, data) {
@@ -94,6 +78,21 @@ const PB_LOG = {
 
 PB_LOG.info("PBSettings (Ultra Edition v7.1) loaded");
 
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    chrome.storage.local.set({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      PB_LOG.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+      PB_LOG.info("PulseBrowser OS Session Start: " + nowST);
+      PB_LOG.info("PulseBrowser OS Settings Start: " + lastnowST);
+    } else {
+      GLOBALSTART = Date.now();
+    }
+  }
+});
 
 async function getSettings() {
   return new Promise((resolve) => {
@@ -254,6 +253,7 @@ async function pbRequestCacheList() {
       }
 
       PB_LOG.load("Cache list received", response.caches);
+      PB_LOG.load("PulseCache list received", response.pulsecaches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
@@ -291,30 +291,41 @@ async function pbRenderCacheList() {
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList();
   
-  if (!result || !result.caches) {
+  if (!result || (!result.caches && !result.pulsecaches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
 
 
   const caches = result.caches;
+  const pulsecaches = result.pulsecaches;  
+  const errorcount = result.errorcount;
+  const errorSizeMB = result.errorSizeMB;
 
-  if (caches.length === 0) {
+  if (caches.length === 0 && pulsecaches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
 
   // ⭐ Sort: current cache first, then by entry count
-  caches.sort((a, b) => {
+  if (caches) caches.sort((a, b) => {
     if (a.name === a.currentCache) return -1;
     if (b.name === a.currentCache) return 1;
     return (b.entries || 0) - (a.entries || 0);
   });
 
-  let best = false;
+  // ⭐ Sort: current cache first, then by entry count
+  if (pulsecaches) pulsecaches.sort((a, b) => {
+    if (a.name === a.currentPulseCache) return -1;
+    if (b.name === a.currentPulseCache) return 1;
+    return (b.entries || 0) - (a.entries || 0);
+  });
 
-  caches.forEach(cache => {
-    let li = document.getElementById("li");
+  let best = false;
+  let pulsebest = false;  
+  let li = document.getElementById("li");
+
+  if (caches) caches.forEach(cache => {
     if (!li) li = document.createElement("li");
     li.className = "PulseCache";
     li.style.cssText = `
@@ -342,12 +353,12 @@ async function pbRenderCacheList() {
     const density = cache.density ?? 0;
     const KBperEntry = (1024 / cache.density).toFixed(0);
   
-    if (!best) lastActiveEntries = cache.entries ?? 0;
+    if (!best) lastPulseActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
 
-      Entries: <font color="#0FF">${cache.entries}</font><br>
+      Realm Fragments: <font color="#0FF">${cache.entries}</font><br>
       Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
@@ -364,8 +375,10 @@ async function pbRenderCacheList() {
 
       li.style.cursor = "pointer";
       const u = new URL(entry);
-      li.onclick = () => {
+      li.onclick = async () => {
+        pbPreconnect([entry]);
         openNamedTab(u.hostname, entry);
+        await PBUniversalBoost.warmOrigin(entry);
       };
     }
 
@@ -373,7 +386,80 @@ async function pbRenderCacheList() {
     best = true;
   });
 
-  PB_LOG3.info("Cache list rendered", caches);
+  PB_LOG.info("Cache list rendered", caches);
+
+  if (pulsecaches) pulsecaches.forEach(cache => {
+    let li = document.getElementById("li");
+    if (!li) li = document.createElement("li");
+    li.className = "PulseCache";
+    li.style.cssText = `
+      margin: 14px 20px;
+      padding: 3px 6px;
+      max-width: clamp(245px, 12vw, 315px);
+      width: clamp(245px, 12vw, 315px);
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    `;
+
+    // ⭐ Cache size color logic
+    const sizeMB = parseFloat(cache.sizePulseMB || "0");
+    let sizeColor = "lightgreen";
+
+    if (sizeMB >= 150) sizeColor = "gold";     // warming
+    if (sizeMB >= 300) sizeColor = "orange";   // heavy
+    if (sizeMB >= 600) sizeColor = "red";      // critical
+
+    // ⭐ Safe fallback values
+    const weightClass = cache.weightPulseClass || "unknown";
+    const personality = cache.pulsepersonality || "Wanderer";
+    const pulseRank = cache.realpulseRank;
+    const density = cache.densitypulse ?? 0;
+    const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
+  
+    if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
+
+    li.innerHTML = `
+      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br><br>
+
+      Realm Fragments: <font color="#0FF">${cache.entries}</font><br>
+      Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
+
+      Weight: <font color="#0FF">${weightClass}</font><br>
+      Personality: <font color="#0FF">${personality}</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
+
+      PulseRank: <font color="gold">${pulseRank}</font><br>
+      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+    `;
+
+    if (cache.lastEntry) {
+      let entry = cache.lastEntry;
+
+      li.style.cursor = "pointer";
+      const u = new URL(entry);
+      li.onclick = async () => {
+        pbPreconnect([entry]);
+        openNamedTab(u.hostname, entry);
+        await PBUniversalBoost.warmOrigin(entry);
+      };
+    }
+
+    listEl.appendChild(li);
+    pulsebest = true;
+  });
+
+  PB_LOG.info("PulseCache list rendered", pulsecaches);
+  
+  let errorcolor = "lightgreen";
+  if (errorcount) errorcolor = "#FF8844";
+  if (!li) li = document.getElementById("li");
+
+  li.innerHTML = li.innerHTML + `<p>
+    Realm Misalignments: <font color="${errorcolor}">${errorcount || "0"}</font>
+    Error Fragments: <font color="${errorcolor}">${errorSizeMB || "0"}</font>
+  `;
 }
 
 async function pbRenderStorageStats2(history) {
@@ -460,9 +546,18 @@ async function pbRenderStorageStats2(history) {
     }
   });
 
-  console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-  console.log("PulseBrowser OS Session Start: " + nowST);
-  console.log("PulseBrowser OS Settings Start: " + lastnowST);
+  chrome.runtime.sendMessage({ type: "STORAGE_PASSOFF", totalUsed }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG.info("STORAGE_PASSOFF unavailable or error", response);
+      return;
+    }
+    PB_LOG.change("STORAGE_PASSOFF", totalUsed, response.totalUsed);
+    totalUsed = response.totalUsed;
+  });
+
+  PB_LOG.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+  PB_LOG.info("PulseBrowser OS Session Start: " + nowST);
+  PB_LOG.info("PulseBrowser OS Settings Start: " + lastnowST);
 
   if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
 

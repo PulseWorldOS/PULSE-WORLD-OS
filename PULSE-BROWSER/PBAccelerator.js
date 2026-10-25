@@ -192,6 +192,10 @@ function pbRealmWarm(origin) {
 function IsPartner(origin) {
   return origin.includes("fordfamilyretail")
       || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smokeshop")
+      || origin.includes("peacesmoke-shop")
+      || origin.includes("chromewebstore")
+      || origin.includes("fordfamilydistribution")
       || origin.includes("peace-smoke-shop")
       || origin.includes("fordfamilymanagement");
 }

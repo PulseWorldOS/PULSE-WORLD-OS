@@ -7,10 +7,11 @@ let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
 const CACHE_NAME = "PulseBrowser-Companion";
+const PULSE_FAUX_CACHE_NAME = "PulseWorld-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
-
+let totalUsed = 0;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
@@ -30,21 +31,6 @@ chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
 //   }
 // });
 
-chrome.storage.local.get(["globalStart"], (res) => {
-  if (!res.globalStart) {
-    GLOBALSTART = Date.now();
-    chrome.storage.local.set({ globalStart: GLOBALSTART });
-  } else {
-    if (isValid(res.globalStart)) {
-      GLOBALSTART = res.globalStart;
-      console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-      console.log("PulseBrowser OS Session Start: " + nowSW);
-      console.log("PulseBrowser OS NewTab Start: " + lastnowSW);
-    } else {
-      GLOBALSTART = Date.now();
-    }
-  }
-});
 
 const PB_LOG2 = {
   info(label, data) {
@@ -89,6 +75,22 @@ const PB_LOG2 = {
     );
   }
 };
+
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    chrome.storage.local.set({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      PB_LOG2.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+      PB_LOG2.info("PulseBrowser OS Session Start: " + nowST);
+      PB_LOG2.info("PulseBrowser OS Settings Start: " + lastnowST);
+    } else {
+      GLOBALSTART = Date.now();
+    }
+  }
+});
 
 function saveCache() {
   chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
@@ -582,6 +584,10 @@ const PB_HOMES = [
 function IsPartner(origin) {
   return origin.includes("fordfamilyretail")
       || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smokeshop")
+      || origin.includes("peacesmoke-shop")
+      || origin.includes("chromewebstore")
+      || origin.includes("fordfamilydistribution")
       || origin.includes("peace-smoke-shop")
       || origin.includes("fordfamilymanagement");
 }
@@ -708,6 +714,7 @@ const PB_GENERIC_ASSETS = [
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
+      || (origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") && origin.includes("chromewebstore"))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")
@@ -770,13 +777,12 @@ async function pbPrefetch(urls = []) {
   let warmedCount = 0;
 
   for (const url of urls) {
-    if (!url) continue;
     if (
       !url ||
       (url.startsWith("chrome://") && !url.includes("newtab")) ||
       url.startsWith("chrome-extension://")
     ) {
-      return;
+      continue;
     }
     // ⭐ Skip permanently failed URLs
     if (fails[url] >= 2 && !isPulseWorld(url)) {
@@ -823,7 +829,13 @@ async function pbPreload(origin) {
   let warmedCount = 0;
 
   for (const url of urls) {
-    if (!url) continue;
+    if (
+      !url ||
+      (url.startsWith("chrome://") && !url.includes("newtab")) ||
+      url.startsWith("chrome-extension://")
+    ) {
+      continue;
+    }
 
     // ⭐ Skip permanently failed URLs
     if (fails[url] >= 2 && !isPulseWorld(url)) {
@@ -1079,6 +1091,31 @@ function isValid(t) {
     t > 0
   );
 }
+function isErrorURL(url) {
+  if (url.match(/\/[^\/]+\.[a-z]+\/[^\/]+\.[a-z]+/i)) return true;
+  if (url.match(/\.[a-z]+\/\.[a-z]+$/i)) return true;
+  return false;
+}
+
+function isRealCacheURL(url) {
+  // ⭐ Reject PulseWorld OS query URLs
+  if (url.includes("?Impulse=")) return false;
+  // ⭐ Reject any URL containing double slashes like /app.css/app.css
+  if (url.match(/\/[^\/]+\.[a-z]+\/[^\/]+\.[a-z]+/i)) return false;
+  // ⭐ Reject URLs ending in a file then another file
+  if (url.match(/\.[a-z]+\/\.[a-z]+$/i)) return false;
+  // ⭐ Reject URLs with repeated file extensions
+  // if (url.match(/(\.[a-z]+){2,}/i)) return false;
+  // ⭐ Reject URLs with query strings (not real assets)
+  if (url.includes("?")) return false;
+  // // ⭐ Reject URLs that don’t have a valid extension OR a root document
+  // if (!url.match(/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i)) {
+  //   // Allow root documents like "/" or "/index"
+  //   if (!url.endsWith("/") && !url.endsWith("/index")) return false;
+  // }
+  return true;
+}
+
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
@@ -1264,18 +1301,27 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
         try {
           const cacheNames = await caches.keys();
-          const cacheDetails = [];
+          let cacheDetails = [];
+          let PulseCacheDetails = [];
+          let errorcount = 0;
+          let errorSizeMB = 0;
 
           for (const name of cacheNames) {
             try {
               const cache = await caches.open(name);
               const requests = await cache.keys();
-              const count = requests.length;
+              const realRequests = requests.filter(req => (isRealCacheURL(req.url) && !isPulseWorld(req.url)));
+              const PulseRequests = requests.filter(req => (isRealCacheURL(req.url) && isPulseWorld(req.url)));
+              const ErrorRequests = requests.filter(req => (isErrorURL(req.url)));
+              const count = realRequests.length;
+              const pulsecount = PulseRequests.length;
+              errorcount = ErrorRequests.length;
               const currentCache = CACHE_NAME;
+              const currentPulseCache = PULSE_FAUX_CACHE_NAME;
 
               // ⭐ Compute total cache size
               let totalBytes = 0;
-              for (const req of requests) {
+              for (const req of realRequests) {
                 try {
                   const res = await cache.match(req);
                   if (res) {
@@ -1287,12 +1333,47 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 }
               }
 
-              const sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
-              const density = count / (sizeMB || 1);
+              // ⭐ Compute total cache size
+              let totalPulseBytes = 0;
+              for (const req of PulseRequests) {
+                try {
+                  const res = await cache.match(req);
+                  if (res) {
+                    const buf = await res.arrayBuffer();
+                    totalPulseBytes += buf.byteLength;
+                  }
+                } catch (e) {
+                  console.warn("PulseRequests Cache size read failed:", e);
+                }
+              }
 
+              // ⭐ Compute total cache size
+              let totalErrorBytes = 0;
+              for (const req of ErrorRequests) {
+                try {
+                  const res = await cache.match(req);
+                  if (res) {
+                    const buf = await res.arrayBuffer();
+                    totalErrorBytes += buf.byteLength;
+                  }
+                } catch (e) {
+                  console.warn("ErrorRequests Cache size read failed:", e);
+                }
+              }
+
+              const sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
+              const sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
+              errorSizeMB = parseFloat((totalErrorBytes / (1024 * 1024)).toFixed(2));
+              const density = count / (sizeMB || 1);
+              const densitypulse = pulsecount / (sizePulseMB || 1);
               // ⭐ Diversity (unique hosts)
-              const diversity = new Set(requests.map(r => {
+              const diversity = new Set(realRequests.map(r => {
                 try { return new URL(r.url).hostname; }
+                catch { return "unknown"; }
+              })).size;
+
+              const pulsediversity = new Set(PulseRequests.map(r => {
+                try { return new URL(r.url); }
                 catch { return "unknown"; }
               })).size;
 
@@ -1303,12 +1384,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               if (count > 1000) weightClass = "Heavy";
               if (count > 2000) weightClass = "Massive";
 
+              // ⭐ Weight class (unchanged)
+              let weightPulseClass = "Very Small";
+              if (pulsecount > 100) weightPulseClass = "Light";
+              if (pulsecount > 500) weightPulseClass = "Medium";
+              if (pulsecount > 1000) weightPulseClass = "Heavy";
+              if (pulsecount > 2000) weightPulseClass = "Massive";
+
               // ⭐ Raw PulseScore
               const rawPulse =
                 (density * 2) +
                 (diversity * 3) +
                 (count / 50) -
                 (sizeMB / 10);
+
+              // ⭐ Raw PulseScore
+              const rawrealPulse =
+                (densitypulse * 2) +
+                (pulsediversity * 8) +
+                (pulsecount / 40) -
+                (sizePulseMB / 10);
 
               // ⭐ Final PulseScore (0–100)
               const pulseScore = Math.max(0, Math.min(100, Math.floor(rawPulse)));
@@ -1317,6 +1412,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               if (pulseScore >= 40) pulseTier = "Moderate Push";
               if (pulseScore >= 60) pulseTier = "High Speed";
               if (pulseScore >= 80) pulseTier = "Blazing Fast";
+
+              // ⭐ Final PulseScore (0–100)
+              const realpulseScore = Math.max(0, Math.min(100, Math.floor(rawrealPulse)));
+              let realpulseTier = "Quiet Load";
+              if (realpulseScore >= 20) realpulseTier = "Light Sway";
+              if (realpulseScore >= 40) realpulseTier = "Moderate Push";
+              if (realpulseScore >= 60) realpulseTier = "High Speed";
+              if (realpulseScore >= 80) realpulseTier = "Blazing Fast";
               
               // ⭐ Personality (style)
               let personality = "Silent Ghost";
@@ -1325,7 +1428,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               else if (density > 10) personality = "Balanced Traveler";
               else if (density > 5) personality = "Calm Wanderer";
 
+              // ⭐ Personality (style)
+              let pulsepersonality = "Astral Viewer";
+              if (densitypulse > 50) pulsepersonality = "Multiversal Traveler";
+              else if (densitypulse > 20) pulsepersonality = "Realm Lord";
+              else if (densitypulse > 10) pulsepersonality = "Time Traveler";
+              else if (densitypulse > 5) pulsepersonality = "Astral Projection";
+
               const pulseRank = `${pulseTier}`;
+              const realpulseRank = `${realpulseTier}`;
+
+              PulseCacheDetails.push({
+                name: PULSE_FAUX_CACHE_NAME,
+                entries: pulsecount,
+                sizeBytes: totalPulseBytes,
+                sizePulseMB,
+                weightPulseClass,
+                pulsepersonality,
+                densitypulse,
+                realpulseScore,
+                realpulseTier,
+                realpulseRank,
+                currentPulseCache,
+                firstEntry: PulseRequests[0]?.url || null,
+                lastEntry: PulseRequests[pulsecount - 1]?.url || null
+              });
 
               cacheDetails.push({
                 name,
@@ -1339,11 +1466,20 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 pulseTier,
                 pulseRank,
                 currentCache,
-                firstEntry: requests[0]?.url || null,
-                lastEntry: requests[count - 1]?.url || null
+                firstEntry: realRequests[0]?.url || null,
+                lastEntry: realRequests[count - 1]?.url || null
               });
 
             } catch (innerErr) {
+              PulseCacheDetails.push({
+                name: PULSE_FAUX_CACHE_NAME,
+                entries: null,
+                sizeBytes: 0,
+                sizeMB: "0.00",
+                weightClass: "unknown",
+                error: innerErr.toString()
+              });
+
               cacheDetails.push({
                 name,
                 entries: null,
@@ -1359,7 +1495,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             ok: true,
             ts,
             totalCaches: cacheNames.length,
-            caches: cacheDetails
+            errorcount,
+            errorSizeMB,
+            caches: cacheDetails,
+            pulsecaches: PulseCacheDetails
           };
 
           PB_LOG2.info("GET_CACHE_LIST", payload);
@@ -1386,8 +1525,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           const cache = await caches.open(CACHE_NAME);
           const requests = await cache.keys();
+          const realRequests = requests.filter(req => isRealCacheURL(req.url));
 
-          const req = requests.find(r => r.url === url);
+          const req = realRequests.find(r => r.url === url);
 
           if (!req) {
             sendResponse({ ok: false, error: "Artifact not found in cache" });
@@ -1539,6 +1679,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     // ACCELERATE → WARM-PATH EVENT (fallback)
     // -------------------------------------------------------
+    case "STORAGE_PASSOFF":
+      if (msg.totalUsed) {
+        totalUsed = msg.totalUsed;
+      }
+      sendResponse({ ok: true, totalUsed });
+      break;
+    // -------------------------------------------------------
+    // ACCELERATE → WARM-PATH EVENT (fallback)
+    // -------------------------------------------------------
     case "PBACC_ACCELERATE_EVENT":
       if (msg.url) {
         const origin = new URL(msg.url).origin;
@@ -1651,9 +1800,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (origin.includes("https://")) {
           origin = origin.replace("https://","");
         };
-        PBUniversalBoost2?.warmOrigin?.(origin);
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
+        PBUniversalBoost2?.warmOrigin?.(origin);
       } catch (_) {}
       sendResponse({ ok: true });
       break;
@@ -1925,6 +2074,18 @@ const PBUniversalBoost2 = {
     if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
       return;
     }
+
+    // ⭐ Skip warming any URL with a query string
+    if (origin.includes("?")) {
+      return;
+    }
+
+    // ⭐ Skip warming if the FULL URL already ends with a file extension
+    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(origin)) {
+      console.log("[PBUniversalBoost2] Skipped (direct file):", origin);
+      return;
+    }
+
 
     const paths = [
       "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"

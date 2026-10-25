@@ -18,10 +18,14 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
-let lastActiveEntries = null;
+let lastPulseActiveEntries = 0;
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
+// Internet Origin (ARPANET first packet)
+const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
+// Your PulseWorld Origin Consensus
+let CONSENSUS_ORIGIN = new Date(GLOBALSTART).toLocaleString();
 let totalUsed = 0;
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
@@ -42,30 +46,10 @@ chrome.storage.local.get(["SessionStart"], (res) => {
   }
 });
 
-chrome.storage.local.get(["globalStart"], (res) => {
-  if (!res.globalStart) {
-    GLOBALSTART = Date.now();
-    const ItsTime = new Date(GLOBALSTART).toLocaleString();
-    startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
-    chrome.storage.local.set({ globalStart: GLOBALSTART });
-  } else {
-    if (isValid(res.globalStart)) {
-      GLOBALSTART = res.globalStart;
-      const ItsTime = new Date(GLOBALSTART).toLocaleString();
-      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
-      console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-    } else {
-      GLOBALSTART = Date.now();
-      const ItsTime = new Date(GLOBALSTART).toLocaleString();
-      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
-    }
-  }
-});
-
 const PB_LOG3 = {
   info(label, data) {
     console.log(
-      `%c[PBSettings][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#55BBFF; font-weight:bold;",
       data || ""
     );
@@ -73,7 +57,7 @@ const PB_LOG3 = {
 
   change(label, before, after) {
     console.groupCollapsed(
-      `%c[PBSettings][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00FFAA; font-weight:bold;"
     );
     console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
@@ -83,7 +67,7 @@ const PB_LOG3 = {
 
   save(label, data) {
     console.log(
-      `%c[PBSettings][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00DDFF; font-weight:bold;",
       data
     );
@@ -91,7 +75,7 @@ const PB_LOG3 = {
 
   load(label, data) {
     console.log(
-      `%c[PBSettings][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FFD700; font-weight:bold;",
       data
     );
@@ -99,12 +83,37 @@ const PB_LOG3 = {
 
   event(label, data) {
     console.log(
-      `%c[PBSettings][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FF55AA; font-weight:bold;",
       data
     );
   }
 };
+
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    const ItsTime = new Date(GLOBALSTART).toLocaleString();
+    CONSENSUS_ORIGIN = ItsTime;
+    startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
+    chrome.storage.local.set({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      const ItsTime = new Date(GLOBALSTART).toLocaleString();
+      CONSENSUS_ORIGIN = ItsTime;
+      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
+      PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+      PB_LOG3.info("PulseBrowser OS Session Start: " + nowFP);
+      PB_LOG3.info("PulseBrowser OS Settings Start: " + lastnowFP);
+    } else {
+      GLOBALSTART = Date.now();
+      const ItsTime = new Date(GLOBALSTART).toLocaleString();
+      CONSENSUS_ORIGIN = ItsTime;
+      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
+    }
+  }
+});
 
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
@@ -138,6 +147,7 @@ async function pbRequestCacheList2() {
       }
       
       PB_LOG3.load("Cache list received", response.caches);
+      PB_LOG3.load("PulseCache list received", response.pulsecaches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
@@ -150,15 +160,24 @@ async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
   // ⭐ Fetch cache list
-  const result = await pbRequestCacheList2();
+  const result = await pbRequestCacheList2();  
   
-  if (!result || !result.caches) {
+  if (!result || (!result.caches && !result.pulsecaches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
-  
+
+  if (caches.length === 0 && pulsecaches.length === 0) {
+    listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
+    return;
+  }
+    
   const caches = result.caches;
-  if (lastActiveEntries && lastActiveEntries === caches.entries) return;
+  const pulsecaches = result.pulsecaches;
+  const errorcount = result.errorcount;
+  const errorSizeMB = result.errorSizeMB;
+
+  if (lastPulseActiveEntries && lastPulseActiveEntries === (caches.entries + pulsecaches.entries)) return;
 
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
@@ -184,22 +203,26 @@ async function pbRenderCacheList2() {
   predictionText = predictionText + ".";
   if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
   statsHTMLShell = statsHTML;
-  if (caches.length === 0) {
-    listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
-    return;
-  }
 
   // ⭐ Sort: current cache first, then by entry count
-  caches.sort((a, b) => {
+  if (caches) caches.sort((a, b) => {
     if (a.name === a.currentCache) return -1;
     if (b.name === a.currentCache) return 1;
     return (b.entries || 0) - (a.entries || 0);
   });
 
-  let best = false;
+  // ⭐ Sort: current cache first, then by entry count
+  if (pulsecaches) pulsecaches.sort((a, b) => {
+    if (a.name === a.currentPulseCache) return -1;
+    if (b.name === a.currentPulseCache) return 1;
+    return (b.entries || 0) - (a.entries || 0);
+  });
 
-  caches.forEach(cache => {
-    let li = document.getElementById("li");
+  let best = false;
+  let pulsebest = false;
+  let li = document.getElementById("li");
+
+  if (caches) caches.forEach(cache => {
     if (!li) li = document.createElement("li");
     li.className = "PulseCache";
     li.style.cssText = `
@@ -227,16 +250,16 @@ async function pbRenderCacheList2() {
     const density = cache.density ?? 0;
     const KBperEntry = (1024 / cache.density).toFixed(0);
   
-    lastActiveEntries = cache.entries ?? 0;
+    if (!best) lastPulseActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
 
-      Entries: <font color="#0FF">${cache.entries}</font><br>
+      Realm Fragments: <font color="#0FF">${cache.entries}</font><br>
       Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
-      Personality: <font color="gold">${personality}</font><br>
+      Personality: <font color="#0FF">${personality}</font><br>
       Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
@@ -249,17 +272,91 @@ async function pbRenderCacheList2() {
 
       li.style.cursor = "pointer";
       const u = new URL(entry);
-      li.onclick = () => {
+      li.onclick = async () => {
+        pbPreconnect([entry]);
         openNamedTab(u.hostname, entry);
+        await PBUniversalBoost.warmOrigin(entry);
       };
     }
-
 
     listEl.appendChild(li);
     best = true;
   });
 
   PB_LOG3.info("Cache list rendered", caches);
+
+  if (pulsecaches) pulsecaches.forEach(cache => {
+    let li = document.getElementById("li");
+    if (!li) li = document.createElement("li");
+    li.className = "PulseCache";
+    li.style.cssText = `
+      margin: 14px 20px;
+      padding: 3px 6px;
+      max-width: clamp(245px, 12vw, 315px);
+      width: clamp(245px, 12vw, 315px);
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    `;
+
+    // ⭐ Cache size color logic
+    const sizeMB = parseFloat(cache.sizePulseMB || "0");
+    let sizeColor = "lightgreen";
+
+    if (sizeMB >= 150) sizeColor = "gold";     // warming
+    if (sizeMB >= 300) sizeColor = "orange";   // heavy
+    if (sizeMB >= 600) sizeColor = "red";      // critical
+
+    // ⭐ Safe fallback values
+    const weightClass = cache.weightPulseClass || "unknown";
+    const personality = cache.pulsepersonality || "Wanderer";
+    const pulseRank = cache.realpulseRank;
+    const density = cache.densitypulse ?? 0;
+    const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
+  
+    if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
+
+    li.innerHTML = `
+      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br><br>
+
+      Realm Fragments: <font color="#0FF">${cache.entries}</font><br>
+      Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
+
+      Weight: <font color="#0FF">${weightClass}</font><br>
+      Personality: <font color="#0FF">${personality}</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
+
+      PulseRank: <font color="gold">${pulseRank}</font><br>
+      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+    `;
+
+    if (cache.lastEntry) {
+      let entry = cache.lastEntry;
+
+      li.style.cursor = "pointer";
+      const u = new URL(entry);
+      li.onclick = async () => {
+        pbPreconnect([entry]);
+        openNamedTab(u.hostname, entry);
+        await PBUniversalBoost.warmOrigin(entry);
+      };
+    }
+
+    listEl.appendChild(li);
+    pulsebest = true;
+  });
+
+  PB_LOG3.info("PulseCache list rendered", pulsecaches);
+
+  let errorcolor = "lightgreen";
+  if (errorcount) errorcolor = "#FF8844";
+  if (!li) li = document.getElementById("li");
+
+  li.innerHTML = li.innerHTML + `<p>
+    Realm Misalignments: <font color="${errorcolor}">${errorcount || "0"}</font>
+    Error Fragments: <font color="${errorcolor}">${errorSizeMB || "0"}</font>
+  `;
 }
 // function writeBigBlob() {
 //   return new Promise((resolve, reject) => {
@@ -383,9 +480,18 @@ async function pbRenderStorageStats(history) {
     }
   });
 
-  console.log("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-  console.log("PulseBrowser OS Session Start: " + nowFP);  
-  console.log("PulseBrowser OS NewTab Start: " + lastnowFP);
+  chrome.runtime.sendMessage({ type: "STORAGE_PASSOFF", totalUsed }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG3.info("STORAGE_PASSOFF unavailable or error", response);
+      return;
+    }
+    PB_LOG3.change("STORAGE_PASSOFF", totalUsed, response.totalUsed);
+    totalUsed = response.totalUsed;
+  });
+
+  PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+  PB_LOG3.info("PulseBrowser OS Session Start: " + nowFP);
+  PB_LOG3.info("PulseBrowser OS Settings Start: " + lastnowFP);
 
   if (!predictionText.includes("Running")) percentColor2 = "#FF8844";
   if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
@@ -657,6 +763,7 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
+  setInterval(flickerOrigins, 500); // every 1.5s
   console.log("💓 GPU Heartbeat: device is alive");
 }, 5000);
 
@@ -939,9 +1046,10 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
 
   if (div) {
     // ⭐ Replace any existing listener instead of stacking new ones
-    div.onclick = () => {
+    div.onclick = async () => {
       pbPreconnect([link]);
       openNamedTab(realm, link);
+      await PBUniversalBoost.warmOrigin(link);
     };
   }
 }
@@ -986,6 +1094,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
+      || (origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") && origin.includes("chromewebstore"))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")
@@ -998,6 +1107,10 @@ function isPulseWorld(origin) {
 function IsPartner(origin) {
   return origin.includes("fordfamilyretail")
       || origin.includes("peacesmokeshop")
+      || origin.includes("peace-smokeshop")
+      || origin.includes("peacesmoke-shop")
+      || origin.includes("chromewebstore")
+      || origin.includes("fordfamilydistribution")
       || origin.includes("peace-smoke-shop")
       || origin.includes("fordfamilymanagement");
 }
@@ -1033,6 +1146,17 @@ const PBUniversalBoost = {
 
     // ⭐ Only warm http/https origins
     if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
+      return;
+    }
+
+    // ⭐ Skip warming any URL with a query string
+    if (origin.includes("?")) {
+      return;
+    }
+
+    // ⭐ Skip warming if the FULL URL already ends with a file extension
+    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(origin)) {
+      console.log("[PBUniversalBoost] Skipped (direct file):", origin);
       return;
     }
 
@@ -1832,6 +1956,7 @@ async function pulseTeleportKey(event) {
     fetch(link, { mode: "no-cors" }).catch(() => {});
   } catch (_) {}
 
+  pbPreconnect([link]);
   openNamedTab("PulseWorldModule", link);
   await PBUniversalBoost.warmOrigin(link);
 }
@@ -1963,7 +2088,7 @@ document.getElementById("searchus").addEventListener("click", (event) => {
   window.location.href = engineURL + encodeURIComponent("pulseworld.net");
 });
 
-document.getElementById("navigate").addEventListener("click", () => {
+document.getElementById("navigate").addEventListener("click", async () => {
   let text = document.getElementById("searchengineTextbox").textContent.trim();
 
   // If ANY space exists → not navigation
@@ -1995,7 +2120,9 @@ document.getElementById("navigate").addEventListener("click", () => {
       fetch(origin, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
 
+    pbPreconnect([origin]);
     openNamedTab("PulseSearchLink", origin);
+    await PBUniversalBoost.warmOrigin(origin);
     // ⭐ PURE DOMAIN → Navigate directly
     // window.location.href = origin;
   }
@@ -2030,7 +2157,7 @@ document.getElementById("text").addEventListener("click", (event) => {
   engineType = "text";
 });
 
-document.getElementById("search").addEventListener("click", (event) => {
+document.getElementById("search").addEventListener("click", async (event) => {
   let text = document.getElementById("searchengineTextbox").textContent.trim();
 
   // Remove spaces just in case (e.g., "gmail . com")
@@ -2061,7 +2188,9 @@ document.getElementById("search").addEventListener("click", (event) => {
     } catch (_) {}
 
     // ⭐ PURE DOMAIN → Navigate directly
+    pbPreconnect([origin]);
     openNamedTab("PulseSearchLink", origin);
+    await PBUniversalBoost.warmOrigin(origin);
     // window.location.href = origin;
     return;
   }
@@ -2078,7 +2207,9 @@ document.getElementById("search").addEventListener("click", (event) => {
   }
 
   if (url) {
+    pbPreconnect([url]);
     openNamedTab("PulseSearchLink", url);
+    await PBUniversalBoost.warmOrigin(url);
   }
   // window.location.href = url;
 });
@@ -2129,7 +2260,7 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
 });
 
 
-document.getElementById("searchengineTextbox").addEventListener("keydown", (event) => {
+document.getElementById("searchengineTextbox").addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
 
@@ -2159,8 +2290,10 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
         fetch(origin, { mode: "no-cors" }).catch(() => {});
       } catch (_) {}
 
+      pbPreconnect([origin]);
       // ⭐ PURE DOMAIN → Navigate directly
       openNamedTab("PulseSearchLink", origin);
+      await PBUniversalBoost.warmOrigin(origin);
       // window.location.href = origin;
       return;
     }
@@ -2175,7 +2308,9 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", (even
     }
 
     if (url) {
+      pbPreconnect([url]);
       openNamedTab("PulseSearchLink", url);
+      await PBUniversalBoost.warmOrigin(url);
     }
     // window.location.href = url;
   }
@@ -2225,6 +2360,7 @@ aboutBtn.addEventListener("click", async () => {
     fetch(link, { mode: "no-cors" }).catch(() => {});
   } catch (_) {}
 
+  pbPreconnect([link]);
   openNamedTab("PulseBrowserOS", link);
   await PBUniversalBoost.warmOrigin(link);
 });
@@ -2265,6 +2401,8 @@ engageBtn.addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseBusiness", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2306,6 +2444,8 @@ enterBtn.addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseWorld", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2347,6 +2487,8 @@ setupBtn.addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseIdentity", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2370,6 +2512,8 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+
+        pbPreconnect([internalURL]);
         openNamedTab("PulseMail", internalURL);
         await PBUniversalBoost.warmOrigin(internalURL);
         // chrome.tabs.create({ url: internalURL });
@@ -2388,6 +2532,8 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseMail", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2412,6 +2558,8 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+
+        pbPreconnect([internalURL]);
         openNamedTab("PulseBank", internalURL);
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
@@ -2429,6 +2577,8 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseBank", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2453,6 +2603,8 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+
+        pbPreconnect([internalURL]);
         openNamedTab("PulseSocial", internalURL);
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
@@ -2470,6 +2622,8 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseSocial", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2493,6 +2647,8 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+
+        pbPreconnect([internalURL]);
         openNamedTab("PulseWork", internalURL);
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
@@ -2510,6 +2666,8 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseWork", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2533,6 +2691,8 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+
+        pbPreconnect([internalURL]);
         openNamedTab("PulseStream", internalURL);
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
@@ -2550,6 +2710,8 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseStream", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2573,6 +2735,8 @@ document.getElementById("moduleShopping").addEventListener("click", async () => 
         try {
           fetch(internalURL, { mode: "no-cors" }).catch(() => {});
         } catch (_) {}
+
+        pbPreconnect([internalURL]);
         openNamedTab("PulseShopping", internalURL);
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
@@ -2590,6 +2754,8 @@ document.getElementById("moduleShopping").addEventListener("click", async () => 
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+    
+    pbPreconnect([link]);
     openNamedTab("PulseStream", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2614,6 +2780,8 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseModule1", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2638,6 +2806,8 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseModule2", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2662,6 +2832,8 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseModule3", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2686,6 +2858,8 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseModule4", link); 
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2710,6 +2884,8 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseModule5", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2733,6 +2909,8 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
+
+    pbPreconnect([link]);
     openNamedTab("PulseModule6", link);
     await PBUniversalBoost.warmOrigin(link);
 });
@@ -2882,6 +3060,40 @@ setInterval(() => {
   function stopPulseLoop() {
     clearInterval(intervalId);
     intervalId = null;
+  }
+
+  // Flicker engine
+  function flickerOrigins() {
+    // 1 in 50 chance to flicker (tunable)
+    const chance = Math.random();
+
+    if (chance < 0.22) {
+      startBtn.style.cursor = "pointer";
+      // Flicker to Internet Origin
+      startBtn.innerHTML =
+        `<span class="origin-link">
+          <font color="#FF0">Internet Origin:</font> ${INTERNET_ORIGIN}
+        </span>`;
+
+      startBtn.onclick = async () => {
+        pbPreconnect(["https://www.pulseworld.net/?Impulse=PulseWorldFounders"]);
+        openNamedTab("PulseFounders", "https://www.pulseworld.net/?Impulse=PulseWorldFounders");
+        await PBUniversalBoost.warmOrigin("https://www.pulseworld.net/?Impulse=PulseWorldFounders");
+      }      
+
+      // Flicker back after 120–240ms
+      setTimeout(() => {
+        startBtn.style.cursor = "default";
+        startBtn.innerHTML =
+          `<font color="#0FF">Origin Consensus:</font> ${CONSENSUS_ORIGIN}`;
+      }, 920 + Math.random() * 920);
+
+    } else {
+      startBtn.style.cursor = "default";
+      // Normal state: Consensus
+      startBtn.innerHTML =
+        `<font color="#0FF">Origin Consensus:</font> ${CONSENSUS_ORIGIN}`;
+    }
   }
       
   const ENTERPRISE_DOMAINS = [
