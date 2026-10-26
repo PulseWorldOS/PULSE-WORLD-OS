@@ -910,13 +910,19 @@ function pbHomeRealmWarm(origin) {
 }
 
 function pbRealmWarm(origin) {
+  // Normalize origin: remove trailing slash if present
+  const base = origin.endsWith("/") ? origin.slice(0, -1) : origin;
+
   const urls = [
-    origin + "/index.html",
-    origin + "/404.html",
-    origin + "/"
+    base + "/index.html",
+    base + "/404.html",
+    base + "/"
   ];
+
   pbPrefetch(urls);
+  console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
+
 
 
 async function pbWarmPaths(origins) {
@@ -976,7 +982,10 @@ async function pbWarmPath(origin) {
 // ---------------------------------------------------------------------------
 async function pbAccelerate(url) {
   const domainClass = pbDomainClass(url);
-  const origin = new URL(url).origin;
+
+  // Normalize origin: remove trailing slash if present
+  const rawOrigin = new URL(url).origin;
+  const origin = rawOrigin.endsWith("/") ? rawOrigin.slice(0, -1) : rawOrigin;
 
   console.log("%c[PBAccelerator] Accelerate:", "color:#00C8FF;", url, "class:", domainClass);
 
@@ -984,9 +993,16 @@ async function pbAccelerate(url) {
     await pbWarmPath(origin);
   } else {
     if (!PulseBrowserSettings) PulseBrowserSettings = await getSettings();
+
     // WWW acceleration: preconnect + basic prefetch
     if (PulseBrowserSettings.accelPreconnect) pbPreconnect([origin]);
-    if (PulseBrowserSettings.accelPrefetch)   pbPrefetch([origin + "/", origin + "/about"]);
+
+    if (PulseBrowserSettings.accelPrefetch) {
+      pbPrefetch([
+        origin + "/",        // always safe now
+        origin + "/about"    // always safe now
+      ]);
+    }
   }
 }
 
@@ -1131,6 +1147,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       pbLoadExtensionSettings().then((settings) => {
         sendResponse({ ok: true, settings });
       });
+      return true;
+    
+    case "PBCONTENT_REALM_CLAIM":
+      if (msg.realm) {
+        const realm = msg.realm;
+        pbPrefetch([msg.realm]);
+        sendResponse({ ok: true, realm });
+      }
       return true;
 
     case "PBSETTINGS_GET":
@@ -2091,6 +2115,9 @@ const PBUniversalBoost2 = {
   async warmOrigin(origin) {
     if (!origin) return;
 
+    // ⭐ Normalize origin: remove trailing slash if present
+    const base = origin.endsWith("/") ? origin.slice(0, -1) : origin;
+
     // ⭐ Load permanent per-URL fail-cache
     const store = await chrome.storage.local.get(["pb_fail_cache"]);
     const fails = store.pb_fail_cache || {};
@@ -2109,25 +2136,24 @@ const PBUniversalBoost2 = {
     ];
 
     for (const prefix of forbidden) {
-      if (origin.startsWith(prefix)) return;
+      if (base.startsWith(prefix)) return;
     }
 
     // ⭐ Only warm http/https origins
-    if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
+    if (!base.startsWith("http://") && !base.startsWith("https://")) {
       return;
     }
 
     // ⭐ Skip warming any URL with a query string
-    if (origin.includes("?")) {
+    if (base.includes("?")) {
       return;
     }
 
     // ⭐ Skip warming if the FULL URL already ends with a file extension
-    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(origin)) {
-      console.log("[PBUniversalBoost2] Skipped (direct file):", origin);
+    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(base)) {
+      console.log("[PBUniversalBoost2] Skipped (direct file):", base);
       return;
     }
-
 
     const paths = [
       "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"
@@ -2138,9 +2164,10 @@ const PBUniversalBoost2 = {
 
     let warmedCount = 0;
 
+    // ⭐ Build slash-clean URLs
     const urls = []
-      .concat(paths.map((p) => origin + p))
-      .concat(assets.map((p) => origin + p));
+      .concat(paths.map((p) => base + p))
+      .concat(assets.map((p) => base + p));
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
@@ -2165,23 +2192,25 @@ const PBUniversalBoost2 = {
       } catch (_) {}
 
       // ⭐ Add delay between warm-fetches
-      await sleep(200);   // ← 150–200ms recommended
+      await sleep(200);
     }
 
     // ⭐ Save updated fail-cache
     await chrome.storage.local.set({ pb_fail_cache: fails });
 
-    console.log("[PBUniversalBoost2] Warmed publish directory for", origin);
+    console.log("[PBUniversalBoost2] Warmed publish directory for", base);
   },
 
   async warmTab(tab) {
     if (!tab || !tab.url) return;
     try {
-      const origin = new URL(tab.url).origin;
+      const rawOrigin = new URL(tab.url).origin;
+      const origin = rawOrigin.endsWith("/") ? rawOrigin.slice(0, -1) : rawOrigin;
       await PBUniversalBoost2.warmOrigin(origin);
     } catch (_) {}
   }
 };
+
 
 
 // Example kernel hook (inside PBCompanion.js tab update):

@@ -1551,7 +1551,7 @@ async function PulseBrowserDomScan() {
 
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
-
+  
   // Strip heavy elements
   ["script", "iframe", "audio", "source", "object", "embed", "img"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
@@ -1635,6 +1635,8 @@ async function PulseBrowserDomScan() {
   if (!favicon) {
     favicon = `${location.origin}/favicon.ico`;
   }
+
+  chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm: location.hostname });
 
   const icon = await fetchAndStoreIcon(location.origin, favicon);
 

@@ -177,14 +177,19 @@ function pbHomeRealmWarm(origin) {
 }
 
 function pbRealmWarm(origin) {
+  // Normalize origin: remove trailing slash if present
+  const base = origin.endsWith("/") ? origin.slice(0, -1) : origin;
+
   const urls = [
-    origin + "/index.html",
-    origin + "/404.html",
-    origin + "/"
+    base + "/index.html",
+    base + "/404.html",
+    base + "/"
   ];
+
   pbPrefetch(urls);
   console.log("%c[PBAccelerator] Realm Warm:", "color:#00C8FF;", origin);
 }
+
 
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER

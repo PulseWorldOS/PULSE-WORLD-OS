@@ -1142,6 +1142,9 @@ const PBUniversalBoost = {
   async warmOrigin(origin) {
     if (!origin) return;
 
+    // ⭐ Normalize origin: remove trailing slash if present
+    const base = origin.endsWith("/") ? origin.slice(0, -1) : origin;
+
     // ⭐ Load permanent per-URL fail-cache
     const store = await chrome.storage.local.get(["pb_fail_cache"]);
     const fails = store.pb_fail_cache || {};
@@ -1160,22 +1163,22 @@ const PBUniversalBoost = {
     ];
 
     for (const prefix of forbidden) {
-      if (origin.startsWith(prefix)) return;
+      if (base.startsWith(prefix)) return;
     }
 
     // ⭐ Only warm http/https origins
-    if (!origin.startsWith("http://") && !origin.startsWith("https://")) {
+    if (!base.startsWith("http://") && !base.startsWith("https://")) {
       return;
     }
 
     // ⭐ Skip warming any URL with a query string
-    if (origin.includes("?")) {
+    if (base.includes("?")) {
       return;
     }
 
     // ⭐ Skip warming if the FULL URL already ends with a file extension
-    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(origin)) {
-      console.log("[PBUniversalBoost] Skipped (direct file):", origin);
+    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(base)) {
+      console.log("[PBUniversalBoost] Skipped (direct file):", base);
       return;
     }
 
@@ -1187,8 +1190,8 @@ const PBUniversalBoost = {
     ];
 
     const urls = []
-      .concat(paths.map((p) => origin + p))
-      .concat(assets.map((p) => origin + p));
+      .concat(paths.map((p) => base + p))
+      .concat(assets.map((p) => base + p));
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
@@ -1225,8 +1228,9 @@ const PBUniversalBoost = {
   async warmTab(tab) {
     if (!tab || !tab.url) return;
     try {
-      const origin = new URL(tab.url).origin;
-      await PBUniversalBoost.warmOrigin(origin);
+      const rawOrigin = new URL(tab.url).origin;
+      const origin = rawOrigin.endsWith("/") ? rawOrigin.slice(0, -1) : rawOrigin;
+      await PBUniversalBoost2.warmOrigin(origin);
     } catch (_) {}
   }
 };
