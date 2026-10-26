@@ -18,9 +18,9 @@ let totalUsed = 0;
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
-  if (res.PulseBrowserFaviconCaches1) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches1;
+chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
+  if (res.PulseBrowserFaviconMultiverse) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
@@ -94,7 +94,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -380,9 +380,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    if (!response.ok) throw new Error("Fetch failed");
 
-    let blob = await response.blob();
+    // ⭐ HARD STOP: do NOT blob invalid responses
+    if (!response.ok) {
+      console.warn("Invalid favicon response:", iconUrl, response.status);
+      return iconUrl; // ← triggers your fallback system
+    }
+
+    const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
@@ -1152,10 +1157,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_REALM_CLAIM":
       if (msg.realm) {
         const realm = msg.realm;
-        pbPrefetch([msg.realm]);
+        pbPrefetch([realm]);
+        PB_LOG2.save("PBCONTENT_REALM_CLAIM", realm);
         sendResponse({ ok: true, realm });
       }
-      return true;
+      break;
 
     case "PBSETTINGS_GET":
       pbLoadSettings().then((settings) => {
@@ -1191,15 +1197,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // -------------------------------------------------------
     case "PBNAV_EVENT":
       if (msg.url) {
-        pbAccelerate(msg.url);
-        PulseRealmState.lastURL = msg.url;
+        const realm = msg.url;
+        pbPrefetch([realm]);
+        pbAccelerate(realm);
+        PulseRealmState.lastURL = realm;
         PulseRealmState.lastDomainClass = msg.domainClass;
         PulseRealmState.warmPathsTriggered += 1;
-        let origin = new URL(msg.url).origin
+        let origin = new URL(realm).origin
         PulseRealmState.lastWarmOrigin = origin;
-        PulseRealmState.navHistory.push(msg.url);
+        PulseRealmState.navHistory.push(realm);
         PulseRealmState.navEvents.push(msg);
-        PB_LOG2.event("PBNAV_EVENT", msg.url);
+        PB_LOG2.event("PBNAV_EVENT", realm);
       }
       sendResponse({ ok: true });
       break;

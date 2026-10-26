@@ -14,9 +14,9 @@ console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected"
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
-  if (res.PulseBrowserFaviconCaches1) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches1;
+chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
+  if (res.PulseBrowserFaviconMultiverse) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
@@ -497,7 +497,7 @@ async function injectHUD() {
   setInterval(gpuWarmExtra, sync);
   setTimeout(() => {
     PulseBrowserDomScan();
-  }, 2000);
+  }, 3500);
   setTimeout(() => {
     DomScanPreview();
   }, 4000);
@@ -1487,9 +1487,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    if (!response.ok) throw new Error("Fetch failed");
 
-    let blob = await response.blob();
+    // ⭐ HARD STOP: do NOT blob invalid responses
+    if (!response.ok) {
+      console.warn("Invalid favicon response:", iconUrl, response.status);
+      return iconUrl; // ← triggers your fallback system
+    }
+
+    const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
@@ -1548,6 +1553,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
 
 async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
+  const origin = location.hostname;
 
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
@@ -1636,8 +1642,6 @@ async function PulseBrowserDomScan() {
     favicon = `${location.origin}/favicon.ico`;
   }
 
-  chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm: location.hostname });
-
   const icon = await fetchAndStoreIcon(location.origin, favicon);
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
@@ -1661,11 +1665,21 @@ async function PulseBrowserDomScan() {
   };
 
   console.log("Ghost Echo Initiated (Safe Mode): ", snapshot);
+  
+  if (
+    !origin ||
+    (origin.startsWith("chrome://") && !origin.includes("newtab")) ||
+    origin.startsWith("chrome-extension://")
+  ) {
+    return;
+  }
 
   chrome.storage.local.set({ [snapshotKey]: snapshot });
+
+  chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm: location.href });
 }
 
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }

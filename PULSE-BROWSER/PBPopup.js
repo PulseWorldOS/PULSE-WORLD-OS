@@ -36,15 +36,15 @@ chrome.storage.local.get(["SessionStart"], (res) => {
 
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
-  if (res.PulseBrowserFaviconCaches1) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches1;
+chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
+  if (res.PulseBrowserFaviconMultiverse) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
+  chrome.storage.local.set({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }
 
 document.addEventListener("keydown", (e) => {
@@ -947,9 +947,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    if (!response.ok) throw new Error("Fetch failed");
 
-    let blob = await response.blob();
+    // ⭐ HARD STOP: do NOT blob invalid responses
+    if (!response.ok) {
+      console.warn("Invalid favicon response:", iconUrl, response.status);
+      return iconUrl; // ← triggers your fallback system
+    }
+
+    const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {

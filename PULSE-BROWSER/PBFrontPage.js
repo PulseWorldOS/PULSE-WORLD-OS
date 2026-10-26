@@ -933,7 +933,6 @@ async function openNamedTab(name, url) {
   const existingEntry = pulseTabs[identity];
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
-  
   // ⭐ If tab already exists → PURE SELECT
   if (existingEntry) {
     const tabId = Number(existingEntry.id);
@@ -1022,40 +1021,47 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
 
-  // Build the correct bubble ID and class
   if (snapshot) {
     if (!div) {
       div = document.createElement("div");
       div.id = bubbleId;
       div.className = bubbleId;
-      // ---------------------------------------------
-      // ⭐ Inject ONLY the favicon (big, centered)
-      // ---------------------------------------------
+
+      // ⭐ Triple-fallback favicon system
+      const favicon = snapshot.favicon || "";
+      const regfavicon = snapshot.regfavicon || "";
+      const osfallback = "PulseOsTabs.png"; // ← your OS bubble icon
+
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
-              src="${snapshot.favicon}"
-              alt="favicon"
-              onerror="this.src='${snapshot.regfavicon}'"
+               src="${favicon}"
+               alt="favicon"
+               onerror="
+                 this.onerror=null;
+                 this.src='${regfavicon}';
+                 this.onerror=function(){ this.src='${osfallback}'; };
+               "
+          >
         </div>
       `;
-      document.body.appendChild(div);
+
+      topPanel.appendChild(div);
     }
 
-    // Chamber awakens
-    toppanel.style.backdropFilter = "blur(8px)";
-    toppanel.style.backgroundImage = "none";
+    topPanel.style.backdropFilter = "blur(8px)";
+    topPanel.style.backgroundImage = "none";
 
   } else {
     topPanel.classList.add('electrify');
     pulseRehydrateTabs();
-    // Now check if any bubbles remain
-    const remaining = document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+
+    const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+
     if (remaining === 0) {
-      toppanel.style.backdropFilter = "blur(24px)";
-      toppanel.style.backgroundImage = "url(PulseOSTabs.png)";
+      topPanel.style.backdropFilter = "blur(24px)";
+      topPanel.style.backgroundImage = "url(PulseOSTabs.png)";
     } else {
-      // ⭐ There are still bubbles
       console.log(`There are ${remaining} bubbles left.`);
     }
 
@@ -1065,13 +1071,13 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
   }
 
   if (div) {
-    // ⭐ Replace any existing listener instead of stacking new ones
     div.onclick = async () => {
       pbPreconnect([link]);
       openNamedTab(realm, link);
     };
   }
 }
+
 
 // Re-render after everything
 setInterval(async () => {
@@ -1298,9 +1304,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    if (!response.ok) throw new Error("Fetch failed");
 
-    let blob = await response.blob();
+    // ⭐ HARD STOP: do NOT blob invalid responses
+    if (!response.ok) {
+      console.warn("Invalid favicon response:", iconUrl, response.status);
+      return iconUrl; // ← triggers your fallback system
+    }
+
+    const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
@@ -2129,7 +2140,6 @@ document.getElementById("navigate").addEventListener("click", async () => {
     if (!temporaryLinks.includes(origin)) {
       temporaryLinks.push(origin);
     }
-
 
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
