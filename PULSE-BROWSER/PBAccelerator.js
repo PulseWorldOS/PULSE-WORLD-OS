@@ -309,8 +309,6 @@ async function pbLoadExtensionSettings() {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
-    console.log("pbLoadExtensionSettings()", settings);
-
     return settings;
   } catch (err) {
     console.error("pbLoadExtensionSettings() FAILED", err);

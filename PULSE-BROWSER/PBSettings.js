@@ -128,8 +128,6 @@ async function pbLoadExtensionSettings() {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
     const settings = result[EXTENSION_SETTINGS_KEY2] || {};
 
-    PB_LOG.load("pbLoadExtensionSettings()", settings);
-
     return settings;
   } catch (err) {
     PB_LOG.error("pbLoadExtensionSettings() FAILED", err);
@@ -268,20 +266,17 @@ async function pbRenderCacheList() {
       PulseBrowser OS - User Memory
     </div>
   `;
-
-  // // ⭐ Title
-  // listEl.insertAdjacentHTML("beforeend", `
-  //   <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-  //     PulseBrowser OS - User Memory
-  //   </div>
-  // `);
+    
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
+  const fails = store.pb_fail_cache || {};
+  const failCount = Object.keys(fails).length;
 
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
   const history = await new Promise(resolve =>
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
-  console.log(history);
+  
   predictionText = predictionText + ".";
   const statsHTML = await pbRenderStorageStats2(history);
   
@@ -299,7 +294,7 @@ async function pbRenderCacheList() {
   const pulsecaches = result.pulsecaches;  
   const errorcount = result.errorcount;
   const totalcount = result.totalcount;
-  const errorSizeMB = parseFloat(result.errorSizeMB, "0");
+  // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
 
   if (caches.length === 0 && pulsecaches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
@@ -356,7 +351,7 @@ async function pbRenderCacheList() {
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
@@ -381,6 +376,19 @@ async function pbRenderCacheList() {
         await PBUniversalBoost.warmOrigin(entry);
       };
     }
+
+    // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
+
+    let errorcolor = "lightgreen";
+    if (errorcount) errorcolor = "#FF8844";
+    if (!li) li = document.getElementById("li");
+
+    li.innerHTML = li.innerHTML + 
+      // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
+      // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
+      `<p>
+      404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font>
+    `;
 
     listEl.appendChild(li);
     best = true;
@@ -421,7 +429,7 @@ async function pbRenderCacheList() {
     if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
 
     li.innerHTML = `
-      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br><br>
+      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
@@ -452,22 +460,6 @@ async function pbRenderCacheList() {
   });
 
   PB_LOG.info("PulseCache list rendered", pulsecaches);
-
-  const store = await chrome.storage.local.get(["pb_fail_cache"]);
-  const fails = store.pb_fail_cache || {};
-  const failCount = Object.keys(fails).length;
-
-  totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
-  
-  let errorcolor = "lightgreen";
-  if (errorcount) errorcolor = "#FF8844";
-  if (!li) li = document.getElementById("li");
-
-  li.innerHTML = li.innerHTML + `<p>
-    Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
-    Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
-    404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font>
-  `;
 }
 
 async function getSWSize() {
@@ -513,8 +505,7 @@ async function pbRenderStorageStats2(history) {
   const swMB = (swSize / (1024 * 1024)).toFixed(2);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
-  const swKB = (swSize / 1024).toFixed(2);  
-  const overmindMB = ((.04 * totalUsed) / (1024 * 1024)).toFixed(2);
+  const swKB = (swSize / 1024).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";

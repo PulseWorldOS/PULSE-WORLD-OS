@@ -28,8 +28,6 @@ async function pbLoadExtensionSettings() {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
-    console.log("pbLoadExtensionSettings()", settings);
-
     return settings;
   } catch (err) {
     console.error("pbLoadExtensionSettings() FAILED", err);
@@ -231,29 +229,24 @@ function startWarmPath() {
   }
   // Initial warm
   warmAllImages();
-
+  gpuWarmExtra();
   // MutationObserver for future images
   const imgObserver = new MutationObserver(() => {
     const now = performance.now();
-
     // Throttle: only warm once every 500ms
     if (now - lastWarm < WARM_COOLDOWN) return;
     lastWarm = now;
-
     warmAllImages();
   });
-
   imgObserver.observe(document.body, {
     childList: true,
     subtree: true
   });
-
   PBQuantumPrefetch.attachToDocument();
 }
 
 // Unified warm function
 function warmAllImages() {
-  gpuWarmExtra();
   // Warm HTML <img>
   document.querySelectorAll("img").forEach(warmImageDecode);
   triggerWarmPaths();
@@ -434,6 +427,9 @@ async function gpuWarmExtra() {
   }
 
   console.log("GPU Warmed!");
+  if (gpuEnabled === "GPU Driver Error") {
+    pbPulseScreen.src = "PulseWorldOS-Older.mp4";
+  }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
@@ -495,10 +491,10 @@ async function injectHUD() {
 
   document.body.appendChild(wrap);
 
-  const sync = getSyncInterval();
+  const sync = getWarmInterval();
   updateHUD();
   PulseBrowserPreview();
-  setInterval(updateHUD, sync);
+  setInterval(gpuWarmExtra, sync);
   setTimeout(() => {
     PulseBrowserDomScan();
   }, 2000);
@@ -854,9 +850,6 @@ let pendingPerf = 0;
 let lastSendPerf = 0;
 
 const mutationObserver = new MutationObserver((mutations) => {
-  pendingMutations += mutations.length;
-  const now = performance.now();
-  
   if (
     location.protocol === "chrome:" ||
     location.href.startsWith("chrome://") ||
@@ -865,6 +858,8 @@ const mutationObserver = new MutationObserver((mutations) => {
     return;
   }
 
+  pendingMutations += mutations.length;
+  const now = performance.now();
   if (now - lastSend > 1000) {
     chrome.runtime.sendMessage({
       type: "PBCONTENT_MUTATION",
@@ -886,8 +881,6 @@ mutationObserver.observe(document.documentElement, {
 // 4. PERFORMANCE PHYSICS
 // ---------------------------------------------------------------------------
 const perfObserver = new PerformanceObserver((list) => {
-  const entries = list.getEntries();
-  const now = performance.now();
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -896,6 +889,8 @@ const perfObserver = new PerformanceObserver((list) => {
     return;
   }
 
+  const entries = list.getEntries();
+  const now = performance.now();
   if (now - lastSendPerf > 1000) {
     chrome.runtime.sendMessage({
       type: "PBCONTENT_PERF",

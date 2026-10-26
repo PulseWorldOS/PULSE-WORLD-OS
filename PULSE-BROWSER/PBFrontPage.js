@@ -173,7 +173,7 @@ async function pbRenderCacheList2() {
   const pulsecaches = result.pulsecaches;  
   const errorcount = result.errorcount;
   const totalcount = result.totalcount;
-  const errorSizeMB = parseFloat(result.errorSizeMB, "0");
+  // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
 
   if (caches.length === 0 && pulsecaches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
@@ -189,19 +189,16 @@ async function pbRenderCacheList2() {
     </div>
   `;
 
-  // // ⭐ Title
-  // listEl.insertAdjacentHTML("beforeend", `
-  //   <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-  //     PulseBrowser OS - User Memory
-  //   </div>
-  // `);
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
+  const fails = store.pb_fail_cache || {};
+  const failCount = Object.keys(fails).length;
 
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
   const history = await new Promise(resolve =>
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
-  console.log(history);
+
   const statsHTML = await pbRenderStorageStats(history);
   predictionText = predictionText + ".";
   if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
@@ -257,7 +254,7 @@ async function pbRenderCacheList2() {
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
 
     li.innerHTML = `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
@@ -282,6 +279,19 @@ async function pbRenderCacheList2() {
         await PBUniversalBoost.warmOrigin(entry);
       };
     }
+    
+    // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
+
+    let errorcolor = "lightgreen";
+    if (errorcount) errorcolor = "#FF8844";
+    if (!li) li = document.getElementById("li");
+
+    li.innerHTML = li.innerHTML + 
+      // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
+      // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
+      `<p>
+      404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font>
+    `;
 
     listEl.appendChild(li);
     best = true;
@@ -322,7 +332,7 @@ async function pbRenderCacheList2() {
     if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
 
     li.innerHTML = `
-      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br><br>
+      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
@@ -353,22 +363,6 @@ async function pbRenderCacheList2() {
   });
 
   PB_LOG3.info("PulseCache list rendered", pulsecaches);
-
-  const store = await chrome.storage.local.get(["pb_fail_cache"]);
-  const fails = store.pb_fail_cache || {};
-  const failCount = Object.keys(fails).length;
-
-  totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
-
-  let errorcolor = "lightgreen";
-  if (errorcount) errorcolor = "#FF8844";
-  if (!li) li = document.getElementById("li");
-
-  li.innerHTML = li.innerHTML + `<p>
-    Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
-    Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
-    404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font>
-  `;
 }
 // function writeBigBlob() {
 //   return new Promise((resolve, reject) => {
@@ -441,7 +435,6 @@ async function pbRenderStorageStats(history) {
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
-  const overmindMB = ((.04 * totalUsed) / (1024 * 1024)).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -790,7 +783,7 @@ async function pulseGPUInspector(adapter, device) {
 // Optional: Real-time heartbeat
 setInterval(() => {
   setInterval(flickerOrigins, 500); // every 1.5s
-  console.log("💓 GPU Heartbeat: device is alive");
+  console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
 }, 5000);
 
 async function gpuWarmExtra() {
@@ -934,7 +927,7 @@ function getNextInstanceIndex() {
   return 1; // fallback
 }
 
-function openNamedTab(name, url) {
+async function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
@@ -1012,6 +1005,7 @@ function openNamedTab(name, url) {
   PulseSnapshotView = new URL(url).hostname;
   
   pulseRehydrateTabs();
+  await pbRenderCacheList2();
 }
 
 function latestSnapshot(realm, link, snapIndex) {
@@ -1075,7 +1069,6 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
     div.onclick = async () => {
       pbPreconnect([link]);
       openNamedTab(realm, link);
-      await PBUniversalBoost.warmOrigin(link);
     };
   }
 }
@@ -1597,8 +1590,6 @@ async function pbLoadExtensionSettings() {
   try {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
-
-    PB_LOG3.load("pbLoadExtensionSettings()", settings);
 
     return settings;
   } catch (err) {

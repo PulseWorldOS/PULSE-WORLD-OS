@@ -7,7 +7,7 @@ let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
 const CACHE_NAME = "PulseBrowser-Companion";
-const PULSE_FAUX_CACHE_NAME = "PulseWorld-Companion";
+const PULSE_FAUX_CACHE_NAME = "PulseWorld Expressions";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
@@ -304,7 +304,7 @@ self.addEventListener('fetch', event => {
       // Final fallback: offline message
       return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {
         status: 503,
-        statusText: "Service Unavailable",
+        statusText: "Realm Unavailable",
         headers: {
           "Content-Type": "text/html; charset=utf-8"
         }
@@ -631,12 +631,19 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   let origin = url;
   const domainClass = pbDomainClass(url);
   
-  if (!url.includes("chrome:")) {
+  if (url.includes("newtab")) {
+    url = "impulse://newtab"
+    PulseRealmState.lastURL = url;
+    PulseRealmState.lastPage = "NewTab";
+    PulseRealmState.lastDomainClass = "PulseWorld";
+    PulseRealmState.lastTitle = "PulseBrowser OS Console";
+  } else {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
     PulseRealmState.lastDomainClass = domainClass;
     PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
+    PB_LOG2.event("PBNAV_EVENT", url);
   }
 
   // Temporal navigation warm
@@ -649,16 +656,6 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   // Universal boost warm-path
   if (typeof PBUniversalBoost2?.warmTab === "function") {
     PBUniversalBoost2.warmTab(tab);
-  }
-  
-  if (!url.includes("newtab")) {
-    if (url) pbAccelerate(url);
-    PulseRealmState.lastURL = url;
-    PulseRealmState.lastDomainClass = domainClass;
-    PulseRealmState.warmPathsTriggered += 1;
-    PulseRealmState.lastWarmOrigin = origin;
-    PulseRealmState.navHistory.push(url);
-    PB_LOG2.event("PBNAV_EVENT", url);
   }
 });
 
@@ -1015,8 +1012,6 @@ async function pbLoadExtensionSettings() {
     const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
     const settings = result[EXTENSION_SETTINGS_KEY] || {};
 
-    PB_LOG2.load("pbLoadExtensionSettings()", settings);
-
     return settings;
   } catch (err) {
     console.error("pbLoadExtensionSettings() FAILED", err);
@@ -1106,6 +1101,7 @@ function isValid(t) {
 }
 
 
+
 function isCacheableURL(url) {
   // // Reject obvious malformed recursive paths like /app.css/app.css
   // if (url.match(/\/[^\/]+\.[a-z]+\/[^\/]+\.[a-z]+/i)) return false;
@@ -1113,8 +1109,8 @@ function isCacheableURL(url) {
   // Reject file/./file patterns
   if (url.match(/\.[a-z]+\/\.[a-z]+$/i)) return false;
 
-  // Reject ONLY query strings that contain a slash AFTER the ?
-  if (url.match(/\?.*\//)) return false;
+  // // Reject ONLY query strings that contain a slash AFTER the ?
+  // if (url.match(/\?.*\//)) return false;
 
   // Everything else is considered cacheable
   return true;
@@ -1310,31 +1306,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           const cacheNames = await caches.keys();
           let cacheDetails = [];
           let PulseCacheDetails = [];
-          let ErrorCacheDetails = [];
+          // let ErrorCacheDetails = [];
           let count = 0;
           let pulsecount = 0;
-          let errorcount = 0;
+          // let errorcount = 0;
           let totalcount = 0;
           let sizeMB = 0;
           let sizePulseMB = 0;
-          let errorSizeMB = 0;
+          // let errorSizeMB = 0;
 
           for (const name of cacheNames) {
             try {
               const cache = await caches.open(name);
               const requests = await cache.keys();
-              const realRequests = requests.filter(req =>
-                isCacheableURL(req.url) && !isPulseWorld(req.url)
+              const realRequests = requests.filter(req => 
+                !isPulseWorld(req.url)
               );
               const PulseRequests = requests.filter(req =>
-                isCacheableURL(req.url) && isPulseWorld(req.url)
+                isPulseWorld(req.url)
               );
-              const ErrorRequests = requests.filter(req =>
-                !realRequests.includes(req) && !PulseRequests.includes(req)
-              );
+              // const ErrorRequests = requests.filter(req =>
+              //   !realRequests.includes(req) && !PulseRequests.includes(req)
+              // );
               count = realRequests.length;
               pulsecount = PulseRequests.length;
-              errorcount = ErrorRequests.length;
+              // errorcount = ErrorRequests.length;
               totalcount = requests.length;
               const currentCache = CACHE_NAME;
               const currentPulseCache = PULSE_FAUX_CACHE_NAME;
@@ -1368,23 +1364,23 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 }
               }
 
-              // ⭐ Compute total cache size
-              let totalErrorBytes = 0;
-              for (const req of ErrorRequests) {
-                try {
-                  const res = await cache.match(req);
-                  if (res) {
-                    const buf = await res.arrayBuffer();
-                    totalErrorBytes += buf.byteLength;
-                  }
-                } catch (e) {
-                  console.warn("ErrorRequests Cache size read failed:", e);
-                }
-              }
+              // // ⭐ Compute total cache size
+              // let totalErrorBytes = 0;
+              // for (const req of ErrorRequests) {
+              //   try {
+              //     const res = await cache.match(req);
+              //     if (res) {
+              //       const buf = await res.arrayBuffer();
+              //       totalErrorBytes += buf.byteLength;
+              //     }
+              //   } catch (e) {
+              //     console.warn("ErrorRequests Cache size read failed:", e);
+              //   }
+              // }
 
               sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
               sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
-              errorSizeMB = parseFloat((totalErrorBytes / (1024 * 1024)).toFixed(2));
+              // errorSizeMB = parseFloat((totalErrorBytes / (1024 * 1024)).toFixed(2));
               const density = count / (sizeMB || 1);
               const densitypulse = pulsecount / (sizePulseMB || 1);
               // ⭐ Diversity (unique hosts)
@@ -1491,15 +1487,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 lastEntry: realRequests[count - 1]?.url || null
               });
 
-              ErrorCacheDetails.push({
-                name: ERROR_FAUX_CACHE_NAME,
-                entries: errorcount,
-                sizeBytes: totalErrorBytes,
-                errorSizeMB,
-                currentErrorCache,
-                firstEntry: ErrorRequests[0]?.url || null,
-                lastEntry: ErrorRequests[errorcount - 1]?.url || null
-              });
+              // ErrorCacheDetails.push({
+              //   name: ERROR_FAUX_CACHE_NAME,
+              //   entries: errorcount,
+              //   sizeBytes: totalErrorBytes,
+              //   errorSizeMB,
+              //   currentErrorCache,
+              //   firstEntry: ErrorRequests[0]?.url || null,
+              //   lastEntry: ErrorRequests[errorcount - 1]?.url || null
+              // });
 
             } catch (innerErr) {
               PulseCacheDetails.push({
@@ -1520,13 +1516,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 error: innerErr.toString()
               });
 
-              ErrorCacheDetails.push({
-                name: ERROR_FAUX_CACHE_NAME,
-                entries: null,
-                sizeBytes: 0,
-                errorSizeMB: "0.00",
-                error: innerErr.toString()
-              });
+              // ErrorCacheDetails.push({
+              //   name: ERROR_FAUX_CACHE_NAME,
+              //   entries: null,
+              //   sizeBytes: 0,
+              //   errorSizeMB: "0.00",
+              //   error: innerErr.toString()
+              // });
             }
           }
 
@@ -1536,14 +1532,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             totalCaches: cacheNames.length,
             caches: cacheDetails,
             pulsecaches: PulseCacheDetails,
-            errorcaches: ErrorCacheDetails,
+            // errorcaches: ErrorCacheDetails,
             cachecount: count,
             pulsecount,
-            errorcount,
+            // errorcount,
             totalcount,
             sizeCacheMB: sizeMB,
             sizePulseMB,
-            errorSizeMB
+            // errorSizeMB
           };
 
           PB_LOG2.info("GET_CACHE_LIST", payload);

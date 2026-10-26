@@ -582,7 +582,7 @@ async function handlePulseRequest(req) {
 
     return cached || new Response("<h1>You are Offline without PulseWorld!</h1><p>Please Check your Connection!</p>", {
       status: 503,
-      statusText: "Service Unavailable",
+      statusText: "PulseWorld Unavailable",
       headers: {
         "Content-Type": "text/html; charset=utf-8"
       }
