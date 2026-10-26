@@ -8,6 +8,7 @@ let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld-Companion";
+const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
@@ -84,8 +85,8 @@ chrome.storage.local.get(["globalStart"], (res) => {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
       PB_LOG2.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-      PB_LOG2.info("PulseBrowser OS Session Start: " + nowST);
-      PB_LOG2.info("PulseBrowser OS Settings Start: " + lastnowST);
+      PB_LOG2.info("PulseBrowser OS Session Start: " + nowSW);
+      PB_LOG2.info("PulseBrowser OS Settings Start: " + lastnowSW);
     } else {
       GLOBALSTART = Date.now();
     }
@@ -226,7 +227,6 @@ self.addEventListener("install", event => {
     "PulseWorldEntrancePulseGPUPulseEarn.png",
     "PulseWorldSplash512.png"
   ];
-
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return Promise.all(
@@ -238,13 +238,25 @@ self.addEventListener("install", event => {
       );
     })
   );
-
   self.skipWaiting();
 });
 
 async function pbWarmBoot() {
   await pbModuleWarmBoot();
   await pbHomeWarmBoot();
+}
+
+async function cacheMyBlob(cache, url, myBlob) {
+  if (!cache) cache = await caches.open(CACHE_NAME);
+  // 1. Wrap the Blob in a Response object
+  const response = new Response(myBlob, {
+    headers: { 
+      'Content-Type': myBlob.type,
+      'Content-Length': myBlob.size
+    }
+  });
+  // 2. Put it in the cache using a URL or custom string as the key
+  await cache.put(url, response);
 }
 
 
@@ -256,45 +268,50 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener('fetch', event => {
   const req = event.request;
-
   // Only cache GET requests
   if (req.method !== 'GET') return;
 
   // // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.startsWith('chrome://extensions/')) {
+  if (req.url.startsWith('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
   }
-
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
-
-    // Try cache first
     const cached = await cache.match(req);
+    
     if (cached) {
+      // const blob = await cached.blob();
+      // cacheMyBlob(cache, req.url, blob);
       return cached; // Warm-state: instant return
     }
 
-    // Network fallback
     try {
       const net = await fetch(req, { cache: 'no-store' });
-
       // Only store good GET 200 responses
       if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
         cache.put(req, net.clone());
       }
-
       return net;
     } catch (err) {
       // Offline fallback: return last known cached version
       const fallback = await cache.match(req);
-      if (fallback) return fallback;
-
+      
+      if (fallback) {
+        // const blob = await fallback.blob();
+        // cacheMyBlob(cache, req.url, blob);
+        return fallback;
+      }
       // Final fallback: offline message
-      return new Response("Offline", { status: 503 });
+      return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {
+        status: 503,
+        statusText: "Service Unavailable",
+        headers: {
+          "Content-Type": "text/html; charset=utf-8"
+        }
+      });
     }
   })());
 });
-
 
 console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
@@ -346,24 +363,20 @@ async function compressImageTinyPNGStyle(blob) {
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
-
   // ⭐ 1. Check cache first
   if (PBFAVICON_CACHE[host]) {
     const cached = PBFAVICON_CACHE[host];
-
     // Valid Base64 favicon
     if (typeof cached === "string" &&
         cached.startsWith("data:image") &&
         cached.length > 50) {
       return cached;
     }
-
     // Valid fallback URL
     if (cached.startsWith("http")) {
       return cached;
     }
   }
-
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
@@ -379,12 +392,14 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return iconUrl;
     }
 
+    let StartNewCache = null;
+    cacheMyBlob(StartNewCache, iconUrl, blob);
+
     const reader = new FileReader();
 
     return new Promise((resolve) => {
       reader.onloadend = () => {
         const base64 = reader.result;
-
         // ⭐ Validate Base64
         if (
           !base64 ||
@@ -399,7 +414,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
           resolve(iconUrl);
           return;
         }
-
         // ⭐ Save compressed Base64
         PBFAVICON_CACHE[host] = base64;
         saveCache();
@@ -418,7 +432,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
 
   } catch (err) {
     console.warn("Favicon fetch failed:", iconUrl, err);
-
     // ⭐ Last resort fallback
     PBFAVICON_CACHE[host] = iconUrl;
     saveCache();
@@ -645,7 +658,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     PulseRealmState.warmPathsTriggered += 1;
     PulseRealmState.lastWarmOrigin = origin;
     PulseRealmState.navHistory.push(url);
-    PB_LOG2.info("PBNAV_EVENT", url);
+    PB_LOG2.event("PBNAV_EVENT", url);
   }
 });
 
@@ -785,7 +798,7 @@ async function pbPrefetch(urls = []) {
       continue;
     }
     // ⭐ Skip permanently failed URLs
-    if (fails[url] >= 2 && !isPulseWorld(url)) {
+    if (fails[url] >= 2) {
       continue;
     }
 
@@ -795,7 +808,7 @@ async function pbPrefetch(urls = []) {
       if (res && res.status === 404) {
         fails[url] = (fails[url] || 0) + 1;
 
-        if (fails[url] >= 2 && !isPulseWorld(url)) {
+        if (fails[url] >= 2) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
         }
       } else {
@@ -838,7 +851,7 @@ async function pbPreload(origin) {
     }
 
     // ⭐ Skip permanently failed URLs
-    if (fails[url] >= 2 && !isPulseWorld(url)) {
+    if (fails[url] >= 2) {
       continue;
     }
 
@@ -848,7 +861,7 @@ async function pbPreload(origin) {
       if (res && res.status === 404) {
         fails[url] = (fails[url] || 0) + 1;
 
-        if (fails[url] >= 2 && !isPulseWorld(url)) {
+        if (fails[url] >= 2) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
         }
       } else {
@@ -1091,30 +1104,22 @@ function isValid(t) {
     t > 0
   );
 }
-function isErrorURL(url) {
-  if (url.match(/\/[^\/]+\.[a-z]+\/[^\/]+\.[a-z]+/i)) return true;
-  if (url.match(/\.[a-z]+\/\.[a-z]+$/i)) return true;
-  return false;
-}
 
-function isRealCacheURL(url) {
-  // ⭐ Reject PulseWorld OS query URLs
-  if (url.includes("?Impulse=")) return false;
-  // ⭐ Reject any URL containing double slashes like /app.css/app.css
-  if (url.match(/\/[^\/]+\.[a-z]+\/[^\/]+\.[a-z]+/i)) return false;
-  // ⭐ Reject URLs ending in a file then another file
+
+function isCacheableURL(url) {
+  // // Reject obvious malformed recursive paths like /app.css/app.css
+  // if (url.match(/\/[^\/]+\.[a-z]+\/[^\/]+\.[a-z]+/i)) return false;
+
+  // Reject file/./file patterns
   if (url.match(/\.[a-z]+\/\.[a-z]+$/i)) return false;
-  // ⭐ Reject URLs with repeated file extensions
-  // if (url.match(/(\.[a-z]+){2,}/i)) return false;
-  // ⭐ Reject URLs with query strings (not real assets)
-  if (url.includes("?")) return false;
-  // // ⭐ Reject URLs that don’t have a valid extension OR a root document
-  // if (!url.match(/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i)) {
-  //   // Allow root documents like "/" or "/index"
-  //   if (!url.endsWith("/") && !url.endsWith("/index")) return false;
-  // }
+
+  // Reject ONLY query strings that contain a slash AFTER the ?
+  if (url.match(/\?.*\//)) return false;
+
+  // Everything else is considered cacheable
   return true;
 }
+
 
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -1165,15 +1170,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // NAVIGATION EVENT → automatic acceleration
     // -------------------------------------------------------
     case "PBNAV_EVENT":
-      if (msg.url) pbAccelerate(msg.url);
-      PulseRealmState.lastURL = msg.url;
-      PulseRealmState.lastDomainClass = msg.domainClass;
-      PulseRealmState.warmPathsTriggered += 1;
-      let origin = new URL(msg.url).origin
-      PulseRealmState.lastWarmOrigin = origin;
-      PulseRealmState.navHistory.push(msg.url);
-      PulseRealmState.navEvents.push(msg);
-      PB_LOG2.info("PBNAV_EVENT", msg.url);
+      if (msg.url) {
+        pbAccelerate(msg.url);
+        PulseRealmState.lastURL = msg.url;
+        PulseRealmState.lastDomainClass = msg.domainClass;
+        PulseRealmState.warmPathsTriggered += 1;
+        let origin = new URL(msg.url).origin
+        PulseRealmState.lastWarmOrigin = origin;
+        PulseRealmState.navHistory.push(msg.url);
+        PulseRealmState.navEvents.push(msg);
+        PB_LOG2.event("PBNAV_EVENT", msg.url);
+      }
       sendResponse({ ok: true });
       break;
 
@@ -1303,21 +1310,35 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           const cacheNames = await caches.keys();
           let cacheDetails = [];
           let PulseCacheDetails = [];
+          let ErrorCacheDetails = [];
+          let count = 0;
+          let pulsecount = 0;
           let errorcount = 0;
+          let totalcount = 0;
+          let sizeMB = 0;
+          let sizePulseMB = 0;
           let errorSizeMB = 0;
 
           for (const name of cacheNames) {
             try {
               const cache = await caches.open(name);
               const requests = await cache.keys();
-              const realRequests = requests.filter(req => (isRealCacheURL(req.url) && !isPulseWorld(req.url)));
-              const PulseRequests = requests.filter(req => (isRealCacheURL(req.url) && isPulseWorld(req.url)));
-              const ErrorRequests = requests.filter(req => (isErrorURL(req.url)));
-              const count = realRequests.length;
-              const pulsecount = PulseRequests.length;
+              const realRequests = requests.filter(req =>
+                isCacheableURL(req.url) && !isPulseWorld(req.url)
+              );
+              const PulseRequests = requests.filter(req =>
+                isCacheableURL(req.url) && isPulseWorld(req.url)
+              );
+              const ErrorRequests = requests.filter(req =>
+                !realRequests.includes(req) && !PulseRequests.includes(req)
+              );
+              count = realRequests.length;
+              pulsecount = PulseRequests.length;
               errorcount = ErrorRequests.length;
+              totalcount = requests.length;
               const currentCache = CACHE_NAME;
               const currentPulseCache = PULSE_FAUX_CACHE_NAME;
+              const currentErrorCache = ERROR_FAUX_CACHE_NAME;
 
               // ⭐ Compute total cache size
               let totalBytes = 0;
@@ -1361,8 +1382,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 }
               }
 
-              const sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
-              const sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
+              sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
+              sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
               errorSizeMB = parseFloat((totalErrorBytes / (1024 * 1024)).toFixed(2));
               const density = count / (sizeMB || 1);
               const densitypulse = pulsecount / (sizePulseMB || 1);
@@ -1470,13 +1491,23 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 lastEntry: realRequests[count - 1]?.url || null
               });
 
+              ErrorCacheDetails.push({
+                name: ERROR_FAUX_CACHE_NAME,
+                entries: errorcount,
+                sizeBytes: totalErrorBytes,
+                errorSizeMB,
+                currentErrorCache,
+                firstEntry: ErrorRequests[0]?.url || null,
+                lastEntry: ErrorRequests[errorcount - 1]?.url || null
+              });
+
             } catch (innerErr) {
               PulseCacheDetails.push({
                 name: PULSE_FAUX_CACHE_NAME,
                 entries: null,
                 sizeBytes: 0,
-                sizeMB: "0.00",
-                weightClass: "unknown",
+                sizePulseMB: "0.00",
+                weightPulseClass: "unknown",
                 error: innerErr.toString()
               });
 
@@ -1488,6 +1519,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 weightClass: "unknown",
                 error: innerErr.toString()
               });
+
+              ErrorCacheDetails.push({
+                name: ERROR_FAUX_CACHE_NAME,
+                entries: null,
+                sizeBytes: 0,
+                errorSizeMB: "0.00",
+                error: innerErr.toString()
+              });
             }
           }
 
@@ -1495,10 +1534,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             ok: true,
             ts,
             totalCaches: cacheNames.length,
-            errorcount,
-            errorSizeMB,
             caches: cacheDetails,
-            pulsecaches: PulseCacheDetails
+            pulsecaches: PulseCacheDetails,
+            errorcaches: ErrorCacheDetails,
+            cachecount: count,
+            pulsecount,
+            errorcount,
+            totalcount,
+            sizeCacheMB: sizeMB,
+            sizePulseMB,
+            errorSizeMB
           };
 
           PB_LOG2.info("GET_CACHE_LIST", payload);
@@ -1525,7 +1570,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           const cache = await caches.open(CACHE_NAME);
           const requests = await cache.keys();
-          const realRequests = requests.filter(req => isRealCacheURL(req.url));
+          const realRequests = requests.filter(req => isCacheableURL(req.url));
 
           const req = realRequests.find(r => r.url === url);
 
@@ -1542,6 +1587,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           const blob = await res.blob();
           const buffer = await blob.arrayBuffer();
+          cacheMyBlob(cache, url, blob);
 
           // ⭐ Store the REAL file bytes
           __PULSE_CACHE_FILE = {
@@ -1960,7 +2006,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PulseRealmState.warmPathsTriggered += 1;
     PulseRealmState.lastWarmOrigin = origin;
     PulseRealmState.navHistory.push(url);
-    PB_LOG2.info("PBNAV_EVENT", url);
+    PB_LOG2.event("PBNAV_EVENT", url);
   }
 });
 
@@ -2326,7 +2372,7 @@ const PBGlobalAssetMap = {
           fails[url] = (fails[url] || 0) + 1;
           console.log("[PBGlobalAssetMap] 404 for", url);
 
-          if (fails[url] >= 2 && !isPulseWorld(url)) {
+          if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
           }
         } else {

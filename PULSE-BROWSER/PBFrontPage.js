@@ -19,6 +19,7 @@ let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
 let lastPulseActiveEntries = 0;
+let totalBytes = 0;
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
@@ -159,23 +160,25 @@ let statsHTMLShell = null;
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
+
   // ⭐ Fetch cache list
-  const result = await pbRequestCacheList2();  
+  const result = await pbRequestCacheList();
   
   if (!result || (!result.caches && !result.pulsecaches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
 
+  const caches = result.caches;
+  const pulsecaches = result.pulsecaches;  
+  const errorcount = result.errorcount;
+  const totalcount = result.totalcount;
+  const errorSizeMB = parseFloat(result.errorSizeMB, "0");
+
   if (caches.length === 0 && pulsecaches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
-    
-  const caches = result.caches;
-  const pulsecaches = result.pulsecaches;
-  const errorcount = result.errorcount;
-  const errorSizeMB = result.errorSizeMB;
 
   if (lastPulseActiveEntries && lastPulseActiveEntries === (caches.entries + pulsecaches.entries)) return;
 
@@ -237,6 +240,7 @@ async function pbRenderCacheList2() {
 
     // ⭐ Cache size color logic
     const sizeMB = parseFloat(cache.sizeMB || "0");
+    totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
     let sizeColor = "lightgreen";
 
     if (sizeMB >= 150) sizeColor = "gold";     // warming
@@ -255,12 +259,12 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br><br>
 
-      Realm Fragments: <font color="#0FF">${cache.entries}</font><br>
-      Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
+      Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
+      Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
       Personality: <font color="#0FF">${personality}</font><br>
-      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
@@ -301,6 +305,7 @@ async function pbRenderCacheList2() {
 
     // ⭐ Cache size color logic
     const sizeMB = parseFloat(cache.sizePulseMB || "0");
+    totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
     let sizeColor = "lightgreen";
 
     if (sizeMB >= 150) sizeColor = "gold";     // warming
@@ -319,12 +324,12 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br><br>
 
-      Realm Fragments: <font color="#0FF">${cache.entries}</font><br>
-      Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
+      Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
+      Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
       Personality: <font color="#0FF">${personality}</font><br>
-      Density: <font color="#0FF">${density.toFixed(2)} Entries/MB (${KBperEntry} KB)</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
@@ -349,13 +354,20 @@ async function pbRenderCacheList2() {
 
   PB_LOG3.info("PulseCache list rendered", pulsecaches);
 
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
+  const fails = store.pb_fail_cache || {};
+  const failCount = Object.keys(fails).length;
+
+  totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
+
   let errorcolor = "lightgreen";
   if (errorcount) errorcolor = "#FF8844";
   if (!li) li = document.getElementById("li");
 
   li.innerHTML = li.innerHTML + `<p>
-    Realm Misalignments: <font color="${errorcolor}">${errorcount || "0"}</font>
-    Error Fragments: <font color="${errorcolor}">${errorSizeMB || "0"}</font>
+    Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
+    Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
+    404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font>
   `;
 }
 // function writeBigBlob() {
@@ -385,6 +397,15 @@ async function pbRenderCacheList2() {
 //     req.onerror = () => reject(req.error);
 //   });
 // }
+async function getSWSize() {
+  try {
+    const res = await fetch(chrome.runtime.getURL("PBCompanion.js"));
+    const text = await res.text();
+    return new Blob([text]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
 
 
 async function pbRenderStorageStats(history) {
@@ -400,6 +421,8 @@ async function pbRenderStorageStats(history) {
   const estimate = await navigator.storage.estimate();
   const localUsed = estimate.usage || 0;
   const localQuota = estimate.quota || 1;
+  const swSize = await getSWSize();
+  console.log("PBCompanion.js Size:", swSize, "bytes");
 
   // ⭐ SYNC STORAGE (chrome.storage.sync)
   const syncItems = await new Promise(resolve =>
@@ -408,14 +431,17 @@ async function pbRenderStorageStats(history) {
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
 
   // ⭐ Combined totals
-  totalUsed = localUsed + syncBytes;
+  totalUsed = localUsed + syncBytes + swSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (syncBytes / (1024 * 1024)).toFixed(2);
+  const swMB = (swSize / (1024 * 1024)).toFixed(2);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
+  const swKB = (swSize / 1024).toFixed(2);
+  const overmindMB = ((.04 * totalUsed) / (1024 * 1024)).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -506,10 +532,10 @@ async function pbRenderStorageStats(history) {
       <div style="display:flex; gap:10px;">
 
         <div style="flex:1;">
-          <strong>Local Storage:</strong><br>
-          • <span style="color:lightgreen">${localMB} MB</span><br>
+          <strong>Companion:</strong><br>
+          • <span style="color:lightgreen">${swKB} KB</span><br>
 
-          <strong>Total Used:</strong><br>
+          <strong>Local Storage:</strong><br>
           • <span style="color:lightgreen">${totalMB} MB</span><br>
         </div>
 
@@ -517,7 +543,7 @@ async function pbRenderStorageStats(history) {
           <strong>Sync Storage:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
-          <strong>Quota:</strong><br>
+          <strong>System Quota:</strong><br>
           • <span style="color:lightgreen">${quotaGB} GB</span><br><br>
         </div>
 

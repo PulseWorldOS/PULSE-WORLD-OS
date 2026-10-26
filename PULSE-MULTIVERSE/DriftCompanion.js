@@ -580,7 +580,13 @@ async function handlePulseRequest(req) {
     PulseRealm.PULSE_ONLINE = false;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 0);
 
-    return cached || new Response("Offline", { status: 503 });
+    return cached || new Response("<h1>You are Offline without PulseWorld!</h1><p>Please Check your Connection!</p>", {
+      status: 503,
+      statusText: "Service Unavailable",
+      headers: {
+        "Content-Type": "text/html; charset=utf-8"
+      }
+    });
   }
 }
 

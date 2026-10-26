@@ -92,10 +92,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // NAVIGATION EVENT (from PBNavigator)
     // ---------------------------------------------------------
     case "PBNAV_EVENT":
-      PulseRealmState.lastURL = msg.url;
-      PulseRealmState.lastDomainClass = msg.domainClass;
-      PulseRealmState.navHistory.push(msg.url);
-      PulseRealmState.navEvents.push(msg);
+      if (msg.url) {
+        pbAccelerate(msg.url);
+        PulseRealmState.lastURL = msg.url;
+        PulseRealmState.lastDomainClass = msg.domainClass;
+        PulseRealmState.warmPathsTriggered += 1;
+        let origin = new URL(msg.url).origin
+        PulseRealmState.lastWarmOrigin = origin;
+        PulseRealmState.navHistory.push(msg.url);
+        PulseRealmState.navEvents.push(msg);
+      }
       sendResponse({ ok: true });
       break;
 

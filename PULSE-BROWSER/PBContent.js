@@ -120,7 +120,7 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) =
   console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
     "color:#00C8FF; font-family:monospace;", response);
   if (response.time && isValid(response.time)) {
-      nowST = response.time;
+      nowCT = response.time;
   }
 });
 
