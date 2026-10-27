@@ -380,25 +380,37 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
+    const osfallback = chrome.runtime.getURL("PulseOSTabs.png"); // ← your OS bubble icon
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
       console.warn("Invalid favicon response:", iconUrl, response.status);
-      return iconUrl; // ← triggers your fallback system
+      PBFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback; // ← triggers your fallback system
     }
 
     const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
-      console.warn("Empty favicon blob, falling back:", iconUrl);
-      PBFAVICON_CACHE[host] = iconUrl;
+      console.warn("Empty favicon blob, falling back:", osfallback);
+      PBFAVICON_CACHE[host] = osfallback;
       saveCache();
-      return iconUrl;
+      return osfallback;
+    }
+
+    // ⭐ Decode-test the blob
+    const valid = await isBlobValidImage(blob);
+    if (!valid) {
+      console.warn("Corrupted favicon detected:", iconUrl);
+      PBFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback;
     }
 
     let StartNewCache = null;
-    cacheMyBlob(StartNewCache, iconUrl, blob);
+    cacheMyBlob(StartNewCache, iconUrl, valid);
 
     const reader = new FileReader();
 

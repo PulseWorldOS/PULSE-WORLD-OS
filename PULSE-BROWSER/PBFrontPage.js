@@ -1027,33 +1027,35 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       div.id = bubbleId;
       div.className = bubbleId;
 
-      // ⭐ Triple-fallback favicon system
       const favicon = snapshot.favicon || "";
-      const regfavicon = snapshot.regfavicon || "";
-      const osfallback = "PulseOsTabs.png"; // ← your OS bubble icon
+      const regfavicon = snapshot.regfavicon || favicon;
+      const osfallback = chrome.runtime.getURL("PulseOSTab.png");
 
+      // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
-               src="${favicon}"
-               alt="favicon"
-               onerror="
-                 this.onerror=null;
-                 this.src='${regfavicon}';
-                 this.onerror=function(){ this.src='${osfallback}'; };
-               "
-          >
+               src="${regfavicon}"
+               alt="favicon">
         </div>
       `;
 
       topPanel.appendChild(div);
+
+      // ⭐ Attach fallback in JS (CSP-safe)
+      const img = div.querySelector(".Snapshot-Favicon");
+
+      img.addEventListener("error", () => {
+        // First fallback → OS icon
+        img.src = osfallback;
+      });
     }
 
     topPanel.style.backdropFilter = "blur(8px)";
     topPanel.style.backgroundImage = "none";
 
   } else {
-    topPanel.classList.add('electrify');
+    topPanel.classList.add("electrify");
     pulseRehydrateTabs();
 
     const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
@@ -1066,7 +1068,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
     }
 
     setTimeout(() => {
-      topPanel.classList.remove('electrify');
+      topPanel.classList.remove("electrify");
     }, 1500);
   }
 
@@ -1304,21 +1306,33 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
+    const osfallback = chrome.runtime.getURL("PulseOSTabs.png"); // ← your OS bubble icon
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
       console.warn("Invalid favicon response:", iconUrl, response.status);
-      return iconUrl; // ← triggers your fallback system
+      PBFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback; // ← triggers your fallback system
     }
 
     const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
-      console.warn("Empty favicon blob, falling back:", iconUrl);
-      PBFAVICON_CACHE[host] = iconUrl;
+      console.warn("Empty favicon blob, falling back:", osfallback);
+      PBFAVICON_CACHE[host] = osfallback;
       saveCache();
-      return iconUrl;
+      return osfallback;
+    }
+
+    // ⭐ Decode-test the blob
+    const valid = await isBlobValidImage(blob);
+    if (!valid) {
+      console.warn("Corrupted favicon detected:", iconUrl);
+      PBFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback;
     }
 
     const reader = new FileReader();

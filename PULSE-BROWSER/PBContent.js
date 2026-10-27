@@ -87,7 +87,8 @@ const PBQuantumPrefetch = {
     this.linkCooldowns.set(href, now);
 
     // Safe prefetch
-    letsgo(link);
+    letsgo(link);    
+    console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
   }
 
 };
@@ -97,7 +98,6 @@ function letsgo(link) {
   pbPreconnect(link);
   try {
     fetch(link, { cache: "force-cache" }).catch(() => {});
-    console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
   } catch (_) {}
 }
 
@@ -1487,21 +1487,24 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
+    const osfallback = chrome.runtime.getURL("PulseOSTabs.png"); // ← your OS bubble icon
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
       console.warn("Invalid favicon response:", iconUrl, response.status);
-      return iconUrl; // ← triggers your fallback system
+      PBFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback; // ← triggers your fallback system
     }
 
     const blob = await response.blob();
 
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
-      console.warn("Empty favicon blob, falling back:", iconUrl);
-      PBFAVICON_CACHE[host] = iconUrl;
+      console.warn("Empty favicon blob, falling back:", osfallback);
+      PBFAVICON_CACHE[host] = osfallback;
       saveCache();
-      return iconUrl;
+      return osfallback;
     }
 
     const reader = new FileReader();
@@ -1550,6 +1553,26 @@ async function fetchAndStoreIcon(host, iconUrl) {
     return iconUrl;
   }
 }
+
+async function isBlobValidImage(blob) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(blob);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(true);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(false);
+    };
+
+    img.src = url;
+  });
+}
+
 
 async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
@@ -1675,6 +1698,8 @@ async function PulseBrowserDomScan() {
   }
 
   chrome.storage.local.set({ [snapshotKey]: snapshot });
+
+  letsgo(location.href);
 
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm: location.href });
 }
