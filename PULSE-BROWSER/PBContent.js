@@ -1191,13 +1191,13 @@ async function saveVideoToMemory(videoElement) {
   }
 }
 
-// document.addEventListener("click", e => {
-//   const el = e.target.closest("a");
-//   if (!el) return;
+document.addEventListener("click", e => {
+  const el = e.target.closest("a");
+  if (!el) return;
 
-//   const href = el.getAttribute("href");
-//   letsgo(href);
-// });
+  const href = el.getAttribute("href");
+  letsgo(href);
+});
 
 const cls = pbDomainClass(location.href);
 if (cls === "PulseWorld" || cls === "Partner") {
