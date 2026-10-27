@@ -532,27 +532,27 @@ checkPersistentStorage(true);
   </div>
 
 <script>
-// (function() {
-//   // Detect hash-based realm entry
-//   const hashRealm = location.hash.startsWith("#Pulse");
+(function() {
+  // Detect hash-based realm entry
+  const hashRealm = location.hash.startsWith("#Pulse");
 
-//   if (hashRealm) {
-//     const realm = location.hash.slice(1); // remove '#'
+  if (hashRealm) {
+    const realm = location.hash.slice(1); // remove '#'
 
-//     // ⭐ If already in the correct realm, DO NOTHING
-//     // Check BOTH the hash AND the Impulse identity
-//     const alreadyHere =
-//       location.hash === `#${realm}` &&
-//       location.search.includes(`Impulse=${realm}`);
+    // ⭐ If already in the correct realm, DO NOTHING
+    // Check BOTH the hash AND the Impulse identity
+    const alreadyHere =
+      location.hash === `#${realm}` &&
+      location.search.includes(`Impulse=${realm}`);
 
-//     if (alreadyHere) {
-//       return; // Skip — prevents stutter / double travel / realm twitch
-//     }
+    if (alreadyHere) {
+      return; // Skip — prevents stutter / double travel / realm twitch
+    }
 
-//     // Diplomatic visa: convert hash → Impulse travel
-//     location.href = `?Impulse=${realm}`;
-//   }
-// })();
+    // Diplomatic visa: convert hash → Impulse travel
+    location.href = `?Impulse=${realm}`;
+  }
+})();
 // ============================================================
 //  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
 // ============================================================
@@ -2550,7 +2550,10 @@ async function loadInternalPage(name) {
 
     const corrected = await extractPageName(fileToLoad);
 
-    // Remove ALL previously injected internal scripts
+    // Remove scripts inside the viewport BEFORE rebuilding
+    viewport.querySelectorAll("script").forEach(s => s.remove());
+
+    // Remove previously injected internal scripts
     document.querySelectorAll("script[data-internal]").forEach(s => s.remove());
 
     // Build new scripts
@@ -3118,7 +3121,7 @@ function setNavigation(pageKey) {
 
       // If this link loads an internal page, load it first
       if (link.load) {
-        await loadInternalPage(link.load);
+        loadInternalPage(link.load);
         if (link.href && link.href.startsWith("#")) {
           setTimeout(() => {
             location.hash = link.href;
