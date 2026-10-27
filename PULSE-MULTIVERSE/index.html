@@ -2551,7 +2551,7 @@ async function loadInternalPage(name) {
     const corrected = await extractPageName(fileToLoad);
 
     const page = PulseRealm.__PULSE_CURRENT_PAGE__;
-    viewport.querySelectorAll("script").forEach(s => s.remove());
+    viewport.querySelectorAll(`script[src*="${page}"]`).forEach(s => s.remove());
 
     // Remove previously injected internal scripts
     document.querySelectorAll("script[data-internal]").forEach(s => s.remove());
