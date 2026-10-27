@@ -2550,7 +2550,7 @@ async function loadInternalPage(name) {
 
     const corrected = await extractPageName(fileToLoad);
 
-    // Remove scripts inside the viewport BEFORE rebuilding
+    const page = PulseRealm.__PULSE_CURRENT_PAGE__;
     viewport.querySelectorAll("script").forEach(s => s.remove());
 
     // Remove previously injected internal scripts
