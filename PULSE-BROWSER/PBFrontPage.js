@@ -1180,10 +1180,10 @@ const PBUniversalBoost = {
       return;
     }
 
-    // ⭐ Skip warming any URL with a query string
-    if (base.includes("?")) {
-      return;
-    }
+    // // ⭐ Skip warming any URL with a query string
+    // if (base.includes("?")) {
+    //   return;
+    // }
 
     // ⭐ Skip warming if the FULL URL already ends with a file extension
     if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(base)) {

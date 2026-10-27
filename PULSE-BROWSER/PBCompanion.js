@@ -2181,10 +2181,10 @@ const PBUniversalBoost2 = {
       return;
     }
 
-    // ⭐ Skip warming any URL with a query string
-    if (base.includes("?")) {
-      return;
-    }
+    // // ⭐ Skip warming any URL with a query string
+    // if (base.includes("?")) {
+    //   return;
+    // }
 
     // ⭐ Skip warming if the FULL URL already ends with a file extension
     if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(base)) {
@@ -2407,7 +2407,7 @@ const PBGlobalAssetMap = {
       if (!res || typeof res !== "string") continue;
 
       // ⭐ Skip permanently failed URLs
-      if (fails[res] >= 2 && !isPulseWorld(res)) {
+      if (fails[res] >= 2) {
         console.log("[PBGlobalAssetMap] PERMANENT SKIP (2× 404):", res);
         continue;
       }
