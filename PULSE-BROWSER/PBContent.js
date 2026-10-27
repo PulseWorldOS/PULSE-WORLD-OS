@@ -1191,13 +1191,13 @@ async function saveVideoToMemory(videoElement) {
   }
 }
 
-document.addEventListener("click", e => {
-  const el = e.target.closest("a");
-  if (!el) return;
+// document.addEventListener("click", e => {
+//   const el = e.target.closest("a");
+//   if (!el) return;
 
-  const href = el.getAttribute("href");
-  letsgo(href);
-});
+//   const href = el.getAttribute("href");
+//   letsgo(href);
+// });
 
 const cls = pbDomainClass(location.href);
 if (cls === "PulseWorld" || cls === "Partner") {
@@ -1700,8 +1700,8 @@ async function PulseBrowserDomScan() {
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 
   letsgo(location.href);
-  
-  chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm: location.href });
+  const realm = location.href + "?pw=offline";
+  chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
 }
 
 
