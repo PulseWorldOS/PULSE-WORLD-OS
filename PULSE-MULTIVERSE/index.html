@@ -533,15 +533,6 @@ checkPersistentStorage(true);
 
 <script>
 (function() {
-  const nav = performance.getEntriesByType("navigation")[0];
-  // const ref = document.referrer || "";
-
-  // // Detect Google Search or Chrome Search Action
-  // const fromGoogle =
-  //   ref.includes("google.com") ||
-  //   ref.includes("google.") ||
-  //   (nav && nav.type === "navigate" && ref === "");
-
   // Detect hash-based realm entry
   const hashRealm = location.hash.startsWith("#Pulse");
 
@@ -549,14 +540,20 @@ checkPersistentStorage(true);
     const realm = location.hash.slice(1); // remove '#'
 
     // ⭐ If already in the correct realm, DO NOTHING
-    if (location.search.includes(`Impulse=${realm}`)) {
-      return; // Skip — prevents stutter / double travel
+    // Check BOTH the hash AND the Impulse identity
+    const alreadyHere =
+      location.hash === `#${realm}` &&
+      location.search.includes(`Impulse=${realm}`);
+
+    if (alreadyHere) {
+      return; // Skip — prevents stutter / double travel / realm twitch
     }
 
     // Diplomatic visa: convert hash → Impulse travel
     location.href = `?Impulse=${realm}`;
   }
 })();
+
 
 // ============================================================
 //  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
