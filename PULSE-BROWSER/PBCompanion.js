@@ -664,11 +664,11 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const domainClass = pbDomainClass(url);
   
   if (url.includes("newtab")) {
-    url = "impulse://newtab"
-    PulseRealmState.lastURL = url;
-    PulseRealmState.lastPage = "NewTab";
-    PulseRealmState.lastDomainClass = "PulseWorld";
-    PulseRealmState.lastTitle = "PulseBrowser OS Console";
+    // url = "impulse://newtab"
+    // PulseRealmState.lastURL = url;
+    // PulseRealmState.lastPage = "NewTab";
+    // PulseRealmState.lastDomainClass = "PulseWorld";
+    // PulseRealmState.lastTitle = "PulseBrowser OS Console";
   } else {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
@@ -2041,6 +2041,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PulseRealmState.lastDomainClass = domainClass;
     PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
+    PB_LOG2.event("PBNAV_EVENT", url);
   }
 
   // Temporal navigation warm
@@ -2181,10 +2182,10 @@ const PBUniversalBoost2 = {
       return;
     }
 
-    // // ⭐ Skip warming any URL with a query string
-    // if (base.includes("?")) {
-    //   return;
-    // }
+    // ⭐ Skip warming any URL with a query string
+    if (base.includes("?")) {
+      return;
+    }
 
     // ⭐ Skip warming if the FULL URL already ends with a file extension
     if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(base)) {

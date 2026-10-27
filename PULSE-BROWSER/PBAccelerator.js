@@ -216,7 +216,6 @@ function pbDomainClass(url) {
   return "WWW";
 }
 
-
 // ---------------------------------------------------------------------------
 // FULL WARM-PATH (preconnect + preload + prefetch + GPU + decode + realm)
 // Also emits PBACC_WARMPATH_EVENT for Realm HUD.

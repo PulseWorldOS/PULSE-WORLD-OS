@@ -1048,6 +1048,7 @@ function pbDomainClass(url) {
   return "WWW";
 }
 
+
 document.addEventListener("PulseDocumentChanged", (ev) => {
   chrome.runtime.sendMessage({
     type: "PBNAV_EVENT",
