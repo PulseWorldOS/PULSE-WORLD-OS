@@ -2550,14 +2550,11 @@ async function loadInternalPage(name) {
 
     const corrected = await extractPageName(fileToLoad);
 
-    const page = PulseRealm.__PULSE_CURRENT_PAGE__;
-    doc.querySelectorAll(`script[data-page="${page}"]`).forEach(s => s.remove());
-
-    // Remove previously injected internal scripts
-    doc.querySelectorAll("script[data-internal]").forEach(s => s.remove());
+    // Remove ALL previously injected internal scripts
+    document.querySelectorAll("script[data-internal]").forEach(s => s.remove());
 
     // Build new scripts
-    const frag = doc.createDocumentFragment();
+    const frag = document.createDocumentFragment();
 
     doc.querySelectorAll("script").forEach(oldScript => {
       const newScript = document.createElement("script");
@@ -2579,7 +2576,7 @@ async function loadInternalPage(name) {
     });
     timerX = 0;
     // Append scripts
-    doc.appendChild(frag);
+    document.body.appendChild(frag);
 
 
     updateBackButtonVisibility();
