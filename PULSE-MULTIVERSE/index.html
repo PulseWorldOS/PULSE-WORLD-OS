@@ -2557,7 +2557,7 @@ async function loadInternalPage(name) {
     doc.querySelectorAll("script[data-internal]").forEach(s => s.remove());
 
     // Build new scripts
-    const frag = document.createDocumentFragment();
+    const frag = doc.createDocumentFragment();
 
     doc.querySelectorAll("script").forEach(oldScript => {
       const newScript = document.createElement("script");
@@ -2579,7 +2579,7 @@ async function loadInternalPage(name) {
     });
     timerX = 0;
     // Append scripts
-    document.body.appendChild(frag);
+    doc.appendChild(frag);
 
 
     updateBackButtonVisibility();
