@@ -95,10 +95,8 @@ const PBQuantumPrefetch = {
 
 
 function letsgo(link) {
-  pbPreconnect(link);
-  try {
-    fetch(link, { cache: "force-cache" }).catch(() => {});
-  } catch (_) {}
+  pbPreconnect([link]);
+  fetch(link, { cache: "force-cache" }).catch(() => {});
 }
 
 function isValid(t) {
@@ -617,13 +615,7 @@ function fadeHUD(vid) {
 function updateHUD() {
   const body = document.getElementById("pb-hud-body");
   if (!body) return;
-  if (
-      location.protocol === "chrome:" ||
-      location.href.startsWith("chrome://") ||
-      location.protocol === "chrome-extension:"
-  ) {
-    return;
-  }
+  
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
@@ -1199,6 +1191,14 @@ async function saveVideoToMemory(videoElement) {
   }
 }
 
+document.addEventListener("click", e => {
+  const el = e.target.closest("a");
+  if (!el) return;
+
+  const href = el.getAttribute("href");
+  letsgo(href);
+});
+
 const cls = pbDomainClass(location.href);
 if (cls === "PulseWorld" || cls === "Partner") {
   document.addEventListener("click", e => {
@@ -1700,7 +1700,7 @@ async function PulseBrowserDomScan() {
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 
   letsgo(location.href);
-
+  
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm: location.href });
 }
 

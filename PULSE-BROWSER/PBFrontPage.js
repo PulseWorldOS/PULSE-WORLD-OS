@@ -564,7 +564,7 @@ function pulseRestoreTabs() {
     for (const url of pulseTabList) {
       try {
         const urlObj = new URL(url);
-        const identity = normalizeIdentity(urlObj.hostname);
+        const identity = normalizeIdentity(urlObj);
 
         openNamedTab(identity, url);
       } catch (e) {
@@ -590,7 +590,7 @@ async function pulseRehydrateTabs() {
 
       try {
         const urlObj = new URL(tab.url);
-        const identity = normalizeIdentity(urlObj.hostname);
+        const identity = normalizeIdentity(urlObj);
 
         // ⭐ Skip NEW TAB — do NOT assign a bubble
         if (identity === "newtab") {
@@ -1028,14 +1028,15 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       div.className = bubbleId;
 
       const favicon = snapshot.favicon || "";
-      const regfavicon = snapshot.regfavicon || favicon;
+      const regfavicon = snapshot.regfavicon || "";
+      const bestfavicon = favicon || regfavicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
 
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
-               src="${regfavicon}"
+               src="${bestfavicon}"
                alt="favicon">
         </div>
       `;

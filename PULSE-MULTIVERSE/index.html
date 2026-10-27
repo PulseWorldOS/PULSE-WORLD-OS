@@ -532,6 +532,25 @@ checkPersistentStorage(true);
   </div>
 
 <script>
+(function() {
+  const nav = performance.getEntriesByType("navigation")[0];
+  const ref = document.referrer || "";
+
+  // Detect Google Search or Chrome Search Action
+  const fromGoogle =
+    ref.includes("google.com") ||
+    ref.includes("google.") ||
+    (nav && nav.type === "navigate" && ref === "");
+
+  // Detect hash-based realm entry
+  const hashRealm = location.hash.startsWith("#Pulse");
+
+  if (fromGoogle && hashRealm) {
+    const realm = location.hash.slice(1); // remove '#'
+    // Diplomatic visa: convert hash → Impulse travel
+    location.href = `?Impulse=${realm}`;
+  }
+})();
 
 // ============================================================
 //  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE

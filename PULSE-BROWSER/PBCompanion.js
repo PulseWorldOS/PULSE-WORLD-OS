@@ -246,6 +246,21 @@ async function pbWarmBoot() {
   await pbHomeWarmBoot();
 }
 
+function makeOfflineKey(url) {
+  // Already has pw=offline → return as-is
+  if (url.includes("pw=offline")) return url;
+
+  // Remove trailing slash ONLY if it's not the root
+  let clean = url;
+  if (clean.endsWith("/") && clean.length > 1) {
+    clean = clean.slice(0, -1);
+  }
+
+  // Add ?pw=offline or &pw=offline depending on existing query
+  const separator = clean.includes("?") ? "&" : "?";
+  return clean + separator + "pw=offline";
+}
+
 async function cacheMyBlob(cache, url, myBlob) {
   if (!cache) cache = await caches.open(CACHE_NAME);
   // 1. Wrap the Blob in a Response object
@@ -286,12 +301,15 @@ self.addEventListener('fetch', event => {
     }
 
     try {
-      const net = await fetch(req, { cache: 'no-store' });
-      // Only store good GET 200 responses
+      let net = await fetch(req, { cache: 'no-store' });
+
       if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
-        cache.put(req, net.clone());
+        const pwoffline = makeOfflineKey(req.url);
+        cache.put(pwoffline, net.clone());
       }
+
       return net;
+
     } catch (err) {
       // Offline fallback: return last known cached version
       const fallback = await cache.match(req);
@@ -408,9 +426,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
       saveCache();
       return osfallback;
     }
-
-    let StartNewCache = null;
-    cacheMyBlob(StartNewCache, iconUrl, valid);
 
     const reader = new FileReader();
 
@@ -1169,9 +1184,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_REALM_CLAIM":
       if (msg.realm) {
         const realm = msg.realm;
-        pbPrefetch([realm]);
-        PB_LOG2.save("PBCONTENT_REALM_CLAIM", realm);
-        sendResponse({ ok: true, realm });
+        const pwoffline = makeOfflineKey(realm);
+        pbPrefetch([pwoffline]);
+        PB_LOG2.save("PBCONTENT_REALM_CLAIM", pwoffline);
+        sendResponse({ ok: true, realm: pwoffline });
       }
       break;
 
@@ -1627,7 +1643,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           const blob = await res.blob();
           const buffer = await blob.arrayBuffer();
-          cacheMyBlob(cache, url, blob);
+          const pwoffline = makeOfflineKey(url);
+          cacheMyBlob(cache, pwoffline, blob);
 
           // ⭐ Store the REAL file bytes
           __PULSE_CACHE_FILE = {
