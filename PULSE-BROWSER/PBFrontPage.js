@@ -1913,7 +1913,7 @@ async function setTheStage() {
   document.addEventListener("keydown", (e) => {
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
-    if (e.repeat) { 
+    if (moduleKeys.includes(key) && e.repeat) { 
       e.preventDefault();
       // ⭐ If NOT a module key → send key to search box
       if (moduleKeys.includes(key)) {
@@ -3331,7 +3331,11 @@ function emitFullPageContext() {
   });
 }
 
+
 function documentTitle() {
+  if (document.title.includes("newtab")) {
+    document.title = "impulse://newtab"
+  }
   return document.title;
 }
 
