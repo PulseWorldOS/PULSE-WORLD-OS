@@ -254,7 +254,7 @@ async function pbRenderCacheList2() {
     let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
     if (!ServiceWorkerOnline) {
-      pausedoffline = `(««PAUSED»»)`;
+      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
     } else {
       pausedoffline = `(CPU)`;
     }
@@ -334,7 +334,7 @@ async function pbRenderCacheList2() {
     const density = cache.densitypulse ?? 0;
     const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
     if (!ServiceWorkerOnline) {
-      pausedoffline = `(««PAUSED»»)`;
+      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
     } else {
       pausedoffline = `(System)`;
     }
@@ -802,9 +802,9 @@ setInterval(() => {
     ServiceWorkerOnline = response.ServiceWorkerOnline;
 
     if (!ServiceWorkerOnline) {
-      disablesw.innerText = "Resume Memory";
+      disablesw.innerText = "Resume Companion";
     } else {
-      disablesw.innerText = "Pause Memory";
+      disablesw.innerText = "Pause Companion";
     }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
@@ -1690,9 +1690,9 @@ async function updateModuleIcons(settings, browser) {
     ServiceWorkerOnline = response.ServiceWorkerOnline;
 
     if (!ServiceWorkerOnline) {
-      disablesw.innerText = "Resume Memory";
+      disablesw.innerText = "Resume Companion";
     } else {
-      disablesw.innerText = "Pause Memory";
+      disablesw.innerText = "Pause Companion";
     }
   });
   if (!settings) settings = await pbLoadExtensionSettings();
@@ -3042,8 +3042,8 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
   if (ServiceWorkerOnline) {
     chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
     ServiceWorkerOnline = false;
-    disablesw.innerText = "Resume Memory";
-    
+    disablesw.innerText = "Resume Companion";
+    await pbRenderCacheList2();
     console.log("Service Worker PAUSED");
     return;
   }
@@ -3053,8 +3053,8 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
     console.log("Turning Service Worker back Online!");
     chrome.runtime.sendMessage({ type: "PB_COMPANION_RESUME" });
     ServiceWorkerOnline = true;
-    disablesw.innerText = "Pause Memory";
-
+    disablesw.innerText = "Pause Companion";
+    await pbRenderCacheList2();
     console.log("Service Worker RESUMED");
   } catch (e) {
     console.error("Service Worker Failed:", e);
@@ -3347,9 +3347,9 @@ setInterval(() => {
         ServiceWorkerOnline = response.ServiceWorkerOnline;
 
         if (!ServiceWorkerOnline) {
-          disablesw.innerText = "Resume Memory";
+          disablesw.innerText = "Resume Companion";
         } else {
-          disablesw.innerText = "Pause Memory";
+          disablesw.innerText = "Pause Companion";
         }
       });
       injectPulseScreenFromMemory(true);

@@ -350,7 +350,7 @@ async function pbRenderCacheList() {
     let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
     if (!ServiceWorkerOnline) {
-      pausedoffline = `(««PAUSED»»)`;
+      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
     } else {
       pausedoffline = `(CPU)`;
     }
@@ -430,7 +430,7 @@ async function pbRenderCacheList() {
     const density = cache.densitypulse ?? 0;
     const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
     if (!ServiceWorkerOnline) {
-      pausedoffline = `(««PAUSED»»)`;
+      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
     } else {
       pausedoffline = `(System)`;
     }

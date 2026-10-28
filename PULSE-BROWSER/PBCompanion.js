@@ -1178,13 +1178,21 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PB_COMPANION_PAUSE":
       ServiceWorkerOnline = false;
+      chrome.storage.local.set({ ServiceWorkerOnline });
       break;
 
     case "PB_COMPANION_RESUME":
       ServiceWorkerOnline = true;
+      chrome.storage.local.set({ ServiceWorkerOnline });
       break;
     
     case "PB_COMPANION_CHECK":
+      // Load cache from storage at startup
+      chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
+        if (res.ServiceWorkerOnline) {
+          ServiceWorkerOnline = res.ServiceWorkerOnline;
+        }
+      });
       sendResponse({ ok: true, ServiceWorkerOnline });
       break;
     
