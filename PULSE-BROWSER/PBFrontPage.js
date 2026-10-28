@@ -1681,6 +1681,12 @@ async function getSettings() {
 }
 
 async function updateModuleIcons(settings, browser) {
+  // Load cache from storage at startup
+  chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
+    if (res.ServiceWorkerOnline) {
+      ServiceWorkerOnline = res.ServiceWorkerOnline;
+    }
+  });
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
     if (!response || !response.ok) {
       PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
