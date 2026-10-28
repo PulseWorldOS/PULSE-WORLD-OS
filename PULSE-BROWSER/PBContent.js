@@ -238,7 +238,6 @@ function startWarmPath() {
   }
   // Initial warm
   warmAllImages();
-  gpuWarmExtra();
   // MutationObserver for future images
   const imgObserver = new MutationObserver(() => {
     const now = performance.now();
@@ -325,11 +324,6 @@ function createPulseScreen() {
 // 2. HUD INJECTION (DevOverlay) — SAFE VERSION
 // ---------------------------------------------------------------------------
 (function safeInjectHUD() {
-  console.log(
-    "HUD CHECK",
-    location.href,
-    location.protocol
-  );
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -451,14 +445,14 @@ async function injectHUD() {
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
   //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   // ];
-  
-  if (document.getElementById("pulsebrowser-dev-overlay")) return;
+  // if (document.getElementById("pulsebrowser-dev-overlay")) return;
   if (!document.body) {
     setTimeout(() => {
       injectHUD();
     }, 50);
     return;
   }
+  
   if (window.innerHeight < 200 || window.innerWidth < 200) return;
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
@@ -500,9 +494,10 @@ async function injectHUD() {
   `;
 
   document.body.appendChild(wrap);
+  const body = document.getElementById("pb-hud-body");
 
   const sync = getWarmInterval();
-  updateHUD();
+  updateHUD(body);
   PulseBrowserPreview();
   setTimeout(() => {
     gpuWarmExtra();
@@ -663,10 +658,7 @@ function fadeHUD(vid) {
   }, 5000);
 }
 
-function updateHUD() {
-  const body = document.getElementById("pb-hud-body");
-  if (!body) return;
-  
+function updateHUD(body) {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
 
@@ -1329,7 +1321,7 @@ function injectPulseFlag() {
     const body = document.getElementById("pb-hud-body");
     const wrap = document.getElementById("pulsebrowser-dev-overlay");
         
-    updateHUD();
+    updateHUD(body);
     wrap.style.display = "block";
     body.style.display = "block";
     flag.textContent = "PulseBrowser OS";
