@@ -1346,8 +1346,13 @@ let isTouchMobile = false;
         
       // ⭐ CASE 1 — Direct page route
       if (hasPage) {
-        const nextRoute = touch.page.trim();
-        routeToInternal(nextRoute);
+        if (current !== "www.pulseworld.net") {
+          const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
+          routeToInternal(defaultRoute);
+        } else {
+          const nextRoute = touch.page.trim();
+          routeToInternal(nextRoute);
+        }
       }
       // ⭐ CASE 2 — No page → use coordinates or default
       else {
