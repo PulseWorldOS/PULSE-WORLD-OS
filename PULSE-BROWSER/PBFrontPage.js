@@ -715,12 +715,14 @@ function injectPulseScreenFromMemory(play) {
     
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
-    pbWrapper.width = pbPulseScreen.width;
-    pbWrapper.height = pbPulseScreen.height;
+    pbWrapper.width = entry.width;
+    pbWrapper.height = entry.height;
     if (pbPulseScreen.src !== entry.source) {
       pbPulseScreen.src = entry.source;
       pbPulseScreen.currentTime = entry.currentTime || 0;
+      pbPulseScreen.play = true;
     }
+
     const interval3 = getCharacterInterval();
     if (!play) {
       setTimeout(() => {
@@ -3067,7 +3069,7 @@ setInterval(() => {
       pulseRehydrateTabs();
     }, interval3);
 
-  setTimeout(injectPulseScreenFromMemory, 100);
+  setTimeout(injectPulseScreenFromMemory, 50);
   
   function swap() {
     nebula.style.opacity = 0;
