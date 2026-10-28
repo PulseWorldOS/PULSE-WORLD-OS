@@ -854,7 +854,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
-setTimeout(gpuWarmExtra, 500);
+setTimeout(gpuWarmExtra, 250);
 setTimeout(pulseRehydrateTabs, 250);
 
 // ============================================================================
