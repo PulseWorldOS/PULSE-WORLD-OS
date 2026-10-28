@@ -1346,16 +1346,9 @@ let isTouchMobile = false;
         
       // ⭐ CASE 1 — Direct page route
       if (hasPage) {
-        if (current !== "www.pulseworld.net") {
-          const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
-          routeToInternal(defaultRoute);
-        } else {
-          const nextRoute = touch.page.trim();
-          routeToInternal(nextRoute);
-        }
-      }
-      // ⭐ CASE 2 — No page → use coordinates or default
-      else {
+        const nextRoute = touch.page.trim();
+        routeToInternal(nextRoute);
+      } else {
         const coordRoute = interpretCoordinates(touch.coord);
 
         if (coordRoute) {
@@ -1371,13 +1364,8 @@ let isTouchMobile = false;
       }
     }
   } else {
-    if (current !== "www.pulseworld.net") {
-      const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
-      routeToInternal(defaultRoute);
-    } else {
-      restorePageFromCookie(hashRoute);
-      routeToInternal(hashRoute);
-    }
+    restorePageFromCookie(hashRoute);
+    routeToInternal(hashRoute);
   }
 
   const urls = [
