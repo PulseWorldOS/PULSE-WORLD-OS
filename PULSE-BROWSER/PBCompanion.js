@@ -18,12 +18,6 @@ let totalUsed = 0;
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
 
-chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
-  if (res.ServiceWorkerOnline) {
-    ServiceWorkerOnline = res.ServiceWorkerOnline;
-  }
-});
-
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   if (res.PulseBrowserFaviconMultiverse) {
@@ -1195,13 +1189,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
     
     case "PB_COMPANION_CHECK":
-      chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
-        if (res.ServiceWorkerOnline) {
-          ServiceWorkerOnline = res.ServiceWorkerOnline;
-          sendResponse({ ok: true, ServiceWorkerOnline });
-        }
-      });
-      break;
+      sendResponse({ ok: true, ServiceWorkerOnline });
+      return true;
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {
