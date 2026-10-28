@@ -1331,39 +1331,43 @@ let isTouchMobile = false;
   const firstChar = hashRoute.charAt(0);
   const isPageHash = firstChar === firstChar.toUpperCase();
 
-  if (impulse) {
-    routeToInternal(impulse.trim());
-  // } else if (isPageHash) {
-  //   routeToInternal(hashRoute);
-  } else {      
-    // ⭐ First route based on touch.page (passport-first)
-    // ⭐ Determine if we have a valid page
-    const hasPage =
-      touch &&
-      typeof touch.page === "string" &&
-      touch.page.trim() !== "";
-      
-    // ⭐ CASE 1 — Direct page route
-    if (hasPage) {
-      const nextRoute = touch.page.trim();
-      routeToInternal(nextRoute);
-    }
-    // ⭐ CASE 2 — No page → use coordinates or default
-    else {
-      const coordRoute = interpretCoordinates(touch.coord);
+  if (!isPageHash) {
+    if (impulse) {
+      routeToInternal(impulse.trim());
+    // } else if (isPageHash) {
+    //   routeToInternal(hashRoute);
+    } else {      
+      // ⭐ First route based on touch.page (passport-first)
+      // ⭐ Determine if we have a valid page
+      const hasPage =
+        touch &&
+        typeof touch.page === "string" &&
+        touch.page.trim() !== "";
+        
+      // ⭐ CASE 1 — Direct page route
+      if (hasPage) {
+        const nextRoute = touch.page.trim();
+        routeToInternal(nextRoute);
+      }
+      // ⭐ CASE 2 — No page → use coordinates or default
+      else {
+        const coordRoute = interpretCoordinates(touch.coord);
 
-      if (coordRoute) {
-        routeToInternal(coordRoute);
-      } else {
+        if (coordRoute) {
+          routeToInternal(coordRoute);
+        } else {
+          const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
+          routeToInternal(defaultRoute);
+        }
+      }    
+      if (!touch) {
         const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
         routeToInternal(defaultRoute);
       }
-    }    
-    if (!touch) {
-      const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
-      routeToInternal(defaultRoute);
     }
+  } else {
     restorePageFromCookie(hashRoute);
+    routeToInternal(hashRoute);
   }
 
   const urls = [
