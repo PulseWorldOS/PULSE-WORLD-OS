@@ -111,6 +111,11 @@ function letsgo(link) {
   fetch(link, { cache: "force-cache" }).catch(() => {});
 }
 
+function cacheit(link) {
+  pbPreconnect([link]);
+  fetch(link, { mode: "no-cors" }).catch(() => {});
+}
+
 function isValid(t) {
   return (
     typeof t === "number" &&
@@ -595,7 +600,7 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">Pulse Offline</button>
+    ">Pulse Memory</button>
   `;
 
   document.body.appendChild(box);
@@ -633,7 +638,7 @@ function showPulseStreamPrompt(video) {
     chrome.runtime.sendMessage({ type: "HISTORY_BACK" });
     location.href = offline;
 
-    flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
+    flag.textContent = "PulseBrowser OS (Pulse Offline Memory)";
     flag.style.background = "#00FF9C";
 
     clearTimeout(autoClose);
@@ -1241,7 +1246,7 @@ document.addEventListener("click", e => {
   if (!el) return;
 
   const href = el.getAttribute("href");
-  letsgo(href);
+  cacheit(href);
 });
 
 const cls = pbDomainClass(location.href);
@@ -1298,7 +1303,7 @@ function injectPulseFlag() {
   //   flag.style.background = "#00C8FF";
   // }
 
-  if (location.href.includes("pw=offline") && flag) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
+  if (location.href.includes("pw=offline") && flag) flag.textContent = "PulseBrowser OS (Pulse Offline Memory)";
   
   let realStory = getPrimaryVideo();
 
@@ -1747,7 +1752,7 @@ async function PulseBrowserDomScan() {
 
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 
-  letsgo(location.href);
+  cacheit(location.href);
   const realm = location.href;
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
 }
