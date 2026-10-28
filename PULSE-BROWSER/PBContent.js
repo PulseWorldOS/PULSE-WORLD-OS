@@ -389,8 +389,6 @@ function loadLastSavedVideo(callback) {
   });
 }
 
-
-
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   gpuEnabled = "GPU Driver Error";
@@ -433,8 +431,6 @@ async function gpuWarmExtra() {
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
-
-setTimeout(gpuWarmExtra, 1000);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
@@ -1006,37 +1002,37 @@ function emitPageContext() {
 emitPageContext();
 
 
-// ---------------------------------------------------------------------------
-// 9. KERNEL MESSAGE LISTENER
-// ---------------------------------------------------------------------------
-chrome.runtime.onMessage.addListener((msg) => {
-  if (!msg || !msg.type) return;
+// // ---------------------------------------------------------------------------
+// // 9. KERNEL MESSAGE LISTENER
+// // ---------------------------------------------------------------------------
+// chrome.runtime.onMessage.addListener((msg) => {
+//   if (!msg || !msg.type) return;
 
-  switch (msg.type) {
+//   switch (msg.type) {
 
-    case "PULSE_OS_NOTIFY":
-      console.log("%c[PULSEWORLD CONTENT] Kernel Notification:",
-        "color:#00C8FF; font-family:monospace;", msg.text);
-      break;
+//     case "PULSE_OS_NOTIFY":
+//       console.log("%c[PULSEWORLD CONTENT] Kernel Notification:",
+//         "color:#00C8FF; font-family:monospace;", msg.text);
+//       break;
 
-    case "PBACC_GPUWARM":
-      warmGPU();
-      break;
+//     case "PBACC_GPUWARM":
+//       warmGPU();
+//       break;
 
-    case "PBACC_GPUWARM_EXTRA":
-      gpuWarmExtra();
-      break;
+//     case "PBACC_GPUWARM_EXTRA":
+//       gpuWarmExtra();
+//       break;
 
-    case "PBACC_DECODEWARM":
-      document.querySelectorAll("img").forEach(warmImageDecode);
-      break;
+//     case "PBACC_DECODEWARM":
+//       document.querySelectorAll("img").forEach(warmImageDecode);
+//       break;
 
-    case "PBNAV_EVENT":
-      console.log("%c[PULSEWORLD CONTENT] Navigation Event:",
-        "color:#00C8FF; font-family:monospace;", msg);
-      break;
-  }
-});
+//     case "PBNAV_EVENT":
+//       console.log("%c[PULSEWORLD CONTENT] Navigation Event:",
+//         "color:#00C8FF; font-family:monospace;", msg);
+//       break;
+//   }
+// });
 
 // ---------------------------------------------------------------------------
 // HOME UNIVERSE (Your 9 domains)
