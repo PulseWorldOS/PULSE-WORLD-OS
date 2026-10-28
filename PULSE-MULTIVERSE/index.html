@@ -1366,8 +1366,13 @@ let isTouchMobile = false;
       }
     }
   } else {
-    restorePageFromCookie(hashRoute);
-    routeToInternal(hashRoute);
+    if (hashRoute) {
+      restorePageFromCookie(hashRoute);
+      routeToInternal(hashRoute);
+    } else {
+      const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
+      routeToInternal(defaultRoute);
+    }
   }
 
   const urls = [
