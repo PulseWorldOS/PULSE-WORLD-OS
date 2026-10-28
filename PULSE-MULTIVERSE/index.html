@@ -8161,30 +8161,36 @@ async function writePulseTouchState(state = {}) {
 }
 function restorePageFromCookie() {
   console.log("%c[PULSEWORLD::COOKIE] restorePageFromCookie() called.",
-              "color:#00F2FF; font-weight:bold;");
+            "color:#00F2FF; font-weight:bold;");
 
   /* ============================================================
-     1. DIRECT QUERY OVERRIDE — TAKES PRIORITY
-     ============================================================ */
-     const params = new URLSearchParams(window.location.search);
+    1. DIRECT QUERY OVERRIDE — TAKES PRIORITY
+    ============================================================ */
+  const params = new URLSearchParams(window.location.search);
 
-    const pulseUser =
-      params.get("pulseuser") ||
-      params.get("PULSEUSER") ||
-      params.get("PulseUser");
+  const pulseUser =
+    params.get("pulseuser") ||
+    params.get("PULSEUSER") ||
+    params.get("PulseUser");
 
-    const impulseParam =
-      params.get("impulse") ||
-      params.get("IMPULSE") ||
-      params.get("Impulse") ||
-      params.get("i");
+  const impulseParam =
+    params.get("impulse") ||
+    params.get("IMPULSE") ||
+    params.get("Impulse") ||
+    params.get("i");
 
+  const hashRealm = location.hash.startsWith("#Pulse");
+  const realm = location.hash.slice(1); // remove '#'
 
-  if (impulseParam) {
+  if (impulseParam || hashRealm) {
     console.log("%c[PULSEWORLD::QUERY] Impulse query detected → overriding cookie.",
                 "color:#00FF7F; font-weight:bold;");
 
-    PulseRealm.__PULSE_CURRENT_PAGE__ = impulseParam;
+    if (realm) {
+      PulseRealm.__PULSE_CURRENT_PAGE__ = realm;
+    } else {
+      PulseRealm.__PULSE_CURRENT_PAGE__ = impulseParam;
+    }
     console.log("[PULSEWORLD::QUERY] CURRENT_PAGE set to:", impulseParam);
 
     // Save override into cookie for future loads
