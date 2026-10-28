@@ -251,10 +251,14 @@ async function pbRenderCacheList2() {
     const pulseRank = cache.pulseRank;
     const density = cache.density ?? 0;
     const KBperEntry = (1024 / cache.density).toFixed(0);
-  
+    let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
-
-    li.innerHTML = `
+    if (!ServiceWorkerOnline) {
+      pausedoffline = `<font color="rosybrown"><strong>««PAUSED»»</strong></font><br>`;
+    } else {
+      pausedoffline = ``;
+    }
+    li.innerHTML = pausedoffline + `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
@@ -1673,6 +1677,20 @@ async function getSettings() {
 }
 
 async function updateModuleIcons(settings, browser) {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
+      return;
+    }
+    PB_LOG3.info("PB_COMPANION_CHECK", response);
+    ServiceWorkerOnline = response.ServiceWorkerOnline;
+
+    if (!ServiceWorkerOnline) {
+      disablesw.innerText = "Resume Memory";
+    } else {
+      disablesw.innerText = "Pause Memory";
+    }
+  });
   if (!settings) settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
   if (!browser) browser = await getSettings();

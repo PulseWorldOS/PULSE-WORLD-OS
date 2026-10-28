@@ -347,10 +347,14 @@ async function pbRenderCacheList() {
     const pulseRank = cache.pulseRank;
     const density = cache.density ?? 0;
     const KBperEntry = (1024 / cache.density).toFixed(0);
-  
+    let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
-
-    li.innerHTML = `
+    if (!ServiceWorkerOnline) {
+      pausedoffline = `<font color="rosybrown"><strong>««PAUSED»»</strong></font><br>`;
+    } else {
+      pausedoffline = ``;
+    }
+    li.innerHTML = pausedoffline + `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
