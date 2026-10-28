@@ -1331,7 +1331,7 @@ let isTouchMobile = false;
   const firstChar = hashRoute.charAt(0);
   const isPageHash = firstChar === firstChar.toUpperCase();
 
-  if (!hashRoute || (hashRoute && current !== "www.pulseworld.net")) {
+  if (!hashRoute || (hashRoute && !current.includes("www.pulseworld.net"))) {
     if (impulse) {
       routeToInternal(impulse.trim());
     // } else if (isPageHash) {
