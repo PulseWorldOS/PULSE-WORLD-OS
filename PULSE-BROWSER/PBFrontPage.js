@@ -163,7 +163,7 @@ async function pbRenderCacheList2() {
   if (!listEl) return;
 
   // ⭐ Fetch cache list
-  const result = await pbRequestCacheList();
+  const result = await pbRequestCacheList2();
   
   if (!result || (!result.caches && !result.pulsecaches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
@@ -200,7 +200,7 @@ async function pbRenderCacheList2() {
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
 
-  const statsHTML = await pbRenderStorageStats(history);
+  const statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
   if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
   statsHTMLShell = statsHTML;
@@ -411,7 +411,7 @@ async function getSWSize() {
 }
 
 
-async function pbRenderStorageStats(history) {
+async function pbRenderStorageStats2(history) {
   if (!navigator.storage || !navigator.storage.estimate) {
     return `
       <div style="margin-top:10px; color:#FF4444; font-size:12px;">

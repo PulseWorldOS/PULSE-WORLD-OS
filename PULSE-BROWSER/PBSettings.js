@@ -278,7 +278,7 @@ async function pbRenderCacheList() {
   );
   
   predictionText = predictionText + ".";
-  const statsHTML = await pbRenderStorageStats2(history);
+  const statsHTML = await pbRenderStorageStats(history);
   
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
@@ -481,7 +481,7 @@ async function getSWSize() {
 }
 
 
-async function pbRenderStorageStats2(history) {
+async function pbRenderStorageStats(history) {
   if (!navigator.storage || !navigator.storage.estimate) {
     return `
       <div style="margin-top:10px; color:#FF4444; font-size:12px;">
