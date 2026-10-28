@@ -1176,6 +1176,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         "color:#00C8FF; font-family:monospace;", msg.text);
       break;
 
+    case "HISTORY_BACK":
+      sendResponse({ ok: true });
+      break;
+
     case "PB_COMPANION_PAUSE":
       ServiceWorkerOnline = false;
       chrome.storage.local.set({ ServiceWorkerOnline });

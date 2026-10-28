@@ -9,6 +9,17 @@ let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
+
+if (location.href.includes("pw=offline")) {
+  chrome.runtime.sendMessage({ type: "HISTORY_BACK"  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.ok) {
+      setTimeout(() => {
+        history.back();
+      }, 2000);
+    }
+  });
+}
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -623,6 +634,7 @@ function showPulseStreamPrompt(video) {
 
   document.getElementById("offlineBtn").onclick = () => {
     const offline = makeOfflineKey(location.href);
+    chrome.runtime.sendMessage({ type: "HISTORY_BACK" });
     location.href = offline;
 
     flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
@@ -630,9 +642,6 @@ function showPulseStreamPrompt(video) {
 
     clearTimeout(autoClose);
     box.remove();
-    setTimeout(() => {
-      history.back();
-    }, 1000);
   };
 }
 
