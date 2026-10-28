@@ -1343,6 +1343,7 @@ let isTouchMobile = false;
       touch &&
       typeof touch.page === "string" &&
       touch.page.trim() !== "";
+      
     // ⭐ CASE 1 — Direct page route
     if (hasPage) {
       const nextRoute = touch.page.trim();
@@ -1363,7 +1364,7 @@ let isTouchMobile = false;
       const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
       routeToInternal(defaultRoute);
     }
-    restorePageFromCookie();
+    restorePageFromCookie(hashRoute);
   }
 
   const urls = [
@@ -8159,7 +8160,7 @@ async function writePulseTouchState(state = {}) {
     }
   }
 }
-function restorePageFromCookie() {
+function restorePageFromCookie(hashRoute) {
   console.log("%c[PULSEWORLD::COOKIE] restorePageFromCookie() called.",
             "color:#00F2FF; font-weight:bold;");
 
@@ -8179,15 +8180,12 @@ function restorePageFromCookie() {
     params.get("Impulse") ||
     params.get("i");
 
-  const hashRealm = location.hash.startsWith("#Pulse");
-  const realm = location.hash.slice(1); // remove '#'
-
-  if (impulseParam || hashRealm) {
+  if (impulseParam || hashRoute) {
     console.log("%c[PULSEWORLD::QUERY] Impulse query detected → overriding cookie.",
                 "color:#00FF7F; font-weight:bold;");
 
-    if (realm) {
-      PulseRealm.__PULSE_CURRENT_PAGE__ = realm;
+    if (hashRoute) {
+      PulseRealm.__PULSE_CURRENT_PAGE__ = hashRoute;
     } else {
       PulseRealm.__PULSE_CURRENT_PAGE__ = impulseParam;
     }
