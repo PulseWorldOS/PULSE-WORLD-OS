@@ -9,9 +9,6 @@ let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
-const flag = document.getElementById("pulseworld-flag");
-
-if (location.href.includes("pw=offline")) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -317,6 +314,11 @@ function createPulseScreen() {
 // 2. HUD INJECTION (DevOverlay) — SAFE VERSION
 // ---------------------------------------------------------------------------
 (function safeInjectHUD() {
+  console.log(
+    "HUD CHECK",
+    location.href,
+    location.protocol
+  );
   if (
       location.protocol === "chrome:" ||
       location.href.startsWith("chrome://") ||
@@ -448,8 +450,6 @@ async function injectHUD() {
   }
   if (window.innerHeight < 200 || window.innerWidth < 200) return;
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
-
-  if (location.href.includes("pw=offline")) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
 
   //   const flag = document.getElementById("pulseworld-flag");
   //   if (flag) {
@@ -1293,6 +1293,9 @@ function injectPulseFlag() {
   //   flag.textContent = "PulseBrowser OS";
   //   flag.style.background = "#00C8FF";
   // }
+
+  if (location.href.includes("pw=offline") && flag) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
+  
   let realStory = getPrimaryVideo();
 
   if (!realStory) { 
