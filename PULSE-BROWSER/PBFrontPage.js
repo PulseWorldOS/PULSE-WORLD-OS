@@ -3069,7 +3069,9 @@ setInterval(() => {
       pulseRehydrateTabs();
     }, interval3);
 
-  setTimeout(injectPulseScreenFromMemory, 50);
+    setTimeout(() => {
+      injectPulseScreenFromMemory(true);
+    }, 50);
   
   function swap() {
     nebula.style.opacity = 0;

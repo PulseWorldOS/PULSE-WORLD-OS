@@ -1270,7 +1270,11 @@ function hidePWLoader() {
 
 let isTouchMobile = false;
 
-(async function(){
+(async function(){    
+  // ⭐ NEW: Hash-based routing (no navigation event)
+  const hashRoute = window.location.hash
+    ? window.location.hash.replace("#", "").trim()
+    : "";
     
   // ⭐ USE PASSPORT-CAPABLE READER CORRECTLY (AWAIT)
   const touch = await readPulseTouchInternal({
@@ -1306,11 +1310,6 @@ let isTouchMobile = false;
     "🛰️ PULSE MULTIVERSAL ROUTER v32.0 — %c[PULSEWORLD::Route] Selecting Initial Pulse World Route...",
     "color:#H02FHA; font-weight:bold; font-family:monospace;"
   );
-    
-  // ⭐ NEW: Hash-based routing (no navigation event)
-  const hashRoute = window.location.hash
-    ? window.location.hash.replace("#", "").trim()
-    : "";
 
   // ---------------------------------------------------------
   // 1. URL parameters
