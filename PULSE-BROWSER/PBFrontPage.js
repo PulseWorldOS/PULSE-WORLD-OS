@@ -21,6 +21,7 @@ let PulseSnapshotView = null;
 let PulseURL = null;
 let lastPulseActiveEntries = 0;
 let totalBytes = 0;
+
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
