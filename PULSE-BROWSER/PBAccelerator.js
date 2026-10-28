@@ -322,7 +322,8 @@ async function pbLoadExtensionSettings() {
 
 async function pbModuleWarmBoot() {
   const settings = await pbLoadExtensionSettings();
-
+  let externalSearchLink = settings.externalSearchLink ?? "https://www.google.com";
+  
   // Collect all accelerated module links directly from settings
   const warmTargets = [
     settings.externalBankLink,
@@ -331,7 +332,7 @@ async function pbModuleWarmBoot() {
     settings.externalWorkLink,
     settings.externalStreamingLink,
     settings.externalShoppingLink,
-    settings.externalSearchLink,
+    externalSearchLink,
     settings.acceleratedModule1Link,
     settings.acceleratedModule2Link,
     settings.acceleratedModule3Link,
