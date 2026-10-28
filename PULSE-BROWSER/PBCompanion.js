@@ -314,11 +314,21 @@ self.addEventListener('fetch', event => {
     } catch (err) {
       // Offline fallback: return last known cached version
       const fallback = await cache.match(req);
-      
-      if (fallback) {
-        // const blob = await fallback.blob();
-        // cacheMyBlob(cache, req.url, blob);
-        return fallback;
+
+      if (fallback) return fallback;
+
+      // Try the REAL realm if offline realm missing
+      if (req.url.includes("pw=offline")) {
+        const originalUrl = req.url
+          .replace(/[?&]pw=offline/g, "")
+          .replace("?&", "?")
+          .replace(/\?$/, "");
+
+        const originalFallback = await cache.match(originalUrl);
+
+        if (originalFallback) {
+          return originalFallback;
+        }
       }
       // Final fallback: offline message
       return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {

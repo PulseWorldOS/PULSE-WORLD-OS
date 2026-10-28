@@ -16,7 +16,7 @@ if (location.href.includes("pw=offline")) {
     if (response.ok) {
       setTimeout(() => {
         history.back();
-      }, 2000);
+      }, 500);
     }
   });
 }
@@ -548,10 +548,10 @@ function showPulseStreamPrompt(video) {
     position: fixed;
     bottom: 20px;
     left: 290px;
-    width: 260px;
+    width: 360px;
     background: rgba(0,0,0,0.88);
     color: #00FF9C;
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-radius: 16px;
     border: 1px solid #0FF;
     font-family: monospace;
@@ -569,7 +569,7 @@ function showPulseStreamPrompt(video) {
       🎥 PulseStream
     </div>
     <div style="margin-bottom:12px;">
-      Watch while you browse?
+      Watch while you browse? Test Offline Site?
     </div>
 
     <button id="pipEnableBtn" style="
@@ -599,7 +599,7 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">«Offline»</button>
+    ">Pulse Offline</button>
   `;
 
   document.body.appendChild(box);
