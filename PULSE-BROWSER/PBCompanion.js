@@ -18,6 +18,12 @@ let totalUsed = 0;
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
 
+chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
+  if (res.ServiceWorkerOnline) {
+    ServiceWorkerOnline = res.ServiceWorkerOnline;
+  }
+});
+
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   if (res.PulseBrowserFaviconMultiverse) {
