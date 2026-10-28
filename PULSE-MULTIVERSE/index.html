@@ -1343,9 +1343,7 @@ let isTouchMobile = false;
       touch &&
       typeof touch.page === "string" &&
       touch.page.trim() !== "";
-    
-    restorePageFromCookie(hashRoute);
-
+      
     // ⭐ CASE 1 — Direct page route
     if (hasPage) {
       const nextRoute = touch.page.trim();
@@ -1366,6 +1364,7 @@ let isTouchMobile = false;
       const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
       routeToInternal(defaultRoute);
     }
+    restorePageFromCookie(hashRoute);
   }
 
   const urls = [
@@ -8190,10 +8189,10 @@ function restorePageFromCookie(hashRoute) {
     } else {
       PulseRealm.__PULSE_CURRENT_PAGE__ = impulseParam;
     }
-    console.log("[PULSEWORLD::QUERY] CURRENT_PAGE set to:", impulseParam);
+    console.log("[PULSEWORLD::QUERY] CURRENT_PAGE set to:", PulseRealm.__PULSE_CURRENT_PAGE__);
 
     // Save override into cookie for future loads
-    const encoded = btoa(JSON.stringify({ page: impulseParam }))
+    const encoded = btoa(JSON.stringify({ page: PulseRealm.__PULSE_CURRENT_PAGE__ }))
       .replace(/\+/g, "-")
       .replace(/\//g, "_");
 
