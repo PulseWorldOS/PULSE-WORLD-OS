@@ -350,12 +350,12 @@ async function pbRenderCacheList() {
     let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
     if (!ServiceWorkerOnline) {
-      pausedoffline = `<font color="rosybrown"><strong>««PAUSED»»</strong></font><br>`;
+      pausedoffline = `(««PAUSED»»)`;
     } else {
-      pausedoffline = ``;
+      pausedoffline = `(CPU)`;
     }
     li.innerHTML = pausedoffline + `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
@@ -429,11 +429,15 @@ async function pbRenderCacheList() {
     const pulseRank = cache.realpulseRank;
     const density = cache.densitypulse ?? 0;
     const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
-  
+    if (!ServiceWorkerOnline) {
+      pausedoffline = `(««PAUSED»»)`;
+    } else {
+      pausedoffline = `(System)`;
+    }
     if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
 
     li.innerHTML = `
-      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br>
+      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>

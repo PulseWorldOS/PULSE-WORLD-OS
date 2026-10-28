@@ -254,12 +254,12 @@ async function pbRenderCacheList2() {
     let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
     if (!ServiceWorkerOnline) {
-      pausedoffline = `<font color="rosybrown"><strong>««PAUSED»»</strong></font><br>`;
+      pausedoffline = `(««PAUSED»»)`;
     } else {
-      pausedoffline = ``;
+      pausedoffline = `(CPU)`;
     }
-    li.innerHTML = pausedoffline + `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} (CPU)</strong></font><br>
+    li.innerHTML = `
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
@@ -333,11 +333,15 @@ async function pbRenderCacheList2() {
     const pulseRank = cache.realpulseRank;
     const density = cache.densitypulse ?? 0;
     const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
-  
+    if (!ServiceWorkerOnline) {
+      pausedoffline = `(««PAUSED»»)`;
+    } else {
+      pausedoffline = `(System)`;
+    }
     if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
 
     li.innerHTML = `
-      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} (System)</strong></font><br>
+      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
@@ -803,7 +807,7 @@ setInterval(() => {
       disablesw.innerText = "Pause Memory";
     }
   });
-  setInterval(flickerOrigins, 500); // every 1.5s
+  setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
 }, 5000);
 
@@ -851,7 +855,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
-setTimeout(gpuWarmExtra, 100);
+setTimeout(gpuWarmExtra, 500);
 setTimeout(pulseRehydrateTabs, 250);
 
 // ============================================================================
@@ -917,7 +921,7 @@ function collectAndWarmAssetsFront() {
   });
 }
 
-setTimeout(collectAndWarmAssetsFront, 600);
+setTimeout(collectAndWarmAssetsFront, 1000);
 
 function savePulseTabs() {
   chrome.storage.local.set({ pulseTabs });
@@ -3171,13 +3175,14 @@ setInterval(() => {
     intervalId = null;
   }
 
+  startBtn.style.cursor = "cursor";
+
   // Flicker engine
   function flickerOrigins() {
     // 1 in 50 chance to flicker (tunable)
     const chance = Math.random();
 
     if (chance < 0.22) {
-      startBtn.style.cursor = "pointer";
       // Flicker to Internet Origin
       startBtn.innerHTML =
         `<span class="origin-link">
@@ -3192,13 +3197,11 @@ setInterval(() => {
 
       // Flicker back after 120–240ms
       setTimeout(() => {
-        startBtn.style.cursor = "default";
         startBtn.innerHTML =
           `<font color="#0FF">Origin Consensus:</font> ${CONSENSUS_ORIGIN}`;
-      }, 920 + Math.random() * 920);
+      }, 920 + chance * 920);
 
     } else {
-      startBtn.style.cursor = "default";
       // Normal state: Consensus
       startBtn.innerHTML =
         `<font color="#0FF">Origin Consensus:</font> ${CONSENSUS_ORIGIN}`;
@@ -3349,6 +3352,14 @@ setInterval(() => {
           disablesw.innerText = "Pause Memory";
         }
       });
+      injectPulseScreenFromMemory(true);
+      const interval3 = getCharacterInterval();
+      setTimeout(() => {
+        pbPulseScreen.currentTime = 0;
+        pbPulseScreen.play = false;
+        injectPulseScreenFromMemory();
+        pulseRehydrateTabs();
+      }, interval3);
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
@@ -3359,7 +3370,6 @@ setInterval(() => {
         }
       });
       updateOverlay();
-      gpuWarmExtra();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
 
@@ -3372,14 +3382,6 @@ setInterval(() => {
         pulseRehydrateTabs();
         startPulseLoop();
       });
-      injectPulseScreenFromMemory(true);
-      const interval3 = getCharacterInterval();
-      setTimeout(() => {
-        pbPulseScreen.currentTime = 0;
-        pbPulseScreen.play = false;
-        injectPulseScreenFromMemory();
-        pulseRehydrateTabs();
-      }, interval3);
     } else {
       stopPulseLoop();
     }

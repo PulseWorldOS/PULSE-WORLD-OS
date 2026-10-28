@@ -434,7 +434,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 }
 
-setTimeout(gpuWarmExtra, 900);
+setTimeout(gpuWarmExtra, 1000);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
@@ -454,7 +454,7 @@ async function injectHUD() {
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
   if (location.href.includes("pw=offline")) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
-  
+
   //   const flag = document.getElementById("pulseworld-flag");
   //   if (flag) {
   //     flag.textContent = "PulseBrowser OS (PIP Available)";
@@ -497,7 +497,10 @@ async function injectHUD() {
   const sync = getWarmInterval();
   updateHUD();
   PulseBrowserPreview();
-  setInterval(gpuWarmExtra, sync);
+  setTimeout(() => {
+    gpuWarmExtra();
+  }, sync);
+
   setTimeout(() => {
     PulseBrowserDomScan();
   }, 3500);
@@ -589,7 +592,7 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">Go Offline</button>
+    ">«Offline»</button>
   `;
 
   document.body.appendChild(box);
@@ -630,6 +633,8 @@ function showPulseStreamPrompt(video) {
 
     history.pushState({}, "", offline);
     history.back();
+    clearTimeout(autoClose);
+    box.remove();
   };
 }
 
