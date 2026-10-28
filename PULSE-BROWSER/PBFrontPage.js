@@ -796,10 +796,8 @@ async function pulseGPUInspector(adapter, device) {
 setInterval(() => {
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
     if (!response || !response.ok) {
-      PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
       return;
     }
-    PB_LOG3.info("PB_COMPANION_CHECK", response);
     ServiceWorkerOnline = response.ServiceWorkerOnline;
 
     if (!ServiceWorkerOnline) {
@@ -1702,10 +1700,8 @@ async function updateModuleIcons(settings, browser) {
   });
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
     if (!response || !response.ok) {
-      PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
       return;
     }
-    PB_LOG3.info("PB_COMPANION_CHECK", response);
     ServiceWorkerOnline = response.ServiceWorkerOnline;
 
     if (!ServiceWorkerOnline) {
@@ -3359,10 +3355,8 @@ setInterval(() => {
     if (!document.hidden || document.visibilityState === "visible") {
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
         if (!response || !response.ok) {
-          PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
           return;
         }
-        PB_LOG3.info("PB_COMPANION_CHECK", response);
         ServiceWorkerOnline = response.ServiceWorkerOnline;
 
         if (!ServiceWorkerOnline) {
