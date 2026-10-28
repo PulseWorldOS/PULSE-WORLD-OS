@@ -1331,7 +1331,7 @@ let isTouchMobile = false;
   const firstChar = hashRoute.charAt(0);
   const isPageHash = firstChar === firstChar.toUpperCase();
 
-  if (!hashRoute || (hashRoute && !current.includes("www.pulseworld.net"))) {
+  if (!hashRoute) {
     if (impulse) {
       routeToInternal(impulse.trim());
     // } else if (isPageHash) {
@@ -1366,12 +1366,12 @@ let isTouchMobile = false;
       }
     }
   } else {
-    if (hashRoute) {
-      restorePageFromCookie(hashRoute);
-      routeToInternal(hashRoute);
-    } else {
+    if (current !== "www.pulseworld.net") {
       const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
       routeToInternal(defaultRoute);
+    } else {
+      restorePageFromCookie(hashRoute);
+      routeToInternal(hashRoute);
     }
   }
 
