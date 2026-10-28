@@ -7,6 +7,7 @@ let socialMediaActiveLink = null;
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
+let ServiceWorkerOffline = false;
 let searchEngineActivated = "*Google.com";
 let temporaryLinks = [];
 let engineURL = buildSearchURL("google.com");
@@ -2996,6 +2997,32 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
   setTimeout(async () => {
     await pbRenderCacheList2();
   }, 500);
+});
+
+const disablesw = document.getElementById("disable-sw");
+
+document.getElementById("disable-sw").addEventListener("click", async () => {
+  // If a SW exists → turn it OFF
+  if (!ServiceWorkerOffline) {
+    chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
+    ServiceWorkerOffline = true;
+    disablesw.innerText = "Resume Memory";
+    
+    console.log("Service Worker PAUSED");
+    return;
+  }
+
+  // If no SW exists → turn it ON
+  try {
+    console.log("Turning Service Worker back Online!");
+    chrome.runtime.sendMessage({ type: "PB_COMPANION_RESUME" });
+    ServiceWorkerOffline = false;
+    disablesw.innerText = "Pause Memory";
+
+    console.log("Service Worker RESUMED");
+  } catch (e) {
+    console.error("Service Worker Failed:", e);
+  }
 });
 
 

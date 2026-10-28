@@ -9,6 +9,7 @@ let lastnowSW = Date.now(); // numeric timestamp
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld Expressions";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
+let ServiceWorkerOnline = true;
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
@@ -284,8 +285,8 @@ self.addEventListener("activate", (event) => {
 self.addEventListener('fetch', event => {
   const req = event.request;
   // Only cache GET requests
+  if (!ServiceWorkerOnline) return;
   if (req.method !== 'GET') return;
-
   // // Skip chrome-extension:// URLs (cannot be cached)
   if (req.url.startsWith('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
@@ -1174,6 +1175,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       console.log("%c[PULSEWORLD CONTENT] Kernel Notification:",
         "color:#00C8FF; font-family:monospace;", msg.text);
       break;
+
+    case "PB_COMPANION_PAUSE":
+      ServiceWorkerOnline = false;
+      return true;
+
+    case "PB_COMPANION_RESUME":
+      ServiceWorkerOnline = true;
+      return true;
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {
