@@ -2520,17 +2520,7 @@ async function loadInternalPage(name) {
       .replace(CONFIG_FOLDER, "")
       .replace(".txt", "");
     internalSelect.value = PulseRealm.__PULSE_CURRENT_PAGE__;
-
-    // 🔹 Update browser URL WITHOUT navigating
-    try {
-      const url = new URL(window.location.href);
-      url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
-      history.replaceState(null, "", url.toString());
-    } catch (e) {
-      console.warn("Unable to update hash via history.replaceState:", e);
-    }
-
-    
+   
     // ⭐ If page includes "admin"
     if (PulseRealm.__PULSE_CURRENT_PAGE__.includes("Admin")) {
       PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseWorldReality";
@@ -2639,6 +2629,14 @@ async function loadInternalPage(name) {
       }
     }));
     driftBtn.textContent = "Drift Realities";
+    // 🔹 Update browser URL WITHOUT navigating
+    try {
+      const url = new URL(window.location.href);
+      url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
+      history.replaceState(null, "", url.toString());
+    } catch (e) {
+      console.warn("Unable to update hash via history.replaceState:", e);
+    }
     
   } catch (e) {
     if (viewport) {
@@ -2649,13 +2647,6 @@ async function loadInternalPage(name) {
 
     PulseRealm.PulseWorldCurrentPage = fileToLoad;
     PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad.replace(CONFIG_FOLDER,"").replace(".txt","");
-    try {
-      const url = new URL(window.location.href);
-      url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
-      history.replaceState(null, "", url.toString());
-    } catch (e) {
-      console.warn("Unable to update hash via history.replaceState (error path):", e);
-    }
 
     isPulseContext = true;
     checkPersistentStorage(true);
@@ -2672,6 +2663,14 @@ async function loadInternalPage(name) {
     }));
 
     driftBtn.textContent = "Drift Realities";
+
+    try {
+      const url = new URL(window.location.href);
+      url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
+      history.replaceState(null, "", url.toString());
+    } catch (e) {
+      console.warn("Unable to update hash via history.replaceState (error path):", e);
+    }
   }
 }
 
