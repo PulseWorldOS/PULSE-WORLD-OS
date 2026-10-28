@@ -1331,7 +1331,7 @@ let isTouchMobile = false;
   const firstChar = hashRoute.charAt(0);
   const isPageHash = firstChar === firstChar.toUpperCase();
 
-  if (!hashRoute) {
+  if (!hashRoute || (hashRoute && !WORLD)) {
     if (impulse) {
       routeToInternal(impulse.trim());
     // } else if (isPageHash) {

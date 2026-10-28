@@ -973,7 +973,9 @@ async function openNamedTab(name, url) {
       PulseURL = url;
       PulseSnapshotView = new URL(url).hostname;
 
-      pulseRehydrateTabs();
+      setTimeout(() => {
+        pulseRehydrateTabs();
+      }, 1500);
       return;
     }
 
@@ -989,7 +991,9 @@ async function openNamedTab(name, url) {
             PulseURL = url;
             PulseSnapshotView = new URL(url).hostname;
 
-            pulseRehydrateTabs();
+            setTimeout(() => {
+              pulseRehydrateTabs();
+            }, 1500);
             return;
           }
 
@@ -1000,7 +1004,9 @@ async function openNamedTab(name, url) {
         PulseURL = url;
         PulseSnapshotView = new URL(url).hostname;
 
-        pulseRehydrateTabs();
+        setTimeout(() => {
+          pulseRehydrateTabs();
+        }, 1500);
         return;
       }
 
@@ -1016,7 +1022,9 @@ async function openNamedTab(name, url) {
     PulseURL = url;
     PulseSnapshotView = new URL(url).hostname;
 
-    pulseRehydrateTabs();
+    setTimeout(() => {
+      pulseRehydrateTabs();
+    }, 1500);
     return;
   }
 
@@ -1029,8 +1037,12 @@ async function openNamedTab(name, url) {
   PulseURL = url;
   PulseSnapshotView = new URL(url).hostname;
   
-  pulseRehydrateTabs();
-  await pbRenderCacheList2();
+  setTimeout(() => {
+    pulseRehydrateTabs();
+  }, 1500);
+  setTimeout(async () => {
+    await pbRenderCacheList2();
+  }, 2500);
 }
 
 function latestSnapshot(realm, link, snapIndex) {
