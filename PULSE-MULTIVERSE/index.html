@@ -1343,7 +1343,9 @@ let isTouchMobile = false;
       touch &&
       typeof touch.page === "string" &&
       touch.page.trim() !== "";
-      
+    
+    restorePageFromCookie(hashRoute);
+
     // ⭐ CASE 1 — Direct page route
     if (hasPage) {
       const nextRoute = touch.page.trim();
@@ -1364,7 +1366,6 @@ let isTouchMobile = false;
       const defaultRoute = DEFAULT_INDEX.replace(".txt", "");
       routeToInternal(defaultRoute);
     }
-    restorePageFromCookie(hashRoute);
   }
 
   const urls = [
