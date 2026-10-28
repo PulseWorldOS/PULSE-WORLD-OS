@@ -9,6 +9,9 @@ let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
+const flag = document.getElementById("pulseworld-flag");
+
+if (location.href.includes("pw=offline")) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
@@ -450,6 +453,8 @@ async function injectHUD() {
   if (window.innerHeight < 200 || window.innerWidth < 200) return;
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
+  if (location.href.includes("pw=offline")) flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
+  
   //   const flag = document.getElementById("pulseworld-flag");
   //   if (flag) {
   //     flag.textContent = "PulseBrowser OS (PIP Available)";
@@ -504,6 +509,21 @@ async function injectHUD() {
 function DomScanPreview() {
   PulseDomScan = true;
   PulseBrowserPreview("PulseBrowser OS has taken a local-only Ghost Echo for your future (" + location.hostname + ") browsing experiences!");
+}
+
+function makeOfflineKey(url) {
+  // Already has pw=offline → return as-is
+  if (url.includes("pw=offline")) return url;
+
+  // Remove trailing slash ONLY if it's not the root
+  let clean = url;
+  if (clean.endsWith("/") && clean.length > 1) {
+    clean = clean.slice(0, -1);
+  }
+
+  // Add ?pw=offline or &pw=offline depending on existing query
+  const separator = clean.includes("?") ? "&" : "?";
+  return clean + separator + "pw=offline";
 }
 
 function showPulseStreamPrompt(video) {
@@ -561,6 +581,15 @@ function showPulseStreamPrompt(video) {
       border-radius:6px;
       cursor:pointer;
     ">Cancel</button>
+
+    <button id="offlineBtn" style="
+      background:#222;
+      color:#0FF;
+      border:1px solid #0FF;
+      padding:6px 12px;
+      border-radius:6px;
+      cursor:pointer;
+    ">Go Offline</button>
   `;
 
   document.body.appendChild(box);
@@ -591,6 +620,16 @@ function showPulseStreamPrompt(video) {
     flag.style.background = "#00FF9C";
     clearTimeout(autoClose);
     box.remove();
+  };
+
+  document.getElementById("offlineBtn").onclick = () => {
+    const offline = makeOfflineKey(location.href);
+
+    flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
+    flag.style.background = "#00FF9C";
+
+    history.pushState({}, "", offline);
+    history.back();
   };
 }
 

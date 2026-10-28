@@ -3130,7 +3130,7 @@ setInterval(() => {
 
     setTimeout(() => {
       injectPulseScreenFromMemory(true);
-    }, 50);
+    }, 100);
   
   function swap() {
     nebula.style.opacity = 0;
