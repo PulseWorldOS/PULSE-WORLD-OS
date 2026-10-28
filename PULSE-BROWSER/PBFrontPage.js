@@ -7,7 +7,7 @@ let socialMediaActiveLink = null;
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
-let ServiceWorkerOffline = false;
+let ServiceWorkerOnline = true;
 let searchEngineActivated = "*Google.com";
 let temporaryLinks = [];
 let engineURL = buildSearchURL("google.com");
@@ -785,6 +785,20 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
+      return;
+    }
+    PB_LOG3.info("PB_COMPANION_CHECK", response);
+    ServiceWorkerOnline = response.ServiceWorkerOnline;
+
+    if (!ServiceWorkerOnline) {
+      disablesw.innerText = "Resume Memory";
+    } else {
+      disablesw.innerText = "Pause Memory";
+    }
+  });
   setInterval(flickerOrigins, 500); // every 1.5s
   console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
 }, 5000);
@@ -1878,20 +1892,6 @@ async function updateModuleIcons(settings, browser) {
 }
 
 async function setTheStage() {
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
-    if (!response || !response.ok) {
-      PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
-      return;
-    }
-    PB_LOG3.info("PB_COMPANION_CHECK", response);
-    ServiceWorkerOffline = response;
-
-    if (ServiceWorkerOffline) {
-      disablesw.innerText = "Resume Memory";
-    } else {
-      disablesw.innerText = "Pause Memory";
-    }
-  });
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
   const PB_HOMES = [
@@ -3017,9 +3017,9 @@ const disablesw = document.getElementById("disable-sw");
 
 document.getElementById("disable-sw").addEventListener("click", async () => {
   // If a SW exists → turn it OFF
-  if (!ServiceWorkerOffline) {
+  if (ServiceWorkerOnline) {
     chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
-    ServiceWorkerOffline = true;
+    ServiceWorkerOnline = false;
     disablesw.innerText = "Resume Memory";
     
     console.log("Service Worker PAUSED");
@@ -3030,7 +3030,7 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
   try {
     console.log("Turning Service Worker back Online!");
     chrome.runtime.sendMessage({ type: "PB_COMPANION_RESUME" });
-    ServiceWorkerOffline = false;
+    ServiceWorkerOnline = true;
     disablesw.innerText = "Pause Memory";
 
     console.log("Service Worker RESUMED");
@@ -3317,6 +3317,20 @@ setInterval(() => {
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden || document.visibilityState === "visible") {
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+        if (!response || !response.ok) {
+          PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
+          return;
+        }
+        PB_LOG3.info("PB_COMPANION_CHECK", response);
+        ServiceWorkerOnline = response.ServiceWorkerOnline;
+
+        if (!ServiceWorkerOnline) {
+          disablesw.innerText = "Resume Memory";
+        } else {
+          disablesw.innerText = "Pause Memory";
+        }
+      });
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
