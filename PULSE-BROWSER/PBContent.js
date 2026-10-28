@@ -623,14 +623,16 @@ function showPulseStreamPrompt(video) {
 
   document.getElementById("offlineBtn").onclick = () => {
     const offline = makeOfflineKey(location.href);
-    history.pushState({}, "", offline);
+    location.href = offline;
 
     flag.textContent = "PulseBrowser OS (Pulse Offline Display)";
     flag.style.background = "#00FF9C";
 
     clearTimeout(autoClose);
     box.remove();
-    history.back();
+    setTimeout(() => {
+      history.back();
+    }, 1000);
   };
 }
 
