@@ -1755,7 +1755,7 @@ async function PulseBrowserDomScan() {
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 
   letsgo(location.href);
-  const realm = location.href + "?pw=offline";
+  const realm = location.href;
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
 }
 
