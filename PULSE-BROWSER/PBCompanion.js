@@ -1198,9 +1198,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
         if (res.ServiceWorkerOnline) {
           ServiceWorkerOnline = res.ServiceWorkerOnline;
+          sendResponse({ ok: true, ServiceWorkerOnline });
         }
       });
-      sendResponse({ ok: true, ServiceWorkerOnline });
       break;
     
     case "PBEXTSETTINGS_GET":
