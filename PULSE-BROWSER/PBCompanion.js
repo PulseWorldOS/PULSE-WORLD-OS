@@ -1178,11 +1178,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PB_COMPANION_PAUSE":
       ServiceWorkerOnline = false;
-      return true;
+      break;
 
     case "PB_COMPANION_RESUME":
       ServiceWorkerOnline = true;
-      return true;
+      break;
+    
+    case "PB_COMPANION_CHECK":
+      sendResponse({ ok: true, ServiceWorkerOnline });
+      break;
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {
@@ -1297,8 +1301,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         pbRealmWarm(msg.origin);
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = msg.origin;
+        PB_LOG2.info("PBACC_REALMWARM", msg.origin);
       }
-      PB_LOG2.info("PBACC_REALMWARM", msg.origin);
       sendResponse({ ok: true });
       break;
 
@@ -1307,8 +1311,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         pbWarmPaths(msg.origins);
         // 🔥 Realm + HUD integration
         PulseRealmState.warmPathsTriggered += msg.origins.length || 1;
+        PB_LOG2.info("PBACC_WARMPATH_EVENT", msg.origins);
       }
-      PB_LOG2.info("PBACC_WARMPATH_EVENT", msg.origins);
       sendResponse({ ok: true });
       break;
 
@@ -1321,8 +1325,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "FIRSTPOST_WARMPATH_EVENT":
       if (Array.isArray(msg.origins)) {
         pbWarmPaths(msg.origins);
+        PB_LOG2.info("FIRSTPOST_WARMPATH_EVENT", msg.origins);
       }
-      PB_LOG2.info("FIRSTPOST_WARMPATH_EVENT", msg.origins);
       sendResponse({ ok: true });
       break;
 
@@ -1340,8 +1344,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         };
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
+        PB_LOG2.info("PBACC_WARMPATH", origin);
       }
-      PB_LOG2.info("PBACC_WARMPATH", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1354,8 +1358,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         };
         PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.lastWarmOrigin = origin;
+        PB_LOG2.info("PBACC_ACCELERATE", origin);
       }
-      PB_LOG2.info("PBACC_ACCELERATE", origin);
       sendResponse({ ok: true });
       break;
 
@@ -1699,11 +1703,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PULSE_OS_PING": {
       if (msg.time && isValid(msg.time)) {
-
         PulseRealmState.lastPing = new Date().toLocaleString();
-
         const incoming = Number(msg.time);   // numeric realm timestamp
-
         // If sessionStart doesn't exist yet, choose earliest realm
         if (!PulseRealmState.sessionStart) {
           let earliest = Math.min(nowSW, incoming);
@@ -1721,8 +1722,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current, PulseRealmState.sessionStart);
           }
         }
-      }
-      
+      }      
       sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart });
       break;
     }
@@ -1794,8 +1794,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "STORAGE_PASSOFF":
       if (msg.totalUsed) {
         totalUsed = msg.totalUsed;
+        sendResponse({ ok: true, totalUsed });
       }
-      sendResponse({ ok: true, totalUsed });
       break;
     // -------------------------------------------------------
     // ACCELERATE → WARM-PATH EVENT (fallback)

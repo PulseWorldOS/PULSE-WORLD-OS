@@ -1878,6 +1878,20 @@ async function updateModuleIcons(settings, browser) {
 }
 
 async function setTheStage() {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG3.info("PB_COMPANION_CHECK ERROR RESPONSE", response);
+      return;
+    }
+    PB_LOG3.info("PB_COMPANION_CHECK", response);
+    ServiceWorkerOffline = response;
+
+    if (ServiceWorkerOffline) {
+      disablesw.innerText = "Resume Memory";
+    } else {
+      disablesw.innerText = "Pause Memory";
+    }
+  });
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
   const PB_HOMES = [
