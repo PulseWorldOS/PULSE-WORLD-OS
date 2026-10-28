@@ -16,6 +16,7 @@ if (location.href.includes("pw=offline")) {
     if (response.ok) {
       setTimeout(() => {
         history.back();
+        if (location.href.includes("pw=offline")) location.href = location.href.replace(/[?&]pw=offline/g, "");
       }, 500);
     }
   });
