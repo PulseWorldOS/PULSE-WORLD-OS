@@ -779,7 +779,7 @@ PulseRealm.PulseHistory = {
   stack: [
     {
       identity: PulseRealm.PulseUser ?? generatePulseUser(),
-      page: PulseRealm.__PULSE_CURRENT_PAGE__ ?? null,
+      page: PulseRealm.__PULSE_CURRENT_PAGE__ ?? PulseRealm.__PULSE_LAST_PAGE__ ?? null,
       timing: PulseRealm.LoadTiming ?? 0,
       time: PulseRealm.CurrentTime,
       timeSpent: PulseRealm.PageTime ?? 0,
@@ -2495,6 +2495,17 @@ async function loadInternalPage(name) {
   link.href = fileToLoad;
   link.as = "fetch";
   document.head.appendChild(link);
+
+  const all = document.querySelectorAll("[id]");
+  let RealityPage = false;
+
+  for (const el of all) {
+    const id = el.id;
+    if (id === name) {
+      RealityPage = true;
+      fileToLoad = CONFIG_FOLDER + "PulseWorldReality.txt";
+    }
+  }
 
   try {
     let res = await fetch(fileToLoad);
