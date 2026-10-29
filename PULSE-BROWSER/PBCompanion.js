@@ -6,6 +6,7 @@
 let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
+let pwmoment = false;
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld-PB-Companion";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
@@ -260,7 +261,10 @@ function makeOfflineKey(url) {
 
   // Add ?pw=offline or &pw=offline depending on existing query
   const separator = clean.includes("?") ? "&" : "?";
-  return clean + separator + "pw=offline";
+  let decision = clean + separator + "pw=offline";
+  if (pwmoment) decision = clean + separator + "pw=moment";
+  pwmoment = false;
+  return decision;
 }
 
 async function cacheMyBlob(cache, url, myBlob) {
@@ -1190,6 +1194,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "HISTORY_BACK":
       if (msg.url) {
+        if (msg.url.includes("pw=moment")) pwmoment = true;
         pbPreconnect([msg.url]);
         fetch(msg.url, { mode: "no-cors" }).catch(() => {});
         sendResponse({ ok: true });
