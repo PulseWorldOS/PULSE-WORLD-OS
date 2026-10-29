@@ -11,39 +11,49 @@ let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 
 if (location.href.includes("pw=offline")) {
-
   chrome.runtime.sendMessage({
     type: "HISTORY_BACK",
     url: location.href
   }, (response) => {
-
     if (chrome.runtime.lastError) return;
-
     if (response.ok) {
-
       const currentUrl = location.href;
-
       history.back();
-
       setTimeout(() => {
-
         // Still here?
         if (location.href === currentUrl) {
-
           const cleanUrl = currentUrl
             .replace(/[?&]pw=offline/g, "")
             .replace("?&", "?")
             .replace(/\?$/, "")
             .replace(/&$/, "");
-
           location.href = cleanUrl;
         }
-
       }, 750);
-
     }
   });
-
+} else if (location.href.includes("pw=moment")) {
+  chrome.runtime.sendMessage({
+    type: "HISTORY_BACK",
+    url: location.href
+  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.ok) {
+      const currentUrl = location.href;
+      history.back();
+      setTimeout(() => {
+        // Still here?
+        if (location.href === currentUrl) {
+          const cleanUrl = currentUrl
+            .replace(/[?&]pw=moment/g, "")
+            .replace("?&", "?")
+            .replace(/\?$/, "")
+            .replace(/&$/, "");
+          location.href = cleanUrl;
+        }
+      }, 750);
+    }
+  });
 }
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
@@ -1362,7 +1372,7 @@ function injectPulseFlag() {
   //   flag.textContent = "PulseBrowser OS";
   //   flag.style.background = "#00C8FF";
   // }
-
+  if (location.href.includes("pw=moment") && flag) flag.textContent = "PulseBrowser OS (Pulse Saved Moment)";
   if (location.href.includes("pw=offline") && flag) flag.textContent = "PulseBrowser OS (Pulse Offline Memory)";
   
   let realStory = getPrimaryVideo();
