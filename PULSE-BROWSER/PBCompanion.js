@@ -265,7 +265,6 @@ function makeOfflineKey(url) {
   let decision = clean + separator + "pw=offline";
   if (pwmoment) decision = clean + separator + "pw=moment";  
   if (pwmoment) pwmomenturl = url;
-  if (pwmoment) pwmoment = false;
   return decision;
 }
 
@@ -2092,6 +2091,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PulseRealmState.lastTitle = "PulseBrowser OS Console";
     if (pwmoment) pbPreconnect([pwmomenturl]);
     if (pwmoment) fetch(pwmomenturl, { mode: "no-cors" }).catch(() => {});
+    pwmoment = false;
   } else {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
