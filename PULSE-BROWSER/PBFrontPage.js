@@ -3212,7 +3212,7 @@ function CheckBackTab() {
       setTimeout(() => {
         const u = new URL(response.comebackURL);
         openNamedTab(u.hostname, response.comebackURL);
-      }, 200);
+      }, 50);
     }
   });
 }
