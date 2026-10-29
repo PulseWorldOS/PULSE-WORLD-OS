@@ -66,15 +66,21 @@ function experimentalColor(v) {
 // ---------------------------------------------------------------------------
 function updateKernel(realm, SessionStart) {
   const el = document.getElementById("pb-hud-kernel");
+  const lastPage = realm.lastPage;
+  const lastTitle = realm.lastTitle;
   const lastURL = realm.lastURL;
   let lastURLshort = lastURL;
   if (lastURL) lastURLshort = lastURL.slice(0, 75);
+  let lastPageshort = lastPage;
+  if (lastPage) lastPageshort = lastPage.slice(0, 75);
+  let lastTitleshort = lastTitle;
+  if (lastTitle) lastTitleshort = lastTitle.slice(0, 75);
   
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
     Session Start: <font color="gold">${SessionStart}</font><br/>
-    Last Page: <font color="#0FF">${realm.lastPage || "-"}</font><br/>
-    Last Title: <font color="#0FF">${realm.lastTitle || "-"}</font><br/>
+    Last Page: <font color="#0FF">${lastPageshort || "-"}</font><br/>
+    Last Title: <font color="#0FF">${lastTitleshort || "-"}</font><br/>
     Last URL: <font color="#0FF">${lastURLshort || "-"}</font><br/>
     Domain Class: <font color="#0FF">${realm.lastDomainClass || "PulseWorld"}</font><br/>
     Data Band: <font color="#0FF">${realm.band || "-"}</font><br/>

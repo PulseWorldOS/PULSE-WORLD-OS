@@ -5,6 +5,7 @@
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
+let lastFailURL = "https://www.pulseworld.net";
 let lastnowSW = Date.now(); // numeric timestamp
 let comeback = false;
 let comebackURL = null;
@@ -859,7 +860,7 @@ async function pbPrefetch(urls = []) {
 
       if (res && res.status === 404) {
         fails[url] = (fails[url] || 0) + 1;
-
+        lastFailURL = url;
         if (fails[url] >= 2) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
         }
@@ -912,7 +913,7 @@ async function pbPreload(origin) {
 
       if (res && res.status === 404) {
         fails[url] = (fails[url] || 0) + 1;
-
+        lastFailURL = url;
         if (fails[url] >= 2) {
           await chrome.storage.local.set({ pb_fail_cache: fails });
         }
@@ -2302,7 +2303,7 @@ const PBUniversalBoost2 = {
 
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
-
+          lastFailURL = url;
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
           }
@@ -2515,6 +2516,7 @@ const PBGlobalAssetMap = {
 
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
+          lastFailURL = url;
           console.log("[PBGlobalAssetMap] 404 for", url);
 
           if (fails[url] >= 2) {

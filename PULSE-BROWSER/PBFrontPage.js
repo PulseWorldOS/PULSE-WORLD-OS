@@ -21,7 +21,7 @@ let PulseSnapshotView = null;
 let PulseURL = null;
 let lastPulseActiveEntries = 0;
 let totalBytes = 0;
-
+let lastFailURL = "https://www.pulseworld.net";
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
@@ -156,6 +156,28 @@ async function pbRequestCacheList2() {
   });
 }
 
+function getReadableName(url) {
+  try {
+    const u = new URL(url);
+
+    // Remove protocol + www
+    let host = u.hostname.replace("www.", "");
+
+    // Remove TLD (.com, .net, etc)
+    host = host.split(".")[0];
+
+    // Replace dashes with spaces
+    host = host.replace(/[-_]/g, " ");
+
+    // Capitalize each word
+    host = host.replace(/\b\w/g, c => c.toUpperCase());
+
+    return host;
+  } catch {
+    return url;
+  }
+}
+
 let predictionText = "Running Stable";
 let statsHTMLShell = null;
 
@@ -279,7 +301,7 @@ async function pbRenderCacheList2() {
 
     if (cache.lastEntry) {
       let entry = cache.lastEntry;
-
+      if (isPulseWorld(lastFailURL)) lastFailURL = entry;
       li.style.cursor = "pointer";
       const u = new URL(entry);
       li.onclick = async () => {
@@ -291,17 +313,21 @@ async function pbRenderCacheList2() {
     
     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
 
-    let errorcolor = "lightgreen";
-    if (errorcount) errorcolor = "#FF8844";
+    
     if (!li) li = document.getElementById("li");
+    const u = new URL(lastFailURL);
+    const RealmURL = getReadableName(u);
+    let errorcolor = "lightgreen";
+    if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
 
     li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
       `<p>
+      Last Realm Drift: <font color="${errorcolor}"><strong>${RealmURL || "-"}</strong></font><br>
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
-      PulseBrowser Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
-      PulseBrowser Offline: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
+      Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
+      Multiverse Offline Realities: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
 
     listEl.appendChild(li);
@@ -765,7 +791,7 @@ async function pulseGPUInspector(adapter, device) {
 
   // Basic info
   console.log("🎮 WebGPU Inspector");
-  console.log("Adapter Name:", adapter.name);
+  console.log("Adapter Name:", adapter.name ?? "PulseEngine 2028");
   console.log("Adapter Type:", adapter.isFallbackAdapter ? "Fallback" : "Primary");
   console.log("Features:", [...adapter.features]);
 
@@ -1310,7 +1336,7 @@ const PBUniversalBoost = {
 
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
-
+          lastFailURL = url;
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });
           }
@@ -2030,6 +2056,7 @@ async function setTheStage() {
       e.preventDefault();
       // ⭐ If NOT a module key → send key to search box
       if (moduleKeys.includes(key)) {
+        e.preventDefault();
         keyHold2Timer = setTimeout(() => {
           const searchArea = document.getElementById("searchengineTextbox");
           searchArea.focus();
@@ -2045,6 +2072,7 @@ async function setTheStage() {
     
     // ⭐ If NOT a module key → send key to search box
     if (moduleKeys.includes(key)) {
+      e.preventDefault();
       // Start long-press timer
       keyHoldTimer = setTimeout(() => {
         if (keyIsDown) {

@@ -4,7 +4,7 @@
 // ============================================================================
 let PulseRealm = {};
 let PulseRealmSettings = {};
-
+let lastFailURL = "https://www.pulseworld.net";
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
@@ -148,7 +148,7 @@ const PBUniversalBoost = {
 
         if (res && res.status === 404) {
           fails[url] = (fails[url] || 0) + 1;
-
+          lastFailURL = url;
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
             await chrome.storage.local.set({ pb_fail_cache: fails });

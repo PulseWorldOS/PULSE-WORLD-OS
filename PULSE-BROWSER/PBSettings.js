@@ -256,6 +256,28 @@ async function pbRequestCacheList() {
   });
 }
 
+function getReadableName(url) {
+  try {
+    const u = new URL(url);
+
+    // Remove protocol + www
+    let host = u.hostname.replace("www.", "");
+
+    // Remove TLD (.com, .net, etc)
+    host = host.split(".")[0];
+
+    // Replace dashes with spaces
+    host = host.replace(/[-_]/g, " ");
+
+    // Capitalize each word
+    host = host.replace(/\b\w/g, c => c.toUpperCase());
+
+    return host;
+  } catch {
+    return url;
+  }
+}
+
 async function pbRenderCacheList() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
@@ -373,7 +395,7 @@ async function pbRenderCacheList() {
 
     if (cache.lastEntry) {
       let entry = cache.lastEntry;
-
+      if (isPulseWorld(lastFailURL)) lastFailURL = entry;
       li.style.cursor = "pointer";
       const u = new URL(entry);
       li.onclick = async () => {
@@ -385,17 +407,21 @@ async function pbRenderCacheList() {
 
     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
 
-    let errorcolor = "lightgreen";
-    if (errorcount) errorcolor = "#FF8844";
+    
     if (!li) li = document.getElementById("li");
+    const u = new URL(lastFailURL);
+    const RealmURL = getReadableName(u);
+    let errorcolor = "lightgreen";
+    if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
 
     li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
       `<p>
+      Last Realm Drift: <font color=${errorcolor}><strong>${RealmURL || "-"}</strong></font><br>
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
-      PulseBrowser Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
-      PulseBrowser Offline: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
+      Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
+      Multiverse Offline Realities: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
 
     listEl.appendChild(li);
