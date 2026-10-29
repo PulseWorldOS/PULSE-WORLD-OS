@@ -11,15 +11,39 @@ let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 
 if (location.href.includes("pw=offline")) {
-  chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: location.href }, (response) => {
+
+  chrome.runtime.sendMessage({
+    type: "HISTORY_BACK",
+    url: location.href
+  }, (response) => {
+
     if (chrome.runtime.lastError) return;
+
     if (response.ok) {
+
+      const currentUrl = location.href;
+
+      history.back();
+
       setTimeout(() => {
-        history.back();
-        if (location.href.includes("pw=offline")) location.href = location.href.replace(/[?&]pw=offline/g, "");
-      }, 500);
+
+        // Still here?
+        if (location.href === currentUrl) {
+
+          const cleanUrl = currentUrl
+            .replace(/[?&]pw=offline/g, "")
+            .replace("?&", "?")
+            .replace(/\?$/, "")
+            .replace(/&$/, "");
+
+          location.href = cleanUrl;
+        }
+
+      }, 750);
+
     }
   });
+
 }
  
 console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected",
