@@ -561,6 +561,21 @@ function makeOfflineKey(url) {
   return clean + separator + "pw=offline";
 }
 
+function makeMomentKey(url) {
+  // Already has pw=offline → return as-is
+  if (url.includes("pw=moment")) return url;
+
+  // Remove trailing slash ONLY if it's not the root
+  let clean = url;
+  if (clean.endsWith("/") && clean.length > 1) {
+    clean = clean.slice(0, -1);
+  }
+
+  // Add ?pw=offline or &pw=offline depending on existing query
+  const separator = clean.includes("?") ? "&" : "?";
+  return clean + separator + "pw=moment";
+}
+
 function showPulseStreamPrompt(video) {
   // Prevent duplicates
   if (document.getElementById("pulseStreamPrompt")) return;
@@ -573,7 +588,7 @@ function showPulseStreamPrompt(video) {
     position: fixed;
     bottom: 20px;
     left: 290px;
-    width: 360px;
+    width: 290px;
     background: rgba(0,0,0,0.88);
     color: #00FF9C;
     padding: 12px 16px;
@@ -615,7 +630,16 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">Cancel</button>
+    ">Cancel Action</button>
+
+    <button id="saveMoment" style="
+      background:#222;
+      color:#0FF;
+      border:1px solid #0FF;
+      padding:6px 12px;
+      border-radius:6px;
+      cursor:pointer;
+    ">Save Moment</button>
 
     <button id="offlineBtn" style="
       background:#222;
@@ -624,7 +648,7 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">Pulse Memory</button>
+    ">Offline Memory</button>
   `;
 
   document.body.appendChild(box);
@@ -663,6 +687,18 @@ function showPulseStreamPrompt(video) {
     location.href = offline;
 
     flag.textContent = "PulseBrowser OS (Pulse Offline Memory)";
+    flag.style.background = "#00FF9C";
+
+    clearTimeout(autoClose);
+    box.remove();
+  };
+
+  document.getElementById("saveMoment").onclick = () => {
+    const moment = makeMomentKey(location.href);
+    chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: moment  });
+    location.href = moment;
+
+    flag.textContent = "PulseBrowser OS (Pulse Saved Moment)";
     flag.style.background = "#00FF9C";
 
     clearTimeout(autoClose);
