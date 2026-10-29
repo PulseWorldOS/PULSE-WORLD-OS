@@ -1045,10 +1045,17 @@ async function openNamedTab(name, url) {
 
 function latestSnapshot(realm, link, snapIndex) {
   const snapshotKey = `pulse_snapshot_${realm}`;
-
+  let TempLink = false;
+  temporaryLinks.forEach((origin) => {
+    if (origin === link) TempLink = true;
+  });
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap) renderSnapshot(snap, snapIndex, realm, link);
+    if (snap && !TempLink) {
+      renderSnapshot(snap, snapIndex, realm, link);
+    } else {
+      renderTemporary(snap, snapIndex, realm, link);
+    }
   });
 }
 
@@ -1107,6 +1114,53 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
     setTimeout(() => {
       topPanel.classList.remove("electrify");
     }, 1500);
+  }
+
+  if (div) {
+    div.onclick = async () => {
+      pbPreconnect([link]);
+      openNamedTab(realm, link);
+    };
+  }
+}
+
+async function renderTemporary(snapshot, snapIndex, realm, link) {
+  const bubbleId = `PulseBrowser-OS-Temporary${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+
+  if (snapshot) {
+    if (!div) {
+      div = document.createElement("div");
+      div.id = bubbleId;
+      div.className = bubbleId;
+
+      const favicon = snapshot.favicon || "";
+      const regfavicon = snapshot.regfavicon || "";
+      const bestfavicon = favicon || regfavicon;
+      const osfallback = chrome.runtime.getURL("PulseOSTab.png");
+
+      // ⭐ No inline JS — CSP-safe
+      div.innerHTML = `
+        <div class="Snapshot-Viewport">
+          <img class="Snapshot-Favicon"
+               src="${bestfavicon}"
+               alt="favicon">
+        </div>
+      `;
+
+      document.body.appendChild(div);
+
+      // ⭐ Attach fallback in JS (CSP-safe)
+      const img = div.querySelector(".Snapshot-Favicon");
+
+      img.addEventListener("error", () => {
+        // First fallback → OS icon
+        img.src = osfallback;
+      });
+    }
+
+  } else {
+    pulseRehydrateTabs();
   }
 
   if (div) {
@@ -2197,6 +2251,7 @@ document.getElementById("navigate").addEventListener("click", async () => {
     return; // do nothing
   }
 
+  if (text.includes("http://")) text = text.replace("http://", "");
   if (text.includes("https://")) text = text.replace("https://", "");
 
   // Domain or domain + path
@@ -2334,6 +2389,7 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
     return;
   }
 
+  if (text.includes("http://")) text = text.replace("http://", "");
   if (text.includes("https://")) text = text.replace("https://", "");
 
   // Domain or domain + path (no spaces allowed)
@@ -2370,6 +2426,7 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", async
 
     let text = document.getElementById("searchengineTextbox").textContent.trim();
 
+    if (text.includes("http://")) text = text.replace("http://", "");
     if (text.includes("https://")) text = text.replace("https://", "");
 
     // Domain or domain + path
