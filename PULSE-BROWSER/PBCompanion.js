@@ -677,7 +677,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   let page = tab.page;
   let origin = url;
   const domainClass = pbDomainClass(url);
-  
+
   if (url.includes("newtab")) {
     // url = "impulse://newtab"
     // PulseRealmState.lastURL = url;
