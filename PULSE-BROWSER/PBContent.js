@@ -694,7 +694,7 @@ function showPulseStreamPrompt(video) {
   };
 
   document.getElementById("offlineBtn").onclick = () => {
-    const offline = makeOfflineKey(location.href);
+    const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
     chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
     location.href = offline;
 
@@ -706,7 +706,7 @@ function showPulseStreamPrompt(video) {
   };
 
   document.getElementById("saveMoment").onclick = () => {
-    const moment = makeMomentKey(location.href);
+    const moment = makeMomentKey(location.href.replace(window.location.hash, ""));
     chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: moment  });
     location.href = moment;
 

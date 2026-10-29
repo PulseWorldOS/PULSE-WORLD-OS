@@ -1201,7 +1201,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.url) {
         pbPreconnect([msg.url]);
         fetch(msg.url, { mode: "no-cors" }).catch(() => {});
-        setTimeout(backToOriginal, 500);
+        setTimeout(backToOriginal, 1500);
         sendResponse({ ok: true });
       }
       break;
