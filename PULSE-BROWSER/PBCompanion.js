@@ -251,6 +251,7 @@ async function pbWarmBoot() {
 function makeOfflineKey(url) {
   // Already has pw=offline → return as-is
   if (url.includes("pw=offline")) return url;
+  if (url.includes("pw=moment")) return url;
 
   // Remove trailing slash ONLY if it's not the root
   let clean = url;
