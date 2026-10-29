@@ -19,9 +19,9 @@ if (location.href.includes("pw=offline")) {
   }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.ok) {
+      const currentUrl = location.href;
       setTimeout(() => {
-        history.back();
-        const currentUrl = location.href;
+        // history.back();
         // Still here?
         if (location.href === currentUrl) {
           const cleanUrl = currentUrl
@@ -41,9 +41,9 @@ if (location.href.includes("pw=offline")) {
   }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.ok) {
+      const currentUrl = location.href;
       setTimeout(() => {
-        history.back();
-        const currentUrl = location.href;
+        // history.back();
         // Still here?
         if (location.href === currentUrl) {
           const cleanUrl = currentUrl
