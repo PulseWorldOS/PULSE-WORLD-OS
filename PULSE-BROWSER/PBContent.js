@@ -12,9 +12,11 @@ let lastnowCT = Date.now(); // numeric timestamp
 
 
 if (location.href.includes("pw=offline")) {
+  const url = new URL(location.href);
+  url.hash = "";
   chrome.runtime.sendMessage({
     type: "HISTORY_BACK",
-    url: location.href
+    url
   }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.ok) {
@@ -34,9 +36,11 @@ if (location.href.includes("pw=offline")) {
     }
   });
 } else if (location.href.includes("pw=moment")) {
+  const url = new URL(location.href);
+  url.hash = "";
   chrome.runtime.sendMessage({
     type: "HISTORY_BACK",
-    url: location.href
+    url
   }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.ok) {
