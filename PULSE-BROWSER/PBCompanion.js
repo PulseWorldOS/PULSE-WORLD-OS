@@ -7,6 +7,7 @@ let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
 let pwmoment = false;
+let pwmomenturl = null;
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld-PB-Companion";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
@@ -262,8 +263,9 @@ function makeOfflineKey(url) {
   // Add ?pw=offline or &pw=offline depending on existing query
   const separator = clean.includes("?") ? "&" : "?";
   let decision = clean + separator + "pw=offline";
-  if (pwmoment) decision = clean + separator + "pw=moment";
-  pwmoment = false;
+  if (pwmoment) decision = clean + separator + "pw=moment";  
+  if (pwmoment) pwmomenturl = url;
+  if (pwmoment) pwmoment = false;
   return decision;
 }
 
@@ -1182,6 +1184,13 @@ function isCacheableURL(url) {
 }
 
 
+function backToOriginal() {
+  chrome.storage.local.get("originalTabId", data => {
+    if (data.originalTabId) {
+      chrome.tabs.update(data.originalTabId, { active: true });
+    }
+  });
+}
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
@@ -1195,8 +1204,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "HISTORY_BACK":
       if (msg.url) {
         if (msg.url.includes("pw=moment")) pwmoment = true;
+        if (msg.url.includes("pw=moment")) pwmomenturl = msg.url;
         pbPreconnect([msg.url]);
         fetch(msg.url, { mode: "no-cors" }).catch(() => {});
+        setTimeout(backToOriginal, 500);
         sendResponse({ ok: true });
       }
       break;
@@ -2079,6 +2090,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PulseRealmState.lastPage = "NewTab";
     PulseRealmState.lastDomainClass = "PulseWorld";
     PulseRealmState.lastTitle = "PulseBrowser OS Console";
+    if (pwmoment) pbPreconnect([pwmomenturl]);
+    if (pwmoment) fetch(pwmomenturl, { mode: "no-cors" }).catch(() => {});
   } else {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;

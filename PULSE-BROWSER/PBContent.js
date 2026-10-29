@@ -10,6 +10,7 @@ let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 
+
 if (location.href.includes("pw=offline")) {
   chrome.runtime.sendMessage({
     type: "HISTORY_BACK",
