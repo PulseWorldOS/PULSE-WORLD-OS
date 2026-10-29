@@ -794,6 +794,8 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
+  setInterval(flickerOrigins, 1500); // every 1.5s
+  console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
     if (!response || !response.ok) {
       return;
@@ -806,8 +808,6 @@ setInterval(() => {
       disablesw.innerText = "Pause Companion";
     }
   });
-  setInterval(flickerOrigins, 1500); // every 1.5s
-  console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
 }, 5000);
 
 async function gpuWarmExtra() {

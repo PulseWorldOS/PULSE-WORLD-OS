@@ -1188,7 +1188,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "HISTORY_BACK":
-      sendResponse({ ok: true });
+      if (msg.url) {
+        pbPreconnect([msg.url]);
+        fetch(msg.url, { mode: "no-cors" }).catch(() => {});
+        sendResponse({ ok: true });
+      }
       break;
 
     case "PB_COMPANION_PAUSE":

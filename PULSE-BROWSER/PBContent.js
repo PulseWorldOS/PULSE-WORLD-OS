@@ -11,7 +11,7 @@ let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 
 if (location.href.includes("pw=offline")) {
-  chrome.runtime.sendMessage({ type: "HISTORY_BACK"  }, (response) => {
+  chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: location.href }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.ok) {
       setTimeout(() => {
@@ -635,7 +635,7 @@ function showPulseStreamPrompt(video) {
 
   document.getElementById("offlineBtn").onclick = () => {
     const offline = makeOfflineKey(location.href);
-    chrome.runtime.sendMessage({ type: "HISTORY_BACK" });
+    chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
     location.href = offline;
 
     flag.textContent = "PulseBrowser OS (Pulse Offline Memory)";
