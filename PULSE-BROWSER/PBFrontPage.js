@@ -25,6 +25,12 @@ let lastFailURL = "https://www.pulseworld.net";
 let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
+let online = navigator.onLine;
+if (!online) {
+  document.title = "PulseBrowser OS [Offline]"
+} else {
+  document.title = "PulseBrowser OS"
+}
 // Internet Origin (ARPANET first packet)
 const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
 // Your PulseWorld Origin Consensus
@@ -3232,6 +3238,12 @@ setInterval(() => {
   } else if (userInteracted) {
     document.getElementById("timerBtn").style.display = "none";
     timerX = 0;
+  }
+  online = navigator.onLine;
+  if (!online) {
+    document.title = "PulseBrowser OS [Offline]"
+  } else {
+    document.title = "PulseBrowser OS"
   }
   CheckBackTab();
 }, sync);
