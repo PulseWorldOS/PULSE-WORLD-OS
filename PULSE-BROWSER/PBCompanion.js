@@ -6,8 +6,7 @@
 let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
-let pwmoment = false;
-let pwmomenturl = null;
+
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld-PB-Companion";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
@@ -252,7 +251,6 @@ async function pbWarmBoot() {
 function makeOfflineKey(url) {
   // Already has pw=offline → return as-is
   if (url.includes("pw=offline")) return url;
-  if (url.includes("pw=moment")) return url;
 
   // Remove trailing slash ONLY if it's not the root
   let clean = url;
@@ -263,8 +261,6 @@ function makeOfflineKey(url) {
   // Add ?pw=offline or &pw=offline depending on existing query
   const separator = clean.includes("?") ? "&" : "?";
   let decision = clean + separator + "pw=offline";
-  if (pwmoment) decision = clean + separator + "pw=moment";  
-  if (pwmoment) pwmomenturl = decision;
   return decision;
 }
 
@@ -1202,8 +1198,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "HISTORY_BACK":
       if (msg.url) {
-        if (msg.url.includes("pw=moment")) pwmoment = true;
-        if (msg.url.includes("pw=moment")) pwmomenturl = msg.url;
         pbPreconnect([msg.url]);
         fetch(msg.url, { mode: "no-cors" }).catch(() => {});
         setTimeout(backToOriginal, 500);
@@ -2089,9 +2083,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PulseRealmState.lastPage = "NewTab";
     PulseRealmState.lastDomainClass = "PulseWorld";
     PulseRealmState.lastTitle = "PulseBrowser OS Console";
-    if (pwmoment) pbPreconnect([pwmomenturl]);
-    if (pwmoment) fetch(pwmomenturl, { mode: "no-cors" }).catch(() => {});
-    pwmoment = false;
+    pbPreconnect([PulseRealmState.lastURL]);
+    fetch(PulseRealmState.lastURL, { mode: "no-cors" }).catch(() => {});
   } else {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;

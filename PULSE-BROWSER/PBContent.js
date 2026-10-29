@@ -40,19 +40,19 @@ if (location.href.includes("pw=offline")) {
   }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.ok) {
-      // const currentUrl = location.href;
-      // setTimeout(() => {
-      //   history.back();
-      //   // Still here?
-      //   if (location.href === currentUrl) {
-      //     const cleanUrl = currentUrl
-      //       .replace(/[?&]pw=moment/g, "")
-      //       .replace("?&", "?")
-      //       .replace(/\?$/, "")
-      //       .replace(/&$/, "");
-      //     location.href = cleanUrl;
-      //   }
-      // }, 750);
+      const currentUrl = location.href;
+      setTimeout(() => {
+        history.back();
+        // Still here?
+        if (location.href === currentUrl) {
+          const cleanUrl = currentUrl
+            .replace(/[?&]pw=moment/g, "")
+            .replace("?&", "?")
+            .replace(/\?$/, "")
+            .replace(/&$/, "");
+          location.href = cleanUrl;
+        }
+      }, 750);
     }
   });
 }
