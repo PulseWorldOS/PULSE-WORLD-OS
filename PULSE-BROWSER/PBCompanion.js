@@ -311,9 +311,9 @@ self.addEventListener('fetch', event => {
 
       if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
         const pwoffline = makeOfflineKey(req.url);
-        let netclone = net.clone();
+        let netclone = net.clone();        
+        cache.put("https://www.pulseworld.net/#LastRealm", netclone);
         cache.put(pwoffline, netclone);
-        cache.put("https://www.pulseworld.net/LastRealm", netclone);
       }
 
       return net;
