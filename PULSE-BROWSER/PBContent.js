@@ -682,7 +682,7 @@ function showPulseStreamPrompt(video) {
   // Auto-dismiss after 12 seconds
   const autoClose = setTimeout(() => {
     if (box) box.remove();
-  }, 12000);
+  }, 6000);
 
   // Enable PIP
   document.getElementById("pipEnableBtn").onclick = () => {
@@ -1323,8 +1323,6 @@ async function saveVideoToMemory(videoElement) {
 
 document.addEventListener("click", e => {
   const el = e.target.closest("a");
-  const box = document.getElementById("pulseStreamPrompt");
-  if (box) box.remove();
   if (!el) return;
 
   const href = el.getAttribute("href");

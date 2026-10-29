@@ -1169,19 +1169,20 @@ function getReadableName(url) {
   try {
     const u = new URL(url);
 
-    // Remove protocol + www
-    let host = u.hostname.replace("www.", "");
+    let host = u.hostname.replace(/^www\./, "");
 
-    // Remove TLD (.com, .net, etc)
-    host = host.split(".")[0];
+    const parts = host.split(".");
 
-    // Replace dashes with spaces
+    if (parts.length >= 2) {
+      host = parts[parts.length - 2];
+    }
+
     host = host.replace(/[-_]/g, " ");
 
-    // Capitalize each word
     host = host.replace(/\b\w/g, c => c.toUpperCase());
 
     return host;
+
   } catch {
     return url;
   }

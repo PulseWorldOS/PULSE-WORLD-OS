@@ -26,10 +26,13 @@ let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
 let online = navigator.onLine;
+const titlediv = document.getElementById("title");
 if (!online) {
-  document.title = "PulseBrowser OS [Offline]"
+  titlediv.textContent = "PulseBrowser OS (Drifting..)";
+  document.title = "PulseBrowser OS [Offline]";
 } else {
-  document.title = "PulseBrowser OS"
+  titlediv.textContent = "PulseBrowser OS";
+  document.title = "PulseBrowser OS";
 }
 // Internet Origin (ARPANET first packet)
 const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
@@ -166,19 +169,20 @@ function getReadableName(url) {
   try {
     const u = new URL(url);
 
-    // Remove protocol + www
-    let host = u.hostname.replace("www.", "");
+    let host = u.hostname.replace(/^www\./, "");
 
-    // Remove TLD (.com, .net, etc)
-    host = host.split(".")[0];
+    const parts = host.split(".");
 
-    // Replace dashes with spaces
+    if (parts.length >= 2) {
+      host = parts[parts.length - 2];
+    }
+
     host = host.replace(/[-_]/g, " ");
 
-    // Capitalize each word
     host = host.replace(/\b\w/g, c => c.toUpperCase());
 
     return host;
+
   } catch {
     return url;
   }
@@ -1128,7 +1132,6 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       const img = div.querySelector(".Snapshot-Favicon");
 
       img.addEventListener("error", () => {
-        // First fallback → OS icon
         img.src = osfallback;
       });
     }
@@ -3241,9 +3244,11 @@ setInterval(() => {
   }
   online = navigator.onLine;
   if (!online) {
-    document.title = "PulseBrowser OS [Offline]"
+    titlediv.textContent = "PulseBrowser OS (Drifting..)";
+    document.title = "PulseBrowser OS [Offline]";
   } else {
-    document.title = "PulseBrowser OS"
+    titlediv.textContent = "PulseBrowser OS";
+    document.title = "PulseBrowser OS";
   }
   CheckBackTab();
 }, sync);
