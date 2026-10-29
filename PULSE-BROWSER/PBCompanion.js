@@ -302,7 +302,7 @@ self.addEventListener('fetch', event => {
     
     if (cached) {
       // const blob = await cached.blob();
-      // cacheMyBlob(cache, req.url, blob);
+      // cacheMyBlob(cache, "https://www.pulseworld.net/LastRealm", blob);
       return cached; // Warm-state: instant return
     }
 
@@ -311,7 +311,9 @@ self.addEventListener('fetch', event => {
 
       if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
         const pwoffline = makeOfflineKey(req.url);
-        cache.put(pwoffline, net.clone());
+        let netclone = net.clone();
+        cache.put(pwoffline, netclone);
+        cache.put("https://www.pulseworld.net/LastRealm", netclone);
       }
 
       return net;
