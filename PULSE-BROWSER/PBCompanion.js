@@ -264,7 +264,7 @@ function makeOfflineKey(url) {
   const separator = clean.includes("?") ? "&" : "?";
   let decision = clean + separator + "pw=offline";
   if (pwmoment) decision = clean + separator + "pw=moment";  
-  if (pwmoment) pwmomenturl = url;
+  if (pwmoment) pwmomenturl = decision;
   return decision;
 }
 
