@@ -2197,6 +2197,8 @@ document.getElementById("navigate").addEventListener("click", async () => {
     return; // do nothing
   }
 
+  if (text.includes("https://")) text = text.replace("https://", "");
+
   // Domain or domain + path
   const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
 
@@ -2332,6 +2334,8 @@ document.getElementById("searchengineTextbox").addEventListener("input", () => {
     return;
   }
 
+  if (text.includes("https://")) text = text.replace("https://", "");
+
   // Domain or domain + path (no spaces allowed)
   const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
 
@@ -2365,6 +2369,8 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", async
     event.preventDefault();
 
     let text = document.getElementById("searchengineTextbox").textContent.trim();
+
+    if (text.includes("https://")) text = text.replace("https://", "");
 
     // Domain or domain + path
     const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
