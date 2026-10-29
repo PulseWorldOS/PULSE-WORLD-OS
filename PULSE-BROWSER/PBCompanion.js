@@ -6,7 +6,8 @@
 let nowSW = Date.now(); // numeric timestamp
 let now = new Date().toLocaleString();
 let lastnowSW = Date.now(); // numeric timestamp
-
+let comeback = false;
+let comebackURL = null;
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld-PB-Companion";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
@@ -1199,9 +1200,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "HISTORY_BACK":
       if (msg.url) {
+        comeback = true;
+        comebackURL = msg.url;
         pbPreconnect([msg.url]);
         fetch(msg.url, { mode: "no-cors" }).catch(() => {});
-        setTimeout(backToOriginal, 1500);
+        setTimeout(backToOriginal, 200);
         sendResponse({ ok: true });
       }
       break;
@@ -1216,6 +1219,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       ServiceWorkerOnline = true;
       chrome.storage.local.set({ ServiceWorkerOnline });
       sendResponse({ ok: true, ServiceWorkerOnline });
+      break;
+
+    case "OPEN_TAB_BACK":
+      sendResponse({ ok: true, comeback, comebackURL });
+      comeback = false;
+      comebackURL = null;
       break;
     
     case "PB_COMPANION_CHECK":
@@ -2084,8 +2093,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     PulseRealmState.lastPage = "NewTab";
     PulseRealmState.lastDomainClass = "PulseWorld";
     PulseRealmState.lastTitle = "PulseBrowser OS Console";
-    pbPreconnect([PulseRealmState.lastURL]);
-    fetch(PulseRealmState.lastURL, { mode: "no-cors" }).catch(() => {});
+    if (comeback) {
+      pbPreconnect([comebackURL]);
+      fetch(comebackURL, { mode: "no-cors" }).catch(() => {});
+    }
   } else {
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;

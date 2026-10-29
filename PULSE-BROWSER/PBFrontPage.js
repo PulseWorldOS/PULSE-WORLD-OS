@@ -791,7 +791,6 @@ async function pulseGPUInspector(adapter, device) {
   });
 }
 
-
 // Optional: Real-time heartbeat
 setInterval(() => {
   setInterval(flickerOrigins, 1500); // every 1.5s
@@ -3201,7 +3200,22 @@ setInterval(() => {
     document.getElementById("timerBtn").style.display = "none";
     timerX = 0;
   }
+  CheckBackTab();
 }, sync);
+
+function CheckBackTab() {
+  chrome.runtime.sendMessage({ type: "OPEN_TAB_BACK" }, (response) => {
+    if (!response || !response.ok) {
+      return;
+    }
+    if (response.comeback) {
+      setTimeout(() => {
+        const u = new URL(response.comebackURL);
+        openNamedTab(u.hostname, response.comebackURL);
+      }, 200);
+    }
+  });
+}
 
     const interval3 = getCharacterInterval();
     setTimeout(() => {
