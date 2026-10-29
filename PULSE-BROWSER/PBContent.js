@@ -668,7 +668,7 @@ function showPulseStreamPrompt(video) {
       padding:6px 12px;
       border-radius:6px;
       cursor:pointer;
-    ">Offline Memory</button>
+    ">Offline Reality</button>
   `;
 
   document.body.appendChild(box);
@@ -1323,6 +1323,8 @@ async function saveVideoToMemory(videoElement) {
 
 document.addEventListener("click", e => {
   const el = e.target.closest("a");
+  const box = document.getElementById("pulseStreamPrompt");
+  if (box) box.remove();
   if (!el) return;
 
   const href = el.getAttribute("href");

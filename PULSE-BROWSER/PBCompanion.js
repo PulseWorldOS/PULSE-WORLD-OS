@@ -1709,7 +1709,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           const cache = await caches.open(CACHE_NAME);
           const requests = await cache.keys();
-          const realRequests = requests.filter(req => isCacheableURL(req.url));
+          const realRequests = requests.filter(req => req.url);
 
           const req = realRequests.find(r => r.url === url);
 
@@ -1727,7 +1727,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           const blob = await res.blob();
           const buffer = await blob.arrayBuffer();
           const pwoffline = makeOfflineKey(url);
-          cacheMyBlob(cache, pwoffline, blob);
+          if (url !== pwoffline) cacheMyBlob(cache, pwoffline, blob);
 
           // ⭐ Store the REAL file bytes
           __PULSE_CACHE_FILE = {

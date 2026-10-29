@@ -2072,7 +2072,6 @@ async function setTheStage() {
     
     // ⭐ If NOT a module key → send key to search box
     if (moduleKeys.includes(key)) {
-      e.preventDefault();
       // Start long-press timer
       keyHoldTimer = setTimeout(() => {
         if (keyIsDown) {
