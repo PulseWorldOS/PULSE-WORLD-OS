@@ -1045,17 +1045,18 @@ async function openNamedTab(name, url) {
 
 function latestSnapshot(realm, link, snapIndex) {
   const snapshotKey = `pulse_snapshot_${realm}`;
-  let TempLink = false;
-  temporaryLinks.forEach((origin) => {
-    if (origin === link) TempLink = true;
-  });
+  // let TempLink = false;
+  // temporaryLinks.forEach((origin) => {
+  //   if (origin === link) TempLink = true;
+  // });
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap && !TempLink) {
+    if (snap) {
       renderSnapshot(snap, snapIndex, realm, link);
-    } else {
-      renderTemporary(snap, snapIndex, realm, link);
     }
+    // else {
+    //   renderTemporary(snap, snapIndex, realm, link);
+    // }
   });
 }
 
