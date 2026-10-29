@@ -175,6 +175,8 @@ async function pbRenderCacheList2() {
   const pulsecaches = result.pulsecaches;  
   const errorcount = result.errorcount;
   const totalcount = result.totalcount;
+  const pulsemoments = result.pulsemomentscount;
+  const pulseoffline = result.pulseofflinecount;
   // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
 
   if (caches.length === 0 && pulsecaches.length === 0) {
@@ -252,6 +254,7 @@ async function pbRenderCacheList2() {
     const pulseRank = cache.pulseRank;
     const density = cache.density ?? 0;
     const KBperEntry = (1024 / cache.density).toFixed(0);
+    
     let pausedoffline = ``;
     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
     if (!ServiceWorkerOnline) {
@@ -296,7 +299,9 @@ async function pbRenderCacheList2() {
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
       `<p>
-      404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font>
+      404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
+      PulseBrowser Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
+      PulseBrowser Offline: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
 
     listEl.appendChild(li);

@@ -768,6 +768,14 @@ const PB_GENERIC_ASSETS = [
   "/styles.css"
 ];
 
+function isOffline(origin) {
+  return origin.includes("pw=offline");
+}
+
+function isAMoment(origin) {
+  return origin.includes("pw=moment");
+}
+
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
@@ -1428,6 +1436,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           const cacheNames = await caches.keys();
           let cacheDetails = [];
           let PulseCacheDetails = [];
+          let pulsemomentscount = 0;
+          let pulseofflinecount = 0;
           // let ErrorCacheDetails = [];
           let count = 0;
           let pulsecount = 0;
@@ -1447,11 +1457,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const PulseRequests = requests.filter(req =>
                 isPulseWorld(req.url)
               );
+              const PulseMoments = requests.filter(req => 
+                isAMoment(req.url)
+              );
+              const PulseOffline = requests.filter(req => 
+                isOffline(req.url)
+              );
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );
               count = realRequests.length;
               pulsecount = PulseRequests.length;
+              pulsemomentscount = PulseMoments.length;
+              pulseofflinecount = PulseOffline.length;
               // errorcount = ErrorRequests.length;
               totalcount = requests.length;
               const currentCache = CACHE_NAME;
@@ -1657,6 +1675,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             // errorcaches: ErrorCacheDetails,
             cachecount: count,
             pulsecount,
+            pulsemomentscount,
+            pulseofflinecount,
             // errorcount,
             totalcount,
             sizeCacheMB: sizeMB,
