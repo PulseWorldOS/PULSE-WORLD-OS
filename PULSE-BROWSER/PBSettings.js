@@ -572,7 +572,7 @@ async function pbRenderStorageStats(history) {
     const now = Date.now();
     const deltaTime = (now - lastCheck) / 1000; // seconds
     const deltaUsed = totalUsed - lastUsed;
-
+    
     if (deltaUsed > 0 && deltaTime > 0) {
       const rate = deltaUsed / deltaTime; // bytes per second
       const remaining = localQuota - totalUsed;
@@ -580,13 +580,19 @@ async function pbRenderStorageStats(history) {
       if (rate > 0) {
         const secondsUntilFull = remaining / rate;
 
-        if (secondsUntilFull > 86400) {
+        if (secondsUntilFull > 31536000) { // 365 days
+          predictionText = `~${(secondsUntilFull / 31536000).toFixed(1)} Years`;
+          if ((secondsUntilFull / 31536000) > 1000) predictionText = `~A Millenia`;
+        } else if (secondsUntilFull > 2592000) { // 30 days
+          predictionText = `~${(secondsUntilFull / 2592000).toFixed(1)} Months`;
+        } else if (secondsUntilFull > 86400) { // 1 day
           predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
-        } else if (secondsUntilFull > 3600) {
+        } else if (secondsUntilFull > 3600) { // 1 hour
           predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
         } else {
           predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
         }
+
       }
     }
   }

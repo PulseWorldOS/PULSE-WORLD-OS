@@ -518,6 +518,7 @@ async function pbRenderStorageStats2(history) {
 
         if (secondsUntilFull > 31536000) { // 365 days
           predictionText = `~${(secondsUntilFull / 31536000).toFixed(1)} Years`;
+          if ((secondsUntilFull / 31536000) > 1000) predictionText = `~A Millenia`;
         } else if (secondsUntilFull > 2592000) { // 30 days
           predictionText = `~${(secondsUntilFull / 2592000).toFixed(1)} Months`;
         } else if (secondsUntilFull > 86400) { // 1 day
@@ -1003,7 +1004,7 @@ async function openNamedTab(name, url) {
 
       setTimeout(() => {
         pulseRehydrateTabs();
-      }, 1500);
+      }, 3500);
       return;
     }
 
@@ -1021,7 +1022,7 @@ async function openNamedTab(name, url) {
 
             setTimeout(() => {
               pulseRehydrateTabs();
-            }, 1500);
+            }, 3500);
             return;
           }
 
@@ -1034,7 +1035,7 @@ async function openNamedTab(name, url) {
 
         setTimeout(() => {
           pulseRehydrateTabs();
-        }, 1500);
+        }, 3500);
         return;
       }
 
@@ -1052,7 +1053,7 @@ async function openNamedTab(name, url) {
 
     setTimeout(() => {
       pulseRehydrateTabs();
-    }, 1500);
+    }, 3500);
     return;
   }
 
@@ -1067,7 +1068,7 @@ async function openNamedTab(name, url) {
   
   setTimeout(() => {
     pulseRehydrateTabs();
-  }, 1500);
+  }, 3500);
   setTimeout(async () => {
     await pbRenderCacheList2();
   }, 2500);
@@ -3241,9 +3242,10 @@ function CheckBackTab() {
       return;
     }
     if (response.comeback) {
-      setTimeout(() => {
+      setTimeout(async () => {
         const u = new URL(response.comebackURL);
         openNamedTab(u.hostname, response.comebackURL);
+        await PBUniversalBoost.warmOrigin(response.comebackURL);
       }, 250);
     }
   });
