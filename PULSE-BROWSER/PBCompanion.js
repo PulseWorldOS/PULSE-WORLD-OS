@@ -4,6 +4,7 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
+let activeRealmClaim = false;
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
 let lastnowSW = Date.now(); // numeric timestamp
@@ -1262,6 +1263,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.realm) {
         const realm = msg.realm;
         const pwoffline = makeOfflineKey(realm);
+        comebackURL = pwoffline;
         pbPrefetch([pwoffline]);
         PB_LOG2.save("PBCONTENT_REALM_CLAIM", pwoffline);
         sendResponse({ ok: true, realm: pwoffline });
