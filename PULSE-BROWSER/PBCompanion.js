@@ -207,7 +207,7 @@ const PB_SW_SETTINGS = {
     "orbitalmap.net"
   ]
 };
-let PB_SW_OLD_SETTINGS = PB_SW_SETTINGS;
+
 // ============================================================================
 //  SECTION 0 — INSTALL / ACTIVATE (Warm Boot)
 // ============================================================================
@@ -1838,12 +1838,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
       
     case "PULSE_OS_CLEAR_LOCAL_STORAGE":
-      PB_SW_OLD_SETTINGS = PB_SW_SETTINGS;
       chrome.storage.local.clear(() => {
         console.log("PulseWorld local storage cleared.");
       });
-      pbSaveSettings(PB_SW_OLD_SETTINGS).then(() => {
-        sendResponse({ ok: true });
+      chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
+        resolve(data || PB_SW_SETTINGS);
       });
       break;
 
