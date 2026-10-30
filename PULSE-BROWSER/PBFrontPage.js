@@ -3133,7 +3133,7 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
     // Now ask about local storage
     const confirmClear2 = confirm(
-      "PulseBrowser OS: Caches cleared.\n\nWould you also like to clear PulseWorld local storage?"
+      "PulseBrowser OS: Caches cleared.\n\nWould you also like to clear PulseWorld local storage? Your Settings are Secure!"
     );
 
     if (confirmClear2) {
@@ -3142,7 +3142,7 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
   } else {
     // Now ask about local storage
     const confirmClear2 = confirm(
-      "PulseBrowser OS: Would you like to clear PulseWorld local storage?"
+      "PulseBrowser OS: Would you like to clear PulseWorld local storage? Your Settings are Secure!"
     );
 
     if (confirmClear2) {
