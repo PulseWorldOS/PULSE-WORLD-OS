@@ -314,7 +314,7 @@ self.addEventListener('fetch', event => {
         let netclone = net.clone();
         let realmclone = netclone.clone();
         cache.put(pwoffline, netclone);
-        cache.put("https://www.pulseworld.net/#LastRealm", realmclone);
+        // cache.put("https://offline.pulseworld.net/#LastRealm", realmclone);
       }
 
       return net;

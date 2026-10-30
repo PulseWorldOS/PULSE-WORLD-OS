@@ -1794,7 +1794,7 @@ async function PulseBrowserDomScan() {
     }
   }
 
-  if (!favicon) {
+  if (!favicon || favicon.startsWith("//")) {
     favicon = `${location.origin}/favicon.ico`;
   }
 
