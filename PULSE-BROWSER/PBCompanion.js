@@ -313,7 +313,7 @@ self.addEventListener('fetch', event => {
       if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
         const pwoffline = makeOfflineKey(req.url);
         let netclone = net.clone();
-        let realmclone = netclone.clone();
+        // let realmclone = netclone.clone();
         cache.put(pwoffline, netclone);
         // cache.put("https://offline.pulseworld.net/#LastRealm", realmclone);
       }
@@ -799,7 +799,8 @@ function isPulseWorld(origin) {
 // ---------------------------------------------------------------------------
 function pbDNSWarm(origin) {
   try {
-    const link = document.createElement("link");
+    let link = document.getElementById("link");
+    if (!link) link = document.createElement("link");
     link.rel = "dns-prefetch";
     link.href = origin;
     document.head.appendChild(link);
@@ -814,7 +815,8 @@ function pbDNSWarm(origin) {
 // ---------------------------------------------------------------------------
 function pbTLSWarm(origin) {
   try {
-    const link = document.createElement("link");
+    let link = document.getElementById("link");
+    if (!link) link = document.createElement("link");
     link.rel = "preconnect";
     link.href = origin;
     document.head.appendChild(link);

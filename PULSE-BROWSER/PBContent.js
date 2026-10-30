@@ -195,7 +195,8 @@ function pbPreconnect(origins = []) {
 // ---------------------------------------------------------------------------
 function pbDNSWarm(origin) {
   try {
-    const link = document.createElement("link");
+    let link = document.getElementById("link");
+    if (!link) link = document.createElement("link");
     link.rel = "dns-prefetch";
     link.href = origin;
     document.head.appendChild(link);
@@ -210,7 +211,8 @@ function pbDNSWarm(origin) {
 // ---------------------------------------------------------------------------
 function pbTLSWarm(origin) {
   try {
-    const link = document.createElement("link");
+    let link = document.getElementById("link");
+    if (!link) link = document.createElement("link");
     link.rel = "preconnect";
     link.href = origin;
     document.head.appendChild(link);
