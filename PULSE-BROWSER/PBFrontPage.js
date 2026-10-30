@@ -1114,7 +1114,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
 
       const favicon = snapshot.favicon || "";
       const regfavicon = snapshot.regfavicon || "";
-      const bestfavicon = favicon || regfavicon;
+      let bestfavicon = favicon || regfavicon;
+      if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
 
       // ⭐ No inline JS — CSP-safe
