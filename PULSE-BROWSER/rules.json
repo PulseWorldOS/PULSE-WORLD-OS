@@ -72,12 +72,6 @@
     "condition": { "urlFilter": "*cdn.ampproject.org*" }
   },
   {
-    "id": 13,
-    "priority": 1,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*akamaihd.net*" }
-  },
-  {
     "id": 14,
     "priority": 1,
     "action": { "type": "block" },

@@ -66,6 +66,7 @@ const PB_ASSETS = [
 // ---------------------------------------------------------------------------
 function pbDNSWarm(origin) {
   try {
+    
     let link = document.getElementById("link");
     if (!link) link = document.createElement("link");
     link.rel = "dns-prefetch";
