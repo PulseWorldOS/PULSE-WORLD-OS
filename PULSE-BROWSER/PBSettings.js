@@ -407,7 +407,6 @@ async function pbRenderCacheList() {
     }
 
     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
-
     
     if (!li) li = document.getElementById("li");
     const u = new URL(lastFailURL);
