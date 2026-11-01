@@ -293,9 +293,9 @@
         <div class="media-wrapper">
           <video id="bernersVideo" src="./_EXPRESSIONS/_VIDEOS/TimBernersLee" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Berners Lee"></video>
         </div>
-        <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectBernersLee.webp.pex" class="gallery-img2" alt="Tim Berners-Lee">
-        </div>
+        //<div class="media-wrapper">
+        //  <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectBernersLee.webp.pex" class="gallery-img2" alt="Tim Berners-Lee">
+        //</div>
         <p class="gallery-quote">"The Web is the moment the Internet discovered it."</p>
         <p class="gallery-role">Architect of Universal Access - Inventor of the World Wide Web</p>
       </div>
