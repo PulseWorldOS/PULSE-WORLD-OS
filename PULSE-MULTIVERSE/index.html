@@ -2466,7 +2466,13 @@ async function routeToInternal(routeName) {
 }
 async function loadInternalPage(name) {
   showPWLoader();
-  if (name.includes("tp-pulse-layers") || name.includes("tp-layer-benefits") || name.includes("PulseWorldReality1")) name = "PulseWorldReality";
+  if (name.includes("tp-pulse-layers") || name.includes("tp-layer-benefits") || name.includes("PulseWorldReality1")) {
+    const hash = name;
+    name = "PulseWorldReality";
+    setTimeout(() => {
+      location.hash = hash;
+    }, 500);
+  }
   PulseRealm.__PULSE_LAST_PAGE__ = PulseRealm.__PULSE_CURRENT_PAGE__ ?? "PulseWorldInventory";
   
   const now = performance.now();
