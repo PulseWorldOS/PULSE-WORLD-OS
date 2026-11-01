@@ -442,7 +442,7 @@ function loadLastSavedVideo(callback) {
   chrome.storage.local.get(["pipMemory"], data => {
     const list = data.pipMemory || [];
     if (!list.length) return callback(null);
-
+    console.log(list);
     const last = list[list.length - 1];
     callback(last);
   });
