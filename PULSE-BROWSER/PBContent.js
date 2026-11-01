@@ -1214,7 +1214,7 @@ function AttemptPulseSteam(videoElement) {
 
 function getPrimaryVideo() {
   const videos = [...document.querySelectorAll("video")];
-
+  console.log(videos);
   // Filter to only videos that are actually loaded/playing
   const candidates = videos.filter(v =>
     v.videoWidth > 0 &&
@@ -1315,6 +1315,7 @@ async function saveVideoToMemory(videoElement) {
     chrome.storage.local.get(["pipMemory"], data => {
       const list = data.pipMemory || [];
       list.push(entry);
+      console.log(list);
       chrome.storage.local.set({ pipMemory: list });
     });
 
