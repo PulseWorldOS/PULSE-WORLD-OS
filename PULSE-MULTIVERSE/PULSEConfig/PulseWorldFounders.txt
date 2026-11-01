@@ -305,7 +305,7 @@
       <!-- Vint Cerf -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectVintCerf.webp.pex" class="gallery-img2" alt="Vint Cerf">
+          <video id="cerfVideo" src="./_EXPRESSIONS/_VIDEOS/VintCerf" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Vint Cerf"></video>
         </div>
         <p class="gallery-quote">"Connection is a promise — protocols keep it."</p>
         <p class="gallery-role">Father of The Internet - Co-Creator of TCP/IP</p>
@@ -314,7 +314,7 @@
       <!-- Bob Kahn -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectBobKahn.webp.pex" class="gallery-img2" alt="Bob Kahn">
+          <video id="kahnVideo" src="./_EXPRESSIONS/_VIDEOS/BobKahn" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Bob Kahn"></video>
         </div>
         <p class="gallery-quote">"Openness is the engine of evolution."</p>
         <p class="gallery-role">The Network Forger - Co-Designer of TCP/IP</p>
@@ -441,9 +441,7 @@ founderVideo = document.getElementById("founderVideo");
       founderVideo.style.display = "none";
     };
   }
-  setTimeout(() => {
-    bernersVideo.currentTime = 0;
-  }, 5000);
+  
   const badge2 = document.getElementById("pulsepal-badge");
   const talk2 = document.getElementById("pulsepal-talk");
   function pulsepalSpeak(message) {
