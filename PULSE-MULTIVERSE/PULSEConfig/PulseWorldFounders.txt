@@ -323,7 +323,7 @@
       <!-- Paul Baran -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectPaulBaran.webp.pex" class="gallery-img2" alt="Paul Baran">
+          <video id="baranVideo" src="./_EXPRESSIONS/_VIDEOS/PaulBaran" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Paul Baran"></video>
         </div>
         <p class="gallery-quote">"Break the message into pieces — let the world carry it."</p>
         <p class="gallery-role">The Packet Pioneer - Developer of Packet Switching</p>
@@ -337,7 +337,7 @@
       <!-- Leonard Kleinrock -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectKleinrock.webp.pex" class="gallery-img2" alt="Leonard Kleinrock">
+          <video id="kleinrockVideo" src="./_EXPRESSIONS/_VIDEOS/LeonardKleinrock" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Leonard Kleinrock"></video>
         </div>
         <p class="gallery-quote">"Flow is the heartbeat of every network."</p>
         <p class="gallery-role">The Flow Master — Developer of Queueing Theory</p>
@@ -346,7 +346,7 @@
       <!-- Louis Pouzin -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectPouzin.webp.pex" class="gallery-img2" alt="Louis Pouzin">
+          <video id="pouzinVideo" src="./_EXPRESSIONS/_VIDEOS/LouisPouzin" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Louis Pouzin"></video>
         </div>
         <p class="gallery-quote">"A datagram is a traveler — free, independent, unstoppable."</p>
         <p class="gallery-role">The Datagram Alchemist — Inventor of Datagrams</p>
@@ -355,7 +355,7 @@
       <!-- Radia Perlman -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectPerlman.webp.pex" class="gallery-img2" alt="Radia Perlman">
+          <video id="perlmanVideo" src="./_EXPRESSIONS/_VIDEOS/RadiaPerlman" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Radia Perlman"></video>
         </div>
         <p class="gallery-quote">"Stability is the root from which all networks grow."</p>
         <p class="gallery-role">The Network Druid — Inventor of Spanning Tree Protocol</p>
@@ -369,7 +369,7 @@
       <!-- Elizabeth Feinler -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectFeinler.webp.pex" class="gallery-img2" alt="Elizabeth Feinler">
+          <video id="feinlerVideo" src="./_EXPRESSIONS/_VIDEOS/ElizabethFeinler" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Elizabeth Feinler"></video>
         </div>
         <p class="gallery-quote">"Names give shape to the formless."</p>
         <p class="gallery-role">The Name Keeper — Creator of Early Naming Systems</p>
@@ -378,7 +378,7 @@
       <!-- Douglas Engelbart -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectEngelbart.webp.pex" class="gallery-img2" alt="Douglas Engelbart">
+          <video id="engelbartVideo" src="./_EXPRESSIONS/_VIDEOS/DouglasEngelbart" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Douglas Engelbart"></video>
         </div>
 
         <p class="gallery-quote">"Augmentation is the evolution of thought."</p>
@@ -389,7 +389,7 @@
       <!-- Marc Andreessen -->
       <div class="gallery-item">
         <div class="media-wrapper">
-          <img src="./_EXPRESSIONS/_PEX/BUILD/ArchitectAndreessen.webp.pex" class="gallery-img2" alt="Marc Andreessen">
+          <video id="marcVideo" src="./_EXPRESSIONS/_VIDEOS/MarcAndreessen" autoplay muted playsinline style="display:block;width: 100%;height: 100%;" aria-label="Marc Andreessen"></video>
         </div>
         <p class="gallery-quote">"A browser is a doorway — and everyone deserves a key."</p>
         <p class="gallery-role">The Gate Opener — Creator of Mosaic</p>
