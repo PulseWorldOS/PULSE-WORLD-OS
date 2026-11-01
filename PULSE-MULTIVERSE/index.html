@@ -2556,30 +2556,34 @@ async function loadInternalPage(name) {
     // Remove ALL previously injected internal scripts
     document.querySelectorAll("script[data-internal]").forEach(s => s.remove());
 
-    // Build new scripts
-    const frag = document.createDocumentFragment();
+     // Append scripts
+    try {
+      // Build new scripts
+      const frag = document.createDocumentFragment();
 
-    doc.querySelectorAll("script").forEach(oldScript => {
-      const newScript = document.createElement("script");
+      doc.querySelectorAll("script").forEach(oldScript => {
+        const newScript = document.createElement("script");
 
-      // Mark this script as internal AND page-specific
-      newScript.setAttribute("data-internal", "true");
-      newScript.setAttribute("data-page", corrected); // <-- IMPORTANT
+        // Mark this script as internal AND page-specific
+        newScript.setAttribute("data-internal", "true");
+        newScript.setAttribute("data-page", corrected); // <-- IMPORTANT
 
-      // Copy attributes
-      for (const attr of oldScript.attributes) {
-        newScript.setAttribute(attr.name, attr.value);
-      }
+        // Copy attributes
+        for (const attr of oldScript.attributes) {
+          newScript.setAttribute(attr.name, attr.value);
+        }
 
-      // Copy inline code
-      const code = oldScript.textContent.trim();
-      if (code) newScript.textContent = code;
+        // Copy inline code
+        const code = oldScript.textContent.trim();
+        if (code) newScript.textContent = code;
 
-      frag.appendChild(newScript);
-    });
-    timerX = 0;
-    // Append scripts
-    document.body.appendChild(frag);
+        frag.appendChild(newScript);
+      });
+      timerX = 0;
+      document.body.appendChild(frag);
+    } catch (err) {
+
+    }
 
 
     updateBackButtonVisibility();
