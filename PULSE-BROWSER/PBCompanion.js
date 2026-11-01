@@ -340,6 +340,16 @@ self.addEventListener('fetch', event => {
           return originalFallback;
         }
       }
+
+      const pulseworldURL = req.url
+        .replace(location.origin, "https://www.pulseworld.net");
+
+      const pulseworldFallback = await cache.match(pulseworldURL);
+
+      if (pulseworldFallback) {
+        return pulseworldFallback;
+      }
+
       // Final fallback: offline message
       return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {
         status: 503,

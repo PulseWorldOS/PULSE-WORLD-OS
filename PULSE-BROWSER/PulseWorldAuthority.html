@@ -10,9 +10,96 @@
     font-family: sans-serif;
   }
   #pulseworld {
-    width: 100%;
-    height: auto;
+    opacity: 1;
+    position: fixed;
+    /* AUTO-CENTER CONTENT INSIDE */
     display: block;
+    margin: 0 auto;
+    /* Normal dimensional viewport */
+    top: 11dvh;
+    left: 9dvw;
+    width: calc(100dvw - 20dvw);
+    height: calc(100% - 29%);
+    /* FIX: allow collapse to override */
+    min-width: 0;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 24px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    z-index: 9999;
+    /* SHADOW + DEPTH */
+    box-shadow:
+      0 0 22px rgba(0, 255, 255, 0.25),
+      inset 0 0 18px rgba(0, 255, 255, 0.08),
+      0 0 120px rgba(0, 255, 255, 0.15);
+    scrollbar-color: #00eaff #0a0a0a;
+    scrollbar-width: thin;
+  }
+  /* TITLES */
+  .gallery-title {
+    color: gold;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .gallery-subtitle {
+    color: #ccc;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+  }
+
+  /* GRID — FIXED TO 3 COLUMNS (3 TIERS / 3 ROWS) */
+  .gallery-grid {
+    max-width: var(--tp-max-width); /* 1200px */
+    display: grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    gap: 4px;
+  }
+
+  /* ITEM CARD */
+  .gallery-item {
+    background: #111;
+    border-radius: 14px;
+    padding: 22px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+  }
+
+  /* IMAGE WRAPPER */
+  .media-wrapper {
+    position: relative;
+    overflow: hidden;
+    justify-self: center;
+    border-radius: 12px;
+    background: #000;
+  }
+
+  /* IMAGE */
+  .gallery-img {
+    width: 300px;
+    display: block;
+    justify-self: center;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.4s ease, filter 0.4s ease;
+  }
+
+  /* IMAGE */
+  .gallery-img2 {
+    width: 450px;
+    display: block;
+    justify-self: center;
+    object-fit: contain;
+    border-radius: 12px;
+    transition: transform 0.4s ease, filter 0.4s ease;
   }
 </style>
 </head>

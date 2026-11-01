@@ -5,7 +5,9 @@
 // ---------------------------------------------------------
 async function saveVideoToMemory(videoElement) {
   try {
-    const response = await fetch(videoElement.src);
+    let newsource = videoElement.src;
+    
+    const response = await fetch(newsource);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
 
@@ -34,10 +36,11 @@ async function saveVideoToMemory(videoElement) {
 // ---------------------------------------------------------
 (async () => {
   try {
-    const url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
+    const url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt?pw=offline";
 
-    const response = await fetch(url);
-    const html = await response.text();
+    const response = await fetch(url, { mode: "cors" });
+    
+    let html = await response.text();    
 
     const container = document.getElementById("pulseworld");
     container.innerHTML = html;
@@ -47,7 +50,7 @@ async function saveVideoToMemory(videoElement) {
 
     // Save each video to extension memory
     videos.forEach(v => saveVideoToMemory(v));
-
+    
     // Return list to parent
     window.parent.postMessage({
       type: "PulseWorldAuthorityVideos",
