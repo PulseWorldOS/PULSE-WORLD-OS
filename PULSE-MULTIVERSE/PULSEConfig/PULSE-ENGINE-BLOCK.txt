@@ -810,7 +810,7 @@ engineVideo = document.getElementById("engineVideo");
       setInterval(() => {
     
         timerX = timerX + 1;
-    if (timerX >= 6) {
+        if (timerX >= 6) {
           engineVideo.style.display = "none";
           timerX = 0;
         }
