@@ -532,6 +532,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
+let runonce = false;
 // (function() {
 //   // Detect hash-based realm entry
 //   const hashRealm = location.hash.startsWith("#Pulse");
@@ -2552,8 +2553,6 @@ async function loadInternalPage(name) {
     const doc = viewport;
 
     const corrected = await extractPageName(fileToLoad);
-
-    let runonce = false;
 
     if (!runonce) {
       runonce = true;
