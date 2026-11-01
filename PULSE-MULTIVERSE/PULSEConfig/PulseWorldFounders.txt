@@ -441,6 +441,9 @@ founderVideo = document.getElementById("founderVideo");
       founderVideo.style.display = "none";
     };
   }
+  setTimeout(() => {
+    bernersVideo.currentTime = 0;
+  }, 5000);
   const badge2 = document.getElementById("pulsepal-badge");
   const talk2 = document.getElementById("pulsepal-talk");
   function pulsepalSpeak(message) {
