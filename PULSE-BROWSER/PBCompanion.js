@@ -341,13 +341,15 @@ self.addEventListener('fetch', event => {
         }
       }
 
-      const pulseworldURL = req.url
-        .replace(location.origin, "https://www.pulseworld.net");
+      if (req.url.includes("extension") && req.url.includes("chrome")) {
+        const pulseworldURL = req.url
+          .replace(location.origin, "https://www.pulseworld.net");
 
-      const pulseworldFallback = await cache.match(pulseworldURL);
+        const pulseworldFallback = await cache.match(pulseworldURL);
 
-      if (pulseworldFallback) {
-        return pulseworldFallback;
+        if (pulseworldFallback) {
+          return pulseworldFallback;
+        }
       }
 
       // Final fallback: offline message
