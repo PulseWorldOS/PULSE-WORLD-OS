@@ -18,12 +18,6 @@
     "condition": { "urlFilter": "*google-analytics.com*" }
   },
   {
-    "id": 4,
-    "priority": 1,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*facebook.net*" }
-  },
-  {
     "id": 6,
     "priority": 1,
     "action": { "type": "block" },

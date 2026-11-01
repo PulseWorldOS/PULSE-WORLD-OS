@@ -1262,7 +1262,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCONTENT_REALM_CLAIM":
       if (msg.realm) {
         const realm = msg.realm;
-        const pwoffline = makeOfflineKey(realm);
+        let pwoffline = makeOfflineKey(realm);
         comebackURL = pwoffline;
         pbPrefetch([pwoffline]);
         PB_LOG2.save("PBCONTENT_REALM_CLAIM", pwoffline);

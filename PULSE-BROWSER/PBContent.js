@@ -1834,7 +1834,8 @@ async function PulseBrowserDomScan() {
 
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 
-  const realm = location.href;
+  let realm = location.href;
+  realm = realm.replace(window.location.hash, "");
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
 }
