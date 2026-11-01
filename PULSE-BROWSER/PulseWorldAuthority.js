@@ -1,42 +1,42 @@
 
 
-// ---------------------------------------------------------
-// Save video bytes into extension memory
-// ---------------------------------------------------------
-async function saveVideoToMemory(videoElement) {
-  try {
-    let newsource = videoElement.src;
+// // ---------------------------------------------------------
+// // Save video bytes into extension memory
+// // ---------------------------------------------------------
+// async function saveVideoToMemory(videoElement) {
+//   try {
+//     let newsource = videoElement.src;
     
-    const response = await fetch(newsource);
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
+//     const response = await fetch(newsource);
+//     const blob = await response.blob();
+//     const blobUrl = URL.createObjectURL(blob);
 
-    const entry = {
-      source: videoElement.src,
-      blobUrl,
-      width: videoElement.videoWidth,
-      height: videoElement.videoHeight,
-      currentTime: videoElement.currentTime || 0,
-      timestamp: Date.now()
-    };
+//     const entry = {
+//       source: videoElement.src,
+//       blobUrl,
+//       width: videoElement.videoWidth,
+//       height: videoElement.videoHeight,
+//       currentTime: videoElement.currentTime || 0,
+//       timestamp: Date.now()
+//     };
 
-    chrome.storage.local.get(["pipMemory"], data => {
-      const list = data.pipMemory || [];
-      list.push(entry);
-      chrome.storage.local.set({ pipMemory: list });
-    });
+//     chrome.storage.local.get(["pipMemory"], data => {
+//       const list = data.pipMemory || [];
+//       list.push(entry);
+//       chrome.storage.local.set({ pipMemory: list });
+//     });
 
-  } catch (e) {
-    console.warn("Cannot save video bytes:", e);
-  }
-}
+//   } catch (e) {
+//     console.warn("Cannot save video bytes:", e);
+//   }
+// }
 
 // ---------------------------------------------------------
 // Minimal Authority Gateway + Video Extraction + Saving
 // ---------------------------------------------------------
 (async () => {
   try {
-    const url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt?pw=offline";
+    const url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
 
     const response = await fetch(url, { mode: "cors" });
     
@@ -48,8 +48,8 @@ async function saveVideoToMemory(videoElement) {
     // Extract videos
     const videos = Array.from(container.querySelectorAll("video"));
 
-    // Save each video to extension memory
-    videos.forEach(v => saveVideoToMemory(v));
+    // // Save each video to extension memory
+    // videos.forEach(v => saveVideoToMemory(v));
     
     // Return list to parent
     window.parent.postMessage({
