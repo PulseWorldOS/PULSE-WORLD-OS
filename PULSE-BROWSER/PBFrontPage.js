@@ -1171,8 +1171,6 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
       authoritylink = authoritylink + "?from=" + realm;
       openNamedTab(realm, link);
-      PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
-        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
     };
   }
 }
