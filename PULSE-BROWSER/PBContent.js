@@ -1707,6 +1707,18 @@ async function isBlobValidImage(blob) {
   });
 }
 
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || (origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") && origin.includes("chromewebstore"))
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
 
 async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
