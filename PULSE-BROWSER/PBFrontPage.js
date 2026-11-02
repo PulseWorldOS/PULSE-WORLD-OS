@@ -1263,7 +1263,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
-      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")

@@ -1331,7 +1331,7 @@ document.addEventListener("click", e => {
 });
 
 
-if (isPulseWorld(location.href) || IsPartner(location.href)) {
+if (isPulseWorld(location.href)) {
   document.addEventListener("click", e => {
     const vid = e.target.closest("video");
     if (!vid) return;
@@ -1710,7 +1710,7 @@ async function isBlobValidImage(blob) {
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
-      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")
