@@ -14,7 +14,7 @@
 <link rel="preload" fetchpriority="high" as="video" href="./_EXPRESSIONS/_VIDEOS/PulseWorldTeam" type="video/mp4">
 
 <title>Pulse World OS — Discover EVERYTHING Effortlessly!</title>
-</head>
+
 <style>
 /* TITLES */
   .gallery-title {
@@ -81,7 +81,8 @@
     border-radius: 12px;
     transition: transform 0.4s ease, filter 0.4s ease;
   }
-</style>
+  </style>
+</head>
 
 <body>
 <video id="teamVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldTeam" autoplay muted playsinline style="display:block;" aria-label="Team Video"></video>
