@@ -98,7 +98,7 @@ async function pullall(container) {
     latestSnapshot(host, container, html);
     //container.innerHTML = html;
     
-    setTimeout(pullall(container), 500);
+    setTimeout(pullall(container), 1000);
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =
