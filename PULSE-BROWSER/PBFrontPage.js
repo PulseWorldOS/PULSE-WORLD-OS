@@ -1102,6 +1102,8 @@ function latestSnapshot(realm, link, snapIndex) {
     const snap = items[snapshotKey];
     if (snap) {
       renderSnapshot(snap, snapIndex, realm, link);
+    } else {
+      renderSnapshot(snap, snapIndex, realm, link);
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
@@ -1120,9 +1122,9 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       div.id = bubbleId;
       div.className = bubbleId;
 
-      const favicon = snapshot.regfavicon;
       const regfavicon = await getFavicon(realm);
-      let bestfavicon = favicon || regfavicon;
+      const favicon = snapshot.regfavicon ?? regfavicon;
+      let bestfavicon = favicon;
       if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
 
@@ -1186,9 +1188,9 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       div.id = bubbleId;
       div.className = bubbleId;
 
-      const favicon = snapshot.regfavicon;
       const regfavicon = await getFavicon(realm);
-      const bestfavicon = favicon || regfavicon;
+      const favicon = snapshot.regfavicon ?? regfavicon;
+      let bestfavicon = favicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
 
       // ⭐ No inline JS — CSP-safe
