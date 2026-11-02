@@ -1744,7 +1744,7 @@ async function PulseBrowserDomScan() {
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
   // Strip heavy elements
-  ["script", "iframe", "audio", "object", "embed"].forEach(tag =>
+  ["script", "iframe", "audio"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
   
@@ -1857,7 +1857,7 @@ async function PulseBrowserDomScan() {
   realm = realm.replace(window.location.hash, "");
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
-  const authorityRealm = document.documentElement.innerHTML;
+  const authorityRealm = clone.innerHTML;
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm });
   
   chrome.storage.local.set({ [snapshotKey]: snapshot });
