@@ -767,6 +767,8 @@ function injectPulseScreenFromMemory(play) {
     if (!entry) return;
     if (!entry.source) return;
     let source = entry.source;
+    console.log(location.origin);
+    console.log(pbPulseScreen.src);
     
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
