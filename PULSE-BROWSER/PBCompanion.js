@@ -2127,12 +2127,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           PB_LOG2.save("PULSE_OS_SESSION_START", PulseRealmState.sessionStart);
         } else {
           // Convert stored sessionStart back to number for comparison
-          const current = new Date(PulseRealmState.sessionStart).getTime();
-          if (incoming < current) {
+          const current = new Date(PulseRealmState.sessionStart);
+          const currentTime = current.getTime();
+          if (incoming < currentTime) {
             PulseRealmState.sessionStart = new Date(incoming).toLocaleString();
             nowSW = incoming;
             chrome.storage.local.set({ SessionStart: nowSW });
-            PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current, PulseRealmState.sessionStart);
+            PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current.toLocaleString(), PulseRealmState.sessionStart);
           }
         }
       }      
