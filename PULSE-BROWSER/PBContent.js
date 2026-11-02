@@ -1744,7 +1744,7 @@ async function PulseBrowserDomScan() {
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
   // Strip heavy elements
-  ["script", "iframe", "audio"].forEach(tag =>
+  ["iframe", "audio"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
   
