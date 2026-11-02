@@ -2,6 +2,7 @@
 
 let userInteracted = false;
 let engineType = "text";
+let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let socialMode = "Internal";
 let socialMediaActiveLink = null;
@@ -1166,6 +1167,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
   if (div) {
     div.onclick = async () => {
       pbPreconnect([link]);
+      authoritylink = authoritylink + "?from=" + realm;
       openNamedTab(realm, link);
     };
   }
@@ -2583,9 +2585,7 @@ aboutBtn.addEventListener("click", async () => {
 
 // Click logic stays the same
 authorityBtn.addEventListener("click", async () => {
-  const link = chrome.runtime.getURL("PulseWorldAuthority.html");
-
-  openNamedTab("PulseWorldAuthority", link);
+  openNamedTab("PulseWorldAuthority", authoritylink);
 });
 
 engageBtn.addEventListener("mouseover", () => {
