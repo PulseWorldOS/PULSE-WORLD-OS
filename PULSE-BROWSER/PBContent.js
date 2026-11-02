@@ -1735,11 +1735,11 @@ async function PulseBrowserDomScan() {
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
-  
-  ["audio", "script", "object", "embed"].forEach(tag =>
+  // Strip heavy elements
+  ["script", "iframe", "audio", "object", "embed"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
-
+  
   // // Strip external stylesheets + refresh metas
   // clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
   //      .forEach(el => el.remove());
