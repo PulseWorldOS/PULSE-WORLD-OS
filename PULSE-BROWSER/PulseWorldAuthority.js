@@ -2,17 +2,23 @@
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 
-// function latestSnapshot(realm, container, html) {
-//   const snapshotKey = `pulse_snapshot_${realm}`;
-//   chrome.storage.local.get(snapshotKey, (items) => {
-//     const snap = items[snapshotKey];
-//     if (snap && snap.htmlSummary) {
-//       container.innerHTML = snap.htmlSummary;
-//     } else {
-//       container.innerHTML = html;
-//     }
-//   });
-// }
+function latestSnapshot(realm, container, html) {
+  const snapshotKey = `pulse_snapshot_${realm}`;
+  chrome.storage.local.get(snapshotKey, (items) => {
+    const snap = items[snapshotKey];
+    if (snap && snap.htmlSummary) {
+      container.innerHTML = snap.htmlSummary;
+      // Extract videos and prefer offline cache, with online fallback
+      const videos = Array.from(container.querySelectorAll("video"));
+      videos.forEach(v => changeToOffline(v));
+    } else {
+      container.innerHTML = html;
+      // Extract videos and prefer offline cache, with online fallback
+      const videos = Array.from(container.querySelectorAll("video"));
+      videos.forEach(v => changeToOffline(v));
+    }
+  });
+}
 
 async function changeToOffline(videoElement) {
   let originalSrc = videoElement.src;
@@ -84,13 +90,9 @@ async function changeToOffline(videoElement) {
     //   return null;
     // }
 
-    // let host = u.hostname;
-    // latestSnapshot(host, container, html);
-    container.innerHTML = html;
-
-    // Extract videos and prefer offline cache, with online fallback
-    const videos = Array.from(container.querySelectorAll("video"));
-    videos.forEach(v => changeToOffline(v));
+    let host = url.hostname;
+    latestSnapshot(host, container, html);
+    //container.innerHTML = html;
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =
