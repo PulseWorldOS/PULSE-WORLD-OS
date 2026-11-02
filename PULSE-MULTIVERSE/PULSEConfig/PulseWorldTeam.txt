@@ -15,7 +15,73 @@
 
 <title>Pulse World OS — Discover EVERYTHING Effortlessly!</title>
 </head>
+<style>
+/* TITLES */
+  .gallery-title {
+    color: gold;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 
+  .gallery-subtitle {
+    color: #ccc;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+  }
+
+  /* GRID — FIXED TO 3 COLUMNS (3 TIERS / 3 ROWS) */
+  .gallery-grid {
+    max-width: var(--tp-max-width); /* 1200px */
+    display: grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    gap: 4px;
+  }
+
+  /* ITEM CARD */
+  .gallery-item {
+    background: #111;
+    border-radius: 14px;
+    padding: 22px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+  }
+
+  /* IMAGE WRAPPER */
+  .media-wrapper {
+    position: relative;
+    overflow: hidden;
+    justify-self: center;
+    border-radius: 12px;
+    background: #000;
+  }
+
+  /* IMAGE */
+  .gallery-img {
+    width: 300px;
+    display: block;
+    justify-self: center;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.4s ease, filter 0.4s ease;
+  }
+
+  /* IMAGE */
+  .gallery-img2 {
+    width: 450px;
+    display: block;
+    justify-self: center;
+    object-fit: contain;
+    border-radius: 12px;
+    transition: transform 0.4s ease, filter 0.4s ease;
+  }
+</style>
 
 <body>
 <video id="teamVideo" src="./_EXPRESSIONS/_VIDEOS/PulseWorldTeam" autoplay muted playsinline style="display:block;" aria-label="Team Video"></video>
