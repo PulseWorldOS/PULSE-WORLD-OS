@@ -558,6 +558,92 @@ function sendPulseHeartbeat() {
 }
 
 
+// ============================================================
+// ⭐ MULTITHREADED MICRO-SCHEDULER (SAFE, PASSIVE, NON-INTRUSIVE)
+// ============================================================
+
+const PW_AUTO_THREAD = true;
+
+const PW_TASKS = [];
+let PW_RUNNING = false;
+
+function pwThread(fn) {
+  PW_TASKS.push(fn);
+  if (!PW_RUNNING) pwRun();
+}
+
+async function pwRun() {
+  PW_RUNNING = true;
+  while (PW_TASKS.length) {
+    const task = PW_TASKS.shift();
+    try { await task(); }
+    catch (e) { /* ignore */ }
+    await Promise.resolve(); // yield
+  }
+  PW_RUNNING = false;
+}
+
+// ============================================================
+// ⭐ MESSAGE CHANNEL — Page ↔ Service Worker communication
+// ============================================================
+
+self.addEventListener('message', event => {
+  const msg = event.data;
+
+  if (msg === 'PULSE_DEVICE_ON') {
+    self.pulseDeviceActive = true;
+    sendPulseHeartbeat();
+  }
+
+  if (msg === 'PULSE_DEVICE_OFF') {
+    self.pulseDeviceActive = false;
+    sendPulseHeartbeat();
+  }
+
+  if (msg === 'PULSE_HEARTBEAT_REQUEST') {
+    sendPulseHeartbeat();
+  }
+
+  // Shared buffer request from page/worker
+  if (event.data === "PULSE_SHARED_BUFFER_REQUEST") {
+    event.source.postMessage({
+      type: "PULSE_SHARED_BUFFER",
+      buffer: PULSE_SHARED_BUFFER
+    });
+  }
+
+  if (msg && msg.prefetch) {
+    const url = msg.prefetch;
+
+    if (
+      url.includes('-TEST') ||
+      url.includes('/PulseAdmin')
+    ) {
+      return;
+    }
+
+    event.waitUntil(
+      (async () => {
+        try {
+          const cached = await getSharedResponse(url);
+          if (cached) return;
+
+          const resp = await fetch(url);
+          if (resp && resp.ok) {
+            if (PW_AUTO_THREAD) {
+              pwThread(() => putSharedResponse(url, resp.clone()));
+            } else {
+              await putSharedResponse(url, resp.clone());
+            }
+          }
+        } catch (err) {
+          console.warn('SW Prefetch failed:', url, err);
+        }
+      })()
+    );
+  }
+});
+
 function makeOfflineKey(url) {
   // Already has pw=offline → return as-is
   if (url.includes("pw=offline")) return url;
