@@ -168,10 +168,14 @@ async function saveVideoToMemory(videoElement) {
   try {
     if (!videoElement.src) return;
     // if (videoElement.src.startsWith("chrome-extension://")) return;
-    const response = await fetch(videoElement.src);
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
     const source = videoElement.src;
+    const response = await fetch(source);
+    let blob = null;
+    let blobUrl = source;
+    if (!videoElement.src.startsWith("chrome-extension://")) {
+      blob = await response.blob();
+      blobUrl = URL.createObjectURL(blob);
+    }
     const width = videoElement.videoWidth;
     const height = videoElement.videoHeight;
     const currentTime = videoElement.currentTime;

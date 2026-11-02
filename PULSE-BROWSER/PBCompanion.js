@@ -265,15 +265,17 @@ async function handlePulseRequest(req) {
   }
 
   try {
-    const net =  await fetch(req, { cache: 'no-store' });
+    let net = null;
+    if (!req.url.startsWith('chrome-extension://')) {
+      net = await fetch(req, { cache: 'no-store' });
+    }
 
     PULSE_ONLINE = true;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
 
     if (
       net &&
-      net.ok &&
-      (!req.url.startsWith('chrome-extension://') && !req.url.includes('.html'))
+      net.ok
     ) {
       const pwoffline = makeOfflineKey(req.url);
       let netclone = net.clone();
