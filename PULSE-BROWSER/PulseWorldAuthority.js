@@ -164,6 +164,72 @@ function loadVideoMemory(callback) {
   });
 }
 
+function collectAndWarmAssetsContent() {
+  const assets = [];
+
+  // -------------------------------------------------------
+  // 1. Scripts
+  // -------------------------------------------------------
+  document.querySelectorAll("script[src]").forEach(el => {
+    assets.push(el.src);
+  });
+
+  // -------------------------------------------------------
+  // 2. Stylesheets
+  // -------------------------------------------------------
+  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => {
+    assets.push(el.href);
+  });
+
+  // -------------------------------------------------------
+  // 3. HTML Images
+  // -------------------------------------------------------
+  const htmlImgs = [...document.querySelectorAll("img[src]")];
+  htmlImgs.forEach(el => assets.push(el.src));
+
+  // -------------------------------------------------------
+  // 4. CSS Background Images
+  // -------------------------------------------------------
+  const bgImgs = [...document.querySelectorAll("*")]
+    .map(el => getComputedStyle(el).backgroundImage)
+    .filter(bg => bg && bg !== "none")
+    .map(bg => {
+      const match = bg.match(/url\(["']?(.*?)["']?\)/);
+      return match ? match[1] : null;
+    })
+    .filter(Boolean);
+
+  bgImgs.forEach(src => assets.push(src));
+
+  // -------------------------------------------------------
+  // 5. Decode Warm (HTML + CSS synthetic)
+  // -------------------------------------------------------
+  const syntheticImgs = bgImgs.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+
+  const allImgs = [...htmlImgs, ...syntheticImgs];
+  const decodeCount = allImgs.length;
+
+  allImgs.forEach(img => {
+    try { img.decode?.().catch(() => {}); } catch (_) {}
+  });
+
+  // -------------------------------------------------------
+  // 6. Send unified front‑page report
+  // -------------------------------------------------------
+  chrome.runtime.sendMessage({
+    type: "PB_ASSET_LIST_CONTENT",
+    pageUrl: location.href,
+    assets,
+    decodeCount
+  });
+}
+
+setTimeout(collectAndWarmAssetsContent, 600);
+
 async function saveVideoToMemory(videoElement) {
   try {
     if (!videoElement.src) return;
