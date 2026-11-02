@@ -64,6 +64,138 @@ async function changeToOffline(videoElement) {
   });
 }
 
+
+function AttemptPulseSteam(videoElement) {
+  try {
+    if (videoElement) {
+      videoElement.requestPictureInPicture()
+        .then(() => saveVideoToMemory(videoElement))
+        .catch(err => {
+          console.warn("PIP Error:", err);
+          fallbackPIP();
+        });
+      return;
+    }
+
+    fallbackPIP();
+
+  } catch (e) {
+    console.warn("PulseStream Error:", e);
+    fallbackPIP();
+  }
+}
+
+function getPrimaryVideo() {
+  const videos = [...document.querySelectorAll("video")];
+  console.log(videos);
+  // Filter to only videos that are actually loaded/playing
+  const candidates = videos.filter(v =>
+    v.videoWidth > 0 &&
+    v.videoHeight > 0 &&
+    v.readyState >= 2
+  );
+
+  // If no real videos, fallback to first <video>
+  if (candidates.length === 0) {
+    return videos[0] || null;
+  }
+
+  // If exactly one real video → use it
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+
+  // If multiple real videos → use the second one
+  if (candidates.length >= 2) {
+    return candidates[candidates.length - 2];
+  }
+
+  return null;
+}
+
+
+
+function fallbackPIP() {
+  getLastMemoryVideo(memVideo => {
+    if (memVideo) {
+      memVideo.requestPictureInPicture()
+        .catch(err => console.warn("Memory PIP Error:", err));
+      return;
+    }
+
+    const realStory = getPrimaryVideo();
+
+    if (realStory) {
+      realStory.requestPictureInPicture()
+        .then(() => saveVideoToMemory(realStory))
+        .catch(err => console.warn("Fresh PIP Error:", err));
+    }
+
+    console.log("Primary video:", realStory);
+  });
+}
+
+
+
+function getLastMemoryVideo(callback) {
+  loadVideoMemory(list => {
+    if (!list.length) {
+      callback(null);
+      return;
+    }
+
+    const last = list[list.length - 1];
+    const videos = [...document.querySelectorAll("video")];
+
+    const match = videos.find(v => v.src === last.src);
+
+    if (match) {
+      try { match.currentTime = last.currentTime; } catch (_) {}
+      callback(match);
+    } else {
+      callback(null);
+    }
+  });
+}
+
+function loadVideoMemory(callback) {
+  chrome.storage.local.get(["pipMemory"], data => {
+    callback(data.pipMemory || []);
+  });
+}
+
+async function saveVideoToMemory(videoElement) {
+  try {
+    if (!videoElement.src) return;
+    // if (videoElement.src.startsWith("chrome-extension://")) return;
+    const response = await fetch(videoElement.src);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const source = videoElement.src;
+    const width = videoElement.videoWidth;
+    const height = videoElement.videoHeight;
+    const currentTime = videoElement.currentTime;
+
+    const entry = {
+      source,
+      blobUrl,
+      width,
+      height,
+      currentTime: currentTime || 0,
+      timestamp: Date.now()
+    };
+
+    chrome.storage.local.get(["pipMemory"], data => {
+      const list = data.pipMemory || [];
+      list.push(entry);
+      chrome.storage.local.set({ pipMemory: list });
+    });
+
+  } catch (e) {
+    console.warn("Cannot save video bytes:", e);
+  }
+}
+
 async function pullall(container) {
   // Extract videos and prefer offline cache, with online fallback
   const videos = Array.from(container.querySelectorAll("video"));
