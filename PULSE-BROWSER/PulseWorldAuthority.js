@@ -17,8 +17,8 @@ async function latestSnapshot(realm, container, html) {
   });
 }
 
-async function changeToOffline(videoElement) {
-  let originalSrc = videoElement.src;
+async function changeToOffline(Element) {
+  let originalSrc = Element.src;
 
   // Build the offline version
   let offlineSrc = originalSrc;
@@ -38,7 +38,7 @@ async function changeToOffline(videoElement) {
   let triedOnline = false;
 
   function trySource(src, isOffline) {
-    videoElement.src = src;
+    Element.src = src;
     if (isOffline) triedOffline = true;
     else triedOnline = true;
   }
@@ -46,19 +46,19 @@ async function changeToOffline(videoElement) {
   // Start with offline version
   trySource(offlineSrc, true);
 
-  videoElement.addEventListener("error", function onError() {
+  Element.addEventListener("error", function onError() {
     if (!triedOnline) {
       // Offline failed → try online
-      console.warn("Offline video failed, trying online:", onlineSrc);
+      console.warn("Offline expression failed, trying online:", onlineSrc);
       trySource(onlineSrc, false);
     } else if (!triedOffline) {
       // Online failed → try offline
-      console.warn("Online video failed, trying offline:", offlineSrc);
+      console.warn("Online expression failed, trying offline:", offlineSrc);
       trySource(offlineSrc, true);
     } else {
       // Both failed
       console.error("Both offline and online versions failed for:", originalSrc);
-      videoElement.removeEventListener("error", onError);
+      Element.removeEventListener("error", onError);
     }
   });
 }
@@ -67,6 +67,11 @@ async function pullall(container) {
   // Extract videos and prefer offline cache, with online fallback
   const videos = Array.from(container.querySelectorAll("video"));
   videos.forEach(v => changeToOffline(v));
+  // -------------------------------------------------------
+  // 3. HTML Images
+  // -------------------------------------------------------
+  const htmlImgs = Array.from(container.querySelectorAll("img[src]"));
+  htmlImgs.forEach(el => changeToOffline(el.src));
 }
 
 // ---------------------------------------------------------
@@ -94,7 +99,7 @@ async function pullall(container) {
     }
 
     let host = u.hostname;
-    console.log(host);
+    
     latestSnapshot(host, container, html);
     //container.innerHTML = html;
     
