@@ -5,6 +5,8 @@
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
 let activeRealmClaim = false;
+let PULSE_ONLINE = false;
+let lastKnownData = {};
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
 let lastnowSW = Date.now(); // numeric timestamp
@@ -273,7 +275,7 @@ async function handlePulseRequest(req) {
   try {
     const net = await fetch(req);
 
-    PulseRealm.PULSE_ONLINE = true;
+    PULSE_ONLINE = true;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
 
     if (
@@ -290,7 +292,7 @@ async function handlePulseRequest(req) {
 
   } catch (err) {
 
-    PulseRealm.PULSE_ONLINE = false;
+    PULSE_ONLINE = false;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 0);
 
     return cached || new Response("<h1>You are Offline without PulseWorld!</h1><p>Please Check your Connection!</p>", {
@@ -328,7 +330,7 @@ async function handlePulseAPI(req) {
       try {
         const cloned = net.clone();
         const json = await cloned.json();
-        PulseRealm.lastKnownData = json;
+        lastKnownData = json;
         pulseSetFlag(PULSE_SHARED_INDEX.API_LAST_TS, Date.now());
       } catch (e) {}
 
@@ -339,7 +341,7 @@ async function handlePulseAPI(req) {
   try {
     const result = await app.handle(req);
 
-    PulseRealm.lastKnownData = result;
+    lastKnownData = result;
     pulseSetFlag(PULSE_SHARED_INDEX.API_LAST_TS, Date.now());
 
     return new Response(JSON.stringify(result), {
@@ -357,7 +359,7 @@ async function handlePulseAPI(req) {
     offline: true,
     ts: Date.now(),
     route: req.url,
-    data: PulseRealm.lastKnownData || {},
+    data: lastKnownData || {},
     reason: "Network unreachable; using local OS continuity"
   };
 
