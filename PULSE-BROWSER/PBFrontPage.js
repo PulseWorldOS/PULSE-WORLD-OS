@@ -1001,6 +1001,7 @@ function getNextInstanceIndex() {
 
 async function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
+  name = identity;
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
@@ -1169,7 +1170,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
     div.onclick = async () => {
       pbPreconnect([link]);
       authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
-      authoritylink = authoritylink + "?from=" + realm;
+      authoritylink = authoritylink + "?from=" + normalizeIdentity(realm);
       openNamedTab(realm, link);
     };
   }
