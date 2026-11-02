@@ -254,8 +254,8 @@ async function pbWarmBoot() {
   await pbHomeWarmBoot();
 }
 
-async function handlePulseRequest(req, cache) {
-
+async function handlePulseRequest(req) {
+  const cache = await caches.open(CACHE_NAME);
   pulseInc(PULSE_SHARED_INDEX.REQUEST_COUNT);
 
   const cached = await getSharedResponse(req);
@@ -273,8 +273,7 @@ async function handlePulseRequest(req, cache) {
     if (
       net &&
       net.ok &&
-      net.status === 200 &&
-      req.method === 'GET'
+      !req.url.startsWith('chrome-extension://')
     ) {
       const pwoffline = makeOfflineKey(req.url);
       let netclone = net.clone();
@@ -605,12 +604,8 @@ self.addEventListener('fetch', event => {
   // // Skip chrome-extension:// URLs (cannot be cached)
   if (req.url.startsWith('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
-  }
-  
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    handlePulseRequest(req, cache);
-  })());
+  }  
+  event.respondWith(handlePulseRequest(req));
 });
 
 console.log("%c[PULSEBROWSER OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
