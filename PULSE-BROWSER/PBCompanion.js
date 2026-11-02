@@ -1121,7 +1121,7 @@ function isAMoment(origin) {
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
-      || (origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") && origin.includes("chromewebstore"))
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")

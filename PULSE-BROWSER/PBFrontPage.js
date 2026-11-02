@@ -1169,6 +1169,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       pbPreconnect([link]);
       authoritylink = authoritylink + "?from=" + realm;
       openNamedTab(realm, link);
+      PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
+        (msg.assets || []).forEach(a => PBTemporalCache?.noteAsset?.(origin, a));
     };
   }
 }
@@ -1261,7 +1263,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
-      || (origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") && origin.includes("chromewebstore"))
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")

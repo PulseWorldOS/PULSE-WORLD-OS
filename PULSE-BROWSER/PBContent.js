@@ -1330,8 +1330,8 @@ document.addEventListener("click", e => {
   cacheit(href);
 });
 
-const cls = pbDomainClass(location.href);
-if (cls === "PulseWorld" || cls === "Partner") {
+
+if (isPulseWorld(location.href) || IsPartner(location.href)) {
   document.addEventListener("click", e => {
     const vid = e.target.closest("video");
     if (!vid) return;
@@ -1710,7 +1710,7 @@ async function isBlobValidImage(blob) {
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
-      || (origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") && origin.includes("chromewebstore"))
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
       || origin.includes("booleanlogic.net")
       || origin.includes("binaryos.net")
       || origin.includes("serviceworker.net")
