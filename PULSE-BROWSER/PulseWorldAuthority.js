@@ -2,7 +2,7 @@
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 
-function latestSnapshot(realm, container, html) {
+async function latestSnapshot(realm, container, html) {
   const snapshotKey = `pulse_snapshot_${realm}`;
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
@@ -84,14 +84,15 @@ async function changeToOffline(videoElement) {
     let html = await response.text();
 
     const container = document.getElementById("pulseworld");
-    // let u;
-    // try {
-    //   u = new URL(url);
-    // } catch {
-    //   return null;
-    // }
+    let u;
+    try {
+      u = new URL(url);
+    } catch {
+      return null;
+    }
 
-    let host = url.hostname;
+    let host = u.hostname;
+    console.log(host);
     latestSnapshot(host, container, html);
     //container.innerHTML = html;
 
