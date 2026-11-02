@@ -1818,8 +1818,9 @@ async function PulseBrowserDomScan() {
     favicon = `${location.origin}/favicon.ico`;
   }
 
-  const icon = await fetchAndStoreIcon(location.origin, favicon);
-  if (isPulseWorld(location.origin)) favicon = icon;
+  if (isPulseWorld(location.origin)) {
+    favicon = await fetchAndStoreIcon(location.origin, favicon);
+  }
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   // const htmlSummary = clone.innerHTML.slice(2000); // ~2KB max CHANGED TO FULL AGAIN
@@ -1838,7 +1839,6 @@ async function PulseBrowserDomScan() {
     counts,
     links: tinyLinks,
     images: tinyImages,
-    favicon: icon,
     regfavicon: favicon
   };
 

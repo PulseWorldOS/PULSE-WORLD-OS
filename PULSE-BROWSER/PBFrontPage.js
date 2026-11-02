@@ -1120,8 +1120,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
       div.id = bubbleId;
       div.className = bubbleId;
 
-      const favicon = snapshot.favicon || "";
-      const regfavicon = snapshot.regfavicon || "";
+      const favicon = snapshot.regfavicon;
+      const regfavicon = await getFavicon(realm);
       let bestfavicon = favicon || regfavicon;
       if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
@@ -1186,8 +1186,8 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       div.id = bubbleId;
       div.className = bubbleId;
 
-      const favicon = snapshot.favicon || "";
-      const regfavicon = snapshot.regfavicon || "";
+      const favicon = snapshot.regfavicon;
+      const regfavicon = await getFavicon(realm);
       const bestfavicon = favicon || regfavicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
 
