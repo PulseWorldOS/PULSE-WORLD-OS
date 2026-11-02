@@ -17,8 +17,8 @@ async function latestSnapshot(realm, container, html) {
   });
 }
 
-async function changeToOffline(Element) {
-  let originalSrc = Element.src;
+async function changeToOffline(videoElement) {
+  let originalSrc = videoElement.src;
 
   // Build the offline version
   let offlineSrc = originalSrc;
@@ -38,7 +38,7 @@ async function changeToOffline(Element) {
   let triedOnline = false;
 
   function trySource(src, isOffline) {
-    Element.src = src;
+    videoElement.src = src;
     if (isOffline) triedOffline = true;
     else triedOnline = true;
   }
@@ -46,19 +46,19 @@ async function changeToOffline(Element) {
   // Start with offline version
   trySource(offlineSrc, true);
 
-  Element.addEventListener("error", function onError() {
+  videoElement.addEventListener("error", function onError() {
     if (!triedOnline) {
       // Offline failed → try online
-      console.warn("Offline expression failed, trying online:", onlineSrc);
+      console.warn("Offline video failed, trying online:", onlineSrc);
       trySource(onlineSrc, false);
     } else if (!triedOffline) {
       // Online failed → try offline
-      console.warn("Online expression failed, trying offline:", offlineSrc);
+      console.warn("Online video failed, trying offline:", offlineSrc);
       trySource(offlineSrc, true);
     } else {
       // Both failed
       console.error("Both offline and online versions failed for:", originalSrc);
-      Element.removeEventListener("error", onError);
+      videoElement.removeEventListener("error", onError);
     }
   });
 }
@@ -67,11 +67,6 @@ async function pullall(container) {
   // Extract videos and prefer offline cache, with online fallback
   const videos = Array.from(container.querySelectorAll("video"));
   videos.forEach(v => changeToOffline(v));
-  // -------------------------------------------------------
-  // 3. HTML Images
-  // -------------------------------------------------------
-  const htmlImgs = [container.querySelectorAll("img[src]")];
-  htmlImgs.forEach(el => changeToOffline(el.src));
 }
 
 // ---------------------------------------------------------
@@ -103,7 +98,7 @@ async function pullall(container) {
     latestSnapshot(host, container, html);
     //container.innerHTML = html;
     
-    setTimeout(pullall(container), 500);
+    setTimeout(pullall(container), 1000);
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =
