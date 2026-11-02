@@ -327,8 +327,8 @@ document.addEventListener("click", e => {
 
     let host = u.hostname;
     
-    latestSnapshot(host, container, html);
-    //container.innerHTML = html;
+    // latestSnapshot(host, container, html);
+    container.innerHTML = html;
     
     setTimeout(pullall(container), 1000);
 
