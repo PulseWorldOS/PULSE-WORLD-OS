@@ -1,30 +1,52 @@
 
+const params = new URLSearchParams(location.search);
+const origin = params.get("from");
+
 async function changeToOffline(videoElement) {
   let originalSrc = videoElement.src;
-  let offlineSrc = originalSrc;
 
+  // Build the offline version
+  let offlineSrc = originalSrc;
   if (!originalSrc.includes("pw=offline")) {
     const separator = originalSrc.includes("?") ? "&" : "?";
     offlineSrc = originalSrc + separator + "pw=offline";
   }
 
-  // First try the offline version
-  videoElement.src = offlineSrc;
+  // Clean online version (remove pw=offline if present)
+  let onlineSrc = originalSrc.replace(/([?&])pw=offline(&)?/, (match, p1, p2) => {
+    if (p1 === "?" && !p2) return "";
+    if (p1 === "?" && p2) return "?";
+    return p2 ? p1 : "";
+  }).replace(/[?&]$/, "");
 
-  // If offline version fails, fall back to the original online URL
+  let triedOffline = false;
+  let triedOnline = false;
+
+  function trySource(src, isOffline) {
+    videoElement.src = src;
+    if (isOffline) triedOffline = true;
+    else triedOnline = true;
+  }
+
+  // Start with offline version
+  trySource(offlineSrc, true);
+
   videoElement.addEventListener("error", function onError() {
-    // Prevent infinite loop
-    videoElement.removeEventListener("error", onError);
-
-    if (videoElement.src.includes("pw=offline")) {
-      console.warn("Offline video failed, falling back to online:", originalSrc);
-      videoElement.src = originalSrc;
+    if (!triedOnline) {
+      // Offline failed → try online
+      console.warn("Offline video failed, trying online:", onlineSrc);
+      trySource(onlineSrc, false);
+    } else if (!triedOffline) {
+      // Online failed → try offline
+      console.warn("Online video failed, trying offline:", offlineSrc);
+      trySource(offlineSrc, true);
+    } else {
+      // Both failed
+      console.error("Both offline and online versions failed for:", originalSrc);
+      videoElement.removeEventListener("error", onError);
     }
-  }, { once: true });
+  });
 }
-
-const params = new URLSearchParams(location.search);
-const origin = params.get("from");
 
 // ---------------------------------------------------------
 // Minimal Authority Gateway + Video Extraction + Saving
