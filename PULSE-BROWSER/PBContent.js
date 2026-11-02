@@ -1736,13 +1736,13 @@ async function PulseBrowserDomScan() {
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
   // Strip heavy elements
-  // ["script", "audio", "source", "object", "embed"].forEach(tag =>
-  //   clone.querySelectorAll(tag).forEach(el => el.remove())
-  // );
+  ["script", "iframe", "audio", "object", "embed"].forEach(tag =>
+    clone.querySelectorAll(tag).forEach(el => el.remove())
+  );
   
-  // // Strip external stylesheets + refresh metas
-  // clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
-  //      .forEach(el => el.remove());
+  // Strip external stylesheets + refresh metas
+  clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
+       .forEach(el => el.remove());
 
   // Tiny image preview (first 10)
   const tinyImages = [...document.querySelectorAll("img[src]")]
@@ -1826,13 +1826,14 @@ async function PulseBrowserDomScan() {
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
   const htmlSummary = clone.innerHTML.slice(0, 4000);
+  const htmlDoc = document.documentElement.innerHTML;
 
   const snapshot = {
     url: location.href,
     title: document.title,
     realm: location.hostname,
     meta: { description: metaDesc, ogTitle, ogImage },
-    htmlSummary, // ⭐ SAFE replacement
+    htmlSummary: htmlDoc, // ⭐ SAFE replacement
     viewport,
     scroll,
     visibility,
