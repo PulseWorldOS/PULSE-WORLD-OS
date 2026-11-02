@@ -767,8 +767,6 @@ function injectPulseScreenFromMemory(play) {
     if (!entry) return;
     if (!entry.source) return;
     let source = entry.source;
-    console.log(location.origin);
-    console.log(pbPulseScreen.src);
     
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
@@ -783,8 +781,6 @@ function injectPulseScreenFromMemory(play) {
       pbPulseScreen.currentTime = entry.currentTime || 0;
       pbPulseScreen.play = true;
     }
-    console.log(location.origin);
-    console.log(pbPulseScreen.src);
     const interval3 = getCharacterInterval();
     if (!play) {
       setTimeout(() => {

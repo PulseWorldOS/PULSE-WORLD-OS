@@ -294,6 +294,17 @@ async function handlePulseRequest(req) {
 
     if (fallback) return fallback;
 
+    if (req.url.startsWith('chrome-extension://')) {
+      const pulseworldURL = req.url
+        .replace(location.origin, "https://www.pulseworld.net");
+
+      const pulseworldFallback = await cache.match(pulseworldURL);
+
+      if (pulseworldFallback) {
+        return pulseworldFallback;
+      }
+    }
+
     // Try the REAL realm if offline realm missing
     if (req.url.includes("pw=offline")) {
       const originalUrl = req.url
@@ -305,17 +316,6 @@ async function handlePulseRequest(req) {
 
       if (originalFallback) {
         return originalFallback;
-      }
-    }
-
-    if (req.url.startsWith('chrome-extension://')) {
-      const pulseworldURL = req.url
-        .replace(location.origin, "https://www.pulseworld.net");
-
-      const pulseworldFallback = await cache.match(pulseworldURL);
-
-      if (pulseworldFallback) {
-        return pulseworldFallback;
       }
     }
 
