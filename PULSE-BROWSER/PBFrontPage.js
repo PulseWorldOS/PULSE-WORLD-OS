@@ -1103,7 +1103,7 @@ function latestSnapshot(realm, link, snapIndex) {
     if (snap) {
       renderSnapshot(snap, snapIndex, realm, link);
     } else {
-      renderSnapshot(snap, snapIndex, realm, link);
+      renderSnapshot(true, snapIndex, realm, link);
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
