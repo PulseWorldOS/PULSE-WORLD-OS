@@ -1,5 +1,12 @@
 
-
+async function changeToOffline(videoElement) {
+  let source = videoElement.src;
+  if (!source.includes("pw=offline")) {
+    const separator = source.includes("?") ? "&" : "?";
+    source = source + separator + "pw=offline";
+  }
+  videoElement.src = source;
+}
 // // ---------------------------------------------------------
 // // Save video bytes into extension memory
 // // ---------------------------------------------------------
@@ -52,11 +59,11 @@ const origin = params.get("from");
     const container = document.getElementById("pulseworld");
     container.innerHTML = html;
 
-    // // Extract videos
-    // const videos = Array.from(container.querySelectorAll("video"));
+    // Extract videos
+    const videos = Array.from(container.querySelectorAll("video"));
 
-    // // Save each video to extension memory
-    // videos.forEach(v => saveVideoToMemory(v));
+    // Save each video to extension memory
+    videos.forEach(v => changeToOffline(v));
     
     // // Return list to parent
     // window.parent.postMessage({
