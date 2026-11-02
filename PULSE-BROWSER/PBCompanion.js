@@ -252,6 +252,23 @@ async function pbWarmBoot() {
   await pbHomeWarmBoot();
 }
 
+// ============================================================
+// ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
+// ============================================================
+
+const SHARED_CACHE_NAME = "PulseWorld-Companion";
+
+async function getSharedResponse(req) {
+  const cache = await caches.open(SHARED_CACHE_NAME);
+  return cache.match(req);
+}
+
+async function putSharedResponse(req, res) {
+  const cache = await caches.open(SHARED_CACHE_NAME);
+  if (res && res.ok) {
+    await cache.put(req, res.clone());
+  }
+}
 
 const SHARED_STATE_BYTES = 4096;
 
