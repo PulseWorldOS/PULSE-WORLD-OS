@@ -8,6 +8,7 @@ function latestSnapshot(realm, container, html) {
     const snap = items[snapshotKey];
     if (snap && snap.htmlSummary) {
       container.innerHTML = snap.htmlSummary;
+      console.log("Pulse Ghost Echo Used for your Local Environment!");
       // Extract videos and prefer offline cache, with online fallback
       const videos = Array.from(container.querySelectorAll("video"));
       videos.forEach(v => changeToOffline(v));
