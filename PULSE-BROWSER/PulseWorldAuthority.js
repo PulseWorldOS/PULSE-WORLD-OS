@@ -298,7 +298,7 @@ document.addEventListener("click", e => {
 (async () => {
   try {
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
-    if (origin) url = origin;
+    if (origin) url = "https://" + origin;
     
     // if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
     //   const separator = url.includes("?") ? "&" : "?";
