@@ -372,7 +372,7 @@ async function handlePulseAPI(req) {
 // ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
 // ============================================================
 
-const SHARED_CACHE_NAME = "PulseWorld-Companion";
+const SHARED_CACHE_NAME = "PulseBrowser-Companion";
 
 async function getSharedResponse(req) {
   const cache = await caches.open(SHARED_CACHE_NAME);
