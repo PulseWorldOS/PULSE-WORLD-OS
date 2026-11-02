@@ -1168,6 +1168,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
   if (div) {
     div.onclick = async () => {
       pbPreconnect([link]);
+      authoritylink = authoritylink.replace("?from="+realm,"");
       authoritylink = authoritylink + "?from=" + realm;
       openNamedTab(realm, link);
       PBGlobalAssetMap?.scanAndWarm?.(origin, msg.assets || []);
