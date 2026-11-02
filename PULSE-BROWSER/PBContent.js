@@ -1816,9 +1816,10 @@ async function PulseBrowserDomScan() {
   }
 
   const icon = await fetchAndStoreIcon(location.origin, favicon);
+  if (isPulseWorld(location.origin)) favicon = icon;
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
-  const htmlSummary = clone.innerHTML; // ~2KB max CHANGED TO FULL AGAIN
+  const htmlSummary = clone.innerHTML.slice(3000); // ~2KB max CHANGED TO FULL AGAIN
 
   const snapshot = {
     url: location.href,
