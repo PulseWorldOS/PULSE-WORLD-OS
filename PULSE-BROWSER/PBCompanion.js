@@ -252,6 +252,120 @@ async function pbWarmBoot() {
   await pbHomeWarmBoot();
 }
 
+async function handlePulseRequest(req) {
+
+  pulseInc(PULSE_SHARED_INDEX.REQUEST_COUNT);
+
+  if (!req.url.startsWith('http') && !req.url.includes('-TEST')) {
+    return fetch(req);
+  }
+
+  if (req.url.includes('/PULSE-API')) {
+    return handlePulseAPI(req);
+  }
+
+  const cached = await getSharedResponse(req);
+  if (cached) {
+    pulseInc(PULSE_SHARED_INDEX.CACHE_HIT_COUNT);
+    return cached;
+  }
+
+  try {
+    const net = await fetch(req);
+
+    PulseRealm.PULSE_ONLINE = true;
+    pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
+
+    if (
+      net &&
+      net.ok &&
+      net.status === 200 &&
+      req.method === 'GET'
+    ) {
+      await putSharedResponse(req, net.clone());
+      pulseInc(PULSE_SHARED_INDEX.CACHE_MISS_COUNT);
+    }
+
+    return net;
+
+  } catch (err) {
+
+    PulseRealm.PULSE_ONLINE = false;
+    pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 0);
+
+    return cached || new Response("<h1>You are Offline without PulseWorld!</h1><p>Please Check your Connection!</p>", {
+      status: 503,
+      statusText: "PulseWorld Unavailable",
+      headers: {
+        "Content-Type": "text/html; charset=utf-8"
+      }
+    });
+  }
+}
+
+
+// ============================================================
+// ⭐ PULSE-API HANDLER — network-first (keeps its own cache)
+// ============================================================
+
+async function handlePulseAPI(req) {
+
+  if (!req.url.startsWith('http') &&
+      !req.url.includes('-TEST') &&
+      !req.url.pathname.includes('.webp.pex')) {
+    return fetch(req);
+  }
+
+  const app = self.PulseWorldExpressLayer;
+  const apiCache = await caches.open('pulse-api-cache');
+
+  try {
+    const net = await fetch(req);
+
+    if (net && net.ok) {
+      apiCache.put(req, net.clone());
+
+      try {
+        const cloned = net.clone();
+        const json = await cloned.json();
+        PulseRealm.lastKnownData = json;
+        pulseSetFlag(PULSE_SHARED_INDEX.API_LAST_TS, Date.now());
+      } catch (e) {}
+
+      return net;
+    }
+  } catch (err) {}
+
+  try {
+    const result = await app.handle(req);
+
+    PulseRealm.lastKnownData = result;
+    pulseSetFlag(PULSE_SHARED_INDEX.API_LAST_TS, Date.now());
+
+    return new Response(JSON.stringify(result), {
+      headers: { "Content-Type": "application/json" }
+    });
+  } catch (err) {}
+
+  const cached = await apiCache.match(req);
+  if (cached) {
+    return cached;
+  }
+
+  const offlineData = {
+    status: "ok",
+    offline: true,
+    ts: Date.now(),
+    route: req.url,
+    data: PulseRealm.lastKnownData || {},
+    reason: "Network unreachable; using local OS continuity"
+  };
+
+  return new Response(JSON.stringify(offlineData), {
+    headers: { "Content-Type": "application/json" }
+  });
+}
+
 // ============================================================
 // ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
 // ============================================================
@@ -465,9 +579,11 @@ self.addEventListener('fetch', event => {
   if (req.url.startsWith('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
   }
+  
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(req);
+    handlePulseRequest(req);
     
     if (cached) {
       // const blob = await cached.blob();
