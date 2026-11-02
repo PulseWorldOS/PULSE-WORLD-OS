@@ -1732,7 +1732,7 @@ async function PulseBrowserDomScan() {
   const clone = document.documentElement.cloneNode(true);
   
   // Strip heavy elements
-  ["script", "iframe", "audio", "source", "object", "embed", "img"].forEach(tag =>
+  ["script", "iframe", "audio", "source", "object", "embed"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
 
