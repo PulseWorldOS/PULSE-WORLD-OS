@@ -190,6 +190,7 @@ function getReadableName(url) {
   }
 }
 
+
 let predictionText = "Running Stable";
 let statsHTMLShell = null;
 

@@ -70,6 +70,26 @@ async function pullall(container) {
   videos.forEach(v => changeToOffline(v));
 }
 
+document.addEventListener("click", e => {
+  const vid = e.target.closest("video");
+  if (!vid) return;
+
+  // ⭐ Calculate aspect ratio
+  const ratio = vid.videoWidth / vid.videoHeight;
+  const isIdentityVideo = ratio < 1.4;
+
+  // ⭐ Exclude PulseStatus and PulseStatus2 videos
+  const src = vid.src || "";
+  const isPulseStatus =
+    src.includes("PulseStatus") ||
+    src.includes("PulseStatus2");
+
+  // ⭐ Trigger ONLY if identity video AND NOT PulseStatus
+  if (isIdentityVideo && !isPulseStatus) {
+    setTimeout(() => AttemptPulseSteam(vid), 1500);
+  }
+});
+
 // ---------------------------------------------------------
 // Minimal Authority Gateway + Video Extraction + Saving
 // ---------------------------------------------------------
