@@ -1168,6 +1168,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
   if (div) {
     div.onclick = async () => {
       pbPreconnect([link]);
+      authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
+      authoritylink = authoritylink + "?from=" + realm;
       openNamedTab(realm, link);
     };
   }

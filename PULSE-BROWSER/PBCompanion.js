@@ -1616,6 +1616,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBAUTHORITY_REALM_CLAIM":
       sendResponse({ ok: true, realm: authorityRealm });
+      authorityRealm = null;
       break;
 
     case "PBSETTINGS_GET":
