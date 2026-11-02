@@ -40,6 +40,11 @@ const origin = params.get("from");
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
     if (origin) url = origin;
 
+    if (!url.includes("pw=offline")) {
+      const separator = url.includes("?") ? "&" : "?";
+      url = url + separator + "pw=offline";
+    }
+
     const response = await fetch(url, { mode: "cors" });
     
     let html = await response.text();    

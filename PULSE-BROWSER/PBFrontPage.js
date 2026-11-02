@@ -764,13 +764,18 @@ function injectPulseScreenFromMemory(play) {
   loadLastSavedVideo(entry => {
     if (!entry) return;
     if (!entry.source) return;
+    let source = entry.source;
     
     pbPulseScreen.width = entry.width;
     pbPulseScreen.height = entry.height;
     pbWrapper.width = entry.width;
     pbWrapper.height = entry.height;
-    if (pbPulseScreen.src !== entry.source) {
-      pbPulseScreen.src = entry.source;
+    if (pbPulseScreen.src !== source) {
+      if (!source.includes("pw=offline")) {
+        const separator = source.includes("?") ? "&" : "?";
+        source = source + separator + "pw=offline";
+      }
+      pbPulseScreen.src = source;
       pbPulseScreen.currentTime = entry.currentTime || 0;
       pbPulseScreen.play = true;
     }
@@ -782,7 +787,7 @@ function injectPulseScreenFromMemory(play) {
         pbPulseScreen.play = false;
       }, interval3);
     } else {
-      pbPulseScreen.src = entry.source;
+      pbPulseScreen.src = source;
       pbPulseScreen.currentTime = 0;
       pbPulseScreen.play = true;
     }
