@@ -1732,7 +1732,10 @@ async function PulseBrowserDomScan() {
   const clone = document.documentElement.cloneNode(true);
   
   // Strip heavy elements
-  ["audio", "source", "object", "embed"].forEach(tag =>
+  // ["audio", "source", "object", "embed"].forEach(tag =>
+  //   clone.querySelectorAll(tag).forEach(el => el.remove())
+  // );
+  ["audio"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
 
