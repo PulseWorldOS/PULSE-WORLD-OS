@@ -254,17 +254,9 @@ async function pbWarmBoot() {
   await pbHomeWarmBoot();
 }
 
-async function handlePulseRequest(req) {
+async function handlePulseRequest(req, cache) {
 
   pulseInc(PULSE_SHARED_INDEX.REQUEST_COUNT);
-
-  if (!req.url.startsWith('http') && !req.url.includes('-TEST')) {
-    return fetch(req);
-  }
-
-  if (req.url.includes('/PULSE-API')) {
-    return handlePulseAPI(req);
-  }
 
   const cached = await getSharedResponse(req);
   if (cached) {
@@ -273,7 +265,7 @@ async function handlePulseRequest(req) {
   }
 
   try {
-    const net = await fetch(req);
+    const net =  await fetch(req, { cache: 'no-store' });
 
     PULSE_ONLINE = true;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
@@ -284,7 +276,9 @@ async function handlePulseRequest(req) {
       net.status === 200 &&
       req.method === 'GET'
     ) {
-      await putSharedResponse(req, net.clone());
+      const pwoffline = makeOfflineKey(req.url);
+      let netclone = net.clone();
+      await putSharedResponse(pwoffline, netclone);
       pulseInc(PULSE_SHARED_INDEX.CACHE_MISS_COUNT);
     }
 
@@ -295,9 +289,40 @@ async function handlePulseRequest(req) {
     PULSE_ONLINE = false;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 0);
 
-    return cached || new Response("<h1>You are Offline without PulseWorld!</h1><p>Please Check your Connection!</p>", {
+    // Offline fallback: return last known cached version
+    const fallback = await cache.match(req);
+
+    if (fallback) return fallback;
+
+    // Try the REAL realm if offline realm missing
+    if (req.url.includes("pw=offline")) {
+      const originalUrl = req.url
+        .replace(/[?&]pw=offline/g, "")
+        .replace("?&", "?")
+        .replace(/\?$/, "");
+
+      const originalFallback = await cache.match(originalUrl);
+
+      if (originalFallback) {
+        return originalFallback;
+      }
+    }
+
+    if (req.url.includes("extension") && req.url.includes("chrome")) {
+      const pulseworldURL = req.url
+        .replace(location.origin, "https://www.pulseworld.net");
+
+      const pulseworldFallback = await cache.match(pulseworldURL);
+
+      if (pulseworldFallback) {
+        return pulseworldFallback;
+      }
+    }
+
+    // Final fallback: offline message
+    return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {
       status: 503,
-      statusText: "PulseWorld Unavailable",
+      statusText: "Realm Unavailable",
       headers: {
         "Content-Type": "text/html; charset=utf-8"
       }
@@ -584,68 +609,7 @@ self.addEventListener('fetch', event => {
   
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(req);
-    handlePulseRequest(req);
-    
-    if (cached) {
-      // const blob = await cached.blob();
-      // cacheMyBlob(cache, "https://www.pulseworld.net/LastRealm", blob);
-      return cached; // Warm-state: instant return
-    }
-
-    try {
-      let net = await fetch(req, { cache: 'no-store' });
-
-      if (net && net.ok && !req.url.startsWith('chrome-extension://')) {
-        const pwoffline = makeOfflineKey(req.url);
-        let netclone = net.clone();
-        // let realmclone = netclone.clone();
-        cache.put(pwoffline, netclone);
-        // cache.put("https://offline.pulseworld.net/#LastRealm", realmclone);
-      }
-
-      return net;
-
-    } catch (err) {
-      // Offline fallback: return last known cached version
-      const fallback = await cache.match(req);
-
-      if (fallback) return fallback;
-
-      // Try the REAL realm if offline realm missing
-      if (req.url.includes("pw=offline")) {
-        const originalUrl = req.url
-          .replace(/[?&]pw=offline/g, "")
-          .replace("?&", "?")
-          .replace(/\?$/, "");
-
-        const originalFallback = await cache.match(originalUrl);
-
-        if (originalFallback) {
-          return originalFallback;
-        }
-      }
-
-      if (req.url.includes("extension") && req.url.includes("chrome")) {
-        const pulseworldURL = req.url
-          .replace(location.origin, "https://www.pulseworld.net");
-
-        const pulseworldFallback = await cache.match(pulseworldURL);
-
-        if (pulseworldFallback) {
-          return pulseworldFallback;
-        }
-      }
-
-      // Final fallback: offline message
-      return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {
-        status: 503,
-        statusText: "Realm Unavailable",
-        headers: {
-          "Content-Type": "text/html; charset=utf-8"
-        }
-      });
-    }
+    handlePulseRequest(req, cache);
   })());
 });
 
