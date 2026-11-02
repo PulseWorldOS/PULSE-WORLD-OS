@@ -214,7 +214,7 @@ const PB_SW_SETTINGS = {
 // ============================================================================
 self.addEventListener("install", event => {
   console.log(
-    "%c[PULSEWORLD OS KERNEL] Installed",
+    "%c[PULSEBROWSER OS KERNEL] Installed",
     "color:#00FF9C; font-weight:bold; font-family:monospace;"
   );
   
@@ -283,7 +283,7 @@ const PULSE_SHARED_INDEX = {
 };
 
 console.log(
-  "%c⟡ Pulse World Shared Atomic Index Map Loaded",
+  "%c⟡ Pulse Browser Shared Atomic Index Map Loaded",
   "color:#8ff; font-size:12px;"
 );
 
@@ -310,7 +310,7 @@ function pulseActivityReport() {
   const heartbeat = pulseGetFlag(PULSE_SHARED_INDEX.HEARTBEAT_TS);
 
   console.groupCollapsed(
-    "%c⟡ PULSE WORLD KERNEL — Activity Report",
+    "%c⟡ PULSE BROWSER KERNEL — Activity Report",
     "color:#4f8; font-size:12px;"
   );
 
