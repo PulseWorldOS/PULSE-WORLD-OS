@@ -1728,6 +1728,13 @@ async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
   const origin = location.hostname;
 
+  if (
+    !origin ||
+    (origin.startsWith("chrome://") && !origin.includes("newtab"))
+  ) {
+    return;
+  }
+
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
   
@@ -1851,13 +1858,7 @@ async function PulseBrowserDomScan() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
   const authorityRealm = document.documentElement.innerHTML;
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm });
-  if (
-    !origin ||
-    (origin.startsWith("chrome://") && !origin.includes("newtab"))
-  ) {
-    return;
-  }
-
+  
   chrome.storage.local.set({ [snapshotKey]: snapshot });
 }
 

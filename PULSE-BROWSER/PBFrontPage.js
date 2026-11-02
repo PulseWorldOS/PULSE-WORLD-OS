@@ -1169,8 +1169,6 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
   if (div) {
     div.onclick = async () => {
       pbPreconnect([link]);
-      authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
-      authoritylink = authoritylink + "?from=" + normalizeIdentity(realm);
       openNamedTab(realm, link);
     };
   }
@@ -2589,6 +2587,7 @@ aboutBtn.addEventListener("click", async () => {
 // Click logic stays the same
 authorityBtn.addEventListener("click", async () => {
   openNamedTab("PulseWorldAuthority", authoritylink);
+  await PBUniversalBoost.warmOrigin(authoritylink);
 });
 
 engageBtn.addEventListener("mouseover", () => {
