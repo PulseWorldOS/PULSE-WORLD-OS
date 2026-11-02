@@ -222,7 +222,7 @@ function collectAndWarmAssetsContent() {
   // -------------------------------------------------------
   chrome.runtime.sendMessage({
     type: "PB_ASSET_LIST_CONTENT",
-    pageUrl: location.href,
+    pageUrl: "https://" + origin,
     assets,
     decodeCount
   });
