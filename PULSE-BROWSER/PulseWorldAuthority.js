@@ -1,12 +1,61 @@
 
 async function changeToOffline(videoElement) {
-  let source = videoElement.src;
-  if (!source.includes("pw=offline")) {
-    const separator = source.includes("?") ? "&" : "?";
-    source = source + separator + "pw=offline";
+  let originalSrc = videoElement.src;
+  let offlineSrc = originalSrc;
+
+  if (!originalSrc.includes("pw=offline")) {
+    const separator = originalSrc.includes("?") ? "&" : "?";
+    offlineSrc = originalSrc + separator + "pw=offline";
   }
-  videoElement.src = source;
+
+  // First try the offline version
+  videoElement.src = offlineSrc;
+
+  // If offline version fails, fall back to the original online URL
+  videoElement.addEventListener("error", function onError() {
+    // Prevent infinite loop
+    videoElement.removeEventListener("error", onError);
+
+    if (videoElement.src.includes("pw=offline")) {
+      console.warn("Offline video failed, falling back to online:", originalSrc);
+      videoElement.src = originalSrc;
+    }
+  }, { once: true });
 }
+
+const params = new URLSearchParams(location.search);
+const origin = params.get("from");
+
+// ---------------------------------------------------------
+// Minimal Authority Gateway + Video Extraction + Saving
+// ---------------------------------------------------------
+(async () => {
+  try {
+    let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
+    if (origin) url = origin;
+
+    if (!url.includes("pw=offline")) {
+      const separator = url.includes("?") ? "&" : "?";
+      url = url + separator + "pw=offline";
+    }
+
+    const response = await fetch(url, { mode: "cors" });
+    let html = await response.text();
+
+    const container = document.getElementById("pulseworld");
+    container.innerHTML = html;
+
+    // Extract videos and prefer offline cache, with online fallback
+    const videos = Array.from(container.querySelectorAll("video"));
+    videos.forEach(v => changeToOffline(v));
+
+  } catch (err) {
+    document.getElementById("pulseworld").innerHTML =
+      "<p style='color:red;'>PulseWorld could not load.</p>";
+    console.error("PulseWorldAuthority error:", err);
+  }
+})();
+
 // // ---------------------------------------------------------
 // // Save video bytes into extension memory
 // // ---------------------------------------------------------
@@ -37,47 +86,3 @@ async function changeToOffline(videoElement) {
 //     console.warn("Cannot save video bytes:", e);
 //   }
 // }
-const params = new URLSearchParams(location.search);
-const origin = params.get("from");
-// ---------------------------------------------------------
-// Minimal Authority Gateway + Video Extraction + Saving
-// ---------------------------------------------------------
-(async () => {
-  try {
-    let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
-    if (origin) url = origin;
-
-    if (!url.includes("pw=offline")) {
-      const separator = url.includes("?") ? "&" : "?";
-      url = url + separator + "pw=offline";
-    }
-
-    const response = await fetch(url, { mode: "cors" });
-    
-    let html = await response.text();    
-
-    const container = document.getElementById("pulseworld");
-    container.innerHTML = html;
-
-    // Extract videos
-    const videos = Array.from(container.querySelectorAll("video"));
-
-    // Save each video to extension memory
-    videos.forEach(v => changeToOffline(v));
-    
-    // // Return list to parent
-    // window.parent.postMessage({
-    //   type: "PulseWorldAuthorityVideos",
-    //   videos: videos.map(v => ({
-    //     src: v.src,
-    //     width: v.width,
-    //     height: v.height
-    //   }))
-    // }, "*");
-
-  } catch (err) {
-    document.getElementById("pulseworld").innerHTML =
-      "<p style='color:red;'>PulseWorld could not load.</p>";
-    console.error("PulseWorldAuthority error:", err);
-  }
-})();
