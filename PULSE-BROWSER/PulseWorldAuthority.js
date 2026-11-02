@@ -70,7 +70,7 @@ async function pullall(container) {
   // -------------------------------------------------------
   // 3. HTML Images
   // -------------------------------------------------------
-  const htmlImgs = Array.from(container.querySelectorAll("img[src]"));
+  const htmlImgs = [container.querySelectorAll("img[src]")];
   htmlImgs.forEach(el => changeToOffline(el.src));
 }
 
