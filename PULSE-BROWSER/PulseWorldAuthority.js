@@ -9,7 +9,6 @@ async function latestSnapshot(realm, container, html) {
     const snap = items[snapshotKey];
     if (snap && snap.htmlSummary) {
       container.innerHTML = snap.htmlSummary;
-      snap.htmlimages
       console.log("Pulse Ghost Echo Used for your Local Environment!");
       setTimeout(pullall(container), 1000);
     } else {
