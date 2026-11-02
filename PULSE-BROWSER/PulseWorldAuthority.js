@@ -30,13 +30,15 @@
 //     console.warn("Cannot save video bytes:", e);
 //   }
 // }
-
+const params = new URLSearchParams(location.search);
+const origin = params.get("from");
 // ---------------------------------------------------------
 // Minimal Authority Gateway + Video Extraction + Saving
 // ---------------------------------------------------------
 (async () => {
   try {
-    const url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
+    let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
+    if (origin) url = origin;
 
     const response = await fetch(url, { mode: "cors" });
     

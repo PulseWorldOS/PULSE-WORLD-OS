@@ -3281,6 +3281,10 @@ function CheckBackTab() {
   });
 }
 
+    setTimeout(() => {
+      injectPulseScreenFromMemory(true);
+    }, 100);
+    
     const interval3 = getCharacterInterval();
     setTimeout(() => {
       pbPulseScreen.currentTime = 0;
@@ -3289,9 +3293,6 @@ function CheckBackTab() {
       pulseRehydrateTabs();
     }, interval3);
 
-    setTimeout(() => {
-      injectPulseScreenFromMemory(true);
-    }, 100);
   
   function swap() {
     nebula.style.opacity = 0;
