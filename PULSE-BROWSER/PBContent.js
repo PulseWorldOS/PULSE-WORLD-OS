@@ -1735,7 +1735,8 @@ async function PulseBrowserDomScan() {
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
-  ["audio", "object", "embed"].forEach(tag =>
+  
+  ["audio", "script", "object", "embed"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
 
@@ -1824,7 +1825,7 @@ async function PulseBrowserDomScan() {
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   // const htmlSummary = clone.innerHTML.slice(2000); // ~2KB max CHANGED TO FULL AGAIN
-  const htmlSummary = clone.innerHTML.slice(3000);
+  const htmlSummary = clone.innerHTML.slice(5000);
 
   const snapshot = {
     url: location.href,
