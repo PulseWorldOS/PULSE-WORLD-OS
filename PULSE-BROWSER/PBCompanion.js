@@ -433,7 +433,7 @@ async function cacheMyBlob(cache, url, myBlob) {
 
 
 self.addEventListener("activate", (event) => {
-  console.log("%c[PULSEWORLD OS KERNEL] Activated",
+  console.log("%c[PULSEBROWSER OS KERNEL] Activated",
     "color:#00FF9C; font-weight:bold; font-family:monospace;");
   event.waitUntil(self.clients.claim());
   sendPulseHeartbeat();
@@ -514,10 +514,10 @@ self.addEventListener('fetch', event => {
   })());
 });
 
-console.log("%c[PULSEWORLD OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
+console.log("%c[PULSEBROWSER OS KERNEL] PBCompanion.js (Ultra Edition v12.0) Loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
 
-console.log("[PULSEWORLD OS KERNEL] Initializing PulseWorld with Accelerated Modules:", now);
+console.log("[PULSEBROWSER OS KERNEL] Initializing PulseWorld with Accelerated Modules:", now);
 
 const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
 
@@ -743,7 +743,7 @@ async function getFavicon(url, flags = {}) {
   // ⭐ Cached → return instantly
   if (PBFAVICON_CACHE[host]) {
     console.log(
-      "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
+      "%c[PULSEBROWSER OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
     );
     return PBFAVICON_CACHE[host];
@@ -2167,7 +2167,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     default:
-      console.log("[PULSEWORLD OS KERNEL] Unknown Event:", msg);
+      console.log("[PULSEBROWSER OS KERNEL] Unknown Event:", msg);
   }
 });
 
@@ -2347,12 +2347,12 @@ async function clearPulseCaches() {
         deleted.push(key);
 
         console.log(
-          "%c[PULSEWORLD OS KERNEL] Deleted Cache: " + key,
+          "%c[PULSEBROWSER OS KERNEL] Deleted Cache: " + key,
           "color:#FF5555; font-weight:bold;"
         );
       } catch (err) {
         console.log(
-          "%c[PULSEWORLD OS KERNEL] Failed to Delete Cache: " + key +
+          "%c[PULSEBROWSER OS KERNEL] Failed to Delete Cache: " + key +
           " → " + err.toString(),
           "color:#FF0000; font-weight:bold;"
         );
@@ -2363,7 +2363,7 @@ async function clearPulseCaches() {
   }
 
   // ⭐ Summary log (PulseBrowser OS style)
-  console.log("%c[PULSEWORLD OS KERNEL] Cache Purge Summary",
+  console.log("%c[PULSEBROWSER OS KERNEL] Cache Purge Summary",
     "color:#00FFFF; font-weight:bold;");
 
   console.log({
@@ -2709,5 +2709,5 @@ const PBGlobalAssetMap = {
 // ============================================================================
 //  END OF KERNEL
 // ============================================================================
-console.log("%c[PULSEWORLD OS KERNEL] Ultra Edition Ready (12 subsystems online)",
+console.log("%c[PULSEBROWSER OS KERNEL] Ultra Edition Ready (12 subsystems online)",
   "color:#00FF9C; font-weight:bold;");

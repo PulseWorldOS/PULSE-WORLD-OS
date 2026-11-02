@@ -1618,7 +1618,7 @@ async function getFavicon(url, flags = {}) {
   // ⭐ Cached → return instantly
   if (PBFAVICON_CACHE[host]) {
     console.log(
-      "%c[PULSEWORLD OS KERNEL] SAVED FAVICON LOCATED: " + host,
+      "%c[PULSEBROWSER OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
     );
     return PBFAVICON_CACHE[host];
