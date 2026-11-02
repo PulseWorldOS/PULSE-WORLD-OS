@@ -102,13 +102,14 @@
       "PBCompanion.js",
       "PBSettings.js",
       "PulseWorldOS.mp4",
-      "PulseWorldOS-Older.mp4"
+      "PulseWorldOS-Older.mp4",
+      "PulseWorldAuthority.html"
     ],
     "matches": ["<all_urls>"]
   }
 ],
 
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; img-src * data: blob: https: blob:; media-src 'self' blob: https: data:;"
+    "extension_pages": "style-src-elem 'self' 'unsafe-inline'; script-src 'self'; object-src 'self'; img-src * data: blob: https: blob:; media-src 'self' blob: https: data:; style-src 'self' 'unsafe-inline';"
   }
 }

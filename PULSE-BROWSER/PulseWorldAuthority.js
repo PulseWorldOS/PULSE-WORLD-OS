@@ -45,21 +45,21 @@
     const container = document.getElementById("pulseworld");
     container.innerHTML = html;
 
-    // Extract videos
-    const videos = Array.from(container.querySelectorAll("video"));
+    // // Extract videos
+    // const videos = Array.from(container.querySelectorAll("video"));
 
     // // Save each video to extension memory
     // videos.forEach(v => saveVideoToMemory(v));
     
-    // Return list to parent
-    window.parent.postMessage({
-      type: "PulseWorldAuthorityVideos",
-      videos: videos.map(v => ({
-        src: v.src,
-        width: v.width,
-        height: v.height
-      }))
-    }, "*");
+    // // Return list to parent
+    // window.parent.postMessage({
+    //   type: "PulseWorldAuthorityVideos",
+    //   videos: videos.map(v => ({
+    //     src: v.src,
+    //     width: v.width,
+    //     height: v.height
+    //   }))
+    // }, "*");
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =

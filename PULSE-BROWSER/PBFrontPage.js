@@ -1,3 +1,4 @@
+const { AuthorizeInstance } = require("twilio/lib/rest/previewIam/v1/authorize");
 
 let userInteracted = false;
 let engineType = "text";
@@ -2525,11 +2526,13 @@ document.getElementById("searchengineTextbox").addEventListener("keydown", async
 });
 
 const aboutBtn = document.getElementById("about");
+const authorityBtn = document.getElementById("authority");
 const engageBtn = document.getElementById("engage");
 const enterBtn = document.getElementById("enter");
 const setupBtn = document.getElementById("setup");
 
 let hoverTimer = null;
+
 aboutBtn.addEventListener("mouseover", () => {
   const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
 
@@ -2570,6 +2573,24 @@ aboutBtn.addEventListener("click", async () => {
 
   pbPreconnect([link]);
   openNamedTab("PulseBrowserOS", link);
+  await PBUniversalBoost.warmOrigin(link);
+});
+
+// Click logic stays the same
+authorityBtn.addEventListener("click", async () => {
+  const link = chrome.runtime.getURL("PulseWorldAuthority.html");
+
+  chrome.runtime.sendMessage({
+    type: "PB_HOVER_PREFETCH",
+    href: link
+  });
+
+  try {
+    fetch(link, { mode: "no-cors" }).catch(() => {});
+  } catch (_) {}
+
+  pbPreconnect([link]);
+  openNamedTab("PulseWorldAuthority", link);
   await PBUniversalBoost.warmOrigin(link);
 });
 
