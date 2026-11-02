@@ -1825,15 +1825,14 @@ async function PulseBrowserDomScan() {
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
-  const htmlSummary = clone.innerHTML.slice(0, 4000);
-  const htmlDoc = document.documentElement.innerHTML;
+  const htmlSummary = clone.innerHTML.slice(0, 2000);
 
   const snapshot = {
     url: location.href,
     title: document.title,
     realm: location.hostname,
     meta: { description: metaDesc, ogTitle, ogImage },
-    htmlSummary: htmlDoc, // ⭐ SAFE replacement
+    htmlSummary, // ⭐ SAFE replacement
     viewport,
     scroll,
     visibility,
@@ -1850,7 +1849,8 @@ async function PulseBrowserDomScan() {
   realm = realm.replace(window.location.hash, "");
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
-  
+  const authorityRealm = document.documentElement.innerHTML;
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", authorityRealm });
   if (
     !origin ||
     (origin.startsWith("chrome://") && !origin.includes("newtab"))

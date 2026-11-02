@@ -5,6 +5,7 @@
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
 let activeRealmClaim = false;
+let authorityRealm = null;
 let PULSE_ONLINE = false;
 let lastKnownData = {};
 let now = new Date().toLocaleString();
@@ -1604,6 +1605,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PB_LOG2.save("PBCONTENT_REALM_CLAIM", pwoffline);
         sendResponse({ ok: true, realm: pwoffline });
       }
+      break;
+
+    case "PBAUTHORITY_REALM":
+      if (msg.realm) {
+        authorityRealm = msg.realm;
+        sendResponse({ ok: true });
+      }
+      break;
+
+    case "PBAUTHORITY_REALM_CLAIM":
+      sendResponse({ ok: true, realm: authorityRealm });
       break;
 
     case "PBSETTINGS_GET":

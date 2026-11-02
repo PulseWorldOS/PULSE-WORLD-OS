@@ -1,6 +1,7 @@
 
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
+let authorityRealm = null;
 
 async function latestSnapshot(realm, container, html) {
   const snapshotKey = `pulse_snapshot_${realm}`;
@@ -299,6 +300,13 @@ document.addEventListener("click", e => {
   try {
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
     if (origin) url = "https://" + origin;
+    chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      
+      if (response.realm) {
+          authorityRealm = response.realm;
+      }
+    });
     
     // if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
     //   const separator = url.includes("?") ? "&" : "?";
@@ -307,6 +315,7 @@ document.addEventListener("click", e => {
 
     const response = await fetch(url, { mode: "cors" });
     let html = await response.text();
+    if (authorityRealm) html = authorityRealm;
 
     const container = document.getElementById("pulseworld");
     let u;
