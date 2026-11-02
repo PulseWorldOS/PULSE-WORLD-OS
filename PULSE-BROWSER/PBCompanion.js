@@ -569,6 +569,7 @@ let PW_RUNNING = false;
 
 function pwThread(fn) {
   PW_TASKS.push(fn);
+  console.log(PW_TASKS);
   if (!PW_RUNNING) pwRun();
 }
 
