@@ -252,6 +252,155 @@ async function pbWarmBoot() {
   await pbHomeWarmBoot();
 }
 
+
+const SHARED_STATE_BYTES = 4096;
+
+console.log(
+  "%c⟡ Allocating SharedArrayBuffer (%d bytes)...",
+  "color:#9df; font-size:12px;",
+  SHARED_STATE_BYTES
+);
+
+const PULSE_SHARED_BUFFER = typeof SharedArrayBuffer !== "undefined"
+  ? new SharedArrayBuffer(SHARED_STATE_BYTES)
+  : new ArrayBuffer(SHARED_STATE_BYTES);
+const PULSE_SHARED_INTS = new Int32Array(PULSE_SHARED_BUFFER);
+
+console.log(
+  "%c⟡ SharedArrayBuffer READY — %d Int32 cells online.",
+  "color:#4f8; font-size:12px;",
+  PULSE_SHARED_INTS.length
+);
+
+// Index map
+const PULSE_SHARED_INDEX = {
+  ONLINE_FLAG: 0,
+  REQUEST_COUNT: 1,
+  CACHE_HIT_COUNT: 2,
+  CACHE_MISS_COUNT: 3,
+  API_LAST_TS: 4,
+  HEARTBEAT_TS: 5
+};
+
+console.log(
+  "%c⟡ Pulse World Shared Atomic Index Map Loaded",
+  "color:#8ff; font-size:12px;"
+);
+
+
+// ⭐ Activity console (rate-limited + max reports)
+let PULSE_ACTIVITY_LAST = performance.now();
+const PULSE_ACTIVITY_INTERVAL = 8000; // 8 seconds
+
+let PULSE_ACTIVITY_REPORT_COUNT = 0;
+const PULSE_ACTIVITY_MAX_REPORTS = 5;
+
+function pulseActivityReport() {
+  if (PULSE_ACTIVITY_REPORT_COUNT >= PULSE_ACTIVITY_MAX_REPORTS) return;
+
+  const now = performance.now();
+  if (now - PULSE_ACTIVITY_LAST < PULSE_ACTIVITY_INTERVAL) return;
+  PULSE_ACTIVITY_LAST = now;
+  PULSE_ACTIVITY_REPORT_COUNT++;
+
+  const requests = pulseGetFlag(PULSE_SHARED_INDEX.REQUEST_COUNT);
+  const hits = pulseGetFlag(PULSE_SHARED_INDEX.CACHE_HIT_COUNT);
+  const misses = pulseGetFlag(PULSE_SHARED_INDEX.CACHE_MISS_COUNT);
+  const apiTs = pulseGetFlag(PULSE_SHARED_INDEX.API_LAST_TS);
+  const heartbeat = pulseGetFlag(PULSE_SHARED_INDEX.HEARTBEAT_TS);
+
+  console.groupCollapsed(
+    "%c⟡ PULSE WORLD KERNEL — Activity Report",
+    "color:#4f8; font-size:12px;"
+  );
+
+  console.log(`Requests: ${requests}`);
+  console.log(`Cache Hits: ${hits}`);
+  console.log(`Cache Misses: ${misses}`);
+  console.log(`Last API TS: ${apiTs}`);
+  console.log(`Heartbeat: ${heartbeat}`);
+
+  console.groupEnd();
+
+}
+
+// ⭐ Atomic deep debug (OFF by default)
+const ATOMIC_DEBUG = false;
+
+function pulseSetFlag(index, value) {
+  Atomics.store(PULSE_SHARED_INTS, index, value);
+  Atomics.notify(PULSE_SHARED_INTS, index);
+
+  if (ATOMIC_DEBUG) {
+    console.log(
+      "%c⟡ [Atomic:Set] Index %d → %d",
+      "color:#0f0; font-size:11px;",
+      index,
+      value
+    );
+  }
+
+  pulseActivityReport();
+}
+
+function pulseGetFlag(index) {
+  const v = Atomics.load(PULSE_SHARED_INTS, index);
+
+  if (ATOMIC_DEBUG) {
+    console.log(
+      "%c⟡ [Atomic:Get] Index %d → %d",
+      "color:#0ff; font-size:11px;",
+      index,
+      v
+    );
+  }
+
+  return v;
+}
+
+function pulseInc(index, delta = 1) {
+  const v = Atomics.add(PULSE_SHARED_INTS, index, delta);
+
+  if (ATOMIC_DEBUG) {
+    console.log(
+      "%c⟡ [Atomic:Inc] Index %d → %d (+%d)",
+      "color:#ff0; font-size:11px;",
+      index,
+      v + delta,
+      delta
+    );
+  }
+
+  pulseActivityReport();
+}
+// ============================================================
+// ⭐ HEARTBEAT — Announces continuation existence
+// ============================================================
+
+function sendPulseHeartbeat() {
+  const ts = Date.now();
+  pulseSetFlag(PULSE_SHARED_INDEX.HEARTBEAT_TS, ts);
+
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'PULSE_HEARTBEAT',
+        deviceActive: !!self.pulseDeviceActive,
+        timestamp: ts,
+        sharedState: {
+          online: !!pulseGetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG),
+          requests: pulseGetFlag(PULSE_SHARED_INDEX.REQUEST_COUNT),
+          cacheHits: pulseGetFlag(PULSE_SHARED_INDEX.CACHE_HIT_COUNT),
+          cacheMisses: pulseGetFlag(PULSE_SHARED_INDEX.CACHE_MISS_COUNT),
+          apiLastTs: pulseGetFlag(PULSE_SHARED_INDEX.API_LAST_TS),
+          heartbeatTs: pulseGetFlag(PULSE_SHARED_INDEX.HEARTBEAT_TS)
+        }
+      });
+    });
+  });
+}
+
+
 function makeOfflineKey(url) {
   // Already has pw=offline → return as-is
   if (url.includes("pw=offline")) return url;
@@ -287,6 +436,7 @@ self.addEventListener("activate", (event) => {
   console.log("%c[PULSEWORLD OS KERNEL] Activated",
     "color:#00FF9C; font-weight:bold; font-family:monospace;");
   event.waitUntil(self.clients.claim());
+  sendPulseHeartbeat();
 });
 
 self.addEventListener('fetch', event => {
@@ -507,32 +657,25 @@ async function fetchAndStoreIcon(host, iconUrl) {
 
 async function getFavicon(url, flags = {}) {
   let u;
-
   try {
     u = new URL(url);
   } catch {
     return null;
   }
-
   let host = u.hostname;
-
   // ⭐ Preserve www if explicitly present
   if (url.includes("www.") && !host.startsWith("www.")) {
     host = "www." + host;
   }
-
   // ⭐ Default favicon URL
   let iconURL = `https://${host}/favicon.ico`;
-
   // ⭐ Strip subdomains unless it's "www"
   const parts = host.split(".");
   if (parts.length > 2 && parts[0] !== "www") {
     const root = parts.slice(parts.length - 2).join(".");
     iconURL = `https://${root}/favicon.ico`;
   }
-
   let icon = iconURL;
-
   // ⭐ Special external cases
   try {
     if (host.includes("google.com")) {
