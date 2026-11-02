@@ -2,17 +2,17 @@
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 
-function latestSnapshot(realm, container, html) {
-  const snapshotKey = `pulse_snapshot_${realm}`;
-  chrome.storage.local.get(snapshotKey, (items) => {
-    const snap = items[snapshotKey];
-    if (snap && snap.htmlSummary) {
-      container.innerHTML = snap.htmlSummary;
-    } else {
-      container.innerHTML = html;
-    }
-  });
-}
+// function latestSnapshot(realm, container, html) {
+//   const snapshotKey = `pulse_snapshot_${realm}`;
+//   chrome.storage.local.get(snapshotKey, (items) => {
+//     const snap = items[snapshotKey];
+//     if (snap && snap.htmlSummary) {
+//       container.innerHTML = snap.htmlSummary;
+//     } else {
+//       container.innerHTML = html;
+//     }
+//   });
+// }
 
 async function changeToOffline(videoElement) {
   let originalSrc = videoElement.src;
@@ -77,15 +77,16 @@ async function changeToOffline(videoElement) {
     let html = await response.text();
 
     const container = document.getElementById("pulseworld");
-    let u;
-    try {
-      u = new URL(url);
-    } catch {
-      return null;
-    }
+    // let u;
+    // try {
+    //   u = new URL(url);
+    // } catch {
+    //   return null;
+    // }
 
-    let host = u.hostname;
-    latestSnapshot(host, container, html);
+    // let host = u.hostname;
+    // latestSnapshot(host, container, html);
+    container.innerHTML = html;
 
     // Extract videos and prefer offline cache, with online fallback
     const videos = Array.from(container.querySelectorAll("video"));
