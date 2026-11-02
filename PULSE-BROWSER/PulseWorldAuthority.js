@@ -9,10 +9,10 @@ async function latestSnapshot(realm, container, html) {
     if (snap && snap.htmlSummary) {
       container.innerHTML = snap.htmlSummary;
       console.log("Pulse Ghost Echo Used for your Local Environment!");
-      pullall(container);
+      setTimeout(pullall(container), 1000);
     } else {
       container.innerHTML = html;
-      pullall(container);
+      setTimeout(pullall(container), 1000);
     }
   });
 }
@@ -98,7 +98,7 @@ async function pullall(container) {
     latestSnapshot(host, container, html);
     //container.innerHTML = html;
     
-    setTimeout(pullall(container), 1000);
+    setTimeout(pullall(container), 500);
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =
