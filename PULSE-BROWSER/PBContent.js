@@ -1849,7 +1849,7 @@ async function PulseBrowserDomScan() {
   realm = realm.replace(window.location.hash, "");
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
-  const authorityRealm = document.documentElement.innerHTML;
+  const authorityRealm = document.documentElement;
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm });
   if (
     !origin ||
