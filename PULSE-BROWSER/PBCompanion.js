@@ -265,10 +265,7 @@ async function handlePulseRequest(req) {
   }
 
   try {
-    let net = null;
-    if (!req.url.startsWith('chrome-extension://')) {
-      net = await fetch(req, { cache: 'no-store' });
-    }
+    const net =  await fetch(req, { cache: 'no-store' });
 
     PULSE_ONLINE = true;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
