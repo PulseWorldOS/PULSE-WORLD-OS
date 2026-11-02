@@ -1736,9 +1736,9 @@ async function PulseBrowserDomScan() {
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
 
-  // Strip external stylesheets + refresh metas
-  clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
-       .forEach(el => el.remove());
+  // // Strip external stylesheets + refresh metas
+  // clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
+  //      .forEach(el => el.remove());
 
   // Tiny image preview (first 10)
   const tinyImages = [...document.querySelectorAll("img[src]")]
