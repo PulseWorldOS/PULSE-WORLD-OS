@@ -1819,7 +1819,7 @@ async function PulseBrowserDomScan() {
   if (isPulseWorld(location.origin)) favicon = icon;
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
-  const htmlSummary = clone.innerHTML.slice(5000); // ~2KB max CHANGED TO FULL AGAIN
+  const htmlSummary = clone.innerHTML.slice(3000); // ~2KB max CHANGED TO FULL AGAIN
 
   const snapshot = {
     url: location.href,
@@ -1839,20 +1839,21 @@ async function PulseBrowserDomScan() {
   };
 
   console.log("Ghost Echo Initiated (Safe Mode): ", snapshot);
-  
-  if (
-    !origin ||
-    (origin.startsWith("chrome://") && !origin.includes("newtab"))
-  ) {
-    return;
-  }
-
-  chrome.storage.local.set({ [snapshotKey]: snapshot });
 
   let realm = location.href;
   realm = realm.replace(window.location.hash, "");
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
+  
+  if (
+    !origin ||
+    (origin.startsWith("chrome://") && !origin.includes("newtab")) ||
+    origin.startsWith("chrome-extension://")
+  ) {
+    return;
+  }
+
+  chrome.storage.local.set({ [snapshotKey]: snapshot });
 }
 
 
