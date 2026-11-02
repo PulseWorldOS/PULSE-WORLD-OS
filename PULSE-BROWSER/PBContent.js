@@ -1735,7 +1735,7 @@ async function PulseBrowserDomScan() {
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
-  ["audio"].forEach(tag =>
+  ["audio", "object", "embed"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
 
