@@ -77,7 +77,7 @@ async function pullall(container) {
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
     if (origin) url = origin;
 
-    if (!url.includes("pw=offline")) {
+    if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
       const separator = url.includes("?") ? "&" : "?";
       url = url + separator + "pw=offline";
     }
