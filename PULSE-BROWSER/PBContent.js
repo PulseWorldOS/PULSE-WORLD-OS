@@ -1838,8 +1838,7 @@ async function PulseBrowserDomScan() {
   
   if (
     !origin ||
-    (origin.startsWith("chrome://") && !origin.includes("newtab")) ||
-    origin.startsWith("chrome-extension://")
+    (origin.startsWith("chrome://") && !origin.includes("newtab"))
   ) {
     return;
   }

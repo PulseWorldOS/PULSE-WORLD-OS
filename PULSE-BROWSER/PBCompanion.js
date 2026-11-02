@@ -272,8 +272,7 @@ async function handlePulseRequest(req) {
 
     if (
       net &&
-      net.ok &&
-      !req.url.startsWith('chrome-extension://')
+      net.ok
     ) {
       const pwoffline = makeOfflineKey(req.url);
       let netclone = net.clone();
