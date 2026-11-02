@@ -1825,7 +1825,7 @@ async function PulseBrowserDomScan() {
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   // const htmlSummary = clone.innerHTML.slice(2000); // ~2KB max CHANGED TO FULL AGAIN
-  const htmlSummary = clone.innerHTML.slice(5000);
+  const htmlSummary = clone.innerHTML.slice(2000);
 
   const snapshot = {
     url: location.href,
