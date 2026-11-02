@@ -4,10 +4,138 @@
 <meta charset="UTF-8">
 <title>PulseWorld Authority Gateway</title>
 <style>
+  :root {
+    --pulse-obsidian: #000000;
+    --pulse-void: #050505;
+    --pulse-glass: rgba(255,255,255,0.08);
+    --pulse-gold: #f5d97a;
+    --pulse-gold-strong: #ffd447;
+    --pulse-teal: #00e6c7;
+    --pulse-teal-soft: #00c7a6;
+    --pulse-coral: #ff5f6a;
+    --pulse-coral-strong: #ff3d4d;
+    --pulse-white: #f2f2f2;
+    --pulse-muted: #888;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 8px;
+    --shadow-soft: 0 0 24px rgba(0,0,0,0.45);
+    --shadow-glow: 0 0 18px rgba(255,212,71,0.45);
+    --transition: 0.25s ease;
+    --pw-bg: #020308;
+    --pw-gold: #f5d27a;
+    --pw-teal: #00ffc8;
+    --pw-text: #f9f9f9;
+    --pw-subtle: #a7b0c5;
+    --pw-panel-bg: rgba(5, 7, 14, 0.9);
+    --pw-panel-border: rgba(0, 255, 200, 0.35);
+    --pw-panel-glow: rgba(0, 255, 200, 0.45);
+    --pw-console-bg: rgba(3, 5, 10, 0.95);
+    /* Colors */
+    --tp-yellow: #ffff99;
+    --tp-yellow-strong: #ffd400;
+    --tp-teal: #00a884;
+    --tp-teal-soft: #00c7a6;
+    --tp-coral: #ff5a5a;
+    --tp-coral-dark: #ff3d3d;
+    --tp-bg: #000000;
+    --tp-text: #1a1a1a;
+    --tp-muted: #777777;
+    --tp-card-bg: #000000;
+    --tp-shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.12);
+    --tp-radius-lg: 18px;
+    --tp-radius-md: 12px;
+    --tp-radius-sm: 8px;
+    /* Layout */
+    --tp-max-width: 1000px;
+    --tp-section-padding: 10px;
+    --tp-section-padding-lg: 40px;
+    /* Animation */
+    --tp-gradient-duration: 10s;
+    --pulse-cyan: #00fff2;
+    --pulse-cyan-soft: #00fff255;
+    --pulse-cyan-hard: #00fff2cc;
+    --pulse-green: #6aff6a;
+    --glass-bg: rgba(0, 0, 0, 0.45);
+    --glass-border: rgba(0, 255, 255, 0.25);
+    --glass-blur: blur(12px);
+    --pulse-cyan-glow: rgba(0,255,200,0.45);
+    --pulse-bg-dark: #050510;
+    --pulse-bg-card: rgba(20,20,20,0.85);
+    --pulse-bg-input: rgba(255,255,255,0.05);
+    --pulse-shadow: 0 0 25px rgba(0,255,200,0.15);
+    --bg: #030910;
+    --card-radius: 18px;
+    --primary: #1fe0a2;
+    --primary-soft: rgba(31, 224, 162, 0.18);
+    --accent: #ffb347;
+    --warning: #ffb347;
+    --normal: #ffcc33;
+    --fast: #00c46a;
+    --slow: #ff9933;
+    --demerit: #ff4444;
+    --success: #1fe0a2;
+    --danger: #ff5c7a;
+    --text-main: #f7f9fc;
+    --text-soft: #a9b3c7;
+    --border-soft: rgba(255, 255, 255, 0.08);
+    --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.45);
+    --seasonal-overlay: rgba(255, 255, 255, 0.04);
+    --sparkle-1: #FFD27F;
+    --sparkle-2: #FFE9B3;
+    --sparkle-3: #FFF5D6;
+    --season-glow: rgba(255, 215, 130, 0.6);
+    --t-gold: #f5d27a;
+    --t-gold-deep: #b58a3c;
+    --t-bg-dark: #05080c;
+    --t-metal-light: #d9dde4;
+    --t-metal-mid: #9ca3b0;
+    --t-metal-dark: #4b515e;
+    --t-text-main: #f5f7fb;
+    --t-text-subtle: #a7b0c4;
+    --t-card-bg: #070a11;
+    --bg-alt: #0b1020;
+    --accent: #00c8ff;
+    --accent-soft: rgba(0, 200, 255, 0.12);
+    --accent-strong: rgba(0, 200, 255, 0.35);
+    --text: #f5f7ff;
+    --muted: #9aa0c2;
+    --border: #1b2238;
+    --danger: #ff4b81;
+    --success: #3dd68c;
+    --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.55);
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+  }
   body {
     margin: 0;
-    background: transparent;
-    font-family: sans-serif;
+    padding: 0;
+    width: 100dvw;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+    inset: 0;
+    font-family: system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    color: var(--pulse-gold-strong);
+    background-image: url("https://www.pulseworld.net/_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex");
+    background-size: cover;
+    background-position-x: center;
+    touch-action: manipulation;
+    animation: pwHoverDrift 40s ease-in-out infinite;
+  }
+  html {
+    margin: 0;
+    padding: 0;
+    width: 100dvw;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+    touch-action: manipulation;
+    font-family: system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    animation: pwHoverDrift 40s ease-in-out infinite;
   }
   #pulseworld {
     opacity: 1;

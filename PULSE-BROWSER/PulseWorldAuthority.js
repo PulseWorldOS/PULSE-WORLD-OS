@@ -76,11 +76,11 @@ async function pullall(container) {
   try {
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
     if (origin) url = origin;
-
-    if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
-      const separator = url.includes("?") ? "&" : "?";
-      url = url + separator + "pw=offline";
-    }
+    
+    // if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
+    //   const separator = url.includes("?") ? "&" : "?";
+    //   url = url + separator + "pw=offline";
+    // }
 
     const response = await fetch(url, { mode: "cors" });
     let html = await response.text();
