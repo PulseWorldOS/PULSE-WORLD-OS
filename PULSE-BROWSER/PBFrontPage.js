@@ -1,4 +1,4 @@
-const { AuthorizeInstance } = require("twilio/lib/rest/previewIam/v1/authorize");
+
 
 let userInteracted = false;
 let engineType = "text";
@@ -2580,18 +2580,7 @@ aboutBtn.addEventListener("click", async () => {
 authorityBtn.addEventListener("click", async () => {
   const link = chrome.runtime.getURL("PulseWorldAuthority.html");
 
-  chrome.runtime.sendMessage({
-    type: "PB_HOVER_PREFETCH",
-    href: link
-  });
-
-  try {
-    fetch(link, { mode: "no-cors" }).catch(() => {});
-  } catch (_) {}
-
-  pbPreconnect([link]);
   openNamedTab("PulseWorldAuthority", link);
-  await PBUniversalBoost.warmOrigin(link);
 });
 
 engageBtn.addEventListener("mouseover", () => {
