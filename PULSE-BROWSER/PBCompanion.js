@@ -308,7 +308,7 @@ async function handlePulseRequest(req) {
       }
     }
 
-    if (req.url.includes("extension") && req.url.includes("chrome")) {
+    if (req.url.startsWith('chrome-extension://')) {
       const pulseworldURL = req.url
         .replace(location.origin, "https://www.pulseworld.net");
 
