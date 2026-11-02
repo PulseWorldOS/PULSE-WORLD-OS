@@ -9,14 +9,10 @@ async function latestSnapshot(realm, container, html) {
     if (snap && snap.htmlSummary) {
       container.innerHTML = snap.htmlSummary;
       console.log("Pulse Ghost Echo Used for your Local Environment!");
-      // Extract videos and prefer offline cache, with online fallback
-      const videos = Array.from(container.querySelectorAll("video"));
-      videos.forEach(v => changeToOffline(v));
+      pullall(container);
     } else {
       container.innerHTML = html;
-      // Extract videos and prefer offline cache, with online fallback
-      const videos = Array.from(container.querySelectorAll("video"));
-      videos.forEach(v => changeToOffline(v));
+      pullall(container);
     }
   });
 }
@@ -67,6 +63,12 @@ async function changeToOffline(videoElement) {
   });
 }
 
+async function pullall(container) {
+  // Extract videos and prefer offline cache, with online fallback
+  const videos = Array.from(container.querySelectorAll("video"));
+  videos.forEach(v => changeToOffline(v));
+}
+
 // ---------------------------------------------------------
 // Minimal Authority Gateway + Video Extraction + Saving
 // ---------------------------------------------------------
@@ -95,6 +97,8 @@ async function changeToOffline(videoElement) {
     console.log(host);
     latestSnapshot(host, container, html);
     //container.innerHTML = html;
+    
+    setTimeout(pullall(container), 500);
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =
@@ -102,6 +106,7 @@ async function changeToOffline(videoElement) {
     console.error("PulseWorldAuthority error:", err);
   }
 })();
+
 
 // // ---------------------------------------------------------
 // // Save video bytes into extension memory
