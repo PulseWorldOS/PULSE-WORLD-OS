@@ -7,12 +7,13 @@ async function latestSnapshot(realm, container, html) {
   const snapshotKey = `pulse_snapshot_${realm}`;
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (snap && snap.htmlSummary) {
+    if (snap && snap.htmlSummary && !authorityRealm) {
       container.innerHTML = snap.htmlSummary;
       console.log("Pulse Ghost Echo Used for your Local Environment!");
       setTimeout(pullall(container), 1000);
     } else {
       container.innerHTML = html;
+      authorityRealm = null;
       setTimeout(pullall(container), 1000);
     }
   });
