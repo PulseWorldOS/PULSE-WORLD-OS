@@ -783,7 +783,8 @@ function injectPulseScreenFromMemory(play) {
       pbPulseScreen.currentTime = entry.currentTime || 0;
       pbPulseScreen.play = true;
     }
-
+    console.log(location.origin);
+    console.log(pbPulseScreen.src);
     const interval3 = getCharacterInterval();
     if (!play) {
       setTimeout(() => {
