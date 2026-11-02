@@ -1102,8 +1102,6 @@ function latestSnapshot(realm, link, snapIndex) {
     const snap = items[snapshotKey];
     if (snap) {
       renderSnapshot(snap, snapIndex, realm, link);
-    } else {
-      renderSnapshot(true, snapIndex, realm, link);
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
