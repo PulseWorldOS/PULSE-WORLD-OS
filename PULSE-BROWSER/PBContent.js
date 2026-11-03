@@ -1171,10 +1171,24 @@ const PB_HOMES = [
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
+
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
+// ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
 function pbDomainClass(url) {
-  for (const domain of PB_HOMES) {
-    if (url.includes(domain)) return "PulseWorld";
-  }
+  if (isPulseWorld(url)) return "PulseWorld";
   if (IsPartner(url)) return "Partner";
   return "WWW";
 }
@@ -1710,19 +1724,6 @@ async function isBlobValidImage(blob) {
 
     img.src = url;
   });
-}
-
-function isPulseWorld(origin) {
-  return origin.includes("pulseworld.net")
-      || origin.includes("orbitalmap.net")
-      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
-      || origin.includes("booleanlogic.net")
-      || origin.includes("binaryos.net")
-      || origin.includes("serviceworker.net")
-      || origin.includes("gpuprocessing.net")
-      || origin.includes("pulseworld.me")
-      || origin.includes("pulseworld.money")
-      || origin.includes("pulseworld.biz");
 }
 
 async function PulseBrowserDomScan() {

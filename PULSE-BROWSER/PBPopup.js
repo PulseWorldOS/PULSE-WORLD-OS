@@ -75,10 +75,11 @@ function IsPartner(origin) {
       || origin.includes("fordfamilymanagement");
 }
 
+// ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
 function pbDomainClass(url) {
-  for (const domain of PB_HOMES) {
-    if (url.includes(domain)) return "PulseWorld";
-  }
+  if (isPulseWorld(url)) return "PulseWorld";
   if (IsPartner(url)) return "Partner";
   return "WWW";
 }
