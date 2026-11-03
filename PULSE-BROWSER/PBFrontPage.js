@@ -1191,14 +1191,14 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
 
       const regfavicon = await getFavicon(realm);
       const favicon = regfavicon;
-      let bestfavicon = favicon;
+      let bestfavicon = osfallback;
       const osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
 
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon2"
-               src="${osfallback}"
+               src="${bestfavicon}"
                alt="favicon">
         </div>
       `;
