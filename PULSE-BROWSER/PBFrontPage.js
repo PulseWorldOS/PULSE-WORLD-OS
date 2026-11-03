@@ -657,7 +657,7 @@ async function pulseRehydrateTabs() {
             snapshot: null,
           };
           if (identity !== "newtab") skipcount += 1;
-          if (identity !== "newtab") renderTemporary(true, skipcount, identity, urlObj);
+          if (identity !== "newtab") renderTemporary(true, skipcount, identity, tab.url);
           continue; // ⭐ Do NOT increment snapIndex
         }
 
@@ -1192,7 +1192,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       const regfavicon = await getFavicon(realm);
       const favicon = regfavicon;
       let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
-      if (isPulseWorld(realm)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
+      if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
       const os2fallback = chrome.runtime.getURL("PulseOSTab.png");
       let bestfavicon = osfallback;
 
