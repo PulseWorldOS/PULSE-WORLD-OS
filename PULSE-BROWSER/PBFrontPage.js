@@ -1198,7 +1198,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon2"
-               src="${bestfavicon}"
+               src="${osfallback}"
                alt="favicon">
         </div>
       `;
