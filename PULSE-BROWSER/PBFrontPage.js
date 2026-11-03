@@ -2754,13 +2754,17 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalEmailLink?.trim() || "https://mail.google.com";
+    let link = settings.externalEmailLink?.trim() || "https://mail.google.com";
 
     console.log("[FrontPage] Opening External Email Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2799,13 +2803,17 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com";
+    let link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com";
 
     console.log("[FrontPage] Opening External Bank Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2844,13 +2852,17 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalSocialLink?.trim() || "https://www.facebook.com";
+    let link = settings.externalSocialLink?.trim() || "https://www.facebook.com";
 
     console.log("[FrontPage] Opening External Social Media Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2888,13 +2900,17 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net";
+    let link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net";
 
     console.log("[FrontPage] Opening External Work Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2932,13 +2948,17 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalStreamingLink?.trim() || "https://www.netflix.com";
+    let link = settings.externalStreamingLink?.trim() || "https://www.netflix.com";
 
     console.log("[FrontPage] Opening External Streaming Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2976,13 +2996,17 @@ document.getElementById("moduleShopping").addEventListener("click", async () => 
     }
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.externalShoppingLink?.trim() || "https://www.amazon.com";
+    let link = settings.externalShoppingLink?.trim() || "https://www.amazon.com";
 
     console.log("[FrontPage] Opening External Shopping Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3002,13 +3026,17 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav1Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com";
+    let link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com";
 
     console.log("[FrontPage] Opening External moduleFav1Icon Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3028,13 +3056,17 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav2Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule2Link?.trim() || "https://www.office.com";
+    let link = settings.acceleratedModule2Link?.trim() || "https://www.office.com";
 
     console.log("[FrontPage] Opening External moduleFav2Icon Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3054,13 +3086,17 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav3Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com";
+    let link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com";
 
     console.log("[FrontPage] Opening External moduleFav3Icon Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3080,13 +3116,17 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav4Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com";
+    let link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com";
 
     console.log("[FrontPage] Opening External moduleFav4Icon Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3106,13 +3146,17 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav5Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com";
+    let link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com";
 
     console.log("[FrontPage] Opening External moduleFav5Icon Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3131,13 +3175,17 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
     console.log("[FrontPage] moduleFav6Icon module clicked. Settings:", settings);
 
     // EXTERNAL MODE → open user’s chosen provider
-    const link = settings.acceleratedModule6Link?.trim() || "https://www.snapchat.com";
+    let link = settings.acceleratedModule6Link?.trim() || "https://www.snapchat.com";
 
     console.log("[FrontPage] Opening External moduleFav6Icon Provider:", link);
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
+    if (!online) {
+      const separator = link.includes("?") ? "&" : "?";
+      link = link + separator + "pw=offline";
+    }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
