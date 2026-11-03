@@ -316,7 +316,7 @@ document.addEventListener("click", e => {
     const response = await fetch(url, { mode: "cors" });
     let html = await response.text();
     if (authorityRealm) html = authorityRealm;
-
+    html = html.replace(/\.\/_EXPRESSIONS/g, "https://www.pulseworld.net/_EXPRESSIONS");
     const container = document.getElementById("pulseworld");
     let u;
     try {
@@ -328,8 +328,6 @@ document.addEventListener("click", e => {
     let host = u.hostname;
     
     // latestSnapshot(host, container, html);
-    
-    html = html.replace(/\.\/_EXPRESSIONS/g, "https://www.pulseworld.net/_EXPRESSIONS");
     container.innerHTML = html;
     
     setTimeout(pullall(container), 1000);
