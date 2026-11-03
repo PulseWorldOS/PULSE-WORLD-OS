@@ -1,7 +1,6 @@
 
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
-const Myorigin = "www.pulseworld.net";
 let authorityRealm = null;
 
 // async function latestSnapshot(realm, container, html) {
@@ -92,7 +91,7 @@ function getReadableName(url) {
 if (origin) {
   document.title = `PulseBrowser Temporal Drift [${getReadableName("https://" + origin)}]`;
 } else {
-  document.title = `PulseBrowser Temporal Drift [${getReadableName("https://" + Myorigin)}]`;
+  document.title = `PulseBrowser Temporal Drift [${getReadableName("https://www.pulseworld.net")}]`;
 }
 
 function AttemptPulseSteam(videoElement) {
@@ -247,13 +246,18 @@ function collectAndWarmAssetsContent() {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
 
-  const OurAssets = origin ?? Myorigin;
+  const Assets = null;
+  if (origin) {
+    Assets = origin;
+  } else {
+    Assets = "www.pulseworld.net";
+  }
   // -------------------------------------------------------
   // 6. Send unified front‑page report
   // -------------------------------------------------------
   chrome.runtime.sendMessage({
     type: "PB_ASSET_LIST_CONTENT",
-    pageUrl: OurAssets,
+    pageUrl: Assets,
     assets,
     decodeCount
   });
@@ -358,11 +362,7 @@ function hidePWLoader() {
   try {
     showPWLoader();
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldFounders.txt";
-    if (origin) {
-      url = "https://" + origin;
-    } else {
-      url = "https://" + Myorigin;
-    }
+    if (origin) url = "https://" + origin;
     chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
       if (chrome.runtime.lastError) return;
       
