@@ -298,7 +298,7 @@ document.addEventListener("click", e => {
 // ---------------------------------------------------------
 (async () => {
   try {
-    let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt";
+    let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldFounders.txt";
     if (origin) url = "https://" + origin;
     chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
       if (chrome.runtime.lastError) return;
