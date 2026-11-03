@@ -635,6 +635,7 @@ async function pulseRehydrateTabs() {
   if (document.visibilityState !== "visible") return;
   let skipcount = 0;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
+  document.querySelectorAll('[class^="PulseBrowser-OS-Temporary"]').forEach(el => el.remove());
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     
@@ -1257,6 +1258,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       break;
     }
   }
+  
   pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
   // location.reload();
