@@ -3,21 +3,21 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let authorityRealm = null;
 
-async function latestSnapshot(realm, container, html) {
-  const snapshotKey = `pulse_snapshot_${realm}`;
-  chrome.storage.local.get(snapshotKey, (items) => {
-    const snap = items[snapshotKey];
-    if (snap && snap.htmlSummary && !authorityRealm) {
-      container.innerHTML = snap.htmlSummary;
-      console.log("Pulse Ghost Echo Used for your Local Environment!");
-      setTimeout(pullall(container), 1000);
-    } else {
-      container.innerHTML = html;
-      authorityRealm = null;
-      setTimeout(pullall(container), 1000);
-    }
-  });
-}
+// async function latestSnapshot(realm, container, html) {
+//   const snapshotKey = `pulse_snapshot_${realm}`;
+//   chrome.storage.local.get(snapshotKey, (items) => {
+//     const snap = items[snapshotKey];
+//     if (snap && snap.htmlSummary && !authorityRealm) {
+//       container.innerHTML = snap.htmlSummary;
+//       console.log("Pulse Ghost Echo Used for your Local Environment!");
+//       setTimeout(pullall(container), 1000);
+//     } else {
+//       container.innerHTML = html;
+//       authorityRealm = null;
+//       setTimeout(pullall(container), 1000);
+//     }
+//   });
+// }
 
 async function changeToOffline(videoElement) {
   let originalSrc = videoElement.src;
@@ -328,6 +328,7 @@ document.addEventListener("click", e => {
     let host = u.hostname;
     
     // latestSnapshot(host, container, html);
+    html = html.replace("chrome-extension://kkidimiknkgfkjplagaohacidaagcbjg", "https://www.pulseworld.net");
     container.innerHTML = html;
     
     setTimeout(pullall(container), 1000);

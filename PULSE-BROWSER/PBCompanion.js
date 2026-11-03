@@ -1129,18 +1129,6 @@ function isAMoment(origin) {
   return origin.includes("pw=moment");
 }
 
-function isPulseWorld(origin) {
-  return origin.includes("pulseworld.net")
-      || origin.includes("orbitalmap.net")
-      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
-      || origin.includes("booleanlogic.net")
-      || origin.includes("binaryos.net")
-      || origin.includes("serviceworker.net")
-      || origin.includes("gpuprocessing.net")
-      || origin.includes("pulseworld.me")
-      || origin.includes("pulseworld.money")
-      || origin.includes("pulseworld.biz");
-}
 
 // ---------------------------------------------------------------------------
 // DNS WARM (resolve domain early)
