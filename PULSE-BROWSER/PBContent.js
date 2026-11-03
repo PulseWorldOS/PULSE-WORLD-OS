@@ -557,7 +557,7 @@ async function injectHUD() {
 
   setTimeout(() => {
     PulseBrowserDomScan();
-  }, 3500);
+  }, 4500);
   setTimeout(() => {
     DomScanPreview();
   }, 4000);
@@ -1744,7 +1744,7 @@ async function PulseBrowserDomScan() {
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
   // );
   // Strip heavy elements
-  ["iframe", "audio"].forEach(tag =>
+  ["script", "iframe", "audio"].forEach(tag =>
     clone.querySelectorAll(tag).forEach(el => el.remove())
   );
   
