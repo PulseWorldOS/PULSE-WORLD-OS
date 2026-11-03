@@ -328,7 +328,8 @@ document.addEventListener("click", e => {
     let host = u.hostname;
     
     // latestSnapshot(host, container, html);
-    html = html.replace("chrome-extension://kkidimiknkgfkjplagaohacidaagcbjg", "https://www.pulseworld.net");
+    
+    html = html.replace(/\.\/_EXPRESSIONS/g, "https://www.pulseworld.net/_EXPRESSIONS");
     container.innerHTML = html;
     
     setTimeout(pullall(container), 1000);
