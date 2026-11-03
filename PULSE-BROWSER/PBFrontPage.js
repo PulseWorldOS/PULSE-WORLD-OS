@@ -1191,7 +1191,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       const regfavicon = await getFavicon(realm);
       const favicon = snapshot.regfavicon ?? regfavicon;
       let bestfavicon = favicon;
-      const osfallback = chrome.runtime.getURL("PulseOSTab.png");
+      const osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
 
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
