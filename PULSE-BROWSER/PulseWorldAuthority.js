@@ -293,11 +293,40 @@ document.addEventListener("click", e => {
   }
 });
 
+let loader = document.getElementById("pw-loading");
+
+function showPWLoader() {
+  // If the loader was removed, recreate it
+  if (!loader) {
+    loader = document.createElement("div");
+    loader.id = "pw-loading";
+    loader.className = "pw-loader";
+    document.body.appendChild(loader);
+  }
+
+  // Ensure styles apply before fading in
+  requestAnimationFrame(() => {
+    loader.style.opacity = "1";
+    loader.style.pointerEvents = "auto"; // optional if your loader blocks input
+  });
+}
+
+function hidePWLoader() {
+  
+  if (!loader) return;
+
+  requestAnimationFrame(() => {
+    loader.style.opacity = "0";
+    loader.style.pointerEvents = "none";
+  });
+}
+
 // ---------------------------------------------------------
 // Minimal Authority Gateway + Video Extraction + Saving
 // ---------------------------------------------------------
 (async () => {
   try {
+    showPWLoader();
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldFounders.txt";
     if (origin) url = "https://" + origin;
     chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
@@ -331,6 +360,7 @@ document.addEventListener("click", e => {
     container.innerHTML = html;
     
     setTimeout(pullall(container), 1000);
+    hidePWLoader();
 
   } catch (err) {
     document.getElementById("pulseworld").innerHTML =
