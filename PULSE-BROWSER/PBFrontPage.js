@@ -1196,7 +1196,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
         <div class="Snapshot-Viewport">
-          <img class="Snapshot-Favicon"
+          <img class="Snapshot-Favicon2"
                src="${bestfavicon}"
                alt="favicon">
         </div>
@@ -1205,7 +1205,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       document.body.appendChild(div);
 
       // ⭐ Attach fallback in JS (CSP-safe)
-      const img = div.querySelector(".Snapshot-Favicon");
+      const img = div.querySelector(".Snapshot-Favicon2");
 
       img.addEventListener("error", () => {
         // First fallback → OS icon
