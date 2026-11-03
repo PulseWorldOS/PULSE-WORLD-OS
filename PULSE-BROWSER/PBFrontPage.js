@@ -633,6 +633,7 @@ function pulseRestoreTabs() {
 async function pulseRehydrateTabs() {
   if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
+  let skipcount = 0;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
@@ -648,12 +649,14 @@ async function pulseRehydrateTabs() {
         const identity = normalizeIdentity(urlObj);
 
         // ⭐ Skip NEW TAB — do NOT assign a bubble
-        if (identity === "newtab") {
+        if (identity === "newtab" || tab.url.startsWith("chrome-extension://")) {
           rebuilt[identity] = {
             id: tab.id,
             realm: identity,
             snapshot: null,
           };
+          if (identity !== "newtab") skipcount += 1;
+          if (identity !== "newtab") renderTemporary(true, skipcount, identity, urlObj);
           continue; // ⭐ Do NOT increment snapIndex
         }
 

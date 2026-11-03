@@ -338,6 +338,28 @@
       left: 590px;
     }
 
+    .PulseBrowser-OS-Temporary2 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 35;
+      animation: bubbleFloatExplorer 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 245px;
+      right: 590px;
+    }
+
     /* ⭐ Viewport layer */
     .Snapshot-Viewport {
       width: 100%;
@@ -365,7 +387,8 @@
     .PulseBrowser-OS-Snapshot7.electrify,
     .PulseBrowser-OS-Snapshot8.electrify,
     .PulseBrowser-OS-Snapshot9.electrify,
-    .PulseBrowser-OS-Temporary1.electrify {
+    .PulseBrowser-OS-Temporary1.electrify,
+    .PulseBrowser-OS-Temporary2.electrify {
       animation: bubbleElectrify 3.2s ease-out;
       background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000 70%);
       box-shadow:
@@ -435,23 +458,23 @@
     }
     @keyframes bubbleFloatExplorer {
       0%   { transform: translate(0px, 0px); }
-      10%  { transform: translate(4px, -3px); }
+      10%  { transform: translate(6px, -8px); }
       20%  { transform: translate(-5px, 4px); }
       35%  { transform: translate(6px, 2px); }
       50%  { transform: translate(-4px, -5px); }
-      65%  { transform: translate(5px, 3px); }
-      80%  { transform: translate(-3px, 5px); }
+      65%  { transform: translate(8px, 3px); }
+      80%  { transform: translate(-3px, 8px); }
       100% { transform: translate(0px, 0px); }
     }
     @keyframes bubbleFloatMinion {
-      0%   { transform: translate(0px, 0px); }
+      0%   { transform: translate(0px, 2px); }
       8%   { transform: translate(2px, -3px); }
-      16%  { transform: translate(-1px, 2px); }
-      24%  { transform: translate(3px, 1px); }
+      16%  { transform: translate(-1px, 8px); }
+      24%  { transform: translate(7px, 1px); }
       32%  { transform: translate(-2px, -2px); }
       48%  { transform: translate(4px, 3px); }
       64%  { transform: translate(-3px, 1px); }
-      80%  { transform: translate(2px, -4px); }
+      80%  { transform: translate(8px, -4px); }
       100% { transform: translate(0px, 0px); }
     }
     @keyframes bubbleFloatHeartbeat {
