@@ -2761,10 +2761,10 @@ document.getElementById("moduleEmail").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2810,10 +2810,10 @@ document.getElementById("moduleBank").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2859,10 +2859,10 @@ document.getElementById("moduleSocial").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2907,10 +2907,10 @@ document.getElementById("moduleWork").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -2955,10 +2955,10 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3003,10 +3003,10 @@ document.getElementById("moduleShopping").addEventListener("click", async () => 
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3033,10 +3033,10 @@ document.getElementById("moduleFav1").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3063,10 +3063,10 @@ document.getElementById("moduleFav2").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3093,10 +3093,10 @@ document.getElementById("moduleFav3").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3123,10 +3123,10 @@ document.getElementById("moduleFav4").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3153,10 +3153,10 @@ document.getElementById("moduleFav5").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
@@ -3182,10 +3182,10 @@ document.getElementById("moduleFav6").addEventListener("click", async () => {
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    if (!online) {
-      const separator = link.includes("?") ? "&" : "?";
-      link = link + separator + "pw=offline";
-    }
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
     // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
