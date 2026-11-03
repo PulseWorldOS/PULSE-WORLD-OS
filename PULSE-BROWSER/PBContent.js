@@ -51,16 +51,16 @@ if (location.href.includes("pw=offline")) {
         // history.back();
         // Still here?
         // ONLY return to live URL when internet exists
-        if (navigator.onLine) {
-          if (location.href === currentUrl) {
-            const cleanUrl = currentUrl
-              .replace(/[?&]pw=moment/g, "")
-              .replace("?&", "?")
-              .replace(/\?$/, "")
-              .replace(/&$/, "");
-            location.href = cleanUrl;
-          }
+
+        if (location.href === currentUrl) {
+          const cleanUrl = currentUrl
+            .replace(/[?&]pw=moment/g, "")
+            .replace("?&", "?")
+            .replace(/\?$/, "")
+            .replace(/&$/, "");
+          location.href = cleanUrl;
         }
+
       }, 750);
     }
   });
