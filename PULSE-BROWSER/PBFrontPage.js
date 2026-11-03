@@ -1190,7 +1190,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       div.className = bubbleId;
 
       const regfavicon = await getFavicon(realm);
-      const favicon = snapshot.regfavicon ?? regfavicon;
+      const favicon = regfavicon;
       let bestfavicon = favicon;
       const osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
 
