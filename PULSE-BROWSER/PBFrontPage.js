@@ -1193,6 +1193,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       const favicon = regfavicon;
       let bestfavicon = osfallback;
       const osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
+      const os2fallback = chrome.runtime.getURL("PulseOSTab.png");
 
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
@@ -1210,7 +1211,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
 
       img.addEventListener("error", () => {
         // First fallback → OS icon
-        img.src = osfallback;
+        img.src = os2fallback;
       });
     }
 
