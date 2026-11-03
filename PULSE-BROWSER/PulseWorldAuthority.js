@@ -65,6 +65,32 @@ async function changeToOffline(videoElement) {
   });
 }
 
+function getReadableName(url) {
+  try {
+    const u = new URL(url);
+
+    let host = u.hostname.replace(/^www\./, "");
+
+    const parts = host.split(".");
+
+    if (parts.length >= 2) {
+      host = parts[parts.length - 2];
+    }
+
+    host = host.replace(/[-_]/g, " ");
+
+    host = host.replace(/\b\w/g, c => c.toUpperCase());
+
+    return host;
+
+  } catch {
+    return url;
+  }
+}
+
+if (origin) {
+  document.title = `PulseWorld Temporal Drift [${getReadableName(origin)}]`;
+}
 
 function AttemptPulseSteam(videoElement) {
   try {
