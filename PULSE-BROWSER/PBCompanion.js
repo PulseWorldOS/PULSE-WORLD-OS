@@ -1630,7 +1630,7 @@ class PulseWasmEngine {
 
   async EarnerLockedandLoaded() {
     this.isLoaded = true;
-    chrome.power.requestKeepAwake("system");
+    if (chrome && chrome.power) chrome.power.requestKeepAwake("system");
   }
 
   // Load the pure binary math module into memory
@@ -1671,7 +1671,7 @@ class PulseWasmEngine {
     
     // 3. Extract the high-density result from WASM memory
     const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress);
-    chrome.power.releaseKeepAwake();
+    if (chrome && chrome.power) chrome.power.releaseKeepAwake();
     return proofResult;
   }
 }
