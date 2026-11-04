@@ -3317,6 +3317,9 @@ setInterval(() => {
     timerX = 0;
   }
   online = navigator.onLine;
+  let onlineFlag = "Online";
+  if (!online) onlineFlag = "Offline";
+  console.log("PulseBrowser OS: [Status] " + onlineFlag);
   if (!online) {
     titlediv.textContent = "PulseBrowser OS (Drifting..)";
     document.title = "PulseBrowser OS [Offline]";
