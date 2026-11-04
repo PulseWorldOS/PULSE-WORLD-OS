@@ -136,6 +136,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
       PB_LOG2.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
       PB_LOG2.info("PulseBrowser OS Session Start: " + nowSW);
       PB_LOG2.info("PulseBrowser OS Settings Start: " + lastnowSW);
+      PB_LOG2.info("PulseBrowser OS Present Moment: " + new Date().toLocaleString());
     } else {
       GLOBALSTART = Date.now();
     }
@@ -2786,7 +2787,7 @@ async function clearPulseCaches() {
 //  SECTION 8 — DEVTOOLS
 // ============================================================================
 function pbLogKernelStatus() {
-  console.log("%c[PBDevTools] Kernel Status @ " + new Date(nowSW).toLocaleString(),
+  console.log("%c[PBDevTools] Kernel Status @ " + new Date().toLocaleString(),
     "color:#FF4444; font-weight:bold;");
   console.log("[PBDevTools] Realm:", PulseRealmState);
   pbLoadSettings().then((settings) => console.log("[PBDevTools] Settings:", settings));
