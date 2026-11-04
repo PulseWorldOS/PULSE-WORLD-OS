@@ -1516,6 +1516,7 @@ async function pbModuleWarmBoot() {
   let externalSearchLink = settings.externalSearchLink || "https://www.google.com";
   if (PulseRealmSettings.goEarnerMode === true) PulseBrowserSettings.enablePulseEarner = true;
   if (PulseBrowserSettings.enablePulseEarner === true) PulseBrowserSettings.enableEarnerOverlay = true;
+  pbSaveSettings(PulseBrowserSettings);
   // Collect all accelerated module links directly from settings
   warmTargets = [
     settings.externalBankLink,
