@@ -1589,7 +1589,22 @@ function isValid(t) {
   );
 }
 
+async function fetchWithYourQueryStringCache(url) {
+  try {
+    const OfflineCache = makeOfflineKey(url);
+    const net =  await fetch(OfflineCache, { cache: 'no-store' });
 
+    if (net && net.ok && (!req.url.startsWith('chrome-extension://'))) {
+      PULSE_ONLINE = true;
+      pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
+      pulseInc(PULSE_SHARED_INDEX.CACHE_MISS_COUNT);
+    }
+    
+  } catch (err) {
+    PULSE_ONLINE = false;
+    pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 0);
+  }
+}
 
 function isCacheableURL(url) {
   // // Reject obvious malformed recursive paths like /app.css/app.css
