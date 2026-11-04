@@ -1260,6 +1260,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   }
   
   pulseRehydrateTabs();
+  backToOriginal();
   // injectPulseScreenFromMemory();
   // location.reload();
 });

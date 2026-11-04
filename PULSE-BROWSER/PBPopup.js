@@ -376,6 +376,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   }
   // ⭐ REHYDRATE WITH CLEAN INDICES
   pulseRehydrateTabs();
+  backToOriginal();
 });
 
 const out = document.getElementById("output");
