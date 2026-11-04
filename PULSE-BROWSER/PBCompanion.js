@@ -1019,7 +1019,7 @@ function pbDomainClass(url) {
     warmTargets.forEach(origin => {
       let host = new URL(origin).hostname;
       host = host.replace("https://","");
-      host = host.replace("www","");
+      host = host.replace("www.","");
       host = host.endsWith("/") ? host.slice(0, -1) : host;
       console.log(origin);
       console.log(url);
