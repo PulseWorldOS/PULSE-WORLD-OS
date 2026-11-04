@@ -12,7 +12,7 @@ function toggleSetting(key, label) {
   loadSettings((settings) => {
     settings[key] = !settings[key];
     saveSettings(settings, () => {
-      write(label + ": " + (settings[key] ? "ON" : "OFF"));
+      console.log(label + ": " + (settings[key] ? "ON" : "OFF"));
     });
   });
 }
@@ -20,7 +20,7 @@ function toggleSetting(key, label) {
 // Utility: load settings
 function loadSettings(cb) {
   chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
-    if (chrome.runtime.lastError) return write("Settings unreachable.");
+    if (chrome.runtime.lastError) return console.log("Settings unreachable.");
     cb(res.settings);
   });
 }
