@@ -2786,7 +2786,7 @@ async function clearPulseCaches() {
 //  SECTION 8 — DEVTOOLS
 // ============================================================================
 function pbLogKernelStatus() {
-  console.log("%c[PBDevTools] Kernel Status @ " + now,
+  console.log("%c[PBDevTools] Kernel Status @ " + nowSW,
     "color:#FF4444; font-weight:bold;");
   console.log("[PBDevTools] Realm:", PulseRealmState);
   pbLoadSettings().then((settings) => console.log("[PBDevTools] Settings:", settings));
