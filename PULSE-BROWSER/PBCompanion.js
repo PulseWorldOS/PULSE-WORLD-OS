@@ -1054,6 +1054,10 @@ function IsPartner(origin) {
       || origin.includes("fordfamilymanagement");
 }
 
+function isFavicon(origin) {
+  return origin.includes("favicon");
+}
+
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
@@ -1999,10 +2003,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const cache = await caches.open(name);
               const requests = await cache.keys();
               const realRequests = requests.filter(req => 
-                !isPulseWorld(req.url)
+                !isPulseWorld(req.url) && !isFavicon(req.url)
               );
               const PulseRequests = requests.filter(req =>
-                isPulseWorld(req.url)
+                isPulseWorld(req.url) && !isFavicon(req.url)
               );
               const PulseMoments = [
                 ...new Set(
