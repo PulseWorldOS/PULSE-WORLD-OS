@@ -1453,7 +1453,6 @@ async function pbWarmPath(origin) {
 // ---------------------------------------------------------------------------
 async function pbAccelerate(url) {
   const domainClass = pbDomainClass(url);
-  console.log(domainClass);
 
   // Normalize origin: remove trailing slash if present
   const rawOrigin = new URL(url).origin;
@@ -1629,6 +1628,11 @@ class PulseWasmEngine {
     this.isLoaded = false;
   }
 
+  async EarnerLockedandLoaded() {
+    this.isLoaded = true;
+    chrome.power.requestKeepAwake("system");
+  }
+
   // Load the pure binary math module into memory
   async initEngine(wasmBinaryUrl) {
     if (this.isLoaded) return;
@@ -1647,7 +1651,7 @@ class PulseWasmEngine {
         }
       });
 
-      this.isLoaded = true;
+      EarnerLockedandLoaded();
       console.log("[WASM ENGINE] Pure mathematical module stable and hot.");
     } catch (err) {
       console.error("[WASM ENGINE] Initialization failed:", err);
@@ -1667,7 +1671,7 @@ class PulseWasmEngine {
     
     // 3. Extract the high-density result from WASM memory
     const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress);
-
+    chrome.power.releaseKeepAwake();
     return proofResult;
   }
 }
