@@ -34,12 +34,50 @@ chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   }
 });
 
-// chrome.storage.local.get(["SessionStart"], (res) => {
-//   if (isValid(res.SessionStart)) {
-//     nowSW = res.SessionStart;
-//     console.log("PulseBrowser OS Local Session Start: " + nowSW);
-//   }
-// });
+// 1. The Core Queue Engine
+class StorageQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+  }
+
+  // Adds the payload to the line and ensures the processing loops runs
+  enqueue(dataObject) {
+    this.queue.push(dataObject);
+    if (!this.isProcessing) {
+      this.processNext();
+    }
+  }
+
+  // Processes each object one by one, keeping the disk thread safe
+  async processNext() {
+    if (this.queue.length === 0) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.isProcessing = true;
+    const dataObject = this.queue.shift(); // Pull the next write payload
+
+    try {
+      // Executes the native Chrome write sequentially
+      await chrome.storage.local.set(dataObject);
+    } catch (error) {
+      console.error("[STORAGE GOVERNOR] Quota write blocked:", error);
+    }
+
+    // Yield control for 0ms to let the browser breathe, then hit the next item
+    setTimeout(() => this.processNext(), 0);
+  }
+}
+
+// 2. Instantiate the global queue in your worker
+const orchestratorQueue = new StorageQueue();
+
+// 3. The Drop-In Replacement Function
+function safeStorageSet(dataObject) {
+  orchestratorQueue.enqueue(dataObject);
+}
 
 
 const PB_LOG2 = {
@@ -89,7 +127,7 @@ const PB_LOG2 = {
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
     GLOBALSTART = Date.now();
-    chrome.storage.local.set({ globalStart: GLOBALSTART });
+    safeStorageSet({ globalStart: GLOBALSTART });
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
@@ -103,7 +141,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -1021,10 +1059,6 @@ function pbDomainClass(url) {
       host = host.replace("https://","");
       host = host.replace("www.","");
       host = host.endsWith("/") ? host.slice(0, -1) : host;
-      console.log(origin);
-      console.log(url);
-      console.log(host);
-      console.log(url.includes(host));
       if (url.includes(host)) warmclass = true;
     });
     if (warmclass) return "Warm-Galaxy";
@@ -1054,13 +1088,13 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     // PulseRealmState.lastTitle = "PulseBrowser OS Console";
   } else {
     if (url.includes("PulseWorldAuthority")) {
-      PulseRealmState.lastURL = "PulseBrowser - PulseWorld Multiverse";
       PulseRealmState.lastDomainClass = "Not Exactly Sure...";
     } else {
       const domainClass = pbDomainClass(url);
-      PulseRealmState.lastURL = url;
       PulseRealmState.lastDomainClass = domainClass;
     }
+    
+    PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
     PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
@@ -1225,7 +1259,7 @@ async function pbPrefetch(urls = []) {
         fails[url] = (fails[url] || 0) + 1;
         lastFailURL = url;
         if (fails[url] >= 2) {
-          await chrome.storage.local.set({ pb_fail_cache: fails });
+          await safeStorageSet({ pb_fail_cache: fails });
         }
       } else {
         warmedCount++;
@@ -1234,7 +1268,7 @@ async function pbPrefetch(urls = []) {
   }
 
   // ⭐ Save updated fail-cache
-  await chrome.storage.local.set({ pb_fail_cache: fails });
+  await safeStorageSet({ pb_fail_cache: fails });
 
   if (warmedCount > 0) {
     PulseRealmState.warmAssetsTriggered += warmedCount || 1;
@@ -1278,7 +1312,7 @@ async function pbPreload(origin) {
         fails[url] = (fails[url] || 0) + 1;
         lastFailURL = url;
         if (fails[url] >= 2) {
-          await chrome.storage.local.set({ pb_fail_cache: fails });
+          await safeStorageSet({ pb_fail_cache: fails });
         }
       } else {
         warmedCount++;
@@ -1287,7 +1321,7 @@ async function pbPreload(origin) {
   }
 
   // ⭐ Save updated fail-cache
-  await chrome.storage.local.set({ pb_fail_cache: fails });
+  await safeStorageSet({ pb_fail_cache: fails });
 
   if (warmedCount > 0) {
     PulseRealmState.warmAssetsTriggered += warmedCount || 1;
@@ -1584,13 +1618,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PB_COMPANION_PAUSE":
       ServiceWorkerOnline = false;
-      chrome.storage.local.set({ ServiceWorkerOnline });
+      safeStorageSet({ ServiceWorkerOnline });
       sendResponse({ ok: true, ServiceWorkerOnline });
       break;
 
     case "PB_COMPANION_RESUME":
       ServiceWorkerOnline = true;
-      chrome.storage.local.set({ ServiceWorkerOnline });
+      safeStorageSet({ ServiceWorkerOnline });
       sendResponse({ ok: true, ServiceWorkerOnline });
       break;
 
@@ -1677,15 +1711,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         pbPrefetch([realm]);
         pbAccelerate(realm);
         if (realm.includes("PulseWorldAuthority")) {
-          PulseRealmState.lastURL = "PulseBrowser - PulseWorld Multiverse";
           PulseRealmState.lastDomainClass = "Not Exactly Sure...";
         } else {
-          PulseRealmState.lastURL = realm;
           PulseRealmState.lastDomainClass = msg.domainClass;
         }
-        PulseRealmState.warmPathsTriggered += 1;
         let origin = new URL(realm).origin
         PulseRealmState.lastWarmOrigin = origin;
+        PulseRealmState.lastURL = realm;
+        PulseRealmState.warmPathsTriggered += 1;
         PulseRealmState.navHistory.push(realm);
         PulseRealmState.navEvents.push(msg);
         PB_LOG2.event("PBNAV_EVENT", realm);
@@ -2162,7 +2195,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           let earliest = Math.min(nowSW, incoming);
           PulseRealmState.sessionStart = new Date(earliest).toLocaleString();
           nowSW = earliest;
-          chrome.storage.local.set({ SessionStart: nowSW });
+          safeStorageSet({ SessionStart: nowSW });
           PB_LOG2.save("PULSE_OS_SESSION_START", PulseRealmState.sessionStart);
         } else {
           // Convert stored sessionStart back to number for comparison
@@ -2171,7 +2204,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           if (incoming < currentTime) {
             PulseRealmState.sessionStart = new Date(incoming).toLocaleString();
             nowSW = incoming;
-            chrome.storage.local.set({ SessionStart: nowSW });
+            safeStorageSet({ SessionStart: nowSW });
             PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current.toLocaleString(), PulseRealmState.sessionStart);
           }
         }
@@ -2505,13 +2538,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
   } else {
     if (url.includes("PulseWorldAuthority")) {
-      PulseRealmState.lastURL = "PulseBrowser - PulseWorld Multiverse";
       PulseRealmState.lastDomainClass = "Not Exactly Sure...";
     } else {
       const domainClass = pbDomainClass(url);
-      PulseRealmState.lastURL = url;
       PulseRealmState.lastDomainClass = domainClass;
     }
+    PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
     PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
@@ -2692,7 +2724,7 @@ const PBUniversalBoost2 = {
           fails[url] = (fails[url] || 0) + 1;
           lastFailURL = url;
           if (fails[url] >= 2) {
-            await chrome.storage.local.set({ pb_fail_cache: fails });
+            await safeStorageSet({ pb_fail_cache: fails });
           }
         } else {
           warmedCount++;
@@ -2704,7 +2736,7 @@ const PBUniversalBoost2 = {
     }
 
     // ⭐ Save updated fail-cache
-    await chrome.storage.local.set({ pb_fail_cache: fails });
+    await safeStorageSet({ pb_fail_cache: fails });
 
     console.log("[PBUniversalBoost2] Warmed publish directory for", base);
   },
@@ -2907,7 +2939,7 @@ const PBGlobalAssetMap = {
           console.log("[PBGlobalAssetMap] 404 for", url);
 
           if (fails[url] >= 2) {
-            await chrome.storage.local.set({ pb_fail_cache: fails });
+            await safeStorageSet({ pb_fail_cache: fails });
           }
         } else {
           warmedCount++;
@@ -2916,7 +2948,7 @@ const PBGlobalAssetMap = {
     }
 
     // ⭐ Save updated fail-cache
-    await chrome.storage.local.set({ pb_fail_cache: fails });
+    await safeStorageSet({ pb_fail_cache: fails });
 
     console.log("[PBGlobalAssetMap] Warmed predicted assets for", origin, warmedCount);
   }

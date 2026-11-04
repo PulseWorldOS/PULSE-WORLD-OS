@@ -19,6 +19,52 @@ function isValid(t) {
   );
 }
 
+
+// 1. The Core Queue Engine
+class PulseStorageQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+  }
+
+  // Adds the payload to the line and ensures the processing loops runs
+  enqueue(dataObject) {
+    this.queue.push(dataObject);
+    if (!this.isProcessing) {
+      this.processNext();
+    }
+  }
+
+  // Processes each object one by one, keeping the disk thread safe
+  async processNext() {
+    if (this.queue.length === 0) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.isProcessing = true;
+    const dataObject = this.queue.shift(); // Pull the next write payload
+
+    try {
+      // Executes the native Chrome write sequentially
+      await chrome.storage.local.set(dataObject);
+    } catch (error) {
+      console.error("[STORAGE GOVERNOR] Quota write blocked:", error);
+    }
+
+    // Yield control for 0ms to let the browser breathe, then hit the next item
+    setTimeout(() => this.processNext(), 0);
+  }
+}
+
+// 2. Instantiate the global queue in your worker
+const PulseorchestratorQueue = new PulseStorageQueue();
+
+// 3. The Drop-In Replacement Function
+function PulsesafeStorageSet(dataObject) {
+  PulseorchestratorQueue.enqueue(dataObject);
+}
+
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {
   if (chrome.runtime.lastError) return write("Kernel unreachable.");
   write("Kernel Response:\n" + JSON.stringify(res, null, 2));
@@ -44,7 +90,7 @@ chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
 });
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }
 
 document.addEventListener("keydown", (e) => {
@@ -153,14 +199,14 @@ const PBUniversalBoost = {
           lastFailURL = url;
           // ⭐ If this URL hit 404 twice → permanently skip it
           if (fails[url] >= 2) {
-            await chrome.storage.local.set({ pb_fail_cache: fails });
+            await PulsesafeStorageSet({ pb_fail_cache: fails });
           }
         }
       } catch (_) {}
     }
 
     // ⭐ Save updated fail-cache
-    await chrome.storage.local.set({ pb_fail_cache: fails });
+    await PulsesafeStorageSet({ pb_fail_cache: fails });
 
     console.log("[PBUniversalBoost] Warmed publish directory for", origin);
   },
@@ -239,18 +285,18 @@ async function pulseRehydrateTabs() {
     }
 
     pulseTabs = rebuilt;
-    chrome.storage.local.set({ pulseTabs: rebuilt });
+    PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
 }
 
 
 function savePulseTabs() {
-  chrome.storage.local.set({ pulseTabs });
+  PulsesafeStorageSet({ pulseTabs });
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const originalTabId = tabs[0].id;
-  chrome.storage.local.set({ originalTabId });
+  PulsesafeStorageSet({ originalTabId });
   pulseRehydrateTabs();
 });
 

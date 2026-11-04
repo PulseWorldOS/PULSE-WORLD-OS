@@ -11,6 +11,50 @@ let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 
 
+// 1. The Core Queue Engine
+class StorageQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+  }
+
+  // Adds the payload to the line and ensures the processing loops runs
+  enqueue(dataObject) {
+    this.queue.push(dataObject);
+    if (!this.isProcessing) {
+      this.processNext();
+    }
+  }
+
+  // Processes each object one by one, keeping the disk thread safe
+  async processNext() {
+    if (this.queue.length === 0) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.isProcessing = true;
+    const dataObject = this.queue.shift(); // Pull the next write payload
+
+    try {
+      // Executes the native Chrome write sequentially
+      await chrome.storage.local.set(dataObject);
+    } catch (error) {
+      console.error("[STORAGE GOVERNOR] Quota write blocked:", error);
+    }
+
+    // Yield control for 0ms to let the browser breathe, then hit the next item
+    setTimeout(() => this.processNext(), 0);
+  }
+}
+
+// 2. Instantiate the global queue in your worker
+const orchestratorQueue = new StorageQueue();
+
+// 3. The Drop-In Replacement Function
+function safeStorageSet(dataObject) {
+  orchestratorQueue.enqueue(dataObject);
+}
 
 if (location.href.includes("pw=offline")) {
   chrome.runtime.sendMessage({
@@ -1333,7 +1377,7 @@ async function saveVideoToMemory(videoElement) {
     chrome.storage.local.get(["pipMemory"], data => {
       const list = data.pipMemory || [];
       list.push(entry);
-      chrome.storage.local.set({ pipMemory: list });
+      safeStorageSet({ pipMemory: list });
     });
 
   } catch (e) {
@@ -1861,10 +1905,10 @@ async function PulseBrowserDomScan() {
   const authorityRealm = clone.innerHTML;
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm });
   
-  chrome.storage.local.set({ [snapshotKey]: snapshot });
+  safeStorageSet({ [snapshotKey]: snapshot });
 }
 
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }

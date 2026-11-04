@@ -53,6 +53,52 @@ function isValid(t) {
   );
 }
 
+
+// 1. The Core Queue Engine
+class PulseStorageQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+  }
+
+  // Adds the payload to the line and ensures the processing loops runs
+  enqueue(dataObject) {
+    this.queue.push(dataObject);
+    if (!this.isProcessing) {
+      this.processNext();
+    }
+  }
+
+  // Processes each object one by one, keeping the disk thread safe
+  async processNext() {
+    if (this.queue.length === 0) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.isProcessing = true;
+    const dataObject = this.queue.shift(); // Pull the next write payload
+
+    try {
+      // Executes the native Chrome write sequentially
+      await chrome.storage.local.set(dataObject);
+    } catch (error) {
+      console.error("[STORAGE GOVERNOR] Quota write blocked:", error);
+    }
+
+    // Yield control for 0ms to let the browser breathe, then hit the next item
+    setTimeout(() => this.processNext(), 0);
+  }
+}
+
+// 2. Instantiate the global queue in your worker
+const PulseorchestratorQueue = new PulseStorageQueue();
+
+// 3. The Drop-In Replacement Function
+function PulsesafeStorageSet(dataObject) {
+  PulseorchestratorQueue.enqueue(dataObject);
+}
+
 chrome.storage.local.get(["SessionStart"], (res) => {
   if (isValid(res.SessionStart)) {
     nowFP = res.SessionStart;
@@ -110,7 +156,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
     const ItsTime = new Date(GLOBALSTART).toLocaleString();
     CONSENSUS_ORIGIN = ItsTime;
     startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
-    chrome.storage.local.set({ globalStart: GLOBALSTART });
+    PulsesafeStorageSet({ globalStart: GLOBALSTART });
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
@@ -146,7 +192,7 @@ chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
 
 
 function saveCache() {
-  chrome.storage.local.set({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
 }
 
 async function pbRequestCacheList2() {
@@ -547,7 +593,7 @@ async function pbRenderStorageStats2(history) {
   }
 
   // ⭐ Save new history snapshot
-  chrome.storage.local.set({
+  PulsesafeStorageSet({
     pulseStorageHistory: {
       lastCheck: GLOBALSTART ?? nowFP,
       lastUsed: totalUsed
@@ -678,13 +724,13 @@ async function pulseRehydrateTabs() {
     }
 
     pulseTabs = rebuilt;
-    chrome.storage.local.set({ pulseTabs: rebuilt });
+    PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   let originalTabId = tabs[0].id;
-  chrome.storage.local.set({ originalTabId });
+  PulsesafeStorageSet({ originalTabId });
   pulseRehydrateTabs();
 });
 
@@ -974,7 +1020,7 @@ function collectAndWarmAssetsFront() {
 setTimeout(collectAndWarmAssetsFront, 1000);
 
 function savePulseTabs() {
-  chrome.storage.local.set({ pulseTabs });
+  PulsesafeStorageSet({ pulseTabs });
 }
 
 // Normalize identity to domain or subdomain level
@@ -1364,7 +1410,7 @@ const PBUniversalBoost = {
           fails[url] = (fails[url] || 0) + 1;
           lastFailURL = url;
           if (fails[url] >= 2) {
-            await chrome.storage.local.set({ pb_fail_cache: fails });
+            await PulsesafeStorageSet({ pb_fail_cache: fails });
           }
         } else {
           warmedCount++;
@@ -1376,7 +1422,7 @@ const PBUniversalBoost = {
     }
 
     // ⭐ Save updated fail-cache
-    await chrome.storage.local.set({ pb_fail_cache: fails });
+    await PulsesafeStorageSet({ pb_fail_cache: fails });
 
     console.log("[PBUniversalBoost] Warmed publish directory for", origin);
   },
