@@ -1,6 +1,6 @@
 
-const params = new URLSearchParams(location.search);
-const origin = params.get("from");
+const params2 = new URLSearchParams(location.search);
+const origin2 = params2.get("from");
 let authorityRealm = null;
 
 // async function latestSnapshot(realm, container, html) {
@@ -88,7 +88,7 @@ function getReadableName(url) {
   }
 }
 
-if (origin) {
+if (origin2) {
   document.title = `PulseBrowser Temporal Drift [${getReadableName("https://" + origin)}]`;
 } else {
   document.title = `PulseBrowser Temporal Drift [Multiverse #${Math.random()}]`;
@@ -247,8 +247,8 @@ function collectAndWarmAssetsContent() {
   });
 
   let Assets = null;
-  if (origin) {
-    Assets = origin;
+  if (origin2) {
+    Assets = origin2;
   } else {
     Assets = "www.pulseworld.net";
   }
@@ -362,7 +362,7 @@ function hidePWLoader() {
   try {
     showPWLoader();
     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldFounders.txt";
-    if (origin) url = "https://" + origin;
+    if (origin2) url = "https://" + origin2;
     chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
       if (chrome.runtime.lastError) return;
       
