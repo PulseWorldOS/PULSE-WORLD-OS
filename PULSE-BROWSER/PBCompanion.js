@@ -1165,10 +1165,10 @@ async function getSettings() {
       S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
-      S.enableEarnerOverlay = S.enableEarnerOverlay !== false; // auto warm boot for home universe
-      S.enableDevOverlay = S.enableDevOverlay !== false; // auto warm boot for home universe
-      S.enableDevCaches = S.enableDevCaches !== false; // auto warm boot for home universe
-      S.enablePulseEarner = S.enablePulseEarner !== false; // auto warm boot for home universe
+      S.enableEarnerOverlay = S.enableEarnerOverlay !== false; 
+      S.enableDevOverlay = S.enableDevOverlay !== false; 
+      S.enableDevCaches = S.enableDevCaches !== false;
+      S.enablePulseEarner = S.enablePulseEarner !== false;
       
       resolve(S);
     });
@@ -1427,7 +1427,7 @@ async function pbWarmPath(origin) {
     PBUniversalBoost2.warmOrigin(origin);
   }
 
-  if (!PulseBrowserSettings) PulseBrowserSettings = await getSettings();
+  PulseBrowserSettings = await getSettings();
 
   if (PulseBrowserSettings.accelDNSWarm)      pbDNSWarm(origin);
   if (PulseBrowserSettings.accelTLSWarm)      pbTLSWarm(origin);
