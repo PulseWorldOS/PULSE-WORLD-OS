@@ -597,13 +597,16 @@ async function injectHUD() {
   PulseBrowserPreview();
   setTimeout(() => {
     gpuWarmExtra();
+    updateHUD(body);
   }, sync);
 
   setTimeout(() => {
     PulseBrowserDomScan();
+    updateHUD(body);
   }, 4500);
   setTimeout(() => {
     DomScanPreview();
+    updateHUD(body);
   }, 4000);
 }
 
