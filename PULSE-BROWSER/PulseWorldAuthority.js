@@ -91,7 +91,7 @@ function getReadableName(url) {
 if (origin2) {
   document.title = `PulseBrowser Temporal Drift [${getReadableName("https://" + origin)}]`;
 } else {
-  document.title = `PulseBrowser Temporal Drift [Multiverse #${Math.random()}]`;
+  document.title = `PulseBrowser Temporal Drift [Multiverse #${(Math.random()*100)}]`;
 }
 
 function AttemptPulseSteam(videoElement) {
