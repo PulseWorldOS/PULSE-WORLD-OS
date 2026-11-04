@@ -1165,6 +1165,10 @@ async function getSettings() {
       S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false; // auto warm boot for home universe
+      S.enableEarnerOverlay = S.enableEarnerOverlay !== false; // auto warm boot for home universe
+      S.enableDevOverlay = S.enableDevOverlay !== false; // auto warm boot for home universe
+      S.enableDevCaches = S.enableDevCaches !== false; // auto warm boot for home universe
+      S.enablePulseEarner = S.enablePulseEarner !== false; // auto warm boot for home universe
       
       resolve(S);
     });
