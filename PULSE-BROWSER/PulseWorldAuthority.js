@@ -246,7 +246,7 @@ function collectAndWarmAssetsContent() {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
 
-  const Assets = null;
+  let Assets = null;
   if (origin) {
     Assets = origin;
   } else {
