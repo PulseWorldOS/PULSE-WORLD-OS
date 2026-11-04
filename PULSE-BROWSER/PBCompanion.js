@@ -2001,18 +2001,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 ...new Set(
                   requests
                     .filter(req => isAMoment(req.url))
-                    .map(req => req.url)
-                )
+                    .map(req => [req.url, req])
+                ).values()
               ];
-              const PulseOffline = [
-                ...new Set(
+              const PulseOffline = Array.from(
+                new Map(
                   requests
                     .filter(req => isOffline(req.url))
-                    .map(req => req.url)
-                )
-              ];
+                    .map(req => [req.url, req])
+                ).values()
+              );
 
-              pulseofflinecount = PulseOffline.length;
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );
