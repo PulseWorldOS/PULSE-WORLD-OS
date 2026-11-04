@@ -339,7 +339,7 @@ async function pbRenderCacheList() {
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
     <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-      PulseBrowser OS - User Memory
+      PulseBrowser OS - System Memory
     </div>
   `;
     
