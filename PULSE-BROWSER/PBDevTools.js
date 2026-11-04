@@ -186,6 +186,20 @@ function pbLogDevOverlayStatus() {
 }
 
 // ---------------------------------------------------------------------------
+// DEV OVERLAY INSPECTOR
+// ---------------------------------------------------------------------------
+function pbLogEarnerOverlayStatus() {
+  logHeader("EarnerOverlay Status");
+
+  chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
+    const s = res.settings;
+
+    logKV("EarnerOverlay Enabled", s.enableEarnerOverlay);
+    logKV("HUD Active", s.contentHUD);
+  });
+}
+
+// ---------------------------------------------------------------------------
 // EXPERIMENTAL SYSTEM INSPECTOR
 // ---------------------------------------------------------------------------
 function pbLogExperimentalStatus() {
@@ -218,6 +232,7 @@ function pbDumpFullOS() {
   pbLogAcceleratorStatus();
   pbLogContentRuntimeStatus();
   pbLogDevOverlayStatus();
+  pbLogEarnerOverlayStatus();
   pbLogExperimentalStatus();
 }
 
@@ -261,6 +276,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBDEV_OVERLAY":
       pbLogDevOverlayStatus();
+      sendResponse({ ok: true });
+      break;
+    
+    case "PBEARNER_OVERLAY":
+      pbLogEarnerOverlayStatus();
       sendResponse({ ok: true });
       break;
 
