@@ -72,9 +72,9 @@ function updateKernel(realm, SessionStart) {
   let lastURLshort = lastURL;
   if (lastURL) lastURLshort = lastURL.slice(0, 75);
   let lastPageshort = lastPage;
-  if (lastPage) lastPageshort = lastPage.slice(0, 75);
+  if (lastPage) lastPageshort = lastPage.slice(0, 40);
   let lastTitleshort = lastTitle;
-  if (lastTitle) lastTitleshort = lastTitle.slice(0, 75);
+  if (lastTitle) lastTitleshort = lastTitle.slice(0, 40);
   
   el.innerHTML = `
     <div class="pb-hud-title">Network Kernel (Internet)</div>
@@ -125,7 +125,7 @@ function updatePerformance(realm) {
   let lastNAV = realm.navHistory;
   if (lastNAV) lastNAV = realm.navHistory.slice(-1)[0];
   let lastNAVshort = lastNAV;
-  if (lastNAV) lastNAVshort = lastNAV?.slice(0, 75);
+  if (lastNAV) lastNAVshort = lastNAV?.slice(0, 39);
 
   const lastPerf = perf.length > 0 ? perf[perf.length - 1] : null;
 
@@ -235,7 +235,7 @@ function updateSettings(settings) {
     PulseAccelerator: <font color="${enabledColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
     PulseNavigator: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
     PulseRouter: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
-    PulseEarner: <font color="${tfColor(settings.enablePulseEarner)}">${settings.enablePulseEarner}</font><br/>
+    PulseEarner: <font color="${enabledColor(settings.enablePulseEarner)}">${settings.enablePulseEarner}</font><br/>
     OS User Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
     OS User Memory: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
     OS Earner Overlay: <font color="${tfColor(settings.enableEarnerOverlay)}">${settings.enableEarnerOverlay}</font><br/>
@@ -254,7 +254,6 @@ function updateExperimental(settings) {
     Realm Continuity: <font color="${experimentalColor(settings.experimentalRealmPerservere)}">${settings.experimentalRealmPerservere}</font><br/>
     Learned Paths: <font color="${experimentalColor(settings.experimentalLearnPaths)}">${settings.experimentalLearnPaths}</font><br/>
     Perpetual Flow: <font color="${experimentalColor(settings.experimentalPerpFresh)}">${settings.experimentalPerpFresh}</font><br/>
-    Predictive Prefetch: <font color="${experimentalColor(settings.experimentalPredictivePrefetch)}">${settings.experimentalPredictivePrefetch}</font><br/>
     Temporal NAV: <font color="${experimentalColor(settings.experimentalTemporalNavigation)}">${settings.experimentalTemporalNavigation}</font><br/>
     Quantum Routing: <font color="${experimentalColor(settings.experimentalQuantumRouting)}">${settings.experimentalQuantumRouting}</font><br/>
   `;

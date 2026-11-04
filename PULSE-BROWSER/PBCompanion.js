@@ -236,7 +236,6 @@ const PB_SW_SETTINGS = {
   experimentalLearnPaths: true,
   experimentalPerpFresh: true,
   experimentalTemporalNavigation: true,
-  experimentalPredictivePrefetch: true,
   experimentalQuantumRouting: true,
   experimentalPortalTransitions: false,
   experimentalMeshAwareness: false,

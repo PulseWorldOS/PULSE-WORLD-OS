@@ -197,7 +197,6 @@ function pbLogExperimentalStatus() {
     logKV("Realm Perserverance", s.experimentalRealmPerservere);
     logKV("Learned Paths", s.experimentalLearnPaths);
     logKV("Perpetual Freshness", s.experimentalPerpFresh);
-    logKV("Predictive Prefetch", s.experimentalPredictivePrefetch);
     logKV("AI Warm Path", s.experimentalAIWarmPath);
     logKV("Temporal Navigation", s.experimentalTemporalNavigation);
     logKV("Quantum Routing", s.experimentalQuantumRouting);
