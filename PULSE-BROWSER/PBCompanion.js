@@ -1514,7 +1514,6 @@ async function pbModuleWarmBoot() {
   PulseBrowserSettings = await getSettings();
   PulseRealmSettings = settings;
   let externalSearchLink = settings.externalSearchLink || "https://www.google.com";
-  pbSaveSettings(PulseRealmSettings);
   if (PulseRealmSettings.goEarnerMode === true) PulseBrowserSettings.enablePulseEarner = true;
   if (PulseBrowserSettings.enablePulseEarner === true) PulseBrowserSettings.enableEarnerOverlay = true;
   // Collect all accelerated module links directly from settings
