@@ -11,6 +11,7 @@
   <!-- Preload Logo -->
   <link rel="preload" fetchpriority="high" as="video" href="PulseWorldOS.mp4" type="video/mp4">
   <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
+  <link rel="preload" as="image" href="PulseEarn.png" />
   <!-- <link rel="preload" as="image" href="PulseWorldSplash512.png" /> -->
 
   <style>
@@ -118,8 +119,8 @@
       margin: 14px 14px;
       top: 0;
       left: 300px;
-      width: 100%;
-      height: 100%;
+      height: 280px;
+      width: clamp(450px, 12vw, 500px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -135,13 +136,9 @@
 
     /* ⭐ Big favicon */
     .earner-engine {
-      background-image: url("PulseEarn.png");
-      background-repeat: no-repeat;
-      background-size: 35%;        /* 1/3 the size */
-      background-position: center; /* centered perfectly */
+      width: 35%;
+      height: 35%;
       border-radius: 40px;
-      height: 280px;
-      width: clamp(450px, 12vw, 500px);
       object-fit: contain;
       filter: drop-shadow(0 0 10px #00aaffaa);
     }
@@ -1230,9 +1227,8 @@
     <!-- Left panel content -->
   </div>
   <div class="earner-panel" id="earner-panel">
-    <div class="earner-engine" id="earner-engine">
+      <img class="earner-engine" src="PulseEarn.png" alt="Earner Engine Logo" />
       <!-- Earner panel content -->
-    </div>
   </div>
   <div class="side-panel left-panel" id="side-panel left-panel">
     <div class="cache-panel" id="cache-panel">
