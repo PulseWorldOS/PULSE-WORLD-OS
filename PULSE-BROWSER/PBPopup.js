@@ -67,7 +67,7 @@ function PulsesafeStorageSet(dataObject) {
 
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {
   if (chrome.runtime.lastError) return write("Kernel unreachable.");
-  write("Kernel Response:\n" + JSON.stringify(res, null, 2));
+  write("Kernel Response:\n" + JSON.stringify(response, null, 2));
   if (response.time && isValid(response.time)) {
       nowPP = response.time;
   }
