@@ -949,6 +949,7 @@ async function gpuWarmExtra() {
     pbPulseScreen.src = "PulseWorldOS-Older.mp4";
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY" });
 }
 
 setTimeout(gpuWarmExtra, 250);

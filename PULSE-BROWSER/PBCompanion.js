@@ -8,6 +8,7 @@ let activeRealmClaim = false;
 let authorityRealm = null;
 let PULSE_ONLINE = false;
 let lastKnownData = {};
+let LocalMemoryLayer = {};
 let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
@@ -623,6 +624,23 @@ async function pwRun() {
   }
   PW_RUNNING = false;
 }
+
+// Drop this right inside your site tabs / orchestrator loops
+function getLocalMemoryLayer() {
+  if (!performance || !performance.memory) {
+    return { status: "Standard Engine Active" };
+  }
+
+  // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
+  const heap = performance.memory;
+  
+  return {
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
+    heapLimitMB: (heap.jsHeapLimitSize / 1024 / 1024).toFixed(1) + " MB"
+  };
+}
+
 
 // ============================================================
 // ⭐ MESSAGE CHANNEL — Page ↔ Service Worker communication
@@ -1805,6 +1823,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBACC_WARMPATH_EXTERNAL":
       PulseRealmState.warmPathsTriggered += msg.count || 1;
+      sendResponse({ ok: true });
+      break;
+
+    case "PBCHECK_MEMORY":
+      LocalMemoryLayer = getLocalMemoryLayer();
+      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayer);
       sendResponse({ ok: true });
       break;
 
