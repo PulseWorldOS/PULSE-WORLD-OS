@@ -91,7 +91,7 @@ function getReadableName(url) {
 if (origin) {
   document.title = `PulseBrowser Temporal Drift [${getReadableName("https://" + origin)}]`;
 } else {
-  document.title = `PulseBrowser Temporal Drift [${getReadableName("https://www.pulseworld.net")}]`;
+  document.title = `PulseBrowser Temporal Drift [Multiverse #${Math.random()}]`;
 }
 
 function AttemptPulseSteam(videoElement) {
@@ -379,17 +379,11 @@ function hidePWLoader() {
     const response = await fetch(url, { mode: "cors" });
     let html = await response.text();
     if (authorityRealm) html = authorityRealm;
+    html = html.replace(/\.\/DriftCompanion.js/g, "https://www.pulseworld.net/DriftCompanion.js");
     html = html.replace(/\.\/_EXPRESSIONS/g, "https://www.pulseworld.net/_EXPRESSIONS");
-    const container = document.getElementById("pulseworld");
-    let u;
-    try {
-      u = new URL(url);
-    } catch {
-      return null;
-    }
-
-    let host = u.hostname;
     
+    const container = document.getElementById("pulseworld");
+        
     // latestSnapshot(host, container, html);
     container.innerHTML = html;
     
