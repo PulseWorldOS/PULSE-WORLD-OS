@@ -1674,7 +1674,7 @@ class PulseWasmEngine {
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-
+PB_LOG2.event("PulseBrowser Earner Online and Waiting!", pulseWasmCompute);
 
 
 function backToOriginal() {
