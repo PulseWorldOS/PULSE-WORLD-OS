@@ -133,9 +133,18 @@
       z-index: 5;
     }
 
+    .earner-inner-panel {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     /* ⭐ Big favicon */
     .CompanionMessage {
-      position:fixed;
+      position: absolute;
       font-weight: bold;
       margin-top: 10px;
       top: 0;
@@ -1234,11 +1243,13 @@
     <!-- Left panel content -->
   </div>
   <div class="earner-panel" id="earner-panel">
-    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
-      PulseBrowser OS - Pulse Earner
-    </div>
     <img class="earner-engine" src="PulseEarn.png" alt="Earner Engine Logo" />
-    <!-- Earner panel content -->
+    <div class="earner-inner-panel" id="earner-inner-panel">
+      <div style="font-weight:bold; top: 0; text-align: center; position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
+        PulseBrowser OS - Pulse Earner
+      </div>
+      <!-- Earner panel content -->
+    </div>
   </div>
   <div class="side-panel left-panel" id="side-panel left-panel">
     <div class="cache-panel" id="cache-panel">

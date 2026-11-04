@@ -45,7 +45,7 @@ let totalUsed = 0;
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
-const earnerpanel = document.getElementById("earner-panel");
+const earnerpanel = document.getElementById("earner-inner-panel");
 
 function isValid(t) {
   return (
