@@ -1014,7 +1014,7 @@ function isPulseWorld(origin) {
 function pbDomainClass(url) {
   if (isPulseWorld(url)) return "PulseWorld";
   if (IsPartner(url)) return "Partner";
-  console.log(warmTargets);
+  let warmclass = false;
   if (warmTargets.length > 0) {
     warmTargets.forEach(origin => {
       let host = new URL(origin).hostname;
@@ -1024,8 +1024,10 @@ function pbDomainClass(url) {
       console.log(origin);
       console.log(url);
       console.log(host);
-      if (url.includes(host)) return "Warm-Galaxy";
+      console.log(url.includes(host));
+      if (url.includes(host)) warmclass = true;
     });
+    if (warmclass) return "Warm-Galaxy";
   }
   return "WWW";
 }
