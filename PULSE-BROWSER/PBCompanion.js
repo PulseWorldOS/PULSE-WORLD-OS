@@ -187,7 +187,7 @@ const PulseRealmState = {
 //  SECTION 2 — SETTINGS (Full OS Registry)
 // ============================================================================
 
-const PB_1_SW_SETTINGS = {
+const PB_SW_SETTINGS = {
   enableInterceptor: true,
   enableAccelerator: true,
   enableNavigator: true,
@@ -1816,7 +1816,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case "PBSETTINGS_RESET":
-      pbSaveSettings(PB_1_SW_SETTINGS).then(() => {
+      pbSaveSettings(PB_SW_SETTINGS).then(() => {
         PB_LOG2.info("PBSETTINGS_RESET", "Defaults Restored");
         sendResponse({ ok: true });
       });
@@ -2389,8 +2389,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       chrome.storage.local.clear(() => {
         console.log("PulseWorld local storage cleared.");
       });
-      chrome.storage.sync.get(PB_1_SW_SETTINGS, (data) => {
-        resolve(data || PB_1_SW_SETTINGS);
+      chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
+        resolve(data || PB_SW_SETTINGS);
       });
       break;
 
@@ -2563,8 +2563,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 function pbLoadSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(PB_1_SW_SETTINGS, (data) => {
-      resolve(data || PB_1_SW_SETTINGS);
+    chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
+      resolve(data || PB_SW_SETTINGS);
     });
   });
 }
