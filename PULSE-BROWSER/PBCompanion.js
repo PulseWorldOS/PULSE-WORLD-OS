@@ -1017,7 +1017,13 @@ function pbDomainClass(url) {
   console.log(warmTargets);
   if (warmTargets.length > 0) {
     warmTargets.forEach(origin => {
-      const host = new URL(origin).hostname;
+      let host = new URL(origin).hostname;
+      host = host.replace("https://","");
+      host = host.replace("www","");
+      host = host.endsWith("/") ? host.slice(0, -1) : host;
+      console.log(origin);
+      console.log(url);
+      console.log(host);
       if (url.includes(host)) return "Warm-Galaxy";
     });
   }
@@ -1037,8 +1043,6 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   let title = tab.title;
   let page = tab.page;
   let origin = url;
-  const domainClass = pbDomainClass(url);
-  console.log(domainClass);
 
   if (url.includes("newtab")) {
     // url = "impulse://newtab"
@@ -1047,6 +1051,8 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     // PulseRealmState.lastDomainClass = "PulseWorld";
     // PulseRealmState.lastTitle = "PulseBrowser OS Console";
   } else {
+    const domainClass = pbDomainClass(url);
+    console.log(domainClass);
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
     PulseRealmState.lastDomainClass = domainClass;
@@ -2475,8 +2481,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   let title = tab.title;
   let page = tab.page;
   const origin = new URL(url).origin;
-  const domainClass = pbDomainClass(url);
-  console.log(domainClass);
   
   if (url.includes("newtab")) {
     url = "impulse://newtab"
@@ -2489,6 +2493,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       fetch(comebackURL, { mode: "no-cors" }).catch(() => {});
     }
   } else {
+    const domainClass = pbDomainClass(url);
+    console.log(domainClass);
     PulseRealmState.lastURL = url;
     PulseRealmState.lastPage = page;
     PulseRealmState.lastDomainClass = domainClass;
