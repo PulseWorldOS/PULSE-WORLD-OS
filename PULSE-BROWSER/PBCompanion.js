@@ -18,6 +18,7 @@ let comebackURL = null;
 const CACHE_NAME = "PulseBrowser-Companion";
 const PULSE_FAUX_CACHE_NAME = "PulseWorld-PB-Companion";
 const ERROR_FAUX_CACHE_NAME = "PulseBrowser-Companion";
+const SHARED_CACHE_NAME = "PulseBrowser-Companion";
 let ServiceWorkerOnline = true;
 let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
@@ -437,8 +438,6 @@ async function handlePulseAPI(req) {
 // ============================================================
 // ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
 // ============================================================
-
-const SHARED_CACHE_NAME = "PulseBrowser-Companion";
 
 async function getSharedResponse(req) {
   const cache = await caches.open(SHARED_CACHE_NAME);
@@ -2322,6 +2321,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PULSE_OS_PING": {
       if (msg.time && isValid(msg.time)) {
+        sendPulseHeartbeat();
         PulseRealmState.lastPing = new Date().toLocaleString();
         const incoming = Number(msg.time);   // numeric realm timestamp
         // If sessionStart doesn't exist yet, choose earliest realm
