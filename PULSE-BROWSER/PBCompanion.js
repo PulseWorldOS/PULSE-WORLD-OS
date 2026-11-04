@@ -1688,9 +1688,16 @@ class PulseWasmEngine {
   }
 }
 
+const out = document.getElementById("earner-panel");
+// WORK MODULE
+
+// Utility: write to console panel
+function write(msg) {
+  out.innerHTML = out.innerHTML + msg + "<br>";
+}
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-PB_LOG2.event("PulseBrowser Earner Online and Waiting!", pulseWasmCompute);
+write("PulseBrowser Earner Online and Waiting!\n" + pulseWasmCompute);
 
 async function runProtectedCompute(computeTaskFunction) {
   try {
