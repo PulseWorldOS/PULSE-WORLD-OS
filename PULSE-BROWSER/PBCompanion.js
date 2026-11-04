@@ -638,7 +638,7 @@ function getLocalMemoryLayer() {
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
     totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    heapLimitMB: (heap.jsHeapLimitSize / 1024 / 1024).toFixed(1) + " MB"
+    heapLimitMB: ((heap.jsHeapLimitSize ?? heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(1) + " MB"
   };
 }
 
