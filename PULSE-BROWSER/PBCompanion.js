@@ -10,7 +10,6 @@ let PULSE_ONLINE = false;
 let lastKnownData = {};
 let LocalMemoryLayer = {};
 let warmTargets = [];
-let memorySample = null;
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
 let lastnowSW = Date.now(); // numeric timestamp
@@ -625,19 +624,6 @@ async function pwRun() {
     await Promise.resolve(); // yield
   }
   PW_RUNNING = false;
-}
-
-function runMemoryMeasurements() {
-  const interval = -Math.log(Math.random()) * 5 * 60 * 1000;
-  console.log(`Next measurement in ${Math.round(interval / 1000)} seconds.`);
-  setTimeout(measureMemory, interval);
-}
-
-async function measureMemory() {
-  memorySample = await performance.measureUserAgentSpecificMemory();
-  console.log(memorySample);
-  LocalMemoryLayer = memorySample;
-  runMemoryMeasurements();
 }
 
 // Drop this right inside your site tabs / orchestrator loops
@@ -1942,8 +1928,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBCHECK_MEMORY":
-      // LocalMemoryLayer = getLocalMemoryLayer();
-      runMemoryMeasurements();
+      LocalMemoryLayer = getLocalMemoryLayer();
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayer);
       sendResponse({ ok: true });
       break;
