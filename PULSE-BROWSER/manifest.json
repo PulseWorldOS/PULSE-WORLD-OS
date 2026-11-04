@@ -61,7 +61,6 @@
     "system.storage",
     "declarativeNetRequestWithHostAccess",
     "webRequest",
-    "webRequestBlocking",
     "offscreen",
     "power"
   ],
