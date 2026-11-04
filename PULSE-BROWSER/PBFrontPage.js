@@ -4,6 +4,7 @@ let userInteracted = false;
 let engineType = "text";
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
+let CompanionMessage = null;
 let socialMode = "Internal";
 let socialMediaActiveLink = null;
 let workMode = "Internal";
@@ -44,6 +45,7 @@ let totalUsed = 0;
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
+const earnerpanel = document.getElementById("earner-panel");
 
 function isValid(t) {
   return (
@@ -898,7 +900,8 @@ setInterval(() => {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
-
+    CompanionMessage = response.CompanionMessage;
+    earnerpanel.innerHTML = earnerpanel.innerHTML + CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
     } else {
@@ -1870,7 +1873,8 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
-
+    CompanionMessage = response.CompanionMessage;
+    earnerpanel.innerHTML = earnerpanel.innerHTML + CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
     } else {
@@ -3619,7 +3623,8 @@ function CheckBackTab() {
           return;
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
-
+        CompanionMessage = response.CompanionMessage;
+        earnerpanel.innerHTML = earnerpanel.innerHTML + CompanionMessage;
         if (!ServiceWorkerOnline) {
           disablesw.innerText = "Resume Companion";
         } else {

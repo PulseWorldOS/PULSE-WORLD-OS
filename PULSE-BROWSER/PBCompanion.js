@@ -4,6 +4,7 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
+let CompanionMessage = null;
 let activeRealmClaim = false;
 let authorityRealm = null;
 let PULSE_ONLINE = false;
@@ -1688,16 +1689,10 @@ class PulseWasmEngine {
   }
 }
 
-const out = document.getElementById("earner-panel");
-// WORK MODULE
-
-// Utility: write to console panel
-function write(msg) {
-  out.innerHTML = out.innerHTML + msg + "<br>";
-}
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-write("PulseBrowser Earner Online and Waiting!\n" + pulseWasmCompute);
+CompanionMessage = "PulseBrowser Earner Online and Waiting!\n" + pulseWasmCompute;
+PB_LOG2.event("PulseBrowser Earner Online and Waiting!", pulseWasmCompute);
 
 async function runProtectedCompute(computeTaskFunction) {
   try {
@@ -1778,7 +1773,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           ServiceWorkerOnline = res.ServiceWorkerOnline;
         }
       });
-      sendResponse({ ok: true, ServiceWorkerOnline });
+      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage });
+      CompanionMessage = null;
       return true;
     
     case "PBEXTSETTINGS_GET":
