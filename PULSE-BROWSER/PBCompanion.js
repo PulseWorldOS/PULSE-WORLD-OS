@@ -1605,6 +1605,62 @@ function isCacheableURL(url) {
   return true;
 }
 
+// ============================================================================
+// PURE WASM EXECUTION ENGINE (ISOLATED COMPUTE LAYER)
+// ============================================================================
+class PulseWasmEngine {
+  constructor() {
+    this.wasmInstance = null;
+    this.isLoaded = false;
+  }
+
+  // Load the pure binary math module into memory
+  async initEngine(wasmBinaryUrl) {
+    if (this.isLoaded) return;
+    
+    try {
+      // Fetch the highly dense compiled binary module
+      const response = await fetchWithYourQueryStringCache(wasmBinaryUrl);
+      const buffer = await response.arrayBuffer();
+      
+      // Compile natively right on that 1ms service worker line
+      const module = await WebAssembly.compile(buffer);
+      this.wasmInstance = await WebAssembly.instantiate(module, {
+        env: {
+          memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+          abort: () => { console.error("[WASM ABORT] Critical execution crash"); }
+        }
+      });
+
+      this.isLoaded = true;
+      console.log("[WASM ENGINE] Pure mathematical module stable and hot.");
+    } catch (err) {
+      console.error("[WASM ENGINE] Initialization failed:", err);
+    }
+  }
+
+  // The pure compute pipeline: Input bytes -> Output proofs
+  async executeProofJob(rawPayloadData) {
+    if (!this.isLoaded) throw new Error("WASM engine not ready");
+
+    // 1. Transform payload data into a dense binary array
+    const inputArray = new Uint8Array(rawPayloadData);
+    
+    // 2. Run your specific math execution (e.g., factoring out formulas)
+    // This executes at raw native silicon speeds inside the worker
+    const resultAddress = this.wasmInstance.exports.computeMathProofs(inputArray);
+    
+    // 3. Extract the high-density result from WASM memory
+    const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress);
+
+    return proofResult;
+  }
+}
+
+// Instantiate the isolated engine
+const pulseWasmCompute = new PulseWasmEngine();
+
+
 
 function backToOriginal() {
   chrome.storage.local.get("originalTabId", data => {
