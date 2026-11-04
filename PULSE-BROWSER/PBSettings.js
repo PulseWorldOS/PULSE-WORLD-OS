@@ -421,7 +421,7 @@ async function pbRenderCacheList() {
       Last Realm Drift: <font color=${errorcolor}><strong>${RealmURL || "-"}</strong></font><br>
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
-      Multiverse Offline Realities: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
+      Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
 
     listEl.appendChild(li);
