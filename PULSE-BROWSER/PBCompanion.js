@@ -1053,11 +1053,15 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     // PulseRealmState.lastDomainClass = "PulseWorld";
     // PulseRealmState.lastTitle = "PulseBrowser OS Console";
   } else {
-    const domainClass = pbDomainClass(url);
-    console.log(domainClass);
-    PulseRealmState.lastURL = url;
+    if (url.includes("PulseWorldAuthority")) {
+      PulseRealmState.lastURL = "PulseWorld Multiverse";
+      PulseRealmState.lastDomainClass = "Not Exactly Sure..";
+    } else {
+      const domainClass = pbDomainClass(url);
+      PulseRealmState.lastURL = url;
+      PulseRealmState.lastDomainClass = domainClass;
+    }
     PulseRealmState.lastPage = page;
-    PulseRealmState.lastDomainClass = domainClass;
     PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
     PB_LOG2.event("PBNAV_EVENT", url);
@@ -1672,8 +1676,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const realm = msg.url;
         pbPrefetch([realm]);
         pbAccelerate(realm);
-        PulseRealmState.lastURL = realm;
-        PulseRealmState.lastDomainClass = msg.domainClass;
+        if (realm.includes("PulseWorldAuthority")) {
+          PulseRealmState.lastURL = "PulseWorld Multiverse";
+          PulseRealmState.lastDomainClass = "Not Exactly Sure..";
+        } else {
+          PulseRealmState.lastURL = realm;
+          PulseRealmState.lastDomainClass = msg.domainClass;
+        }
         PulseRealmState.warmPathsTriggered += 1;
         let origin = new URL(realm).origin
         PulseRealmState.lastWarmOrigin = origin;
@@ -2495,11 +2504,15 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       fetch(comebackURL, { mode: "no-cors" }).catch(() => {});
     }
   } else {
-    const domainClass = pbDomainClass(url);
-    console.log(domainClass);
-    PulseRealmState.lastURL = url;
+    if (url.includes("PulseWorldAuthority")) {
+      PulseRealmState.lastURL = "PulseWorld Multiverse";
+      PulseRealmState.lastDomainClass = "Not Exactly Sure..";
+    } else {
+      const domainClass = pbDomainClass(url);
+      PulseRealmState.lastURL = url;
+      PulseRealmState.lastDomainClass = domainClass;
+    }
     PulseRealmState.lastPage = page;
-    PulseRealmState.lastDomainClass = domainClass;
     PulseRealmState.lastTitle = title;
     PulseRealmState.navHistory.push(url);
     PB_LOG2.event("PBNAV_EVENT", url);
