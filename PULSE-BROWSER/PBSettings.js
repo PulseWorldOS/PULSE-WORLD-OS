@@ -158,7 +158,7 @@ async function getSettings() {
       S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
       S.experimentalQuantumRouting = S.experimentalQuantumRouting !== false; 
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false;
-      S.enableEarnerOverlay = S.enableEarnerOverlay !== false; 
+      S.enablePulseEarnOverlay = S.enablePulseEarnOverlay !== false; 
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
       S.enablePulseEarner = S.enablePulseEarner !== false;

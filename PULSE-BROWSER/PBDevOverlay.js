@@ -238,7 +238,7 @@ function updateSettings(settings) {
     PulseEarner: <font color="${enabledColor(settings.enablePulseEarner)}">${settings.enablePulseEarner}</font><br/>
     OS User Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
     OS User Memory: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
-    OS Earner Overlay: <font color="${tfColor(settings.enableEarnerOverlay)}">${settings.enableEarnerOverlay}</font><br/>
+    Pulse Earner Overlay: <font color="${tfColor(settings.enablePulseEarnOverlay)}">${settings.enablePulseEarnOverlay}</font><br/>
     Universal Runtime: <font color="${tfColor(settings.enableContentRuntime)}">${settings.enableContentRuntime}</font><br/>
   `;
 }

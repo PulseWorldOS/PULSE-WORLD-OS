@@ -194,7 +194,7 @@ function pbLogEarnerOverlayStatus() {
   chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
     const s = res.settings;
 
-    logKV("EarnerOverlay Enabled", s.enableEarnerOverlay);
+    logKV("EarnerOverlay Enabled", s.enablePulseEarnOverlay);
     logKV("HUD Active", s.contentHUD);
   });
 }
