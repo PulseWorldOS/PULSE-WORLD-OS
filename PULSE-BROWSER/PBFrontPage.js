@@ -948,6 +948,7 @@ async function gpuWarmExtra() {
   if (gpuEnabled === "GPU Driver Error") {
     pbPulseScreen.src = "PulseWorldOS-Older.mp4";
   }
+  chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY" });
 }
