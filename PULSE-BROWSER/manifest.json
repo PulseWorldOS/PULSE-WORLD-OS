@@ -61,9 +61,6 @@
     "system.storage",
     "declarativeNetRequestWithHostAccess",
     "webRequest",
-    "bluetooth",
-    "usb",
-    "processes",
     "offscreen",
     "power"
   ],
