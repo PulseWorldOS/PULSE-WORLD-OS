@@ -8,6 +8,7 @@ let activeRealmClaim = false;
 let authorityRealm = null;
 let PULSE_ONLINE = false;
 let lastKnownData = {};
+let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
 let lastnowSW = Date.now(); // numeric timestamp
@@ -1013,6 +1014,12 @@ function isPulseWorld(origin) {
 function pbDomainClass(url) {
   if (isPulseWorld(url)) return "PulseWorld";
   if (IsPartner(url)) return "Partner";
+  if (warmTargets.length > 0) {
+    warmTargets.forEach(origin => {
+      const host = new URL(origin).hostname;
+      if (url.includes(host)) return "Warm-Galaxy";
+    });
+  }
   return "WWW";
 }
 
@@ -1440,7 +1447,7 @@ async function pbModuleWarmBoot() {
   let externalSearchLink = settings.externalSearchLink || "https://www.google.com";
   pbSaveSettings(PulseRealmSettings);
   // Collect all accelerated module links directly from settings
-  const warmTargets = [
+  warmTargets = [
     settings.externalBankLink,
     settings.externalEmailLink,
     settings.externalSocialLink,
@@ -2501,12 +2508,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
   if (!url.includes("newtab")) {
     if (url) pbAccelerate(url);
-    PulseRealmState.lastURL = url;
-    PulseRealmState.lastDomainClass = domainClass;
     PulseRealmState.warmPathsTriggered += 1;
     PulseRealmState.lastWarmOrigin = origin;
-    PulseRealmState.navHistory.push(url);
-    PB_LOG2.event("PBNAV_EVENT", url);
   }
 });
 
