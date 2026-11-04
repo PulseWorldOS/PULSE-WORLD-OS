@@ -523,7 +523,7 @@ function pulseActivityReport() {
 }
 
 // ⭐ Atomic deep debug (OFF by default)
-const ATOMIC_DEBUG = false;
+const ATOMIC_DEBUG = true;
 
 function pulseSetFlag(index, value) {
   Atomics.store(PULSE_SHARED_INTS, index, value);
