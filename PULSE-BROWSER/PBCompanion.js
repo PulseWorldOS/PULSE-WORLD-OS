@@ -1014,6 +1014,7 @@ function isPulseWorld(origin) {
 function pbDomainClass(url) {
   if (isPulseWorld(url)) return "PulseWorld";
   if (IsPartner(url)) return "Partner";
+  console.log(warmTargets);
   if (warmTargets.length > 0) {
     warmTargets.forEach(origin => {
       const host = new URL(origin).hostname;
@@ -1037,6 +1038,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   let page = tab.page;
   let origin = url;
   const domainClass = pbDomainClass(url);
+  console.log(domainClass);
 
   if (url.includes("newtab")) {
     // url = "impulse://newtab"
@@ -1387,6 +1389,7 @@ async function pbWarmPath(origin) {
 // ---------------------------------------------------------------------------
 async function pbAccelerate(url) {
   const domainClass = pbDomainClass(url);
+  console.log(domainClass);
 
   // Normalize origin: remove trailing slash if present
   const rawOrigin = new URL(url).origin;
@@ -2473,6 +2476,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   let page = tab.page;
   const origin = new URL(url).origin;
   const domainClass = pbDomainClass(url);
+  console.log(domainClass);
   
   if (url.includes("newtab")) {
     url = "impulse://newtab"
