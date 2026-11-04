@@ -1661,7 +1661,7 @@ class PulseWasmEngine {
   // The pure compute pipeline: Input bytes -> Output proofs
   async executeProofJob(rawPayloadData) {
     if (!this.isLoaded) throw new Error("WASM engine not ready");
-
+    
     // 1. Transform payload data into a dense binary array
     const inputArray = new Uint8Array(rawPayloadData);
     
@@ -1679,6 +1679,31 @@ class PulseWasmEngine {
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
 PB_LOG2.event("PulseBrowser Earner Online and Waiting!", pulseWasmCompute);
+
+async function runProtectedCompute(computeTaskFunction) {
+  try {
+    // 1. Lock the system right on that invisible line before the execution
+    if (chrome && chrome.power) {
+      chrome.power.requestKeepAwake("system");
+      console.log("[POWER GOVERNOR] System locked awake for calculation...");
+    }
+
+    // 2. Execute your pure WASM math proof or WebGPU logic
+    const result = await computeTaskFunction();
+    return result;
+
+  } catch (error) {
+    console.error("[POWER GOVERNOR] Calculation crashed:", error);
+    throw error;
+  } finally {
+    // 3. ALWAYS release the lock inside a 'finally' block!
+    // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
+    if (chrome && chrome.power) {
+      chrome.power.releaseKeepAwake();
+      console.log("[POWER GOVERNOR] System lock released cleanly.");
+    }
+  }
+}
 
 
 function backToOriginal() {
@@ -1972,12 +1997,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const PulseRequests = requests.filter(req =>
                 isPulseWorld(req.url)
               );
-              const PulseMoments = requests.filter(req => 
-                isAMoment(req.url)
-              );
-              const PulseOffline = requests.filter(req => 
-                isOffline(req.url)
-              );
+              const PulseMoments = [
+                ...new Set(
+                  requests
+                    .filter(req => isAMoment(req.url))
+                    .map(req => req.url)
+                )
+              ];
+              const PulseOffline = [
+                ...new Set(
+                  requests
+                    .filter(req => isOffline(req.url))
+                    .map(req => req.url)
+                )
+              ];
+
+              pulseofflinecount = PulseOffline.length;
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );

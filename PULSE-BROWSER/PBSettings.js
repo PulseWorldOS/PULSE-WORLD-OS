@@ -8,6 +8,52 @@ const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 
+
+// 1. The Core Queue Engine
+class Pulse2StorageQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+  }
+
+  // Adds the payload to the line and ensures the processing loops runs
+  enqueue(dataObject) {
+    this.queue.push(dataObject);
+    if (!this.isProcessing) {
+      this.processNext();
+    }
+  }
+
+  // Processes each object one by one, keeping the disk thread safe
+  async processNext() {
+    if (this.queue.length === 0) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.isProcessing = true;
+    const dataObject = this.queue.shift(); // Pull the next write payload
+
+    try {
+      // Executes the native Chrome write sequentially
+      await chrome.storage.local.set(dataObject);
+    } catch (error) {
+      console.error("[STORAGE GOVERNOR] Quota write blocked:", error);
+    }
+
+    // Yield control for 0ms to let the browser breathe, then hit the next item
+    setTimeout(() => this.processNext(), 0);
+  }
+}
+
+// 2. Instantiate the global queue in your worker
+const Pulse2orchestratorQueue = new Pulse2StorageQueue();
+
+// 3. The Drop-In Replacement Function
+function Pulse2safeStorageSet(dataObject) {
+  Pulse2orchestratorQueue.enqueue(dataObject);
+}
+
 function isValid(t) {
   return (
     typeof t === "number" &&
@@ -81,7 +127,7 @@ PB_LOG.info("PBSettings (Ultra Edition v7.1) loaded");
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
     GLOBALSTART = Date.now();
-    chrome.storage.local.set({ globalStart: GLOBALSTART });
+    Pulse2safeStorageSet({ globalStart: GLOBALSTART });
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
@@ -228,7 +274,7 @@ async function saveExtensionSettingsUI() {
     programmaticBanking: document.getElementById("programmaticBanking").checked
   };
 
-  await chrome.storage.local.set({ [EXTENSION_SETTINGS_KEY2]: settings });
+  await Pulse2safeStorageSet({ [EXTENSION_SETTINGS_KEY2]: settings });
 
   PB_LOG.change("Extension Settings Saved", before[EXTENSION_SETTINGS_KEY2], settings);
 }
@@ -598,7 +644,7 @@ async function pbRenderStorageStats(history) {
   }
 
   // ⭐ Save new history snapshot
-  chrome.storage.local.set({
+  Pulse2safeStorageSet({
     pulseStorageHistory: {
       lastCheck: GLOBALSTART ?? nowST,
       lastUsed: totalUsed
