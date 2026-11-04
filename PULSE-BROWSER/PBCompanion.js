@@ -636,6 +636,7 @@ function runMemoryMeasurements() {
 async function measureMemory() {
   memorySample = await performance.measureUserAgentSpecificMemory();
   console.log(memorySample);
+  LocalMemoryLayer = memorySample;
   runMemoryMeasurements();
 }
 
@@ -1941,11 +1942,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBCHECK_MEMORY":
-      LocalMemoryLayer = getLocalMemoryLayer();
-      if (crossOriginIsolated) {
-        runMemoryMeasurements();
-        LocalMemoryLayer = memorySample;
-      }
+      // LocalMemoryLayer = getLocalMemoryLayer();
+      runMemoryMeasurements();
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayer);
       sendResponse({ ok: true });
       break;
