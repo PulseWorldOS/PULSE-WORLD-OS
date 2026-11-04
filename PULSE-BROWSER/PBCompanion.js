@@ -1691,8 +1691,8 @@ class PulseWasmEngine {
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-CompanionMessage = "PulseBrowser Earner Online and Waiting..";
-PB_LOG2.event("PulseBrowser Earner Online and Waiting!", pulseWasmCompute);
+CompanionMessage = "Pulse Earner Online and Waiting..";
+PB_LOG2.event("Pulse Earner Online and Waiting!", pulseWasmCompute);
 
 async function runProtectedCompute(computeTaskFunction) {
   try {
