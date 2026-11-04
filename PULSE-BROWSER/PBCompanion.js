@@ -1679,16 +1679,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (realm.includes("PulseWorldAuthority")) {
           PulseRealmState.lastURL = "PulseBrowser - PulseWorld Multiverse";
           PulseRealmState.lastDomainClass = "Not Exactly Sure...";
-          PulseRealmState.lastWarmOrigin = "PulseBrowser OS";
-          PulseRealmState.navHistory.push(realm);
         } else {
           PulseRealmState.lastURL = realm;
           PulseRealmState.lastDomainClass = msg.domainClass;
-          let origin = new URL(realm).origin
-          PulseRealmState.lastWarmOrigin = origin;
-          PulseRealmState.navHistory.push(realm);
         }
         PulseRealmState.warmPathsTriggered += 1;
+        let origin = new URL(realm).origin
+        PulseRealmState.lastWarmOrigin = origin;
+        PulseRealmState.navHistory.push(realm);
         PulseRealmState.navEvents.push(msg);
         PB_LOG2.event("PBNAV_EVENT", realm);
       }
