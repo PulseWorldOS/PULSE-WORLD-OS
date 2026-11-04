@@ -1691,7 +1691,7 @@ class PulseWasmEngine {
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-CompanionMessage = "PulseBrowser Earner Online and Waiting!\n" + pulseWasmCompute;
+CompanionMessage = "PulseBrowser Earner Online and Waiting!";
 PB_LOG2.event("PulseBrowser Earner Online and Waiting!", pulseWasmCompute);
 
 async function runProtectedCompute(computeTaskFunction) {
@@ -1774,7 +1774,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }
       });
       sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage });
-      CompanionMessage = null;
       return true;
     
     case "PBEXTSETTINGS_GET":

@@ -900,8 +900,8 @@ setInterval(() => {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
+    if (CompanionMessage !== response.CompanionMessage) earnerpanel.innerHTML = earnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     CompanionMessage = response.CompanionMessage;
-    earnerpanel.innerHTML = earnerpanel.innerHTML + CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
     } else {
@@ -1873,8 +1873,8 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
+    if (CompanionMessage !== response.CompanionMessage) earnerpanel.innerHTML = earnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     CompanionMessage = response.CompanionMessage;
-    earnerpanel.innerHTML = earnerpanel.innerHTML + CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
     } else {
@@ -3623,8 +3623,8 @@ function CheckBackTab() {
           return;
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
+        if (CompanionMessage !== response.CompanionMessage) earnerpanel.innerHTML = earnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         CompanionMessage = response.CompanionMessage;
-        earnerpanel.innerHTML = earnerpanel.innerHTML + CompanionMessage;
         if (!ServiceWorkerOnline) {
           disablesw.innerText = "Resume Companion";
         } else {
