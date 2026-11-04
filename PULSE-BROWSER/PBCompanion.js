@@ -2010,14 +2010,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               );
               const PulseMoments = [
                 ...new Set(
-                  requests
+                  realRequests
                     .filter(req => isAMoment(req.url))
                     .map(req => [req.url, req])
                 ).values()
               ];
               const PulseOffline = Array.from(
                 new Map(
-                  requests
+                  realRequests
                     .filter(req => isOffline(req.url))
                     .map(req => [req.url, req])
                 ).values()
