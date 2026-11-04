@@ -1150,8 +1150,8 @@ console.log("%c[PULSEBROWSER] PBAccelerator (Ultra Edition v10.0) loaded",
 
 async function getSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(null, (data) => {
-      const S = data || {};
+    chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
+      const S = data || PB_SW_SETTINGS;
 
       // Force all acceleration systems ON by default
       S.accelDNSWarm      = S.accelDNSWarm      !== false;
@@ -1170,7 +1170,7 @@ async function getSettings() {
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
       S.enablePulseEarner = S.enablePulseEarner !== false;
-      PB_LOG2.load("getSettings()", S);
+      
       resolve(S);
     });
   });
