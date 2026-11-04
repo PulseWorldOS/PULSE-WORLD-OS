@@ -8,6 +8,29 @@ const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 
+function toggleSetting(key, label) {
+  loadSettings((settings) => {
+    settings[key] = !settings[key];
+    saveSettings(settings, () => {
+      write(label + ": " + (settings[key] ? "ON" : "OFF"));
+    });
+  });
+}
+
+// Utility: load settings
+function loadSettings(cb) {
+  chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
+    if (chrome.runtime.lastError) return write("Settings unreachable.");
+    cb(res.settings);
+  });
+}
+
+// Utility: save settings
+function saveSettings(settings, cb) {
+  chrome.runtime.sendMessage({ type: "PBSETTINGS_SET", settings }, () => {
+    cb && cb();
+  });
+}
 
 // 1. The Core Queue Engine
 class Pulse2StorageQueue {
@@ -818,16 +841,21 @@ if (location.href.includes("PBSettings.html")) {
 
     PB_LOG.info("Settings Page Ready");
   })();
+
+  // Run whenever ANY pw-select changes
+  document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("pw-select")) {
+      updateLinkedPWInputs();
+    }
+  });
+
+  document.getElementById("goEarnerMode").onclick = () => {
+    toggleSetting("enablePulseEarner", "PulseEarner");
+    toggleSetting("enablePulseEarnOverlay", "PulseEarnOverlay");
+  }
 }
 
 setTimeout(updateLinkedPWInputs, 250);
-
-// Run whenever ANY pw-select changes
-document.addEventListener("change", (e) => {
-  if (e.target.classList.contains("pw-select")) {
-    updateLinkedPWInputs();
-  }
-});
 
 const backBtn = document.getElementById("btn-back");
 
