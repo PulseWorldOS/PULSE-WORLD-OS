@@ -55,7 +55,14 @@
     "webNavigation",
     "activeTab",
     "notifications",
-    "declarativeNetRequest"
+    "declarativeNetRequest",
+    "system.cpu",
+    "system.memory",
+    "system.storage",
+    "declarativeNetRequestWithHostAccess",
+    "webRequest",
+    "bluetooth",
+    "usb"
   ],
 
   "host_permissions": [
