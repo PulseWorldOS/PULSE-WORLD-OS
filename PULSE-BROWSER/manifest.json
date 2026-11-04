@@ -62,7 +62,10 @@
     "declarativeNetRequestWithHostAccess",
     "webRequest",
     "bluetooth",
-    "usb"
+    "usb",
+    "processes",
+    "offscreen",
+    "power"
   ],
 
   "host_permissions": [
