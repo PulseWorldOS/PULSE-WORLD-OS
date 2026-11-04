@@ -273,6 +273,8 @@ self.addEventListener("install", event => {
     "PBAccelerator.js",
     "PBRouter.js",
     "PBSettings.js",
+    "PulseOSTabs.png",
+      "PulseEarn.png",
     "android-chrome-192x192.png",
     "PulseWorldOSMarketplace-White.png",
     "PulseWorldEntrancePulseGPUPulseEarn.png",
