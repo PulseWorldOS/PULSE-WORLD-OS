@@ -192,7 +192,7 @@ const PB_SW_SETTINGS = {
   enableAccelerator: true,
   enableNavigator: true,
   enableRouter: true,
-  enablePulseEarner: true,
+  enablePulseEarner: false,
   enablePulseGPU: true,
   enablePulseDecode: true,
   enableContentRuntime: true,
@@ -1465,7 +1465,7 @@ async function pbAccelerate(url) {
   if (domainClass === "PulseWorld") {
     await pbWarmPath(origin);
   } else {
-    if (!PulseBrowserSettings) PulseBrowserSettings = await getSettings();
+    PulseBrowserSettings = await getSettings();
 
     // WWW acceleration: preconnect + basic prefetch
     if (PulseBrowserSettings.accelPreconnect) pbPreconnect([origin]);
@@ -1511,9 +1511,12 @@ async function pbLoadExtensionSettings() {
 
 async function pbModuleWarmBoot() {
   const settings = await pbLoadExtensionSettings();
+  PulseBrowserSettings = await getSettings();
   PulseRealmSettings = settings;
   let externalSearchLink = settings.externalSearchLink || "https://www.google.com";
   pbSaveSettings(PulseRealmSettings);
+  if (PulseRealmSettings.goEarnerMode === true) PulseBrowserSettings.enablePulseEarner = true;
+  if (PulseBrowserSettings.enablePulseEarner === true) PulseBrowserSettings.enableEarnerOverlay = true;
   // Collect all accelerated module links directly from settings
   warmTargets = [
     settings.externalBankLink,
