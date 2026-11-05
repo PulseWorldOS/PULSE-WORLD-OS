@@ -6,6 +6,7 @@ let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let socialMode = "Internal";
+let isEarning = false;
 let socialMediaActiveLink = null;
 let workMode = "Internal";
 let workActiveLink = null;
@@ -750,15 +751,37 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) =>
   }
 });
 
-pbPulseEarn.onclick = async () => {
-  pbPulseEarn.style.width = "70px";
-  pbPulseEarn.style.height = "70px";
-  earnerinnerpanel.style.display = "none";
-  earnerpanel.style.background = "transparent";
-  earnerpanel.style.backdropFilter = "none";
-  earnerpanel.style.boxShadow = "none";
-  earnerpanel.style.border = "none";
-}
+pbPulseEarn.onclick = () => {
+  if (!isEarning) {
+    // ——— Turn ON (transparent / earning mode) ———
+    pbPulseEarn.id = "pbPulseEarning";
+    pbPulseEarn.className = "pbPulseEarning";
+    pbPulseEarn.style.width = "70px";
+    pbPulseEarn.style.height = "70px";
+
+    earnerinnerpanel.style.display = "none";
+    earnerpanel.style.background = "transparent";
+    earnerpanel.style.backdropFilter = "none";
+    earnerpanel.style.boxShadow = "none";
+    earnerpanel.style.border = "none";
+
+    isEarning = true;
+  } else {
+    // ——— Turn OFF (restore original) ———
+    pbPulseEarn.id = "pbPulseEarn";
+    pbPulseEarn.className = "";          // or put back any original class if you had one
+    pbPulseEarn.style.width = "";        // let CSS take over again
+    pbPulseEarn.style.height = "";
+
+    earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+    earnerpanel.style.background = "";
+    earnerpanel.style.backdropFilter = "";
+    earnerpanel.style.boxShadow = "";
+    earnerpanel.style.border = "";
+
+    isEarning = false;
+  }
+};
 
 function getPrimaryVideo() {
   const videos = [...document.querySelectorAll("video")];
