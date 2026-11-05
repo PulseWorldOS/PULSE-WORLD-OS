@@ -507,7 +507,7 @@ async function gpuWarmExtra() {
     } catch (_) {}
 
     try { el.getContext?.("2d"); } catch (_) {}
-    try { el.play?.().catch(() => {}); } catch (_) {}
+    // try { el.play?.().catch(() => {}); } catch (_) {}
   });
 
   // Warm WebGPU (if available)
@@ -1100,20 +1100,20 @@ perfObserver.observe({
 // ---------------------------------------------------------------------------
 // 6. GPU WARM-PATH (canvas + video)
 // ---------------------------------------------------------------------------
-function warmGPU() {
-  const canvases = document.querySelectorAll("canvas");
-  const videos = document.querySelectorAll("video");
+// function warmGPU() {
+//   const canvases = document.querySelectorAll("canvas");
+//   const videos = document.querySelectorAll("video");
 
-  canvases.forEach((c) => {
-    try { c.getContext("webgl") || c.getContext("webgl2"); } catch (_) {}
-  });
+//   canvases.forEach((c) => {
+//     try { c.getContext("webgl") || c.getContext("webgl2"); } catch (_) {}
+//   });
 
-  videos.forEach((v) => {
-    try { v.play().catch(() => {}); } catch (_) {}
-  });
+//   videos.forEach((v) => {
+//     try { v.play().catch(() => {}); } catch (_) {}
+//   });
 
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM" });
-}
+//   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM" });
+// }
 
 // setTimeout(warmGPU, 500);
 
