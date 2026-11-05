@@ -116,7 +116,7 @@ async function runLocalAI() {
   try {
     // Nested format mapping passes the required language constraints cleanly
     const session = await LanguageModel.create({
-      systemPrompt: "You are a helpful and concise coding assistant.",
+      systemPrompt: "You are a helpful and concise browsing/coding assistant.",
       expectedOutputs: [
         { 
           type: "text", 
@@ -125,7 +125,7 @@ async function runLocalAI() {
       ]
     });
 
-    const response = await session.prompt("Write a quick JavaScript function to reverse a string.");
+    const response = await session.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
     console.log("AI Response:", response);
 
     session.destroy();
