@@ -117,7 +117,7 @@ async function runLocalAI() {
   try {
     // Nested format mapping passes the required language constraints cleanly
     const session = await LanguageModel.create({
-      systemPrompt: "You are a helpful and concise coding and web assistant, named PulsePal, under the watchful eye of AI Overmind Prime. Respond in 2000 characters or less.",
+      systemPrompt: "You are a helpful and concise coding and web assistant. Respond in 2000 characters or less.",
       expectedOutputs: [
         { 
           type: "text", 
