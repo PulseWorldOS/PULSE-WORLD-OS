@@ -103,7 +103,7 @@ function PulsesafeStorageSet(dataObject) {
 
 async function runLocalAI() {
   if (typeof LanguageModel === 'undefined') {
-    console.error("The Prompt API is not supported in this environment.");
+    console.error("The Prompt API is not supported in this browser version.");
     return;
   }
 
@@ -113,16 +113,25 @@ async function runLocalAI() {
     return;
   }
 
-  // Session configured with explicit output language to satisfy Chrome's safety policy
-  const session = await LanguageModel.create({
-    systemPrompt: "You are a helpful and concise coding assistant.",
-    expectedOutputLanguage: "en" 
-  });
+  try {
+    // Nested format mapping passes the required language constraints cleanly
+    const session = await LanguageModel.create({
+      systemPrompt: "You are a helpful and concise coding assistant.",
+      expectedOutputs: [
+        { 
+          type: "text", 
+          languages: ["en"] 
+        }
+      ]
+    });
 
-  const response = await session.prompt("Write a quick JavaScript function to reverse a string.");
-  console.log("AI Response:", response);
+    const response = await session.prompt("Write a quick JavaScript function to reverse a string.");
+    console.log("AI Response:", response);
 
-  session.destroy();
+    session.destroy();
+  } catch (error) {
+    console.error("Failed to initialize LanguageModel session:", error);
+  }
 }
 
 function isValid(t) {
