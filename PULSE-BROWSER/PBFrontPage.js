@@ -120,6 +120,9 @@ async function runLocalAI() {
   try {
     const SessionAI = await chrome.storage.local.get(["aiSession"]);
     aiSession = SessionAI.aiSession;
+  } catch (err) {}
+
+  try {
     if (!aiSession) {
       // 1. Initialize the session using the modern nested outputs architecture
       aiSession = await LanguageModel.create({
