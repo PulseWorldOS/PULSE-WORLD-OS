@@ -1251,6 +1251,7 @@ async function openNamedTab(name, url) {
   name = identity;
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
+
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
   // ⭐ If tab already exists → PURE SELECT
