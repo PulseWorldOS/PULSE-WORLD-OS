@@ -2006,22 +2006,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const cache = await caches.open(name);
               const requests = await cache.keys();
               const realRequests = requests.filter(req => 
-                !isPulseWorld(req.url) && !isFavicon(req.url)
+                (!isPulseWorld(req.url) && !isFavicon(req.url))
               );
               const PulseRequests = requests.filter(req =>
-                isPulseWorld(req.url) && !isFavicon(req.url)
+                (isPulseWorld(req.url) && !isFavicon(req.url))
               );
               const PulseMoments = [
                 ...new Set(
                   realRequests
-                    .filter(req => isAMoment(req.url))
+                    .filter(req => (isAMoment(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
               ];
               const PulseOffline = Array.from(
                 new Map(
                   realRequests
-                    .filter(req => isOffline(req.url))
+                    .filter(req => (isOffline(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
               );
