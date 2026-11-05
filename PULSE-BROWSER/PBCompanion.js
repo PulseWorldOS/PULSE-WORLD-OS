@@ -195,7 +195,7 @@ const PB_SW_SETTINGS = {
   enableAccelerator: true,
   enableNavigator: true,
   enableRouter: true,
-  enablePulseEarner: true,
+  enablePulseEarnerEngine: true,
   enablePulseGPU: true,
   enablePulseDecode: true,
   enableContentRuntime: true,
@@ -1186,7 +1186,7 @@ async function getSettings() {
       S.enablePulseEarnOverlay = S.enablePulseEarnOverlay !== false; 
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
-      S.enablePulseEarner = S.enablePulseEarner !== false;
+      S.enablePulseEarnerEngine = S.enablePulseEarnerEngine !== false;
       PB_LOG2.load("getSettings()", S);
       resolve(S);
     });

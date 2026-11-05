@@ -1854,7 +1854,7 @@ async function getSettings() {
       S.enablePulseEarnOverlay = S.enablePulseEarnOverlay !== false; 
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
-      S.enablePulseEarner = S.enablePulseEarner !== false;
+      S.enablePulseEarnerEngine = S.enablePulseEarnerEngine !== false;
       
       resolve(S);
     });
