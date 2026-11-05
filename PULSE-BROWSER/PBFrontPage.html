@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://www.pulseworld.money" crossorigin>
   <!-- Preload Logo -->
   <link rel="preload" fetchpriority="high" as="video" href="PulseWorldOS.mp4" type="video/mp4">
+  <link rel="preload" fetchpriority="high" as="video" href="PulseEarn.mp4" type="video/mp4">
   <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
-  <link rel="preload" as="image" href="PulseEarn.png" />
   <!-- <link rel="preload" as="image" href="PulseWorldSplash512.png" /> -->
 
   <style>
@@ -144,9 +144,15 @@
 
     /* ⭐ Big favicon */
     .CompanionMessage {
+      opacity: 0;
       position: absolute;
       font-weight: bold;
+      animation: Reveal 3s ease forwards;
       bottom: 40px;
+    }
+
+    @keyframes Reveal {
+      to { opacity: 1; }
     }
     /* ⭐ Big favicon */
     .earner-engine {
@@ -476,6 +482,13 @@
       animation: pulseGlow 3.5s ease-in-out infinite;
     }
 
+    #pbPulseEarn {
+      width: 140px;
+      height: auto;
+      max-height: 350px;
+      border-radius: inherit;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
 
     @keyframes bubbleElectrify {
       0%   { transform: translate(0px, 0px) scale(1); }
@@ -1242,7 +1255,7 @@
     <!-- Left panel content -->
   </div>
   <div class="earner-panel" id="earner-panel">
-    <img class="earner-engine" src="PulseEarn.png" alt="Earner Engine Logo" />
+    <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div style="font-weight:bold; top: 0; text-align: center; position: absolute; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom: 6px;">
         Pulse Earner - Engine Overlay

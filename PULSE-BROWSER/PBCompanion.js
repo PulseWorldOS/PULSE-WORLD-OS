@@ -276,7 +276,7 @@ self.addEventListener("install", event => {
     "PBRouter.js",
     "PBSettings.js",
     "PulseOSTabs.png",
-      "PulseEarn.png",
+    "PulseEarn.mp4",
     "android-chrome-192x192.png",
     "PulseWorldOSMarketplace-White.png",
     "PulseWorldEntrancePulseGPUPulseEarn.png",
