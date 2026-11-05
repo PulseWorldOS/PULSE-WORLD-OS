@@ -53,6 +53,7 @@ const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const pbPulseScreen = document.getElementById("pbPulseScreen");
 const pbPulseEarn = document.getElementById("pbPulseEarn");
+const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 
 function isValid(t) {
@@ -250,73 +251,73 @@ function getReadableName(url) {
   async function CheckEarnDetailsState() {
     const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
     EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
-    console.log("Earn State:", EarnDetailsHidden);
+    console.log("Earn Details State:", EarnDetailsHidden);
     if (EarnDetailsHidden) {
       // ——— Turn ON (transparent / earning mode) ———
-      pbPulseEarn.id = "pbPulseEarning";
-      pbPulseEarn.className = "pbPulseEarning";
-      pbPulseEarn.style.width = "70px";
-      pbPulseEarn.style.height = "70px";
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+      pbPulseDetailsEarn.style.width = "70px";
+      pbPulseDetailsEarn.style.height = "70px";
 
-      earnerinnerpanel.style.display = "none";
-      earnerpanel.style.background = "transparent";
-      earnerpanel.style.backdropFilter = "none";
-      earnerpanel.style.boxShadow = "none";
-      earnerpanel.style.border = "none";
+      earnerinnerhelperpanel.style.display = "none";
+      earnerhelperpanel.style.background = "transparent";
+      earnerhelperpanel.style.backdropFilter = "none";
+      earnerhelperpanel.style.boxShadow = "none";
+      earnerhelperpanel.style.border = "none";
       setTimeout(() => {
-        pbPulseEarn.id = "pbPulseEarn";
-        pbPulseEarn.className = "pbPulseEarn";
-        pbPulseEarn.style.transform = "translate(200px, 111px)";
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.style.transform = "translate(200px, 111px)";
       }, 2000);
       
     } else {
       // ——— Turn OFF (restore original) ———
-      pbPulseEarn.id = "pbPulseEarn";
-      pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
-      pbPulseEarn.style.width = "";        // let CSS take over again
-      pbPulseEarn.style.height = "";
-      pbPulseEarn.style.transform = "";
-      earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
-      earnerpanel.style.background = "";
-      earnerpanel.style.backdropFilter = "";
-      earnerpanel.style.boxShadow = "";
-      earnerpanel.style.border = "";
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+      pbPulseDetailsEarn.style.width = "";        // let CSS take over again
+      pbPulseDetailsEarn.style.height = "";
+      pbPulseDetailsEarn.style.transform = "";
+      earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerhelperpanel.style.background = "";
+      earnerhelperpanel.style.backdropFilter = "";
+      earnerhelperpanel.style.boxShadow = "";
+      earnerhelperpanel.style.border = "";
     }
 
     
-    pbPulseEarn.onclick = async () => {
-      console.log("Earn State:", EarnDetailsHidden);
+    pbPulseDetailsEarn.onclick = async () => {
+      console.log("Earn Details State:", EarnDetailsHidden);
       if (!EarnDetailsHidden) {
         EarnDetailsHidden = true;
         // ——— Turn ON (transparent / earning mode) ———
-        pbPulseEarn.id = "pbPulseEarning";
-        pbPulseEarn.className = "pbPulseEarning";
-        pbPulseEarn.style.width = "70px";
-        pbPulseEarn.style.height = "70px";
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+        pbPulseDetailsEarn.style.width = "70px";
+        pbPulseDetailsEarn.style.height = "70px";
 
-        earnerinnerpanel.style.display = "none";
-        earnerpanel.style.background = "transparent";
-        earnerpanel.style.backdropFilter = "none";
-        earnerpanel.style.boxShadow = "none";
-        earnerpanel.style.border = "none";
+        earnerinnerhelperpanel.style.display = "none";
+        earnerhelperpanel.style.background = "transparent";
+        earnerhelperpanel.style.backdropFilter = "none";
+        earnerhelperpanel.style.boxShadow = "none";
+        earnerhelperpanel.style.border = "none";
         setTimeout(() => {
-          pbPulseEarn.id = "pbPulseEarn";
-          pbPulseEarn.className = "pbPulseEarn";
-          pbPulseEarn.style.transform = "translate(200px, 111px)";
+          pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.style.transform = "translate(200px, 111px)";
         }, 2000);
       } else {
         EarnDetailsHidden = false;
         // ——— Turn OFF (restore original) ———
-        pbPulseEarn.id = "pbPulseEarn";
-        pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
-        pbPulseEarn.style.width = "";        // let CSS take over again
-        pbPulseEarn.style.height = "";
-        pbPulseEarn.style.transform = "";
-        earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
-        earnerpanel.style.background = "";
-        earnerpanel.style.backdropFilter = "";
-        earnerpanel.style.boxShadow = "";
-        earnerpanel.style.border = "";
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+        pbPulseDetailsEarn.style.width = "";        // let CSS take over again
+        pbPulseDetailsEarn.style.height = "";
+        pbPulseDetailsEarn.style.transform = "";
+        earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
+        earnerhelperpanel.style.background = "";
+        earnerhelperpanel.style.backdropFilter = "";
+        earnerhelperpanel.style.boxShadow = "";
+        earnerhelperpanel.style.border = "";
       }
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
