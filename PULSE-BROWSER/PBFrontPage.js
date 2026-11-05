@@ -10,6 +10,9 @@ let socialMode = "Internal";
 let EarnHidden = false;
 let EarnDetailsHidden = false;
 let socialMediaActiveLink = null;
+// Your cybernetic state architecture
+let aiSession = null;
+let memoryBuffer = [];
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -116,7 +119,7 @@ async function runLocalAI() {
 
   try {
     // Nested format mapping passes the required language constraints cleanly
-    const session = await LanguageModel.create({
+    aiSession = await LanguageModel.create({
       systemPrompt: "You are a helpful and concise coding and web assistant. Respond in 2000 characters or less.",
       expectedOutputs: [
         { 
@@ -126,20 +129,16 @@ async function runLocalAI() {
       ]
     });
 
-    const response = await session.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
+    const response = await aiSession.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
     console.log("PulsePal:", response);
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.innerHTML = "PulsePal:" + response;
 
-    session.destroy();
+    aiSession.destroy();
   } catch (error) {
     console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
   }
 }
-
-// Your cybernetic state architecture
-let aiSession = null;
-let memoryBuffer = [];
 
 async function initializeExoskeleton() {
   aiSession = await LanguageModel.create({
