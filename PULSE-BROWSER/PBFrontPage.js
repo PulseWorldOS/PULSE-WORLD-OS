@@ -786,6 +786,7 @@ if (isEarning) {
 
 pbPulseEarn.onclick = async () => {
   if (!isEarning) {
+    isEarning = true;
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";
     pbPulseEarn.className = "pbPulseEarning";
@@ -802,8 +803,8 @@ pbPulseEarn.onclick = async () => {
       pbPulseEarn.className = "pbPulseEarn";
       pbPulseEarn.style.transform = "translate(200px, 111px)";
     }, 2000);
-    isEarning = true;
   } else {
+    isEarning = false;
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
     pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
@@ -815,7 +816,6 @@ pbPulseEarn.onclick = async () => {
     earnerpanel.style.backdropFilter = "";
     earnerpanel.style.boxShadow = "";
     earnerpanel.style.border = "";
-    isEarning = false;
   }
   PulsesafeStorageSet({ EarningVisible: isEarning });
 };
