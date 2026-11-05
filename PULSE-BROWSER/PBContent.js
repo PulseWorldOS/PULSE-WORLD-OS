@@ -187,22 +187,22 @@ const PBQuantumPrefetch = {
     this.linkCooldowns.set(href, now);
 
     // Safe prefetch
-    letsgo(linkURL);    
-    console.log("[PBQuantumPrefetch] Prefetched hovered link:", linkURL);
+    letsgo(linkURL.href);    
+    console.log("[PBQuantumPrefetch] Prefetched hovered link:", linkURL.href);
   }
 
 };
 
 
 function letsgo(link) {
-  if (link.includes("http://") || link.includes("https://")) {
+  if (link && (link.includes("http://") || link.includes("https://"))) {
     pbPreconnect([link]);
     fetch(link, { cache: "force-cache" }).catch(() => {});
   }
 }
 
 function cacheit(link) {
-  if (link.includes("http://") || link.includes("https://")) {
+  if (link && (link.includes("http://") || link.includes("https://"))) {
     pbPreconnect([link]);
     fetch(link, { mode: "no-cors" }).catch(() => {});
   }
