@@ -237,7 +237,7 @@ function updateSettings(settings) {
     Pulse Router: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
     Pulse Earner: <font color="${enabledColor(settings.enablePulseEarnerEngine)}">${settings.enablePulseEarnerEngine}</font><br/>
     Pulse OS User Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
-    Pulse OS System Memory: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
+    Pulse OS System Details: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
     Pulse Earner Engine Overlay: <font color="${tfColor(settings.enablePulseEarnOverlay)}">${settings.enablePulseEarnOverlay}</font><br/>
     Multiversal Runtime: <font color="${tfColor(settings.enableContentRuntime)}">${settings.enableContentRuntime}</font><br/>
   `;
