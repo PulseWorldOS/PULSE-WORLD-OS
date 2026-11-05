@@ -5,6 +5,7 @@ let engineType = "text";
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
+let CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
 let socialMode = "Internal";
 let EarnHidden = false;
 let EarnDetailsHidden = false;
@@ -127,6 +128,7 @@ async function runLocalAI() {
 
     const response = await session.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
     console.log("PulsePal:", response);
+    CompanionDetailsMessage = "PulsePal:" + response;
 
     session.destroy();
   } catch (error) {
