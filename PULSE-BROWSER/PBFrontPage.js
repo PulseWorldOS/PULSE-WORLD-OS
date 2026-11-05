@@ -117,10 +117,10 @@ async function runLocalAI() {
     return;
   }
 
-  try {
-    const SessionAI = await chrome.storage.local.get(["aiSession"]);
-    aiSession = SessionAI.aiSession;
-  } catch (err) {}
+  // try {
+  //   const SessionAI = await chrome.storage.local.get(["aiSession"]);
+  //   aiSession = SessionAI.aiSession;
+  // } catch (err) {}
 
   try {
     if (!aiSession) {
