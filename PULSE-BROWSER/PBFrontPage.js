@@ -131,6 +131,7 @@ async function runLocalAI() {
 
     const response = await aiSession.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
     console.log("PulsePal:", response);
+    CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.innerHTML = "PulsePal:" + response;
 
