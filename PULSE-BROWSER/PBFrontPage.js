@@ -751,7 +751,7 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) =>
   }
 });
 
-chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN" }, (response) => {
+chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning }, (response) => {
   if (chrome.runtime.lastError) return;
   if (!response || !response.ok) {
     return;
@@ -815,7 +815,39 @@ pbPulseEarn.onclick = () => {
 
     isEarning = false;
   }
-  chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning });
+  chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      return;
+    }
+    isEarning = response.isEarning;
+    console.log(isEarning);
+    if (!isEarning) {
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulseEarn.id = "pbPulseEarning";
+      pbPulseEarn.className = "pbPulseEarning";
+      pbPulseEarn.style.width = "70px";
+      pbPulseEarn.style.height = "70px";
+
+      earnerinnerpanel.style.display = "none";
+      earnerpanel.style.background = "transparent";
+      earnerpanel.style.backdropFilter = "none";
+      earnerpanel.style.boxShadow = "none";
+      earnerpanel.style.border = "none";
+    } else {
+      // ——— Turn OFF (restore original) ———
+      pbPulseEarn.id = "pbPulseEarn";
+      pbPulseEarn.className = "";          // or put back any original class if you had one
+      pbPulseEarn.style.width = "";        // let CSS take over again
+      pbPulseEarn.style.height = "";
+
+      earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerpanel.style.background = "";
+      earnerpanel.style.backdropFilter = "";
+      earnerpanel.style.boxShadow = "";
+      earnerpanel.style.border = "";
+    }
+  });
 };
 
 function getPrimaryVideo() {
