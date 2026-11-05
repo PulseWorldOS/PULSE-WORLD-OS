@@ -267,10 +267,10 @@ function getReadableName(url) {
       setTimeout(() => {
         pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
-        pbPulseDetailsEarn.style.transform = "translate(-200px, 111px)";
+        pbPulseDetailsEarn.style.transform = "translate(-240px, 111px)";
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
-      }, 2000);
+      }, 1500);
       
     } else {
       // ——— Turn OFF (restore original) ———
@@ -290,7 +290,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.style.transform = "";
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
-      }, 2000);
+      }, 1500);
     }
 
     
@@ -311,10 +311,10 @@ function getReadableName(url) {
         setTimeout(() => {
           pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
           pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
-          pbPulseDetailsEarn.style.transform = "translate(-200px, 111px)";
+          pbPulseDetailsEarn.style.transform = "translate(-240px, 111px)";
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
-        }, 2000);
+        }, 1500);
       } else {
         EarnDetailsHidden = false;
         // ——— Turn OFF (restore original) ———
@@ -334,7 +334,7 @@ function getReadableName(url) {
           pbPulseDetailsEarn.style.transform = "";
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
-        }, 2000);
+        }, 1500);
       }
       console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
@@ -360,10 +360,10 @@ async function CheckEarnState() {
     setTimeout(() => {
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";
-      pbPulseEarn.style.transform = "translate(200px, 111px)";
+      pbPulseEarn.style.transform = "translate(250px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
-    }, 2000);
+    }, 1500);
     
   } else {
     // ——— Turn OFF (restore original) ———
@@ -382,7 +382,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
-    }, 2000);
+    }, 1500);
   }
 
   pbPulseEarn.onclick = async () => {
@@ -402,10 +402,10 @@ async function CheckEarnState() {
       setTimeout(() => {
         pbPulseEarn.id = "pbPulseEarn";
         pbPulseEarn.className = "pbPulseEarn";
-        pbPulseEarn.style.transform = "translate(200px, 111px)";
+        pbPulseEarn.style.transform = "translate(250px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
-      }, 2000);
+      }, 1500);
     } else {
       EarnHidden = false;
       // ——— Turn OFF (restore original) ———
@@ -424,7 +424,7 @@ async function CheckEarnState() {
         pbPulseEarn.style.transform = "";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
-      }, 2000);
+      }, 1500);
     }
     console.log("Earn State:", EarnHidden);
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
