@@ -118,9 +118,8 @@ async function runLocalAI() {
   }
 
   try {
-    // Nested format mapping passes the required language constraints cleanly
+    // 1. Initialize the session using the modern nested outputs architecture
     aiSession = await LanguageModel.create({
-      systemPrompt: "You are a helpful and concise coding and web assistant. Respond in 2000 characters or less.",
       expectedOutputs: [
         { 
           type: "text", 
@@ -129,12 +128,31 @@ async function runLocalAI() {
       ]
     });
 
-    const response = await aiSession.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
-    console.log("PulsePal:", response);
-    CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
-    CompanionDetailsMessage.style.fontSize = "0.6rem";
-    CompanionDetailsMessage.innerHTML = "PulsePal:" + response;
+    // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+    const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
+    const wrappedPrompt = `
+[IDENTITY & CONSTRAINTS]
+- Your name is PulsePal.
+- You are a local, cybernetic cognitive assistant.
+- You must keep your response under 2000 characters.
 
+[USER QUERY]
+${rawPrompt}
+
+[PULSEPAL RESPONSE]:`;
+
+    // 3. Fire the wrapped prompt
+    const response = await aiSession.prompt(wrappedPrompt);
+    console.log("PulsePal:", response);
+    
+    // 4. Update the DOM elements smoothly
+    const CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
+    if (CompanionDetailsMessage) {
+      CompanionDetailsMessage.style.fontSize = "0.6rem";
+      CompanionDetailsMessage.innerHTML = "<strong>PulsePal:</strong> " + response;
+    }
+
+    // 5. Safely clean up the hardware resource allocation
     aiSession.destroy();
   } catch (error) {
     console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
