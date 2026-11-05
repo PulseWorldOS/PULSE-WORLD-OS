@@ -282,6 +282,9 @@ function getReadableName(url) {
       earnerhelperpanel.style.backdropFilter = "";
       earnerhelperpanel.style.boxShadow = "";
       earnerhelperpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseDetailsEarn.style.transform = "";
+      }, 2000);
     }
 
     
@@ -318,6 +321,9 @@ function getReadableName(url) {
         earnerhelperpanel.style.backdropFilter = "";
         earnerhelperpanel.style.boxShadow = "";
         earnerhelperpanel.style.border = "";
+        setTimeout(() => {
+          pbPulseDetailsEarn.style.transform = "";
+        }, 2000);
       }
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
@@ -357,6 +363,9 @@ async function CheckEarnState() {
     earnerpanel.style.backdropFilter = "";
     earnerpanel.style.boxShadow = "";
     earnerpanel.style.border = "";
+    setTimeout(() => {
+      pbPulseEarn.style.transform = "";
+    }, 2000);
   }
 
   pbPulseEarn.onclick = async () => {
@@ -392,6 +401,9 @@ async function CheckEarnState() {
       earnerpanel.style.backdropFilter = "";
       earnerpanel.style.boxShadow = "";
       earnerpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseEarn.style.transform = "";
+      }, 2000);
     }
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
   };
