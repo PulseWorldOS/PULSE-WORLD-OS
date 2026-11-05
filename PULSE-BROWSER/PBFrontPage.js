@@ -289,7 +289,6 @@ function getReadableName(url) {
 
     
     pbPulseDetailsEarn.onclick = async () => {
-      console.log("Earn Details State:", EarnDetailsHidden);
       if (!EarnDetailsHidden) {
         EarnDetailsHidden = true;
         // ——— Turn ON (transparent / earning mode) ———
@@ -325,6 +324,7 @@ function getReadableName(url) {
           pbPulseDetailsEarn.style.transform = "";
         }, 2000);
       }
+      console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
   }
@@ -369,7 +369,6 @@ async function CheckEarnState() {
   }
 
   pbPulseEarn.onclick = async () => {
-    console.log("Earn State:", EarnHidden);
     if (!EarnHidden) {
       EarnHidden = true;
       // ——— Turn ON (transparent / earning mode) ———
@@ -405,6 +404,7 @@ async function CheckEarnState() {
         pbPulseEarn.style.transform = "";
       }, 2000);
     }
+    console.log("Earn State:", EarnHidden);
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
   };
 
