@@ -110,30 +110,24 @@ async function runLocalAI() {
     console.error("PulsePal (Gemini Nano) is not supported in this browser version.");
     return;
   }
-  
+
   const status = await LanguageModel.availability();
   if (status === 'unavailable') {
     console.error("PulsePal (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
-  // try {
-  //   const SessionAI = await chrome.storage.local.get(["aiSession"]);
-  //   aiSession = SessionAI.aiSession;
-  // } catch (err) {}
-
   try {
-    if (!aiSession) {
-      // 1. Initialize the session using the modern nested outputs architecture
-      aiSession = await LanguageModel.create({
-        expectedOutputs: [
-          { 
-            type: "text", 
-            languages: ["en"] 
-          }
-        ]
-      });
-    }
+    // 1. Initialize the session using the modern nested outputs architecture
+    aiSession = await LanguageModel.create({
+      expectedOutputs: [
+        { 
+          type: "text", 
+          languages: ["en"] 
+        }
+      ]
+    });
+
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
@@ -157,7 +151,7 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = "<strong>PulsePal:</strong> " + response;
     }
-    PulsesafeStorageSet({ aiSession: aiSession });
+
     // 5. Safely clean up the hardware resource allocation
     aiSession.destroy();
   } catch (error) {
