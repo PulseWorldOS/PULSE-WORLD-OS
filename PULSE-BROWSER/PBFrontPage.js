@@ -286,6 +286,8 @@ function getReadableName(url) {
       setTimeout(() => {
         pbPulseDetailsEarn.style.border = "";
         pbPulseDetailsEarn.style.transform = "";
+        pbPulseDetailsEarn.currentTime = 0;
+        pbPulseDetailsEarn.play = true;
       }, 2000);
     }
 
@@ -326,6 +328,8 @@ function getReadableName(url) {
         setTimeout(() => {
           pbPulseDetailsEarn.style.border = "";
           pbPulseDetailsEarn.style.transform = "";
+          pbPulseDetailsEarn.currentTime = 0;
+          pbPulseDetailsEarn.play = true;
         }, 2000);
       }
       console.log("Earn Details State:", EarnDetailsHidden);
@@ -370,6 +374,8 @@ async function CheckEarnState() {
     setTimeout(() => {
       pbPulseEarn.style.border = "";
       pbPulseEarn.style.transform = "";
+      pbPulseEarn.currentTime = 0;
+      pbPulseEarn.play = true;
     }, 2000);
   }
 
@@ -408,6 +414,8 @@ async function CheckEarnState() {
       setTimeout(() => {
         pbPulseEarn.style.border = "";
         pbPulseEarn.style.transform = "";
+        pbPulseEarn.currentTime = 0;
+        pbPulseEarn.play = true;
       }, 2000);
     }
     console.log("Earn State:", EarnHidden);
