@@ -102,35 +102,26 @@ function PulsesafeStorageSet(dataObject) {
 }
 
 async function runLocalAI() {
-  // 1. Check if the global LanguageModel object exists at all
   if (typeof LanguageModel === 'undefined') {
-    console.error("The Prompt API is not supported. Ensure you are on a compatible Chrome version and flags are on.");
+    console.error("The Prompt API is not supported in this environment.");
     return;
   }
 
-  // 2. Check model availability (Modern standard)
-  const status = await LanguageModel.availability(); // Returns 'readily', 'after-download', or 'unavailable'
-  
+  const status = await LanguageModel.availability();
   if (status === 'unavailable') {
     console.error("Gemini Nano cannot run on this device hardware.");
     return;
   }
-  
-  if (status === 'after-download') {
-    console.log("Model is downloading... Please wait a moment.");
-    // In some Chrome versions, calling .create() will trigger/await the download
-  }
 
-  // 3. Create the session using the global constructor
+  // Session configured with explicit output language to satisfy Chrome's safety policy
   const session = await LanguageModel.create({
-    systemPrompt: "You are a helpful and concise coding assistant."
+    systemPrompt: "You are a helpful and concise coding assistant.",
+    expectedOutputLanguage: "en" 
   });
 
-  // 4. Prompt the model
   const response = await session.prompt("Write a quick JavaScript function to reverse a string.");
   console.log("AI Response:", response);
 
-  // 5. Clean up system memory
   session.destroy();
 }
 
