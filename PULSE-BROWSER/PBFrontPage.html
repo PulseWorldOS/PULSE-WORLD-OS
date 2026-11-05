@@ -484,7 +484,7 @@
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: pulseGlow 3.5s ease-in-out infinite;
     }
-    
+
     #pbPulseEarning {
       position: absolute;
       width: 25%;
@@ -493,8 +493,18 @@
       border-radius: 99px;
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
-      animation: bubbleFloatMinion 15s ease-in-out infinite,
+      animation: bubbleFloatMinionette 2s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
+    }
+    @keyframes bubbleFloatMinionette {
+      0%   { transform: translate(70px, 72px); }
+      8%   { transform: translate(82px, 83px); }
+      20%  { transform: translate(108px, 104px); }
+      24%  { transform: translate(117px, 111px); }
+      48%  { transform: translate(144px, 111px); }
+      64%  { transform: translate(163px, 111px); }
+      80%  { transform: translate(187px, 111px); }
+      100% { transform: translate(200px, 111px); }
     }
 
     @keyframes bubbleElectrify {

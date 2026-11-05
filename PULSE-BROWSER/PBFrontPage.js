@@ -770,10 +770,15 @@ chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning }, (response) =>
     earnerpanel.style.backdropFilter = "none";
     earnerpanel.style.boxShadow = "none";
     earnerpanel.style.border = "none";
+    setTimeout(() => {
+      pbPulseEarn.id = "pbPulseEarn";
+      pbPulseEarn.className = "pbPulseEarn";
+    }, 2000);
+    
   } else {
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
-    pbPulseEarn.className = "";          // or put back any original class if you had one
+    pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
     pbPulseEarn.style.width = "";        // let CSS take over again
     pbPulseEarn.style.height = "";
 
@@ -799,12 +804,16 @@ pbPulseEarn.onclick = async () => {
     earnerpanel.style.backdropFilter = "none";
     earnerpanel.style.boxShadow = "none";
     earnerpanel.style.border = "none";
+    setTimeout(() => {
+      pbPulseEarn.id = "pbPulseEarn";
+      pbPulseEarn.className = "pbPulseEarn";
+    }, 2000);
     isEarning = true;
     PulsesafeStorageSet({ EarningVisible: isEarning });
   } else {
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
-    pbPulseEarn.className = "";          // or put back any original class if you had one
+    pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
     pbPulseEarn.style.width = "";        // let CSS take over again
     pbPulseEarn.style.height = "";
 
