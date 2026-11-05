@@ -104,7 +104,7 @@ function updateKernel(realm, SessionStart) {
 function updateRouter(settings) {
   const el = document.getElementById("pb-hud-router");
   el.innerHTML = `
-    <div class="pb-hud-title">PulseRouter</div>
+    <div class="pb-hud-title">Pulse Router</div>
     Enabled: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
     Prioritize CDN: <font color="${tfColor(settings.routerPrioritizeCDN)}">${settings.routerPrioritizeCDN}</font><br/>
     Prioritize Assets: <font color="${tfColor(settings.routerPrioritizeAssets)}">${settings.routerPrioritizeAssets}</font><br/>
@@ -198,7 +198,7 @@ function updateGPU(realm) {
 function updateNavigator(settings, realm) {
   const el = document.getElementById("pb-hud-navigator");
   el.innerHTML = `
-    <div class="pb-hud-title">PulseNavigator</div>
+    <div class="pb-hud-title">Pulse Navigator</div>
     Enabled: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
     Warm Siblings: <font color="${tfColor(settings.navWarmSiblings)}">${settings.navWarmSiblings}</font><br/>
     Warm Assets: <font color="${tfColor(settings.navWarmAssets)}">${settings.navWarmAssets}</font><br/>
@@ -213,7 +213,7 @@ function updateNavigator(settings, realm) {
 function updateAccelerator(settings, realm) {
   const el = document.getElementById("pb-hud-accelerator");
   el.innerHTML = `
-    <div class="pb-hud-title">PulseAccelerator</div>
+    <div class="pb-hud-title">Pulse Accelerator</div>
     Enabled: <font color="${enabledColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
     Preconnect: <font color="${tfColor(settings.accelPreconnect)}">${settings.accelPreconnect}</font><br/>
     Prefetch: <font color="${tfColor(settings.accelPrefetch)}">${settings.accelPrefetch}</font><br/>
@@ -232,10 +232,10 @@ function updateSettings(settings) {
   const el = document.getElementById("pb-hud-settings");
   el.innerHTML = `
     <div class="pb-hud-title">PulseBrowser Settings</div>
-    PulseAccelerator: <font color="${enabledColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
-    PulseNavigator: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
-    PulseRouter: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
-    PulseEarner: <font color="${enabledColor(settings.enablePulseEarner)}">${settings.enablePulseEarner}</font><br/>
+    Pulse Accelerator: <font color="${enabledColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
+    Pulse Navigator: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
+    Pulse Router: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
+    Pulse Earner: <font color="${enabledColor(settings.enablePulseEarner)}">${settings.enablePulseEarner}</font><br/>
     Pulse OS User Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
     Pulse OS System Memory: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
     Pulse Earner Engine Overlay: <font color="${tfColor(settings.enablePulseEarnOverlay)}">${settings.enablePulseEarnOverlay}</font><br/>
