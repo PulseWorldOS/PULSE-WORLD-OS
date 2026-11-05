@@ -6,7 +6,7 @@ let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let socialMode = "Internal";
-let isEarning = false;
+let isEarning = chrome.storage.local.get(["EarningVisible"]) ?? false;
 let socialMediaActiveLink = null;
 let workMode = "Internal";
 let workActiveLink = null;
@@ -758,7 +758,7 @@ chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning }, (response) =>
   }
   isEarning = response.isEarning;
   console.log(isEarning);
-  if (!isEarning) {
+  if (isEarning) {
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";
     pbPulseEarn.className = "pbPulseEarning";
@@ -785,7 +785,8 @@ chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning }, (response) =>
   }
 });
 
-pbPulseEarn.onclick = () => {
+
+pbPulseEarn.onclick = async () => {
   if (!isEarning) {
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";
@@ -798,8 +799,8 @@ pbPulseEarn.onclick = () => {
     earnerpanel.style.backdropFilter = "none";
     earnerpanel.style.boxShadow = "none";
     earnerpanel.style.border = "none";
-
     isEarning = true;
+    PulsesafeStorageSet({ EarningVisible: isEarning });
   } else {
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
@@ -812,7 +813,6 @@ pbPulseEarn.onclick = () => {
     earnerpanel.style.backdropFilter = "";
     earnerpanel.style.boxShadow = "";
     earnerpanel.style.border = "";
-
     isEarning = false;
   }
   chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning }, (response) => {
@@ -821,32 +821,6 @@ pbPulseEarn.onclick = () => {
       return;
     }
     isEarning = response.isEarning;
-    console.log(isEarning);
-    if (!isEarning) {
-      // ——— Turn ON (transparent / earning mode) ———
-      pbPulseEarn.id = "pbPulseEarning";
-      pbPulseEarn.className = "pbPulseEarning";
-      pbPulseEarn.style.width = "70px";
-      pbPulseEarn.style.height = "70px";
-
-      earnerinnerpanel.style.display = "none";
-      earnerpanel.style.background = "transparent";
-      earnerpanel.style.backdropFilter = "none";
-      earnerpanel.style.boxShadow = "none";
-      earnerpanel.style.border = "none";
-    } else {
-      // ——— Turn OFF (restore original) ———
-      pbPulseEarn.id = "pbPulseEarn";
-      pbPulseEarn.className = "";          // or put back any original class if you had one
-      pbPulseEarn.style.width = "";        // let CSS take over again
-      pbPulseEarn.style.height = "";
-
-      earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
-      earnerpanel.style.background = "";
-      earnerpanel.style.backdropFilter = "";
-      earnerpanel.style.boxShadow = "";
-      earnerpanel.style.border = "";
-    }
   });
 };
 
