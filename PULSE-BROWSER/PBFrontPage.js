@@ -268,6 +268,8 @@ function getReadableName(url) {
         pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.style.transform = "translate(-200px, 111px)";
+        pbPulseDetailsEarn.currentTime = 0;
+        pbPulseDetailsEarn.play = true;
       }, 2000);
       
     } else {
@@ -310,6 +312,8 @@ function getReadableName(url) {
           pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
           pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
           pbPulseDetailsEarn.style.transform = "translate(-200px, 111px)";
+          pbPulseDetailsEarn.currentTime = 0;
+          pbPulseDetailsEarn.play = true;
         }, 2000);
       } else {
         EarnDetailsHidden = false;
@@ -357,6 +361,8 @@ async function CheckEarnState() {
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";
       pbPulseEarn.style.transform = "translate(200px, 111px)";
+      pbPulseEarn.currentTime = 0;
+      pbPulseEarn.play = true;
     }, 2000);
     
   } else {
@@ -397,6 +403,8 @@ async function CheckEarnState() {
         pbPulseEarn.id = "pbPulseEarn";
         pbPulseEarn.className = "pbPulseEarn";
         pbPulseEarn.style.transform = "translate(200px, 111px)";
+        pbPulseEarn.currentTime = 0;
+        pbPulseEarn.play = true;
       }, 2000);
     } else {
       EarnHidden = false;
@@ -1261,7 +1269,7 @@ async function openNamedTab(name, url) {
 
       setTimeout(() => {
         pulseRehydrateTabs();
-      }, 3500);
+      }, 2000);
       return;
     }
 
@@ -1279,7 +1287,7 @@ async function openNamedTab(name, url) {
 
             setTimeout(() => {
               pulseRehydrateTabs();
-            }, 3500);
+            }, 2000);
             return;
           }
 
@@ -1292,7 +1300,7 @@ async function openNamedTab(name, url) {
 
         setTimeout(() => {
           pulseRehydrateTabs();
-        }, 3500);
+        }, 2000);
         return;
       }
 
@@ -1310,7 +1318,7 @@ async function openNamedTab(name, url) {
 
     setTimeout(() => {
       pulseRehydrateTabs();
-    }, 3500);
+    }, 2000);
     return;
   }
 
@@ -1325,7 +1333,7 @@ async function openNamedTab(name, url) {
   
   setTimeout(() => {
     pulseRehydrateTabs();
-  }, 3500);
+  }, 2000);
   setTimeout(async () => {
     await pbRenderCacheList2();
   }, 2500);
