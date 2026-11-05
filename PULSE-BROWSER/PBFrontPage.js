@@ -243,6 +243,11 @@ function getReadableName(url) {
   }
 }
 
+async function CheckEarnState() {
+  isEarning = await chrome.storage.local.get(["EarningVisible"]);
+}
+
+setTimeout(CheckEarnState, 50);
 
 let predictionText = "Running Stable";
 let statsHTMLShell = null;
@@ -250,7 +255,7 @@ let statsHTMLShell = null;
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
-  isEarning = await chrome.storage.local.get(["EarningVisible"]);
+  CheckEarnState();
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
   
