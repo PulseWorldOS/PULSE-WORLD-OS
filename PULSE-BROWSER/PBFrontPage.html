@@ -133,7 +133,35 @@
       z-index: 5;
     }
 
+    .earner-helper-panel {
+      position: fixed;
+      margin: 14px 14px;
+      top: 0;
+      right: 310px;
+      height: 280px;
+      width: clamp(350px, 12vw, 400px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(24px);
+
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
     .earner-inner-panel {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .earner-inner-helper-panel {
       width: 100%;
       height: 100%;
       text-align: center;
@@ -1276,6 +1304,15 @@
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div style="font-weight:bold; top: 0; text-align: center; position: absolute; color: #0FF; font-size:13px; margin-top: 9px; margin-bottom: 6px;">
         Pulse Earner - Engine Overlay
+      </div>
+      <!-- Earner panel content -->
+    </div>
+  </div>
+  <div class="earner-helper-panel" id="earner-helper-panel">
+    <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
+    <div class="earner-inner-helper-panel" id="earner-inner-helper-panel">
+      <div style="font-weight:bold; top: 0; text-align: center; position: absolute; color: #0FF; font-size:13px; margin-top: 9px; margin-bottom: 6px;">
+        Pulse Earner - Engine Details
       </div>
       <!-- Earner panel content -->
     </div>

@@ -7,6 +7,7 @@ let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let socialMode = "Internal";
 let EarnHidden = false;
+let EarnDetailsHidden = false;
 let socialMediaActiveLink = null;
 let workMode = "Internal";
 let workActiveLink = null;
@@ -48,6 +49,8 @@ const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
+const earnerhelperpanel = document.getElementById("earner-helper-panel");
+const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const pbPulseScreen = document.getElementById("pbPulseScreen");
 const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbWrapper = document.getElementById("pbWrapper");
@@ -243,6 +246,82 @@ function getReadableName(url) {
   }
 }
 
+
+  async function CheckEarnDetailsState() {
+    const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
+    EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
+    console.log("Earn State:", EarnDetailsHidden);
+    if (EarnDetailsHidden) {
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulseEarn.id = "pbPulseEarning";
+      pbPulseEarn.className = "pbPulseEarning";
+      pbPulseEarn.style.width = "70px";
+      pbPulseEarn.style.height = "70px";
+
+      earnerinnerpanel.style.display = "none";
+      earnerpanel.style.background = "transparent";
+      earnerpanel.style.backdropFilter = "none";
+      earnerpanel.style.boxShadow = "none";
+      earnerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseEarn.id = "pbPulseEarn";
+        pbPulseEarn.className = "pbPulseEarn";
+        pbPulseEarn.style.transform = "translate(200px, 111px)";
+      }, 2000);
+      
+    } else {
+      // ——— Turn OFF (restore original) ———
+      pbPulseEarn.id = "pbPulseEarn";
+      pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
+      pbPulseEarn.style.width = "";        // let CSS take over again
+      pbPulseEarn.style.height = "";
+      pbPulseEarn.style.transform = "";
+      earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerpanel.style.background = "";
+      earnerpanel.style.backdropFilter = "";
+      earnerpanel.style.boxShadow = "";
+      earnerpanel.style.border = "";
+    }
+
+    
+    pbPulseEarn.onclick = async () => {
+      console.log("Earn State:", EarnDetailsHidden);
+      if (!EarnDetailsHidden) {
+        EarnDetailsHidden = true;
+        // ——— Turn ON (transparent / earning mode) ———
+        pbPulseEarn.id = "pbPulseEarning";
+        pbPulseEarn.className = "pbPulseEarning";
+        pbPulseEarn.style.width = "70px";
+        pbPulseEarn.style.height = "70px";
+
+        earnerinnerpanel.style.display = "none";
+        earnerpanel.style.background = "transparent";
+        earnerpanel.style.backdropFilter = "none";
+        earnerpanel.style.boxShadow = "none";
+        earnerpanel.style.border = "none";
+        setTimeout(() => {
+          pbPulseEarn.id = "pbPulseEarn";
+          pbPulseEarn.className = "pbPulseEarn";
+          pbPulseEarn.style.transform = "translate(200px, 111px)";
+        }, 2000);
+      } else {
+        EarnDetailsHidden = false;
+        // ——— Turn OFF (restore original) ———
+        pbPulseEarn.id = "pbPulseEarn";
+        pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
+        pbPulseEarn.style.width = "";        // let CSS take over again
+        pbPulseEarn.style.height = "";
+        pbPulseEarn.style.transform = "";
+        earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+        earnerpanel.style.background = "";
+        earnerpanel.style.backdropFilter = "";
+        earnerpanel.style.boxShadow = "";
+        earnerpanel.style.border = "";
+      }
+      PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
+    };
+  }
+
 async function CheckEarnState() {
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
@@ -278,7 +357,6 @@ async function CheckEarnState() {
     earnerpanel.style.boxShadow = "";
     earnerpanel.style.border = "";
   }
-
 
   pbPulseEarn.onclick = async () => {
     console.log("Earn State:", EarnHidden);
@@ -320,6 +398,7 @@ async function CheckEarnState() {
 }
 
 setTimeout(CheckEarnState, 50);
+setTimeout(CheckEarnDetailsState, 50);
 
 let predictionText = "Running Stable";
 let statsHTMLShell = null;
