@@ -166,10 +166,10 @@ const PBQuantumPrefetch = {
   tryPrefetch(link) {
     const href = link[0];
     const now = Date.now();
-
+    let linkURL = href;
     // Only prefetch if same domain
     try {
-      const linkURL = new URL(href);
+      linkURL = new URL(href);
       if (linkURL.hostname !== location.hostname) {
         return; // cross-domain → skip
       }
@@ -187,8 +187,8 @@ const PBQuantumPrefetch = {
     this.linkCooldowns.set(href, now);
 
     // Safe prefetch
-    letsgo(link);    
-    console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
+    letsgo(linkURL);    
+    console.log("[PBQuantumPrefetch] Prefetched hovered link:", linkURL);
   }
 
 };
@@ -1362,11 +1362,11 @@ async function saveVideoToMemory(videoElement) {
     if (!videoElement.src) return;
     // if (videoElement.src.startsWith("chrome-extension://")) return;
     const source = videoElement.src;
-    if (!source.startsWith("http://") && !source.startsWith("https://")) return;
+    if (!source.startsWith("http://") && !source.startsWith("https://") && !source.startsWith("chrome-extension://")) return;
     const response = await fetch(source);
     let blob = null;
     let blobUrl = source;
-    if (!videoElement.src.startsWith("chrome-extension://")) {
+    if (!source.startsWith("chrome-extension://")) {
       blob = await response.blob();
       blobUrl = URL.createObjectURL(blob);
     }
