@@ -146,7 +146,7 @@ ${rawPrompt}
     console.log("PulsePal:", response);
     
     // 4. Update the DOM elements smoothly
-    const CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
+    CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
     if (CompanionDetailsMessage) {
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = "<strong>PulsePal:</strong> " + response;
