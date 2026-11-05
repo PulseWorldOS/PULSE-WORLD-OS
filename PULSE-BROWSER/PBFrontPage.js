@@ -103,20 +103,20 @@ function PulsesafeStorageSet(dataObject) {
 
 async function runLocalAI() {
   if (typeof LanguageModel === 'undefined') {
-    console.error("The Prompt API is not supported in this browser version.");
+    console.error("AI Overmind Prime (Gemini Nano) is not supported in this browser version.");
     return;
   }
 
   const status = await LanguageModel.availability();
   if (status === 'unavailable') {
-    console.error("Gemini Nano cannot run on this device hardware.");
+    console.error("AI Overmind Prime (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
   try {
     // Nested format mapping passes the required language constraints cleanly
     const session = await LanguageModel.create({
-      systemPrompt: "You are a helpful and concise browsing/coding assistant.",
+      systemPrompt: "You are a helpful and concise coding and web assistant.",
       expectedOutputs: [
         { 
           type: "text", 
@@ -126,11 +126,11 @@ async function runLocalAI() {
     });
 
     const response = await session.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
-    console.log("AI Response:", response);
+    console.log("AI Overmind Prime:", response);
 
     session.destroy();
   } catch (error) {
-    console.error("Failed to initialize LanguageModel session:", error);
+    console.error("Failed to initialize AI Overmind Prime (Gemini Nano) session:", error);
   }
 }
 
