@@ -134,6 +134,47 @@ async function runLocalAI() {
   }
 }
 
+// Your cybernetic state architecture
+let aiSession = null;
+let memoryBuffer = [];
+
+async function initializeExoskeleton() {
+  aiSession = await LanguageModel.create({
+    systemPrompt: "You are a cognitive amplifier. Enhance, polish, and optimize the user's intent without changing their core decision.",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
+  });
+}
+
+// The Absolute Kill Switch Button
+function wipeMemory() {
+  // 1. Hard destroy the local WebAssembly/Nano session in memory
+  if (aiSession) {
+    aiSession.destroy(); 
+    aiSession = null;
+  }
+  // 2. Clear your local memory buffers completely
+  memoryBuffer = [];
+  
+  console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
+  
+  // 3. Re-instantiate a clean slate
+  initializeExoskeleton();
+}
+
+// Compress text to a tiny binary array for local storage
+async function compressMemory(text) {
+  const stream = new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'));
+  const response = new Response(stream);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+// Decompress back to string instantly when the user acts
+async function decompressMemory(binaryData) {
+  const stream = new Blob([binaryData]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return await new Response(stream).text();
+}
+
+
 function isValid(t) {
   return (
     typeof t === "number" &&
