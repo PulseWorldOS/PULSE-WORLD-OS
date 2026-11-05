@@ -752,10 +752,12 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) =>
 });
 
 chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN" }, (response) => {
+  if (chrome.runtime.lastError) return;
   if (!response || !response.ok) {
     return;
   }
   isEarning = response.isEarning;
+  console.log(isEarning);
   if (!isEarning) {
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";

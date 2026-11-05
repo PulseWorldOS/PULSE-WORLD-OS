@@ -1815,6 +1815,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBEARNER_HIDDEN":
       if (msg.isEarning) {
         isEarning = msg.isEarning;
+        console.log(isEarning);
         sendResponse({ ok: true, isEarning });
       }
       break;
