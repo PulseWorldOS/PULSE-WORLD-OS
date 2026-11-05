@@ -270,7 +270,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.style.transform = "translate(-240px, 111px)";
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
-      }, 1500);
+      }, 1200);
       
     } else {
       // ——— Turn OFF (restore original) ———
@@ -290,7 +290,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.style.transform = "";
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
-      }, 1500);
+      }, 1200);
     }
 
     
@@ -314,7 +314,7 @@ function getReadableName(url) {
           pbPulseDetailsEarn.style.transform = "translate(-240px, 111px)";
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
-        }, 1500);
+        }, 1200);
       } else {
         EarnDetailsHidden = false;
         // ——— Turn OFF (restore original) ———
@@ -334,7 +334,7 @@ function getReadableName(url) {
           pbPulseDetailsEarn.style.transform = "";
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
-        }, 1500);
+        }, 1200);
       }
       console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
@@ -363,7 +363,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "translate(250px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
-    }, 1500);
+    }, 1200);
     
   } else {
     // ——— Turn OFF (restore original) ———
@@ -382,7 +382,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
-    }, 1500);
+    }, 1200);
   }
 
   pbPulseEarn.onclick = async () => {
@@ -405,7 +405,7 @@ async function CheckEarnState() {
         pbPulseEarn.style.transform = "translate(250px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
-      }, 1500);
+      }, 1200);
     } else {
       EarnHidden = false;
       // ——— Turn OFF (restore original) ———
@@ -424,7 +424,7 @@ async function CheckEarnState() {
         pbPulseEarn.style.transform = "";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
-      }, 1500);
+      }, 1200);
     }
     console.log("Earn State:", EarnHidden);
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
