@@ -9,6 +9,7 @@ let activeRealmClaim = false;
 let authorityRealm = null;
 let EarnHidden = false;
 let PULSE_ONLINE = false;
+// let aiSessionFP = null;
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
@@ -299,6 +300,10 @@ self.addEventListener("install", event => {
 });
 
 async function pbWarmBoot() {
+  // try {
+  //   const SessionAI = await chrome.storage.local.get(["aiSession"]);
+  //   aiSessionFP = SessionAI.aiSession;
+  // } catch (err) {}
   await pbModuleWarmBoot();
   await pbHomeWarmBoot();
 }
