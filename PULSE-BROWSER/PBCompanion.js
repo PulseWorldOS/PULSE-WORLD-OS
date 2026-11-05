@@ -7,7 +7,7 @@ let nowSW = Date.now(); // numeric timestamp
 let CompanionMessage = null;
 let activeRealmClaim = false;
 let authorityRealm = null;
-let isEarning = false;
+let EarnHidden = false;
 let PULSE_ONLINE = false;
 let lastKnownData = {};
 let temporaryLinks = [];
@@ -1813,10 +1813,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBEARNER_HIDDEN":
-      if (msg.isEarning) {
-        isEarning = msg.isEarning;
-        console.log(isEarning);
-        sendResponse({ ok: true, isEarning });
+      if (msg.EarnHidden) {
+        EarnHidden = msg.EarnHidden;
+        console.log(EarnHidden);
+        sendResponse({ ok: true, EarnHidden });
       }
       break;
 
