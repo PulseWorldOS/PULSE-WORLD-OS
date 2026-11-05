@@ -244,7 +244,8 @@ function getReadableName(url) {
 }
 
 async function CheckEarnState() {
-  EarnHidden = await chrome.storage.local.get(["EarningInVisible"]);
+  const Vis = await chrome.storage.local.get(["EarningInVisible"]);
+  EarnHidden = Vis.EarningInVisible;
   console.log("Earn State:", EarnHidden);
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
