@@ -7,6 +7,7 @@ let nowSW = Date.now(); // numeric timestamp
 let CompanionMessage = null;
 let activeRealmClaim = false;
 let authorityRealm = null;
+let isEarning = false;
 let PULSE_ONLINE = false;
 let lastKnownData = {};
 let temporaryLinks = [];
@@ -1807,6 +1808,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAUTHORITY_REALM":
       if (msg.realm) {
         authorityRealm = msg.realm;
+        sendResponse({ ok: true });
+      }
+      break;
+
+    case "PBEARNER_HIDDEN":
+      if (msg.isEarning) {
+        isEarning = msg.isEarning;
         sendResponse({ ok: true });
       }
       break;

@@ -781,6 +781,7 @@ pbPulseEarn.onclick = () => {
 
     isEarning = false;
   }
+  chrome.runtime.sendMessage({ type: "PBEARNER_HIDDEN", isEarning });
 };
 
 function getPrimaryVideo() {
