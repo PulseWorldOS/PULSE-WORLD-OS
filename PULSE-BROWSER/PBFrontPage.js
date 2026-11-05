@@ -45,7 +45,11 @@ let totalUsed = 0;
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
-const earnerpanel = document.getElementById("earner-inner-panel");
+const earnerpanel = document.getElementById("earner-panel");
+const earnerinnerpanel = document.getElementById("earner-inner-panel");
+const pbPulseScreen = document.getElementById("pbPulseScreen");
+const pbPulseEarn = document.getElementById("pbPulseEarn");
+const pbWrapper = document.getElementById("pbWrapper");
 
 function isValid(t) {
   return (
@@ -736,8 +740,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   pulseRehydrateTabs();
 });
 
-const pbPulseScreen = document.getElementById("pbPulseScreen");
-const pbWrapper = document.getElementById("pbWrapper");
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
 // ---------------------------------------------------------------------------
@@ -747,6 +749,16 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) =>
       nowFP = response.time;
   }
 });
+
+pbPulseEarn.onclick = async () => {
+  pbPulseEarn.style.width = "70px";
+  pbPulseEarn.style.height = "70px";
+  earnerinnerpanel.style.display = "none";
+  earnerpanel.style.background = "transparent";
+  earnerpanel.style.backdropFilter = "none";
+  earnerpanel.style.boxShadow = "none";
+  earnerpanel.style.border = "none";
+}
 
 function getPrimaryVideo() {
   const videos = [...document.querySelectorAll("video")];
@@ -900,7 +912,7 @@ setInterval(() => {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
-    if (CompanionMessage !== response.CompanionMessage) earnerpanel.innerHTML = earnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+    if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
@@ -1873,7 +1885,7 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
-    if (CompanionMessage !== response.CompanionMessage) earnerpanel.innerHTML = earnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+    if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
@@ -3630,7 +3642,7 @@ function CheckBackTab() {
           return;
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
-        if (CompanionMessage !== response.CompanionMessage) earnerpanel.innerHTML = earnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+        if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
           disablesw.innerText = "Resume Companion";
