@@ -698,7 +698,7 @@ async function pbRenderStorageStats(history) {
 
   // ⭐ Render UI
   return `
-    <div style="margin: 14px 20px; padding:8px; border-radius:8px;
+    <div style="margin: 8px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
       <strong>PulseBrowser-Storage (RAM)</strong><br><br>
