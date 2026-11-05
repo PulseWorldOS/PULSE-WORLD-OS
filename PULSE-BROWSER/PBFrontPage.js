@@ -284,6 +284,7 @@ function getReadableName(url) {
       earnerhelperpanel.style.boxShadow = "";
       earnerhelperpanel.style.border = "";
       setTimeout(() => {
+        pbPulseDetailsEarn.style.border = "";
         pbPulseDetailsEarn.style.transform = "";
       }, 2000);
     }
@@ -323,6 +324,7 @@ function getReadableName(url) {
         earnerhelperpanel.style.boxShadow = "";
         earnerhelperpanel.style.border = "";
         setTimeout(() => {
+          pbPulseDetailsEarn.style.border = "";
           pbPulseDetailsEarn.style.transform = "";
         }, 2000);
       }
@@ -360,13 +362,13 @@ async function CheckEarnState() {
     pbPulseEarn.style.width = "";        // let CSS take over again
     pbPulseEarn.style.height = "";
     pbPulseEarn.style.transform = "";
-    pbPulseEarn.style.border = "2px solid #000";
     earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
     earnerpanel.style.background = "";
     earnerpanel.style.backdropFilter = "";
     earnerpanel.style.boxShadow = "";
     earnerpanel.style.border = "";
     setTimeout(() => {
+      pbPulseEarn.style.border = "";
       pbPulseEarn.style.transform = "";
     }, 2000);
   }
@@ -398,13 +400,13 @@ async function CheckEarnState() {
       pbPulseEarn.style.width = "";        // let CSS take over again
       pbPulseEarn.style.height = "";
       pbPulseEarn.style.transform = "";
-      pbPulseEarn.style.border = "2px solid #000";
       earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
       earnerpanel.style.background = "";
       earnerpanel.style.backdropFilter = "";
       earnerpanel.style.boxShadow = "";
       earnerpanel.style.border = "";
       setTimeout(() => {
+        pbPulseEarn.style.border = "";
         pbPulseEarn.style.transform = "";
       }, 2000);
     }
