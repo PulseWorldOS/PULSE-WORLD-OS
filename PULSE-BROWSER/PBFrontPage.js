@@ -1024,7 +1024,7 @@ function injectPulseScreenFromMemory(play) {
       }
       pbPulseScreen.src = source;
       pbPulseScreen.currentTime = entry.currentTime || 0;
-      pbPulseScreen.play();
+      pbPulseScreen.play = true;
     }
     const interval3 = getCharacterInterval();
     if (!play) {
@@ -1035,7 +1035,7 @@ function injectPulseScreenFromMemory(play) {
     } else {
       pbPulseScreen.src = source;
       pbPulseScreen.currentTime = 0;
-      pbPulseScreen.play();
+      pbPulseScreen.play = true;
     }
   });
 }

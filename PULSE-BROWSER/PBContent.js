@@ -195,13 +195,17 @@ const PBQuantumPrefetch = {
 
 
 function letsgo(link) {
-  pbPreconnect([link]);
-  fetch(link, { cache: "force-cache" }).catch(() => {});
+  if (link.startsWith("http://") || link.startsWith("https://")) {
+    pbPreconnect([link]);
+    fetch(link, { cache: "force-cache" }).catch(() => {});
+  }
 }
 
 function cacheit(link) {
-  pbPreconnect([link]);
-  fetch(link, { mode: "no-cors" }).catch(() => {});
+  if (link.startsWith("http://") || link.startsWith("https://")) {
+    pbPreconnect([link]);
+    fetch(link, { mode: "no-cors" }).catch(() => {});
+  }
 }
 
 function isValid(t) {
@@ -1358,6 +1362,7 @@ async function saveVideoToMemory(videoElement) {
     if (!videoElement.src) return;
     // if (videoElement.src.startsWith("chrome-extension://")) return;
     const source = videoElement.src;
+    if (!source.startsWith("http://") && !source.startsWith("https://")) return;
     const response = await fetch(source);
     let blob = null;
     let blobUrl = source;
