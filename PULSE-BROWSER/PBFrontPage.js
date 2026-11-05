@@ -103,13 +103,13 @@ function PulsesafeStorageSet(dataObject) {
 
 async function runLocalAI() {
   if (typeof LanguageModel === 'undefined') {
-    console.error("AI Overmind Prime (Gemini Nano) is not supported in this browser version.");
+    console.error("PulsePal (Gemini Nano) is not supported in this browser version.");
     return;
   }
 
   const status = await LanguageModel.availability();
   if (status === 'unavailable') {
-    console.error("AI Overmind Prime (Gemini Nano) cannot run on this device hardware.");
+    console.error("PulsePal (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
@@ -126,11 +126,11 @@ async function runLocalAI() {
     });
 
     const response = await session.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
-    console.log("AI Overmind Prime:", response);
+    console.log("PulsePal:", response);
 
     session.destroy();
   } catch (error) {
-    console.error("Failed to initialize AI Overmind Prime (Gemini Nano) session:", error);
+    console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
   }
 }
 
