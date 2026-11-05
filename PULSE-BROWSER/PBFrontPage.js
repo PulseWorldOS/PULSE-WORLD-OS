@@ -893,7 +893,7 @@ async function pulseRehydrateTabs() {
         const identity = normalizeIdentity(urlObj);
 
         // ⭐ Skip NEW TAB — do NOT assign a bubble
-        if (identity === "newtab" || tab.url.startsWith("chrome-extension://")) {
+        if (identity === "newtab" || tab.url.startsWith("chrome-extension://") || tab.url.startsWith("chrome://")) {
           rebuilt[identity] = {
             id: tab.id,
             realm: identity,
@@ -1435,6 +1435,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       const favicon = regfavicon;
       let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
       if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
+      if (link.startsWith("chrome://")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
       const os2fallback = chrome.runtime.getURL("PulseOSTab.png");
       let bestfavicon = osfallback;
 
