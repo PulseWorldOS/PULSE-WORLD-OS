@@ -524,6 +524,28 @@
       animation: bubbleFloatMinionette 2s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
     }
+    #pbPulseDetailsEarn {
+      position: absolute;
+      width: 25%;
+      margin-bottom: 20px;
+      height: auto;
+      border-radius: 99px;
+      object-fit: inherit;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
+
+    #pbPulseDetailsEarning {
+      position: absolute;
+      width: 25%;
+      margin-bottom: 20px;
+      height: auto;
+      border-radius: 99px;
+      object-fit: inherit;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+      animation: bubbleFloatMinionette2 2s ease-in-out,
+                pulseGlow 3.5s ease-in-out infinite;
+    }
     @keyframes bubbleFloatMinionette {
       0%   { transform: translate(70px, 72px); }
       8%   { transform: translate(82px, 83px); }
@@ -533,6 +555,17 @@
       64%  { transform: translate(163px, 111px); }
       80%  { transform: translate(187px, 111px); }
       100% { transform: translate(200px, 111px); }
+    }
+    
+    @keyframes bubbleFloatMinionette2 {
+      0%   { transform: translate(-70px, 72px); }
+      8%   { transform: translate(-82px, 83px); }
+      20%  { transform: translate(-108px, 104px); }
+      24%  { transform: translate(-117px, 111px); }
+      48%  { transform: translate(-144px, 111px); }
+      64%  { transform: translate(-163px, 111px); }
+      80%  { transform: translate(-187px, 111px); }
+      100% { transform: translate(-200px, 111px); }
     }
 
     @keyframes bubbleElectrify {
@@ -1309,7 +1342,7 @@
     </div>
   </div>
   <div class="earner-helper-panel" id="earner-helper-panel">
-    <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
+    <video id="pbPulseDetailsEarn" class="pbPulseDetailsEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseDetailsEarn"></video>
     <div class="earner-inner-helper-panel" id="earner-inner-helper-panel">
       <div style="font-weight:bold; top: 0; text-align: center; position: absolute; color: #0FF; font-size:13px; margin-top: 9px; margin-bottom: 6px;">
         Pulse Earner - Engine Details

@@ -267,7 +267,7 @@ function getReadableName(url) {
       setTimeout(() => {
         pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
-        pbPulseDetailsEarn.style.transform = "translate(200px, 111px)";
+        pbPulseDetailsEarn.style.transform = "translate(-200px, 111px)";
       }, 2000);
       
     } else {
@@ -303,7 +303,7 @@ function getReadableName(url) {
         setTimeout(() => {
           pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
           pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
-          pbPulseDetailsEarn.style.transform = "translate(200px, 111px)";
+          pbPulseDetailsEarn.style.transform = "translate(-200px, 111px)";
         }, 2000);
       } else {
         EarnDetailsHidden = false;
