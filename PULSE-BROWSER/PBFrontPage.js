@@ -244,8 +244,8 @@ function getReadableName(url) {
 }
 
 async function CheckEarnState() {
-  EarnHidden = await chrome.storage.local.get(["EarningVisible"]);
-  
+  EarnHidden = await chrome.storage.local.get(["EarningInVisible"]);
+  console.log("Earn State:", EarnHidden);
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";
@@ -280,6 +280,7 @@ async function CheckEarnState() {
 
 
   pbPulseEarn.onclick = async () => {
+    console.log("Earn State:", EarnHidden);
     if (!EarnHidden) {
       EarnHidden = true;
       // ——— Turn ON (transparent / earning mode) ———
@@ -312,7 +313,7 @@ async function CheckEarnState() {
       earnerpanel.style.boxShadow = "";
       earnerpanel.style.border = "";
     }
-    PulsesafeStorageSet({ EarningVisible: EarnHidden });
+    PulsesafeStorageSet({ EarningInVisible: EarnHidden });
   };
 
 }
