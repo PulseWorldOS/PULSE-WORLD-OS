@@ -128,31 +128,6 @@ const PB_LOG2 = {
   }
 };
 
-async function runLocalAI() {
-  // 1. Check if the built-in language model is available
-  const capabilities = await window.ai.languageModel.capabilities();
-  
-  if (capabilities.available === 'no') {
-    console.error("Gemini Nano is not supported or enabled on this browser.");
-    return;
-  }
-
-  // 2. Create an AI session with an optional system prompt
-  const session = await window.ai.languageModel.create({
-    systemPrompt: "You are a helpful and concise coding assistant."
-  });
-
-  // 3. Prompt the model (Standard non-streaming)
-  const response = await session.prompt("Write a quick JavaScript function to reverse a string.");
-  console.log("AI Response:", response);
-
-  // 4. Clean up the session when done to free up system memory
-  session.destroy();
-}
-
-setTimeout(runLocalAI, 500);
-
-
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
     GLOBALSTART = Date.now();

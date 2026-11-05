@@ -56,15 +56,6 @@ const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 
-function isValid(t) {
-  return (
-    typeof t === "number" &&
-    Number.isFinite(t) &&
-    t > 0
-  );
-}
-
-
 // 1. The Core Queue Engine
 class PulseStorageQueue {
   constructor() {
@@ -108,6 +99,49 @@ const PulseorchestratorQueue = new PulseStorageQueue();
 // 3. The Drop-In Replacement Function
 function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
+}
+
+async function runLocalAI() {
+  // 1. Check if the global LanguageModel object exists at all
+  if (typeof LanguageModel === 'undefined') {
+    console.error("The Prompt API is not supported. Ensure you are on a compatible Chrome version and flags are on.");
+    return;
+  }
+
+  // 2. Check model availability (Modern standard)
+  const status = await LanguageModel.availability(); // Returns 'readily', 'after-download', or 'unavailable'
+  
+  if (status === 'unavailable') {
+    console.error("Gemini Nano cannot run on this device hardware.");
+    return;
+  }
+  
+  if (status === 'after-download') {
+    console.log("Model is downloading... Please wait a moment.");
+    // In some Chrome versions, calling .create() will trigger/await the download
+  }
+
+  // 3. Create the session using the global constructor
+  const session = await LanguageModel.create({
+    systemPrompt: "You are a helpful and concise coding assistant."
+  });
+
+  // 4. Prompt the model
+  const response = await session.prompt("Write a quick JavaScript function to reverse a string.");
+  console.log("AI Response:", response);
+
+  // 5. Clean up system memory
+  session.destroy();
+}
+
+setTimeout(runLocalAI, 500);
+
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
 }
 
 chrome.storage.local.get(["SessionStart"], (res) => {
