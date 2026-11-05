@@ -1057,8 +1057,7 @@ function IsPartner(origin) {
 }
 
 function isFavicon(origin) {
-  return origin.includes("favicon")
-      || (origin.includes("android-") && (origin.includes(".png") || origin.includes(".webp") || origin.includes(".jpg") || origin.includes(".jpeg")));
+  return origin.includes("favicon");
 }
 
 function isPulseWorld(origin) {
@@ -2007,10 +2006,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const cache = await caches.open(name);
               const requests = await cache.keys();
               const realRequests = requests.filter(req => 
-                !isPulseWorld(req.url)
+                !isPulseWorld(req.url) && !isFavicon(req.url)
               );
               const PulseRequests = requests.filter(req =>
-                isPulseWorld(req.url)
+                isPulseWorld(req.url) && !isFavicon(req.url)
               );
               const PulseMoments = [
                 ...new Set(
