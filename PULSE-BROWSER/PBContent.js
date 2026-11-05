@@ -590,17 +590,19 @@ async function injectHUD() {
   `;
 
   document.body.appendChild(wrap);
-  const body = document.getElementById("pb-hud-body");
 
   const sync = getWarmInterval();
+  let body = document.getElementById("pb-hud-body");
   updateHUD(body);
   PulseBrowserPreview();
   setTimeout(() => {
+    body = document.getElementById("pb-hud-body");
     gpuWarmExtra();
     updateHUD(body);
   }, sync);
   
   setTimeout(() => {
+    body = document.getElementById("pb-hud-body");
     PulseBrowserDomScan();
     updateHUD(body);
   }, 4500);
