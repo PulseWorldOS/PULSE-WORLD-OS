@@ -245,7 +245,7 @@ function getReadableName(url) {
 
 async function CheckEarnState() {
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
-  EarnHidden = Vis.EarningInVisible;
+  EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
@@ -327,7 +327,6 @@ let statsHTMLShell = null;
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
-  CheckEarnState();
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
   
