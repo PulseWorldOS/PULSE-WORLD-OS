@@ -134,8 +134,6 @@ async function runLocalAI() {
   session.destroy();
 }
 
-setTimeout(runLocalAI, 500);
-
 function isValid(t) {
   return (
     typeof t === "number" &&
@@ -3579,12 +3577,14 @@ const nebula = document.getElementById("nebula");
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
   window.addEventListener(evt, () => {
     userInteracted = true;
+    runLocalAI();
   }, { once: true });
 });
 window.addEventListener("blur", () => {
   userInteracted = true;
   document.getElementById("subtitle").style.color = "yellow"
   document.getElementById("subsubtitle").style.color = "yellow"
+  runLocalAI();
   // pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
 }, { once: true });
