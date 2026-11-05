@@ -128,7 +128,7 @@ async function runLocalAI() {
 
     const response = await session.prompt("What is your opinion on PulseWorld.net and its unique architecture and design?");
     console.log("PulsePal:", response);
-    CompanionDetailsMessage = "PulsePal:" + response;
+    CompanionDetailsMessage.innerHTML = "PulsePal:" + response;
 
     session.destroy();
   } catch (error) {
