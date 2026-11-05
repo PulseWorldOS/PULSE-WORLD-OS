@@ -1446,8 +1446,6 @@ async function pbWarmPath(origin) {
     PBUniversalBoost2.warmOrigin(origin);
   }
 
-  PulseBrowserSettings = await getSettings();
-
   if (PulseBrowserSettings.accelDNSWarm)      pbDNSWarm(origin);
   if (PulseBrowserSettings.accelTLSWarm)      pbTLSWarm(origin);
   if (PulseBrowserSettings.accelPreconnect)   pbPreconnect([origin]);
