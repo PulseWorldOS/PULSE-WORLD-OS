@@ -72,6 +72,7 @@ function updateKernel(realm, SessionStart) {
   let lastURLshort = lastURL;
   if (lastURL) lastURLshort = lastURL.slice(0, 75);
   let lastPageshort = lastPage;
+  
   if (lastPage) lastPageshort = lastPage.slice(0, 40);
   let lastTitleshort = lastTitle;
   if (lastTitle) lastTitleshort = lastTitle.slice(0, 40);
