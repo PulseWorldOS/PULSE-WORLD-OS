@@ -258,7 +258,7 @@ function getReadableName(url) {
       pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
       pbPulseDetailsEarn.style.width = "70px";
       pbPulseDetailsEarn.style.height = "70px";
-
+      pbPulseDetailsEarn.style.border = "2px solid #000";
       earnerinnerhelperpanel.style.display = "none";
       earnerhelperpanel.style.background = "transparent";
       earnerhelperpanel.style.backdropFilter = "none";
@@ -274,6 +274,7 @@ function getReadableName(url) {
       // ——— Turn OFF (restore original) ———
       pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
       pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+      pbPulseDetailsEarn.style.border = "2px solid #000";
       pbPulseDetailsEarn.style.width = "";        // let CSS take over again
       pbPulseDetailsEarn.style.height = "";
       pbPulseDetailsEarn.style.transform = "";
@@ -296,7 +297,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
         pbPulseDetailsEarn.style.width = "70px";
         pbPulseDetailsEarn.style.height = "70px";
-
+        pbPulseDetailsEarn.style.border = "2px solid #000";
         earnerinnerhelperpanel.style.display = "none";
         earnerhelperpanel.style.background = "transparent";
         earnerhelperpanel.style.backdropFilter = "none";
@@ -315,6 +316,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.style.width = "";        // let CSS take over again
         pbPulseDetailsEarn.style.height = "";
         pbPulseDetailsEarn.style.transform = "";
+        pbPulseDetailsEarn.style.border = "2px solid #000";
         earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
         earnerhelperpanel.style.background = "";
         earnerhelperpanel.style.backdropFilter = "";
@@ -339,7 +341,7 @@ async function CheckEarnState() {
     pbPulseEarn.className = "pbPulseEarning";
     pbPulseEarn.style.width = "70px";
     pbPulseEarn.style.height = "70px";
-
+    pbPulseEarn.style.border = "2px solid #000";
     earnerinnerpanel.style.display = "none";
     earnerpanel.style.background = "transparent";
     earnerpanel.style.backdropFilter = "none";
@@ -358,6 +360,7 @@ async function CheckEarnState() {
     pbPulseEarn.style.width = "";        // let CSS take over again
     pbPulseEarn.style.height = "";
     pbPulseEarn.style.transform = "";
+    pbPulseEarn.style.border = "2px solid #000";
     earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
     earnerpanel.style.background = "";
     earnerpanel.style.backdropFilter = "";
@@ -376,7 +379,7 @@ async function CheckEarnState() {
       pbPulseEarn.className = "pbPulseEarning";
       pbPulseEarn.style.width = "70px";
       pbPulseEarn.style.height = "70px";
-
+      pbPulseEarn.style.border = "2px solid #000";
       earnerinnerpanel.style.display = "none";
       earnerpanel.style.background = "transparent";
       earnerpanel.style.backdropFilter = "none";
@@ -395,6 +398,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.width = "";        // let CSS take over again
       pbPulseEarn.style.height = "";
       pbPulseEarn.style.transform = "";
+      pbPulseEarn.style.border = "2px solid #000";
       earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
       earnerpanel.style.background = "";
       earnerpanel.style.backdropFilter = "";
