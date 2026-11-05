@@ -9,6 +9,7 @@ let activeRealmClaim = false;
 let authorityRealm = null;
 let PULSE_ONLINE = false;
 let lastKnownData = {};
+let temporaryLinks = [];
 let LocalMemoryLayer = {};
 let warmTargets = [];
 let now = new Date().toLocaleString();
@@ -1089,6 +1090,16 @@ function pbDomainClass(url) {
     });
     if (warmclass) return "Warm-Galaxy";
   }
+  if (temporaryLinks.length > 0) {
+    temporaryLinks.forEach(origin => {
+      let host = new URL(origin).hostname;
+      host = host.replace("https://","");
+      host = host.replace("www.","");
+      host = host.endsWith("/") ? host.slice(0, -1) : host;
+      if (url.includes(host)) warmclass = true;
+    });
+    if (warmclass) return "Warm-Nova";
+  }
   return "WWW";
 }
 
@@ -1914,6 +1925,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBACC_WARMPATH_EVENT":
       if (Array.isArray(msg.origins)) {
         pbWarmPaths(msg.origins);
+        // 🔥 Realm + HUD integration
+        PulseRealmState.warmPathsTriggered += msg.origins.length || 1;
+        PB_LOG2.info("PBACC_WARMPATH_EVENT", msg.origins);
+      }
+      sendResponse({ ok: true });
+      break;
+    
+    case "PBWARM_NOVA_EVENT":
+      if (Array.isArray(msg.origins)) {
+        pbWarmPaths(msg.origins);
+        temporaryLinks = msg.origins;
         // 🔥 Realm + HUD integration
         PulseRealmState.warmPathsTriggered += msg.origins.length || 1;
         PB_LOG2.info("PBACC_WARMPATH_EVENT", msg.origins);

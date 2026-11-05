@@ -3592,6 +3592,13 @@ function CheckBackTab() {
 
     const count = Links.length + temporaryLinks.length;
 
+    if (temporaryLinks.length > 0) {
+      chrome.runtime.sendMessage({
+        type: "PBWARM_NOVA_EVENT",
+        origins: temporaryLinks
+      });
+    }
+
     chrome.runtime.sendMessage({
       type: "PBACC_WARMPATH_EVENT",
       origins: PB_HOMES
