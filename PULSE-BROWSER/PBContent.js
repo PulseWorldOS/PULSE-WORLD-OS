@@ -195,14 +195,14 @@ const PBQuantumPrefetch = {
 
 
 function letsgo(link) {
-  if (link.startsWith("http://") || link.startsWith("https://")) {
+  if (link.includes("http://") || link.includes("https://")) {
     pbPreconnect([link]);
     fetch(link, { cache: "force-cache" }).catch(() => {});
   }
 }
 
 function cacheit(link) {
-  if (link.startsWith("http://") || link.startsWith("https://")) {
+  if (link.includes("http://") || link.includes("https://")) {
     pbPreconnect([link]);
     fetch(link, { mode: "no-cors" }).catch(() => {});
   }
