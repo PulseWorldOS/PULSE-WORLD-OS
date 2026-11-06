@@ -260,7 +260,7 @@ CompanionConsoleSend.onclick = async () => {
     );
     aiSize = await getAISize();
   }, 300);
-  
+  PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
   //   if (chrome.runtime.lastError) return;
   //   if (!response || !response.ok) {
