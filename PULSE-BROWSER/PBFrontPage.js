@@ -192,7 +192,7 @@ ${rawPrompt}
       CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
-      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      if (!LastMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     }
   
