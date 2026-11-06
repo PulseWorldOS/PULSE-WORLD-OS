@@ -1528,6 +1528,7 @@ let pwErrors = [];
     #pw-console-ai {
       height: calc(45vh - 60px); /* ⭐ now subtracting tab bar height */
       overflow-y: auto;
+      display: none;
       padding: 10px 16px;
       font-family: Consolas, monospace;
       font-size: 15px;
@@ -2467,7 +2468,6 @@ let pwErrors = [];
 
       evoConsole.appendChild(tabsBar);
       
-      if (aiLogBox) aiLogBox.style.display = "none";
       let taskPanel = document.getElementById("pw-task-panel");
       if (taskPanel) {
         taskPanel.classList.remove("active");
