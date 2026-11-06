@@ -159,7 +159,7 @@ async function runLocalAI() {
 - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, that if you add to browser.. then click back.. it enables offline, until online, then site wipes query string takes back over. (Still Testing)
 - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
 - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
-- You must keep your response under 3000-3500 characters.
+- You must keep your response under 3000 characters.
 
 [USER QUERY]
 ${rawPrompt}

@@ -199,11 +199,11 @@ function updateGPU(realm) {
 function updateNavigator(settings, realm) {
   const el = document.getElementById("pb-hud-navigator");
   el.innerHTML = `
-    <div class="pb-hud-title">Pulse Navigator</div>
-    Enabled: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
-    Warm Siblings: <font color="${tfColor(settings.navWarmSiblings)}">${settings.navWarmSiblings}</font><br/>
-    Warm Assets: <font color="${tfColor(settings.navWarmAssets)}">${settings.navWarmAssets}</font><br/>
-    Warm Global: <font color="${tfColor(settings.navWarmGlobalSites)}">${settings.navWarmGlobalSites}</font><br/>
+    <div class="pb-hud-title">Pulse Pal</div>
+    Enabled: <font color="${enabledColor(settings.enablePulsePal)}">${settings.enablePulsePal}</font><br/>
+    AI Console: <font color="${tfColor(settings.enablePulsePalConsole)}">${settings.enablePulsePalConsole}</font><br/>
+    Immortal Memory: <font color="${tfColor(settings.enablePulsePalMemory)}">${settings.enablePulsePalMemory}</font><br/>
+    Cybernetic Actions: <font color="${tfColor(settings.enablePulsePalCybernetics)}">${settings.enablePulsePalCybernetics}</font><br/>
   `;
 }
 
@@ -234,7 +234,6 @@ function updateSettings(settings) {
   el.innerHTML = `
     <div class="pb-hud-title">PulseBrowser Settings</div>
     Pulse Accelerator: <font color="${enabledColor(settings.enableAccelerator)}">${settings.enableAccelerator}</font><br/>
-    Pulse Navigator: <font color="${enabledColor(settings.enableNavigator)}">${settings.enableNavigator}</font><br/>
     Pulse Router: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
     Pulse Earner: <font color="${enabledColor(settings.enablePulseEarnerEngine)}">${settings.enablePulseEarnerEngine}</font><br/>
     Pulse Pal: <font color="${enabledColor(settings.enablePulsePal)}">${settings.enablePulsePal}</font><br/>
