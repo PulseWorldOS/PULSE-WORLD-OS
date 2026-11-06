@@ -132,6 +132,9 @@ async function runLocalAI() {
     const SessionAI = await chrome.storage.local.get(["PulsePalAIMemoryBuffer"]);
     PulsePalAIMemoryBuffer = SessionAI.PulsePalAIMemoryBuffer ?? [];
     LastMessage = PulsePalAIMemoryBuffer.pop();
+    let CompanionTitle = document.getElementById("CompanionTitle");
+    CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
+    PulsePalAIMemoryBuffer.push(CompanionTitle.innerHTML);
     PulsePalAIMemoryBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     // CompanionDetailsMessage.innerHTML = LastMessage;
