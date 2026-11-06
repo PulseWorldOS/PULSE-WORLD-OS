@@ -167,7 +167,6 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-      CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
     console.log(aiMemoryBuffer);
     PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
@@ -203,6 +202,7 @@ CompanionConsoleSend.onclick = async () => {
   const response = await aiSession.prompt(text);
   console.log("PulsePal:", response);
   aiMemoryBuffer.push(response);
+  PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
   setTimeout(() => {
     appendCompanionMessage(
       CompanionLogArea,
