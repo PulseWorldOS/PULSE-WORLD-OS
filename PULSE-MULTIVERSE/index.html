@@ -8285,6 +8285,13 @@ function restorePageFromCookie(hashRoute) {
   }
 }
 
+async function initializeExoskeleton() {
+  aiSession = await LanguageModel.create({
+    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
+  });
+}
+
 async function runLocalAI() {
   if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
