@@ -2487,6 +2487,8 @@ async function setTheStage() {
    
   document.addEventListener("keydown", (e) => {
     CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    console.log(e.target);
+    console.log(CompanionConsoleInput);
     if (e.target === CompanionConsoleInput) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
