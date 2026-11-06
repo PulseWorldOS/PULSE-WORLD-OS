@@ -5,6 +5,7 @@ let engineType = "text";
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
+let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -216,17 +217,33 @@ ${rawPrompt}
   }
 }
 
-function appendCompanionMessage(area, role, text) {
+function appendEarnerMessage(area, role, text) {
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   const now = Date.now();
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Earner: ${showTime}</font> `) + text + `<br><br>`;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
+
+function appendCompanionMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  const bubblebr = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  const now = Date.now();
+  const ItsTime = new Date(now).toLocaleString();
+  const showTime = `[${ItsTime}]`
+  bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
   PulseAIMemoryBuffer.push(bubble.innerHTML);
-  PulseAIMemoryBuffer.push(`<br>`);
+  PulseAIMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubble);
+  area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -1341,7 +1358,8 @@ setInterval(() => {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
-    if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
+    // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
@@ -2314,7 +2332,8 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
-    if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
+    // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
@@ -4081,7 +4100,8 @@ function CheckBackTab() {
           return;
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
-        if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
+        // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
           disablesw.innerText = "Resume Companion";
