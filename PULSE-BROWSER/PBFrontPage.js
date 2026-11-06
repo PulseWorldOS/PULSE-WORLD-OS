@@ -123,13 +123,13 @@ async function runLocalAI() {
   let LastMessage = null;
 
   const status = await LanguageModel.availability();
+  const SessionAI = await chrome.storage.local.get(["PulseAIMemoryBuffer"]);
   if (status === 'unavailable') {
     console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
   try {
-    const SessionAI = await chrome.storage.local.get(["PulseAIMemoryBuffer"]);
     PulseAIMemoryBuffer = SessionAI.PulseAIMemoryBuffer ?? [];
     LastMessage = PulseAIMemoryBuffer.pop();
     PulseAIMemoryBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
@@ -195,7 +195,7 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+      if (!LastMessage) appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
