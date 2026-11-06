@@ -131,7 +131,7 @@ async function runLocalAI() {
     console.log(PulsePalMemoryBuffer);
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryBuffer"]);
     PulsePalMemoryBuffer = SessionAI.PulsePalMemoryBuffer ?? [];
-    LastMessage = PulsePalMemoryBuffer.pop(); 
+    LastMessage = PulsePalMemoryBuffer.pop();
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.innerHTML = LastMessage;
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
@@ -205,7 +205,6 @@ ${rawPrompt}
       PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     }
     PulsesafeStorageSet({ PulsePalMemoryBuffer });
-    aiSize = await getAISize();
     RunningAI = false;
     // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
     //   if (chrome.runtime.lastError) return;
@@ -1066,7 +1065,7 @@ async function pbRenderStorageStats2(history) {
         </div>
 
         <div style="flex:1;">
-          <strong>AI Storage:</strong><br>
+          <strong>AI Memory:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
           <strong>System Quota:</strong><br>
@@ -3799,7 +3798,8 @@ window.addEventListener("blur", () => {
 let timerX = 0;
 document.getElementById("timerBtn").textContent = timerX;
 const sync = getSyncInterval2();
-setInterval(() => {
+setInterval(async () => {
+  aiSize = await getAISize();
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 20) {
