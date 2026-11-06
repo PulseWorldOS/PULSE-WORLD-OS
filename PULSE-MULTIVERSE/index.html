@@ -158,7 +158,9 @@ function pulsepalSpeak(message) {
   vaultBtn.style.display = "none";
   rewardsBtn.style.display = "none";
   badge.classList.add("talking");
-  setTimeout(() => badge.classList.remove("talking"), 10000); // hides after 3s
+  setTimeout(() => {
+    badge.classList.remove("talking")
+  }, 10000); // hides after 3s
   if (!PulseRealm.CurrentHost.includes("pulseworld.biz")) {
     vaultBtn.style.display = "flex";
     rewardsBtn.style.display = "flex";
@@ -7565,7 +7567,9 @@ async function checkReboot() {
         const img = badge.querySelector(".pulsepal-image");
         img.src = PulseRealm.PulsePalPhoto ?? "./_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex";
         badge.classList.add("talking");
-        setTimeout(() => badge.classList.remove("talking"), 5000); // hides after 3s
+        setTimeout(() => {
+          badge.classList.remove("talking")
+        }, 5000); // hides after 3s
       };
     }
     
@@ -7641,8 +7645,6 @@ function MergedPickASpeech(message, imagePath) {
   // Hide after 12 seconds AND restore default image
   badge._speechTimer = setTimeout(() => {
     badge.classList.remove("talking");
-
-    // ⭐ Restore default face
     if (img) {
       img.src = DEFAULT_IMAGE;
     }
