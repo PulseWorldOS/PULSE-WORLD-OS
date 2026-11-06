@@ -1528,7 +1528,6 @@ let pwErrors = [];
     #pw-console-ai {
       height: calc(45vh - 60px); /* ⭐ now subtracting tab bar height */
       overflow-y: auto;
-      display: none;
       padding: 10px 16px;
       font-family: Consolas, monospace;
       font-size: 15px;
@@ -2465,7 +2464,7 @@ let pwErrors = [];
       tabsBar.appendChild(logTab);
       tabsBar.appendChild(tasksTab);
       tabsBar.appendChild(aiTab);
-
+      if (aiLogBox) aiLogBox.style.display = "none";
       evoConsole.appendChild(tabsBar);
       
       let taskPanel = document.getElementById("pw-task-panel");
@@ -2481,8 +2480,8 @@ let pwErrors = [];
         logTab.classList.add("active");
         tasksTab.classList.remove("active");
 
-        if (aiLogBox) aiLogBox.style.display = "none";
         if (evoLogBox) evoLogBox.style.display = "block";
+        if (aiLogBox) aiLogBox.style.display = "none";
         taskPanel = document.getElementById("pw-task-panel");
         if (taskPanel) taskPanel.classList.remove("active");
       };
@@ -2508,8 +2507,8 @@ let pwErrors = [];
         logTab.classList.remove("active");
         tasksTab.classList.remove("active");
 
-        if (evoLogBox) evoLogBox.style.display = "none";
         if (aiLogBox) aiLogBox.style.display = "block";
+        if (evoLogBox) evoLogBox.style.display = "none";
         taskPanel = document.getElementById("pw-task-panel");
         if (taskPanel) taskPanel.classList.remove("active");
       };
