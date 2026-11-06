@@ -233,6 +233,7 @@ function appendCompanionMessage(area, role, text) {
   PulsePalAIMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
+  PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -242,7 +243,6 @@ function appendCompanionMessage(area, role, text) {
     if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
     if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
   });
-  PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
 }
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
@@ -261,14 +261,14 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("Pulse Pal:", response);
-  setTimeout(async () => {
+  setTimeout(() => {
     appendCompanionMessage(
       CompanionDetailsMessage,
       "Pulse Pal",
       response
     );
-    aiSize = await getAISize();
   }, 300);
+  aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
