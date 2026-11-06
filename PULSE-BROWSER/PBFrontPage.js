@@ -6,7 +6,7 @@ let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-let CompanionConsoleSend = document.querySelector(".CompanionConsoleSend");
+let CompanionConsoleSend = document.querySelector("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let socialMode = "Internal";
 let EarnHidden = false;
@@ -192,12 +192,12 @@ function appendCompanionMessage(area, role, text) {
 }
 
 CompanionConsoleSend.onclick = async () => {
-  let CompanionLogArea = document.getElementById("CompanionLogArea"); 
+  CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  appendCompanionMessage(CompanionLogArea, "user", text);
+  appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("PulsePal:", response);
@@ -205,7 +205,7 @@ CompanionConsoleSend.onclick = async () => {
   PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
   setTimeout(() => {
     appendCompanionMessage(
-      CompanionLogArea,
+      CompanionDetailsMessage,
       "PulsePal",
       response
     );
