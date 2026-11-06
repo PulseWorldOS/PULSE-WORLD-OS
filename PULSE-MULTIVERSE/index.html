@@ -2462,6 +2462,7 @@ let pwErrors = [];
         logTab.classList.add("active");
         tasksTab.classList.remove("active");
 
+        if (aiLogBox) aiLogBox.style.display = "none";
         if (evoLogBox) evoLogBox.style.display = "block";
         taskPanel = document.getElementById("pw-task-panel");
         if (taskPanel) taskPanel.classList.remove("active");
@@ -2472,6 +2473,7 @@ let pwErrors = [];
         tasksTab.classList.add("active");
         logTab.classList.remove("active");
 
+        if (aiLogBox) aiLogBox.style.display = "none";
         if (evoLogBox) evoLogBox.style.display = "none";
         taskPanel = document.getElementById("pw-task-panel");
         if (taskPanel) {
@@ -2487,7 +2489,8 @@ let pwErrors = [];
         logTab.classList.remove("active");
         tasksTab.classList.remove("active");
 
-        if (aiLogBox) aiLogBox.style.display = "none";
+        if (evoLogBox) evoLogBox.style.display = "none";
+        if (aiLogBox) aiLogBox.style.display = "block";
         taskPanel = document.getElementById("pw-task-panel");
         if (taskPanel) taskPanel.classList.remove("active");
       };
