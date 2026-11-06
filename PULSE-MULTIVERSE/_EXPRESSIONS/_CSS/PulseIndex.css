@@ -1490,7 +1490,7 @@ nav a:hover::after {
   bottom: 190px;
   left: 10px;
   max-width: 280px;
-
+  width: 280px;
   /* ⭐ FULLY OPAQUE SOLID GRADIENT */
   background: linear-gradient(135deg, #00e6c3 0%, #cfa300 100%);
 
