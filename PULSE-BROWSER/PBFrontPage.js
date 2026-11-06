@@ -157,7 +157,7 @@ ${rawPrompt}
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + "<p><strong>PulsePal:</strong> " + response;
+      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
@@ -174,7 +174,7 @@ function appendCompanionMessage(area, role, text) {
   bubble.style.marginBottom = "6px";
   bubble.style.fontSize = "13px";
   bubble.style.lineHeight = "1.4";
-  bubble.style.color = role === "user" ? "#f9f9f9" : "#a7f5e4";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#0FF";
   bubble.textContent = (role === "user" ? "You: " : "PulsePal: ") + text;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
