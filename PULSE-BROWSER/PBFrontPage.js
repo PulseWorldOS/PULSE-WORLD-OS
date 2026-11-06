@@ -129,7 +129,6 @@ async function runLocalAI() {
   }
 
   try {
-    console.log(PulsePalAIMemoryBuffer);
     const SessionAI = await chrome.storage.local.get(["PulsePalAIMemoryBuffer"]);
     PulsePalAIMemoryBuffer = SessionAI.PulsePalAIMemoryBuffer ?? [];
     LastMessage = PulsePalAIMemoryBuffer.pop();
@@ -152,7 +151,7 @@ async function runLocalAI() {
         if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
         if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
       });
-      PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
+      
       // 1. Initialize the session using the modern nested outputs architecture
       await initializeExoskeleton();
     }
@@ -200,7 +199,15 @@ ${rawPrompt}
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
-    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (!response || !response.ok) {
+        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+        return;
+      }
+      if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
+      if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
+    });
     RunningAI = false;
 
   } catch (error) {
@@ -217,7 +224,8 @@ function appendCompanionMessage(area, role, text) {
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
-  PulsePalAIMemoryBuffer.push((role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`);
+  PulsePalAIMemoryBuffer.push(bubble.innerHTML);
+  PulsePalAIMemoryBuffer.push(`<br>`);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
