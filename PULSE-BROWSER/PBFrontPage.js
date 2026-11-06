@@ -120,8 +120,10 @@ async function runLocalAI() {
   }
 
   try {
+    console.log(memoryBuffer);
     const SessionAI = await chrome.storage.local.get(["memoryBuffer"]);
     memoryBuffer = SessionAI.memoryBuffer ?? [];
+    console.log(memoryBuffer);
   } catch (err) {}
 
   try {
@@ -164,6 +166,7 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
+    console.log(memoryBuffer);
     PulsesafeStorageSet({ memoryBuffer: memoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
