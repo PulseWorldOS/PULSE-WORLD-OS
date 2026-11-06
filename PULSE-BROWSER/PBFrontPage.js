@@ -165,7 +165,7 @@ ${rawPrompt}
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response + `<br>`;
+      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     console.log(aiMemoryBuffer);
@@ -183,7 +183,7 @@ function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">PulsePal:</font> `) + text + `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">PulsePal:</font> `) + text + `<br><br>`;
   aiMemoryBuffer.push(bubble.textContent);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
