@@ -184,19 +184,18 @@ function appendCompanionMessage(area, role, text) {
 }
 
 CompanionConsoleSend.onclick = async () => {
-  let CompanionLogArea = document.getElementById("CompanionLogArea"); 
   let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  appendCompanionMessage(CompanionLogArea, "user", text);
+  appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("PulsePal:", response);
   memoryBuffer.push(response);
   setTimeout(() => {
     appendCompanionMessage(
-      CompanionLogArea,
+      CompanionDetailsMessage,
       "PulsePal",
       response
     );
@@ -2478,12 +2477,14 @@ async function setTheStage() {
 
   document.addEventListener("keydown", (e) => {
     const consoleinput = document.getElementById("CompanionConsoleInput");
-    if (document.activeElement === consoleinput) {
-        console.log("The element has focus!");
-        return;
-    } else {
-        console.log("The element does not have focus.");
-    }
+    let isFocused = false;
+    consoleinput.addEventListener('focus', () => {
+        isFocused = true;
+    });
+    consoleinput.addEventListener('blur', () => {
+        isFocused = false;
+    });
+    if (isFocused) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
     if (moduleKeys.includes(key) && e.repeat) { 
