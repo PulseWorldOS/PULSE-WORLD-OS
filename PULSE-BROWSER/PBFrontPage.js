@@ -156,17 +156,16 @@ async function runLocalAI() {
 ${rawPrompt}
 
 [PULSEPAL RESPONSE]:`;
-    aiMemoryBuffer.push(wrappedPrompt);
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("PulsePal:", response);
-    aiMemoryBuffer.push(response);
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
     }
     console.log(aiMemoryBuffer);
     PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
@@ -184,7 +183,6 @@ function appendCompanionMessage(area, role, text) {
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">PulsePal:</font> `) + text + `<br><br>`;
-  aiMemoryBuffer.push(bubble.textContent);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -199,7 +197,6 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("PulsePal:", response);
-  aiMemoryBuffer.push(response);
   PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
   setTimeout(() => {
     appendCompanionMessage(
@@ -208,6 +205,7 @@ CompanionConsoleSend.onclick = async () => {
       response
     );
   }, 300);
+  aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
 };
 
 async function initializeExoskeleton() {
