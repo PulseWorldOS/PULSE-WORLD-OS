@@ -6,6 +6,7 @@ let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let CompanionConsoleSend = document.querySelector(".CompanionConsoleSend");
 let socialMode = "Internal";
 let EarnHidden = false;
 let EarnDetailsHidden = false;
@@ -157,6 +158,7 @@ ${rawPrompt}
     if (CompanionDetailsMessage) {
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + "<p><strong>PulsePal:</strong> " + response;
+      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
     // PulsesafeStorageSet({ aiSession: aiSession });
@@ -166,6 +168,36 @@ ${rawPrompt}
     console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
   }
 }
+
+function appendCompanionMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  bubble.style.marginBottom = "6px";
+  bubble.style.fontSize = "13px";
+  bubble.style.lineHeight = "1.4";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#a7f5e4";
+  bubble.textContent = (role === "user" ? "You: " : "PulsePal: ") + text;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
+CompanionConsoleSend.onclick = async () => {
+  let CompanionLogArea = document.getElementById("CompanionLogArea"); 
+  let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+  const text = CompanionConsoleInput.value.trim();
+  if (!text) return;
+  // 3. Fire the wrapped prompt
+  const response = await aiSession.prompt(text);
+  console.log("PulsePal:", response);
+  appendCompanionMessage(CompanionLogArea, "user", text);
+  CompanionConsoleInput.value = "";
+  setTimeout(() => {
+    appendCompanionMessage(
+      CompanionLogArea,
+      "PulsePal",
+      response
+    );
+  }, 300);
+};
 
 async function initializeExoskeleton() {
   aiSession = await LanguageModel.create({
