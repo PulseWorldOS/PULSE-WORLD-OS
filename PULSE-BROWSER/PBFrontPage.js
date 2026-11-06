@@ -404,6 +404,7 @@ function getReadableName(url) {
       setTimeout(() => {
         pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.style.opacity = "1";
         pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
@@ -448,6 +449,7 @@ function getReadableName(url) {
         setTimeout(() => {
           pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
           pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.style.opacity = "1";
           pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
@@ -460,6 +462,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.style.width = "";        // let CSS take over again
         pbPulseDetailsEarn.style.height = "";
         pbPulseDetailsEarn.style.transform = "";
+        pbPulseDetailsEarn.style.opacity = "0.25";
         pbPulseDetailsEarn.style.border = "2px solid #000";
         earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
         earnerhelperpanel.style.background = "";
@@ -497,6 +500,7 @@ async function CheckEarnState() {
     setTimeout(() => {
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";
+      pbPulseEarn.style.opacity = "1";
       pbPulseEarn.style.transform = "translate(250px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
@@ -509,6 +513,7 @@ async function CheckEarnState() {
     pbPulseEarn.style.width = "";        // let CSS take over again
     pbPulseEarn.style.height = "";
     pbPulseEarn.style.transform = "";
+    pbPulseEarn.style.opacity = "0.25";
     earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
     earnerpanel.style.background = "";
     earnerpanel.style.backdropFilter = "";
@@ -539,6 +544,7 @@ async function CheckEarnState() {
       setTimeout(() => {
         pbPulseEarn.id = "pbPulseEarn";
         pbPulseEarn.className = "pbPulseEarn";
+        pbPulseEarn.style.opacity = "1";
         pbPulseEarn.style.transform = "translate(250px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
