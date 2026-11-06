@@ -181,21 +181,21 @@ async function runLocalAI() {
 ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
-    if (!LastMessage) {
-      // 3. Fire the wrapped prompt
-      const response = await aiSession.prompt(wrappedPrompt);
-      console.log("Pulse Pal:", response);
-      // 4. Update the DOM elements smoothly
-      CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-      let CompanionTitle = document.getElementById("CompanionTitle");
-      if (CompanionDetailsMessage) {
-        CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
-        CompanionDetailsMessage.style.fontSize = "0.6rem";
-        CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
-        CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-        PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
-      }
+    // 3. Fire the wrapped prompt
+    const response = await aiSession.prompt(wrappedPrompt);
+    console.log("Pulse Pal:", response);
+    
+    // 4. Update the DOM elements smoothly
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    let CompanionTitle = document.getElementById("CompanionTitle");
+    if (CompanionDetailsMessage) {
+      CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
+      CompanionDetailsMessage.style.fontSize = "0.6rem";
+      if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
+      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     }
+  
     // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
     //   if (chrome.runtime.lastError) return;
     //   if (!response || !response.ok) {
