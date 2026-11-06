@@ -10,6 +10,7 @@ let CompanionConsoleSend = document.querySelector(".CompanionConsoleSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let socialMode = "Internal";
 let EarnHidden = false;
+let RunningAI = false;
 let EarnDetailsHidden = false;
 let socialMediaActiveLink = null;
 // Your cybernetic state architecture
@@ -108,6 +109,8 @@ function PulsesafeStorageSet(dataObject) {
 }
 
 async function runLocalAI() {
+  if (RunningAI) return; // already running
+  RunningAI = true;
   if (typeof LanguageModel === 'undefined') {
     console.error("PulsePal (Gemini Nano) is not supported in this browser version.");
     return;
