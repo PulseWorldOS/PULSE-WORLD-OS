@@ -131,6 +131,14 @@ async function runLocalAI() {
 
   try {
     if (!aiSession) {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+        if (response.aiSession) aiSession = response.aiSession;
+      });
       // 1. Initialize the session using the modern nested outputs architecture
       aiSession = await LanguageModel.create({
         expectedOutputs: [

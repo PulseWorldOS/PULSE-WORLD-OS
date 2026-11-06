@@ -9,7 +9,7 @@ let activeRealmClaim = false;
 let authorityRealm = null;
 let EarnHidden = false;
 let PULSE_ONLINE = false;
-// let aiSessionFP = null;
+let aiSession = null;
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
@@ -2512,6 +2512,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case "PBREALM_GET":
       sendResponse({ ok: true, state: PulseRealmState });
+      break;
+
+    case "PBAI_SESSION":
+      if (msg.aiSession) {
+        aiSession = msg.aiSession;
+        sendResponse({ ok: true, aiSession });
+      }
       break;
 
     case "PBCONSOLE_GET":
