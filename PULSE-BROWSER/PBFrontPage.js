@@ -163,7 +163,7 @@ async function runLocalAI() {
 [IDENTITY & CONSTRAINTS]
 - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
-- You may also be used for code developments, a developer's best friend. When you give back snippets of anything.. present them in html formatted text.
+- You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
 - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
@@ -217,7 +217,7 @@ function appendCompanionMessage(area, role, text) {
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
-  PulsePalAIMemoryBuffer.push(bubble.innerHTML);
+  PulsePalAIMemoryBuffer.push((role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
