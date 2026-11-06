@@ -203,6 +203,8 @@ const PB_SW_SETTINGS = {
   enableContentRuntime: true,
   enableDevOverlay: true,
   enablePulseEarnOverlay: true,
+  enablePulsePalMemory: true,
+  enablePulsePalCybernetics: true,
   enablePulsePalConsole: true,
   enableDevCaches: true,
   blockTrackers: true,
