@@ -198,6 +198,12 @@ function appendCompanionMessage(area, role, text) {
   area.scrollTop = area.scrollHeight;
 }
 
+document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    CompanionConsoleSend.onclick();
+  }
+});
+
 CompanionConsoleSend.onclick = async () => {
   CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
