@@ -7,6 +7,7 @@ let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.querySelector(".CompanionConsoleSend");
+let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let socialMode = "Internal";
 let EarnHidden = false;
 let EarnDetailsHidden = false;
@@ -185,7 +186,7 @@ function appendCompanionMessage(area, role, text) {
 
 CompanionConsoleSend.onclick = async () => {
   let CompanionLogArea = document.getElementById("CompanionLogArea"); 
-  let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+  CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
@@ -2477,6 +2478,8 @@ async function setTheStage() {
   setInterval(pbRefreshWarmDocument, interval); 
    
   document.addEventListener("keydown", (e) => {
+    CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    if (e.target === CompanionConsoleInput) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
     if (moduleKeys.includes(key) && e.repeat) { 
