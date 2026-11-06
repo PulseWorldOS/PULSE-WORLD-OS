@@ -2476,17 +2476,7 @@ async function setTheStage() {
   
   setInterval(pbRefreshWarmDocument, interval); 
    
-  const consoleinput = document.getElementById("CompanionConsoleInput");
-  let isFocused = false;
-  consoleinput.addEventListener('focus', () => {
-      isFocused = true;
-  });
-  consoleinput.addEventListener('blur', () => {
-      isFocused = false;
-  });
-
   document.addEventListener("keydown", (e) => {
-    if (isFocused) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
     if (moduleKeys.includes(key) && e.repeat) { 
