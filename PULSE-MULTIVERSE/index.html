@@ -1505,6 +1505,32 @@ let pwErrors = [];
     }
 
     /* ============================================================
+       AI LOG AREA
+       ============================================================ */
+
+    #pw-console-ai {
+      height: calc(45vh - 60px); /* ⭐ now subtracting tab bar height */
+      overflow-y: auto;
+      padding: 10px 16px;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+      color: #CFF;
+    }
+
+    #pw-console-ai::-webkit-scrollbar { width: 12px; }
+    #pw-console-ai::-webkit-scrollbar-track {
+      background: rgba(0,20,25,0.55);
+    }
+    #pw-console-ai::-webkit-scrollbar-thumb {
+      background: #00eaff;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #00eaff;
+    }
+    #pw-console-ai::-webkit-scrollbar-thumb:hover {
+      background: #7df9ff;
+    }
+
+    /* ============================================================
        LOG LINE
        ============================================================ */
 
