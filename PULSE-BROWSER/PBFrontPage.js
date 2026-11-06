@@ -226,6 +226,7 @@ function appendCompanionMessage(area, role, text) {
   bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">Pulse Pal:</font> `) + text + `<br><br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
+  PulsePalMemoryBuffer.push(area.innerHTML);
 }
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
