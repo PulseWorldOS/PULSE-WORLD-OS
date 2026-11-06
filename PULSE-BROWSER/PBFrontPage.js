@@ -189,6 +189,14 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
     }
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+      if (!response || !response.ok) {
+        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+        return;
+      }
+      PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+      if (response.aiSession) aiSession = response.aiSession;
+    });
     PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
