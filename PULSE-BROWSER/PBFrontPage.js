@@ -15,7 +15,7 @@ let EarnDetailsHidden = false;
 let socialMediaActiveLink = null;
 // Your cybernetic state architecture
 let aiSession = null;
-let aiMemoryBuffer = [];
+let PulsePalMemoryBuffer = [];
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -123,10 +123,10 @@ async function runLocalAI() {
   }
 
   try {
-    console.log(aiMemoryBuffer);
-    const SessionAI = await chrome.storage.local.get(["aiMemoryBuffer"]);
-    aiMemoryBuffer = SessionAI.aiMemoryBuffer ?? [];
-    console.log(aiMemoryBuffer);
+    console.log(PulsePalMemoryBuffer);
+    const SessionAI = await chrome.storage.local.get(["PulsePalMemoryBuffer"]);
+    PulsePalMemoryBuffer = SessionAI.PulsePalMemoryBuffer ?? [];
+    console.log(PulsePalMemoryBuffer);
   } catch (err) {}
 
   try {
@@ -191,7 +191,7 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-      aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
+      PulsePalMemoryBuffer.push(CompanionDetailsMessage.textContent);
     }
     // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
     //   if (chrome.runtime.lastError) return;
@@ -205,7 +205,7 @@ ${rawPrompt}
     //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
     //   console.log(response);
     // });
-    PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
+    PulsesafeStorageSet({ PulsePalMemoryBuffer: PulsePalMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
     RunningAI = false;
@@ -240,7 +240,6 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("Pulse Pal:", response);
-  PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
   setTimeout(() => {
     appendCompanionMessage(
       CompanionDetailsMessage,
@@ -248,7 +247,8 @@ CompanionConsoleSend.onclick = async () => {
       response
     );
   }, 300);
-  aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
+  PulsePalMemoryBuffer.push(CompanionDetailsMessage.textContent);
+  PulsesafeStorageSet({ PulsePalMemoryBuffer: PulsePalMemoryBuffer });
   // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
   //   if (chrome.runtime.lastError) return;
   //   if (!response || !response.ok) {
@@ -278,7 +278,7 @@ function wipeMemory() {
     aiSession = null;
   }
   // 2. Clear your local memory buffers completely
-  aiMemoryBuffer = [];
+  PulsePalMemoryBuffer = [];
   
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
   
