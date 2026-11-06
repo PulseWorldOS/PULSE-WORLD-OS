@@ -136,7 +136,7 @@ async function runLocalAI() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+        if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
         if (response.aiSession) aiSession = response.aiSession;
       });
       if (!aiSession) {
@@ -194,7 +194,7 @@ ${rawPrompt}
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+      if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
       if (response.aiSession) aiSession = response.aiSession;
     });
     PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
@@ -246,8 +246,9 @@ CompanionConsoleSend.onclick = async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+    if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
     if (response.aiSession) aiSession = response.aiSession;
+    if (!response.aiSession && aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, aiSession);
   });
 };
 
