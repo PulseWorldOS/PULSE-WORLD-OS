@@ -130,19 +130,19 @@ async function runLocalAI() {
   } catch (err) {}
 
   try {
-      // if (!aiSession) {
-      // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
-      //   if (chrome.runtime.lastError) return;
-      //   if (!response || !response.ok) {
-      //     PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-      //     return;
-      //   }
-      //   if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-      //   if (response.aiSession) aiSession = response.aiSession;
-      //   console.log(aiSession);
-      //   console.log(response.aiSession);
-      //   console.log(response);
-      // });
+    if (!aiSession) {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+        if (response.aiSession) aiSession = response.aiSession;
+        console.log(aiSession);
+        console.log(response.aiSession);
+        console.log(response);
+      });
       if (!aiSession) {
         // 1. Initialize the session using the modern nested outputs architecture
         aiSession = await LanguageModel.create({
@@ -154,7 +154,7 @@ async function runLocalAI() {
           ]
         });
       }
-    // }
+    }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";

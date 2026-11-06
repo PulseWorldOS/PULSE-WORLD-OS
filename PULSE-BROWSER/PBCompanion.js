@@ -2515,12 +2515,20 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAI_SESSION":
-      if (msg.aiSession) {
-        aiSession = msg.aiSession;
-        console.log(aiSession);
-        sendResponse({ ok: true, aiSession });
+      if (!msg.aiSession) {
+        (async () => {
+          aiSession = await LanguageModel.create({
+            expectedOutputs: [
+              { 
+                type: "text", 
+                languages: ["en"] 
+              }
+            ]
+          });
+        })();
       }
-      break;
+      sendResponse({ ok: true, aiSession });
+      return true;
 
     case "PBCONSOLE_GET":
       pbLoadConsole().then(console => sendResponse({ ok: true, console }));
