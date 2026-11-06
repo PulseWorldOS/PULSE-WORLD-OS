@@ -826,7 +826,6 @@ const chromebgmobile = document.getElementById("chrome-bg-mobile");
 const evoToggleBtn = document.getElementById("evotogglebtn");
 const evoConsole = document.getElementById("evoconsole");
 const evoLogBox = document.getElementById("pw-console-log");
-const aiLogBox  = document.getElementById("pw-console-ai");
 const refreshInstance = document.querySelector(".btn-primary");
 const bootVideo = document.getElementById("bootVideo");
 const viewport =  document.getElementById("viewport");
@@ -2443,6 +2442,9 @@ let pwErrors = [];
       const aiTab = document.createElement("div");
       aiTab.className = "pw-tab";
       aiTab.textContent = "PULSEPAL";
+      let aiLogBox = document.createElement("div");
+      aiLogBox.className = "pw-console-ai";
+      aiLogBox.id = "pw-console-ai";
 
       tabsBar.appendChild(logTab);
       tabsBar.appendChild(tasksTab);
@@ -2941,7 +2943,6 @@ function handleGo() {
 function pulseConsoleOpen () {
   // Assuming evoLogBox is your log container element
   if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
-  if (aiLogBox) aiLogBox.scrollTop = aiLogBox.scrollHeight;
   
   ghostBtn.style.display =
     ghostBtn.style.display === "none" ? "flex" : "none";
