@@ -162,8 +162,11 @@ ${rawPrompt}
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("PulsePal:", response);
     // 4. Update the DOM elements smoothly
+    
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    let CompanionTitle = document.getElementById("CompanionTitle");
     if (CompanionDetailsMessage) {
+      CompanionTitle.innerHTML = "PulsePal (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;

@@ -1373,6 +1373,13 @@
       color: var(--pw-gold);
     }
 
+    .CompanionTitle {
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      color: #0FF;
+    }
+
     .consoleOvermindCompanion {
       flex: 1;
       width: 90%;
@@ -1455,7 +1462,9 @@
         Pulse Pal - AI Console
       </div>      
       <!-- <div class="CompanionDetailsMessage" id="CompanionDetailsMessage" style="color: whitesmoke; font-size: 0.8rem;">PulsePal: Always Waiting to be Helpful!</div> -->
-      <div id="consoleOvermindCompanion" class="consoleOvermindCompanion"></div>
+      <div id="consoleOvermindCompanion" class="consoleOvermindCompanion">
+        <div id="CompanionTitle" class="CompanionTitle"></div>
+      </div>
       <div class="CompanionConsoleInputRow">
         <input id="CompanionConsoleInput" class="CompanionConsoleInput"
                 type="text" placeholder="Just Ask PulsePal.." />
