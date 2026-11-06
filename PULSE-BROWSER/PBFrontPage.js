@@ -144,6 +144,7 @@ async function runLocalAI() {
         console.log(response);
       });
       if (!aiSession) {
+        PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
         // 1. Initialize the session using the modern nested outputs architecture
         aiSession = await LanguageModel.create({
           expectedOutputs: [
