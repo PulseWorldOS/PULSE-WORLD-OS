@@ -115,7 +115,7 @@ async function runLocalAI() {
     return;
   }
   RunningAI = true;
-  const LastMessage = PulsePalMemoryBuffer.pop(); 
+  let LastMessage = null;
 
   const status = await LanguageModel.availability();
   if (status === 'unavailable') {
@@ -127,7 +127,7 @@ async function runLocalAI() {
     console.log(PulsePalMemoryBuffer);
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryBuffer"]);
     PulsePalMemoryBuffer = SessionAI.PulsePalMemoryBuffer ?? [];
-    
+    LastMessage = PulsePalMemoryBuffer.pop(); 
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.innerHTML = LastMessage;
     console.log(SessionAI.PulsePalMemoryBuffer);
