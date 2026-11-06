@@ -6,7 +6,7 @@ let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-let CompanionConsoleSend = document.querySelector("consoleOvermindCompanionSend");
+let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let socialMode = "Internal";
 let EarnHidden = false;
@@ -181,9 +181,7 @@ ${rawPrompt}
 
 function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
-  bubble.style.marginBottom = "6px";
-  bubble.style.fontSize = "13px";
-  bubble.style.lineHeight = "1.4";
+  bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#0FF";
   bubble.textContent = (role === "user" ? "You: " : "PulsePal: ") + text;
   aiMemoryBuffer.push(bubble.textContent);
@@ -3702,9 +3700,13 @@ const nebula = document.getElementById("nebula");
 ["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
   window.addEventListener(evt, () => {
     userInteracted = true;
-    runLocalAI();
   }, { once: true });
 });
+
+if (!userInteracted) {
+  runLocalAI();
+}
+
 window.addEventListener("blur", () => {
   userInteracted = true;
   document.getElementById("subtitle").style.color = "yellow"
