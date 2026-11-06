@@ -2535,6 +2535,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         //   sendResponse({ ok: true, aiSession });
         // })();
         sendResponse({ ok: true, PulseAIPalMemoryBuffer });
+      } else {
+        (async () => {
+          const SessionAI = await chrome.storage.local.get(["PulseAIPalMemoryBuffer"]);
+          PulseAIPalMemoryBuffer = SessionAI.PulseAIPalMemoryBuffer ?? [];
+          console.log(SessionAI.PulseAIPalMemoryBuffer);
+        })();
       }
       return true;
 

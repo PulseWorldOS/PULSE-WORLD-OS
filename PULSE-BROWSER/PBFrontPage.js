@@ -137,7 +137,6 @@ async function runLocalAI() {
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     // CompanionDetailsMessage.innerHTML = LastMessage;
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-    console.log(SessionAI.PulseAIPalMemoryBuffer);
     aiSize = await getAISize();
   } catch (err) {}
 
@@ -219,12 +218,8 @@ ${rawPrompt}
 
 function appendEarnerMessage(area, role, text) {
   const bubble = document.createElement("div");
-  bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  const now = Date.now();
-  const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Earner: ${showTime}</font> `) + text + `<br><br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Pulse Earner: </font> `) + text + `<br><br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -241,8 +236,8 @@ function appendCompanionMessage(area, role, text) {
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
   PulseAIPalMemoryBuffer.push(bubble.innerHTML);
-  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubble);
+  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
