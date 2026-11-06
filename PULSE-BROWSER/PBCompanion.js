@@ -1741,6 +1741,13 @@ async function runProtectedCompute(computeTaskFunction) {
   }
 }
 
+async function initializeExoskeleton() {
+  aiSession = await LanguageModel.create({
+    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
+  });
+}
+
 
 function backToOriginal() {
   chrome.storage.local.get("originalTabId", data => {
@@ -2521,22 +2528,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // (async () => {
         //   aiSession = await chrome.storage.local.get(["aiSession"]);
         //   if (!aiSession) {
-                // aiSession = await LanguageModel.create({
-                // expectedOutputs: [
-                //   { 
-                //     type: "text", 
-                //     languages: ["en"] 
-                //   }, 
-                //   { 
-                //     type: "html", 
-                //     languages: ["en"] 
-                //   }, 
-                //   { 
-                //     type: "javascript", 
-                //     languages: ["en"] 
-                //   } 
-                // ]
-                // });
+                initializeExoskeleton();
         //      safeStorageSet({ aiSession });
         //   }
         //   sendResponse({ ok: true, aiSession });

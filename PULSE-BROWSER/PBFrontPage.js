@@ -154,22 +154,7 @@ async function runLocalAI() {
       });
       PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
       // 1. Initialize the session using the modern nested outputs architecture
-      aiSession = await LanguageModel.create({
-        expectedOutputs: [
-          { 
-            type: "text", 
-            languages: ["en"] 
-          }, 
-          { 
-            type: "html", 
-            languages: ["en"] 
-          }, 
-          { 
-            type: "javascript", 
-            languages: ["en"] 
-          } 
-        ]
-      });
+      initializeExoskeleton();
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
@@ -292,21 +277,8 @@ CompanionConsoleSend.onclick = async () => {
 
 async function initializeExoskeleton() {
   aiSession = await LanguageModel.create({
-    systemPrompt: "You are a cognitive amplifier. Enhance, polish, and optimize the user's intent without changing their core decision.",
-    expectedOutputs: [
-      { 
-        type: "text", 
-        languages: ["en"] 
-      }, 
-      { 
-        type: "html", 
-        languages: ["en"] 
-      }, 
-      { 
-        type: "javascript", 
-        languages: ["en"] 
-      } 
-    ]
+    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
   });
 }
 
