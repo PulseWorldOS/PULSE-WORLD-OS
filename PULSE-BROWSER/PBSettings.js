@@ -185,7 +185,7 @@ async function getSettings() {
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
       S.enablePulseEarnerEngine = S.enablePulseEarnerEngine !== false;
-      
+      S.enablePulsePal = S.enablePulsePal !== false;
       resolve(S);
     });
   });

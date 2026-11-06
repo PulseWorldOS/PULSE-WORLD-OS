@@ -150,7 +150,7 @@ async function runLocalAI() {
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-- You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourself.
+- You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
 - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
 - PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, and Perlman), then says Explore Us!
@@ -2212,7 +2212,7 @@ async function getSettings() {
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
       S.enablePulseEarnerEngine = S.enablePulseEarnerEngine !== false;
-      
+      S.enablePulsePal = S.enablePulsePal !== false;
       resolve(S);
     });
   });
