@@ -195,7 +195,7 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
+      if (!EarnDetailsHidden) appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
