@@ -2529,9 +2529,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             });
             safeStorageSet({ aiSession });
           }
+          sendResponse({ ok: true, aiSession });
         })();
+      } else {
+        safeStorageSet({ aiSession });
+        sendResponse({ ok: true, aiSession });
       }
-      sendResponse({ ok: true, aiSession });
       return true;
 
     case "PBCONSOLE_GET":
