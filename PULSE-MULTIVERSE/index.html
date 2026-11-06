@@ -7614,6 +7614,7 @@ async function checkReboot() {
   }
   return false;
 }
+
 function MergedPickASpeech(message, imagePath) {
   if (!badge || !talk) return;
 
@@ -7645,7 +7646,7 @@ function MergedPickASpeech(message, imagePath) {
     if (img) {
       img.src = DEFAULT_IMAGE;
     }
-  }, 8000);
+  }, 10000);
 }
 
 PulseRealm.PickASpeech8 = MergedPickASpeech;
@@ -7654,8 +7655,6 @@ async function runBootSequenceOnce(Rebooted,isMobile) {
     if (!Rebooted || Rebooted === false) {
     pulseNotify("🌐 PulseBrowser OS","Welcome to the Pulse World Multiverse!");
     BOOT_PANEL_DURATION = BOOT_DURATION + 1500;
-  
-    pulsepalSpeak("Welcome to PulseWorld.Net! Built by History, Built for You!");
 
     enableBootVideo(isMobile);
     console.log("%c✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::EXPRESSION] Pulse Multiversal Drift Gate, First Boot of Session → Running Cinematic.", "color:#H02FHA; font-weight:bold; font-family:monospace;");
@@ -8320,7 +8319,7 @@ async function runLocalAI() {
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
+- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! "Welcome to PulseWorld.Net! Built by History, Built for You!"
 - You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
