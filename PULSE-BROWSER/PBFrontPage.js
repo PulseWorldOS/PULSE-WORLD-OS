@@ -164,7 +164,7 @@ async function runLocalAI() {
 - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend. When you give back snippets of anything.. present them in html formatted text.
-- If asked for you to find a site and take them there.. respond by also adding {*Website Call: (https://www.website.com/)*} to the end.
+- Only when the user specifically asked for you to find a site and take them there.. respond by also adding {*Website Call: (https://www.website.com/)*} to the end only when asked.
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
 - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
@@ -197,7 +197,7 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+      if (!LastMessage) appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
@@ -263,8 +263,22 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("Pulse Pal:", response);
+  setTimeout(() => {
+    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
+  }, 300);
   appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
-  if (response.includes("{*Website Call:")) {
+  aiSize = await getAISize();
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
+    if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
+    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
+  });
+  if (response.includes("*Website Call:")) {
     const urlRegex = /https?:\/\/([^\s]+)/i;
     const match = response.match(urlRegex);
     if (match && match[1]) {
@@ -275,29 +289,6 @@ CompanionConsoleSend.onclick = async () => {
       console.log("URL not found in the provided string.");
     } 
   }
-  aiSize = await getAISize();
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-      return;
-    }
-    if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
-    if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
-  });
-  PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
-  // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
-  //   if (chrome.runtime.lastError) return;
-  //   if (!response || !response.ok) {
-  //     PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-  //     return;
-  //   }
-  //   if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-  //   if (response.aiSession) aiSession = response.aiSession;
-  //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Response:", response.aiSession);
-  //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
-  //   console.log(response);
-  // });
 };
 
 async function initializeExoskeleton() {
