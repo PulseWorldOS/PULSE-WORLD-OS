@@ -1016,6 +1016,8 @@ const PulseDOMScan  = PulseRealm.PulseDOMScan;
 const PulseStorageScan = PulseRealm.PulseStorageScan;
 const PulseWorldPromises = PulseRealm.PulseWorldPromises;
 const portalBootVideo =  document.getElementById("portalBootVideo");
+const badge = document.getElementById("pulsepal-badge");
+const talk = document.getElementById("pulsepal-talk");
 const bgMusic =  document.getElementById("bgMusic");
 const PulsePortalviewport =  document.getElementById("PulsePortalviewport");
 const warpGate  = document.getElementById("warpGate");
@@ -1770,7 +1772,9 @@ async function checkReboot() {
         const img = badge.querySelector(".pulsepal-image");
         img.src = PulseRealm.PulsePalPhoto;
         badge.classList.add("talking");
-        setTimeout(() => badge.classList.remove("talking"), 5000); // hides after 3s
+        setTimeout(() => {
+          badge.classList.remove("talking")
+        }, 10000); // hides after 3s
       };
     }
     
