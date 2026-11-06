@@ -2473,17 +2473,18 @@ async function setTheStage() {
 
   const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
   
-  setInterval(pbRefreshWarmDocument, interval);  
+  setInterval(pbRefreshWarmDocument, interval); 
+   
+  const consoleinput = document.getElementById("CompanionConsoleInput");
+  let isFocused = false;
+  consoleinput.addEventListener('focus', () => {
+      isFocused = true;
+  });
+  consoleinput.addEventListener('blur', () => {
+      isFocused = false;
+  });
 
   document.addEventListener("keydown", (e) => {
-    const consoleinput = document.getElementById("CompanionConsoleInput");
-    let isFocused = false;
-    consoleinput.addEventListener('focus', () => {
-        isFocused = true;
-    });
-    consoleinput.addEventListener('blur', () => {
-        isFocused = false;
-    });
     if (isFocused) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
