@@ -173,8 +173,10 @@ ${rawPrompt}
     PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
+    RunningAI = false;
   } catch (error) {
     console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
+    RunningAI = false;
   }
 }
 
