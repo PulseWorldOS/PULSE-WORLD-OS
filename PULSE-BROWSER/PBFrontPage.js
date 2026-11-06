@@ -21,7 +21,7 @@ let aiSize = 0;
 let swSize = 0;
 // Your cybernetic state architecture
 let aiSession = null;
-let PulseAIMemoryBuffer = [];
+let PulseAIPalMemoryBuffer = [];
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -124,33 +124,33 @@ async function runLocalAI() {
   let LastMessage = null;
 
   const status = await LanguageModel.availability();
-  const SessionAI = await chrome.storage.local.get(["PulseAIMemoryBuffer"]);
+  const SessionAI = await chrome.storage.local.get(["PulseAIPalMemoryBuffer"]);
   if (status === 'unavailable') {
     console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
   try {
-    PulseAIMemoryBuffer = SessionAI.PulseAIMemoryBuffer ?? [];
-    LastMessage = PulseAIMemoryBuffer.pop();
-    PulseAIMemoryBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
+    PulseAIPalMemoryBuffer = SessionAI.PulseAIPalMemoryBuffer ?? [];
+    LastMessage = PulseAIPalMemoryBuffer.pop();
+    PulseAIPalMemoryBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     // CompanionDetailsMessage.innerHTML = LastMessage;
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-    console.log(SessionAI.PulseAIMemoryBuffer);
+    console.log(SessionAI.PulseAIPalMemoryBuffer);
     aiSize = await getAISize();
   } catch (err) {}
 
   try {
     if (!aiSession) {
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIMemoryBuffer }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.PulseAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIMemoryBuffer, response.PulseAIMemoryBuffer);
-        if (response.PulseAIMemoryBuffer) PulseAIMemoryBuffer = response.PulseAIMemoryBuffer;
+        if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+        if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
       });
       
       // 1. Initialize the session using the modern nested outputs architecture
@@ -200,14 +200,14 @@ ${rawPrompt}
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIMemoryBuffer }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      if (response.PulseAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIMemoryBuffer, response.PulseAIMemoryBuffer);
-      if (response.PulseAIMemoryBuffer) PulseAIMemoryBuffer = response.PulseAIMemoryBuffer;
+      if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+      if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
     });
     RunningAI = false;
 
@@ -240,19 +240,19 @@ function appendCompanionMessage(area, role, text) {
   const showTime = `[${ItsTime}]`
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
-  PulseAIMemoryBuffer.push(bubble.innerHTML);
-  PulseAIMemoryBuffer.push(bubblebr.innerHTML);
+  PulseAIPalMemoryBuffer.push(bubble.innerHTML);
+  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubble);
   area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIMemoryBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulseAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIMemoryBuffer, response.PulseAIMemoryBuffer);
-    if (response.PulseAIMemoryBuffer) PulseAIMemoryBuffer = response.PulseAIMemoryBuffer;
+    if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+    if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
 }
 
@@ -276,14 +276,14 @@ CompanionConsoleSend.onclick = async () => {
     appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
   }, 300);
   aiSize = await getAISize();
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIMemoryBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulseAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIMemoryBuffer, response.PulseAIMemoryBuffer);
-    if (response.PulseAIMemoryBuffer) PulseAIMemoryBuffer = response.PulseAIMemoryBuffer;
+    if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+    if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
@@ -313,7 +313,7 @@ function wipeMemory() {
     aiSession = null;
   }
   // 2. Clear your local memory buffers completely
-  PulseAIMemoryBuffer = [];
+  PulseAIPalMemoryBuffer = [];
   
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
   
@@ -945,7 +945,7 @@ async function getSWSize() {
 
 async function getAISize() {
   try {
-    return new Blob([PulseAIMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulseAIPalMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -1341,14 +1341,14 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIMemoryBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulseAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIMemoryBuffer, response.PulseAIMemoryBuffer);
-    if (response.PulseAIMemoryBuffer) PulseAIMemoryBuffer = response.PulseAIMemoryBuffer;
+    if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+    if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
