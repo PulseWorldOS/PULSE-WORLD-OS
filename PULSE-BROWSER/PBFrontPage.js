@@ -150,7 +150,7 @@ async function runLocalAI() {
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - Remember PulseBrowser + Pulse World with all 4 Tiers and Realms are still Under Construction.
 - You hold your PulsePal memory locally with the user not reliant on any server or network.. including ourself.
-- You must keep your response under 2000 characters.
+- You must keep your response under 3000 characters.
 
 [USER QUERY]
 ${rawPrompt}
