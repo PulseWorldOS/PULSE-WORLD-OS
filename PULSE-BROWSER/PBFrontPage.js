@@ -249,9 +249,9 @@ CompanionConsoleSend.onclick = async () => {
       "Pulse Pal",
       response
     );
+    PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
+    PulsesafeStorageSet({ PulsePalMemoryBuffer });
   }, 300);
-  PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
-  PulsesafeStorageSet({ PulsePalMemoryBuffer });
   
   // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
   //   if (chrome.runtime.lastError) return;
