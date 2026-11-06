@@ -528,9 +528,6 @@ checkPersistentStorage(true);
           ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INFO] Awaiting New Diagnostic Signals…
         </div>
       </div>
-      
-      <div class="pw-console-ai" id="pw-console-ai" role="log" aria-live="polite">
-      </div>
 
       <div class="pw-console-footer">
         <span class="pw-console-status" role="status">
@@ -2941,8 +2938,8 @@ function handleGo() {
 
 function pulseConsoleOpen () {
   // Assuming evoLogBox is your log container element
-  evoLogBox.scrollTop = evoLogBox.scrollHeight;
-  aiLogBox.scrollTop = aiLogBox.scrollHeight;
+  if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  if (aiLogBox) aiLogBox.scrollTop = aiLogBox.scrollHeight;
   
   ghostBtn.style.display =
     ghostBtn.style.display === "none" ? "flex" : "none";
