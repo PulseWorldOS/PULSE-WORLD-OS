@@ -2517,14 +2517,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (!msg.aiSession) {
         (async () => {
-          aiSession = await LanguageModel.create({
-            expectedOutputs: [
-              { 
-                type: "text", 
-                languages: ["en"] 
-              }
-            ]
-          });
+          aiSession = await chrome.storage.local.get(["aiSession"]);
+          if (!aiSession) {
+            aiSession = await LanguageModel.create({
+              expectedOutputs: [
+                { 
+                  type: "text", 
+                  languages: ["en"] 
+                }
+              ]
+            });
+            safeStorageSet({ aiSession });
+          }
         })();
       }
       sendResponse({ ok: true, aiSession });
