@@ -598,7 +598,7 @@ async function CheckEarnState() {
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";
       pbPulseEarn.style.opacity = "1";
-      pbPulseEarn.style.transform = "translate(250px, 111px)";
+      pbPulseEarn.style.transform = "translate(240px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
     }, 1200);
@@ -642,7 +642,7 @@ async function CheckEarnState() {
         pbPulseEarn.id = "pbPulseEarn";
         pbPulseEarn.className = "pbPulseEarn";
         pbPulseEarn.style.opacity = "1";
-        pbPulseEarn.style.transform = "translate(250px, 111px)";
+        pbPulseEarn.style.transform = "translate(240px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
       }, 1200);

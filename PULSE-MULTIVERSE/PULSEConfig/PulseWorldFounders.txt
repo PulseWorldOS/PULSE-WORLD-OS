@@ -516,10 +516,13 @@ founderVideo = document.getElementById("founderVideo");
     badge2.classList.add("talking");
     setTimeout(() => badge2.classList.remove("talking"), 12000); // hides after 3s
   }
-  pulsepalSpeak("Welcome to the Founders'/Architects’ Domain — the thinkers who engineered PulseWorld’s structure, its drift‑physics, and its living systems. Their designs still guide every realm you travel through.");
-PulseRealm.__LOAD_END = performance.now();
+  PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
 
+  const response = await aiSession.prompt("Tell me more about the PulseWorld Founders page and who is on it and involved directly or indirectly?");
+    console.log("Pulse Pal:", response);
+    if (!response) pulsepalSpeak("Welcome to the Founders'/Architects’ Domain — the thinkers who engineered PulseWorld’s structure, its drift‑physics, and its living systems. Their designs still guide every realm you travel through.");
+    if (response) pulsepalSpeak(response);
 })();
 
 </script>

@@ -85,9 +85,7 @@ PulseRealm.CurrentHost = current;
 console.log(`🌐 PULSE MULTIVERSAL BOOT v40.0 — %c[PULSEWORLD] PulseWorld Current Host: ${PulseRealm.CurrentHost}`,
 "color:#00FF9C; font-weight:bold; font-family:monospace;"
 );
-let RunningAI = false;
-let aiSession = null;
-let identity = PulseRealm.PulseIdentity;
+
 function stripTimestamp(alias) {
   if (!alias || typeof alias !== "string") return "";
   return alias.replace(/-M#.*$/, "");
@@ -110,6 +108,9 @@ const DEFAULT_PHOTO = "./_EXPRESSIONS/_PEX/BUILD/FrustratedLogo.webp.pex";
 const DEFAULT_ALIAS = "./_EXPRESSIONS/_PEX/BUILD/FrustratedAlias.webp.pex";
 const DEFAULT_BIZ = "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizLogo.webp.pex";
 const DEFAULT_BIZ_ALIAS = "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizAlias.webp.pex";
+let RunningAI = false;
+let aiSession = null;
+let identity = PulseRealm.PulseIdentity;
 let meshVideo = document.getElementById("meshVideo");
 let emailVideo = document.getElementById("emailVideo");
 let assetVideo = document.getElementById("assetVideo");
@@ -8360,7 +8361,7 @@ async function runLocalAI() {
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-    const rawPrompt = `What is your opinion on PulseWorld.net and its Tiered Multiversal Realms (${PulseRealm.CurrentHost}) and its unique architecture and design?`;
+    let rawPrompt = `What is your opinion on PulseWorld.net and its Tiered Multiversal Realms specifically (${PulseRealm.CurrentHost}) and its unique architecture and design?`;
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
 - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
