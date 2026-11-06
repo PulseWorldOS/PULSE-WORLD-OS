@@ -530,6 +530,23 @@ checkPersistentStorage(true);
         </div>
       </div>
 
+      <div class="pw-console-ai" id="pw-console-ai" role="ai" aria-live="polite">
+        <div class="pw-log-line">
+          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INIT] PulseWorld Console Initialized.
+        </div>
+
+        <div class="pw-log-line">
+          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::BOOT] Mesh Window Stable.
+        </div>
+
+        <div class="pw-log-line">
+          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::SYNC] PulseBand Sync Active.
+        </div>
+
+        <div class="pw-log-line">
+          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INFO] Awaiting New Diagnostic Signals…
+        </div>
+      </div>
 
       <div class="pw-console-footer">
         <span class="pw-console-status" role="status">
@@ -2442,9 +2459,7 @@ let pwErrors = [];
       const aiTab = document.createElement("div");
       aiTab.className = "pw-tab";
       aiTab.textContent = "PULSEPAL";
-      let aiLogBox = document.createElement("div");
-      aiLogBox.className = "pw-console-ai";
-      aiLogBox.id = "pw-console-ai";
+      let aiLogBox = document.getElementById("pw-console-ai");
 
       tabsBar.appendChild(logTab);
       tabsBar.appendChild(tasksTab);
