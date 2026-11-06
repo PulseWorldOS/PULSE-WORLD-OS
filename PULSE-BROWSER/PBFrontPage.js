@@ -404,16 +404,16 @@ let pulseTabs = {};
 let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconCaches1"], (res) => {
-  if (res.PulseBrowserFaviconCaches1) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconCaches1;
+chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
+  if (res.PulseBrowserFaviconMultiverse) {
+    PBFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
 
 
 function saveCache() {
-  PulsesafeStorageSet({ PulseBrowserFaviconCaches1: PBFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
 }
 
 async function pbRequestCacheList2() {
