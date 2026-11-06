@@ -10,7 +10,7 @@ let authorityRealm = null;
 let EarnHidden = false;
 let PULSE_ONLINE = false;
 let aiSession = null;
-let PulsePalAIMemoryBuffer = [];
+let PulseAIMemoryBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
@@ -2523,9 +2523,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAI_SESSION":
-      if (msg.PulsePalAIMemoryBuffer) {
-        PulsePalAIMemoryBuffer = msg.PulsePalAIMemoryBuffer;
-        safeStorageSet({ PulsePalAIMemoryBuffer });
+      if (msg.PulseAIMemoryBuffer) {
+        PulseAIMemoryBuffer = msg.PulseAIMemoryBuffer;
+        safeStorageSet({ PulseAIMemoryBuffer });
         // (async () => {
         //   aiSession = await chrome.storage.local.get(["aiSession"]);
         //   if (!aiSession) {
@@ -2534,7 +2534,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         //   }
         //   sendResponse({ ok: true, aiSession });
         // })();
-        sendResponse({ ok: true, PulsePalAIMemoryBuffer });
+        sendResponse({ ok: true, PulseAIMemoryBuffer });
       }
       return true;
 

@@ -590,7 +590,7 @@ async function getSWSize() {
 
 async function getAI2Size() {
   try {
-    return new Blob([PulsePalAIMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulseAIMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
