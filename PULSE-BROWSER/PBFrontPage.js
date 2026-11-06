@@ -13,6 +13,9 @@ let EarnHidden = false;
 let RunningAI = false;
 let EarnDetailsHidden = false;
 let socialMediaActiveLink = null;
+let keyIsDown = false;
+let keyHoldTimer = null;
+let keyHold2Timer = null;
 // Your cybernetic state architecture
 let aiSession = null;
 let PulsePalMemoryBuffer = [];
@@ -190,9 +193,13 @@ ${rawPrompt}
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
     if (CompanionDetailsMessage) {
+      CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
+      const now = Date.now();
+      const ItsTime = new Date(now).toLocaleString();
+      const showTime = `[${ItsTime}]`
+      if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       if (!LastMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     }
@@ -223,7 +230,10 @@ function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">Pulse Pal:</font> `) + text + `<br><br>`;
+  const now = Date.now();
+  const ItsTime = new Date(now).toLocaleString();
+  const showTime = `[${ItsTime}]`
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
   PulsePalMemoryBuffer.push(area.innerHTML);
@@ -910,6 +920,13 @@ async function getSWSize() {
   }
 }
 
+async function getAISize() {
+  try {
+    return new Blob([PulsePalMemoryBuffer]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
 
 async function pbRenderStorageStats2(history) {
   if (!navigator.storage || !navigator.storage.estimate) {
@@ -925,8 +942,10 @@ async function pbRenderStorageStats2(history) {
   const localUsed = estimate.usage || 0;
   const localQuota = estimate.quota || 1;
   const swSize = await getSWSize();
+  let aiSize = await getAISize();
+  console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
-
+  aiSize = swSize + aiSize;
   // ⭐ SYNC STORAGE (chrome.storage.sync)
   const syncItems = await new Promise(resolve =>
     chrome.storage.sync.get(null, resolve)
@@ -934,16 +953,16 @@ async function pbRenderStorageStats2(history) {
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
 
   // ⭐ Combined totals
-  totalUsed = localUsed + syncBytes + swSize;
+  totalUsed = localUsed + syncBytes + aiSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (syncBytes / (1024 * 1024)).toFixed(2);
-  const swMB = (swSize / (1024 * 1024)).toFixed(2);
+  const swMB = (aiSize / (1024 * 1024)).toFixed(2);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
-  const swKB = (swSize / 1024).toFixed(2);
+  const swKB = (aiSize / 1024).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -2236,10 +2255,6 @@ async function pbLoadExtensionSettings() {
     return {};
   }
 }
-
-let keyIsDown = false;
-let keyHoldTimer = null;
-let keyHold2Timer = null;
 
 async function getSettings() {
   return new Promise((resolve) => {

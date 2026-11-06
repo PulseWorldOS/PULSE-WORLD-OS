@@ -201,7 +201,7 @@ function updateNavigator(settings, realm) {
   el.innerHTML = `
     <div class="pb-hud-title">Pulse Pal</div>
     Enabled: <font color="${enabledColor(settings.enablePulsePal)}">${settings.enablePulsePal}</font><br/>
-    AI Console: <font color="${tfColor(settings.enablePulsePalConsole)}">${settings.enablePulsePalConsole}</font><br/>
+    AI Companion: <font color="${tfColor(settings.enablePulsePalConsole)}">${settings.enablePulsePalConsole}</font><br/>
     Immortal Memory: <font color="${tfColor(settings.enablePulsePalMemory)}">${settings.enablePulsePalMemory}</font><br/>
     Cybernetic Actions: <font color="${tfColor(settings.enablePulsePalCybernetics)}">${settings.enablePulsePalCybernetics}</font><br/>
   `;
