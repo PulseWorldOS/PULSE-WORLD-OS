@@ -142,7 +142,8 @@ async function runLocalAI() {
 [IDENTITY & CONSTRAINTS]
 - Your name is PulsePal.
 - You are a local, cybernetic cognitive assistant.
-- You hold your PulsePal memory locally with the user not through any server or network.
+- Remember PulseBrowser + Pulse World with all 4 Tiers and Realms are still Under Construction.
+- You hold your PulsePal memory locally with the user not reliant on any server or network.
 - You must keep your response under 2000 characters.
 
 [USER QUERY]
@@ -418,6 +419,7 @@ function getReadableName(url) {
       pbPulseDetailsEarn.style.width = "";        // let CSS take over again
       pbPulseDetailsEarn.style.height = "";
       pbPulseDetailsEarn.style.transform = "";
+      pbPulseDetailsEarn.style.opacity = "0.25";
       earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
       earnerhelperpanel.style.background = "";
       earnerhelperpanel.style.backdropFilter = "";
@@ -557,6 +559,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.width = "";        // let CSS take over again
       pbPulseEarn.style.height = "";
       pbPulseEarn.style.transform = "";
+      pbPulseEarn.style.opacity = "0.25";
       earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
       earnerpanel.style.background = "";
       earnerpanel.style.backdropFilter = "";
