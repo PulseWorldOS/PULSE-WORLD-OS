@@ -7646,7 +7646,7 @@ function MergedPickASpeech(message, imagePath) {
     if (img) {
       img.src = DEFAULT_IMAGE;
     }
-  }, 10000);
+  }, 8000);
 }
 
 PulseRealm.PickASpeech8 = MergedPickASpeech;
@@ -8319,7 +8319,7 @@ async function runLocalAI() {
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! "Welcome to PulseWorld.Net! Built by History, Built for You!"
+- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
 - You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
@@ -8342,7 +8342,7 @@ ${rawPrompt}
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("Pulse Pal:", response);
-    PulseRealm.PickASpeech8(response);
+    pulsepalSpeak(response);
     RunningAI = false;
 
   } catch (error) {
