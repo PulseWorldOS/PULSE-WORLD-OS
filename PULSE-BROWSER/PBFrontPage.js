@@ -130,15 +130,19 @@ async function runLocalAI() {
   } catch (err) {}
 
   try {
-    if (!aiSession) {
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
-        if (!response || !response.ok) {
-          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-          return;
-        }
-        if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-        if (response.aiSession) aiSession = response.aiSession;
-      });
+      // if (!aiSession) {
+      // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+      //   if (chrome.runtime.lastError) return;
+      //   if (!response || !response.ok) {
+      //     PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      //     return;
+      //   }
+      //   if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+      //   if (response.aiSession) aiSession = response.aiSession;
+      //   console.log(aiSession);
+      //   console.log(response.aiSession);
+      //   console.log(response);
+      // });
       if (!aiSession) {
         // 1. Initialize the session using the modern nested outputs architecture
         aiSession = await LanguageModel.create({
@@ -150,7 +154,7 @@ async function runLocalAI() {
           ]
         });
       }
-    }
+    // }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
@@ -189,14 +193,18 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
     }
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
-      if (!response || !response.ok) {
-        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-        return;
-      }
-      if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-      if (response.aiSession) aiSession = response.aiSession;
-    });
+    // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+    //   if (chrome.runtime.lastError) return;
+    //   if (!response || !response.ok) {
+    //     PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+    //     return;
+    //   }
+    //   if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+    //   if (response.aiSession) aiSession = response.aiSession;
+    //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Response:", response.aiSession);
+    //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
+    //   console.log(response);
+    // });
     PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
@@ -241,15 +249,18 @@ CompanionConsoleSend.onclick = async () => {
     );
   }, 300);
   aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
-    if (!response || !response.ok) {
-      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-      return;
-    }
-    if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-    if (response.aiSession) aiSession = response.aiSession;
-    if (!response.aiSession && aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, aiSession);
-  });
+  // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+  //   if (chrome.runtime.lastError) return;
+  //   if (!response || !response.ok) {
+  //     PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+  //     return;
+  //   }
+  //   if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
+  //   if (response.aiSession) aiSession = response.aiSession;
+  //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Response:", response.aiSession);
+  //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
+  //   console.log(response);
+  // });
 };
 
 async function initializeExoskeleton() {
@@ -1284,6 +1295,7 @@ setInterval(() => {
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+    if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
     }
@@ -2260,6 +2272,7 @@ async function updateModuleIcons(settings, browser) {
     }
   });
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+    if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
     }
@@ -3788,6 +3801,7 @@ setInterval(() => {
 
 function CheckBackTab() {
   chrome.runtime.sendMessage({ type: "OPEN_TAB_BACK" }, (response) => {
+    if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
     }
@@ -4024,6 +4038,7 @@ function CheckBackTab() {
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden || document.visibilityState === "visible") {
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+        if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           return;
         }

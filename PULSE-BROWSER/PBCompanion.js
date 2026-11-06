@@ -2517,8 +2517,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (msg.aiSession) {
         aiSession = msg.aiSession;
-        sendResponse({ ok: true, aiSession });
-      } else {
+        console.log(aiSession);
         sendResponse({ ok: true, aiSession });
       }
       break;
