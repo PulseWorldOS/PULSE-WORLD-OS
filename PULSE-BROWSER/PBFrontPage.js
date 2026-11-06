@@ -162,7 +162,7 @@ async function runLocalAI() {
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
 - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
-- You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
+- You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.. and also if asked for code developments, a developer's best friend.
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
 - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
@@ -233,6 +233,7 @@ function appendCompanionMessage(area, role, text) {
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
   PulsePalAIMemoryBuffer.push(bubble.innerHTML);
+  PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
 }
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
@@ -257,7 +258,6 @@ CompanionConsoleSend.onclick = async () => {
       "Pulse Pal",
       response
     );
-    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
     aiSize = await getAISize();
   }, 300);
   
