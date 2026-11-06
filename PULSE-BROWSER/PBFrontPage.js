@@ -155,8 +155,9 @@ async function runLocalAI() {
 - PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, or Shannon. Architects like Berners Lee, Cerf, and Baran), then says Explore Us!
 - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
 - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
+- PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM earning running with your system, in an immortal tab that continues to build Value.
 - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
-- You must keep your response under 3000-4000 characters.
+- You must keep your response under 3000-3500 characters.
 
 [USER QUERY]
 ${rawPrompt}
