@@ -1324,6 +1324,15 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
+    if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
+  });
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
