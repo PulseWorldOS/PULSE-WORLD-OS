@@ -263,7 +263,8 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("Pulse Pal:", response);
-  if (response.includes("Website Call")) {
+  appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+  if (response.includes("{*Website Call:")) {
     const urlRegex = /https?:\/\/([^\s]+)/i;
     const match = response.match(urlRegex);
     if (match && match[1]) {
@@ -274,13 +275,6 @@ CompanionConsoleSend.onclick = async () => {
       console.log("URL not found in the provided string.");
     } 
   }
-  setTimeout(() => {
-    appendCompanionMessage(
-      CompanionDetailsMessage,
-      "Pulse Pal",
-      response
-    );
-  }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
