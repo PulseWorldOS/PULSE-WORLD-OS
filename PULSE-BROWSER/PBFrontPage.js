@@ -130,6 +130,7 @@ async function runLocalAI() {
     LastMessage = PulsePalMemoryBuffer.pop(); 
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.innerHTML = LastMessage;
+    CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     console.log(SessionAI.PulsePalMemoryBuffer);
   } catch (err) {}
 
