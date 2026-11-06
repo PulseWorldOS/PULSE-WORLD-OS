@@ -126,7 +126,9 @@ async function runLocalAI() {
     console.log(PulsePalMemoryBuffer);
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryBuffer"]);
     PulsePalMemoryBuffer = SessionAI.PulsePalMemoryBuffer ?? [];
-    console.log(PulsePalMemoryBuffer);
+    const LastMessage = PulsePalMemoryBuffer.pop();
+    CompanionDetailsMessage.innerHTML = LastMessage;
+    console.log(SessionAI.PulsePalMemoryBuffer);
   } catch (err) {}
 
   try {
@@ -139,9 +141,6 @@ async function runLocalAI() {
         }
         if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
         if (response.aiSession) aiSession = response.aiSession;
-        console.log(aiSession);
-        console.log(response.aiSession);
-        console.log(response);
       });
       if (!aiSession) {
         PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
@@ -192,7 +191,7 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-      PulsePalMemoryBuffer.push(CompanionDetailsMessage.textContent);
+      PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     }
     // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
     //   if (chrome.runtime.lastError) return;
@@ -206,7 +205,7 @@ ${rawPrompt}
     //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
     //   console.log(response);
     // });
-    PulsesafeStorageSet({ PulsePalMemoryBuffer: PulsePalMemoryBuffer });
+    PulsesafeStorageSet({ PulsePalMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
     RunningAI = false;
@@ -248,8 +247,9 @@ CompanionConsoleSend.onclick = async () => {
       response
     );
   }, 300);
-  PulsePalMemoryBuffer.push(CompanionDetailsMessage.textContent);
-  PulsesafeStorageSet({ PulsePalMemoryBuffer: PulsePalMemoryBuffer });
+  PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
+  PulsesafeStorageSet({ PulsePalMemoryBuffer });
+  
   // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
   //   if (chrome.runtime.lastError) return;
   //   if (!response || !response.ok) {

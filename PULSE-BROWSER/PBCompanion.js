@@ -2532,6 +2532,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           sendResponse({ ok: true, aiSession });
         })();
       } else {
+        aiSession = msg.aiSession;
         safeStorageSet({ aiSession });
         sendResponse({ ok: true, aiSession });
       }
