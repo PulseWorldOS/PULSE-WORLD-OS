@@ -151,6 +151,7 @@ async function runLocalAI() {
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction.
 - You hold your PulsePal memory locally with the user not reliant on any server or network.. including ourself.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
+- PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly.
 - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
 - You must keep your response under 3000 characters.
 
@@ -622,7 +623,7 @@ async function pbRenderCacheList2() {
 
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
-    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
       PulseBrowser OS - System Details
     </div>
   `;
