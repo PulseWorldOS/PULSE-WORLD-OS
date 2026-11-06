@@ -945,15 +945,15 @@ async function pbRenderStorageStats2(history) {
   let aiSize = await getAISize();
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
-  aiSize = swSize + aiSize;
+  
   // ⭐ SYNC STORAGE (chrome.storage.sync)
   const syncItems = await new Promise(resolve =>
     chrome.storage.sync.get(null, resolve)
   );
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
-
+  aiSize = syncBytes + aiSize;
   // ⭐ Combined totals
-  totalUsed = localUsed + syncBytes + aiSize;
+  totalUsed = localUsed + swSize + aiSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
   // ⭐ Conversions
