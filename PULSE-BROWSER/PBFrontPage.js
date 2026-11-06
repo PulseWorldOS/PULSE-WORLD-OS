@@ -16,6 +16,7 @@ let socialMediaActiveLink = null;
 let keyIsDown = false;
 let keyHoldTimer = null;
 let keyHold2Timer = null;
+let aiSize = 0;
 // Your cybernetic state architecture
 let aiSession = null;
 let PulsePalMemoryBuffer = [];
@@ -203,7 +204,9 @@ ${rawPrompt}
       if (!LastMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     }
-  
+    PulsesafeStorageSet({ PulsePalMemoryBuffer });
+    aiSize = await getAISize();
+    RunningAI = false;
     // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
     //   if (chrome.runtime.lastError) return;
     //   if (!response || !response.ok) {
@@ -216,10 +219,9 @@ ${rawPrompt}
     //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
     //   console.log(response);
     // });
-    PulsesafeStorageSet({ PulsePalMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
-    RunningAI = false;
+
   } catch (error) {
     console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
     RunningAI = false;
@@ -255,7 +257,7 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("Pulse Pal:", response);
-  setTimeout(() => {
+  setTimeout(async () => {
     appendCompanionMessage(
       CompanionDetailsMessage,
       "Pulse Pal",
@@ -263,6 +265,7 @@ CompanionConsoleSend.onclick = async () => {
     );
     PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
     PulsesafeStorageSet({ PulsePalMemoryBuffer });
+    aiSize = await getAISize();
   }, 300);
   
   // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
@@ -942,7 +945,7 @@ async function pbRenderStorageStats2(history) {
   const localUsed = estimate.usage || 0;
   const localQuota = estimate.quota || 1;
   const swSize = await getSWSize();
-  let aiSize = await getAISize();
+  aiSize = await getAISize();
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
   
@@ -958,11 +961,12 @@ async function pbRenderStorageStats2(history) {
 
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
-  const syncMB = (syncBytes / (1024 * 1024)).toFixed(2);
-  const swMB = (aiSize / (1024 * 1024)).toFixed(2);
+  const syncMB = (aiSize / (1024 * 1024)).toFixed(2);
+  const swMB = (swSize / (1024 * 1024)).toFixed(2);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
-  const swKB = (aiSize / 1024).toFixed(2);
+  const swKB = (swSize / 1024).toFixed(2);
+  const syncKB = (aiSize / 1024).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -983,7 +987,7 @@ async function pbRenderStorageStats2(history) {
   // ⭐ Sync display formatting
   let syncDisplay;
   if (syncBytes < 1024 * 1024) {
-    syncDisplay = (syncBytes / 1024).toFixed(2) + " KB";
+    syncDisplay = syncKB + " KB";
   } else {
     syncDisplay = syncMB + " MB";
   }
@@ -1062,7 +1066,7 @@ async function pbRenderStorageStats2(history) {
         </div>
 
         <div style="flex:1;">
-          <strong>Sync Storage:</strong><br>
+          <strong>AI Storage:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
           <strong>System Quota:</strong><br>

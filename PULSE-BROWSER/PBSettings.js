@@ -602,6 +602,8 @@ async function pbRenderStorageStats(history) {
   const localUsed = estimate.usage || 0;
   const localQuota = estimate.quota || 1;
   const swSize = await getSWSize();
+  let aiSize = await getAISize();
+  console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
 
   // ⭐ SYNC STORAGE (chrome.storage.sync)
@@ -609,18 +611,19 @@ async function pbRenderStorageStats(history) {
     chrome.storage.sync.get(null, resolve)
   );
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
-
+  aiSize = syncBytes + aiSize;
   // ⭐ Combined totals
-  totalUsed = localUsed + syncBytes + swSize;
+  totalUsed = localUsed + swSize + aiSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
-  const syncMB = (syncBytes / (1024 * 1024)).toFixed(2);
+  const syncMB = (aiSize / (1024 * 1024)).toFixed(2);
   const swMB = (swSize / (1024 * 1024)).toFixed(2);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
+  const syncKB = (aiSize / 1024).toFixed(2);
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -637,7 +640,7 @@ async function pbRenderStorageStats(history) {
   // ⭐ Sync display formatting
   let syncDisplay;
   if (syncBytes < 1024 * 1024) {
-    syncDisplay = (syncBytes / 1024).toFixed(2) + " KB";
+    syncDisplay = syncKB + " KB";
   } else {
     syncDisplay = syncMB + " MB";
   }
@@ -715,7 +718,7 @@ async function pbRenderStorageStats(history) {
         </div>
 
         <div style="flex:1;">
-          <strong>Sync Storage:</strong><br>
+          <strong>AI Storage:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
           <strong>System Quota:</strong><br>
