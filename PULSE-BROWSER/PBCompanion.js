@@ -2525,14 +2525,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (msg.PulsePalAIMemoryBuffer) {
         PulsePalAIMemoryBuffer = msg.PulsePalAIMemoryBuffer;
-        // (async () => {
+        (async () => {
         //   aiSession = await chrome.storage.local.get(["aiSession"]);
         //   if (!aiSession) {
-                initializeExoskeleton();
+                await initializeExoskeleton();
         //      safeStorageSet({ aiSession });
         //   }
         //   sendResponse({ ok: true, aiSession });
-        // })();
+        })();
         safeStorageSet({ PulsePalAIMemoryBuffer });
         sendResponse({ ok: true, PulsePalAIMemoryBuffer });
       }

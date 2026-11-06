@@ -154,7 +154,7 @@ async function runLocalAI() {
       });
       PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
       // 1. Initialize the session using the modern nested outputs architecture
-      initializeExoskeleton();
+      await initializeExoskeleton();
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
