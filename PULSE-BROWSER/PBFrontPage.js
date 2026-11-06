@@ -153,7 +153,7 @@ async function runLocalAI() {
 - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourself.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
 - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
-- PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, or Shannon. Architects like Berners Lee, Cerf, and Baran), then says Explore Us!
+- PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, and Perlman), then says Explore Us!
 - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
 - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
 - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, that if you add to browser.. then click back.. it enables offline, until online, then site wipes query string takes back over. (Still Testing)
