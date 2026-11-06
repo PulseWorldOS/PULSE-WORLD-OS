@@ -2518,6 +2518,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.aiSession) {
         aiSession = msg.aiSession;
         sendResponse({ ok: true, aiSession });
+      } else {
+        sendResponse({ ok: true, aiSession });
       }
       break;
 
