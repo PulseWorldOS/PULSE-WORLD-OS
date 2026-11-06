@@ -5,7 +5,7 @@ let engineType = "text";
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
-let CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
+let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let socialMode = "Internal";
 let EarnHidden = false;
 let EarnDetailsHidden = false;
@@ -153,10 +153,11 @@ ${rawPrompt}
     console.log("PulsePal:", response);
     
     // 4. Update the DOM elements smoothly
-    CompanionDetailsMessage = document.getElementById("CompanionDetailsMessage");
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      CompanionDetailsMessage.innerHTML = "<strong>PulsePal:</strong> " + response;
+      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + "<p><strong>PulsePal:</strong> " + response;
+      CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
     // PulsesafeStorageSet({ aiSession: aiSession });
     // // 5. Safely clean up the hardware resource allocation
