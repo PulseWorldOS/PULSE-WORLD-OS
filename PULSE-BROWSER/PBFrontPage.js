@@ -118,15 +118,22 @@ async function runLocalAI() {
   }
 
   try {
-    // 1. Initialize the session using the modern nested outputs architecture
-    aiSession = await LanguageModel.create({
-      expectedOutputs: [
-        { 
-          type: "text", 
-          languages: ["en"] 
-        }
-      ]
-    });
+    const SessionAI = await chrome.storage.local.get(["aiSession"]);
+    aiSession = SessionAI.aiSession;
+  } catch (err) {}
+
+  try {
+    if (!aiSession) {
+      // 1. Initialize the session using the modern nested outputs architecture
+      aiSession = await LanguageModel.create({
+        expectedOutputs: [
+          { 
+            type: "text", 
+            languages: ["en"] 
+          }
+        ]
+      });
+    }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
@@ -151,9 +158,9 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = "<strong>PulsePal:</strong> " + response;
     }
-
-    // 5. Safely clean up the hardware resource allocation
-    aiSession.destroy();
+    PulsesafeStorageSet({ aiSession: aiSession });
+    // // 5. Safely clean up the hardware resource allocation
+    // aiSession.destroy();
   } catch (error) {
     console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
   }
