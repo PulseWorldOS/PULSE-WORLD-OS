@@ -182,8 +182,8 @@ ${rawPrompt}
 function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
-  bubble.style.color = role === "user" ? "#f9f9f9" : "#0FF";
-  bubble.textContent = (role === "user" ? "You: " : "PulsePal: ") + text;
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  bubble.textContent = (role === "user" ? "You: " : `<font color="#0FF">PulsePal:</font> `) + text;
   aiMemoryBuffer.push(bubble.textContent);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
