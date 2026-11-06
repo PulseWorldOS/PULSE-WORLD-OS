@@ -2477,6 +2477,13 @@ async function setTheStage() {
   setInterval(pbRefreshWarmDocument, interval);  
 
   document.addEventListener("keydown", (e) => {
+    const consoleinput = document.getElementById("CompanionConsoleInput");
+    if (document.activeElement === consoleinput) {
+        console.log("The element has focus!");
+        return;
+    } else {
+        console.log("The element does not have focus.");
+    }
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
     if (moduleKeys.includes(key) && e.repeat) { 
