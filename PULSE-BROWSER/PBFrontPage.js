@@ -112,13 +112,13 @@ async function runLocalAI() {
   if (RunningAI) return; // already running
   RunningAI = true;
   if (typeof LanguageModel === 'undefined') {
-    console.error("PulsePal (Gemini Nano) is not supported in this browser version.");
+    console.error("Pulse Pal (Gemini Nano) is not supported in this browser version.");
     return;
   }
 
   const status = await LanguageModel.availability();
   if (status === 'unavailable') {
-    console.error("PulsePal (Gemini Nano) cannot run on this device hardware.");
+    console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
@@ -146,11 +146,11 @@ async function runLocalAI() {
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Your name is PulsePal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
+- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction.
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-- You hold your PulsePal memory locally with the user not reliant on any server or network.. including ourself.
+- You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourself.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
 - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
 - PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, or Shannon. Architects like Berners Lee, Cerf, and Baran), then says Explore Us!
@@ -164,18 +164,18 @@ async function runLocalAI() {
 [USER QUERY]
 ${rawPrompt}
 
-[PULSEPAL RESPONSE]:`;
+[PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
-    console.log("PulsePal:", response);
+    console.log("Pulse Pal:", response);
     // 4. Update the DOM elements smoothly
     
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
     if (CompanionDetailsMessage) {
-      CompanionTitle.innerHTML = "PulsePal (Multiverse #" + (Math.random()*100) + ")"
+      CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">PulsePal:</font></strong> ` + response;
+      CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal:</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       aiMemoryBuffer.push(CompanionDetailsMessage.textContent);
     }
@@ -184,7 +184,7 @@ ${rawPrompt}
     // aiSession.destroy();
     RunningAI = false;
   } catch (error) {
-    console.error("Failed to initialize PulsePal (Gemini Nano) session:", error);
+    console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
     RunningAI = false;
   }
 }
@@ -193,7 +193,7 @@ function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">PulsePal:</font> `) + text + `<br><br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You:</font> ` : `<font color="#0FF">Pulse Pal:</font> `) + text + `<br><br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -207,12 +207,12 @@ CompanionConsoleSend.onclick = async () => {
   appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
-  console.log("PulsePal:", response);
+  console.log("Pulse Pal:", response);
   PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
   setTimeout(() => {
     appendCompanionMessage(
       CompanionDetailsMessage,
-      "PulsePal",
+      "Pulse Pal",
       response
     );
   }, 300);
