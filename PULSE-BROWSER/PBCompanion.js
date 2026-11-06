@@ -2521,15 +2521,23 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // (async () => {
         //   aiSession = await chrome.storage.local.get(["aiSession"]);
         //   if (!aiSession) {
-        //     aiSession = await LanguageModel.create({
-        //       expectedOutputs: [
-        //         { 
-        //           type: "text", 
-        //           languages: ["en"] 
-        //         }
-        //       ]
-        //     });
-        //     safeStorageSet({ aiSession });
+                // aiSession = await LanguageModel.create({
+                // expectedOutputs: [
+                //   { 
+                //     type: "text", 
+                //     languages: ["en"] 
+                //   }, 
+                //   { 
+                //     type: "html", 
+                //     languages: ["en"] 
+                //   }, 
+                //   { 
+                //     type: "javascript", 
+                //     languages: ["en"] 
+                //   } 
+                // ]
+                // });
+        //      safeStorageSet({ aiSession });
         //   }
         //   sendResponse({ ok: true, aiSession });
         // })();

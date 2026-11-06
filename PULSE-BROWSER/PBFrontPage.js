@@ -158,8 +158,16 @@ async function runLocalAI() {
         expectedOutputs: [
           { 
             type: "text", 
-            languages: ["en", "javascript", "html"] 
-          }
+            languages: ["en"] 
+          }, 
+          { 
+            type: "html", 
+            languages: ["en"] 
+          }, 
+          { 
+            type: "javascript", 
+            languages: ["en"] 
+          } 
         ]
       });
     }
@@ -285,7 +293,20 @@ CompanionConsoleSend.onclick = async () => {
 async function initializeExoskeleton() {
   aiSession = await LanguageModel.create({
     systemPrompt: "You are a cognitive amplifier. Enhance, polish, and optimize the user's intent without changing their core decision.",
-    expectedOutputs: [{ type: "text", languages: ["en"] }]
+    expectedOutputs: [
+      { 
+        type: "text", 
+        languages: ["en"] 
+      }, 
+      { 
+        type: "html", 
+        languages: ["en"] 
+      }, 
+      { 
+        type: "javascript", 
+        languages: ["en"] 
+      } 
+    ]
   });
 }
 
