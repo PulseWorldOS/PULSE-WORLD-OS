@@ -2534,7 +2534,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         //   }
         //   sendResponse({ ok: true, aiSession });
         // })();
-        sendResponse({ ok: true, PulseAIPalMemoryBuffer });
       } else {
         (async () => {
           const SessionAI = await chrome.storage.local.get(["PulseAIPalMemoryBuffer"]);
@@ -2542,6 +2541,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           console.log(SessionAI.PulseAIPalMemoryBuffer);
         })();
       }
+      sendResponse({ ok: true, PulseAIPalMemoryBuffer });
       return true;
 
     case "PBCONSOLE_GET":
