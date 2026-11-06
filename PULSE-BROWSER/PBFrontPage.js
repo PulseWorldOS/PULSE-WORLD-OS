@@ -117,10 +117,10 @@ async function runLocalAI() {
     return;
   }
 
-  try {
-    const SessionAI = await chrome.storage.local.get(["aiSession"]);
-    aiSession = SessionAI.aiSession;
-  } catch (err) {}
+  // try {
+  //   const SessionAI = await chrome.storage.local.get(["aiSession"]);
+  //   aiSession = SessionAI.aiSession;
+  // } catch (err) {}
 
   try {
     if (!aiSession) {
@@ -158,7 +158,7 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       CompanionDetailsMessage.innerHTML = "<strong>PulsePal:</strong> " + response;
     }
-    PulsesafeStorageSet({ aiSession: aiSession });
+    // PulsesafeStorageSet({ aiSession: aiSession });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
   } catch (error) {
