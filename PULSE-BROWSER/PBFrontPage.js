@@ -15,7 +15,7 @@ let EarnDetailsHidden = false;
 let socialMediaActiveLink = null;
 // Your cybernetic state architecture
 let aiSession = null;
-let memoryBuffer = [];
+let aiMemoryBuffer = [];
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -123,10 +123,10 @@ async function runLocalAI() {
   }
 
   try {
-    console.log(memoryBuffer);
-    const SessionAI = await chrome.storage.local.get(["memoryBuffer"]);
-    memoryBuffer = SessionAI.memoryBuffer ?? [];
-    console.log(memoryBuffer);
+    console.log(aiMemoryBuffer);
+    const SessionAI = await chrome.storage.local.get(["aiMemoryBuffer"]);
+    aiMemoryBuffer = SessionAI.aiMemoryBuffer ?? [];
+    console.log(aiMemoryBuffer);
   } catch (err) {}
 
   try {
@@ -156,11 +156,11 @@ async function runLocalAI() {
 ${rawPrompt}
 
 [PULSEPAL RESPONSE]:`;
-    memoryBuffer.push(wrappedPrompt);
+    aiMemoryBuffer.push(wrappedPrompt);
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("PulsePal:", response);
-    memoryBuffer.push(response);
+    aiMemoryBuffer.push(response);
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
@@ -169,8 +169,8 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
-    console.log(memoryBuffer);
-    PulsesafeStorageSet({ memoryBuffer: memoryBuffer });
+    console.log(aiMemoryBuffer);
+    PulsesafeStorageSet({ aiMemoryBuffer: aiMemoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
   } catch (error) {
@@ -185,7 +185,7 @@ function appendCompanionMessage(area, role, text) {
   bubble.style.lineHeight = "1.4";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#0FF";
   bubble.textContent = (role === "user" ? "You: " : "PulsePal: ") + text;
-  memoryBuffer.push(bubble.textContent);
+  aiMemoryBuffer.push(bubble.textContent);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -200,7 +200,7 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("PulsePal:", response);
-  memoryBuffer.push(response);
+  aiMemoryBuffer.push(response);
   setTimeout(() => {
     appendCompanionMessage(
       CompanionLogArea,
@@ -225,7 +225,7 @@ function wipeMemory() {
     aiSession = null;
   }
   // 2. Clear your local memory buffers completely
-  memoryBuffer = [];
+  aiMemoryBuffer = [];
   
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
   
