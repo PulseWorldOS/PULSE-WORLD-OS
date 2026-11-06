@@ -164,7 +164,6 @@ async function runLocalAI() {
 - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! (You are Ready for any Varying User Vocabulary!)
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend. When you give back snippets of anything.. present them in html formatted text.
-- Only when the user specifically asked for you to find a site and take them there.. respond by also adding {*Website Call: (https://www.website.com/)*} to the end only when asked.
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
 - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
@@ -197,26 +196,12 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      if (!LastMessage) appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+      appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
     RunningAI = false;
-    // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
-    //   if (chrome.runtime.lastError) return;
-    //   if (!response || !response.ok) {
-    //     PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-    //     return;
-    //   }
-    //   if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-    //   if (response.aiSession) aiSession = response.aiSession;
-    //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Response:", response.aiSession);
-    //   PB_LOG3.info("PBAI_SESSION Testing Responses and Current, Current:", aiSession);
-    //   console.log(response);
-    // });
-    // // 5. Safely clean up the hardware resource allocation
-    // aiSession.destroy();
 
   } catch (error) {
     console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
@@ -243,7 +228,6 @@ function appendCompanionMessage(area, role, text) {
     }
     if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
     if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
-    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   });
 }
 
@@ -264,9 +248,8 @@ CompanionConsoleSend.onclick = async () => {
   const response = await aiSession.prompt(text);
   console.log("Pulse Pal:", response);
   setTimeout(() => {
-    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
+    appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
   }, 300);
-  appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -276,19 +259,18 @@ CompanionConsoleSend.onclick = async () => {
     }
     if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
     if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
-    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   });
-  if (response.includes("*Website Call:")) {
-    const urlRegex = /https?:\/\/([^\s]+)/i;
-    const match = response.match(urlRegex);
-    if (match && match[1]) {
-      const extractedURL = match[1];
-      console.log("The extracted URL is: " + extractedURL);
-      openNamedTab("PulsePal Tab", extractedURL);
-    } else {
-      console.log("URL not found in the provided string.");
-    } 
-  }
+  // if (response.includes("{*Website Call:")) {
+  //   const urlRegex = /https?:\/\/([^\s]+)/i;
+  //   const match = response.match(urlRegex);
+  //   if (match && match[1]) {
+  //     const extractedURL = match[1];
+  //     console.log("The extracted URL is: " + extractedURL);
+  //     openNamedTab("PulsePal Tab", extractedURL);
+  //   } else {
+  //     console.log("URL not found in the provided string.");
+  //   } 
+  // }
 };
 
 async function initializeExoskeleton() {
@@ -3895,7 +3877,6 @@ function CheckBackTab() {
     if (intervalId) return; // already running
 
     intervalId = setInterval(() => {
-      PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
       pulseRehydrateTabs(); // safe now
