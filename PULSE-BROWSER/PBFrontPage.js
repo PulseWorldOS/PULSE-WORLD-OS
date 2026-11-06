@@ -118,10 +118,10 @@ async function runLocalAI() {
     return;
   }
 
-  // try {
-  //   const SessionAI = await chrome.storage.local.get(["aiSession"]);
-  //   aiSession = SessionAI.aiSession;
-  // } catch (err) {}
+  try {
+    const SessionAI = await chrome.storage.local.get(["memoryBuffer"]);
+    memoryBuffer = SessionAI.memoryBuffer ?? [];
+  } catch (err) {}
 
   try {
     if (!aiSession) {
@@ -149,11 +149,11 @@ async function runLocalAI() {
 ${rawPrompt}
 
 [PULSEPAL RESPONSE]:`;
-
+    memoryBuffer.push(wrappedPrompt);
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("PulsePal:", response);
-    
+    memoryBuffer.push(response);
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
@@ -162,7 +162,7 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       CompanionDetailsMessage.scrollTo(0, CompanionDetailsMessage.scrollTop);
     }
-    // PulsesafeStorageSet({ aiSession: aiSession });
+    PulsesafeStorageSet({ memoryBuffer: memoryBuffer });
     // // 5. Safely clean up the hardware resource allocation
     // aiSession.destroy();
   } catch (error) {
@@ -177,6 +177,7 @@ function appendCompanionMessage(area, role, text) {
   bubble.style.lineHeight = "1.4";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#0FF";
   bubble.textContent = (role === "user" ? "You: " : "PulsePal: ") + text;
+  memoryBuffer.push(bubble.textContent);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -187,10 +188,11 @@ CompanionConsoleSend.onclick = async () => {
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  const response = await aiSession.prompt(text);
-  console.log("PulsePal:", response);
   appendCompanionMessage(CompanionLogArea, "user", text);
   CompanionConsoleInput.value = "";
+  const response = await aiSession.prompt(text);
+  console.log("PulsePal:", response);
+  memoryBuffer.push(response);
   setTimeout(() => {
     appendCompanionMessage(
       CompanionLogArea,
