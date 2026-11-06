@@ -184,18 +184,19 @@ function appendCompanionMessage(area, role, text) {
 }
 
 CompanionConsoleSend.onclick = async () => {
+  let CompanionLogArea = document.getElementById("CompanionLogArea"); 
   let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  appendCompanionMessage(CompanionDetailsMessage, "user", text);
+  appendCompanionMessage(CompanionLogArea, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("PulsePal:", response);
   memoryBuffer.push(response);
   setTimeout(() => {
     appendCompanionMessage(
-      CompanionDetailsMessage,
+      CompanionLogArea,
       "PulsePal",
       response
     );
