@@ -117,7 +117,7 @@ function PulsesafeStorageSet(dataObject) {
 async function runLocalAI() {
   if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
-    console.error("Pulse Pal (Gemini Nano) is not supported in this browser version.");
+    console.error("AI Overmind (Gemini Nano) is not supported in this browser version.");
     return;
   }
   RunningAI = true;
@@ -126,7 +126,7 @@ async function runLocalAI() {
   const status = await LanguageModel.availability();
   const SessionAI = await chrome.storage.local.get(["PulseAIPalMemoryBuffer"]);
   if (status === 'unavailable') {
-    console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
+    console.error("AI Overmind (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
@@ -165,7 +165,7 @@ async function runLocalAI() {
 - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-- You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
+- You hold your AI Overmind & Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
 - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
 - PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, and Perlman), then says Explore Us!
@@ -182,7 +182,7 @@ ${rawPrompt}
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
-    console.log("Pulse Pal:", response);
+    console.log("AI Overmind:", response);
     
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
@@ -190,13 +190,13 @@ ${rawPrompt}
     if (CompanionDetailsMessage) {
       CompanionTitle.style.marginBottom = "6px;"
       CompanionTitle.style.textAlign = "center";
-      CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
+      CompanionTitle.innerHTML = "AI Overmind (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
-      // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
+      appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
+      // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
@@ -211,7 +211,7 @@ ${rawPrompt}
     RunningAI = false;
 
   } catch (error) {
-    console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
+    console.error("Failed to initialize AI Overmind (Gemini Nano) session:", error);
     RunningAI = false;
   }
 }
@@ -234,7 +234,7 @@ function appendCompanionMessage(area, role, text) {
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`
   bubblebr.innerHTML = `<br>`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulseAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
@@ -268,9 +268,9 @@ CompanionConsoleSend.onclick = async () => {
   appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
-  console.log("Pulse Pal:", response);
+  console.log("AI Overmind:", response);
   setTimeout(() => {
-    appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+    appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
   }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
