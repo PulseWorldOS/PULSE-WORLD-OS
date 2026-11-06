@@ -530,6 +530,9 @@ checkPersistentStorage(true);
       </div>
 
       <div class="pw-console-ai" id="pw-console-ai" role="log" aria-live="polite">
+        <div class="pw-log-line">
+          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INIT] PulseWorld Console Initialized.
+        </div>
       </div>
 
       <div class="pw-console-footer">
@@ -827,6 +830,7 @@ const chromebgmobile = document.getElementById("chrome-bg-mobile");
 const evoToggleBtn = document.getElementById("evotogglebtn");
 const evoConsole = document.getElementById("evoconsole");
 const evoLogBox = document.getElementById("pw-console-log");
+const aiLogBox  = document.getElementById("pw-console-ai");
 const refreshInstance = document.querySelector(".btn-primary");
 const bootVideo = document.getElementById("bootVideo");
 const viewport =  document.getElementById("viewport");
@@ -1685,13 +1689,6 @@ let pwErrors = [];
 
   `;
   document.head.appendChild(s);
-  
-  // ============================================================
-  // CORE ELEMENTS
-  // ============================================================
-  const evoConsole = document.getElementById("evoconsole");
-  const evoLogBox  = document.getElementById("pw-console-log");
-  const aiLogBox  = document.getElementById("pw-console-ai");
 
   // ============================================================
   // STATE
@@ -2945,6 +2942,7 @@ function handleGo() {
 function pulseConsoleOpen () {
   // Assuming evoLogBox is your log container element
   evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  aiLogBox.scrollTop = aiLogBox.scrollHeight;
   
   ghostBtn.style.display =
     ghostBtn.style.display === "none" ? "flex" : "none";
