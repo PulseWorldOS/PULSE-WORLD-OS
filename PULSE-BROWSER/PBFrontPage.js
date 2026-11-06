@@ -126,7 +126,7 @@ async function runLocalAI() {
     console.log(PulsePalMemoryBuffer);
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryBuffer"]);
     PulsePalMemoryBuffer = SessionAI.PulsePalMemoryBuffer ?? [];
-    const LastMessage = PulsePalMemoryBuffer.pop();
+    const LastMessage = PulsePalMemoryBuffer.pop(); 
     CompanionDetailsMessage.innerHTML = LastMessage;
     console.log(SessionAI.PulsePalMemoryBuffer);
   } catch (err) {}
