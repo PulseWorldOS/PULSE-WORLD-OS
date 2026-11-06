@@ -139,15 +139,17 @@ async function runLocalAI() {
         PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
         if (response.aiSession) aiSession = response.aiSession;
       });
-      // 1. Initialize the session using the modern nested outputs architecture
-      aiSession = await LanguageModel.create({
-        expectedOutputs: [
-          { 
-            type: "text", 
-            languages: ["en"] 
-          }
-        ]
-      });
+      if (!aiSession) {
+        // 1. Initialize the session using the modern nested outputs architecture
+        aiSession = await LanguageModel.create({
+          expectedOutputs: [
+            { 
+              type: "text", 
+              languages: ["en"] 
+            }
+          ]
+        });
+      }
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
