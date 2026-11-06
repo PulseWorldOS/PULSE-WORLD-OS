@@ -111,6 +111,7 @@ const DEFAULT_BIZ_ALIAS = "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizAlias.webp.pex
 let RunningAI = false;
 let aiSession = null;
 let identity = PulseRealm.PulseIdentity;
+let aiLogBox = document.getElementById("pw-console-ai");
 let meshVideo = document.getElementById("meshVideo");
 let emailVideo = document.getElementById("emailVideo");
 let assetVideo = document.getElementById("assetVideo");
@@ -2459,7 +2460,6 @@ let pwErrors = [];
       const aiTab = document.createElement("div");
       aiTab.className = "pw-tab";
       aiTab.textContent = "PULSEPAL";
-      let aiLogBox = document.getElementById("pw-console-ai");
 
       tabsBar.appendChild(logTab);
       tabsBar.appendChild(tasksTab);
@@ -2467,7 +2467,7 @@ let pwErrors = [];
 
       evoConsole.appendChild(tabsBar);
       
-
+      if (aiLogBox) aiLogBox.style.display = "none";
       let taskPanel = document.getElementById("pw-task-panel");
       if (taskPanel) {
         taskPanel.classList.remove("active");
