@@ -195,7 +195,7 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      if (!LastMessage) appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+      appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
@@ -249,6 +249,8 @@ function appendCompanionMessage(area, role, text) {
     if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
     if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
+  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
+  area.appendChild(bubblebr);
 }
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
@@ -3810,9 +3812,7 @@ const nebula = document.getElementById("nebula");
   }, { once: true });
 });
 
-if (!userInteracted) {
-  runLocalAI();
-}
+setTimeout(runLocalAI, 50);
 
 window.addEventListener("blur", () => {
   userInteracted = true;
