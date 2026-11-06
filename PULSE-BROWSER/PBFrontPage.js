@@ -158,7 +158,7 @@ async function runLocalAI() {
         expectedOutputs: [
           { 
             type: "text", 
-            languages: ["en"] 
+            languages: ["en", "javascript", "html"] 
           }
         ]
       });
@@ -195,6 +195,7 @@ ${rawPrompt}
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
     if (CompanionDetailsMessage) {
+      CompanionTitle.style.marginBottom = "6px;"
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "Pulse Pal (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
