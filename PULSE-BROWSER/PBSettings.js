@@ -182,6 +182,7 @@ async function getSettings() {
       S.experimentalQuantumRouting = S.experimentalQuantumRouting !== false; 
       S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false;
       S.enablePulseEarnOverlay = S.enablePulseEarnOverlay !== false; 
+      S.enablePulsePalConsole = S.enablePulsePalConsole !== false;
       S.enableDevOverlay = S.enableDevOverlay !== false; 
       S.enableDevCaches = S.enableDevCaches !== false;
       S.enablePulseEarnerEngine = S.enablePulseEarnerEngine !== false;

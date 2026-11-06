@@ -241,6 +241,7 @@ function updateSettings(settings) {
     Pulse OS User Overlay: <font color="${tfColor(settings.enableDevOverlay)}">${settings.enableDevOverlay}</font><br/>
     Pulse OS System Details: <font color="${tfColor(settings.enableDevCaches)}">${settings.enableDevCaches}</font><br/>
     Pulse Earner Engine Overlay: <font color="${tfColor(settings.enablePulseEarnOverlay)}">${settings.enablePulseEarnOverlay}</font><br/>
+    Pulse Pal AI Console: <font color="${tfColor(settings.enablePulsePalConsole)}">${settings.enablePulsePalConsole}</font><br/>
     Multiversal Runtime: <font color="${tfColor(settings.enableContentRuntime)}">${settings.enableContentRuntime}</font><br/>
   `;
 }

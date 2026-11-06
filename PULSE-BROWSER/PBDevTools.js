@@ -195,10 +195,25 @@ function pbLogEarnerOverlayStatus() {
     const s = res.settings;
 
     logKV("EarnerOverlay Enabled", s.enablePulseEarnOverlay);
+    S.enablePulsePalConsole
     logKV("HUD Active", s.contentHUD);
   });
 }
 
+
+// ---------------------------------------------------------------------------
+// PULSEPAL OVERLAY INSPECTOR
+// ---------------------------------------------------------------------------
+function pbLogPulsePalOverlayStatus() {
+  logHeader("PulsePalConsole Status");
+
+  chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
+    const s = res.settings;
+
+    logKV("PulsePalConsole Enabled", s.enablePulsePalConsole);
+    logKV("HUD Active", s.contentHUD);
+  });
+}
 // ---------------------------------------------------------------------------
 // EXPERIMENTAL SYSTEM INSPECTOR
 // ---------------------------------------------------------------------------
@@ -233,6 +248,7 @@ function pbDumpFullOS() {
   pbLogContentRuntimeStatus();
   pbLogDevOverlayStatus();
   pbLogEarnerOverlayStatus();
+  pbLogPulsePalOverlayStatus();
   pbLogExperimentalStatus();
 }
 
@@ -281,6 +297,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     
     case "PBEARNER_OVERLAY":
       pbLogEarnerOverlayStatus();
+      sendResponse({ ok: true });
+      break;
+
+    case "PBPULSEPAL_CONSOLE":
+      pbLogPulsePalOverlayStatus();
       sendResponse({ ok: true });
       break;
 
