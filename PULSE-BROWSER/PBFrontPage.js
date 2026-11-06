@@ -269,6 +269,15 @@ CompanionConsoleSend.onclick = async () => {
     );
     aiSize = await getAISize();
   }, 300);
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
+    if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
+  });
   PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
   //   if (chrome.runtime.lastError) return;
