@@ -230,9 +230,9 @@ function appendCompanionMessage(area, role, text) {
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
+  PulsePalAIMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  PulsePalAIMemoryBuffer.push(bubble.innerHTML);
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -3897,6 +3897,7 @@ function CheckBackTab() {
     if (intervalId) return; // already running
 
     intervalId = setInterval(() => {
+      PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
       pulseRehydrateTabs(); // safe now
