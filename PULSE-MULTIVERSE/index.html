@@ -527,6 +527,9 @@ checkPersistentStorage(true);
         <div class="pw-log-line">
           ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INFO] Awaiting New Diagnostic Signals…
         </div>
+      </div>pw-console-ai
+
+      <div class="pw-console-ai" id="pw-console-ai" role="log" aria-live="polite">
       </div>
 
       <div class="pw-console-footer">
@@ -1662,6 +1665,7 @@ let pwErrors = [];
   // ============================================================
   const evoConsole = document.getElementById("evoconsole");
   const evoLogBox  = document.getElementById("pw-console-log");
+  const aiLogBox  = document.getElementById("pw-console-ai");
 
   // ============================================================
   // STATE
@@ -2417,8 +2421,13 @@ let pwErrors = [];
       tasksTab.className = "pw-tab";
       tasksTab.textContent = "TASKS";
 
+      const aiTab = document.createElement("div");
+      aiTab.className = "pw-tab";
+      aiTab.textContent = "PULSEPAL";
+
       tabsBar.appendChild(logTab);
       tabsBar.appendChild(tasksTab);
+      tabsBar.appendChild(aiTab);
 
       evoConsole.appendChild(tabsBar);
       
@@ -2432,6 +2441,7 @@ let pwErrors = [];
       }
 
       logTab.onclick = () => {
+        aiTab.classList.remove("active");
         logTab.classList.add("active");
         tasksTab.classList.remove("active");
 
@@ -2441,6 +2451,7 @@ let pwErrors = [];
       };
 
       tasksTab.onclick = () => {
+        aiTab.classList.remove("active");
         tasksTab.classList.add("active");
         logTab.classList.remove("active");
 
@@ -2452,6 +2463,16 @@ let pwErrors = [];
         } else {
           console.log("PulseWorld: Tasks Panel Error. Still Will Not Render!");
         }
+      };
+
+      aiTab.onclick = () => {
+        aiTab.classList.add("active");
+        logTab.classList.remove("active");
+        tasksTab.classList.remove("active");
+
+        if (aiLogBox) aiLogBox.style.display = "none";
+        taskPanel = document.getElementById("pw-task-panel");
+        if (taskPanel) taskPanel.classList.remove("active");
       };
     }
   }
