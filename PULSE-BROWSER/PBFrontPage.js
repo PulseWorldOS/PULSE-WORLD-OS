@@ -17,9 +17,10 @@ let keyIsDown = false;
 let keyHoldTimer = null;
 let keyHold2Timer = null;
 let aiSize = 0;
+let swSize = 0;
 // Your cybernetic state architecture
 let aiSession = null;
-let PulsePalMemoryBuffer = [];
+let PulsePalAIMemoryBuffer = [];
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -128,39 +129,39 @@ async function runLocalAI() {
   }
 
   try {
-    console.log(PulsePalMemoryBuffer);
-    const SessionAI = await chrome.storage.local.get(["PulsePalMemoryBuffer"]);
-    PulsePalMemoryBuffer = SessionAI.PulsePalMemoryBuffer ?? [];
-    LastMessage = PulsePalMemoryBuffer.pop();
+    console.log(PulsePalAIMemoryBuffer);
+    const SessionAI = await chrome.storage.local.get(["PulsePalAIMemoryBuffer"]);
+    PulsePalAIMemoryBuffer = SessionAI.PulsePalAIMemoryBuffer ?? [];
+    LastMessage = PulsePalAIMemoryBuffer.pop();
+    PulsePalAIMemoryBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
-    CompanionDetailsMessage.innerHTML = LastMessage;
+    // CompanionDetailsMessage.innerHTML = LastMessage;
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-    console.log(SessionAI.PulsePalMemoryBuffer);
+    console.log(SessionAI.PulsePalAIMemoryBuffer);
+    aiSize = await getAISize();
   } catch (err) {}
 
   try {
     if (!aiSession) {
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.aiSession) PB_LOG3.change("PBAI_SESSION", aiSession, response.aiSession);
-        if (response.aiSession) aiSession = response.aiSession;
+        if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
+        if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
       });
-      if (!aiSession) {
-        PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
-        // 1. Initialize the session using the modern nested outputs architecture
-        aiSession = await LanguageModel.create({
-          expectedOutputs: [
-            { 
-              type: "text", 
-              languages: ["en"] 
-            }
-          ]
-        });
-      }
+      PB_LOG3.info("PBAI_SESSION Unavailable or Error", aiSession);
+      // 1. Initialize the session using the modern nested outputs architecture
+      aiSession = await LanguageModel.create({
+        expectedOutputs: [
+          { 
+            type: "text", 
+            languages: ["en"] 
+          }
+        ]
+      });
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
@@ -180,7 +181,7 @@ async function runLocalAI() {
 - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
 - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
 - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
-- You must try to keep your response under 3000 characters.
+- You must try to keep your response under 3000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.
 
 [USER QUERY]
 ${rawPrompt}
@@ -200,11 +201,11 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`
-      if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
-      if (!LastMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-      PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
+      appendCompanionMessage(CompanionDetailsMessage, "Pulse Pal", response);
+      // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">Pulse Pal: ${showTime}</font></strong> ` + response;
+      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
-    PulsesafeStorageSet({ PulsePalMemoryBuffer });
+    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
     RunningAI = false;
     // chrome.runtime.sendMessage({ type: "PBAI_SESSION", aiSession }, (response) => {
     //   if (chrome.runtime.lastError) return;
@@ -237,7 +238,7 @@ function appendCompanionMessage(area, role, text) {
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">Pulse Pal: ${showTime}</font> `) + text + `<br><br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  PulsePalMemoryBuffer.push(area.innerHTML);
+  PulsePalAIMemoryBuffer.push(bubble.innerHTML);
 }
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
@@ -262,8 +263,7 @@ CompanionConsoleSend.onclick = async () => {
       "Pulse Pal",
       response
     );
-    PulsePalMemoryBuffer.push(CompanionDetailsMessage.innerHTML);
-    PulsesafeStorageSet({ PulsePalMemoryBuffer });
+    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
     aiSize = await getAISize();
   }, 300);
   
@@ -296,7 +296,7 @@ function wipeMemory() {
     aiSession = null;
   }
   // 2. Clear your local memory buffers completely
-  PulsePalMemoryBuffer = [];
+  PulsePalAIMemoryBuffer = [];
   
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
   
@@ -465,6 +465,7 @@ function getReadableName(url) {
 
 
   async function CheckEarnDetailsState() {
+    if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
     EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
     console.log("Earn Details State:", EarnDetailsHidden);
@@ -555,6 +556,7 @@ function getReadableName(url) {
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
         }, 1200);
+        if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       }
       console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
@@ -562,6 +564,7 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
+  if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
@@ -649,6 +652,7 @@ async function CheckEarnState() {
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
       }, 1200);
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     console.log("Earn State:", EarnHidden);
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
@@ -924,7 +928,7 @@ async function getSWSize() {
 
 async function getAISize() {
   try {
-    return new Blob([PulsePalMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulsePalAIMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -943,7 +947,7 @@ async function pbRenderStorageStats2(history) {
   const estimate = await navigator.storage.estimate();
   const localUsed = estimate.usage || 0;
   const localQuota = estimate.quota || 1;
-  const swSize = await getSWSize();
+  swSize = await getSWSize();
   aiSize = await getAISize();
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
@@ -1057,7 +1061,7 @@ async function pbRenderStorageStats2(history) {
       <div style="display:flex; gap:10px;">
 
         <div style="flex:1;">
-          <strong>Companion:</strong><br>
+          <strong>System Memory:</strong><br>
           • <span style="color:lightgreen">${swKB} KB</span><br>
 
           <strong>Local Storage:</strong><br>
@@ -3803,7 +3807,7 @@ setInterval(async () => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 20) {
-    enterBtn.click();
+    enterBtn.onclick();
     setTimeout(backToOriginal, 1700);
     document.getElementById("timerBtn").style.display = "none";
   } else if (userInteracted) {

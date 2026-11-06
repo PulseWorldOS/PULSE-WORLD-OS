@@ -10,6 +10,7 @@ let authorityRealm = null;
 let EarnHidden = false;
 let PULSE_ONLINE = false;
 let aiSession = null;
+let PulsePalAIMemoryBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
@@ -2515,26 +2516,25 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAI_SESSION":
-      if (!msg.aiSession) {
-        (async () => {
-          aiSession = await chrome.storage.local.get(["aiSession"]);
-          if (!aiSession) {
-            aiSession = await LanguageModel.create({
-              expectedOutputs: [
-                { 
-                  type: "text", 
-                  languages: ["en"] 
-                }
-              ]
-            });
-            safeStorageSet({ aiSession });
-          }
-          sendResponse({ ok: true, aiSession });
-        })();
-      } else {
-        aiSession = msg.aiSession;
-        safeStorageSet({ aiSession });
-        sendResponse({ ok: true, aiSession });
+      if (msg.PulsePalAIMemoryBuffer) {
+        PulsePalAIMemoryBuffer = msg.PulsePalAIMemoryBuffer;
+        // (async () => {
+        //   aiSession = await chrome.storage.local.get(["aiSession"]);
+        //   if (!aiSession) {
+        //     aiSession = await LanguageModel.create({
+        //       expectedOutputs: [
+        //         { 
+        //           type: "text", 
+        //           languages: ["en"] 
+        //         }
+        //       ]
+        //     });
+        //     safeStorageSet({ aiSession });
+        //   }
+        //   sendResponse({ ok: true, aiSession });
+        // })();
+        safeStorageSet({ PulsePalAIMemoryBuffer });
+        sendResponse({ ok: true, PulsePalAIMemoryBuffer });
       }
       return true;
 

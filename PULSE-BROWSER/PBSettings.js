@@ -590,7 +590,7 @@ async function getSWSize() {
 
 async function getAI2Size() {
   try {
-    return new Blob([PulsePalMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulsePalAIMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -609,8 +609,8 @@ async function pbRenderStorageStats(history) {
   const estimate = await navigator.storage.estimate();
   const localUsed = estimate.usage || 0;
   const localQuota = estimate.quota || 1;
-  const swSize = await getSWSize();
-  let aiSize = await getAI2Size();
+  swSize = await getSWSize();
+  aiSize = await getAI2Size();
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
 
@@ -718,7 +718,7 @@ async function pbRenderStorageStats(history) {
       <div style="display:flex; gap:10px;">
 
         <div style="flex:1;">
-          <strong>Companion:</strong><br>
+          <strong>System Memory:</strong><br>
           • <span style="color:lightgreen">${swKB} KB</span><br>
 
           <strong>Local Storage:</strong><br>
