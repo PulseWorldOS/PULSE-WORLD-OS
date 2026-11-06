@@ -234,7 +234,6 @@ function appendCompanionMessage(area, role, text) {
   PulsePalAIMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalAIMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -243,6 +242,7 @@ function appendCompanionMessage(area, role, text) {
     }
     if (response.PulsePalAIMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalAIMemoryBuffer, response.PulsePalAIMemoryBuffer);
     if (response.PulsePalAIMemoryBuffer) PulsePalAIMemoryBuffer = response.PulsePalAIMemoryBuffer;
+    PulsesafeStorageSet({ PulsePalAIMemoryBuffer });
   });
 }
 
@@ -1082,7 +1082,7 @@ async function pbRenderStorageStats2(history) {
         </div>
 
         <div style="flex:1;">
-          <strong>AI Memory:</strong><br>
+          <strong>AI Sync Memory:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
           <strong>System Quota:</strong><br>

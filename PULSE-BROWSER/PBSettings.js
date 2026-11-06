@@ -726,7 +726,7 @@ async function pbRenderStorageStats(history) {
         </div>
 
         <div style="flex:1;">
-          <strong>AI Memory:</strong><br>
+          <strong>AI Sync Memory:</strong><br>
           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
           <strong>System Quota:</strong><br>
