@@ -265,7 +265,7 @@ CompanionConsoleSend.onclick = async () => {
   await appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
-  console.log("AI Overmind:", response);
+  console.log("AI Overmind: ", response);
   setTimeout(async () => {
     await appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
   }, 300);

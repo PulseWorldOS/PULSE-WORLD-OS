@@ -8365,7 +8365,7 @@ ${rawPrompt}
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("Pulse Pal:", response);
     // if (aiLogBox) aiLogBox.appendChild(response);
-    pulsepalSpeak(response);
+    pulsepalSpeak("Pulse Pal: " + response);
     RunningAI = false;
 
   } catch (error) {
