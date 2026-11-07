@@ -540,7 +540,6 @@ checkPersistentStorage(true);
   </div>
 
 <script>
-let lastAIResponse = null;
 // (function() {
 //   // Detect hash-based realm entry
 //   const hashRealm = location.hash.startsWith("#Pulse");
@@ -620,7 +619,6 @@ ${rawPrompt}
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
     console.log("Pulse Pal:", response);
-    lastAIResponse = response;
     // if (aiLogBox) aiLogBox.appendChild(response);
     pulsepalSpeak(response);
     RunningAI = false;
@@ -1793,7 +1791,6 @@ let pwErrors = [];
   function buildPrefix(type) {
     if (type === "WARN")  return "[WARN] ";
     if (type === "ERROR") return "[ERROR] ";
-    if (type === "AI") return "[AI Overmind] ";
     return "";
   }
 
@@ -2100,10 +2097,10 @@ let pwErrors = [];
         tree.appendChild(header);
         tree.appendChild(children);
 
-        let parent = groupStack.length > 0
+        const parent = groupStack.length > 0
           ? groupStack[groupStack.length - 1].children
           : evoLogBox;
-        if (lastAIResponse) parent = aiLogBox;
+
         parent.appendChild(tree);
 
         const index = evoConsole.querySelectorAll(".pw-log-line, .pw-tree, .pw-group").length - 1;
@@ -2132,10 +2129,9 @@ let pwErrors = [];
         line.appendChild(document.createElement("span"));
       }
 
-      let parent = groupStack.length > 0
+      const parent = groupStack.length > 0
         ? groupStack[groupStack.length - 1].children
         : evoLogBox;
-      if (lastAIResponse) parent = aiLogBox;
 
       parent.appendChild(line);
 
@@ -2192,7 +2188,6 @@ let pwErrors = [];
     L.apply(console,a);
 
     const lineObj = add("LOG",a);
-    if (lastAIResponse) add("AI", lastAIResponse, "color:#0FF;");
 
     pwLineArray.push(lineObj);
     pwLinesLog.push(lineObj);
