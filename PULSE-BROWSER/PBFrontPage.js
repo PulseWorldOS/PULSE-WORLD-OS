@@ -117,7 +117,7 @@ function PulsesafeStorageSet(dataObject) {
 async function runLocalAI() {
   if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
-    console.error("AI Overmind (Gemini Nano) is not supported in this browser version.");
+    console.error("🧠 AI Overmind (Gemini Nano) is not supported in this browser version.");
     return;
   }
   RunningAI = true;
@@ -126,7 +126,7 @@ async function runLocalAI() {
   const status = await LanguageModel.availability();
   const SessionAI = await chrome.storage.local.get(["PulseAIPalMemoryBuffer"]);
   if (status === 'unavailable') {
-    console.error("AI Overmind (Gemini Nano) cannot run on this device hardware.");
+    console.error("🧠 AI Overmind (Gemini Nano) cannot run on this device hardware.");
     return;
   }
 
@@ -160,12 +160,12 @@ async function runLocalAI() {
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Your name is AI Overmind, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
+- Your name is 🧠 AI Overmind Prime, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-- You hold your AI Overmind & each Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
+- You hold your 🧠 AI Overmind Prime & each Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
 - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
 - PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, and Perlman), then says Explore Us!
@@ -191,10 +191,10 @@ ${rawPrompt}
     if (CompanionDetailsMessage) {
       CompanionTitle.style.marginBottom = "6px;"
       CompanionTitle.style.textAlign = "center";
-      CompanionTitle.innerHTML = "AI Overmind (Multiverse #" + (Math.random()*100) + ")"
+      CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       if (!EarnDetailsHidden) await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-      // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">AI Overmind: ${showTime}</font></strong> ` + response;
+      // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">🧠 AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
@@ -209,7 +209,7 @@ ${rawPrompt}
     RunningAI = false;
 
   } catch (error) {
-    console.error("Failed to initialize AI Overmind (Gemini Nano) session:", error);
+    console.error("Failed to initialize 🧠 AI Overmind (Gemini Nano) session:", error);
     RunningAI = false;
   }
 }
@@ -1346,7 +1346,7 @@ setInterval(() => {
     if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
-  console.log("💓 GPU Heartbeat: AI Overmind Prime - GPU Device Approved!");
+  console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
