@@ -191,12 +191,12 @@ ${rawPrompt}
     if (CompanionDetailsMessage) {
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
-      const showTime = `[${ItsTime}]`
+      const showTime = `[${ItsTime}]`;
       CompanionTitle.style.marginBottom = "6px;"
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">🧠 AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
@@ -233,7 +233,7 @@ async function appendCompanionMessage(area, role, text) {
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   const now = Date.now();
   const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`
+  const showTime = `[${ItsTime}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
@@ -266,12 +266,12 @@ CompanionConsoleSend.onclick = async () => {
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  await appendCompanionMessage(CompanionDetailsMessage, "user", text);
+  appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
-    await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {

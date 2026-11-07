@@ -779,14 +779,14 @@ async function updateLinkedPWInputs() {
   });
 }
 
-async function appendCompanionMessage(area, role, text) {
+async function appendSettingsCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
   const bubblebr = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   const now = Date.now();
   const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`
+  const showTime = `[${ItsTime}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
@@ -896,12 +896,12 @@ if (location.href.includes("PBSettings.html")) {
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
       // 3. Fire the wrapped prompt
-      await appendCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
+      appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
       CompanionSettingsConsoleInput.value = "";
       const response = await aiSettingsSession.prompt(text);
       console.log("🧠 AI Overmind: ", response);
       setTimeout(async () => {
-        await appendCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
+        appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
       }, 300);
     };
     
