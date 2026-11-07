@@ -553,6 +553,7 @@ function getReadableName(url) {
         }, 1200);
       } else {
         EarnDetailsHidden = false;
+        runLocalAI();
         // ——— Turn OFF (restore original) ———
         pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
