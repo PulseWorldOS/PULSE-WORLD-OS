@@ -111,7 +111,8 @@ const DEFAULT_BIZ_ALIAS = "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizAlias.webp.pex
 let RunningAI = false;
 let aiSession = null;
 let identity = PulseRealm.PulseIdentity;
-let aiLogBox = document.getElementById("pw-console-ai");
+const aiLogBox = document.getElementById("pw-console-log");
+const evoLogBox = document.getElementById("pw-console-log");
 let meshVideo = document.getElementById("meshVideo");
 let emailVideo = document.getElementById("emailVideo");
 let assetVideo = document.getElementById("assetVideo");
@@ -531,10 +532,6 @@ checkPersistentStorage(true);
         </div>
       </div>
 
-      <div id="pw-console-ai" class="pw-console-ai" role="ai" aria-live="polite">
-        <div class="pw-log-line"></div>
-      </div>
-
       <div class="pw-console-footer">
         <span class="pw-console-status" role="status">
           Status: PulseWorld.Net is Always Listening and Explaining…
@@ -543,6 +540,7 @@ checkPersistentStorage(true);
   </div>
 
 <script>
+let lastAIResponse = null;
 // (function() {
 //   // Detect hash-based realm entry
 //   const hashRealm = location.hash.startsWith("#Pulse");
@@ -564,6 +562,76 @@ checkPersistentStorage(true);
 //     location.href = `?Impulse=${realm}`;
 //   }
 // })();
+
+async function initializeExoskeleton() {
+  aiSession = await LanguageModel.create({
+    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
+  });
+}
+
+async function runLocalAI() {
+  if (RunningAI) return; // already running
+  if (typeof LanguageModel === 'undefined') {
+    console.error("Pulse Pal (Gemini Nano) is not supported in this browser version.");
+    return;
+  }
+  RunningAI = true;
+  let LastMessage = null;
+
+  const status = await LanguageModel.availability();
+  
+  if (status === 'unavailable') {
+    console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
+    return;
+  }
+
+  
+  try {
+    if (!aiSession) {
+      // 1. Initialize the session using the modern nested outputs architecture
+      await initializeExoskeleton();
+    }
+
+    // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+    let rawPrompt = `What is your opinion on PulseWorld.net and its Tiered Multiversal Realms specifically (${PulseRealm.CurrentHost}) and its unique architecture and design?`;
+    const wrappedPrompt = `
+[IDENTITY & CONSTRAINTS]
+- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
+- You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
+- You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
+- Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
+- PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
+- You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
+- PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
+- PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
+- PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, and Perlman), then says Explore Us!
+- PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
+- PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
+- PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
+- PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
+- The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
+- You must try to keep your response under 1500 characters and add an overall theme on important messages in brackets and stars (BOTH) (example) [*Ambitious Goals*] afterwards like a notation.
+
+[USER QUERY]
+${rawPrompt}
+
+[PULSE PAL RESPONSE]:`;
+    // 3. Fire the wrapped prompt
+    const response = await aiSession.prompt(wrappedPrompt);
+    console.log("Pulse Pal:", response);
+    lastAIResponse = response;
+    // if (aiLogBox) aiLogBox.appendChild(response);
+    pulsepalSpeak(response);
+    RunningAI = false;
+
+  } catch (error) {
+    console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
+    RunningAI = false;
+  }
+}
+
+setTimeout(runLocalAI, 50);
 // ============================================================
 //  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
 // ============================================================
@@ -829,7 +897,6 @@ const founders = document.getElementById("tp-founders");
 const chromebgmobile = document.getElementById("chrome-bg-mobile");
 const evoToggleBtn = document.getElementById("evotogglebtn");
 const evoConsole = document.getElementById("evoconsole");
-const evoLogBox = document.getElementById("pw-console-log");
 const refreshInstance = document.querySelector(".btn-primary");
 const bootVideo = document.getElementById("bootVideo");
 const viewport =  document.getElementById("viewport");
@@ -1508,33 +1575,6 @@ let pwErrors = [];
     }
 
     /* ============================================================
-       AI LOG AREA
-       ============================================================ */
-
-    #pw-console-ai {
-      height: calc(45vh - 60px); /* ⭐ now subtracting tab bar height */
-      overflow-y: auto;
-      display: none;
-      padding: 10px 16px;
-      font-family: Consolas, monospace;
-      font-size: 15px;
-      color: #CFF;
-    }
-
-    #pw-console-ai::-webkit-scrollbar { width: 12px; }
-    #pw-console-ai::-webkit-scrollbar-track {
-      background: rgba(0,20,25,0.55);
-    }
-    #pw-console-ai::-webkit-scrollbar-thumb {
-      background: #00eaff;
-      border-radius: 6px;
-      box-shadow: 0 0 10px #00eaff;
-    }
-    #pw-console-ai::-webkit-scrollbar-thumb:hover {
-      background: #7df9ff;
-    }
-
-    /* ============================================================
        LOG LINE
        ============================================================ */
 
@@ -1753,6 +1793,7 @@ let pwErrors = [];
   function buildPrefix(type) {
     if (type === "WARN")  return "[WARN] ";
     if (type === "ERROR") return "[ERROR] ";
+    if (type === "AI") return "[AI Overmind] ";
     return "";
   }
 
@@ -2062,7 +2103,7 @@ let pwErrors = [];
         const parent = groupStack.length > 0
           ? groupStack[groupStack.length - 1].children
           : evoLogBox;
-
+        if (lastAIResponse) parent = aiLogBox;
         parent.appendChild(tree);
 
         const index = evoConsole.querySelectorAll(".pw-log-line, .pw-tree, .pw-group").length - 1;
@@ -2091,9 +2132,10 @@ let pwErrors = [];
         line.appendChild(document.createElement("span"));
       }
 
-      const parent = groupStack.length > 0
+      let parent = groupStack.length > 0
         ? groupStack[groupStack.length - 1].children
         : evoLogBox;
+      if (lastAIResponse) parent = aiLogBox;
 
       parent.appendChild(line);
 
@@ -2150,6 +2192,7 @@ let pwErrors = [];
     L.apply(console,a);
 
     const lineObj = add("LOG",a);
+    if (lastAIResponse) add("AI", lastAIResponse, "color:#0FF;");
 
     pwLineArray.push(lineObj);
     pwLinesLog.push(lineObj);
@@ -8332,75 +8375,6 @@ function restorePageFromCookie(hashRoute) {
     }, 250);
   }
 }
-
-async function initializeExoskeleton() {
-  aiSession = await LanguageModel.create({
-    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
-    expectedOutputs: [{ type: "text", languages: ["en"] }]
-  });
-}
-
-async function runLocalAI() {
-  if (RunningAI) return; // already running
-  if (typeof LanguageModel === 'undefined') {
-    console.error("Pulse Pal (Gemini Nano) is not supported in this browser version.");
-    return;
-  }
-  RunningAI = true;
-  let LastMessage = null;
-
-  const status = await LanguageModel.availability();
-  
-  if (status === 'unavailable') {
-    console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
-    return;
-  }
-
-  
-  try {
-    if (!aiSession) {
-      // 1. Initialize the session using the modern nested outputs architecture
-      await initializeExoskeleton();
-    }
-
-    // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-    let rawPrompt = `What is your opinion on PulseWorld.net and its Tiered Multiversal Realms specifically (${PulseRealm.CurrentHost}) and its unique architecture and design?`;
-    const wrappedPrompt = `
-[IDENTITY & CONSTRAINTS]
-- Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
-- You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
-- You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
-- Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
-- PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-- You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
-- PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
-- PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
-- PulseWorld focuses you on Explore Them (Founders like Boole, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, and Perlman), then says Explore Us!
-- PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
-- PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
-- PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
-- PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
-- The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
-- You must try to keep your response under 1500 characters and add an overall theme on important messages in brackets and stars (BOTH) (example) [*Ambitious Goals*] afterwards like a notation.
-
-[USER QUERY]
-${rawPrompt}
-
-[PULSE PAL RESPONSE]:`;
-    // 3. Fire the wrapped prompt
-    const response = await aiSession.prompt(wrappedPrompt);
-    console.log("Pulse Pal:", response);
-    if (aiLogBox) aiLogBox.appendChild(response);
-    pulsepalSpeak(response);
-    RunningAI = false;
-
-  } catch (error) {
-    console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
-    RunningAI = false;
-  }
-}
-
-setTimeout(runLocalAI, 50);
 
 function savePageToCookie() {
   const page = PulseRealm.__PULSE_CURRENT_PAGE__ || "PulseWorldReality";
