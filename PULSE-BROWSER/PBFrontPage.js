@@ -116,6 +116,7 @@ function PulsesafeStorageSet(dataObject) {
 
 async function runLocalAI() {
   if (RunningAI) return; // already running
+  if (EarnDetailsHidden) return; // already running
   if (typeof LanguageModel === 'undefined') {
     console.error("🧠 AI Overmind (Gemini Nano) is not supported in this browser version.");
     return;
