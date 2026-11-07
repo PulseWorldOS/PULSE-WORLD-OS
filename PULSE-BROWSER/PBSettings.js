@@ -8,6 +8,7 @@ const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 let PulseAIPalMemoryBuffer = [];
+let aiSession = null;
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -798,10 +799,10 @@ async function appendCompanionMessage(area, role, text) {
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
-      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      PB_LOG.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+    if (response.PulseAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
     if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
 }
@@ -896,10 +897,10 @@ if (location.href.includes("PBSettings.html")) {
       chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
-          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          PB_LOG.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+        if (response.PulseAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
         if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
       });
       // if (response.includes("{*Website Call:")) {
