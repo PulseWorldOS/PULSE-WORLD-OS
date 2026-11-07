@@ -774,6 +774,34 @@ async function updateLinkedPWInputs() {
   });
 }
 
+async function appendCompanionMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  const bubblebr = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  const now = Date.now();
+  const ItsTime = new Date(now).toLocaleString();
+  const showTime = `[${ItsTime}]`
+  bubblebr.innerHTML = `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
+  PulseAIPalMemoryBuffer.push(bubble.innerHTML);
+  area.appendChild(bubble);
+  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
+  area.appendChild(bubblebr);
+  area.scrollTop = area.scrollHeight;
+  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
+  area.appendChild(bubblebr);
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+    if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
+  });
+}
+
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
@@ -846,7 +874,11 @@ if (location.href.includes("PBSettings.html")) {
         saveExtensionSettingsUI();
       });
     });
-    
+
+    let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
+    let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+
     CompanionConsoleSend.onclick = async () => {
       CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
       CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
