@@ -7,6 +7,7 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
+const pageSettings = document.getElementById("pw-settings-page");
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
 let aiSettings2Size = 0;
@@ -16,7 +17,6 @@ let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCo
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
 const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn2");
-const pageSettings = document.getElementById("pw-settings-page");
 const earnerhelperApanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-panel");
 
@@ -1005,12 +1005,6 @@ if (location.href.includes("PBSettings.html")) {
       });
     }
 
-    document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
-      if (event.key === "Enter") {
-        CompanionSettingsConsoleSend.click();
-      }
-    });
-
     setInterval(async () => {
       aiSettings2Size = await getAI2Size();
       loadOrders(aiSettings2Size);
@@ -1024,6 +1018,12 @@ if (location.href.includes("PBSettings.html")) {
         OvermindSettingsOrders = null;
       }
     }, 2000);
+    
+    document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
+      if (event.key === "Enter") {
+        CompanionSettingsConsoleSend.click();
+      }
+    });
     
     CompanionSettingsConsoleSend.onclick = async () => {
       CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");

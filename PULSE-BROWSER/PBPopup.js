@@ -10,6 +10,17 @@ let lastFailURL = "https://www.pulseworld.net";
 let PBFAVICON_CACHE = {};
 let nowPP = Date.now(); // numeric timestamp
 let lastnowPP = Date.now(); // numeric timestamp
+let PulsePopupAIPalMemoryBuffer = [];
+let aiPopupSession = null;
+let aiPopupSize = 0;
+let OvermindPopupOrders = null;
+let OvermindPopupHidden = false;
+let CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let CompanionPopupConsoleSend = document.getElementById("consoleOvermindCompanionSend");
+let CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
+const pbPulsePopupOvermind = document.getElementById("pbPulseDetailsEarn2");
+const earnerhelperPopuppanel = document.getElementById("earner-helper-panel");
+const earnerinnerhelperPopuppanel = document.getElementById("earner-inner-helper-panel");
 
 function isValid(t) {
   return (
@@ -18,7 +29,6 @@ function isValid(t) {
     t > 0
   );
 }
-
 
 // 1. The Core Queue Engine
 class PulseStorageQueue {
@@ -64,6 +74,175 @@ const PulseorchestratorQueue = new PulseStorageQueue();
 function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
 }
+
+async function getAI3Size() {
+  try {
+    return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
+
+async function CheckEarnDetailsState() {
+  const SessionAI2 = await chrome.storage.local.get(["PulsePopupAIPalMemoryBuffer"]);
+  PulsePopupAIPalMemoryBuffer = SessionAI2.PulsePopupAIPalMemoryBuffer ?? [];
+  console.log("AI Memory Settings Buffer:" + SessionAI2.PulsePopupAIPalMemoryBuffer);
+  aiPopupSize = await getAI3Size();
+  if (CompanionPopupDetailsMessage) CompanionPopupDetailsMessage.scrollTop = CompanionPopupDetailsMessage.scrollHeight;
+  const Vis = await chrome.storage.local.get(["OvermindPopupInVisible"]);
+  OvermindPopupHidden = Vis.OvermindPopupInVisible ?? false;
+  console.log("Overmind State:", OvermindPopupHidden);
+  if (OvermindPopupHidden) {
+    // ——— Turn ON (transparent / earning mode) ———
+    pbPulsePopupOvermind.id = "pbPulseDetailsEarning2";
+    pbPulsePopupOvermind.className = "pbPulseDetailsEarning2";
+    pbPulsePopupOvermind.style.width = "50px";
+    pbPulsePopupOvermind.style.height = "50px";
+    pbPulsePopupOvermind.style.border = "2px solid #000";
+    earnerinnerhelperPopuppanel.style.display = "none";
+    earnerhelperPopuppanel.style.background = "transparent";
+    earnerhelperPopuppanel.style.backdropFilter = "none";
+    earnerhelperPopuppanel.style.boxShadow = "none";
+    earnerhelperPopuppanel.style.border = "none";
+    setTimeout(() => {
+      pbPulsePopupOvermind.id = "pbPulseDetailsEarn2";
+      pbPulsePopupOvermind.className = "pbPulseDetailsEarn2";
+      pbPulsePopupOvermind.style.opacity = "1";
+      pbPulsePopupOvermind.style.transform = "translate(-130px, -110px)";
+      pbPulsePopupOvermind.currentTime = 0;
+      pbPulsePopupOvermind.play();
+    }, 500);
+    
+  } else {
+    // ——— Turn OFF (restore original) ———
+    pbPulsePopupOvermind.id = "pbPulseDetailsEarn2";
+    pbPulsePopupOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
+    pbPulsePopupOvermind.style.border = "2px solid #000";
+    pbPulsePopupOvermind.style.width = "";        // let CSS take over again
+    pbPulsePopupOvermind.style.height = "";
+    pbPulsePopupOvermind.style.transform = "";
+    pbPulsePopupOvermind.style.opacity = "0.25";
+    earnerinnerhelperPopuppanel.style.display = "flex";   // matches your .earner-inner-panel
+    earnerhelperPopuppanel.style.background = "";
+    earnerhelperPopuppanel.style.backdropFilter = "";
+    earnerhelperPopuppanel.style.boxShadow = "";
+    earnerhelperPopuppanel.style.border = "";
+    setTimeout(() => {
+      pbPulsePopupOvermind.style.border = "";
+      pbPulsePopupOvermind.style.transform = "";
+      pbPulsePopupOvermind.currentTime = 0;
+      pbPulsePopupOvermind.play();
+    }, 500);
+  }
+
+  pbPulsePopupOvermind.onclick = async () => {
+    if (!OvermindPopupHidden) {
+      OvermindPopupHidden = true;
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulsePopupOvermind.id = "pbPulseDetailsEarning2";
+      pbPulsePopupOvermind.className = "pbPulseDetailsEarning2";
+      pbPulsePopupOvermind.style.width = "50px";
+      pbPulsePopupOvermind.style.height = "50px";
+      pbPulsePopupOvermind.style.border = "2px solid #000";
+      earnerinnerhelperPopuppanel.style.display = "none";
+      earnerhelperPopuppanel.style.background = "transparent";
+      earnerhelperPopuppanel.style.backdropFilter = "none";
+      earnerhelperPopuppanel.style.boxShadow = "none";
+      earnerhelperPopuppanel.style.border = "none";
+      setTimeout(() => {
+        pbPulsePopupOvermind.id = "pbPulseDetailsEarn2";
+        pbPulsePopupOvermind.className = "pbPulseDetailsEarn2";
+        pbPulsePopupOvermind.style.opacity = "1";
+        pbPulsePopupOvermind.style.transform = "translate(-130px, -110px)";
+        pbPulsePopupOvermind.currentTime = 0;
+        pbPulsePopupOvermind.play();
+      }, 500);
+    } else {
+      OvermindPopupHidden = false;
+      // ——— Turn OFF (restore original) ———
+      pbPulsePopupOvermind.id = "pbPulseDetailsEarn2";
+      pbPulsePopupOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
+      pbPulsePopupOvermind.style.width = "";        // let CSS take over again
+      pbPulsePopupOvermind.style.height = "";
+      pbPulsePopupOvermind.style.transform = "";
+      pbPulsePopupOvermind.style.opacity = "0.25";
+      pbPulsePopupOvermind.style.border = "2px solid #000";
+      earnerinnerhelperPopuppanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerhelperPopuppanel.style.background = "";
+      earnerhelperPopuppanel.style.backdropFilter = "";
+      earnerhelperPopuppanel.style.boxShadow = "";
+      earnerhelperPopuppanel.style.border = "";
+      setTimeout(() => {
+        pbPulsePopupOvermind.style.border = "";
+        pbPulsePopupOvermind.style.transform = "";
+        pbPulsePopupOvermind.currentTime = 0;
+        pbPulsePopupOvermind.play();
+      }, 500);
+      if (CompanionPopupDetailsMessage) CompanionPopupDetailsMessage.scrollTop = CompanionPopupDetailsMessage.scrollHeight;
+    }
+    console.log("Overmind State:", OvermindPopupHidden);
+    PulsesafeStorageSet({ OvermindPopupInVisible: OvermindPopupHidden });
+  };
+}
+
+document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    CompanionPopupConsoleSend.click();
+  }
+});
+
+CompanionPopupConsoleSend.onclick = async () => {
+  CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
+  CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
+  const text = CompanionPopupConsoleInput.value.trim();
+  if (!text) return;
+  if (!aiPopupSession) {
+    // 1. Initialize the session using the modern nested outputs architecture
+    await initializeExoskeleton();
+  }
+  // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+  let rawPrompt = text;
+  const wrappedPrompt = `
+  [IDENTITY & CONSTRAINTS]
+  - Today's date is ${new Date().toDateString()}.
+  - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
+  - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
+  - You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
+  - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
+  - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
+  - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
+  - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
+  - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
+  - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
+  - PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
+  - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
+  - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
+  - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
+  - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
+  - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
+  - PulseWorld stands on the shoulders of Nine Minds whose ideas shaped the very fabric of Computation, Intelligence, and Reality. Their work spans centuries, yet their influence pulses through every system we build today. Logic, Structure,
+    Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
+  - Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
+    that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
+  - You must try to keep your response under 2000 characters and add an overall theme on important messages in brackets and stars (BOTH) (example) [*Ambitious Goals*] afterwards like a notation.
+
+  [USER QUERY]
+  ${rawPrompt}
+
+  [PULSE PAL RESPONSE]:`;
+  let CompanionPopupTitle = document.getElementById("CompanionTitle");
+  CompanionPopupTitle.style.marginBottom = "6px;"
+  CompanionPopupTitle.style.textAlign = "center";
+  CompanionPopupTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
+  // 3. Fire the wrapped prompt
+  appendPopupCompanionMessage(CompanionPopupDetailsMessage, "user", text);
+  CompanionPopupConsoleInput.value = "";
+  const response = await aiPopupSession.prompt(wrappedPrompt);
+  console.log("🧠 AI Overmind: ", response);
+  setTimeout(async () => {
+    appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
+  }, 300);
+};
 
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {
   if (chrome.runtime.lastError) return write("Kernel unreachable.");
@@ -1264,7 +1443,7 @@ async function loadWorld() {
   const streamIcon = document.getElementById("moduleStreamIcon");
   const socialIcon = document.getElementById("moduleSocialIcon");
   const shoppingIcon = document.getElementById("moduleShoppingIcon");
-    
+  await CheckEarnDetailsState();
   PulseRealmSettings = await pbLoadExtensionSettings();
 
   // INTERNAL MODE → open PulseWorld Work on the real domain
@@ -1400,4 +1579,4 @@ async function loadWorld() {
   }
 }
 
-setTimeout(loadWorld, 500);
+setTimeout(loadWorld, 100);
