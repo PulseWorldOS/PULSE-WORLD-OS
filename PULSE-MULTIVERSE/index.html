@@ -2100,10 +2100,10 @@ let pwErrors = [];
         tree.appendChild(header);
         tree.appendChild(children);
 
-        const parent = groupStack.length > 0
+        let parent = groupStack.length > 0
           ? groupStack[groupStack.length - 1].children
           : evoLogBox;
-        // if (lastAIResponse) parent = aiLogBox;
+        if (lastAIResponse) parent = aiLogBox;
         parent.appendChild(tree);
 
         const index = evoConsole.querySelectorAll(".pw-log-line, .pw-tree, .pw-group").length - 1;
@@ -2135,7 +2135,7 @@ let pwErrors = [];
       let parent = groupStack.length > 0
         ? groupStack[groupStack.length - 1].children
         : evoLogBox;
-      // if (lastAIResponse) parent = aiLogBox;
+      if (lastAIResponse) parent = aiLogBox;
 
       parent.appendChild(line);
 
