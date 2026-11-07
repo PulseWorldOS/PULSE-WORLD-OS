@@ -1676,7 +1676,7 @@ let pwErrors = [];
   function updatePWFooter() {
     const footer = document.querySelector(".pw-console-status");
     if (!footer) return;
-
+    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
     footer.innerHTML = `
       <div style="display:flex; justify-content:center; width:100%;">
 
