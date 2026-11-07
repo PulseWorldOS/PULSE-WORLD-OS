@@ -1048,7 +1048,7 @@ if (location.href.includes("PBSettings.html")) {
       - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
       - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
       - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
-      - PulseWorld focuses you on Explore Them (Founders like Lovelace, Boole, Wiener, Einstein, Shannon, and Turing. Architects like Berners Lee, Cerf, Baran, Neumann, Kahn, Kleinrock, Pouzin, Feinler, Andreessen, Engelbart, and Perlman), then says Explore Us!
+      - PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
       - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
       - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
       - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
