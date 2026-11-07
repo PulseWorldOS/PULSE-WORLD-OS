@@ -796,15 +796,6 @@ async function appendCompanionMessage(area, role, text) {
   area.scrollTop = area.scrollHeight;
   PulseSettingsAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubblebr);
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseSettingsAIPalMemoryBuffer }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG.info("PBAI_SESSION unavailable or error", response);
-      return;
-    }
-    if (response.PulseSettingsAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseSettingsAIPalMemoryBuffer, response.PulseSettingsAIPalMemoryBuffer);
-    if (response.PulseSettingsAIPalMemoryBuffer) PulseSettingsAIPalMemoryBuffer = response.PulseSettingsAIPalMemoryBuffer;
-  });
 }
 
 // ============================================================================
@@ -899,7 +890,7 @@ if (location.href.includes("PBSettings.html")) {
       let CompanionTitle = document.getElementById("CompanionTitle");
       CompanionTitle.style.marginBottom = "6px;"
       CompanionTitle.style.textAlign = "center";
-      CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100) + ")"
+      CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
       // 3. Fire the wrapped prompt
       await appendCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
       CompanionSettingsConsoleInput.value = "";
@@ -909,26 +900,6 @@ if (location.href.includes("PBSettings.html")) {
         await appendCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
       }, 300);
       aiSize = await getAISize();
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseSettingsAIPalMemoryBuffer }, (response) => {
-        if (chrome.runtime.lastError) return;
-        if (!response || !response.ok) {
-          PB_LOG.info("PBAI_SESSION unavailable or error", response);
-          return;
-        }
-        if (response.PulseSettingsAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseSettingsAIPalMemoryBuffer, response.PulseSettingsAIPalMemoryBuffer);
-        if (response.PulseSettingsAIPalMemoryBuffer) PulseSettingsAIPalMemoryBuffer = response.PulseSettingsAIPalMemoryBuffer;
-      });
-      // if (response.includes("{*Website Call:")) {
-      //   const urlRegex = /https?:\/\/([^\s]+)/i;
-      //   const match = response.match(urlRegex);
-      //   if (match && match[1]) {
-      //     const extractedURL = match[1];
-      //     console.log("The extracted URL is: " + extractedURL);
-      //     openNamedTab("PulsePal Tab", extractedURL);
-      //   } else {
-      //     console.log("URL not found in the provided string.");
-      //   } 
-      // }
     };
     
     saveExtensionSettingsUI();
