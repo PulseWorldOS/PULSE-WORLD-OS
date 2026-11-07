@@ -132,7 +132,7 @@ async function runLocalAI() {
 
   try {
     PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
-    LastMessage = PulsePalMemoryAIBuffer.pop();
+    // LastMessage = PulsePalMemoryAIBuffer.pop();
     PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     // CompanionDetailsMessage.innerHTML = LastMessage;
@@ -238,11 +238,7 @@ async function appendCompanionMessage(area, role, text) {
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
-  PulsePalMemoryAIBuffer.push(bubblebr.innerHTML);
-  area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
-  PulsePalMemoryAIBuffer.push(bubblebr.innerHTML);
-  area.appendChild(bubblebr);
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
