@@ -804,6 +804,7 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.transform = "";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
+      pageSettings.style.marginTop = "300px";
     }, 1200);
   }
 
@@ -850,6 +851,7 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.style.transform = "";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
+        pageSettings.style.marginTop = "300px";
       }, 1200);
       if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
     }
