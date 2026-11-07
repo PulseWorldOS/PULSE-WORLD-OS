@@ -593,7 +593,7 @@ async function getSWSize() {
 
 async function getAI2Size() {
   try {
-    return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulseAIPalMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -903,7 +903,6 @@ if (location.href.includes("PBSettings.html")) {
       setTimeout(async () => {
         await appendCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
       }, 300);
-      aiSize = await getAI2Size();
     };
     
     saveExtensionSettingsUI();
