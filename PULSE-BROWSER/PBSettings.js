@@ -10,9 +10,11 @@ let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
 let OvermindSettingsOrders = null;
+let OvermindHidden = false;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
+const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 
 function toggleSetting(key, label) {
   loadSettings((settings) => {
@@ -753,7 +755,105 @@ function getReadableName(url) {
 //   `;
 // }
 
+async function CheckEarnDetailsState() {
+  if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+  const Vis = await chrome.storage.local.get(["OvermindInVisible"]);
+  OvermindHidden = Vis.OvermindInVisible ?? false;
+  console.log("Overmind State:", OvermindHidden);
+  if (OvermindHidden) {
+    // ——— Turn ON (transparent / earning mode) ———
+    pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+    pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+    pbPulseDetailsEarn.style.width = "70px";
+    pbPulseDetailsEarn.style.height = "70px";
+    pbPulseDetailsEarn.style.border = "2px solid #000";
+    earnerinnerhelperpanel.style.display = "none";
+    earnerhelperpanel.style.background = "transparent";
+    earnerhelperpanel.style.backdropFilter = "none";
+    earnerhelperpanel.style.boxShadow = "none";
+    earnerhelperpanel.style.border = "none";
+    setTimeout(() => {
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+      pbPulseDetailsEarn.style.opacity = "1";
+      pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+      pbPulseDetailsEarn.currentTime = 0;
+      pbPulseDetailsEarn.play();
+    }, 1200);
+    
+  } else {
+    // ——— Turn OFF (restore original) ———
+    pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+    pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+    pbPulseDetailsEarn.style.border = "2px solid #000";
+    pbPulseDetailsEarn.style.width = "";        // let CSS take over again
+    pbPulseDetailsEarn.style.height = "";
+    pbPulseDetailsEarn.style.transform = "";
+    pbPulseDetailsEarn.style.opacity = "0.25";
+    earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
+    earnerhelperpanel.style.background = "";
+    earnerhelperpanel.style.backdropFilter = "";
+    earnerhelperpanel.style.boxShadow = "";
+    earnerhelperpanel.style.border = "";
+    setTimeout(() => {
+      pbPulseDetailsEarn.style.border = "";
+      pbPulseDetailsEarn.style.transform = "";
+      pbPulseDetailsEarn.currentTime = 0;
+      pbPulseDetailsEarn.play();
+    }, 1200);
+  }
 
+  pbPulseDetailsEarn.onclick = async () => {
+    if (!OvermindHidden) {
+      OvermindHidden = true;
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+      pbPulseDetailsEarn.style.width = "70px";
+      pbPulseDetailsEarn.style.height = "70px";
+      pbPulseDetailsEarn.style.border = "2px solid #000";
+      earnerinnerhelperpanel.style.display = "none";
+      earnerhelperpanel.style.background = "transparent";
+      earnerhelperpanel.style.backdropFilter = "none";
+      earnerhelperpanel.style.boxShadow = "none";
+      earnerhelperpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.style.opacity = "1";
+        pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+        pbPulseDetailsEarn.currentTime = 0;
+        pbPulseDetailsEarn.play();
+      }, 1200);
+    } else {
+      OvermindHidden = false;
+      // ——— Turn OFF (restore original) ———
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+      pbPulseDetailsEarn.style.width = "";        // let CSS take over again
+      pbPulseDetailsEarn.style.height = "";
+      pbPulseDetailsEarn.style.transform = "";
+      pbPulseDetailsEarn.style.opacity = "0.25";
+      pbPulseDetailsEarn.style.border = "2px solid #000";
+      earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerhelperpanel.style.background = "";
+      earnerhelperpanel.style.backdropFilter = "";
+      earnerhelperpanel.style.boxShadow = "";
+      earnerhelperpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseDetailsEarn.style.border = "";
+        pbPulseDetailsEarn.style.transform = "";
+        pbPulseDetailsEarn.currentTime = 0;
+        pbPulseDetailsEarn.play();
+      }, 1200);
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+    console.log("Overmind State:", OvermindHidden);
+    PulsesafeStorageSet({ OvermindInVisible: OvermindHidden });
+  };
+}
+
+setTimeout(CheckEarnDetailsState, 50);
 
 async function updateLinkedPWInputs() {
   // Find all selects

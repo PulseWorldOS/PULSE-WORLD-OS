@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preload" fetchpriority="high" as="image" href="PulseWorldSettings.png" type="image/png"/>
+  <link rel="preload" fetchpriority="high" as="video" href="PulseOvermind.mp4" type="video/mp4">
   <title>PulseBrowser OS Settings</title>
 
   <style>
@@ -382,10 +383,25 @@
       letter-spacing: 0.12em;
       color: #0FF;
     }
+
+    #pbPulseDetailsEarn {
+      z-index: 10;
+      cursor: pointer;
+      position: absolute;
+      width: 25%;
+      opacity: 0.25;
+      margin-bottom: 20px;
+      height: auto;
+      border-radius: 99px;
+      object-fit: inherit;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
   <div class="earner-helper-panel" id="earner-helper-panel">
+    <video id="pbPulseDetailsEarn" class="pbPulseDetailsEarn" src="PulseOvermind.mp4" autoplay muted playsinline aria-label="pbPulseDetailsEarn"></video>
     <div class="earner-inner-helper-panel" id="earner-inner-helper-panel">
       <div style="text-align: center; font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Pal - 🧠 AI Overmind 
