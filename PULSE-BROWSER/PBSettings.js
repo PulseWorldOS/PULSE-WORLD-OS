@@ -9,7 +9,7 @@ let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
-let aiSize = 0;
+let aiSettingsSize = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
@@ -620,8 +620,8 @@ async function getAI2Size() {
 //   const localUsed = estimate.usage || 0;
 //   const localQuota = estimate.quota || 1;
 //   swSize = await getSWSize();
-//   aiSize = await getAI2Size();
-//   console.log("AI Memory Size:", aiSize, "bytes");
+//   aiSettingsSize = await getAI2Size();
+//   console.log("AI Memory Size:", aiSettingsSize, "bytes");
 //   console.log("PBCompanion.js Size:", swSize, "bytes");
 
 //   // ⭐ SYNC STORAGE (chrome.storage.sync)
@@ -629,19 +629,19 @@ async function getAI2Size() {
 //     chrome.storage.sync.get(null, resolve)
 //   );
 //   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
-//   aiSize = syncBytes + aiSize;
+//   aiSettingsSize = syncBytes + aiSettingsSize;
 //   // ⭐ Combined totals
-//   totalUsed = localUsed + swSize + aiSize;
+//   totalUsed = localUsed + swSize + aiSettingsSize;
 //   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
 //   // ⭐ Conversions
 //   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
-//   const syncMB = (aiSize / (1024 * 1024)).toFixed(2);
+//   const syncMB = (aiSettingsSize / (1024 * 1024)).toFixed(2);
 //   const swMB = (swSize / (1024 * 1024)).toFixed(2);
 //   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
 //   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
 //   const swKB = (swSize / 1024).toFixed(2);
-//   const syncKB = (aiSize / 1024).toFixed(2);
+//   const syncKB = (aiSettingsSize / 1024).toFixed(2);
 
 //   // ⭐ Dynamic color zones
 //   let percentColor = "lightgreen";
@@ -934,7 +934,7 @@ if (location.href.includes("PBSettings.html")) {
     const SessionAI = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
     PulseSettingsAIPalMemoryBuffer = SessionAI.PulseSettingsAIPalMemoryBuffer ?? [];
     console.log(SessionAI.PulseSettingsAIPalMemoryBuffer);
-    aiSize = await getAI2Size();
+    aiSettingsSize = await getAI2Size();
 
     const idsToWatch = [
       "emailMode",
@@ -1012,8 +1012,8 @@ if (location.href.includes("PBSettings.html")) {
     });
 
     setInterval(async () => {
-      aiSize = await getAI2Size();
-      loadOrders(aiSize);
+      aiSettingsSize = await getAI2Size();
+      loadOrders(aiSettingsSize);
       if (OvermindSettingsOrders) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
         const response = await aiSettingsSession.prompt(OvermindSettingsOrders);
@@ -1096,8 +1096,8 @@ setTimeout(updateLinkedPWInputs, 250);
 
 
 // Utility: load settings
-function loadOrders(aiSize) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSize }, (response) => {
+function loadOrders(aiSettingsSize) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
