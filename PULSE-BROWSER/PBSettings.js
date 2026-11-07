@@ -309,8 +309,6 @@ async function saveExtensionSettingsUI() {
 
   PB_LOG.change("Extension Settings Saved", before[EXTENSION_SETTINGS_KEY2], settings);
 }
-
-
 // ============================================================================
 //  SECTION X — CACHE LIST (via PBCompanion.js)
 // ============================================================================
@@ -848,6 +846,42 @@ if (location.href.includes("PBSettings.html")) {
         saveExtensionSettingsUI();
       });
     });
+    
+    CompanionConsoleSend.onclick = async () => {
+      CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+      CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+      const text = CompanionConsoleInput.value.trim();
+      if (!text) return;
+      // 3. Fire the wrapped prompt
+      await appendCompanionMessage(CompanionDetailsMessage, "user", text);
+      CompanionConsoleInput.value = "";
+      const response = await aiSession.prompt(text);
+      console.log("🧠 AI Overmind: ", response);
+      setTimeout(async () => {
+        await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+      }, 300);
+      aiSize = await getAISize();
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
+        if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
+      });
+      // if (response.includes("{*Website Call:")) {
+      //   const urlRegex = /https?:\/\/([^\s]+)/i;
+      //   const match = response.match(urlRegex);
+      //   if (match && match[1]) {
+      //     const extractedURL = match[1];
+      //     console.log("The extracted URL is: " + extractedURL);
+      //     openNamedTab("PulsePal Tab", extractedURL);
+      //   } else {
+      //     console.log("URL not found in the provided string.");
+      //   } 
+      // }
+    };
     
     saveExtensionSettingsUI();
 
