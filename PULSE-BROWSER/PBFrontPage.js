@@ -163,7 +163,7 @@ async function runLocalAI() {
 - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
 - Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
-- You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
+- You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
 - You hold your AI Overmind Prime 🧠 & each Pulse Pal AI Memory locally with the user not reliant on any server or network.. including ourselves.
@@ -266,13 +266,18 @@ CompanionConsoleSend.onclick = async () => {
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  appendCompanionMessage(CompanionDetailsMessage, "user", text);
+  if (text.includes("Overmind Orders")) {
+    const order = "(Please Follow this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
+    appendCompanionMessage(CompanionDetailsMessage, "user", order);
+  } else {
+    appendCompanionMessage(CompanionDetailsMessage, "user", text);
+  }
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-    if (text.includes("Overmind Orders")) OvermindOrders = response;
+    if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
   }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
@@ -1778,7 +1783,9 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   }
   
   pulseRehydrateTabs();
-  backToOriginal();
+  try {
+    backToOriginal();
+  } catch (err) {}
   // injectPulseScreenFromMemory();
   // location.reload();
 });

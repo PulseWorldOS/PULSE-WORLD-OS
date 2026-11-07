@@ -13,12 +13,13 @@ let aiSettingsSession = null;
 let aiSettings2Size = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
-let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
-let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
-let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
-const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn2");
-const earnerhelperApanel = document.getElementById("earner-helper-panel");
-const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-panel");
+let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindSettingsCompanion");
+let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindSettingsCompanionSend");
+let CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
+const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn3");
+const earnerhelperApanel = document.getElementById("earner-helper-Settings-panel");
+const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-Settings-panel");
+const backBtn = document.getElementById("backBtn");
 
 function toggleSetting(key, label) {
   loadSettings((settings) => {
@@ -762,6 +763,9 @@ async function getAI2Size() {
 async function CheckEarnDetailsState() {
   const SessionAI2 = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
   PulseSettingsAIPalMemoryBuffer = SessionAI2.PulseSettingsAIPalMemoryBuffer ?? [];
+  PulseSettingsAIPalMemoryBuffer.forEach(push => { CompanionSettingsDetailsMessage.innerHTML += push; });
+  CompanionSettingsDetailsMessage.style.fontSize = "0.6rem";
+  CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
   console.log("AI Memory Settings Buffer:" + SessionAI2.PulseSettingsAIPalMemoryBuffer);
   aiSettings2Size = await getAI2Size();
   if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
@@ -771,8 +775,8 @@ async function CheckEarnDetailsState() {
   if (OvermindHidden) {
     // ——— Turn ON (transparent / earning mode) ———
     pageSettings.style.marginTop = "0px";
-    pbPulseOvermind.id = "pbPulseDetailsEarning2";
-    pbPulseOvermind.className = "pbPulseDetailsEarning2";
+    pbPulseOvermind.id = "pbPulseDetailsEarning3";
+    pbPulseOvermind.className = "pbPulseDetailsEarning3";
     pbPulseOvermind.style.width = "50px";
     pbPulseOvermind.style.height = "50px";
     pbPulseOvermind.style.border = "2px solid #000";
@@ -782,8 +786,8 @@ async function CheckEarnDetailsState() {
     earnerhelperApanel.style.boxShadow = "none";
     earnerhelperApanel.style.border = "none";
     setTimeout(() => {
-      pbPulseOvermind.id = "pbPulseDetailsEarn2";
-      pbPulseOvermind.className = "pbPulseDetailsEarn2";
+      pbPulseOvermind.id = "pbPulseDetailsEarn3";
+      pbPulseOvermind.className = "pbPulseDetailsEarn3";
       pbPulseOvermind.style.opacity = "1";
       pbPulseOvermind.style.transform = "translate(-130px, -110px)";
       pbPulseOvermind.currentTime = 0;
@@ -793,8 +797,8 @@ async function CheckEarnDetailsState() {
   } else {
     pageSettings.style.marginTop = "300px";
     // ——— Turn OFF (restore original) ———
-    pbPulseOvermind.id = "pbPulseDetailsEarn2";
-    pbPulseOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
+    pbPulseOvermind.id = "pbPulseDetailsEarn3";
+    pbPulseOvermind.className = "pbPulseDetailsEarn3";          // or put back any original class if you had one
     pbPulseOvermind.style.border = "2px solid #000";
     pbPulseOvermind.style.width = "";        // let CSS take over again
     pbPulseOvermind.style.height = "";
@@ -818,8 +822,8 @@ async function CheckEarnDetailsState() {
       OvermindHidden = true;
       pageSettings.style.marginTop = "0px";
       // ——— Turn ON (transparent / earning mode) ———
-      pbPulseOvermind.id = "pbPulseDetailsEarning2";
-      pbPulseOvermind.className = "pbPulseDetailsEarning2";
+      pbPulseOvermind.id = "pbPulseDetailsEarning3";
+      pbPulseOvermind.className = "pbPulseDetailsEarning3";
       pbPulseOvermind.style.width = "50px";
       pbPulseOvermind.style.height = "50px";
       pbPulseOvermind.style.border = "2px solid #000";
@@ -829,8 +833,8 @@ async function CheckEarnDetailsState() {
       earnerhelperApanel.style.boxShadow = "none";
       earnerhelperApanel.style.border = "none";
       setTimeout(() => {
-        pbPulseOvermind.id = "pbPulseDetailsEarn2";
-        pbPulseOvermind.className = "pbPulseDetailsEarn2";
+        pbPulseOvermind.id = "pbPulseDetailsEarn3";
+        pbPulseOvermind.className = "pbPulseDetailsEarn3";
         pbPulseOvermind.style.opacity = "1";
         pbPulseOvermind.style.transform = "translate(-130px, -110px)";
         pbPulseOvermind.currentTime = 0;
@@ -840,8 +844,8 @@ async function CheckEarnDetailsState() {
       OvermindHidden = false;
       pageSettings.style.marginTop = "300px";
       // ——— Turn OFF (restore original) ———
-      pbPulseOvermind.id = "pbPulseDetailsEarn2";
-      pbPulseOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
+      pbPulseOvermind.id = "pbPulseDetailsEarn3";
+      pbPulseOvermind.className = "pbPulseDetailsEarn3";          // or put back any original class if you had one
       pbPulseOvermind.style.width = "";        // let CSS take over again
       pbPulseOvermind.style.height = "";
       pbPulseOvermind.style.transform = "";
@@ -1064,10 +1068,10 @@ if (location.href.includes("PBSettings.html")) {
       ${rawPrompt}
 
       [PULSE PAL RESPONSE]:`;
-      let CompanionTitle = document.getElementById("CompanionTitle");
-      CompanionTitle.style.marginBottom = "6px;"
-      CompanionTitle.style.textAlign = "center";
-      CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
+      let CompanionSettingsTitle = document.getElementById("CompanionSettingsTitle");
+      CompanionSettingsTitle.style.marginBottom = "6px;"
+      CompanionSettingsTitle.style.textAlign = "center";
+      CompanionSettingsTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
       // 3. Fire the wrapped prompt
       appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
       CompanionSettingsConsoleInput.value = "";
@@ -1114,8 +1118,6 @@ function loadOrders(aiSettings2Size) {
     if (response.OvermindOrders) OvermindSettingsOrders = response.OvermindOrders;
   });
 }
-
-const backBtn = document.getElementById("btn-back");
 
 if (backBtn) {
   backBtn.onclick = () => {

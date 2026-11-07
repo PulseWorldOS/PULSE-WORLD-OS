@@ -86,7 +86,10 @@ async function getAI3Size() {
 async function CheckOvermindState() {
   const SessionAI2 = await chrome.storage.local.get(["PulsePopupAIPalMemoryBuffer"]);
   PulsePopupAIPalMemoryBuffer = SessionAI2.PulsePopupAIPalMemoryBuffer ?? [];
-  console.log("AI Memory Settings Buffer:" + SessionAI2.PulsePopupAIPalMemoryBuffer);
+  PulsePopupAIPalMemoryBuffer.forEach(push => { CompanionPopupDetailsMessage.innerHTML += push; });
+  CompanionPopupDetailsMessage.style.fontSize = "0.6rem";
+  CompanionPopupDetailsMessage.scrollTop = CompanionPopupDetailsMessage.scrollHeight;
+  console.log("AI Memory Popup Buffer:" + SessionAI2.PulsePopupAIPalMemoryBuffer);
   aiPopupSize = await getAI3Size();
   if (CompanionPopupDetailsMessage) CompanionPopupDetailsMessage.scrollTop = CompanionPopupDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["OvermindPopupInVisible"]);
@@ -601,7 +604,9 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   }
   // ⭐ REHYDRATE WITH CLEAN INDICES
   pulseRehydrateTabs();
-  backToOriginal();
+  try {
+    backToOriginal();
+  } catch (err) {}
 });
 
 const out = document.getElementById("output");

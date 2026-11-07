@@ -45,6 +45,7 @@
 
 
     .pw-settings-page {
+      pointer-events: none;
       margin: 0 auto;
       margin-top: 300px;
       width: 300px;
@@ -238,12 +239,13 @@
 
     #btn-back {
       position: fixed;
-      top: 4.2dvh;
-      right: 5.8dvw;
-      width: 6dvw;
+      top: 2.2dvh;
+      right: 7.6dvw;
+      width: 12dvw;
       height: 3.9dvh;
       color: black;
       font-weight: bold;
+      pointer-events: auto;
       cursor: pointer;
       background: transparent;
       border-radius: 14px;
@@ -275,7 +277,7 @@
       box-shadow: 0 0 6px #0ff inset;
     }
 
-    .earner-helper-panel {
+    .earner-helper-Settings-panel {
       position: fixed;
       margin: 14px 14px;
       top: 0;
@@ -293,7 +295,7 @@
       z-index: 5;
     }
 
-    .earner-inner-helper-panel {
+    .earner-inner-helper-Settings-panel {
       width: 100%;
       height: 100%;
       font-size: 0.8rem;
@@ -310,14 +312,14 @@
       border: 1px solid rgba(0, 255, 200, 0.25);
     }
 
-    .CompanionConsoleInputRowMain {
+    .CompanionSettingsConsoleInputRowMain {
       display: flex;
       width: 200px;
       gap: 8px;
       margin-top: 8px;
     }
 
-    .CompanionConsoleInput {
+    .CompanionSettingsConsoleInput {
       flex: 1;
       width: 200px;
       padding: 10px 14px;
@@ -329,7 +331,7 @@
       outline: none;
     }
 
-    .consoleOvermindCompanion {
+    .consoleOvermindSettingsCompanion {
       flex: 1;
       width: 90%;
       margin-top: 30px;
@@ -344,7 +346,7 @@
     }
 
     /* BUTTONS */
-    .consoleOvermindCompanionSend {
+    .consoleOvermindSettingsCompanionSend {
       padding: 8px 14px;
       border-radius: 999px;
       border: none;
@@ -358,7 +360,7 @@
         0 4px 10px rgba(0, 0, 0, 0.6);
     }
 
-    .CompanionTitle {
+    .CompanionSettingsTitle {
       margin-bottom: 6px;
       text-align: center;
       font-size: 10px;
@@ -367,7 +369,7 @@
       color: #0FF;
     }
 
-    #pbPulseDetailsEarn2 {
+    #pbPulseDetailsEarn3 {
       z-index: 10;
       cursor: pointer;
       position: absolute;
@@ -405,27 +407,74 @@
       80%  { transform: translate(-117px, -91px); }
       100% { transform: translate(-130px, -110px); }
     }
+
+    #backBtn {
+      position: fixed;
+      top: 2.2dvh;
+      right: 7.6dvw;
+      width: 12dvw;
+      height: 3.9dvh;
+      color: black;
+      font-weight: bold;
+      pointer-events: auto;
+      cursor: pointer;
+      background: transparent;
+      border-radius: 14px;
+      z-index: 99999999;
+      backdrop-filter: blur(4px);
+      /* 3D POP + SHADOW */
+      box-shadow:
+        0 4px 10px rgba(0,255,255,0.35),
+        inset 0 0 12px rgba(0,255,255,0.25),
+        0 0 18px rgba(0,255,255,0.45);
+      transform: translateZ(0); /* GPU hint */
+      transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        filter 0.12s ease,
+        backdrop-filter 0.15s ease;
+    }
+
+    /* Hover: lift + glow */
+    #backBtn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow:
+        0 8px 18px rgba(0,255,255,0.55),
+        inset 0 0 14px rgba(0,255,255,0.35),
+        0 0 22px rgba(0,255,255,0.65);
+      filter: brightness(1.15);
+    }
+
+    /* Active: press inward */
+    #backBtn:active {
+      transform: translateY(1px) scale(0.97);
+      box-shadow:
+        0 3px 6px rgba(0,255,255,0.25),
+        inset 0 0 10px rgba(0,255,255,0.45),
+        0 0 12px rgba(0,255,255,0.35);
+      filter: brightness(0.9);
+    }
   </style>
 </head>
 <body>
-  <div class="earner-helper-panel" id="earner-helper-panel">
-    <video id="pbPulseDetailsEarn2" class="pbPulseDetailsEarn2" src="PulseOvermind.mp4" autoplay muted playsinline aria-label="pbPulseDetailsEarn2"></video>
-    <div class="earner-inner-helper-panel" id="earner-inner-helper-panel">
+  <div class="earner-helper-Settings-panel" id="earner-helper-Settings-panel">
+    <video id="pbPulseDetailsEarn3" class="pbPulseDetailsEarn3" src="PulseOvermind.mp4" autoplay muted playsinline aria-label="pbPulseDetailsEarn3"></video>
+    <div class="earner-inner-helper-Settings-panel" id="earner-inner-helper-Settings-panel">
       <div style="text-align: center; font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
-        Pulse Pal - 🧠 AI Overmind (???)
+        Pulse Pal - 🧠 AI Overmind (Present)
       </div>      
-      <div id="consoleOvermindCompanion" class="consoleOvermindCompanion">
-        <div id="CompanionTitle" class="CompanionTitle" style="text-align: center;"></div>
+      <div id="consoleOvermindSettingsCompanion" class="consoleOvermindSettingsCompanion">
+        <div id="CompanionSettingsTitle" class="CompanionSettingsTitle" style="text-align: center;"></div>
       </div>
-      <div class="CompanionConsoleInputRow">
-        <input id="CompanionConsoleInput" class="CompanionConsoleInput" type="text" placeholder="Just Ask Pulse Pal.. (Chrome Mini AI)" />
-        <button id="consoleOvermindCompanionSend" class="consoleOvermindCompanionSend">Send</button>
+      <div class="CompanionSettingsConsoleInputRow">
+        <input id="CompanionSettingsConsoleInput" class="CompanionSettingsConsoleInput" type="text" placeholder="Just Ask Pulse Pal.. (Chrome Mini AI)" />
+        <button id="consoleSettingsOvermindCompanionSend" class="consoleSettingsOvermindCompanionSend">Send</button>
       </div>
     </div>
   </div>
   <div class="pw-settings-page" id="pw-settings-page">
-    <button id="btn-back" aria-label="Pulse Back Button" role="button">
-      <svg viewBox="0 0 24 24" width="120%" height="120%" fill="#0ff">
+    <button id="backBtn" aria-label="Pulse Back Button" role="button">
+      <svg viewBox="0 0 24 24" width="65%" height="65%" fill="#0ff">
         <path d="M15 4l-8 8 8 8" stroke="#0ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>

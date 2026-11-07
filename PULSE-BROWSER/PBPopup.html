@@ -25,6 +25,7 @@
     .bg {
       /* width: 290px;
       height: 550px; */
+      margin: 0 auto;
       width: 330px;
       height: 850px;
       background: url("PulseBrowserConsole.png") center top / contain no-repeat;
@@ -104,11 +105,11 @@
     }
 
     #btn-open-email {
-      position: fixed;
-      top: 36.3dvh;
-      left: 3.7dvw;
-      width: 45.6dvw;
-      height: 7.5dvh;
+      position: absolute;
+      top: 25.3dvh;
+      left: 5.8dvw;
+      width: 41.6dvw;
+      height: 5.5dvh;
       
       color: black;
       font-weight: bold;
@@ -117,11 +118,11 @@
     }
 
     #btn-open-bank {
-      position: fixed;
-      top: 36.3dvh;
-      right: 3.7dvw;
-      width: 45.6dvw;
-      height: 7.5dvh;
+      position: absolute;
+      top: 25.3dvh;
+      right: 5.8dvw;
+      width: 41.6dvw;
+      height: 5.5dvh;
       
       color: black;
       font-weight: bold;
@@ -130,11 +131,11 @@
     }
 
     #btn-open-identity {
-      position: fixed;
-      top: 45dvh;
-      left: 3.7dvw;
-      width: 45.6dvw;
-      height: 7.5dvh;
+      position: absolute;
+      top: 31dvh;
+      left: 5.8dvw;
+      width: 41.6dvw;
+      height: 5.5dvh;
       
       color: black;
       font-weight: bold;
@@ -143,11 +144,11 @@
     }
 
     #btn-open-business {
-      position: fixed;
-      top: 45dvh;
-      right: 3.7dvw;
-      width: 45.6dvw;
-      height: 7.5dvh;
+      position: absolute;
+      top: 31dvh;
+      right: 5.8dvw;
+      width: 41.6dvw;
+      height: 5.5dvh;
       
       color: black;
       font-weight: bold;
@@ -156,11 +157,11 @@
     }
 
     #btn-open-settings {
-      position: fixed;
-      bottom: 30.3dvh;
-      left: 3.7dvw;
-      width: 45.6dvw;
-      height: 7.5dvh;
+      position: absolute;
+      top: 42dvh;
+      left: 5.8dvw;
+      width: 41.6dvw;
+      height: 5.5dvh;
       
       color: black;
       font-weight: bold;
@@ -169,11 +170,11 @@
     }
 
     #btn-open-modules {
-      position: fixed;
-      bottom: 30.3dvh;
-      right: 3.7dvw;
-      width: 45.6dvw;
-      height: 7.5dvh;
+      position: absolute;
+      top: 42dvh;
+      right: 5.8dvw;
+      width: 41.6dvw;
+      height: 5.5dvh;
       
       color: black;
       font-weight: bold;
@@ -182,8 +183,10 @@
     }
 
     #output {
-      margin-top: 60px;
-      margin-left: -6px;
+      position: absolute;
+      top: 0;
+      margin-top: 90px;
+      margin-left: 12px;
       font-size: 12px;
       background: rgba(0, 20, 30, 0.55);
       backdrop-filter: blur(6px);
@@ -198,10 +201,11 @@
     }
 
     #modules-popup {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       height: 0;
-
+      inset-inline: 0;
+      margin-inline: auto;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
 
@@ -419,7 +423,7 @@
     <video id="pbPulseDetailsEarn2" class="pbPulseDetailsEarn2" src="PulseOvermind.mp4" autoplay muted playsinline aria-label="pbPulseDetailsEarn2"></video>
     <div class="earner-inner-helper-panel" id="earner-inner-helper-panel">
       <div style="text-align: center; font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
-        Pulse Pal - 🧠 AI Overmind (???)
+        Pulse Pal - 🧠 AI Overmind (Past)
       </div>      
       <div id="consoleOvermindCompanion" class="consoleOvermindCompanion">
         <div id="CompanionTitle" class="CompanionTitle" style="text-align: center;"></div>

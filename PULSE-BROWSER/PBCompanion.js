@@ -1785,6 +1785,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         aiSize = msg.aiSize;
       }
       sendResponse({ ok: true, OvermindOrders });
+      OvermindOrders = null;
       break;
 
     case "PB_COMPANION_PAUSE":
