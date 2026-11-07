@@ -192,10 +192,7 @@ ${rawPrompt}
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "AI Overmind (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      const now = Date.now();
-      const ItsTime = new Date(now).toLocaleString();
-      const showTime = `[${ItsTime}]`
-      if (!EarnDetailsHidden) appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
+      if (!EarnDetailsHidden) await appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
@@ -225,7 +222,7 @@ function appendEarnerMessage(area, role, text) {
 }
 
 
-function appendCompanionMessage(area, role, text) {
+async function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
   const bubblebr = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
@@ -240,6 +237,8 @@ function appendCompanionMessage(area, role, text) {
   PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
+  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
+  area.appendChild(bubblebr);
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -249,8 +248,6 @@ function appendCompanionMessage(area, role, text) {
     if (response.PulseAIPalMemoryBuffer) PB_LOG3.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
     if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
   });
-  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
-  area.appendChild(bubblebr);
 }
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
@@ -265,12 +262,12 @@ CompanionConsoleSend.onclick = async () => {
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
   // 3. Fire the wrapped prompt
-  appendCompanionMessage(CompanionDetailsMessage, "user", text);
+  await appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("AI Overmind:", response);
-  setTimeout(() => {
-    appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
+  setTimeout(async () => {
+    await appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
   }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
