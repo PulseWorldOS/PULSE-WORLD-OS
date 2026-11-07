@@ -1026,7 +1026,6 @@ identityVideo = document.getElementById("identityVideo");
       badge2.classList.add("talking");
       setTimeout(() => badge2.classList.remove("talking"), 12000); // hides after 3s
     }
-    pulsepalSpeak("Inventory is your personal multiversal locker — every item, every identity, every drift‑tool you’ve unlocked lives here. Your User Record is your pulse‑signature — your history, your drift‑footprint, your system privileges.");
     
     await loadPulseIdentityContinual();
     
@@ -1113,7 +1112,10 @@ identityVideo = document.getElementById("identityVideo");
 
   PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
-
+  const response = await aiSession.prompt("Tell me more about PulseWorld.net and their secure digital local stripe-based identity on the Inventory page?");
+  console.log("Pulse Pal:", response);
+  if (!response) pulsepalSpeak("Inventory is your personal multiversal locker — every item, every identity, every drift‑tool you’ve unlocked lives here. Your User Record is your pulse‑signature — your history, your drift‑footprint, your system privileges.");
+  if (response) pulsepalSpeak(response);
 })();
 
 </script>
