@@ -268,7 +268,7 @@ CompanionConsoleSend.onclick = async () => {
   const response = await aiSession.prompt(text);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
-    await appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
+    await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
