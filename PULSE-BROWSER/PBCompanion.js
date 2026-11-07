@@ -10,6 +10,7 @@ let authorityRealm = null;
 let EarnHidden = false;
 let PULSE_ONLINE = false;
 let aiSession = null;
+let OvermindOrders = null;
 let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
@@ -1777,6 +1778,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       break;
 
+    case "PB_GATHER_ORDERS":
+      sendResponse({ ok: true, OvermindOrders });
+      break;
+
     case "PB_COMPANION_PAUSE":
       ServiceWorkerOnline = false;
       safeStorageSet({ ServiceWorkerOnline });
@@ -2541,6 +2546,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           console.log(SessionAI.PulsePalMemoryAIBuffer);
         })();
       }
+      if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       sendResponse({ ok: true, PulsePalMemoryAIBuffer });
       return true;
 

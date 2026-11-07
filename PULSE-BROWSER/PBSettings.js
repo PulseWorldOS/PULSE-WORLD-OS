@@ -792,8 +792,6 @@ async function appendSettingsCompanionMessage(area, role, text) {
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  PulseSettingsAIPalMemoryBuffer.push(bubblebr.innerHTML);
-  area.appendChild(bubblebr);
 }
 
 // ============================================================================
@@ -904,6 +902,10 @@ if (location.href.includes("PBSettings.html")) {
         appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
       }, 300);
     };
+
+    setInterval(() => {
+      loadOrders();
+    }, 2000);
     
     saveExtensionSettingsUI();
 
@@ -924,6 +926,15 @@ if (location.href.includes("PBSettings.html")) {
 }
 
 setTimeout(updateLinkedPWInputs, 250);
+
+
+// Utility: load settings
+function loadOrders() {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (res) => {
+    if (chrome.runtime.lastError) return console.log("Settings unreachable.");
+    cb(res.settings);
+  });
+}
 
 const backBtn = document.getElementById("btn-back");
 

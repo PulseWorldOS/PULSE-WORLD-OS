@@ -10,6 +10,7 @@ let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion"
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let socialMode = "Internal";
+let OvermindOrders = null;
 let EarnHidden = false;
 let RunningAI = false;
 let EarnDetailsHidden = false;
@@ -139,7 +140,7 @@ async function runLocalAI() {
 
   try {
     if (!aiSession) {
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -196,7 +197,7 @@ ${rawPrompt}
       if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -235,7 +236,7 @@ async function appendCompanionMessage(area, role, text) {
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -262,11 +263,12 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("🧠 AI Overmind: ", response);
+  if (text.includes("Overmind Orders")) OvermindOrders = response;
   setTimeout(async () => {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   }, 300);
   aiSize = await getAISize();
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -1331,7 +1333,7 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
