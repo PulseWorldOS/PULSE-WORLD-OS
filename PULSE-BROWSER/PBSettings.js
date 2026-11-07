@@ -901,6 +901,11 @@ if (location.href.includes("PBSettings.html")) {
       loadOrders();
       if (OvermindSettingsOrders) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
+        const response = await aiSettingsSession.prompt(OvermindSettingsOrders);
+        console.log("🧠 AI Overmind: ", response);
+        setTimeout(async () => {
+          appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, response);
+        }, 300);
         OvermindSettingsOrders = null;
       }
     }, 5000);
