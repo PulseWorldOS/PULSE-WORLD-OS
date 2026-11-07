@@ -2589,7 +2589,7 @@ async function setTheStage() {
    
   document.addEventListener("keydown", (e) => {
     CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-    if (e.target === CompanionConsoleInput) return;
+    if ((e.target === CompanionConsoleInput) || (e.target === CompanionDetailsMessage)) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
     if (moduleKeys.includes(key) && e.repeat) { 

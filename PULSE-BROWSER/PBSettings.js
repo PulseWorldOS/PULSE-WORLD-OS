@@ -768,8 +768,8 @@ async function CheckEarnDetailsState() {
     pageSettings.style.marginTop = "0px";
     pbPulseOvermind.id = "pbPulseDetailsEarning2";
     pbPulseOvermind.className = "pbPulseDetailsEarning2";
-    pbPulseOvermind.style.width = "70px";
-    pbPulseOvermind.style.height = "70px";
+    pbPulseOvermind.style.width = "50px";
+    pbPulseOvermind.style.height = "50px";
     pbPulseOvermind.style.border = "2px solid #000";
     earnerinnerhelperApanel.style.display = "none";
     earnerhelperApanel.style.background = "transparent";
@@ -783,7 +783,7 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.transform = "translate(-130px, -110px)";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
-    }, 1200);
+    }, 500);
     
   } else {
     pageSettings.style.marginTop = "300px";
@@ -805,7 +805,7 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.transform = "";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
-    }, 1200);
+    }, 500);
   }
 
   pbPulseOvermind.onclick = async () => {
@@ -815,8 +815,8 @@ async function CheckEarnDetailsState() {
       // ——— Turn ON (transparent / earning mode) ———
       pbPulseOvermind.id = "pbPulseDetailsEarning2";
       pbPulseOvermind.className = "pbPulseDetailsEarning2";
-      pbPulseOvermind.style.width = "70px";
-      pbPulseOvermind.style.height = "70px";
+      pbPulseOvermind.style.width = "50px";
+      pbPulseOvermind.style.height = "50px";
       pbPulseOvermind.style.border = "2px solid #000";
       earnerinnerhelperApanel.style.display = "none";
       earnerhelperApanel.style.background = "transparent";
@@ -830,7 +830,7 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.style.transform = "translate(-130px, -110px)";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
-      }, 1200);
+      }, 500);
     } else {
       OvermindHidden = false;
       pageSettings.style.marginTop = "300px";
@@ -852,7 +852,7 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.style.transform = "";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
-      }, 1200);
+      }, 500);
       if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
     }
     console.log("Overmind State:", OvermindHidden);
