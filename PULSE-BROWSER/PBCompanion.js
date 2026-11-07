@@ -1779,9 +1779,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PB_GATHER_ORDERS":
-      if (!OvermindOrders) {
-        sendResponse({ ok: true, OvermindOrders });
-      }
+      sendResponse({ ok: true, OvermindOrders });
       break;
 
     case "PB_COMPANION_PAUSE":
