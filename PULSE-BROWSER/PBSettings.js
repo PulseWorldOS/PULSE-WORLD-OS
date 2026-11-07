@@ -879,12 +879,23 @@ if (location.href.includes("PBSettings.html")) {
         saveExtensionSettingsUI();
       });
     });
+    
+    async function initializeExoskeleton() {
+      aiSession = await LanguageModel.create({
+        systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+        expectedOutputs: [{ type: "text", languages: ["en"] }]
+      });
+    }
 
     CompanionConsoleSend.onclick = async () => {
       CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
       CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
       const text = CompanionConsoleInput.value.trim();
       if (!text) return;
+      if (!aiSession) {
+        // 1. Initialize the session using the modern nested outputs architecture
+        await initializeExoskeleton();
+      }
       // 3. Fire the wrapped prompt
       await appendCompanionMessage(CompanionDetailsMessage, "user", text);
       CompanionConsoleInput.value = "";
