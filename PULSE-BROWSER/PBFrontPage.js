@@ -116,7 +116,6 @@ function PulsesafeStorageSet(dataObject) {
 
 async function runLocalAI() {
   if (RunningAI) return; // already running
-  if (EarnDetailsHidden) return; // already running
   if (typeof LanguageModel === 'undefined') {
     console.error("🧠 AI Overmind (Gemini Nano) is not supported in this browser version.");
     return;
@@ -553,7 +552,6 @@ function getReadableName(url) {
         }, 1200);
       } else {
         EarnDetailsHidden = false;
-        runLocalAI();
         // ——— Turn OFF (restore original) ———
         pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
