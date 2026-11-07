@@ -933,7 +933,7 @@ if (location.href.includes("PBSettings.html")) {
 
     const SessionAI = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
     PulseSettingsAIPalMemoryBuffer = SessionAI.PulseSettingsAIPalMemoryBuffer ?? [];
-    console.log(SessionAI.PulseSettingsAIPalMemoryBuffer);
+    console.log("AI Memory Settings Buffer:" + SessionAI.PulseSettingsAIPalMemoryBuffer);
     aiSettings2Size = await getAI2Size();
 
     const idsToWatch = [
@@ -1023,7 +1023,7 @@ if (location.href.includes("PBSettings.html")) {
         }, 300);
         OvermindSettingsOrders = null;
       }
-    }, 5000);
+    }, 2000);
     
     CompanionSettingsConsoleSend.onclick = async () => {
       CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
