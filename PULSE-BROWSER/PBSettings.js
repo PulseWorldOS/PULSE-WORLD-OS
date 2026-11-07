@@ -15,6 +15,7 @@ let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCo
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
 const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn");
+const pageSettings = document.getElementById("pw-settings-page");
 const earnerhelperApanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-panel");
 
@@ -781,6 +782,7 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.transform = "translate(-190px, 111px)";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
+      pageSettings.style.marginTop = "0px";
     }, 1200);
     
   } else {
@@ -826,6 +828,7 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.style.transform = "translate(-190px, 111px)";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
+        pageSettings.style.marginTop = "0px";
       }, 1200);
     } else {
       OvermindHidden = false;
