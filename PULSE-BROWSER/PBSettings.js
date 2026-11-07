@@ -851,7 +851,7 @@ async function CheckEarnDetailsState() {
       if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
     }
     console.log("Overmind State:", OvermindHidden);
-    PulsesafeStorageSet({ OvermindInVisible: OvermindHidden });
+    Pulse2safeStorageSet({ OvermindInVisible: OvermindHidden });
   };
 }
 
