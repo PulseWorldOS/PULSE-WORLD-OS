@@ -7,11 +7,11 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
-let PulseAIPalMemoryBuffer = [];
-let aiSession = null;
-let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
-let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+let PulseSettingsAIPalMemoryBuffer = [];
+let aiSettingsSession = null;
+let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
+let CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
 
 function toggleSetting(key, label) {
   loadSettings((settings) => {
@@ -593,7 +593,7 @@ async function getSWSize() {
 
 async function getAI2Size() {
   try {
-    return new Blob([PulseAIPalMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -789,21 +789,21 @@ async function appendCompanionMessage(area, role, text) {
   const showTime = `[${ItsTime}]`
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
-  PulseAIPalMemoryBuffer.push(bubble.innerHTML);
+  PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
-  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
+  PulseSettingsAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
-  PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
+  PulseSettingsAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubblebr);
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseSettingsAIPalMemoryBuffer }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulseAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
-    if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
+    if (response.PulseSettingsAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseSettingsAIPalMemoryBuffer, response.PulseSettingsAIPalMemoryBuffer);
+    if (response.PulseSettingsAIPalMemoryBuffer) PulseSettingsAIPalMemoryBuffer = response.PulseSettingsAIPalMemoryBuffer;
   });
 }
 
@@ -881,38 +881,38 @@ if (location.href.includes("PBSettings.html")) {
     });
     
     async function initializeExoskeleton() {
-      aiSession = await LanguageModel.create({
+      aiSettingsSession = await LanguageModel.create({
         systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
         expectedOutputs: [{ type: "text", languages: ["en"] }]
       });
     }
 
-    CompanionConsoleSend.onclick = async () => {
-      CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-      CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-      const text = CompanionConsoleInput.value.trim();
+    CompanionSettingsConsoleSend.onclick = async () => {
+      CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
+      CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
+      const text = CompanionSettingsConsoleInput.value.trim();
       if (!text) return;
-      if (!aiSession) {
+      if (!aiSettingsSession) {
         // 1. Initialize the session using the modern nested outputs architecture
         await initializeExoskeleton();
       }
       // 3. Fire the wrapped prompt
-      await appendCompanionMessage(CompanionDetailsMessage, "user", text);
-      CompanionConsoleInput.value = "";
-      const response = await aiSession.prompt(text);
+      await appendCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
+      CompanionSettingsConsoleInput.value = "";
+      const response = await aiSettingsSession.prompt(text);
       console.log("🧠 AI Overmind: ", response);
       setTimeout(async () => {
-        await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+        await appendCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
       }, 300);
       aiSize = await getAISize();
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseAIPalMemoryBuffer }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulseSettingsAIPalMemoryBuffer }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.PulseAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseAIPalMemoryBuffer, response.PulseAIPalMemoryBuffer);
-        if (response.PulseAIPalMemoryBuffer) PulseAIPalMemoryBuffer = response.PulseAIPalMemoryBuffer;
+        if (response.PulseSettingsAIPalMemoryBuffer) PB_LOG.change("PBAI_SESSION", PulseSettingsAIPalMemoryBuffer, response.PulseSettingsAIPalMemoryBuffer);
+        if (response.PulseSettingsAIPalMemoryBuffer) PulseSettingsAIPalMemoryBuffer = response.PulseSettingsAIPalMemoryBuffer;
       });
       // if (response.includes("{*Website Call:")) {
       //   const urlRegex = /https?:\/\/([^\s]+)/i;
