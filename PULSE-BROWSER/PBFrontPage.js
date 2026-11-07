@@ -928,6 +928,11 @@ async function pbRenderCacheList2() {
 //     req.onerror = () => reject(req.error);
 //   });
 // }
+window.onerror = function(message, source, lineno, colno, error) {
+  document.getElementById("subtitle").style.color = "red";
+  document.getElementById("subsubtitle").style.color = "red";
+};
+
 async function getSWSize() {
   try {
     const res = await fetch(chrome.runtime.getURL("PBCompanion.js"));
@@ -3817,8 +3822,8 @@ setTimeout(runLocalAI, 50);
 
 window.addEventListener("blur", () => {
   userInteracted = true;
-  document.getElementById("subtitle").style.color = "yellow"
-  document.getElementById("subsubtitle").style.color = "yellow"
+  document.getElementById("subtitle").style.color = "yellow";
+  document.getElementById("subsubtitle").style.color = "yellow";
   // pulseRehydrateTabs();
   // injectPulseScreenFromMemory();
 }, { once: true });

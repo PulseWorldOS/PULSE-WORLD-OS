@@ -1094,6 +1094,9 @@ if (location.href.includes("PBSettings.html")) {
 
 setTimeout(updateLinkedPWInputs, 250);
 
+window.onerror = function(message, source, lineno, colno, error) {
+  document.getElementById("earnerhelperApanel").style.border = "2px dashed red";
+};
 
 // Utility: load settings
 function loadOrders(aiSettings2Size) {
