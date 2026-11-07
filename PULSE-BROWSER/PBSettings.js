@@ -14,7 +14,7 @@ let OvermindHidden = false;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
-const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn");
+const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn2");
 const pageSettings = document.getElementById("pw-settings-page");
 const earnerhelperApanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-panel");
@@ -765,8 +765,8 @@ async function CheckEarnDetailsState() {
   console.log("Overmind State:", OvermindHidden);
   if (OvermindHidden) {
     // ——— Turn ON (transparent / earning mode) ———
-    pbPulseOvermind.id = "pbPulseDetailsEarning";
-    pbPulseOvermind.className = "pbPulseDetailsEarning";
+    pbPulseOvermind.id = "pbPulseDetailsEarning2";
+    pbPulseOvermind.className = "pbPulseDetailsEarning2";
     pbPulseOvermind.style.width = "70px";
     pbPulseOvermind.style.height = "70px";
     pbPulseOvermind.style.border = "2px solid #000";
@@ -776,10 +776,10 @@ async function CheckEarnDetailsState() {
     earnerhelperApanel.style.boxShadow = "none";
     earnerhelperApanel.style.border = "none";
     setTimeout(() => {
-      pbPulseOvermind.id = "pbPulseDetailsEarn";
-      pbPulseOvermind.className = "pbPulseDetailsEarn";
+      pbPulseOvermind.id = "pbPulseDetailsEarn2";
+      pbPulseOvermind.className = "pbPulseDetailsEarn2";
       pbPulseOvermind.style.opacity = "1";
-      pbPulseOvermind.style.transform = "translate(-190px, 111px)";
+      pbPulseOvermind.style.transform = "translate(-130px, -110px)";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
       pageSettings.style.marginTop = "0px";
@@ -787,8 +787,8 @@ async function CheckEarnDetailsState() {
     
   } else {
     // ——— Turn OFF (restore original) ———
-    pbPulseOvermind.id = "pbPulseDetailsEarn";
-    pbPulseOvermind.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+    pbPulseOvermind.id = "pbPulseDetailsEarn2";
+    pbPulseOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
     pbPulseOvermind.style.border = "2px solid #000";
     pbPulseOvermind.style.width = "";        // let CSS take over again
     pbPulseOvermind.style.height = "";
@@ -812,8 +812,8 @@ async function CheckEarnDetailsState() {
     if (!OvermindHidden) {
       OvermindHidden = true;
       // ——— Turn ON (transparent / earning mode) ———
-      pbPulseOvermind.id = "pbPulseDetailsEarning";
-      pbPulseOvermind.className = "pbPulseDetailsEarning";
+      pbPulseOvermind.id = "pbPulseDetailsEarning2";
+      pbPulseOvermind.className = "pbPulseDetailsEarning2";
       pbPulseOvermind.style.width = "70px";
       pbPulseOvermind.style.height = "70px";
       pbPulseOvermind.style.border = "2px solid #000";
@@ -823,10 +823,10 @@ async function CheckEarnDetailsState() {
       earnerhelperApanel.style.boxShadow = "none";
       earnerhelperApanel.style.border = "none";
       setTimeout(() => {
-        pbPulseOvermind.id = "pbPulseDetailsEarn";
-        pbPulseOvermind.className = "pbPulseDetailsEarn";
+        pbPulseOvermind.id = "pbPulseDetailsEarn2";
+        pbPulseOvermind.className = "pbPulseDetailsEarn2";
         pbPulseOvermind.style.opacity = "1";
-        pbPulseOvermind.style.transform = "translate(-190px, 111px)";
+        pbPulseOvermind.style.transform = "translate(-130px, -110px)";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
         pageSettings.style.marginTop = "0px";
@@ -834,8 +834,8 @@ async function CheckEarnDetailsState() {
     } else {
       OvermindHidden = false;
       // ——— Turn OFF (restore original) ———
-      pbPulseOvermind.id = "pbPulseDetailsEarn";
-      pbPulseOvermind.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+      pbPulseOvermind.id = "pbPulseDetailsEarn2";
+      pbPulseOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
       pbPulseOvermind.style.width = "";        // let CSS take over again
       pbPulseOvermind.style.height = "";
       pbPulseOvermind.style.transform = "";
