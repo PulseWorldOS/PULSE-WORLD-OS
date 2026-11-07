@@ -898,6 +898,7 @@ async function appendSettingsCompanionMessage(area, role, text) {
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
+  Pulse2safeStorageSet({ PulseSettingsAIPalMemoryBuffer });
 }
 
 
@@ -914,6 +915,7 @@ async function appendOvermindPrimeMessage(area, text) {
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
+  Pulse2safeStorageSet({ PulseSettingsAIPalMemoryBuffer });
 }
 
 // ============================================================================
@@ -927,6 +929,10 @@ if (location.href.includes("PBSettings.html")) {
     await loadExtensionSettingsUI();
     await CheckEarnDetailsState();
     // await pbRenderCacheList();
+
+    const SessionAI = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
+    PulseSettingsAIPalMemoryBuffer = SessionAI.PulseSettingsAIPalMemoryBuffer ?? [];
+    console.log(SessionAI.PulseSettingsAIPalMemoryBuffer);
 
     const idsToWatch = [
       "emailMode",
