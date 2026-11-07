@@ -765,6 +765,7 @@ async function CheckEarnDetailsState() {
   console.log("Overmind State:", OvermindHidden);
   if (OvermindHidden) {
     // ——— Turn ON (transparent / earning mode) ———
+    pageSettings.style.marginTop = "0px";
     pbPulseOvermind.id = "pbPulseDetailsEarning2";
     pbPulseOvermind.className = "pbPulseDetailsEarning2";
     pbPulseOvermind.style.width = "70px";
@@ -782,10 +783,10 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.transform = "translate(-130px, -110px)";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
-      pageSettings.style.marginTop = "0px";
     }, 1200);
     
   } else {
+    pageSettings.style.marginTop = "300px";
     // ——— Turn OFF (restore original) ———
     pbPulseOvermind.id = "pbPulseDetailsEarn2";
     pbPulseOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
@@ -804,13 +805,13 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.transform = "";
       pbPulseOvermind.currentTime = 0;
       pbPulseOvermind.play();
-      pageSettings.style.marginTop = "300px";
     }, 1200);
   }
 
   pbPulseOvermind.onclick = async () => {
     if (!OvermindHidden) {
       OvermindHidden = true;
+      pageSettings.style.marginTop = "0px";
       // ——— Turn ON (transparent / earning mode) ———
       pbPulseOvermind.id = "pbPulseDetailsEarning2";
       pbPulseOvermind.className = "pbPulseDetailsEarning2";
@@ -829,10 +830,10 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.style.transform = "translate(-130px, -110px)";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
-        pageSettings.style.marginTop = "0px";
       }, 1200);
     } else {
       OvermindHidden = false;
+      pageSettings.style.marginTop = "300px";
       // ——— Turn OFF (restore original) ———
       pbPulseOvermind.id = "pbPulseDetailsEarn2";
       pbPulseOvermind.className = "pbPulseDetailsEarn2";          // or put back any original class if you had one
@@ -851,7 +852,6 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.style.transform = "";
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
-        pageSettings.style.marginTop = "300px";
       }, 1200);
       if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
     }
