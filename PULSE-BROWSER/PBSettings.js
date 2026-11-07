@@ -7,6 +7,10 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
+let PulseAIPalMemoryBuffer = [];
+let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
+let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 
 function toggleSetting(key, label) {
   loadSettings((settings) => {
@@ -874,10 +878,6 @@ if (location.href.includes("PBSettings.html")) {
         saveExtensionSettingsUI();
       });
     });
-
-    let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-    let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
-    let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 
     CompanionConsoleSend.onclick = async () => {
       CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
