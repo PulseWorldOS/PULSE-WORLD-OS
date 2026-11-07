@@ -255,7 +255,7 @@ async function appendCompanionMessage(area, role, text) {
   });
 }
 
-document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
+document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
     CompanionConsoleSend.click();
   }

@@ -876,6 +876,12 @@ if (location.href.includes("PBSettings.html")) {
       });
     }
 
+    document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
+      if (event.key === "Enter") {
+        CompanionSettingsConsoleSend.click();
+      }
+    });
+
     CompanionSettingsConsoleSend.onclick = async () => {
       CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
       CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
