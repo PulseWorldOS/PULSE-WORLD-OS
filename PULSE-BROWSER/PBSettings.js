@@ -805,7 +805,7 @@ if (location.href.includes("PBSettings.html")) {
     PB_LOG.info("Initializing Settings Page");
 
     await loadExtensionSettingsUI();
-    await pbRenderCacheList();
+    // await pbRenderCacheList();
 
     const idsToWatch = [
       "emailMode",
