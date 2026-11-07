@@ -1676,7 +1676,7 @@ let pwErrors = [];
   function updatePWFooter() {
     const footer = document.querySelector(".pw-console-status");
     if (!footer) return;
-    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+    
     footer.innerHTML = `
       <div style="display:flex; justify-content:center; width:100%;">
 
@@ -2090,7 +2090,10 @@ let pwErrors = [];
     }
   }
 
-
+  if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  setTimeout(() => {
+    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  }, 2000); // hides after 3s
   // ============================================================
   // ORIGINAL PW LOGGING SYSTEM (with Ghost filter added)
   // ============================================================
