@@ -860,8 +860,6 @@ async function CheckEarnDetailsState() {
   };
 }
 
-setTimeout(CheckEarnDetailsState, 50);
-
 async function updateLinkedPWInputs() {
   // Find all selects
   const selects = document.querySelectorAll(".pw-select");
@@ -927,6 +925,7 @@ if (location.href.includes("PBSettings.html")) {
     PB_LOG.info("Initializing Settings Page");
 
     await loadExtensionSettingsUI();
+    await CheckEarnDetailsState();
     // await pbRenderCacheList();
 
     const idsToWatch = [
