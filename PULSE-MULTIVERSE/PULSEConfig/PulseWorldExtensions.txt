@@ -889,11 +889,6 @@
       timerX = 0;
     }
   }, 1000);
-
-  PulseRealm.PickASpeech8(
-    "PulseBrowser OS Tier 2, A world-layer performance engine for the browser.",
-    "./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex"
-  );
    
     function scrollToSection(id) {
       const el = document.getElementById(id);
@@ -953,6 +948,10 @@
   PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");
 
+  const response = await aiSession.prompt("Tell me more about the PulseBrowser (Tier 2) Extension page and how it can help the user in so many ways?");
+  console.log("Pulse Pal:", response);
+  if (!response) pulsepalSpeak("PulseBrowser OS Tier 2, A world-layer performance engine for the browser.");
+  if (response) pulsepalSpeak(response);
 })();
   </script>
 </body>
