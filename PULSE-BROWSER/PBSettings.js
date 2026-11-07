@@ -903,7 +903,7 @@ if (location.href.includes("PBSettings.html")) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
         OvermindSettingsOrders = null;
       }
-    }, 15000);
+    }, 5000);
     
     CompanionSettingsConsoleSend.onclick = async () => {
       CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
