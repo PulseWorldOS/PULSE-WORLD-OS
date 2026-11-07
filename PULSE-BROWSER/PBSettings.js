@@ -14,7 +14,7 @@ let OvermindHidden = false;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
-const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
+const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn");
 
 function toggleSetting(key, label) {
   loadSettings((settings) => {
@@ -762,89 +762,89 @@ async function CheckEarnDetailsState() {
   console.log("Overmind State:", OvermindHidden);
   if (OvermindHidden) {
     // ——— Turn ON (transparent / earning mode) ———
-    pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
-    pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
-    pbPulseDetailsEarn.style.width = "70px";
-    pbPulseDetailsEarn.style.height = "70px";
-    pbPulseDetailsEarn.style.border = "2px solid #000";
+    pbPulseOvermind.id = "pbPulseDetailsEarning";
+    pbPulseOvermind.className = "pbPulseDetailsEarning";
+    pbPulseOvermind.style.width = "70px";
+    pbPulseOvermind.style.height = "70px";
+    pbPulseOvermind.style.border = "2px solid #000";
     earnerinnerhelperpanel.style.display = "none";
     earnerhelperpanel.style.background = "transparent";
     earnerhelperpanel.style.backdropFilter = "none";
     earnerhelperpanel.style.boxShadow = "none";
     earnerhelperpanel.style.border = "none";
     setTimeout(() => {
-      pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
-      pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
-      pbPulseDetailsEarn.style.opacity = "1";
-      pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
-      pbPulseDetailsEarn.currentTime = 0;
-      pbPulseDetailsEarn.play();
+      pbPulseOvermind.id = "pbPulseDetailsEarn";
+      pbPulseOvermind.className = "pbPulseDetailsEarn";
+      pbPulseOvermind.style.opacity = "1";
+      pbPulseOvermind.style.transform = "translate(-190px, 111px)";
+      pbPulseOvermind.currentTime = 0;
+      pbPulseOvermind.play();
     }, 1200);
     
   } else {
     // ——— Turn OFF (restore original) ———
-    pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
-    pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
-    pbPulseDetailsEarn.style.border = "2px solid #000";
-    pbPulseDetailsEarn.style.width = "";        // let CSS take over again
-    pbPulseDetailsEarn.style.height = "";
-    pbPulseDetailsEarn.style.transform = "";
-    pbPulseDetailsEarn.style.opacity = "0.25";
+    pbPulseOvermind.id = "pbPulseDetailsEarn";
+    pbPulseOvermind.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+    pbPulseOvermind.style.border = "2px solid #000";
+    pbPulseOvermind.style.width = "";        // let CSS take over again
+    pbPulseOvermind.style.height = "";
+    pbPulseOvermind.style.transform = "";
+    pbPulseOvermind.style.opacity = "0.25";
     earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
     earnerhelperpanel.style.background = "";
     earnerhelperpanel.style.backdropFilter = "";
     earnerhelperpanel.style.boxShadow = "";
     earnerhelperpanel.style.border = "";
     setTimeout(() => {
-      pbPulseDetailsEarn.style.border = "";
-      pbPulseDetailsEarn.style.transform = "";
-      pbPulseDetailsEarn.currentTime = 0;
-      pbPulseDetailsEarn.play();
+      pbPulseOvermind.style.border = "";
+      pbPulseOvermind.style.transform = "";
+      pbPulseOvermind.currentTime = 0;
+      pbPulseOvermind.play();
     }, 1200);
   }
 
-  pbPulseDetailsEarn.onclick = async () => {
+  pbPulseOvermind.onclick = async () => {
     if (!OvermindHidden) {
       OvermindHidden = true;
       // ——— Turn ON (transparent / earning mode) ———
-      pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
-      pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
-      pbPulseDetailsEarn.style.width = "70px";
-      pbPulseDetailsEarn.style.height = "70px";
-      pbPulseDetailsEarn.style.border = "2px solid #000";
+      pbPulseOvermind.id = "pbPulseDetailsEarning";
+      pbPulseOvermind.className = "pbPulseDetailsEarning";
+      pbPulseOvermind.style.width = "70px";
+      pbPulseOvermind.style.height = "70px";
+      pbPulseOvermind.style.border = "2px solid #000";
       earnerinnerhelperpanel.style.display = "none";
       earnerhelperpanel.style.background = "transparent";
       earnerhelperpanel.style.backdropFilter = "none";
       earnerhelperpanel.style.boxShadow = "none";
       earnerhelperpanel.style.border = "none";
       setTimeout(() => {
-        pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
-        pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
-        pbPulseDetailsEarn.style.opacity = "1";
-        pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
-        pbPulseDetailsEarn.currentTime = 0;
-        pbPulseDetailsEarn.play();
+        pbPulseOvermind.id = "pbPulseDetailsEarn";
+        pbPulseOvermind.className = "pbPulseDetailsEarn";
+        pbPulseOvermind.style.opacity = "1";
+        pbPulseOvermind.style.transform = "translate(-190px, 111px)";
+        pbPulseOvermind.currentTime = 0;
+        pbPulseOvermind.play();
       }, 1200);
     } else {
       OvermindHidden = false;
       // ——— Turn OFF (restore original) ———
-      pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
-      pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
-      pbPulseDetailsEarn.style.width = "";        // let CSS take over again
-      pbPulseDetailsEarn.style.height = "";
-      pbPulseDetailsEarn.style.transform = "";
-      pbPulseDetailsEarn.style.opacity = "0.25";
-      pbPulseDetailsEarn.style.border = "2px solid #000";
+      pbPulseOvermind.id = "pbPulseDetailsEarn";
+      pbPulseOvermind.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+      pbPulseOvermind.style.width = "";        // let CSS take over again
+      pbPulseOvermind.style.height = "";
+      pbPulseOvermind.style.transform = "";
+      pbPulseOvermind.style.opacity = "0.25";
+      pbPulseOvermind.style.border = "2px solid #000";
       earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
       earnerhelperpanel.style.background = "";
       earnerhelperpanel.style.backdropFilter = "";
       earnerhelperpanel.style.boxShadow = "";
       earnerhelperpanel.style.border = "";
       setTimeout(() => {
-        pbPulseDetailsEarn.style.border = "";
-        pbPulseDetailsEarn.style.transform = "";
-        pbPulseDetailsEarn.currentTime = 0;
-        pbPulseDetailsEarn.play();
+        pbPulseOvermind.style.border = "";
+        pbPulseOvermind.style.transform = "";
+        pbPulseOvermind.currentTime = 0;
+        pbPulseOvermind.play();
       }, 1200);
       if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
