@@ -11,7 +11,7 @@ let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
-let CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
+let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
 
 function toggleSetting(key, label) {
   loadSettings((settings) => {
@@ -889,7 +889,7 @@ if (location.href.includes("PBSettings.html")) {
 
     CompanionSettingsConsoleSend.onclick = async () => {
       CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
-      CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
+      CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
       const text = CompanionSettingsConsoleInput.value.trim();
       if (!text) return;
       if (!aiSettingsSession) {
