@@ -9,7 +9,7 @@ let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
-let OvermindOrders = null;
+let OvermindSettingsOrders = null;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -899,9 +899,9 @@ if (location.href.includes("PBSettings.html")) {
 
     setInterval(async () => {
       loadOrders();
-      if (OvermindOrders) {
-        appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, "Prime", OvermindOrders);
-        OvermindOrders = null;
+      if (OvermindSettingsOrders) {
+        appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, "Prime", OvermindSettingsOrders);
+        OvermindSettingsOrders = null;
       }
     }, 15000);
     
@@ -957,8 +957,8 @@ function loadOrders() {
       PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.OvermindOrders) PB_LOG3.change("PBAI_SESSION", OvermindOrders, response.OvermindOrders);
-    if (response.OvermindOrders) OvermindOrders = response.OvermindOrders;
+    if (response.OvermindOrders) PB_LOG3.change("PBAI_SESSION", OvermindSettingsOrders, response.OvermindOrders);
+    if (response.OvermindOrders) OvermindSettingsOrders = response.OvermindOrders;
   });
 }
 
