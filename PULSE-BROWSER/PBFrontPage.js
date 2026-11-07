@@ -173,7 +173,7 @@ async function runLocalAI() {
 - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
 - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
 - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
-- PulseBusiness, Leveling the playing field, giving local and home businesses proximity visibility (radar) without identity giving them a way to make money with privacy and gives them a moment before the user hits amazon.. etc. (That item is nearby!)
+- PulseBusiness, Leveling the playing field, giving local and home businesses proximity visibility (radar) without identity giving them a way to make money with privacy and gives them a moment before the user hits amazon.. etc. (That item is nearby!) (Still Testing)
 - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
 - You must try to keep your response under 3000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.
 
@@ -183,7 +183,7 @@ ${rawPrompt}
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
-    console.log("AI Overmind:", response);
+    console.log("🧠 AI Overmind:", response);
     
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
@@ -193,7 +193,7 @@ ${rawPrompt}
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "AI Overmind (Multiverse #" + (Math.random()*100) + ")"
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      if (!EarnDetailsHidden) await appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
+      if (!EarnDetailsHidden) await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
@@ -232,7 +232,7 @@ async function appendCompanionMessage(area, role, text) {
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`
   bubblebr.innerHTML = `<br>`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulseAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   PulseAIPalMemoryBuffer.push(bubblebr.innerHTML);
@@ -266,7 +266,7 @@ CompanionConsoleSend.onclick = async () => {
   await appendCompanionMessage(CompanionDetailsMessage, "user", text);
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
-  console.log("AI Overmind: ", response);
+  console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
     await appendCompanionMessage(CompanionDetailsMessage, "AI Overmind", response);
   }, 300);
