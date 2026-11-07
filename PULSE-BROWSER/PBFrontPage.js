@@ -121,7 +121,6 @@ async function runLocalAI() {
     return;
   }
   RunningAI = true;
-  let LastMessage = null;
 
   const status = await LanguageModel.availability();
   const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
@@ -132,10 +131,8 @@ async function runLocalAI() {
 
   try {
     PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
-    // LastMessage = PulsePalMemoryAIBuffer.pop();
     PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
-    // CompanionDetailsMessage.innerHTML = LastMessage;
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     aiSize = await getAISize();
   } catch (err) {}
@@ -196,8 +193,7 @@ ${rawPrompt}
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-      // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">🧠 AI Overmind: ${showTime}</font></strong> ` + response;
+      if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer }, (response) => {
