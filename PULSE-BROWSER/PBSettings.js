@@ -359,398 +359,398 @@ function getReadableName(url) {
   }
 }
 
-async function pbRenderCacheList() {
-  const listEl = document.getElementById("cache-panel");
-  if (!listEl) return;
+// async function pbRenderCacheList() {
+//   const listEl = document.getElementById("cache-panel");
+//   if (!listEl) return;
   
-  // ⭐ Wipe panel completely
-  listEl.innerHTML = `
-    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-      PulseBrowser OS - System Details
-    </div>
-  `;
+//   // ⭐ Wipe panel completely
+//   listEl.innerHTML = `
+//     <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+//       PulseBrowser OS - System Details
+//     </div>
+//   `;
     
-  const store = await chrome.storage.local.get(["pb_fail_cache"]);
-  const fails = store.pb_fail_cache || {};
-  const failCount = Object.keys(fails).length;
+//   const store = await chrome.storage.local.get(["pb_fail_cache"]);
+//   const fails = store.pb_fail_cache || {};
+//   const failCount = Object.keys(fails).length;
 
-  // ⭐ Memory FIRST
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );
+//   // ⭐ Memory FIRST
+//   // ⭐ Load previous storage history
+//   const history = await new Promise(resolve =>
+//     chrome.storage.local.get("pulseStorageHistory", resolve)
+//   );
   
-  predictionText = predictionText + ".";
-  const statsHTML = await pbRenderStorageStats(history);
+//   predictionText = predictionText + ".";
+//   const statsHTML = await pbRenderStorageStats(history);
   
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
+//   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
-  // ⭐ Fetch cache list
-  const result = await pbRequestCacheList();
+//   // ⭐ Fetch cache list
+//   const result = await pbRequestCacheList();
   
-  if (!result || (!result.caches && !result.pulsecaches)) {
-    listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
-    return;
-  }
+//   if (!result || (!result.caches && !result.pulsecaches)) {
+//     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
+//     return;
+//   }
 
-  const caches = result.caches;
-  const pulsecaches = result.pulsecaches;  
-  const errorcount = result.errorcount;
-  const totalcount = result.totalcount;
-  const pulsemoments = result.pulsemomentscount;
-  const pulseoffline = result.pulseofflinecount;
-  // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
+//   const caches = result.caches;
+//   const pulsecaches = result.pulsecaches;  
+//   const errorcount = result.errorcount;
+//   const totalcount = result.totalcount;
+//   const pulsemoments = result.pulsemomentscount;
+//   const pulseoffline = result.pulseofflinecount;
+//   // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
 
-  if (caches.length === 0 && pulsecaches.length === 0) {
-    listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
-    return;
-  }
+//   if (caches.length === 0 && pulsecaches.length === 0) {
+//     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
+//     return;
+//   }
 
-  // ⭐ Sort: current cache first, then by entry count
-  if (caches) caches.sort((a, b) => {
-    if (a.name === a.currentCache) return -1;
-    if (b.name === a.currentCache) return 1;
-    return (b.entries || 0) - (a.entries || 0);
-  });
+//   // ⭐ Sort: current cache first, then by entry count
+//   if (caches) caches.sort((a, b) => {
+//     if (a.name === a.currentCache) return -1;
+//     if (b.name === a.currentCache) return 1;
+//     return (b.entries || 0) - (a.entries || 0);
+//   });
 
-  // ⭐ Sort: current cache first, then by entry count
-  if (pulsecaches) pulsecaches.sort((a, b) => {
-    if (a.name === a.currentPulseCache) return -1;
-    if (b.name === a.currentPulseCache) return 1;
-    return (b.entries || 0) - (a.entries || 0);
-  });
+//   // ⭐ Sort: current cache first, then by entry count
+//   if (pulsecaches) pulsecaches.sort((a, b) => {
+//     if (a.name === a.currentPulseCache) return -1;
+//     if (b.name === a.currentPulseCache) return 1;
+//     return (b.entries || 0) - (a.entries || 0);
+//   });
 
-  let best = false;
-  let pulsebest = false;  
-  let li = document.getElementById("li");
+//   let best = false;
+//   let pulsebest = false;  
+//   let li = document.getElementById("li");
 
-  if (caches) caches.forEach(cache => {
-    if (!li) li = document.createElement("li");
-    li.className = "PulseCache";
-    li.style.cssText = `
-      margin: 14px 20px;
-      padding: 3px 6px;
-      max-width: clamp(245px, 12vw, 315px);
-      width: clamp(245px, 12vw, 315px);
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-      word-break: break-all;
-    `;
+//   if (caches) caches.forEach(cache => {
+//     if (!li) li = document.createElement("li");
+//     li.className = "PulseCache";
+//     li.style.cssText = `
+//       margin: 14px 20px;
+//       padding: 3px 6px;
+//       max-width: clamp(245px, 12vw, 315px);
+//       width: clamp(245px, 12vw, 315px);
+//       word-wrap: break-word;
+//       overflow-wrap: anywhere;
+//       word-break: break-all;
+//     `;
 
-    // ⭐ Cache size color logic
-    const sizeMB = parseFloat(cache.sizeMB || "0");
-    totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
-    let sizeColor = "lightgreen";
+//     // ⭐ Cache size color logic
+//     const sizeMB = parseFloat(cache.sizeMB || "0");
+//     totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
+//     let sizeColor = "lightgreen";
 
-    if (sizeMB >= 150) sizeColor = "gold";     // warming
-    if (sizeMB >= 300) sizeColor = "orange";   // heavy
-    if (sizeMB >= 600) sizeColor = "red";      // critical
+//     if (sizeMB >= 150) sizeColor = "gold";     // warming
+//     if (sizeMB >= 300) sizeColor = "orange";   // heavy
+//     if (sizeMB >= 600) sizeColor = "red";      // critical
 
-    // ⭐ Safe fallback values
-    const weightClass = cache.weightClass || "unknown";
-    const personality = cache.personality || "Wanderer";
-    const pulseRank = cache.pulseRank;
-    const density = cache.density ?? 0;
-    const KBperEntry = (1024 / cache.density).toFixed(0);
-    let pausedoffline = ``;
-    if (!best) lastPulseActiveEntries = cache.entries ?? 0;
-    if (!ServiceWorkerOnline) {
-      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
-    } else {
-      pausedoffline = `(CPU)`;
-    }
-    li.innerHTML = `
-      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
+//     // ⭐ Safe fallback values
+//     const weightClass = cache.weightClass || "unknown";
+//     const personality = cache.personality || "Wanderer";
+//     const pulseRank = cache.pulseRank;
+//     const density = cache.density ?? 0;
+//     const KBperEntry = (1024 / cache.density).toFixed(0);
+//     let pausedoffline = ``;
+//     if (!best) lastPulseActiveEntries = cache.entries ?? 0;
+//     if (!ServiceWorkerOnline) {
+//       pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
+//     } else {
+//       pausedoffline = `(CPU)`;
+//     }
+//     li.innerHTML = `
+//       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
-      Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
+//       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
+//       Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
 
-      Weight: <font color="#0FF">${weightClass}</font><br>
-      Personality: <font color="#0FF">${personality}</font><br>
-      Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
+//       Weight: <font color="#0FF">${weightClass}</font><br>
+//       Personality: <font color="#0FF">${personality}</font><br>
+//       Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
-      PulseRank: <font color="gold">${pulseRank}</font><br>
-      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
-    `;
+//       PulseRank: <font color="gold">${pulseRank}</font><br>
+//       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+//       Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+//     `;
 
-    if (cache.lastEntry) {
-      let entry = cache.lastEntry;
-      if (isPulseWorld(lastFailURL)) lastFailURL = entry;
-      li.style.cursor = "pointer";
-      const u = new URL(entry);
-      li.onclick = async () => {
-        pbPreconnect([entry]);
-        openNamedTab(u.hostname, entry);
-        await PBUniversalBoost.warmOrigin(entry);
-      };
-    }
+//     if (cache.lastEntry) {
+//       let entry = cache.lastEntry;
+//       if (isPulseWorld(lastFailURL)) lastFailURL = entry;
+//       li.style.cursor = "pointer";
+//       const u = new URL(entry);
+//       li.onclick = async () => {
+//         pbPreconnect([entry]);
+//         openNamedTab(u.hostname, entry);
+//         await PBUniversalBoost.warmOrigin(entry);
+//       };
+//     }
 
-    // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
+//     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
     
-    if (!li) li = document.getElementById("li");
-    const u = new URL(lastFailURL);
-    const RealmURL = getReadableName(u);
-    let errorcolor = "lightgreen";
-    if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
+//     if (!li) li = document.getElementById("li");
+//     const u = new URL(lastFailURL);
+//     const RealmURL = getReadableName(u);
+//     let errorcolor = "lightgreen";
+//     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
 
-    li.innerHTML = li.innerHTML + 
-      // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
-      // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
-      `<br><br>
-      Last Realm Drift: <font color=${errorcolor}><strong>${RealmURL || "-"}</strong></font><br>
-      404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
-      Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
-      Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
-    `;
+//     li.innerHTML = li.innerHTML + 
+//       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
+//       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
+//       `<br><br>
+//       Last Realm Drift: <font color=${errorcolor}><strong>${RealmURL || "-"}</strong></font><br>
+//       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
+//       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
+//       Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
+//     `;
 
-    listEl.appendChild(li);
-    best = true;
-  });
+//     listEl.appendChild(li);
+//     best = true;
+//   });
 
-  PB_LOG.info("Cache list rendered", caches);
+//   PB_LOG.info("Cache list rendered", caches);
 
-  if (pulsecaches) pulsecaches.forEach(cache => {
-    let li = document.getElementById("li");
-    if (!li) li = document.createElement("li");
-    li.className = "PulseCache";
-    li.style.cssText = `
-      margin: 14px 20px;
-      padding: 3px 6px;
-      max-width: clamp(245px, 12vw, 315px);
-      width: clamp(245px, 12vw, 315px);
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-      word-break: break-all;
-    `;
+//   if (pulsecaches) pulsecaches.forEach(cache => {
+//     let li = document.getElementById("li");
+//     if (!li) li = document.createElement("li");
+//     li.className = "PulseCache";
+//     li.style.cssText = `
+//       margin: 14px 20px;
+//       padding: 3px 6px;
+//       max-width: clamp(245px, 12vw, 315px);
+//       width: clamp(245px, 12vw, 315px);
+//       word-wrap: break-word;
+//       overflow-wrap: anywhere;
+//       word-break: break-all;
+//     `;
 
-    // ⭐ Cache size color logic
-    const sizeMB = parseFloat(cache.sizePulseMB || "0");
-    totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
-    let sizeColor = "lightgreen";
+//     // ⭐ Cache size color logic
+//     const sizeMB = parseFloat(cache.sizePulseMB || "0");
+//     totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
+//     let sizeColor = "lightgreen";
 
-    if (sizeMB >= 150) sizeColor = "gold";     // warming
-    if (sizeMB >= 300) sizeColor = "orange";   // heavy
-    if (sizeMB >= 600) sizeColor = "red";      // critical
+//     if (sizeMB >= 150) sizeColor = "gold";     // warming
+//     if (sizeMB >= 300) sizeColor = "orange";   // heavy
+//     if (sizeMB >= 600) sizeColor = "red";      // critical
 
-    // ⭐ Safe fallback values
-    const weightClass = cache.weightPulseClass || "unknown";
-    const personality = cache.pulsepersonality || "Wanderer";
-    const pulseRank = cache.realpulseRank;
-    const density = cache.densitypulse ?? 0;
-    const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
-    if (!ServiceWorkerOnline) {
-      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
-    } else {
-      pausedoffline = `(System)`;
-    }
-    if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
+//     // ⭐ Safe fallback values
+//     const weightClass = cache.weightPulseClass || "unknown";
+//     const personality = cache.pulsepersonality || "Wanderer";
+//     const pulseRank = cache.realpulseRank;
+//     const density = cache.densitypulse ?? 0;
+//     const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
+//     if (!ServiceWorkerOnline) {
+//       pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
+//     } else {
+//       pausedoffline = `(System)`;
+//     }
+//     if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
 
-    li.innerHTML = `
-      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
+//     li.innerHTML = `
+//       <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
-      Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
+//       Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
+//       Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
 
-      Weight: <font color="#0FF">${weightClass}</font><br>
-      Personality: <font color="#0FF">${personality}</font><br>
-      Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
+//       Weight: <font color="#0FF">${weightClass}</font><br>
+//       Personality: <font color="#0FF">${personality}</font><br>
+//       Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
-      PulseRank: <font color="gold">${pulseRank}</font><br>
-      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
-    `;
+//       PulseRank: <font color="gold">${pulseRank}</font><br>
+//       First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
+//       Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+//     `;
 
-    if (cache.lastEntry) {
-      let entry = cache.lastEntry;
+//     if (cache.lastEntry) {
+//       let entry = cache.lastEntry;
 
-      li.style.cursor = "pointer";
-      const u = new URL(entry);
-      li.onclick = async () => {
-        pbPreconnect([entry]);
-        openNamedTab(u.hostname, entry);
-        await PBUniversalBoost.warmOrigin(entry);
-      };
-    }
+//       li.style.cursor = "pointer";
+//       const u = new URL(entry);
+//       li.onclick = async () => {
+//         pbPreconnect([entry]);
+//         openNamedTab(u.hostname, entry);
+//         await PBUniversalBoost.warmOrigin(entry);
+//       };
+//     }
 
-    listEl.appendChild(li);
-    pulsebest = true;
-  });
+//     listEl.appendChild(li);
+//     pulsebest = true;
+//   });
 
-  PB_LOG.info("PulseCache list rendered", pulsecaches);
-}
+//   PB_LOG.info("PulseCache list rendered", pulsecaches);
+// }
 
-async function getSWSize() {
-  try {
-    const res = await fetch(chrome.runtime.getURL("PBCompanion.js"));
-    const text = await res.text();
-    return new Blob([text]).size; // returns size in bytes
-  } catch (e) {
-    return 0;
-  }
-}
+// async function getSWSize() {
+//   try {
+//     const res = await fetch(chrome.runtime.getURL("PBCompanion.js"));
+//     const text = await res.text();
+//     return new Blob([text]).size; // returns size in bytes
+//   } catch (e) {
+//     return 0;
+//   }
+// }
 
 
-async function getAI2Size() {
-  try {
-    return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
-  } catch (e) {
-    return 0;
-  }
-}
+// async function getAI2Size() {
+//   try {
+//     return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
+//   } catch (e) {
+//     return 0;
+//   }
+// }
 
-async function pbRenderStorageStats(history) {
-  if (!navigator.storage || !navigator.storage.estimate) {
-    return `
-      <div style="margin-top:10px; color:#FF4444; font-size:12px;">
-        StorageManager API not supported.
-      </div>
-    `;
-  }
+// async function pbRenderStorageStats(history) {
+//   if (!navigator.storage || !navigator.storage.estimate) {
+//     return `
+//       <div style="margin-top:10px; color:#FF4444; font-size:12px;">
+//         StorageManager API not supported.
+//       </div>
+//     `;
+//   }
 
-  // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
-  const estimate = await navigator.storage.estimate();
-  const localUsed = estimate.usage || 0;
-  const localQuota = estimate.quota || 1;
-  swSize = await getSWSize();
-  aiSize = await getAI2Size();
-  console.log("AI Memory Size:", aiSize, "bytes");
-  console.log("PBCompanion.js Size:", swSize, "bytes");
+//   // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
+//   const estimate = await navigator.storage.estimate();
+//   const localUsed = estimate.usage || 0;
+//   const localQuota = estimate.quota || 1;
+//   swSize = await getSWSize();
+//   aiSize = await getAI2Size();
+//   console.log("AI Memory Size:", aiSize, "bytes");
+//   console.log("PBCompanion.js Size:", swSize, "bytes");
 
-  // ⭐ SYNC STORAGE (chrome.storage.sync)
-  const syncItems = await new Promise(resolve =>
-    chrome.storage.sync.get(null, resolve)
-  );
-  const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
-  aiSize = syncBytes + aiSize;
-  // ⭐ Combined totals
-  totalUsed = localUsed + swSize + aiSize;
-  const percent = ((totalUsed / localQuota) * 100).toFixed(2);
+//   // ⭐ SYNC STORAGE (chrome.storage.sync)
+//   const syncItems = await new Promise(resolve =>
+//     chrome.storage.sync.get(null, resolve)
+//   );
+//   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
+//   aiSize = syncBytes + aiSize;
+//   // ⭐ Combined totals
+//   totalUsed = localUsed + swSize + aiSize;
+//   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
 
-  // ⭐ Conversions
-  const localMB = (localUsed / (1024 * 1024)).toFixed(2);
-  const syncMB = (aiSize / (1024 * 1024)).toFixed(2);
-  const swMB = (swSize / (1024 * 1024)).toFixed(2);
-  const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
-  const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
-  const swKB = (swSize / 1024).toFixed(2);
-  const syncKB = (aiSize / 1024).toFixed(2);
+//   // ⭐ Conversions
+//   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
+//   const syncMB = (aiSize / (1024 * 1024)).toFixed(2);
+//   const swMB = (swSize / (1024 * 1024)).toFixed(2);
+//   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
+//   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
+//   const swKB = (swSize / 1024).toFixed(2);
+//   const syncKB = (aiSize / 1024).toFixed(2);
 
-  // ⭐ Dynamic color zones
-  let percentColor = "lightgreen";
-  if (percent >= 40) percentColor = "gold";
-  if (percent >= 70) percentColor = "orange";
-  if (percent >= 90) percentColor = "red";
+//   // ⭐ Dynamic color zones
+//   let percentColor = "lightgreen";
+//   if (percent >= 40) percentColor = "gold";
+//   if (percent >= 70) percentColor = "orange";
+//   if (percent >= 90) percentColor = "red";
 
-  // ⭐ Status text
-  let statusText = "SAFE";
-  if (percent >= 40) statusText = "Warming";
-  if (percent >= 70) statusText = "High Load";
-  if (percent >= 90) statusText = "Critical Load";
+//   // ⭐ Status text
+//   let statusText = "SAFE";
+//   if (percent >= 40) statusText = "Warming";
+//   if (percent >= 70) statusText = "High Load";
+//   if (percent >= 90) statusText = "Critical Load";
 
-  // ⭐ Sync display formatting
-  let syncDisplay;
-  if (syncBytes < 1024 * 1024) {
-    syncDisplay = syncKB + " KB";
-  } else {
-    syncDisplay = syncMB + " MB";
-  }
+//   // ⭐ Sync display formatting
+//   let syncDisplay;
+//   if (syncBytes < 1024 * 1024) {
+//     syncDisplay = syncKB + " KB";
+//   } else {
+//     syncDisplay = syncMB + " MB";
+//   }
 
-  // ⭐ Compute growth rate + projected fill time
-  if (history.pulseStorageHistory) {
-    const { lastCheck, lastUsed } = history.pulseStorageHistory;
+//   // ⭐ Compute growth rate + projected fill time
+//   if (history.pulseStorageHistory) {
+//     const { lastCheck, lastUsed } = history.pulseStorageHistory;
 
-    const now = Date.now();
-    const deltaTime = (now - lastCheck) / 1000; // seconds
-    const deltaUsed = totalUsed - lastUsed;
+//     const now = Date.now();
+//     const deltaTime = (now - lastCheck) / 1000; // seconds
+//     const deltaUsed = totalUsed - lastUsed;
     
-    if (deltaUsed > 0 && deltaTime > 0) {
-      const rate = deltaUsed / deltaTime; // bytes per second
-      const remaining = localQuota - totalUsed;
+//     if (deltaUsed > 0 && deltaTime > 0) {
+//       const rate = deltaUsed / deltaTime; // bytes per second
+//       const remaining = localQuota - totalUsed;
 
-      if (rate > 0) {
-        const secondsUntilFull = remaining / rate;
+//       if (rate > 0) {
+//         const secondsUntilFull = remaining / rate;
 
-        if (secondsUntilFull > 31536000) { // 365 days
-          predictionText = `~${(secondsUntilFull / 31536000).toFixed(1)} Years`;
-          if ((secondsUntilFull / 31536000) > 1000) predictionText = `~A Millenia`;
-        } else if (secondsUntilFull > 2592000) { // 30 days
-          predictionText = `~${(secondsUntilFull / 2592000).toFixed(1)} Months`;
-        } else if (secondsUntilFull > 86400) { // 1 day
-          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
-        } else if (secondsUntilFull > 3600) { // 1 hour
-          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
-        } else {
-          predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
-        }
+//         if (secondsUntilFull > 31536000) { // 365 days
+//           predictionText = `~${(secondsUntilFull / 31536000).toFixed(1)} Years`;
+//           if ((secondsUntilFull / 31536000) > 1000) predictionText = `~A Millenia`;
+//         } else if (secondsUntilFull > 2592000) { // 30 days
+//           predictionText = `~${(secondsUntilFull / 2592000).toFixed(1)} Months`;
+//         } else if (secondsUntilFull > 86400) { // 1 day
+//           predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
+//         } else if (secondsUntilFull > 3600) { // 1 hour
+//           predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
+//         } else {
+//           predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
+//         }
 
-      }
-    }
-  }
+//       }
+//     }
+//   }
 
-  // ⭐ Save new history snapshot
-  Pulse2safeStorageSet({
-    pulseStorageHistory: {
-      lastCheck: GLOBALSTART ?? nowST,
-      lastUsed: totalUsed
-    }
-  });
+//   // ⭐ Save new history snapshot
+//   Pulse2safeStorageSet({
+//     pulseStorageHistory: {
+//       lastCheck: GLOBALSTART ?? nowST,
+//       lastUsed: totalUsed
+//     }
+//   });
 
-  chrome.runtime.sendMessage({ type: "STORAGE_PASSOFF", totalUsed }, (response) => {
-    if (!response || !response.ok) {
-      PB_LOG.info("STORAGE_PASSOFF unavailable or error", response);
-      return;
-    }
-    PB_LOG.change("STORAGE_PASSOFF", totalUsed, response.totalUsed);
-    totalUsed = response.totalUsed;
-  });
+//   chrome.runtime.sendMessage({ type: "STORAGE_PASSOFF", totalUsed }, (response) => {
+//     if (!response || !response.ok) {
+//       PB_LOG.info("STORAGE_PASSOFF unavailable or error", response);
+//       return;
+//     }
+//     PB_LOG.change("STORAGE_PASSOFF", totalUsed, response.totalUsed);
+//     totalUsed = response.totalUsed;
+//   });
 
-  PB_LOG.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-  PB_LOG.info("PulseBrowser OS Session Start: " + nowST);
-  PB_LOG.info("PulseBrowser OS Settings Start: " + lastnowST);
+//   PB_LOG.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
+//   PB_LOG.info("PulseBrowser OS Session Start: " + nowST);
+//   PB_LOG.info("PulseBrowser OS Settings Start: " + lastnowST);
 
-  if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
+//   if (predictionText.includes("....")) predictionText = predictionText.replace("...","");
 
-  // ⭐ Render UI
-  return `
-    <div style="margin: 8px 20px; padding:8px; border-radius:8px;
-                background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
+//   // ⭐ Render UI
+//   return `
+//     <div style="margin: 8px 20px; padding:8px; border-radius:8px;
+//                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong>PulseBrowser-Storage (RAM)</strong><br><br>
+//       <strong>PulseBrowser-Storage (RAM)</strong><br><br>
 
-      <div style="display:flex; gap:10px;">
+//       <div style="display:flex; gap:10px;">
 
-        <div style="flex:1;">
-          <strong>System Memory:</strong><br>
-          • <span style="color:lightgreen">${swKB} KB</span><br>
+//         <div style="flex:1;">
+//           <strong>System Memory:</strong><br>
+//           • <span style="color:lightgreen">${swKB} KB</span><br>
 
-          <strong>Local Storage:</strong><br>
-          • <span style="color:lightgreen">${totalMB} MB</span><br>
-        </div>
+//           <strong>Local Storage:</strong><br>
+//           • <span style="color:lightgreen">${totalMB} MB</span><br>
+//         </div>
 
-        <div style="flex:1;">
-          <strong>AI Sync Memory:</strong><br>
-          • <span style="color:lightgreen">${syncDisplay}</span><br>
+//         <div style="flex:1;">
+//           <strong>AI Sync Memory:</strong><br>
+//           • <span style="color:lightgreen">${syncDisplay}</span><br>
 
-          <strong>System Quota:</strong><br>
-          • <span style="color:lightgreen">${quotaGB} GB</span><br><br>
-        </div>
+//           <strong>System Quota:</strong><br>
+//           • <span style="color:lightgreen">${quotaGB} GB</span><br><br>
+//         </div>
 
-      </div>
+//       </div>
 
-      <strong>Percent Used:</strong>
-      <span style="color:${percentColor}; font-weight:bold;">
-        ${percent}% (${statusText})
-      </span><br>
+//       <strong>Percent Used:</strong>
+//       <span style="color:${percentColor}; font-weight:bold;">
+//         ${percent}% (${statusText})
+//       </span><br>
 
-      <strong>Projected Fill Time:</strong>
-      <span style="color:${percentColor}; font-weight:bold;">
-        ${predictionText}
-      </span><br>
+//       <strong>Projected Fill Time:</strong>
+//       <span style="color:${percentColor}; font-weight:bold;">
+//         ${predictionText}
+//       </span><br>
 
-    </div>
-  `;
-}
+//     </div>
+//   `;
+// }
 
 
 
