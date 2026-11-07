@@ -2588,6 +2588,7 @@ async function setTheStage() {
   setInterval(pbRefreshWarmDocument, interval); 
    
   document.addEventListener("keydown", (e) => {
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
     if ((e.target === CompanionConsoleInput) || (e.target === CompanionDetailsMessage)) return;
     const key = e.key.toLowerCase();
