@@ -9,6 +9,7 @@ let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
+let OvermindOrders = null;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -794,6 +795,22 @@ async function appendSettingsCompanionMessage(area, role, text) {
   area.scrollTop = area.scrollHeight;
 }
 
+
+async function appendOvermindPrimeMessage(area, text) {
+  const bubble = document.createElement("div");
+  const bubblebr = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = "#f9f9f9";
+  const now = Date.now();
+  const ItsTime = new Date(now).toLocaleString();
+  const showTime = `[${ItsTime}]`;
+  bubblebr.innerHTML = `<br>`;
+  bubble.innerHTML = `<font color="red">🧠 AI Overmind Prime: </font> ` + text + `<br><br>`;
+  PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
@@ -880,6 +897,14 @@ if (location.href.includes("PBSettings.html")) {
       }
     });
 
+    setInterval(async () => {
+      loadOrders();
+      if (OvermindOrders) {
+        appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, "Prime", OvermindOrders);
+        OvermindOrders = null;
+      }
+    }, 5000);
+    
     CompanionSettingsConsoleSend.onclick = async () => {
       CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
       CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -903,10 +928,6 @@ if (location.href.includes("PBSettings.html")) {
       }, 300);
     };
 
-    setInterval(() => {
-      loadOrders();
-    }, 2000);
-    
     saveExtensionSettingsUI();
 
     PB_LOG.info("Settings Page Ready");
@@ -930,9 +951,14 @@ setTimeout(updateLinkedPWInputs, 250);
 
 // Utility: load settings
 function loadOrders() {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (res) => {
-    if (chrome.runtime.lastError) return console.log("Settings unreachable.");
-    cb(res.settings);
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.OvermindOrders) PB_LOG3.change("PBAI_SESSION", OvermindOrders, response.OvermindOrders);
+    if (response.OvermindOrders) OvermindOrders = response.OvermindOrders;
   });
 }
 

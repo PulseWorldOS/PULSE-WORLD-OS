@@ -1779,6 +1779,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PB_GATHER_ORDERS":
+      if (!OvermindOrders) {
+        OvermindOrders = "AI Overmind Prime: Keep up the Good Work, PulsePal!";
+      }
       sendResponse({ ok: true, OvermindOrders });
       break;
 
