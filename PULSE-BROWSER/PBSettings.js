@@ -9,6 +9,7 @@ let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
+let aiSize = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
@@ -597,13 +598,13 @@ function getReadableName(url) {
 // }
 
 
-// async function getAI2Size() {
-//   try {
-//     return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
-//   } catch (e) {
-//     return 0;
-//   }
-// }
+async function getAI2Size() {
+  try {
+    return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
 
 // async function pbRenderStorageStats(history) {
 //   if (!navigator.storage || !navigator.storage.estimate) {
@@ -933,6 +934,7 @@ if (location.href.includes("PBSettings.html")) {
     const SessionAI = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
     PulseSettingsAIPalMemoryBuffer = SessionAI.PulseSettingsAIPalMemoryBuffer ?? [];
     console.log(SessionAI.PulseSettingsAIPalMemoryBuffer);
+    aiSize = await getAI2Size();
 
     const idsToWatch = [
       "emailMode",
@@ -1010,7 +1012,8 @@ if (location.href.includes("PBSettings.html")) {
     });
 
     setInterval(async () => {
-      loadOrders();
+      aiSize = await getAI2Size();
+      loadOrders(aiSize);
       if (OvermindSettingsOrders) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
         const response = await aiSettingsSession.prompt(OvermindSettingsOrders);
@@ -1093,8 +1096,8 @@ setTimeout(updateLinkedPWInputs, 250);
 
 
 // Utility: load settings
-function loadOrders() {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
+function loadOrders(aiSize) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
