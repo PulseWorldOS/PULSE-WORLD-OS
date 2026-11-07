@@ -531,10 +531,6 @@ checkPersistentStorage(true);
         </div>
       </div>
 
-      <div id="pw-console-ai" class="pw-console-ai" role="ai" aria-live="polite">
-        <div class="pw-log-line"></div>
-      </div>
-
       <div class="pw-console-footer">
         <span class="pw-console-status" role="status">
           Status: PulseWorld.Net is Always Listening and Explaining…
@@ -2424,7 +2420,7 @@ let pwErrors = [];
       tabsBar.appendChild(logTab);
       tabsBar.appendChild(tasksTab);
       tabsBar.appendChild(aiTab);
-      if (aiLogBox) aiLogBox.style.display = "none";
+      
       evoConsole.appendChild(tabsBar);
       
       let taskPanel = document.getElementById("pw-task-panel");
