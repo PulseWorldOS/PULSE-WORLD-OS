@@ -252,7 +252,7 @@ async function appendCompanionMessage(area, role, text) {
 
 document.getElementById("consoleOvermindCompanionSend").addEventListener("keydown", async (event) => {
   if (event.key === "Enter") {
-    CompanionConsoleSend.onclick();
+    CompanionConsoleSend.click();
   }
 });
 
@@ -3827,7 +3827,7 @@ setInterval(async () => {
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 20) {
-    enterBtn.onclick();
+    enterBtn.click();
     setTimeout(backToOriginal, 1700);
     document.getElementById("timerBtn").style.display = "none";
   } else if (userInteracted) {
