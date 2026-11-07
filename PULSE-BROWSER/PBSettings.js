@@ -791,8 +791,6 @@ async function appendCompanionMessage(area, role, text) {
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
-  PulseSettingsAIPalMemoryBuffer.push(bubblebr.innerHTML);
-  area.appendChild(bubblebr);
   area.scrollTop = area.scrollHeight;
   PulseSettingsAIPalMemoryBuffer.push(bubblebr.innerHTML);
   area.appendChild(bubblebr);
