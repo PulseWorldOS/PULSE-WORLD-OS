@@ -897,7 +897,7 @@ if (location.href.includes("PBSettings.html")) {
       setTimeout(async () => {
         await appendCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);
       }, 300);
-      aiSize = await getAISize();
+      aiSize = await getAI2Size();
     };
     
     saveExtensionSettingsUI();
