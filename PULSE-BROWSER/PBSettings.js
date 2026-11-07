@@ -756,7 +756,7 @@ function getReadableName(url) {
 // }
 
 async function CheckEarnDetailsState() {
-  if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+  if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["OvermindInVisible"]);
   OvermindHidden = Vis.OvermindInVisible ?? false;
   console.log("Overmind State:", OvermindHidden);
@@ -846,7 +846,7 @@ async function CheckEarnDetailsState() {
         pbPulseOvermind.currentTime = 0;
         pbPulseOvermind.play();
       }, 1200);
-      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
     }
     console.log("Overmind State:", OvermindHidden);
     PulsesafeStorageSet({ OvermindInVisible: OvermindHidden });
