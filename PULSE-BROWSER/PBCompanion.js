@@ -10,7 +10,7 @@ let authorityRealm = null;
 let EarnHidden = false;
 let PULSE_ONLINE = false;
 let aiSession = null;
-let PulseAIPalMemoryBuffer = [];
+let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
@@ -2523,9 +2523,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAI_SESSION":
-      if (msg.PulseAIPalMemoryBuffer) {
-        PulseAIPalMemoryBuffer = msg.PulseAIPalMemoryBuffer;
-        safeStorageSet({ PulseAIPalMemoryBuffer });
+      if (msg.PulsePalMemoryAIBuffer) {
+        PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer;
+        safeStorageSet({ PulsePalMemoryAIBuffer });
         // (async () => {
         //   aiSession = await chrome.storage.local.get(["aiSession"]);
         //   if (!aiSession) {
@@ -2536,12 +2536,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // })();
       } else {
         (async () => {
-          const SessionAI = await chrome.storage.local.get(["PulseAIPalMemoryBuffer"]);
-          PulseAIPalMemoryBuffer = SessionAI.PulseAIPalMemoryBuffer ?? [];
-          console.log(SessionAI.PulseAIPalMemoryBuffer);
+          const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
+          PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
+          console.log(SessionAI.PulsePalMemoryAIBuffer);
         })();
       }
-      sendResponse({ ok: true, PulseAIPalMemoryBuffer });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer });
       return true;
 
     case "PBCONSOLE_GET":
