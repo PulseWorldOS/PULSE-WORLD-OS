@@ -190,9 +190,12 @@ ${rawPrompt}
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
     if (CompanionDetailsMessage) {
+      const now = Date.now();
+      const ItsTime = new Date(now).toLocaleString();
+      const showTime = `[${ItsTime}]`
       CompanionTitle.style.marginBottom = "6px;"
       CompanionTitle.style.textAlign = "center";
-      CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100) + ")"
+      CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       if (!EarnDetailsHidden) await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">🧠 AI Overmind: ${showTime}</font></strong> ` + response;

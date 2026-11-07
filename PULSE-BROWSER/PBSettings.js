@@ -896,6 +896,10 @@ if (location.href.includes("PBSettings.html")) {
         // 1. Initialize the session using the modern nested outputs architecture
         await initializeExoskeleton();
       }
+      let CompanionTitle = document.getElementById("CompanionTitle");
+      CompanionTitle.style.marginBottom = "6px;"
+      CompanionTitle.style.textAlign = "center";
+      CompanionTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100) + ")"
       // 3. Fire the wrapped prompt
       await appendCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
       CompanionSettingsConsoleInput.value = "";
