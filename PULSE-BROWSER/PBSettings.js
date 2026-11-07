@@ -760,6 +760,10 @@ async function getAI2Size() {
 // }
 
 async function CheckEarnDetailsState() {
+  const SessionAI2 = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
+  PulseSettingsAIPalMemoryBuffer = SessionAI2.PulseSettingsAIPalMemoryBuffer ?? [];
+  console.log("AI Memory Settings Buffer:" + SessionAI2.PulseSettingsAIPalMemoryBuffer);
+  aiSettings2Size = await getAI2Size();
   if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["OvermindInVisible"]);
   OvermindHidden = Vis.OvermindInVisible ?? false;
@@ -919,6 +923,7 @@ async function appendOvermindPrimeMessage(area, text) {
   Pulse2safeStorageSet({ PulseSettingsAIPalMemoryBuffer });
 }
 
+
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
 // ============================================================================
@@ -930,11 +935,6 @@ if (location.href.includes("PBSettings.html")) {
     await loadExtensionSettingsUI();
     await CheckEarnDetailsState();
     // await pbRenderCacheList();
-
-    const SessionAI = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
-    PulseSettingsAIPalMemoryBuffer = SessionAI.PulseSettingsAIPalMemoryBuffer ?? [];
-    console.log("AI Memory Settings Buffer:" + SessionAI.PulseSettingsAIPalMemoryBuffer);
-    aiSettings2Size = await getAI2Size();
 
     const idsToWatch = [
       "emailMode",
