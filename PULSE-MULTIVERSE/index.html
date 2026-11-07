@@ -2090,7 +2090,9 @@ let pwErrors = [];
     }
   }
 
-  if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  requestAnimationFrame(() => {
+    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  });
   
   // ============================================================
   // ORIGINAL PW LOGGING SYSTEM (with Ghost filter added)
@@ -2913,7 +2915,9 @@ function handleGo() {
 
 function pulseConsoleOpen () {
   // Assuming evoLogBox is your log container element
-  if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  requestAnimationFrame(() => {
+    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  });
   
   ghostBtn.style.display =
     ghostBtn.style.display === "none" ? "flex" : "none";
@@ -8627,7 +8631,9 @@ function interceptNavigation(url) {
 
 (async function PulseLife() {
   setTimeout(() => {
-    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+    requestAnimationFrame(() => {
+      if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+    });
   }, 2000); // hides after 3s
   narMusic.muted = PulseRealm.SoundDisabled;
   loadPulseIdentityContinual();
