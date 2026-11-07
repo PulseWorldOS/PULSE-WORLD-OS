@@ -196,7 +196,7 @@ ${rawPrompt}
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      if (!EarnDetailsHidden) await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+      await appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       // if (!LastMessage) CompanionDetailsMessage.innerHTML = CompanionDetailsMessage.innerHTML + `<p><strong><font color="#0FF">🧠 AI Overmind: ${showTime}</font></strong> ` + response;
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
