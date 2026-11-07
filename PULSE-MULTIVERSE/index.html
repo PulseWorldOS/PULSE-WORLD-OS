@@ -2091,9 +2091,7 @@ let pwErrors = [];
   }
 
   if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
-  setTimeout(() => {
-    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
-  }, 2000); // hides after 3s
+  
   // ============================================================
   // ORIGINAL PW LOGGING SYSTEM (with Ghost filter added)
   // ============================================================
@@ -8628,7 +8626,9 @@ function interceptNavigation(url) {
 
 
 (async function PulseLife() {
-
+  setTimeout(() => {
+    if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
+  }, 2000); // hides after 3s
   narMusic.muted = PulseRealm.SoundDisabled;
   loadPulseIdentityContinual();
   // // ⭐ USE PASSPORT-CAPABLE READER CORRECTLY (AWAIT)
