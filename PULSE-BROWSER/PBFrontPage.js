@@ -263,9 +263,9 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("🧠 AI Overmind: ", response);
-  if (text.includes("Overmind Orders")) OvermindOrders = response;
   setTimeout(async () => {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+    if (text.includes("Overmind Orders")) OvermindOrders = response;
   }, 300);
   aiSize = await getAISize();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
