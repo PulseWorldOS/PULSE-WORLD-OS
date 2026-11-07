@@ -532,21 +532,7 @@ checkPersistentStorage(true);
       </div>
 
       <div class="pw-console-ai" id="pw-console-ai" role="ai" aria-live="polite">
-        <div class="pw-log-line">
-          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INIT] PulseWorld Console Initialized.
-        </div>
-
-        <div class="pw-log-line">
-          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::BOOT] Mesh Window Stable.
-        </div>
-
-        <div class="pw-log-line">
-          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::SYNC] PulseBand Sync Active.
-        </div>
-
-        <div class="pw-log-line">
-          ✨ PULSE MULTIVERSAL RENDERER v32.0 — [PULSEWORLD::INFO] Awaiting New Diagnostic Signals…
-        </div>
+        <div class="pw-log-line"></div>
       </div>
 
       <div class="pw-console-footer">
@@ -1528,6 +1514,7 @@ let pwErrors = [];
     #pw-console-ai {
       height: calc(45vh - 60px); /* ⭐ now subtracting tab bar height */
       overflow-y: auto;
+      display: none;
       padding: 10px 16px;
       font-family: Consolas, monospace;
       font-size: 15px;
