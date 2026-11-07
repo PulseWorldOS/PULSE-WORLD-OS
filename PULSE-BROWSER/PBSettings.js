@@ -954,10 +954,10 @@ function loadOrders() {
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
-      PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
+      PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.OvermindOrders) PB_LOG3.change("PBAI_SESSION", OvermindSettingsOrders, response.OvermindOrders);
+    if (response.OvermindOrders) PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);
     if (response.OvermindOrders) OvermindSettingsOrders = response.OvermindOrders;
   });
 }
