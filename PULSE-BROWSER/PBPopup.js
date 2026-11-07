@@ -83,7 +83,7 @@ async function getAI3Size() {
   }
 }
 
-async function CheckEarnDetailsState() {
+async function CheckOvermindState() {
   const SessionAI2 = await chrome.storage.local.get(["PulsePopupAIPalMemoryBuffer"]);
   PulsePopupAIPalMemoryBuffer = SessionAI2.PulsePopupAIPalMemoryBuffer ?? [];
   console.log("AI Memory Settings Buffer:" + SessionAI2.PulsePopupAIPalMemoryBuffer);
@@ -1443,7 +1443,7 @@ async function loadWorld() {
   const streamIcon = document.getElementById("moduleStreamIcon");
   const socialIcon = document.getElementById("moduleSocialIcon");
   const shoppingIcon = document.getElementById("moduleShoppingIcon");
-  await CheckEarnDetailsState();
+  await CheckOvermindState();
   PulseRealmSettings = await pbLoadExtensionSettings();
 
   // INTERNAL MODE → open PulseWorld Work on the real domain

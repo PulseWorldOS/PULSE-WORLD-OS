@@ -36,9 +36,9 @@ async function pbLogKernelStatus() {
     const state = realm.state || {};
 
     logKV("Last Ping", state.lastPing);
-    logKV("Last Page", state.lastPage);
-    logKV("Last URL", state.lastURL);
-    logKV("Domain Class", state.lastDomainClass);
+    logKV("Last Page", state.lastPage ?? "-");
+    logKV("Last URL", state.lastURL ?? "-");
+    logKV("Domain Class", state.lastDomainClass ?? "-");
 
     logKV("Bands", JSON.stringify(state.bands));
     logKV("Flags", JSON.stringify(state.flags));
