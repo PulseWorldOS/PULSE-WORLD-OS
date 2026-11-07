@@ -900,7 +900,7 @@ if (location.href.includes("PBSettings.html")) {
     setInterval(async () => {
       loadOrders();
       if (OvermindSettingsOrders) {
-        appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, "Prime", OvermindSettingsOrders);
+        appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
         OvermindSettingsOrders = null;
       }
     }, 15000);
