@@ -10,8 +10,8 @@ let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion"
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let MyLocalMemoryLayer = {};
-let MyLocalMemoryLayerMB = null;
-let LocalMemoryLayerMB = null;
+let MyLocalMemoryLayerMB = 0;
+let LocalMemoryLayerMB = 0;
 let socialMode = "Internal";
 let OvermindOrders = null;
 let EarnHidden = false;
@@ -1344,7 +1344,7 @@ function getLocalMemoryLayer() {
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
   LocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
-  LocalMemoryLayerMB = OurLocalMemoryLayerMB.toFixed(2);
+  LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",

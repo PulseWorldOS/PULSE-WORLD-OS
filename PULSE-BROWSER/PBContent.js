@@ -10,7 +10,7 @@ let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
-let OurLocalMemoryLayerMB = null;
+let OurLocalMemoryLayerMB = 0;
 
 const PB_LOG4 = {
   info(label, data) {

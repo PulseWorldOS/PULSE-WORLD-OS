@@ -19,8 +19,8 @@ let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
 let WeLocalMemoryLayer = {};
-let LocalMemoryLayerMB = null;
-let WeLocalMemoryLayerMB = null;
+let LocalMemoryLayerMB = 0;
+let WeLocalMemoryLayerMB = 0;
 let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
@@ -2046,6 +2046,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBCHECK_MEMORY":
+      if (msg.OurLocalMemoryLayer) {
+        WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
+        WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
+      }
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
@@ -2054,13 +2058,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           PB_LOG2.info("PBCHECK_MEMORY:WE", WeLocalMemoryLayerMB);
           LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
           LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
-          WeLocalMemoryLayerMB = null;
+          WeLocalMemoryLayerMB = 0;
         }
-      }
-      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
-      if (msg.OurLocalMemoryLayer) {
-        WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
-        WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
       }
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
       sendResponse({ ok: true, LocalMemoryLayerMB });
