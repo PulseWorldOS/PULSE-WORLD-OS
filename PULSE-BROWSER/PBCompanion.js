@@ -1816,6 +1816,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PB_GATHER_ORDERS":
       if (msg.aiSettings2Size) {
         aiSettingsSize = msg.aiSettings2Size;
+      } else if (msg.aiSettingsSize) {
+        aiSettingsSize = msg.aiSettingsSize;
+      } else if (msg.aiSize) {
+        aiSettingsSize = msg.aiSize;
       }
       if (msg.aiPopupSize) {
         aiPopupSize = msg.aiPopupSize;
