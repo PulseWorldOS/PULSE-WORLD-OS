@@ -104,6 +104,7 @@ async function CheckOvermindState() {
     pbPulsePopupOvermind.style.height = "50px";
     pbPulsePopupOvermind.style.border = "2px solid #000";
     earnerinnerhelperPopuppanel.style.display = "none";
+    earnerinnerhelperPopuppanel.style.pointerEvents = "none";
     earnerhelperPopuppanel.style.background = "transparent";
     earnerhelperPopuppanel.style.backdropFilter = "none";
     earnerhelperPopuppanel.style.boxShadow = "none";
@@ -127,6 +128,7 @@ async function CheckOvermindState() {
     pbPulsePopupOvermind.style.transform = "";
     pbPulsePopupOvermind.style.opacity = "0.25";
     earnerinnerhelperPopuppanel.style.display = "flex";   // matches your .earner-inner-panel
+    earnerinnerhelperPopuppanel.style.pointerEvents = "auto";
     earnerhelperPopuppanel.style.background = "";
     earnerhelperPopuppanel.style.backdropFilter = "";
     earnerhelperPopuppanel.style.boxShadow = "";
@@ -149,6 +151,7 @@ async function CheckOvermindState() {
       pbPulsePopupOvermind.style.height = "50px";
       pbPulsePopupOvermind.style.border = "2px solid #000";
       earnerinnerhelperPopuppanel.style.display = "none";
+      earnerinnerhelperPopuppanel.style.pointerEvents = "none";
       earnerhelperPopuppanel.style.background = "transparent";
       earnerhelperPopuppanel.style.backdropFilter = "none";
       earnerhelperPopuppanel.style.boxShadow = "none";
@@ -172,6 +175,7 @@ async function CheckOvermindState() {
       pbPulsePopupOvermind.style.opacity = "0.25";
       pbPulsePopupOvermind.style.border = "2px solid #000";
       earnerinnerhelperPopuppanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerinnerhelperPopuppanel.style.pointerEvents = "auto";
       earnerhelperPopuppanel.style.background = "";
       earnerhelperPopuppanel.style.backdropFilter = "";
       earnerhelperPopuppanel.style.boxShadow = "";

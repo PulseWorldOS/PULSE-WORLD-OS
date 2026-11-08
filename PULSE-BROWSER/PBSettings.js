@@ -781,10 +781,12 @@ async function CheckEarnDetailsState() {
     pbPulseOvermind.style.height = "50px";
     pbPulseOvermind.style.border = "2px solid #000";
     earnerinnerhelperApanel.style.display = "none";
+    earnerinnerhelperApanel.style.pointerEvents = "none";
     earnerhelperApanel.style.background = "transparent";
     earnerhelperApanel.style.backdropFilter = "none";
     earnerhelperApanel.style.boxShadow = "none";
     earnerhelperApanel.style.border = "none";
+    earnerhelperApanel.style.pointerEvents = "none";
     setTimeout(() => {
       pbPulseOvermind.id = "pbPulseDetailsEarn3";
       pbPulseOvermind.className = "pbPulseDetailsEarn3";
@@ -805,10 +807,12 @@ async function CheckEarnDetailsState() {
     pbPulseOvermind.style.transform = "";
     pbPulseOvermind.style.opacity = "0.25";
     earnerinnerhelperApanel.style.display = "flex";   // matches your .earner-inner-panel
+    earnerinnerhelperApanel.style.pointerEvents = "auto";
     earnerhelperApanel.style.background = "";
     earnerhelperApanel.style.backdropFilter = "";
     earnerhelperApanel.style.boxShadow = "";
     earnerhelperApanel.style.border = "";
+    earnerhelperApanel.style.pointerEvents = "auto";
     setTimeout(() => {
       pbPulseOvermind.style.border = "";
       pbPulseOvermind.style.transform = "";
@@ -828,10 +832,12 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.height = "50px";
       pbPulseOvermind.style.border = "2px solid #000";
       earnerinnerhelperApanel.style.display = "none";
+      earnerinnerhelperApanel.style.pointerEvents = "none";
       earnerhelperApanel.style.background = "transparent";
       earnerhelperApanel.style.backdropFilter = "none";
       earnerhelperApanel.style.boxShadow = "none";
       earnerhelperApanel.style.border = "none";
+      earnerhelperApanel.style.pointerEvents = "none";
       setTimeout(() => {
         pbPulseOvermind.id = "pbPulseDetailsEarn3";
         pbPulseOvermind.className = "pbPulseDetailsEarn3";
@@ -852,10 +858,12 @@ async function CheckEarnDetailsState() {
       pbPulseOvermind.style.opacity = "0.25";
       pbPulseOvermind.style.border = "2px solid #000";
       earnerinnerhelperApanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerinnerhelperApanel.style.pointerEvents = "auto";
       earnerhelperApanel.style.background = "";
       earnerhelperApanel.style.backdropFilter = "";
       earnerhelperApanel.style.boxShadow = "";
       earnerhelperApanel.style.border = "";
+      earnerhelperApanel.style.pointerEvents = "auto";
       setTimeout(() => {
         pbPulseOvermind.style.border = "";
         pbPulseOvermind.style.transform = "";
@@ -1107,8 +1115,8 @@ window.onerror = function(message, source, lineno, colno, error) {
 };
 
 // Utility: load settings
-function loadOrders(aiSettings2Size) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettings2Size }, (response) => {
+function loadOrders(aiSettingsSize) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
