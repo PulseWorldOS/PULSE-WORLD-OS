@@ -18,8 +18,9 @@ let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
-let LocalMemoryLayerMB = null;
 let WeLocalMemoryLayer = {};
+let LocalMemoryLayerMB = null;
+let WeLocalMemoryLayerMB = null;
 let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
@@ -658,7 +659,8 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
-  
+  LocalMemoryLayerMB = ((heap.usedJSHeapSize / 1024 / 1024).toFixed(1)).replace(" MB", "");
+
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
     totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
@@ -2040,14 +2042,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCHECK_MEMORY":
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
+        LocalMemoryLayerMB = msg.MyLocalMemoryLayer.usedHeapMB;
       }
       if (msg.OurLocalMemoryLayer) {
         WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
+        WeLocalMemoryLayerMB = msg.OurLocalMemoryLayer.usedHeapMB;
+        LocalMemoryLayerMB = LocalMemoryLayerMB.replace(" MB", "") + WeLocalMemoryLayerMB.replace(" MB", "");
       }
-      if (LocalMemoryLayer.usedHeapMB && WeLocalMemoryLayer.usedHeapMB) LocalMemoryLayerMB = LocalMemoryLayer.usedHeapMB.replace(" MB","") + WeLocalMemoryLayer.usedHeapMB.replace(" MB","");
-      if (LocalMemoryLayer.usedHeapMB && WeLocalMemoryLayer.usedHeapMB) LocalMemoryLayerMB = LocalMemoryLayer.usedHeapMB;
-      if (LocalMemoryLayer.usedHeapMB && WeLocalMemoryLayer.usedHeapMB) PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
-      sendResponse({ ok: true, LocalMemoryLayerMB });
+      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
+      sendResponse({ ok: true });
       break;
 
     case "PBACC_WARMPATH":

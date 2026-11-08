@@ -10,6 +10,7 @@ let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
+let OurLocalMemoryLayerMB = null;
 
 const PB_LOG4 = {
   info(label, data) {
@@ -359,6 +360,7 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
+  OurLocalMemoryLayerMB = (heap.usedJSHeapSize / 1024 / 1024).toFixed(1);
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",

@@ -1334,6 +1334,7 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
+  MyLocalMemoryLayerMB = (heap.usedJSHeapSize / 1024 / 1024).toFixed(1);
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
