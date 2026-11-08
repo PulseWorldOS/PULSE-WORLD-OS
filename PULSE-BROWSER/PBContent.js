@@ -608,7 +608,7 @@ setInterval(() => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
-}, 2500);
+}, 1500);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
@@ -1076,6 +1076,7 @@ function updateHUD(body) {
         <b><font color="white">Global PulseBrowser OS Stats</font></b><br/>
         <font color="#0FF">Pulse Ops/MS:</font> ${opsPerMs}<br/>
         <font color="#0FF">Pulse Efficiency:</font> ${PEI}<br/>
+        <font color="#0FF">Memory Usage:</font> ${OurLocalMemoryLayerMB}<br/>
         <font color="#0FF">Workload:</font> ${workloadMB.toFixed(2)} MB<br/>
         <font color="#0FF">Mutations:</font> ${PulseRealm.mutationCount}<br/>
         <font color="#0FF">WarmPaths:</font> ${PulseRealm.warmPathsTriggered}<br/>

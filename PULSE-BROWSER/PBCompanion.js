@@ -21,6 +21,7 @@ let LocalMemoryLayer = {};
 let WeLocalMemoryLayer = {};
 let LocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
+let WeLocalMemoryLayerMBackup = 0;
 let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
@@ -2049,6 +2050,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.OurLocalMemoryLayer) {
         WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
         WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
+        WeLocalMemoryLayerMBackup = WeLocalMemoryLayerMB;
       }
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
@@ -2059,6 +2061,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
           LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
           WeLocalMemoryLayerMB = 0;
+        } else {
+          WeLocalMemoryLayerMB = WeLocalMemoryLayerMBackup;
+          WeLocalMemoryLayerMBackup = 0;
         }
       }
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);

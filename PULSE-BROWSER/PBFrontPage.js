@@ -1008,7 +1008,7 @@ async function pbRenderStorageStats2(history) {
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
-  const swMB = (swSize / (1024 * 1024)).toFixed(2);
+  const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
@@ -1114,7 +1114,7 @@ async function pbRenderStorageStats2(history) {
     <div style="margin: 8px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color=${percentColor3}>${MyLocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
+      <strong><font color="#FF8844">PulseBrowser OS (RAM)</font> [<font color=${percentColor3}>${MyLocalMemoryLayerMB} MB</font>]</strong><br><br>
 
       <div style="display:flex; gap:10px;">
 
@@ -4255,7 +4255,7 @@ function CheckBackTab() {
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
-        pulseRehydrateTabs();
+        setTimeout(pulseRehydrateTabs, 2000);
         startPulseLoop();
       });
     } else {
