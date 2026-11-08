@@ -279,6 +279,8 @@ self.addEventListener("install", event => {
     "PBPopup.html",
     "PBSettings.html",
     "PulseWorldAuthority.html",
+    "PBFrontPage.js",
+    "PBDevOverlay.js",
     "PBCompanion.js",
     "PBInterceptor.js",
     "PBAccelerator.js",
@@ -1614,6 +1616,18 @@ startWarmBootLoop();
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  chrome.contextMenus.create({
+    id: 'openSidePanel',
+    title: 'PulseBrowser Side Panel',
+    contexts: ['all']
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'openSidePanel') {
+    // This will open the panel in all the pages on the current window.
+    chrome.sidePanel.open({ windowId: tab.windowId });
+  }
 });
 
 let __PULSE_CACHE_FILE = null;

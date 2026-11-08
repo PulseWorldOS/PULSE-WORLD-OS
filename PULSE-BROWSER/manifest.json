@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PulseBrowser OS",
-  "short_name": "PulseBrowser",
+  "short_name": "PulseWorld",
   "description": "PulseBrowser OS — Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness",
   "version": "12.5.0",
 
@@ -102,6 +102,7 @@
       "android-chrome-192x192.png",
       "PulseWorldEntrancePulseGPUPulseEarn.png",
       "PBFrontPage.js",
+      "PBDevOverlay.js",
       "PBNavigator.js",
       "PBInterceptor.js",
       "PBRouter.js",

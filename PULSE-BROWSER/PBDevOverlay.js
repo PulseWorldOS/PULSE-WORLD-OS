@@ -173,6 +173,26 @@ function updateWarm(realm) {
     `;
     el.onclick = () => {
       (async () => {
+        EarnDetailsHidden = true;
+        // ——— Turn ON (transparent / earning mode) ———
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+        pbPulseDetailsEarn.style.width = "70px";
+        pbPulseDetailsEarn.style.height = "70px";
+        pbPulseDetailsEarn.style.border = "2px solid #000";
+        earnerinnerhelperpanel.style.display = "none";
+        earnerhelperpanel.style.background = "transparent";
+        earnerhelperpanel.style.backdropFilter = "none";
+        earnerhelperpanel.style.boxShadow = "none";
+        earnerhelperpanel.style.border = "none";
+        setTimeout(() => {
+          pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.style.opacity = "1";
+          pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+          pbPulseDetailsEarn.currentTime = 0;
+          pbPulseDetailsEarn.play();
+        }, 1200);
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         chrome.sidePanel.open({
           windowId: tab.windowId
