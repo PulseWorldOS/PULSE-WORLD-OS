@@ -261,6 +261,18 @@ function isValid(t) {
   );
 }
 
+function HelperHud() {
+  const body = document.getElementById("pb-hud-body");
+  const wrap = document.getElementById("pulsebrowser-dev-overlay");
+      
+  updateHUD(body);
+  wrap.style.display = "block";
+  body.style.display = "block";
+
+  setTimeout(() => {
+    fadeHUD();
+  }, 6000);
+}
 
 // ---------------------------------------------------------------------------
 // 1. KERNEL HANDSHAKE
@@ -269,9 +281,8 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) =
   if (chrome.runtime.lastError) return;
   console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
     "color:#00C8FF; font-family:monospace;", response);
-  if (response.time && isValid(response.time)) {
-      nowCT = response.time;
-  }
+  if (response.time && isValid(response.time)) nowCT = response.time;
+  if (response.HelperHudBoolean) HelperHud();
 });
 
 
@@ -361,7 +372,6 @@ function getLocalMemoryLayer() {
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
   OurLocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
-  OurLocalMemoryLayerMB = OurLocalMemoryLayerMB.toFixed(2);
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
@@ -605,6 +615,16 @@ async function gpuWarmExtra() {
 }
 
 setInterval(() => {
+  // ---------------------------------------------------------------------------
+  // 1. KERNEL HANDSHAKE
+  // ---------------------------------------------------------------------------
+  chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
+      "color:#00C8FF; font-family:monospace;", response);
+    if (response.time && isValid(response.time)) nowCT = response.time;
+    if (response.HelperHudBoolean) HelperHud();
+  });
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
@@ -667,6 +687,7 @@ async function injectHUD() {
   document.body.appendChild(wrap);
 
   const sync = getWarmInterval();
+  OurLocalMemoryLayer = getLocalMemoryLayer();
   let body = document.getElementById("pb-hud-body");
   updateHUD(body);
   PulseBrowserPreview();
@@ -869,13 +890,13 @@ function fadeHUD(vid) {
   }, 5000);
 }
 
-function updateHUD(body) {
+async function updateHUD(body) {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
-      OurLocalMemoryLayer = getLocalMemoryLayer();
+      
       PulseRealm = realmRes.state || {};
       PulseRealmSettings = settingsRes.settings || {};
-
+      
       // ---------------------------------------------
       // ⭐ DOM & LOAD TIMES
       // ---------------------------------------------

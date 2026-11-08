@@ -6,6 +6,7 @@
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
+let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
 let activeRealmClaim = false;
@@ -1639,6 +1640,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '🧠 PulseBrowser OS Settings',
     contexts: ['all']
   });
+  chrome.contextMenus.create({
+    id: 'viewHUDOverlay',
+    title: '🧠 PulseBrowser OS HUD Display',
+    contexts: ['all']
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -1650,7 +1656,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       enabled: true
     });
     chrome.sidePanel.open({ windowId: tab.windowId });
-  } else {
+  } else if (info.menuItemId === 'openSettings') {
     // This will open the panel in all the pages on the current window.
     chrome.sidePanel.setOptions({
       tabId: tab.tabId,
@@ -1658,6 +1664,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       enabled: true
     });
     chrome.sidePanel.open({ windowId: tab.windowId });
+  } else if (info.menuItemId === 'viewHUDOverlay') {
+    HelperHudBoolean = true;
   }
 });
 
@@ -2483,7 +2491,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
         }
       }      
-      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart });
+      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean });
       break;
     }
 

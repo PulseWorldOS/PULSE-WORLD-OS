@@ -1024,9 +1024,9 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 40) percentColor2 = "gold";
   if (percent >= 70) percentColor2 = "orange";
   if (percent >= 90) percentColor2 = "red";
-  if (MyLocalMemoryLayerMB >= 35) percentColor3 = "gold";
-  if (MyLocalMemoryLayerMB >= 60) percentColor3 = "orange";
-  if (MyLocalMemoryLayerMB >= 85) percentColor3 = "red";
+  if (MyLocalMemoryLayerMB >= 80) percentColor3 = "gold";
+  if (MyLocalMemoryLayerMB >= 150) percentColor3 = "orange";
+  if (MyLocalMemoryLayerMB >= 250) percentColor3 = "red";
 
   // ⭐ Status text
   let statusText = "SAFE";
