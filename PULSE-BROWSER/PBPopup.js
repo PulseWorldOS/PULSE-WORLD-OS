@@ -189,11 +189,6 @@ async function CheckOvermindState() {
   };
 }
 
-document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
-  if (event.key === "Enter") {
-    CompanionPopupConsoleSend.click();
-  }
-});
 
 async function initializeExoskeleton() {
   aiPopupSession = await LanguageModel.create({
@@ -218,11 +213,18 @@ async function appendPopupCompanionMessage(area, role, text) {
   PulsesafeStorageSet({ PulsePopupAIPalMemoryBuffer });
 }
 
+document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    CompanionPopupConsoleSend.click();
+  }
+});
+
 CompanionPopupConsoleSend.onclick = async () => {
   CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionPopupConsoleInput.value.trim();
   if (!text) return;
+  CompanionPopupConsoleInput.value = "";
   if (!aiPopupSession) {
     // 1. Initialize the session using the modern nested outputs architecture
     await initializeExoskeleton();
@@ -257,7 +259,7 @@ CompanionPopupConsoleSend.onclick = async () => {
   ${rawPrompt}
 
   [PULSE PAL RESPONSE]:`;
-  if (authorityRealm) rawPrompt = "Please Read over this Snapshot of this Website and Tell me A little About it: " + authorityRealm;
+  if (authorityRealm) rawPrompt = text + "--Please Read over this Snapshot of this Website and Tell me A little About it: " + authorityRealm;
   if (authorityRealm) authorityRealm = null;
   let CompanionPopupTitle = document.getElementById("CompanionTitle");
   CompanionPopupTitle.style.marginBottom = "6px;"
@@ -265,7 +267,6 @@ CompanionPopupConsoleSend.onclick = async () => {
   CompanionPopupTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
   // 3. Fire the wrapped prompt
   appendPopupCompanionMessage(CompanionPopupDetailsMessage, "user", text);
-  CompanionPopupConsoleInput.value = "";
   const response = await aiPopupSession.prompt(wrappedPrompt);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {

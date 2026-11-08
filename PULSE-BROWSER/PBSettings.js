@@ -1034,6 +1034,7 @@ if (location.href.includes("PBSettings.html")) {
       CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
       const text = CompanionSettingsConsoleInput.value.trim();
       if (!text) return;
+      CompanionSettingsConsoleInput.value = "";
       if (!aiSettingsSession) {
         // 1. Initialize the session using the modern nested outputs architecture
         await initializeExoskeleton();
@@ -1074,7 +1075,6 @@ if (location.href.includes("PBSettings.html")) {
       CompanionSettingsTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
       // 3. Fire the wrapped prompt
       appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
-      CompanionSettingsConsoleInput.value = "";
       const response = await aiSettingsSession.prompt(wrappedPrompt);
       console.log("🧠 AI Overmind: ", response);
       setTimeout(async () => {

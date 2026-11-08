@@ -265,14 +265,14 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
+  CompanionConsoleInput.value = "";
   // 3. Fire the wrapped prompt
   if (text.includes("Overmind Orders")) {
-    const order = "(Please Follow this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
+    const order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
   } else {
     appendCompanionMessage(CompanionDetailsMessage, "user", text);
   }
-  CompanionConsoleInput.value = "";
   const response = await aiSession.prompt(text);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
