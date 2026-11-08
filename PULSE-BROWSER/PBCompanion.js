@@ -18,6 +18,8 @@ let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
+let LocalMemoryLayerMB = null;
+let WeLocalMemoryLayer = {};
 let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
@@ -2039,8 +2041,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
       }
-      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayer);
-      sendResponse({ ok: true });
+      if (msg.OurLocalMemoryLayer) {
+        WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
+      }
+      if (LocalMemoryLayer.usedHeapMB && WeLocalMemoryLayer.usedHeapMB) LocalMemoryLayerMB = LocalMemoryLayer.usedHeapMB.replace(" MB","") + WeLocalMemoryLayer.usedHeapMB.replace(" MB","");
+      if (LocalMemoryLayer.usedHeapMB && WeLocalMemoryLayer.usedHeapMB) LocalMemoryLayerMB = LocalMemoryLayer.usedHeapMB;
+      if (LocalMemoryLayer.usedHeapMB && WeLocalMemoryLayer.usedHeapMB) PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
+      sendResponse({ ok: true, LocalMemoryLayerMB });
       break;
 
     case "PBACC_WARMPATH":

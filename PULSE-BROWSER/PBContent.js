@@ -598,11 +598,13 @@ async function gpuWarmExtra() {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }
 
 setInterval(() => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }, 3000);
 
 async function injectHUD() {

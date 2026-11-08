@@ -10,6 +10,7 @@ let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion"
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let MyLocalMemoryLayer = {};
+let MyLocalMemoryLayerMB = null;
 let socialMode = "Internal";
 let OvermindOrders = null;
 let EarnHidden = false;
@@ -1463,7 +1464,12 @@ async function gpuWarmExtra() {
   PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) {
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    }
+  });
 }
 
 setTimeout(gpuWarmExtra, 250);
@@ -1531,6 +1537,12 @@ function collectAndWarmAssetsFront() {
     count: decodeCount
   });
   MyLocalMemoryLayer = getLocalMemoryLayer();
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) {
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    }
+  });
 }
 
 setTimeout(collectAndWarmAssetsFront, 1000);
@@ -1793,7 +1805,13 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
 
 // Re-render after everything
 setInterval(async () => {
-  PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
+  MyLocalMemoryLayer = getLocalMemoryLayer();
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) {
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    }
+  });
   await pbRenderCacheList2();
 }, 8000);
 
@@ -4144,6 +4162,12 @@ function CheckBackTab() {
     }, 2700);
     gpuWarmExtra();
     MyLocalMemoryLayer = getLocalMemoryLayer();
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) {
+          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      }
+    });
   }
 
   document.addEventListener("visibilitychange", () => {
