@@ -11,6 +11,7 @@ let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = null;
+let LocalMemoryLayerMB = null;
 let socialMode = "Internal";
 let OvermindOrders = null;
 let EarnHidden = false;
@@ -1109,7 +1110,7 @@ async function pbRenderStorageStats2(history) {
     <div style="margin: 8px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color="white">${MyLocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
+      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color="white">${LocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
 
       <div style="display:flex; gap:10px;">
 
@@ -1338,6 +1339,7 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
+  LocalMemoryLayerMB = (heap.usedJSHeapSize / 1024 / 1024).toFixed(1);
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
@@ -1471,7 +1473,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
     }
   });
 }
@@ -1544,7 +1546,7 @@ function collectAndWarmAssetsFront() {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
     }
   });
 }
@@ -1813,7 +1815,7 @@ setInterval(async () => {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
     }
   });
   await pbRenderCacheList2();
@@ -4169,7 +4171,7 @@ function CheckBackTab() {
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+          MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
       }
     });
   }

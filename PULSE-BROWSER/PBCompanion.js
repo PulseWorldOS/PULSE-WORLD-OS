@@ -2047,12 +2047,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
       if (msg.OurLocalMemoryLayer) {
         WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
-        WeLocalMemoryLayerMB = msg.OurLocalMemoryLayer.usedHeapMB;
+        WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
         PB_LOG2.info("PBCHECK_MEMORY:WE", WeLocalMemoryLayerMB);
         LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
+        LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
       }
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
-      sendResponse({ ok: true });
+      sendResponse({ ok: true, LocalMemoryLayerMB });
       break;
 
     case "PBACC_WARMPATH":
