@@ -740,7 +740,7 @@ async function pbRenderCacheList2() {
   const history = await new Promise(resolve =>
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
-
+  MyLocalMemoryLayer = getLocalMemoryLayer();
   const statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
   if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
@@ -919,8 +919,7 @@ async function pbRenderCacheList2() {
     pulsebest = true;
   });
 
-  PB_LOG3.info("PulseCache list rendered", pulsecaches);  
-  MyLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG3.info("PulseCache list rendered", pulsecaches);
 }
 // function writeBigBlob() {
 //   return new Promise((resolve, reject) => {
@@ -1397,13 +1396,14 @@ async function pulseGPUInspector(adapter, device) {
 }
 
 // Optional: Real-time heartbeat
-setInterval(() => {
+setInterval(async () => {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
         MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     }
   });
+  await pbRenderCacheList2();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -1486,6 +1486,7 @@ async function gpuWarmExtra() {
         MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     }
   });
+  await pbRenderCacheList2();
 }
 
 setTimeout(gpuWarmExtra, 250);
@@ -1495,7 +1496,7 @@ setTimeout(pulseRehydrateTabs, 250);
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
 // ============================================================================
 
-function collectAndWarmAssetsFront() {
+async function collectAndWarmAssetsFront() {
   const assets = [];
 
   // -------------------------------------------------------
@@ -1559,6 +1560,7 @@ function collectAndWarmAssetsFront() {
         MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     }
   });
+  await pbRenderCacheList2();
 }
 
 setTimeout(collectAndWarmAssetsFront, 1000);
@@ -4118,6 +4120,13 @@ function CheckBackTab() {
       settings.acceleratedModule6Link
     ].filter(u => u && u.startsWith("http"));
 
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) {
+          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      }
+    });
+
     collectAndWarmAssetsFront();
 
     const container = document.getElementById("pbWarmContainer");
@@ -4178,12 +4187,6 @@ function CheckBackTab() {
     }, 2700);
     gpuWarmExtra();
     MyLocalMemoryLayer = getLocalMemoryLayer();
-    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
-      if (chrome.runtime.lastError) return;
-      if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-      }
-    });
   }
 
   document.addEventListener("visibilitychange", () => {

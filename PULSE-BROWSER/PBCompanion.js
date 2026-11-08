@@ -659,12 +659,13 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
-  LocalMemoryLayerMB = ((heap.usedJSHeapSize / 1024 / 1024).toFixed(1)).replace(" MB", "");
+  LocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
+  LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
 
   return {
-    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(1) + " MB"
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(2) + " MB"
   };
 }
 
@@ -2043,6 +2044,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
+        LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
         if (WeLocalMemoryLayerMB) {
           PB_LOG2.info("PBCHECK_MEMORY:WE", WeLocalMemoryLayerMB);
           LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
