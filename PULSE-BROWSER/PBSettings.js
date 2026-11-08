@@ -281,7 +281,7 @@ async function loadExtensionSettingsUI() {
 
 async function saveExtensionSettingsUI() {
   const before = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY2]);
-  Pulse2safeStorageSet({ PulseSettingsAIPalMemoryBuffer });
+  
   const settings = {
     emailMode: document.getElementById("emailMode").value,
     externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
