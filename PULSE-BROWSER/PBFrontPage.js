@@ -703,7 +703,6 @@ async function pbRenderCacheList2() {
   if (!listEl) return;
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
-  MyLocalMemoryLayer = getLocalMemoryLayer();
   if (!result || (!result.caches && !result.pulsecaches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
@@ -919,7 +918,8 @@ async function pbRenderCacheList2() {
     pulsebest = true;
   });
 
-  PB_LOG3.info("PulseCache list rendered", pulsecaches);
+  PB_LOG3.info("PulseCache list rendered", pulsecaches);  
+  MyLocalMemoryLayer = getLocalMemoryLayer();
 }
 // function writeBigBlob() {
 //   return new Promise((resolve, reject) => {
@@ -993,8 +993,12 @@ async function pbRenderStorageStats2(history) {
   );
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
   aiSize = syncBytes + aiSize;
-  if (aiSettingsSize) aiSize = aiSize + aiSettingsSize;
-  if (aiPopupSize) aiSize = aiSize + aiPopupSize;
+  console.log("AI Size: ", aiSize);  
+  aiSize = aiSize + aiSettingsSize;
+  console.log("aiSettingsSize Size: ", aiSettingsSize);
+  aiSize = aiSize + aiPopupSize;
+  console.log("aiPopupSize Size: ", aiPopupSize);
+  console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
@@ -1027,12 +1031,7 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 90) statusText = "Critical Load";
 
   // ⭐ Sync display formatting
-  let syncDisplay;
-  // if (syncBytes < 1024 * 1024) {
-  //   syncDisplay = syncKB + " KB";
-  // } else {
-    syncDisplay = syncMB + " MB";
-  // }
+  let aisyncDisplay = syncMB + " MB";
   
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
@@ -1119,7 +1118,7 @@ async function pbRenderStorageStats2(history) {
 
         <div style="flex:1;">
           <strong>AI Sync Memory:</strong><br>
-          • <span style="color:lightgreen">${syncDisplay}</span><br>
+          • <span style="color:lightgreen">${aisyncDisplay}</span><br>
 
           <strong>System Quota:</strong><br>
           • <span style="color:lightgreen">${quotaGB} GB</span><br><br>
