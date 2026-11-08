@@ -872,7 +872,7 @@ function fadeHUD(vid) {
 function updateHUD(body) {
   chrome.runtime.sendMessage({ type: "PBREALM_GET" }, (realmRes) => {
     chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (settingsRes) => {
-
+      OurLocalMemoryLayer = getLocalMemoryLayer();
       PulseRealm = realmRes.state || {};
       PulseRealmSettings = settingsRes.settings || {};
 
