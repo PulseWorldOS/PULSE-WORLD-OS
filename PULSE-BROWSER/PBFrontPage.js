@@ -1110,7 +1110,7 @@ async function pbRenderStorageStats2(history) {
     <div style="margin: 8px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color="white">${LocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
+      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color="white">${MyLocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
 
       <div style="display:flex; gap:10px;">
 
@@ -1394,6 +1394,12 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(() => {
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) {
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    }
+  });
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -1473,7 +1479,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     }
   });
 }
@@ -1546,7 +1552,7 @@ function collectAndWarmAssetsFront() {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     }
   });
 }
@@ -1815,7 +1821,7 @@ setInterval(async () => {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     }
   });
   await pbRenderCacheList2();
@@ -4171,7 +4177,7 @@ function CheckBackTab() {
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = LocalMemoryLayerMB + response.LocalMemoryLayerMB;
+          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
       }
     });
   }
