@@ -20,7 +20,6 @@ let keyHoldTimer = null;
 let keyHold2Timer = null;
 let aiSize = 0;
 let aiSettingsSize = 0;
-let aiPopupSize = 0;
 let swSize = 0;
 // Your cybernetic state architecture
 let aiSession = null;
@@ -976,8 +975,6 @@ async function pbRenderStorageStats2(history) {
   const localQuota = estimate.quota || 1;
   swSize = await getSWSize();
   aiSize = await getAISize();
-  console.log("AI Memory Size:", aiSize, "bytes");
-  console.log("PBCompanion.js Size:", swSize, "bytes");
   
   // ⭐ SYNC STORAGE (chrome.storage.sync)
   const syncItems = await new Promise(resolve =>
@@ -986,10 +983,11 @@ async function pbRenderStorageStats2(history) {
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
   aiSize = syncBytes + aiSize;
   if (aiSettingsSize) aiSize = aiSize + aiSettingsSize;
-  if (aiPopupSize) aiSize = aiSize + aiPopupSize;
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
+  console.log("AI Memory Size:", aiSize, "bytes");
+  console.log("PBCompanion.js Size:", swSize, "bytes");
 
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);

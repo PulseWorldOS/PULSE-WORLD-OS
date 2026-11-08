@@ -761,13 +761,6 @@ async function getAI2Size() {
 // }
 
 async function CheckEarnDetailsState() {
-  const SessionAI2 = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
-  PulseSettingsAIPalMemoryBuffer = SessionAI2.PulseSettingsAIPalMemoryBuffer ?? [];
-  PulseSettingsAIPalMemoryBuffer.forEach(push => { CompanionSettingsDetailsMessage.innerHTML += push; });
-  CompanionSettingsDetailsMessage.style.fontSize = "0.6rem";
-  CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
-  console.log("AI Memory Settings Buffer:" + SessionAI2.PulseSettingsAIPalMemoryBuffer);
-  aiSettings2Size = await getAI2Size();
   if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["OvermindInVisible"]);
   OvermindHidden = Vis.OvermindInVisible ?? false;
@@ -934,6 +927,17 @@ async function appendOvermindPrimeMessage(area, text) {
   area.scrollTop = area.scrollHeight;
   Pulse2safeStorageSet({ PulseSettingsAIPalMemoryBuffer });
 }
+
+async function PullMemoryPost() {
+  const SessionAI2 = await chrome.storage.local.get(["PulseSettingsAIPalMemoryBuffer"]);
+  PulseSettingsAIPalMemoryBuffer = SessionAI2.PulseSettingsAIPalMemoryBuffer ?? [];
+  PulseSettingsAIPalMemoryBuffer.forEach(push => { CompanionSettingsDetailsMessage.innerHTML += push; });
+  CompanionSettingsDetailsMessage.style.fontSize = "0.6rem";
+  CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
+  console.log("AI Memory Settings Buffer:" + SessionAI2.PulseSettingsAIPalMemoryBuffer);
+}
+
+setTimeout(PullMemoryPost, 150);
 
 
 // ============================================================================
