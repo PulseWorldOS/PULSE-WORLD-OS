@@ -803,7 +803,7 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
+      Realm Artifacts: <font color="${sizeColor}">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
@@ -891,7 +891,7 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="#0FF">${cache.entries}</font><br>
+      Realm Artifacts: <font color="${sizeColor}">${cache.entries}</font><br>
       Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
@@ -1007,7 +1007,7 @@ async function pbRenderStorageStats2(history) {
 
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
-  const syncMB = (aiSize / (1024 * 1024)).toFixed(2);
+  const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
   const swMB = (swSize / (1024 * 1024)).toFixed(2);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
@@ -1035,12 +1035,12 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 90) statusText = "Critical Load";
 
   // ⭐ Sync display formatting
-  let aisyncDisplay;
-  if (aiSize < 1024 * 1024) {
-     aisyncDisplay = syncKB + " KB";
-   } else {
-    aisyncDisplay = syncMB + " MB";
-   }
+  let aisyncDisplay = syncMB + " MB";
+  // if (aiSize < 1024 * 1024) {
+  //    aisyncDisplay = syncKB + " KB";
+  //  } else {
+  //   aisyncDisplay = syncMB + " MB";
+  //  }
   
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
@@ -1343,12 +1343,13 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
-  LocalMemoryLayerMB = (heap.usedJSHeapSize / 1024 / 1024).toFixed(1);
+  LocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
+  LocalMemoryLayerMB = OurLocalMemoryLayerMB.toFixed(2);
   
   return {
-    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(1) + " MB"
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(2) + " MB"
   };
 }
 
@@ -1398,14 +1399,6 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(async () => {
-  MyLocalMemoryLayer = getLocalMemoryLayer();
-  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    }
-  });
-  await pbRenderCacheList2();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -1434,6 +1427,14 @@ setInterval(async () => {
       disablesw.innerText = "Pause Companion";
     }
   });
+  MyLocalMemoryLayer = getLocalMemoryLayer();
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) {
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    }
+  });
+  await pbRenderCacheList2();
 }, 5000);
 
 async function gpuWarmExtra() {
@@ -4209,17 +4210,11 @@ function CheckBackTab() {
       pulseRehydrateTabs();
     }, 2700);
     gpuWarmExtra();
-    MyLocalMemoryLayer = getLocalMemoryLayer();
-    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
-      if (chrome.runtime.lastError) return;
-      if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-      }
-    });
   }
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden || document.visibilityState === "visible") {
+      gpuWarmExtra();
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
@@ -4255,10 +4250,8 @@ function CheckBackTab() {
       updateOverlay();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
-
       // Add a temporary class that breaks the stale GPU layer
       body.classList.add("pulse-gpu-reset");
-
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");

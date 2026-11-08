@@ -360,12 +360,13 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
-  OurLocalMemoryLayerMB = (heap.usedJSHeapSize / 1024 / 1024).toFixed(1);
+  OurLocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
+  OurLocalMemoryLayerMB = OurLocalMemoryLayerMB.toFixed(2);
   
   return {
-    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
-    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(1) + " MB"
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(2) + " MB"
   };
 }
 
@@ -597,9 +598,9 @@ async function gpuWarmExtra() {
   if (gpuEnabled === "GPU Driver Error") {
     vid.src = "PulseWorldOS-Older.mp4";
   }
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }
 
@@ -607,7 +608,7 @@ setInterval(() => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
-}, 1000);
+}, 2500);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
