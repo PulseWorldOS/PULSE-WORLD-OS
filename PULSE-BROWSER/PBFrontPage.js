@@ -1018,12 +1018,16 @@ async function pbRenderStorageStats2(history) {
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
   let percentColor2 = "lightgreen";
+  let percentColor3 = "lightgreen";
   if (percent >= 40) percentColor = "gold";
   if (percent >= 70) percentColor = "orange";
   if (percent >= 90) percentColor = "red";
   if (percent >= 40) percentColor2 = "gold";
   if (percent >= 70) percentColor2 = "orange";
   if (percent >= 90) percentColor2 = "red";
+  if (MyLocalMemoryLayerMB >= 25) percentColor3 = "gold";
+  if (MyLocalMemoryLayerMB >= 50) percentColor3 = "orange";
+  if (MyLocalMemoryLayerMB >= 75) percentColor3 = "red";
 
   // ⭐ Status text
   let statusText = "SAFE";
@@ -1110,7 +1114,7 @@ async function pbRenderStorageStats2(history) {
     <div style="margin: 8px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color="white">${MyLocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
+      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color=${percentColor3}>${MyLocalMemoryLayerMB} MB</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
 
       <div style="display:flex; gap:10px;">
 
