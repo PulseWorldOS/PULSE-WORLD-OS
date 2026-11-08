@@ -78,7 +78,7 @@ function PulsesafeStorageSet(dataObject) {
 
 async function getAI3Size() {
   try {
-    return new Blob([PulseSettingsAIPalMemoryBuffer]).size; // returns size in bytes
+    return new Blob([PulsePopupAIPalMemoryBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -212,10 +212,10 @@ async function appendPopupCompanionMessage(area, role, text) {
   const showTime = `[${ItsTime}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
-  PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
+  PulsePopupAIPalMemoryBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  PulsesafeStorageSet({ PulseSettingsAIPalMemoryBuffer });
+  PulsesafeStorageSet({ PulsePopupAIPalMemoryBuffer });
 }
 
 CompanionPopupConsoleSend.onclick = async () => {

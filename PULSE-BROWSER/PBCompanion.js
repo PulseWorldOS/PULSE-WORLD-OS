@@ -5,6 +5,7 @@
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
 let aiSize = 0;
+let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
 let activeRealmClaim = false;
 let authorityRealm = null;
@@ -1614,23 +1615,40 @@ function startWarmBootLoop() {
 
 startWarmBootLoop();
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   chrome.contextMenus.create({
     id: 'openSidePanel',
-    title: 'PulseBrowser Side Panel',
+    title: '🧠 PulseBrowser OS Panel',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'openSettings',
+    title: '🧠 PulseBrowser OS Settings',
     contexts: ['all']
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'openSidePanel') {
     // This will open the panel in all the pages on the current window.
+    chrome.sidePanel.setOptions({
+      tabId: tab.tabId,
+      path: "PBPopup.html",
+      enabled: true
+    });
+    chrome.sidePanel.open({ windowId: tab.windowId });
+  } else {
+    // This will open the panel in all the pages on the current window.
+    chrome.sidePanel.setOptions({
+      tabId: tab.tabId,
+      path: "PBSettings.html",
+      enabled: true
+    });
     chrome.sidePanel.open({ windowId: tab.windowId });
   }
 });
 
-let __PULSE_CACHE_FILE = null;
 
 function isValid(t) {
   return (

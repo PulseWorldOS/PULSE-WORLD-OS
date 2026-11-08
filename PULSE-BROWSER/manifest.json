@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "PulseBrowser OS",
-  "short_name": "PulseWorld",
-  "description": "PulseBrowser OS — Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness",
-  "version": "12.5.0",
+  "short_name": "PulseBrowser OS",
+  "description": "🧠 PulseBrowser OS — Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness",
+  "version": "13.1.0",
 
   "icons": {
     "16": "PulseWorldSplash512.png",
