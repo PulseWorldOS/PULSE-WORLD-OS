@@ -1637,12 +1637,12 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
   chrome.contextMenus.create({
     id: 'openSettings',
-    title: '🧠 PulseBrowser OS Settings',
+    title: '🌐 PulseBrowser OS Settings',
     contexts: ['all']
   });
   chrome.contextMenus.create({
     id: 'viewHUDOverlay',
-    title: '🧠 PulseBrowser OS HUD Display',
+    title: '📺 PulseBrowser OS HUD Display',
     contexts: ['all']
   });
 });
@@ -2492,6 +2492,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }
       }      
       sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean });
+      HelperHudBoolean = false;
       break;
     }
 
