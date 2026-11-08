@@ -18,6 +18,7 @@ let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
+let WeLocalMemoryLayer = {};
 let warmTargets = [];
 let now = new Date().toLocaleString();
 let lastFailURL = "https://www.pulseworld.net";
@@ -2039,6 +2040,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
       }
+      if (msg.OurLocalMemoryLayer) {
+        WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
+      }
+      LocalMemoryLayer = LocalMemoryLayer + WeLocalMemoryLayer;
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayer);
       sendResponse({ ok: true });
       break;

@@ -14,7 +14,7 @@ let OurLocalMemoryLayer = {};
 const PB_LOG4 = {
   info(label, data) {
     console.log(
-      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBContent][INFO][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#55BBFF; font-weight:bold;",
       data || ""
     );
@@ -22,7 +22,7 @@ const PB_LOG4 = {
 
   change(label, before, after) {
     console.groupCollapsed(
-      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBContent][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00FFAA; font-weight:bold;"
     );
     console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
@@ -32,7 +32,7 @@ const PB_LOG4 = {
 
   save(label, data) {
     console.log(
-      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBContent][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00DDFF; font-weight:bold;",
       data
     );
@@ -40,7 +40,7 @@ const PB_LOG4 = {
 
   load(label, data) {
     console.log(
-      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBContent][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FFD700; font-weight:bold;",
       data
     );
@@ -48,7 +48,7 @@ const PB_LOG4 = {
 
   event(label, data) {
     console.log(
-      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[PBContent][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FF55AA; font-weight:bold;",
       data
     );
@@ -410,8 +410,6 @@ function startWarmPath() {
     subtree: true
   });
   PBQuantumPrefetch.attachToDocument();
-  OurLocalMemoryLayer = getLocalMemoryLayer();
-  PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
 }
 
 // Unified warm function
@@ -597,8 +595,17 @@ async function gpuWarmExtra() {
   if (gpuEnabled === "GPU Driver Error") {
     vid.src = "PulseWorldOS-Older.mp4";
   }
+  OurLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }
+
+setInterval(() => {
+  OurLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
+}, 3000);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
