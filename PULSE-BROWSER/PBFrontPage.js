@@ -1458,9 +1458,11 @@ async function gpuWarmExtra() {
   if (gpuEnabled === "GPU Driver Error") {
     pbPulseScreen.src = "PulseWorldOS-Older.mp4";
   }
+  MyLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY" });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer });
 }
 
 setTimeout(gpuWarmExtra, 250);
@@ -1789,6 +1791,8 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
 
 // Re-render after everything
 setInterval(async () => {
+  MyLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   await pbRenderCacheList2();
 }, 8000);
 
@@ -3880,7 +3884,6 @@ let timerX = 0;
 document.getElementById("timerBtn").textContent = timerX;
 const sync = getSyncInterval2();
 setInterval(async () => {
-  MyLocalMemoryLayer = getLocalMemoryLayer();
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 20) {

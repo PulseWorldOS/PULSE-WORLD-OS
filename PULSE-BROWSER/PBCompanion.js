@@ -2036,7 +2036,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBCHECK_MEMORY":
-      LocalMemoryLayer = getLocalMemoryLayer();
+      if (msg.MyLocalMemoryLayer) {
+        LocalMemoryLayer = msg.MyLocalMemoryLayer;
+      }
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayer);
       sendResponse({ ok: true });
       break;

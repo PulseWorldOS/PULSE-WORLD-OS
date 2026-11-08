@@ -9,7 +9,51 @@ let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
+let OurLocalMemoryLayer = {};
 
+const PB_LOG4 = {
+  info(label, data) {
+    console.log(
+      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
 
 // 1. The Core Queue Engine
 class StorageQueue {
@@ -308,6 +352,21 @@ function warmCSSImages() {
   });
 }
 
+function getLocalMemoryLayer() {
+  if (!performance || !performance.memory) {
+    return { status: "Standard Engine Active" };
+  }
+
+  // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
+  const heap = performance.memory;
+  
+  return {
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
+    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(1) + " MB"
+  };
+}
+
 // Safe startup wrapper
 (async function safeWarmPathStart() {
   // Start immediately if DOM is already interactive or complete
@@ -351,6 +410,8 @@ function startWarmPath() {
     subtree: true
   });
   PBQuantumPrefetch.attachToDocument();
+  OurLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
 }
 
 // Unified warm function
