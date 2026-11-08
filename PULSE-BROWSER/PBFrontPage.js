@@ -1070,11 +1070,9 @@ async function pbRenderStorageStats2(history) {
       return;
     }
     if (response.totalUsed) totalUsed = response.totalUsed;
-    if (response.totalUsed) PB_LOG3.change("STORAGE_PASSOFF", totalUsed, response.totalUsed);
+    if (response.totalUsed) PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
     if (response.aiSettingsSize) aiSettingsSize = response.aiSettingsSize;
-    if (response.aiSettingsSize) PB_LOG3.change("STORAGE_PASSOFF", aiSettingsSize, response.aiSettingsSize);
-    if (response.aiPopupSize) aiPopupSize = response.aiPopupSize;
-    if (response.aiPopupSize) PB_LOG3.change("STORAGE_PASSOFF", aiPopupSize, response.aiPopupSize);
+    if (response.aiSettingsSize) PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
   });
 
   PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
