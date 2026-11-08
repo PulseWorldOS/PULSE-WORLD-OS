@@ -5,6 +5,7 @@
 let PulseRealm = {};
 let PulseRealmSettings = {};
 let lastFailURL = "https://www.pulseworld.net";
+let authorityRealm = null;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
@@ -194,6 +195,29 @@ document.getElementById("CompanionConsoleInput").addEventListener("keydown", asy
   }
 });
 
+async function initializeExoskeleton() {
+  aiPopupSession = await LanguageModel.create({
+    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
+  });
+}
+
+async function appendPopupCompanionMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  const bubblebr = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  const now = Date.now();
+  const ItsTime = new Date(now).toLocaleString();
+  const showTime = `[${ItsTime}]`;
+  bubblebr.innerHTML = `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
+  PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+  PulsesafeStorageSet({ PulseSettingsAIPalMemoryBuffer });
+}
+
 CompanionPopupConsoleSend.onclick = async () => {
   CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -233,6 +257,8 @@ CompanionPopupConsoleSend.onclick = async () => {
   ${rawPrompt}
 
   [PULSE PAL RESPONSE]:`;
+  if (authorityRealm) rawPrompt = "Please Read over this Snapshot of this Website and Tell me A little About it: " + authorityRealm;
+  if (authorityRealm) authorityRealm = null;
   let CompanionPopupTitle = document.getElementById("CompanionTitle");
   CompanionPopupTitle.style.marginBottom = "6px;"
   CompanionPopupTitle.style.textAlign = "center";
@@ -276,6 +302,7 @@ function saveCache() {
 }
 
 document.addEventListener("keydown", (e) => {
+  if ((e.target === CompanionPopupConsoleInput) || (e.target === CompanionPopupDetailsMessage)) return;
   pulseConsoleKey(e);
 });
 
@@ -1428,6 +1455,16 @@ function getReadableName(url) {
 //     write("PulseBrowser OS settings reset to defaults.");
 //   });
 // };
+setInterval(async () => {
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    
+    if (response.realm) {
+        authorityRealm = response.realm;
+    }
+  });
+}, 2000);
+
 const EXTENSION_SETTINGS_KEY3 = "pulseworldSettings";
 
 async function pbLoadExtensionSettings() {
@@ -1448,6 +1485,13 @@ async function loadWorld() {
   const streamIcon = document.getElementById("moduleStreamIcon");
   const socialIcon = document.getElementById("moduleSocialIcon");
   const shoppingIcon = document.getElementById("moduleShoppingIcon");
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    
+    if (response.realm) {
+        authorityRealm = response.realm;
+    }
+  });
   await CheckOvermindState();
   PulseRealmSettings = await pbLoadExtensionSettings();
 

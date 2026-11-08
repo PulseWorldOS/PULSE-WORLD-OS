@@ -14,7 +14,7 @@ let aiSettings2Size = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindSettingsCompanion");
-let CompanionSettingsConsoleSend = document.getElementById("consoleOvermindSettingsCompanionSend");
+let CompanionSettingsConsoleSend = document.getElementById("consoleSettingsOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
 const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn3");
 const earnerhelperApanel = document.getElementById("earner-helper-Settings-panel");
@@ -1023,15 +1023,15 @@ if (location.href.includes("PBSettings.html")) {
       }
     }, 2000);
     
-    document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
+    document.getElementById("CompanionSettingsConsoleInput").addEventListener("keydown", async (event) => {
       if (event.key === "Enter") {
         CompanionSettingsConsoleSend.click();
       }
     });
     
     CompanionSettingsConsoleSend.onclick = async () => {
-      CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindCompanion");
-      CompanionSettingsConsoleInput = document.getElementById("CompanionConsoleInput");
+      CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindSettingsCompanion");
+      CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
       const text = CompanionSettingsConsoleInput.value.trim();
       if (!text) return;
       if (!aiSettingsSession) {

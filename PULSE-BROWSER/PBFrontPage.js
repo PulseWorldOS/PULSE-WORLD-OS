@@ -310,7 +310,7 @@ async function initializeExoskeleton() {
 }
 
 // The Absolute Kill Switch Button
-function wipeMemory() {
+async function wipeMemory() {
   // 1. Hard destroy the local WebAssembly/Nano session in memory
   if (aiSession) {
     aiSession.destroy(); 
@@ -322,7 +322,7 @@ function wipeMemory() {
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
   
   // 3. Re-instantiate a clean slate
-  initializeExoskeleton();
+  await initializeExoskeleton();
 }
 
 // Compress text to a tiny binary array for local storage
@@ -1016,11 +1016,11 @@ async function pbRenderStorageStats2(history) {
 
   // ⭐ Sync display formatting
   let syncDisplay;
-  if (syncBytes < 1024 * 1024) {
-    syncDisplay = syncKB + " KB";
-  } else {
+  // if (syncBytes < 1024 * 1024) {
+  //   syncDisplay = syncKB + " KB";
+  // } else {
     syncDisplay = syncMB + " MB";
-  }
+  // }
   
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
@@ -1090,7 +1090,7 @@ async function pbRenderStorageStats2(history) {
 
         <div style="flex:1;">
           <strong>System Memory:</strong><br>
-          • <span style="color:lightgreen">${swKB} KB</span><br>
+          • <span style="color:lightgreen">${swMB} MB</span><br>
 
           <strong>Local Storage:</strong><br>
           • <span style="color:lightgreen">${totalMB} MB</span><br>
