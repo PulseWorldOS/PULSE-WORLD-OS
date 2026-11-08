@@ -702,7 +702,7 @@ async function pbRenderCacheList2() {
   if (!listEl) return;
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
-  
+  MyLocalMemoryLayer = getLocalMemoryLayer();
   if (!result || (!result.caches && !result.pulsecaches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
@@ -1104,7 +1104,7 @@ async function pbRenderStorageStats2(history) {
     <div style="margin: 8px 20px; padding:8px; border-radius:8px;
                 background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <strong><font color="#FF8844">PulseBrowser OS (RAM)</font> «<font color="white">${MyLocalMemoryLayer.usedHeapMB}</font>»</strong><br><br>
+      <strong><font color="#FF8844">PulseBrowser OS </font> «<font color="white">${MyLocalMemoryLayer.usedHeapMB}</font>» <font color="#FF8844">(RAM)</font></strong><br><br>
 
       <div style="display:flex; gap:10px;">
 
@@ -1398,6 +1398,7 @@ setInterval(() => {
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
   });
+  MyLocalMemoryLayer = getLocalMemoryLayer();
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
@@ -1529,6 +1530,7 @@ function collectAndWarmAssetsFront() {
     type: "PBACC_DECODEWARM",
     count: decodeCount
   });
+  MyLocalMemoryLayer = getLocalMemoryLayer();
 }
 
 setTimeout(collectAndWarmAssetsFront, 1000);
@@ -1791,7 +1793,6 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
 
 // Re-render after everything
 setInterval(async () => {
-  MyLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   await pbRenderCacheList2();
 }, 8000);
@@ -4142,6 +4143,7 @@ function CheckBackTab() {
       pulseRehydrateTabs();
     }, 2700);
     gpuWarmExtra();
+    MyLocalMemoryLayer = getLocalMemoryLayer();
   }
 
   document.addEventListener("visibilitychange", () => {
