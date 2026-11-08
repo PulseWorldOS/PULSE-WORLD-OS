@@ -9,6 +9,7 @@ let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+let MyLocalMemoryLayer = {};
 let socialMode = "Internal";
 let OvermindOrders = null;
 let EarnHidden = false;
@@ -148,7 +149,7 @@ async function runLocalAI() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
         }
@@ -213,7 +214,7 @@ ${rawPrompt}
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
       }
@@ -254,7 +255,7 @@ async function appendCompanionMessage(area, role, text) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
@@ -293,7 +294,7 @@ CompanionConsoleSend.onclick = async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
@@ -1325,6 +1326,21 @@ function injectPulseScreenFromMemory(play) {
   });
 }
 
+function getLocalMemoryLayer() {
+  if (!performance || !performance.memory) {
+    return { status: "Standard Engine Active" };
+  }
+
+  // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
+  const heap = performance.memory;
+  
+  return {
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
+    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(1) + " MB"
+  };
+}
+
 async function pulseGPUInspector(adapter, device) {
   // Acquire adapter
   if (!adapter) adapter = await navigator.gpu?.requestAdapter();
@@ -1377,7 +1393,7 @@ setInterval(() => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
@@ -3864,7 +3880,7 @@ let timerX = 0;
 document.getElementById("timerBtn").textContent = timerX;
 const sync = getSyncInterval2();
 setInterval(async () => {
-  aiSize = await getAISize();
+  MyLocalMemoryLayer = getLocalMemoryLayer();
   timerX++;
   document.getElementById("timerBtn").textContent = timerX;
   if (!userInteracted && timerX === 20) {
