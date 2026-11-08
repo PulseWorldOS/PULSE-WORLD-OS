@@ -740,7 +740,7 @@ async function pbRenderCacheList2() {
   const history = await new Promise(resolve =>
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );
-  MyLocalMemoryLayer = getLocalMemoryLayer();
+  
   const statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
   if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
@@ -1024,9 +1024,9 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 40) percentColor2 = "gold";
   if (percent >= 70) percentColor2 = "orange";
   if (percent >= 90) percentColor2 = "red";
-  if (MyLocalMemoryLayerMB >= 25) percentColor3 = "gold";
-  if (MyLocalMemoryLayerMB >= 50) percentColor3 = "orange";
-  if (MyLocalMemoryLayerMB >= 75) percentColor3 = "red";
+  if (MyLocalMemoryLayerMB >= 35) percentColor3 = "gold";
+  if (MyLocalMemoryLayerMB >= 60) percentColor3 = "orange";
+  if (MyLocalMemoryLayerMB >= 85) percentColor3 = "red";
 
   // ⭐ Status text
   let statusText = "SAFE";
@@ -1397,6 +1397,7 @@ async function pulseGPUInspector(adapter, device) {
 
 // Optional: Real-time heartbeat
 setInterval(async () => {
+  MyLocalMemoryLayer = getLocalMemoryLayer();
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
@@ -4120,6 +4121,7 @@ function CheckBackTab() {
       settings.acceleratedModule6Link
     ].filter(u => u && u.startsWith("http"));
 
+    MyLocalMemoryLayer = getLocalMemoryLayer();
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) {
