@@ -148,8 +148,10 @@ async function runLocalAI() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.PulsePalMemoryAIBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-        if (response.PulsePalMemoryAIBuffer) PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
       });
       
       // 1. Initialize the session using the modern nested outputs architecture
@@ -211,8 +213,10 @@ ${rawPrompt}
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      if (response.PulsePalMemoryAIBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-      if (response.PulsePalMemoryAIBuffer) PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+        PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+        PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
     });
     RunningAI = false;
 
@@ -250,8 +254,10 @@ async function appendCompanionMessage(area, role, text) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulsePalMemoryAIBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-    if (response.PulsePalMemoryAIBuffer) PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
   });
 }
 
@@ -287,8 +293,10 @@ CompanionConsoleSend.onclick = async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulsePalMemoryAIBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-    if (response.PulsePalMemoryAIBuffer) PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
   });
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
@@ -1069,12 +1077,18 @@ async function pbRenderStorageStats2(history) {
       PB_LOG3.info("STORAGE_PASSOFF unavailable or error", response);
       return;
     }
-    if (response.totalUsed) totalUsed = response.totalUsed;
-    if (response.totalUsed) PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
-    if (response.aiSettingsSize) aiSettingsSize = response.aiSettingsSize;
-    if (response.aiSettingsSize) PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
-    if (response.aiPopupSize) aiPopupSize = response.aiPopupSize;
-    if (response.aiPopupSize) PB_LOG3.change("STORAGE_PASSOFF: aiPopupSize", aiPopupSize, response.aiPopupSize);
+    if (response.totalUsed && (totalUsed !== response.totalUsed)) {
+      totalUsed = response.totalUsed;
+      PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
+    }
+    if (response.aiSettingsSize && (aiSettingsSize !== response.aiSettingsSize)) {
+      aiSettingsSize = response.aiSettingsSize;
+      PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
+    }
+    if (response.aiPopupSize && (aiPopupSize !== response.aiPopupSize)) {
+      aiPopupSize = response.aiPopupSize;
+      PB_LOG3.change("STORAGE_PASSOFF: aiPopupSize", aiPopupSize, response.aiPopupSize);
+    }
   });
 
   PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
@@ -1363,8 +1377,10 @@ setInterval(() => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.PulsePalMemoryAIBuffer) PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-    if (response.PulsePalMemoryAIBuffer) PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer !== response.PulsePalMemoryAIBuffer)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");

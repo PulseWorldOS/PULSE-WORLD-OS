@@ -201,8 +201,10 @@ function loadOrders(aiPopupSize) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.OvermindOrders) PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
-    if (response.OvermindOrders) OvermindPopupOrders = response.OvermindOrders;
+    if (response.OvermindOrders) {
+      OvermindPopupOrders = response.OvermindOrders;
+      PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
+    }
   });
 }
 

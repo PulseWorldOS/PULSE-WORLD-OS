@@ -2448,7 +2448,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             PulseRealmState.sessionStart = new Date(incoming).toLocaleString();
             nowSW = incoming;
             safeStorageSet({ SessionStart: nowSW });
-            PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current.toLocaleString(), PulseRealmState.sessionStart);
+            if (current.toLocaleString() !== PulseRealmState.sessionStart) {
+              PB_LOG2.change("PULSE_OS_SESSION_EVOLVE", current.toLocaleString(), PulseRealmState.sessionStart);
+            }
           }
         }
       }      
