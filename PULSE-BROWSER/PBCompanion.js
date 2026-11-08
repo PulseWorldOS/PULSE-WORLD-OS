@@ -2042,12 +2042,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCHECK_MEMORY":
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
-        LocalMemoryLayerMB = msg.MyLocalMemoryLayer.usedHeapMB;
+        LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
       }
+      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
       if (msg.OurLocalMemoryLayer) {
         WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
         WeLocalMemoryLayerMB = msg.OurLocalMemoryLayer.usedHeapMB;
-        LocalMemoryLayerMB = LocalMemoryLayerMB.replace(" MB", "") + WeLocalMemoryLayerMB.replace(" MB", "");
+        PB_LOG2.info("PBCHECK_MEMORY:WE", WeLocalMemoryLayerMB);
+        LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
       }
       PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
       sendResponse({ ok: true });

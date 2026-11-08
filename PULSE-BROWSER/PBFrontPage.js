@@ -1031,7 +1031,12 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 90) statusText = "Critical Load";
 
   // ⭐ Sync display formatting
-  let aisyncDisplay = syncMB + " MB";
+  let aisyncDisplay;
+  if (aiSize < 1024 * 1024) {
+     aisyncDisplay = syncKB + " KB";
+   } else {
+    aisyncDisplay = syncMB + " MB";
+   }
   
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
@@ -1333,7 +1338,6 @@ function getLocalMemoryLayer() {
 
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
-  MyLocalMemoryLayerMB = (heap.usedJSHeapSize / 1024 / 1024).toFixed(1);
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(1) + " MB",
