@@ -607,7 +607,7 @@ setInterval(() => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
-}, 3000);
+}, 1000);
 
 async function injectHUD() {
   // const STREAMING_SITES = [

@@ -1074,30 +1074,31 @@ async function pbRenderStorageStats2(history) {
     }
   }
 
-  // ⭐ Save new history snapshot
-  PulsesafeStorageSet({
-    pulseStorageHistory: {
-      lastCheck: GLOBALSTART ?? nowFP,
-      lastUsed: totalUsed
-    }
-  });
-
   chrome.runtime.sendMessage({ type: "STORAGE_PASSOFF", totalUsed }, (response) => {
     if (!response || !response.ok) {
       PB_LOG3.info("STORAGE_PASSOFF unavailable or error", response);
       return;
     }
-    if (response.totalUsed && (totalUsed !== response.totalUsed)) {
+    if (response.totalUsed) {
       totalUsed = response.totalUsed;
       PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
     }
-    if (response.aiSettingsSize && (aiSettingsSize !== response.aiSettingsSize)) {
+    if (response.aiSettingsSize) {
       aiSettingsSize = response.aiSettingsSize;
       PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
     }
-    if (response.aiPopupSize && (aiPopupSize !== response.aiPopupSize)) {
+    if (response.aiPopupSize) {
       aiPopupSize = response.aiPopupSize;
       PB_LOG3.change("STORAGE_PASSOFF: aiPopupSize", aiPopupSize, response.aiPopupSize);
+    }
+  });
+
+  
+  // ⭐ Save new history snapshot
+  PulsesafeStorageSet({
+    pulseStorageHistory: {
+      lastCheck: GLOBALSTART ?? nowFP,
+      lastUsed: totalUsed
     }
   });
 
@@ -1416,7 +1417,6 @@ setInterval(async () => {
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
   });
-  MyLocalMemoryLayer = getLocalMemoryLayer();
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
@@ -1477,10 +1477,10 @@ async function gpuWarmExtra() {
   if (gpuEnabled === "GPU Driver Error") {
     pbPulseScreen.src = "PulseWorldOS-Older.mp4";
   }
-  MyLocalMemoryLayer = getLocalMemoryLayer();
-  PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+  MyLocalMemoryLayer = getLocalMemoryLayer();
+  PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) {
@@ -1685,6 +1685,13 @@ async function openNamedTab(name, url) {
     pulseRehydrateTabs();
   }, 2000);
   setTimeout(async () => {
+    MyLocalMemoryLayer = getLocalMemoryLayer();
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) {
+          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      }
+    });
     await pbRenderCacheList2();
   }, 2500);
 }
@@ -2365,6 +2372,13 @@ async function pbModuleWarmBoot() {
     "%c[PBAccelerator] Module Warm-Boot executed",
     "color:#00C8FF; font-weight:bold;"
   );
+  MyLocalMemoryLayer = getLocalMemoryLayer();
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) {
+        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    }
+  });
   await pbRenderCacheList2();
 }
 
@@ -3838,6 +3852,13 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
   // Re-render after everything
   setTimeout(async () => {
+    MyLocalMemoryLayer = getLocalMemoryLayer();
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) {
+          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      }
+    });
     await pbRenderCacheList2();
   }, 500);
 });
@@ -4189,6 +4210,12 @@ function CheckBackTab() {
     }, 2700);
     gpuWarmExtra();
     MyLocalMemoryLayer = getLocalMemoryLayer();
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) {
+          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      }
+    });
   }
 
   document.addEventListener("visibilitychange", () => {

@@ -1084,6 +1084,10 @@ function isFavicon(origin) {
   return origin.includes("favicon");
 }
 
+function isChrome(origin) {
+  return origin.includes("chrome:");
+}
+
 function isPulseWorld(origin) {
   return origin.includes("pulseworld.net")
       || origin.includes("orbitalmap.net")
@@ -1102,6 +1106,7 @@ function isPulseWorld(origin) {
 function pbDomainClass(url) {
   if (isPulseWorld(url)) return "PulseWorld";
   if (IsPartner(url)) return "Partner";
+  if (isChrome(url)) return "Chrome";
   let warmclass = false;
   if (warmTargets.length > 0) {
     warmTargets.forEach(origin => {
