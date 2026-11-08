@@ -1820,7 +1820,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.aiPopupSize) {
         aiPopupSize = msg.aiPopupSize;
       }
-      aiSettingsSize = aiSettingsSize + aiPopupSize;
       sendResponse({ ok: true, OvermindOrders });
       OvermindOrders = null;
       break;
@@ -2527,7 +2526,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "STORAGE_PASSOFF":
       if (msg.totalUsed) {
         totalUsed = msg.totalUsed;
-        sendResponse({ ok: true, totalUsed, aiSettingsSize });
+        sendResponse({ ok: true, totalUsed, aiSettingsSize, aiPopupSize });
       }
       break;
     // -------------------------------------------------------
