@@ -20,6 +20,7 @@ let keyHoldTimer = null;
 let keyHold2Timer = null;
 let aiSize = 0;
 let aiSettingsSize = 0;
+let aiPopupSize = 0;
 let swSize = 0;
 // Your cybernetic state architecture
 let aiSession = null;
@@ -985,6 +986,7 @@ async function pbRenderStorageStats2(history) {
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
   aiSize = syncBytes + aiSize;
   if (aiSettingsSize) aiSize = aiSize + aiSettingsSize;
+  if (aiPopupSize) aiSize = aiSize + aiPopupSize;
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
   const percent = ((totalUsed / localQuota) * 100).toFixed(2);
@@ -1070,6 +1072,7 @@ async function pbRenderStorageStats2(history) {
     PB_LOG3.change("STORAGE_PASSOFF", totalUsed, response.totalUsed);
     totalUsed = response.totalUsed;
     if (response.aiSize) aiSettingsSize = response.aiSize;
+    if (response.aiPopupSize) aiPopupSize = response.aiPopupSize;
   });
 
   PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);

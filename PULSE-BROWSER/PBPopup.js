@@ -189,6 +189,18 @@ async function CheckOvermindState() {
   };
 }
 
+// Utility: load settings
+function loadOrders(aiPopupSize) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiPopupSize }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.OvermindOrders) PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
+    if (response.OvermindOrders) OvermindPopupOrders = response.OvermindOrders;
+  });
+}
 
 async function initializeExoskeleton() {
   aiPopupSession = await LanguageModel.create({
@@ -1447,6 +1459,26 @@ function getReadableName(url) {
   }
 }
 
+setInterval(async () => {
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    
+    if (response.realm) {
+        authorityRealm = response.realm;
+    }
+  });
+  aiPopupSize = await getAI3Size();
+  loadOrders(aiPopupSize);
+  if (OvermindPopupOrders) {
+    appendPopupCompanionMessage(CompanionPopupDetailsMessage, OvermindPopupOrders);
+    const response = await aiPopupSession.prompt(OvermindPopupOrders);
+    console.log("🧠 AI Overmind: ", response);
+    setTimeout(async () => {
+      appendPopupCompanionMessage(CompanionPopupDetailsMessage, response);
+    }, 300);
+    OvermindPopupOrders = null;
+  }
+}, 2000);
 // // ---------------------------------------------------------------------------
 // // BUTTON: Reset OS Settings
 // // ---------------------------------------------------------------------------
@@ -1456,15 +1488,7 @@ function getReadableName(url) {
 //     write("PulseBrowser OS settings reset to defaults.");
 //   });
 // };
-setInterval(async () => {
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
-    if (chrome.runtime.lastError) return;
-    
-    if (response.realm) {
-        authorityRealm = response.realm;
-    }
-  });
-}, 2000);
+
 
 const EXTENSION_SETTINGS_KEY3 = "pulseworldSettings";
 

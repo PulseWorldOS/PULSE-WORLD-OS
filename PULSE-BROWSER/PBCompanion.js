@@ -4,7 +4,8 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 let nowSW = Date.now(); // numeric timestamp
-let aiSize = 0;
+let aiSettingsSize = 0;
+let aiPopupSize = 0;
 let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
 let activeRealmClaim = false;
@@ -1813,8 +1814,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PB_GATHER_ORDERS":
-      if (msg.aiSize) {
-        aiSize = msg.aiSize;
+      if (msg.aiSettings2Size) {
+        aiSettingsSize = msg.aiSettings2Size;
+      }
+      if (msg.aiPopupSize) {
+        aiPopupSize = msg.aiPopupSize;
       }
       sendResponse({ ok: true, OvermindOrders });
       OvermindOrders = null;
@@ -2522,7 +2526,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "STORAGE_PASSOFF":
       if (msg.totalUsed) {
         totalUsed = msg.totalUsed;
-        sendResponse({ ok: true, totalUsed, aiSize });
+        sendResponse({ ok: true, totalUsed, aiSettingsSize, aiPopupSize });
       }
       break;
     // -------------------------------------------------------
