@@ -8,6 +8,7 @@ let aiSettingsSize = 0;
 let aiPopupSize = 0;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
+let TakeOfflineSnapshot = false;
 let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
@@ -1653,6 +1654,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '📺 PulseBrowser OS HUD Display',
     contexts: ['all']
   });
+  chrome.contextMenus.create({
+    id: 'attemptOfflineSnapshot',
+    title: '🔍 PulseBrowser OS Offline Snapshot',
+    contexts: ['all']
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -1674,6 +1680,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     chrome.sidePanel.open({ windowId: tab.windowId });
   } else if (info.menuItemId === 'viewHUDOverlay') {
     HelperHudBoolean = true;
+  } else if (info.menuItemId === 'attemptOfflineSnapshot') {
+    TakeOfflineSnapshot = true;
   }
 });
 
@@ -1879,7 +1887,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           ServiceWorkerOnline = res.ServiceWorkerOnline;
         }
       });
-      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage });
+      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, TakeOfflineSnapshot });
+      TakeOfflineSnapshot = false;
       return true;
     
     case "PBEXTSETTINGS_GET":
