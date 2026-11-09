@@ -2066,6 +2066,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
         WeLocalMemoryLayerMBackup = WeLocalMemoryLayerMB;
       }
+      if (msg.override) HelperHudBoolean = true;
       if (msg.MyLocalMemoryLayer) {
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
@@ -2497,7 +2498,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             }
           }
         }
-      }      
+      }
       sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean });
       HelperHudBoolean = false;
       break;

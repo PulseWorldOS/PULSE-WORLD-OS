@@ -1605,6 +1605,7 @@ function getNextInstanceIndex() {
 async function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
   name = identity;
+  const override = true;
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
   MyLocalMemoryLayer = getLocalMemoryLayer();
@@ -1618,7 +1619,7 @@ async function openNamedTab(name, url) {
     if (!Number.isInteger(tabId)) {
       
       chrome.tabs.create({ url }, newTab => {
-        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
           if (chrome.runtime.lastError) return;
           if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
           if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1632,7 +1633,7 @@ async function openNamedTab(name, url) {
 
       setTimeout(async () => {
         MyLocalMemoryLayer = getLocalMemoryLayer();
-        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
           if (chrome.runtime.lastError) return;
           if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
           if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1651,7 +1652,7 @@ async function openNamedTab(name, url) {
         chrome.tabs.update(tabId, { url, active: true }, updated => {
           if (chrome.runtime.lastError || !updated) {
             chrome.tabs.create({ url }, newTab => {
-              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
                 if (chrome.runtime.lastError) return;
                 if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
                 if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1665,7 +1666,7 @@ async function openNamedTab(name, url) {
 
             setTimeout(async () => {
               MyLocalMemoryLayer = getLocalMemoryLayer();
-              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
                 if (chrome.runtime.lastError) return;
                 if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
                 if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1679,7 +1680,7 @@ async function openNamedTab(name, url) {
             return;
           }
 
-          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
             if (chrome.runtime.lastError) return;
             if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
             if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1693,7 +1694,7 @@ async function openNamedTab(name, url) {
 
         setTimeout(async () => {
           MyLocalMemoryLayer = getLocalMemoryLayer();
-          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
             if (chrome.runtime.lastError) return;
             if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
             if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1712,7 +1713,7 @@ async function openNamedTab(name, url) {
         tabs: [tab.index]
       });
 
-      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
         if (chrome.runtime.lastError) return;
         if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
         if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1726,7 +1727,7 @@ async function openNamedTab(name, url) {
 
     setTimeout(async () => {
       MyLocalMemoryLayer = getLocalMemoryLayer();
-      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
         if (chrome.runtime.lastError) return;
         if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
         if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1742,7 +1743,7 @@ async function openNamedTab(name, url) {
 
   // ⭐ No existing tab → create new
   chrome.tabs.create({ url }, tab => {
-    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
       if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
@@ -1756,7 +1757,7 @@ async function openNamedTab(name, url) {
   
   setTimeout(async () => {
     MyLocalMemoryLayer = getLocalMemoryLayer();
-    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
       if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
