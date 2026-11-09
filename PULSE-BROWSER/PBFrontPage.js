@@ -1298,12 +1298,12 @@ function loadLastSavedVideo(callback) {
 }
 
 function getCharacterInterval() {
-  const base = 5200;
+  const base = 5150;
   return base;
 }
 
 function getMainInterval() {
-  const base = 8100;
+  const base = 8075;
   return base;
 }
 
@@ -4262,6 +4262,7 @@ function CheckBackTab() {
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
+        pulseRehydrateTabs();
         startPulseLoop();
       });
     } else {
