@@ -335,7 +335,7 @@ ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
-    const response = await aiSession.prompt(wrappedPrompt);
+    const response = await PromptMeAI(wrappedPrompt);
     
     console.log("🧠 AI Overmind:", response);
     
@@ -413,6 +413,10 @@ document.getElementById("CompanionConsoleInput").addEventListener("keydown", asy
   }
 });
 
+async function PromptMeAI(prompt) {
+  return await aiSession.prompt(prompt);
+}
+
 CompanionConsoleSend.onclick = async () => {
   CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -427,7 +431,7 @@ CompanionConsoleSend.onclick = async () => {
   } else {
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
   }
-  const response = await aiSession.prompt(order);
+  const response = await PromptMeAI(order);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
