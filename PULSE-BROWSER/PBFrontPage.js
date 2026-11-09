@@ -4029,6 +4029,8 @@ function CheckBackTab() {
       swap();
       pulseRehydrateTabs(); // safe now
     }, interval);
+
+    setTimeout(pulseRehydrateTabs, 2000);
   }
 
   function stopPulseLoop() {
@@ -4255,7 +4257,6 @@ function CheckBackTab() {
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
-        setTimeout(pulseRehydrateTabs, 2000);
         startPulseLoop();
       });
     } else {

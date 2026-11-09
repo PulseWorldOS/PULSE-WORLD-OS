@@ -1618,13 +1618,19 @@ function startWarmBootLoop() {
     } catch (_) {}
 
     const interval = getWarmInterval();
-    console.log("[PBWarmBootLoop] Next warm in", interval, "ms");
+    PB_LOG2.info("[PBWarmBootLoop] Next warm in" + interval + "ms");
 
     setTimeout(loop, interval);
   }
 
   setTimeout(loop, 600);
 }
+
+function TestingSequence() {
+  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep! :D");
+}
+
+setInterval(TestingSequence, 2000);
 
 startWarmBootLoop();
 
