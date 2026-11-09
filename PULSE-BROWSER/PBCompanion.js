@@ -8,7 +8,7 @@ let aiSettingsSize = 0;
 let aiPopupSize = 0;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
-let CompanionNarcolepsy = true;
+let CompanionDeprivation = false;
 let TakeOfflineSnapshot = false;
 let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
@@ -1828,7 +1828,7 @@ async function runProtectedCompute(computeTaskFunction) {
   try {
     // 1. Lock the system right on that invisible line before the execution
     if (chrome && chrome.power) {
-      CompanionNarcolepsy = false;
+      CompanionDeprivation = true;
       chrome.power.requestKeepAwake("system");
       console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
@@ -1843,7 +1843,7 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && CompanionNarcolepsy) {
+    if ((chrome && chrome.power) && !CompanionDeprivation) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }
@@ -1917,9 +1917,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     
     case "PB_COMPANION_CHECK":
       if (msg.pulseTabs) pulseTabs = msg.pulseTabs;
-      if (msg.CompanionNarcolepsy) {
-        CompanionNarcolepsy = msg.CompanionNarcolepsy;
-        if (!CompanionMessage) {
+      if (msg.CompanionDeprivation) {
+        CompanionDeprivation = msg.CompanionDeprivation;
+        if (!CompanionDeprivation) {
           CompanionMessage = "Always Learning and Thriving..";
         } else {
           CompanionMessage = "Pulse Earning Narcolepsy Engaged!";

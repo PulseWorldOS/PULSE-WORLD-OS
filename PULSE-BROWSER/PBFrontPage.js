@@ -11,7 +11,7 @@ let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-let CompanionNarcolepsy = true;
+let CompanionDeprivation = false;
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
@@ -196,7 +196,7 @@ async function runProtectedCompute(computeTaskFunction) {
   try {
     // 1. Lock the system right on that invisible line before the execution
     if (chrome && chrome.power) {
-      CompanionNarcolepsy = false;
+      CompanionDeprivation = true;
       chrome.power.requestKeepAwake("system");
       console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
@@ -211,7 +211,7 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && CompanionNarcolepsy) {
+    if ((chrome && chrome.power) && !CompanionDeprivation) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }
@@ -1515,7 +1515,7 @@ setInterval(async () => {
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionNarcolepsy }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
@@ -2631,7 +2631,7 @@ async function updateModuleIcons(settings, browser) {
       ServiceWorkerOnline = res.ServiceWorkerOnline;
     }
   });
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionNarcolepsy }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
@@ -4436,7 +4436,7 @@ function CheckBackTab() {
         }
       });
       gpuWarmExtra();
-      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionNarcolepsy }, (response) => {
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           return;
