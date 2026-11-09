@@ -1169,7 +1169,7 @@ function pulseRestoreTabs() {
 }
 
 
-async function pulseRehydrateTabs() {
+async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
   if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
   let skipcount = 0;
@@ -1194,6 +1194,7 @@ async function pulseRehydrateTabs() {
             id: tab.id,
             realm: identity,
             snapshot: null,
+            memory: MyLocalMemoryLayerMB
           };
           if (identity !== "newtab") skipcount += 1;
           if (identity !== "newtab") renderTemporary(true, skipcount, identity, tab.url);
@@ -1201,12 +1202,13 @@ async function pulseRehydrateTabs() {
         }
 
         // ⭐ Normal tab → assign bubble
-        latestSnapshot(identity, urlObj, snapIndex);
+        latestSnapshot(identity, urlObj, snapIndex, WeLocalMemoryLayerMB);
 
         rebuilt[identity] = {
           id: tab.id,
           realm: identity,
-          snapshot: snapIndex
+          snapshot: snapIndex,
+          memory: WeLocalMemoryLayerMB
         };
 
         snapIndex++;
@@ -1224,7 +1226,7 @@ async function pulseRehydrateTabs() {
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   let originalTabId = tabs[0].id;
   PulsesafeStorageSet({ originalTabId });
-  pulseRehydrateTabs();
+  pulseRehydrateTabs(WeLocalMemoryLayerMB);
 });
 
 // ---------------------------------------------------------------------------
@@ -1572,6 +1574,7 @@ setTimeout(collectAndWarmAssetsFront, 1000);
 
 function savePulseTabs(WeLocalMemoryLayerMB) {
   console.log("Snapshot Memory Save: ", WeLocalMemoryLayerMB);
+  PB_LOG3.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   PulsesafeStorageSet({ pulseTabs });
 }
 
@@ -1648,7 +1651,7 @@ async function openNamedTab(name, url) {
       });
       
       setTimeout(() => {
-        pulseRehydrateTabs();
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
       }, 2000);
       return;
     }
@@ -1689,7 +1692,7 @@ async function openNamedTab(name, url) {
             });
             
             setTimeout(() => {
-              pulseRehydrateTabs();
+              pulseRehydrateTabs(WeLocalMemoryLayerMB);
             }, 2000);
             return;
           }
@@ -1725,7 +1728,7 @@ async function openNamedTab(name, url) {
         });
         
         setTimeout(() => {
-          pulseRehydrateTabs();
+          pulseRehydrateTabs(WeLocalMemoryLayerMB);
         }, 2000);
         return;
       }
@@ -1766,7 +1769,7 @@ async function openNamedTab(name, url) {
     });
     
     setTimeout(() => {
-      pulseRehydrateTabs();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
     }, 2000);
     return;
   }
@@ -1804,11 +1807,11 @@ async function openNamedTab(name, url) {
   });
   
   setTimeout(() => {
-    pulseRehydrateTabs();
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
   }, 2000);
 }
 
-function latestSnapshot(realm, link, snapIndex) {
+function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
   const snapshotKey = `pulse_snapshot_${realm}`;
   // let TempLink = false;
   // temporaryLinks.forEach((origin) => {
@@ -1817,7 +1820,7 @@ function latestSnapshot(realm, link, snapIndex) {
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
     if (snap) {
-      renderSnapshot(snap, snapIndex, realm, link);
+      renderSnapshot(snap, snapIndex, realm, link, WeLocalMemoryLayerMB);
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
@@ -1825,7 +1828,7 @@ function latestSnapshot(realm, link, snapIndex) {
   });
 }
 
-async function renderSnapshot(snapshot, snapIndex, realm, link) {
+async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLayerMB) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
@@ -1838,6 +1841,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
 
       const regfavicon = await getFavicon(realm);
       const favicon = snapshot.regfavicon ?? regfavicon;
+      const MemoryLayer = WeLocalMemoryLayerMB;
       let bestfavicon = favicon;
       if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
       const osfallback = chrome.runtime.getURL("PulseOSTab.png");
@@ -1847,7 +1851,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${bestfavicon}"
-               alt="favicon">
+               alt="${MemoryLayer} MB">
         </div>
       `;
 
@@ -1866,7 +1870,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link) {
 
   } else {
     topPanel.classList.add("electrify");
-    pulseRehydrateTabs();
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
 
     const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
 
@@ -1929,7 +1933,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
     }
 
   } else {
-    pulseRehydrateTabs();
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
   }
 
   if (div) {
@@ -1979,7 +1983,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     }
   }
   
-  pulseRehydrateTabs();
+  pulseRehydrateTabs(WeLocalMemoryLayerMB);
   try {
     backToOriginal();
   } catch (err) {}
@@ -4044,7 +4048,7 @@ window.addEventListener("blur", () => {
   userInteracted = true;
   document.getElementById("subtitle").style.color = "yellow";
   document.getElementById("subsubtitle").style.color = "yellow";
-  // pulseRehydrateTabs();
+  // pulseRehydrateTabs(WeLocalMemoryLayerMB);
   // injectPulseScreenFromMemory();
 }, { once: true });
 
@@ -4101,7 +4105,7 @@ function CheckBackTab() {
       pbPulseScreen.currentTime = 0;
       pbPulseScreen.play = false;
       injectPulseScreenFromMemory();
-      pulseRehydrateTabs();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
     }, interval3);
 
   
@@ -4135,7 +4139,7 @@ function CheckBackTab() {
     intervalId = setInterval(() => {
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
-      pulseRehydrateTabs(); // safe now
+      pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
@@ -4330,7 +4334,7 @@ function CheckBackTab() {
     topPanel.classList.add('electrify');
     setTimeout(() => {
       topPanel.classList.remove('electrify');
-      pulseRehydrateTabs();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
     }, 2700);
     gpuWarmExtra();
   }
@@ -4368,7 +4372,7 @@ function CheckBackTab() {
         pbPulseScreen.currentTime = 0;
         pbPulseScreen.play = false;
         injectPulseScreenFromMemory();
-        pulseRehydrateTabs();
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
       }, interval3);
       updateOverlay();
       // Force Chrome to rebuild the GPU layer
@@ -4378,7 +4382,7 @@ function CheckBackTab() {
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
-        pulseRehydrateTabs();
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
         startPulseLoop();
       });
     } else {
