@@ -1488,7 +1488,7 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   MyLocalMemoryLayer = getLocalMemoryLayer();
-  PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
+  PB_LOG3.info("PBCHECK_MEMORY: SYSTEM->MAINTAB", MyLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1625,6 +1625,7 @@ async function openNamedTab(name, url) {
           if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
         });
         pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+        console.log(pulseTabs[identity]);
         savePulseTabs(WeLocalMemoryLayerMB);
       });
 
@@ -1665,6 +1666,7 @@ async function openNamedTab(name, url) {
                 if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
               });
               pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+              console.log(pulseTabs[identity]);
               savePulseTabs(WeLocalMemoryLayerMB);
             });
 
@@ -1700,6 +1702,7 @@ async function openNamedTab(name, url) {
             if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
           });
           pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+          console.log(pulseTabs[identity]);
           savePulseTabs(WeLocalMemoryLayerMB);
         });
 
@@ -1740,6 +1743,7 @@ async function openNamedTab(name, url) {
         if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
       });
       pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+      console.log(pulseTabs[identity]);
       savePulseTabs(WeLocalMemoryLayerMB);
     });
 
@@ -1777,6 +1781,7 @@ async function openNamedTab(name, url) {
       if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
     });
     pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+    console.log(pulseTabs[identity]);
     savePulseTabs(WeLocalMemoryLayerMB);
   });
 

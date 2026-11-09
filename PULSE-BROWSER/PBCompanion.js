@@ -2073,12 +2073,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.override) HelperHudBoolean = true;
       if (msg.MyLocalMemoryLayer) {
+        if (LocalMemoryLayer !== msg.MyLocalMemoryLayer) PB_LOG2.change("PBCHECK_MEMORY: SYSTEM CHANGE", LocalMemoryLayer, msg.MyLocalMemoryLayer);
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
         LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
-        PB_LOG2.info("PBCHECK_MEMORY: SYSTEM ", LocalMemoryLayer);
         if (WeLocalMemoryLayerMB) {
-          PB_LOG2.info("PBCHECK_MEMORY: TAB ", WeLocalMemoryLayer);
+          PB_LOG2.info("PBCHECK_MEMORY: TAB->SYSTEM ", WeLocalMemoryLayer);
           LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
           LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
           sendResponse({ ok: true, LocalMemoryLayerMB, WeLocalMemoryLayerMB });
