@@ -1618,7 +1618,7 @@ function startWarmBootLoop() {
     } catch (_) {}
 
     const interval = getWarmInterval();
-    PB_LOG2.info("[PBWarmBootLoop] Next warm in" + interval + "ms");
+    PB_LOG2.info("[PBWarmBootLoop] Next warm in " + interval + " ms");
 
     setTimeout(loop, interval);
   }
@@ -1627,10 +1627,10 @@ function startWarmBootLoop() {
 }
 
 function TestingSequence() {
-  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep! :D");
+  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep!");
 }
 
-setInterval(TestingSequence, 2000);
+setInterval(TestingSequence, 45000);
 
 startWarmBootLoop();
 
