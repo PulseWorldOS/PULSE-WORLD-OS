@@ -160,6 +160,41 @@ const PB_LOG = {
 
 PB_LOG.info("PBSettings (Ultra Edition v7.1) loaded");
 
+
+let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+// ============================================================
+//  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
+// ============================================================
+
+let PulseBrowserChannel = null;
+try {
+  PulseBrowserChannel = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL);
+} catch {
+  PulseBrowserChannel = null;
+}
+
+function OvermindCrossTabSync(payload) {
+  try {
+    PB_LOG.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    PulseBrowserChannel.postMessage({
+      kind: "command_prompt",
+      payload,
+      ts: nowST
+    });
+  } catch {}
+}
+
+if (PulseBrowserChannel) {
+  PulseBrowserChannel.onmessage = (ev) => {
+    try {
+      const { kind, payload } = ev.data || {};
+      if (kind === "command_prompt") {
+        OvermindSettingsOrders = payload;
+      }
+    } catch {}
+  };
+}
+
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
     GLOBALSTART = Date.now();
@@ -1123,8 +1158,8 @@ function loadOrders(aiSettingsSize) {
       return;
     }
     if (response.OvermindOrders) {
-      OvermindPopupOrders = response.OvermindOrders;
-      PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
+      OvermindSettingsOrders = response.OvermindOrders;
+      PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);
     }
   });
 }

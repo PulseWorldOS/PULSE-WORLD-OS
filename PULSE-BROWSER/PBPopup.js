@@ -33,6 +33,41 @@ function isValid(t) {
   );
 }
 
+
+let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+// ============================================================
+//  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
+// ============================================================
+
+let PulseBrowserChannel = null;
+try {
+  PulseBrowserChannel = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL);
+} catch {
+  PulseBrowserChannel = null;
+}
+
+function OvermindCrossTabSync(payload) {
+  try {
+    PB_LOG.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    PulseBrowserChannel.postMessage({
+      kind: "command_prompt",
+      payload,
+      ts: nowPP
+    });
+  } catch {}
+}
+
+if (PulseBrowserChannel) {
+  PulseBrowserChannel.onmessage = (ev) => {
+    try {
+      const { kind, payload } = ev.data || {};
+      if (kind === "command_prompt") {
+        OvermindPopupOrders = payload;
+      }
+    } catch {}
+  };
+}
+
 // 1. The Core Queue Engine
 class PulseStorageQueue {
   constructor() {
