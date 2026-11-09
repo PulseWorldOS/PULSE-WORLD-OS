@@ -11,6 +11,8 @@ let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
 let OurLocalMemoryLayerMB = 0;
+// Load saved PulseTabs from extension storage at startup
+let pulseTabs = {};
 
 const PB_LOG4 = {
   info(label, data) {
@@ -283,6 +285,7 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) =
     "color:#00C8FF; font-family:monospace;", response);
   if (response.time && isValid(response.time)) nowCT = response.time;
   if (response.HelperHudBoolean) HelperHud();
+  if (response.pulseTabs) pulseTabs = response.pulseTabs;
   if (response.TakeOfflineSnapshot) {
     try {
       const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
@@ -632,6 +635,7 @@ setInterval(() => {
       "color:#00C8FF; font-family:monospace;", response);
     if (response.time && isValid(response.time)) nowCT = response.time;
     if (response.HelperHudBoolean) HelperHud();
+    if (response.pulseTabs) pulseTabs = response.pulseTabs;
     if (response.TakeOfflineSnapshot) {
       try {
         const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));

@@ -30,6 +30,11 @@ let aiPopupSize = 0;
 let swSize = 0;
 let intervalId = null;
 let intervalId2 = null;
+// Load saved PulseTabs from extension storage at startup
+let pulseTabs = {};
+// Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
+let PBFAVICON_CACHE = {};
 // Your cybernetic state architecture
 let aiSession = null;
 let PulsePalMemoryAIBuffer = [];
@@ -439,13 +444,6 @@ chrome.storage.local.get(["globalStart"], (res) => {
     }
   }
 });
-
-// Load saved PulseTabs from extension storage at startup
-let pulseTabs = {};
-
-// Persistent favicon cache stored in chrome.storage.local
-// Local in-memory mirror for speed
-let PBFAVICON_CACHE = {};
 
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {

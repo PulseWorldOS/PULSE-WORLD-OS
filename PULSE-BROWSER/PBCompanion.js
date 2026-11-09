@@ -2512,7 +2512,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
         }
       }
-      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean, TakeOfflineSnapshot });      
+      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean, TakeOfflineSnapshot, pulseTabs });      
       TakeOfflineSnapshot = false;
       HelperHudBoolean = false;
       break;
