@@ -196,6 +196,7 @@ async function runProtectedCompute(computeTaskFunction) {
   try {
     // 1. Lock the system right on that invisible line before the execution
     if (chrome && chrome.power) {
+      CompanionNarcolepsy = false;
       chrome.power.requestKeepAwake("system");
       console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
@@ -210,7 +211,7 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && !CompanionNarcolepsy) {
+    if ((chrome && chrome.power) && CompanionNarcolepsy) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }
@@ -1522,7 +1523,7 @@ setInterval(async () => {
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
-    CompanionMessage = response.CompanionMessage;
+    if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
     } else {
@@ -2638,7 +2639,7 @@ async function updateModuleIcons(settings, browser) {
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
-    CompanionMessage = response.CompanionMessage;
+    if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
       disablesw.innerText = "Resume Companion";
     } else {
@@ -4443,7 +4444,7 @@ function CheckBackTab() {
         ServiceWorkerOnline = response.ServiceWorkerOnline;
         if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
-        CompanionMessage = response.CompanionMessage;
+        if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
           disablesw.innerText = "Resume Companion";
         } else {

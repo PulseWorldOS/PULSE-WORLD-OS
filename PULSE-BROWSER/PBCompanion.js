@@ -1822,13 +1822,13 @@ class PulseWasmEngine {
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-CompanionMessage = "Always Learning and Thriving..";
 PB_LOG2.event("Companion: Pulse Earner Online and Listening!", pulseWasmCompute);
 
 async function runProtectedCompute(computeTaskFunction) {
   try {
     // 1. Lock the system right on that invisible line before the execution
     if (chrome && chrome.power) {
+      CompanionNarcolepsy = false;
       chrome.power.requestKeepAwake("system");
       console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
@@ -1843,7 +1843,7 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && !CompanionNarcolepsy) {
+    if ((chrome && chrome.power) && CompanionNarcolepsy) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }
@@ -1917,7 +1917,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     
     case "PB_COMPANION_CHECK":
       if (msg.pulseTabs) pulseTabs = msg.pulseTabs;
-      if (msg.CompanionNarcolepsy) CompanionNarcolepsy = msg.CompanionNarcolepsy;
+      if (msg.CompanionNarcolepsy) {
+        CompanionNarcolepsy = msg.CompanionNarcolepsy;
+        if (!CompanionMessage) {
+          CompanionMessage = "Always Learning and Thriving..";
+        } else {
+          CompanionMessage = "Pulse Earning Narcolepsy Engaged!";
+        }
+      }
       // Load cache from storage at startup
       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
         if (res.ServiceWorkerOnline) {
