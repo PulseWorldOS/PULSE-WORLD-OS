@@ -1531,7 +1531,7 @@ setInterval(async () => {
       disablesw.innerText = "Pause Companion";
     }
   });
-  MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1652,7 +1652,7 @@ async function collectAndWarmAssetsFront() {
     type: "PBACC_DECODEWARM",
     count: decodeCount
   });
-  MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1700,7 +1700,7 @@ async function openNamedTab(name, url) {
   const override = true;
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
-  MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
 
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
@@ -2033,7 +2033,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
 const intervalB = getMainInterval();
 // Re-render after everything
 setInterval(async () => {
-  MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -2573,7 +2573,7 @@ async function pbModuleWarmBoot() {
     "%c[PBAccelerator] Module Warm-Boot executed",
     "color:#00C8FF; font-weight:bold;"
   );
-  MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -4052,7 +4052,7 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
   // Re-render after everything
   setTimeout(async () => {
-    MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+    MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -4357,7 +4357,7 @@ function CheckBackTab() {
       settings.acceleratedModule6Link
     ].filter(u => u && u.startsWith("http"));
 
-    MyLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
+    MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
