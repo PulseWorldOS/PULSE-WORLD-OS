@@ -8314,6 +8314,10 @@ async function initializeExoskeleton() {
   });
 }
 
+async function PromptMeAI(prompt) {
+  return await aiSession.prompt(prompt);
+}
+
 async function runLocalAI() {
   if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
@@ -8368,7 +8372,7 @@ ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
-    const response = await aiSession.prompt(wrappedPrompt);
+    const response = await PromptMeAI(wrappedPrompt);
     console.log("Pulse Pal:", response);
     // if (aiLogBox) aiLogBox.appendChild(response);
     pulsepalSpeak("Pulse Pal: " + response);

@@ -1051,13 +1051,17 @@ if (location.href.includes("PBSettings.html")) {
         expectedOutputs: [{ type: "text", languages: ["en"] }]
       });
     }
+        
+    async function PromptMeAI(prompt) {
+      return await aiSettingsSession.prompt(prompt);
+    }
 
     setInterval(async () => {
       aiSettings2Size = await getAI2Size();
       loadOrders(aiSettings2Size);
       if (OvermindSettingsOrders) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
-        const response = await aiSettingsSession.prompt(OvermindSettingsOrders);
+        const response = await PromptMeAI(OvermindSettingsOrders);
         console.log("🧠 AI Overmind: ", response);
         setTimeout(async () => {
           appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, response);
@@ -1118,7 +1122,7 @@ if (location.href.includes("PBSettings.html")) {
       CompanionSettingsTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
       // 3. Fire the wrapped prompt
       appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "user", text);
-      const response = await aiSettingsSession.prompt(wrappedPrompt);
+      const response = await PromptMeAI(wrappedPrompt);
       console.log("🧠 AI Overmind: ", response);
       setTimeout(async () => {
         appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", response);

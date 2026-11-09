@@ -274,6 +274,10 @@ document.getElementById("CompanionConsoleInput").addEventListener("keydown", asy
   }
 });
 
+async function PromptMeAI(prompt) {
+  return await aiPopupSession.prompt(prompt);
+}
+
 CompanionPopupConsoleSend.onclick = async () => {
   CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -322,7 +326,7 @@ CompanionPopupConsoleSend.onclick = async () => {
   CompanionPopupTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
   // 3. Fire the wrapped prompt
   appendPopupCompanionMessage(CompanionPopupDetailsMessage, "user", text);
-  const response = await aiPopupSession.prompt(wrappedPrompt);
+  const response = await PromptMeAI(wrappedPrompt);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
@@ -1520,7 +1524,7 @@ setInterval(async () => {
   loadOrders(aiPopupSize);
   if (OvermindPopupOrders) {
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, OvermindPopupOrders);
-    const response = await aiPopupSession.prompt(OvermindPopupOrders);
+    const response = await PromptMeAI(OvermindPopupOrders);
     console.log("🧠 AI Overmind: ", response);
     setTimeout(async () => {
       appendPopupCompanionMessage(CompanionPopupDetailsMessage, response);
