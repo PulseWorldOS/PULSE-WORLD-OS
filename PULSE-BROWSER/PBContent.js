@@ -1995,7 +1995,8 @@ async function PulseBrowserDomScan() {
     counts,
     links: tinyLinks,
     images: tinyImages,
-    regfavicon: favicon
+    regfavicon: favicon,
+    tabMemory: OurLocalMemoryLayerMB
   };
 
   console.log("Ghost Echo Initiated (Safe Mode): ", snapshot);

@@ -2080,7 +2080,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           WeLocalMemoryLayerMBackup = 0;
         }
       }
-      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB);
+      PB_LOG2.info("PBCHECK_MEMORY", LocalMemoryLayerMB, WeLocalMemoryLayerMB);
       sendResponse({ ok: true, LocalMemoryLayerMB });
       break;
 

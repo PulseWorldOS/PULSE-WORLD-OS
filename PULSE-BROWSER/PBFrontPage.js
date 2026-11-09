@@ -13,6 +13,7 @@ let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = 0;
+let WeLocalMemoryLayerMB = 0;
 let LocalMemoryLayerMB = 0;
 let socialMode = "Internal";
 let OvermindOrders = null;
@@ -27,7 +28,6 @@ let aiSize = 0;
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
 let swSize = 0;
-const interval = getWarmInterval2();
 let intervalId = null;
 let intervalId2 = null;
 // Your cybernetic state architecture
@@ -1438,9 +1438,8 @@ setInterval(async () => {
   MyLocalMemoryLayer = getLocalMemoryLayer();
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    }
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
 }, intervalA);
@@ -1492,9 +1491,8 @@ async function gpuWarmExtra() {
   PB_LOG3.info("PBCHECK_MEMORY", MyLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    }
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
 }
@@ -1566,9 +1564,8 @@ async function collectAndWarmAssetsFront() {
   MyLocalMemoryLayer = getLocalMemoryLayer();
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    }
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
 }
@@ -1576,6 +1573,7 @@ async function collectAndWarmAssetsFront() {
 setTimeout(collectAndWarmAssetsFront, 1000);
 
 function savePulseTabs() {
+  console.log("Snapshot Memory Save: ", WeLocalMemoryLayerMB);
   PulsesafeStorageSet({ pulseTabs });
 }
 
@@ -1609,6 +1607,7 @@ async function openNamedTab(name, url) {
   name = identity;
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
+  MyLocalMemoryLayer = getLocalMemoryLayer();
 
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
@@ -1619,13 +1618,28 @@ async function openNamedTab(name, url) {
     if (!Number.isInteger(tabId)) {
       
       chrome.tabs.create({ url }, newTab => {
-        pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
+        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+          if (chrome.runtime.lastError) return;
+          if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+          if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+        });
+        pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
         savePulseTabs();
       });
 
       PulseURL = url;
       PulseSnapshotView = new URL(url).hostname;
 
+      setTimeout(async () => {
+        MyLocalMemoryLayer = getLocalMemoryLayer();
+        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+          if (chrome.runtime.lastError) return;
+          if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+          if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+        });
+        await pbRenderCacheList2();
+      }, 2500);
+      
       setTimeout(() => {
         pulseRehydrateTabs();
       }, 2000);
@@ -1637,26 +1651,56 @@ async function openNamedTab(name, url) {
         chrome.tabs.update(tabId, { url, active: true }, updated => {
           if (chrome.runtime.lastError || !updated) {
             chrome.tabs.create({ url }, newTab => {
-              pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex };
+              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+                if (chrome.runtime.lastError) return;
+                if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+                if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+              });
+              pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
               savePulseTabs();
             });
 
             PulseURL = url;
             PulseSnapshotView = new URL(url).hostname;
 
+            setTimeout(async () => {
+              MyLocalMemoryLayer = getLocalMemoryLayer();
+              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+                if (chrome.runtime.lastError) return;
+                if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+                if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+              });
+              await pbRenderCacheList2();
+            }, 2500);
+            
             setTimeout(() => {
               pulseRehydrateTabs();
             }, 2000);
             return;
           }
 
-          pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex };
+          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+            if (chrome.runtime.lastError) return;
+            if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+            if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+          });
+          pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
           savePulseTabs();
         });
 
         PulseURL = url;
         PulseSnapshotView = new URL(url).hostname;
 
+        setTimeout(async () => {
+          MyLocalMemoryLayer = getLocalMemoryLayer();
+          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+            if (chrome.runtime.lastError) return;
+            if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+            if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+          });
+          await pbRenderCacheList2();
+        }, 2500);
+        
         setTimeout(() => {
           pulseRehydrateTabs();
         }, 2000);
@@ -1668,13 +1712,28 @@ async function openNamedTab(name, url) {
         tabs: [tab.index]
       });
 
-      pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex };
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+      });
+      pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
       savePulseTabs();
     });
 
     PulseURL = url;
     PulseSnapshotView = new URL(url).hostname;
 
+    setTimeout(async () => {
+      MyLocalMemoryLayer = getLocalMemoryLayer();
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+      });
+      await pbRenderCacheList2();
+    }, 2500);
+    
     setTimeout(() => {
       pulseRehydrateTabs();
     }, 2000);
@@ -1683,26 +1742,31 @@ async function openNamedTab(name, url) {
 
   // ⭐ No existing tab → create new
   chrome.tabs.create({ url }, tab => {
-    pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex };
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+    });
+    pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
     savePulseTabs();
   });
 
   PulseURL = url;
   PulseSnapshotView = new URL(url).hostname;
   
-  setTimeout(() => {
-    pulseRehydrateTabs();
-  }, 2000);
   setTimeout(async () => {
     MyLocalMemoryLayer = getLocalMemoryLayer();
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
-      if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-      }
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
     });
     await pbRenderCacheList2();
   }, 2500);
+  
+  setTimeout(() => {
+    pulseRehydrateTabs();
+  }, 2000);
 }
 
 function latestSnapshot(realm, link, snapIndex) {
@@ -1843,9 +1907,8 @@ setInterval(async () => {
   MyLocalMemoryLayer = getLocalMemoryLayer();
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    }
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
 }, intervalB);
@@ -2384,9 +2447,8 @@ async function pbModuleWarmBoot() {
   MyLocalMemoryLayer = getLocalMemoryLayer();
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) {
-        MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    }
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
 }
@@ -3864,9 +3926,8 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
     MyLocalMemoryLayer = getLocalMemoryLayer();
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
-      if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-      }
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
     });
     await pbRenderCacheList2();
   }, 500);
@@ -4028,6 +4089,7 @@ function CheckBackTab() {
 
   function startPulseLoop() {
     if (intervalId) return; // already running
+    const interval = getWarmInterval2();
 
     clearInterval(intervalId2);
     intervalId2 = null;
@@ -4042,6 +4104,7 @@ function CheckBackTab() {
 
   function stopPulseLoop() {
     if (intervalId2) return; // already running
+    const interval = getWarmInterval2();
 
     clearInterval(intervalId);
     intervalId = null;
@@ -4168,9 +4231,8 @@ function CheckBackTab() {
     MyLocalMemoryLayer = getLocalMemoryLayer();
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
       if (chrome.runtime.lastError) return;
-      if (response.LocalMemoryLayerMB) {
-          MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-      }
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
     });
 
     collectAndWarmAssetsFront();
