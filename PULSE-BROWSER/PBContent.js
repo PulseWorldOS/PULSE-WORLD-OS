@@ -283,6 +283,14 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) =
     "color:#00C8FF; font-family:monospace;", response);
   if (response.time && isValid(response.time)) nowCT = response.time;
   if (response.HelperHudBoolean) HelperHud();
+  if (response.TakeOfflineSnapshot) {
+    try {
+      const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
+      chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
+      location.href = offline;
+    } catch (err) {
+    }
+  }
 });
 
 
@@ -624,6 +632,14 @@ setInterval(() => {
       "color:#00C8FF; font-family:monospace;", response);
     if (response.time && isValid(response.time)) nowCT = response.time;
     if (response.HelperHudBoolean) HelperHud();
+    if (response.TakeOfflineSnapshot) {
+      try {
+        const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
+        chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
+        location.href = offline;
+      } catch (err) {
+      }
+    }
   });
   OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);

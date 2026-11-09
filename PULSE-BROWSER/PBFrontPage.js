@@ -1434,14 +1434,6 @@ setInterval(async () => {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if (response.TakeOfflineSnapshot) {
-      try {
-        const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
-        chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
-        location.href = offline;
-      } catch (err) {
-      }
-    }
   });
   MyLocalMemoryLayer = getLocalMemoryLayer();
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
@@ -2565,14 +2557,6 @@ async function updateModuleIcons(settings, browser) {
       disablesw.innerText = "Resume Companion";
     } else {
       disablesw.innerText = "Pause Companion";
-    }
-    if (response.TakeOfflineSnapshot) {
-      try {
-        const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
-        chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
-        location.href = offline;
-      } catch (err) {
-      }
     }
   });
   if (!settings) settings = await pbLoadExtensionSettings();
@@ -4378,14 +4362,6 @@ function CheckBackTab() {
           disablesw.innerText = "Resume Companion";
         } else {
           disablesw.innerText = "Pause Companion";
-        }
-        if (response.TakeOfflineSnapshot) {
-          try {
-            const offline = makeOfflineKey(location.href.replace(window.location.hash, ""));
-            chrome.runtime.sendMessage({ type: "HISTORY_BACK", url: offline  });
-            location.href = offline;
-          } catch (err) {
-          }
         }
       });
       injectPulseScreenFromMemory(true);

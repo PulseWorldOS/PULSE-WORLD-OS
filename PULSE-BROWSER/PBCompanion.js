@@ -1887,8 +1887,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           ServiceWorkerOnline = res.ServiceWorkerOnline;
         }
       });
-      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, TakeOfflineSnapshot });
-      TakeOfflineSnapshot = false;
+      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage });
       return true;
     
     case "PBEXTSETTINGS_GET":
@@ -2513,7 +2512,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
         }
       }
-      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean });
+      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean, TakeOfflineSnapshot });      
+      TakeOfflineSnapshot = false;
       HelperHudBoolean = false;
       break;
     }
