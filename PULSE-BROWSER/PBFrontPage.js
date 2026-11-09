@@ -11,6 +11,7 @@ let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+let CompanionNarcolepsy = false;
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
@@ -84,6 +85,94 @@ const pbPulseScreen = document.getElementById("pbPulseScreen");
 const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
+
+// ============================================================================
+// PURE WASM EXECUTION ENGINE (ISOLATED COMPUTE LAYER)
+// ============================================================================
+class PulseWasmEngine {
+  constructor() {
+    this.wasmInstance = null;
+    this.isLoaded = false;
+  }
+
+  async EarnerLockedandLoaded() {
+    this.isLoaded = true;
+    if (chrome && chrome.power) chrome.power.requestKeepAwake("system");
+  }
+
+  // Load the pure binary math module into memory
+  async initEngine(wasmBinaryUrl) {
+    if (this.isLoaded) return;
+    
+    try {
+      // Fetch the highly dense compiled binary module
+      const response = await fetchWithYourQueryStringCache(wasmBinaryUrl);
+      const buffer = await response.arrayBuffer();
+      
+      // Compile natively right on that 1ms service worker line
+      const module = await WebAssembly.compile(buffer);
+      this.wasmInstance = await WebAssembly.instantiate(module, {
+        env: {
+          memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+          abort: () => { console.error("[WASM ABORT] Critical execution crash"); }
+        }
+      });
+
+      EarnerLockedandLoaded();
+      console.log("[WASM ENGINE] Pure mathematical module stable and hot.");
+    } catch (err) {
+      console.error("[WASM ENGINE] Initialization failed:", err);
+    }
+  }
+
+  // The pure compute pipeline: Input bytes -> Output proofs
+  async executeProofJob(rawPayloadData) {
+    if (!this.isLoaded) throw new Error("WASM engine not ready");
+    
+    // 1. Transform payload data into a dense binary array
+    const inputArray = new Uint8Array(rawPayloadData);
+    
+    // 2. Run your specific math execution (e.g., factoring out formulas)
+    // This executes at raw native silicon speeds inside the worker
+    const resultAddress = this.wasmInstance.exports.computeMathProofs(inputArray);
+    
+    // 3. Extract the high-density result from WASM memory
+    const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress);
+    if (chrome && chrome.power) chrome.power.releaseKeepAwake();
+    return proofResult;
+  }
+}
+
+// Instantiate the isolated engine
+const pulseWasmCompute = new PulseWasmEngine();
+CompanionMessage = "Always Learning and Thriving..";
+PB_LOG3.event("Console: Pulse Earner Online and Listening!", pulseWasmCompute);
+
+async function runProtectedCompute(computeTaskFunction) {
+  try {
+    // 1. Lock the system right on that invisible line before the execution
+    if (chrome && chrome.power) {
+      chrome.power.requestKeepAwake("system");
+      CompanionNarcolepsy = true;
+      console.log("[POWER GOVERNOR] System locked awake for calculation...");
+    }
+
+    // 2. Execute your pure WASM math proof or WebGPU logic
+    const result = await computeTaskFunction();
+    return result;
+
+  } catch (error) {
+    console.error("[POWER GOVERNOR] Calculation crashed:", error);
+    throw error;
+  } finally {
+    // 3. ALWAYS release the lock inside a 'finally' block!
+    // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
+    if ((chrome && chrome.power) && CompanionNarcolepsy) {
+      chrome.power.releaseKeepAwake();
+      console.log("[POWER GOVERNOR] System lock released cleanly.");
+    }
+  }
+}
 
 // 1. The Core Queue Engine
 class PulseStorageQueue {
@@ -1487,18 +1576,13 @@ async function gpuWarmExtra() {
   }
   chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  MyLocalMemoryLayer = getLocalMemoryLayer();
-  PB_LOG3.info("PBCHECK_MEMORY: SYSTEM->MAINTAB", MyLocalMemoryLayer);
-  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
-  });
-  await pbRenderCacheList2();
 }
 
 setTimeout(gpuWarmExtra, 250);
-setTimeout(pulseRehydrateTabs, 250);
+
+setTimeout(() => {
+  pulseRehydrateTabs(WeLocalMemoryLayerMB);
+});
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
@@ -1634,7 +1718,6 @@ async function openNamedTab(name, url) {
       PulseSnapshotView = new URL(url).hostname;
 
       setTimeout(async () => {
-        MyLocalMemoryLayer = getLocalMemoryLayer();
         chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
           if (chrome.runtime.lastError) return;
           if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1675,7 +1758,6 @@ async function openNamedTab(name, url) {
             PulseSnapshotView = new URL(url).hostname;
 
             setTimeout(async () => {
-              MyLocalMemoryLayer = getLocalMemoryLayer();
               chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
                 if (chrome.runtime.lastError) return;
                 if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1711,7 +1793,6 @@ async function openNamedTab(name, url) {
         PulseSnapshotView = new URL(url).hostname;
 
         setTimeout(async () => {
-          MyLocalMemoryLayer = getLocalMemoryLayer();
           chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
             if (chrome.runtime.lastError) return;
             if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1752,7 +1833,6 @@ async function openNamedTab(name, url) {
     PulseSnapshotView = new URL(url).hostname;
 
     setTimeout(async () => {
-      MyLocalMemoryLayer = getLocalMemoryLayer();
       chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
         if (chrome.runtime.lastError) return;
         if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1790,7 +1870,6 @@ async function openNamedTab(name, url) {
   PulseSnapshotView = new URL(url).hostname;
   
   setTimeout(async () => {
-    MyLocalMemoryLayer = getLocalMemoryLayer();
     chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
       if (chrome.runtime.lastError) return;
       if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
@@ -1851,7 +1930,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${bestfavicon}"
-               alt="${MemoryLayer} MB">
+               alt="${MemoryLayer} MB" />
         </div>
       `;
 
@@ -4042,7 +4121,7 @@ const nebula = document.getElementById("nebula");
   }, { once: true });
 });
 
-setTimeout(runLocalAI, 50);
+setTimeout(runProtectedCompute(runLocalAI), 50);
 
 window.addEventListener("blur", () => {
   userInteracted = true;
