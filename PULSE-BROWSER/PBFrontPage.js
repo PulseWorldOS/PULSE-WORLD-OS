@@ -1095,7 +1095,7 @@ async function pbRenderStorageStats2(history) {
   console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
-  const percent = ((totalUsed / localQuota) * 100).toFixed(2);
+  const percent = ((totalUsed / localQuota) * 100).toFixed(3);
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
 
@@ -1514,7 +1514,7 @@ setInterval(async () => {
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionNarcolepsy }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
@@ -2630,7 +2630,7 @@ async function updateModuleIcons(settings, browser) {
       ServiceWorkerOnline = res.ServiceWorkerOnline;
     }
   });
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionNarcolepsy }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
@@ -4435,7 +4435,7 @@ function CheckBackTab() {
         }
       });
       gpuWarmExtra();
-      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs }, (response) => {
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionNarcolepsy }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           return;

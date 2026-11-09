@@ -1916,9 +1916,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
     
     case "PB_COMPANION_CHECK":
-      if (msg.pulseTabs) {
-        pulseTabs = msg.pulseTabs;
-      }
+      if (msg.pulseTabs) pulseTabs = msg.pulseTabs;
+      if (msg.CompanionNarcolepsy) CompanionNarcolepsy = msg.CompanionNarcolepsy;
       // Load cache from storage at startup
       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
         if (res.ServiceWorkerOnline) {
