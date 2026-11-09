@@ -86,6 +86,51 @@ const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 
+
+const PB_LOG3 = {
+  info(label, data) {
+    console.log(
+      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
+
 // ============================================================================
 // PURE WASM EXECUTION ENGINE (ISOLATED COMPUTE LAYER)
 // ============================================================================
@@ -163,6 +208,7 @@ async function runProtectedCompute(computeTaskFunction) {
 
   } catch (error) {
     console.error("[POWER GOVERNOR] Calculation crashed:", error);
+    CompanionNarcolepsy = false;
     throw error;
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
@@ -217,6 +263,10 @@ const PulseorchestratorQueue = new PulseStorageQueue();
 // 3. The Drop-In Replacement Function
 function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
+}
+
+async function PromptMeAI(wrappedPrompt) {
+  await aiSession.prompt(wrappedPrompt);
 }
 
 async function runLocalAI() {
@@ -292,7 +342,8 @@ ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
-    const response = await aiSession.prompt(wrappedPrompt);
+    const response = await PromptMeAI(wrappedPrompt);
+    
     console.log("🧠 AI Overmind:", response);
     
     // 4. Update the DOM elements smoothly
@@ -382,7 +433,7 @@ CompanionConsoleSend.onclick = async () => {
   } else {
     appendCompanionMessage(CompanionDetailsMessage, "user", text);
   }
-  const response = await aiSession.prompt(text);
+  const response = await PromptMeAI(text);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
@@ -464,50 +515,6 @@ chrome.storage.local.get(["SessionStart"], (res) => {
     console.log("PulseBrowser OS Local Session Start: " + nowFP);
   }
 });
-
-const PB_LOG3 = {
-  info(label, data) {
-    console.log(
-      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#55BBFF; font-weight:bold;",
-      data || ""
-    );
-  },
-
-  change(label, before, after) {
-    console.groupCollapsed(
-      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00FFAA; font-weight:bold;"
-    );
-    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
-    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
-    console.groupEnd();
-  },
-
-  save(label, data) {
-    console.log(
-      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00DDFF; font-weight:bold;",
-      data
-    );
-  },
-
-  load(label, data) {
-    console.log(
-      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FFD700; font-weight:bold;",
-      data
-    );
-  },
-
-  event(label, data) {
-    console.log(
-      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FF55AA; font-weight:bold;",
-      data
-    );
-  }
-};
 
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
@@ -4121,7 +4128,7 @@ const nebula = document.getElementById("nebula");
   }, { once: true });
 });
 
-setTimeout(runProtectedCompute(runLocalAI), 50);
+setTimeout(runLocalAI, 50);
 
 window.addEventListener("blur", () => {
   userInteracted = true;

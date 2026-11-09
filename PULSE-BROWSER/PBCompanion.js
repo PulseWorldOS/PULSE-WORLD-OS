@@ -44,7 +44,6 @@ let totalUsed = 0;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
-
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   if (res.PulseBrowserFaviconMultiverse) {
@@ -52,6 +51,40 @@ chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
   }
 });
+
+let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+// ============================================================
+//  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
+// ============================================================
+
+let PulseBrowserChannel = null;
+try {
+  PulseBrowserChannel = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL);
+} catch {
+  PulseBrowserChannel = null;
+}
+
+function OvermindCrossTabSync(payload) {
+  try {
+    PB_LOG2.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!");
+    PulseBrowserChannel.postMessage({
+      kind: "command_prompt",
+      payload,
+      ts: nowSW
+    });
+  } catch {}
+}
+
+if (PulseBrowserChannel) {
+  PulseBrowserChannel.onmessage = (ev) => {
+    try {
+      const { kind, payload } = ev.data || {};
+      if (kind === "command_prompt") {
+        
+      }
+    } catch {}
+  };
+}
 
 // 1. The Core Queue Engine
 class StorageQueue {
@@ -1617,12 +1650,13 @@ function getWarmInterval() {
 function startWarmBootLoop() {
   async function loop() {
     try {
+      OvermindCrossTabSync(OvermindOrders);
       await pbWarmBoot();
     } catch (_) {}
 
     const interval = getWarmInterval();
     PB_LOG2.info("[PBWarmBootLoop] Next warm in " + interval + " ms");
-
+    
     setTimeout(loop, interval);
   }
 
@@ -1630,10 +1664,13 @@ function startWarmBootLoop() {
 }
 
 function TestingSequence() {
-  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep!");
+  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep! Syncing Overmind Orders!");
+  OvermindCrossTabSync(OvermindOrders);
 }
 
-setInterval(TestingSequence, 45000);
+setInterval(() => {
+  TestingSequence();
+}, 45000);
 
 startWarmBootLoop();
 

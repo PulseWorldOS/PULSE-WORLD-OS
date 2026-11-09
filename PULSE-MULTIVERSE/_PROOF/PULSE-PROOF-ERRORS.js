@@ -1038,6 +1038,7 @@ export const PulseUIErrors = (() => {
 
     if (!fromCrossTab) {
       try {
+        initCrossTabChannel();
         crossTabBroadcast(envelope);
       } catch {}
     }
