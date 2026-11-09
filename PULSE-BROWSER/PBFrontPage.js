@@ -1081,15 +1081,15 @@ async function pbRenderStorageStats2(history) {
     }
     if (response.totalUsed) {
       totalUsed = response.totalUsed;
-      PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
+      if (totalUsed !== response.totalUsed) PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
     }
     if (response.aiSettingsSize) {
       aiSettingsSize = response.aiSettingsSize;
-      PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
+      if (aiSettingsSize !== response.aiSettingsSize) PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
     }
     if (response.aiPopupSize) {
       aiPopupSize = response.aiPopupSize;
-      PB_LOG3.change("STORAGE_PASSOFF: aiPopupSize", aiPopupSize, response.aiPopupSize);
+      if (aiPopupSize !== response.aiPopupSize) PB_LOG3.change("STORAGE_PASSOFF: aiPopupSize", aiPopupSize, response.aiPopupSize);
     }
   });
 
