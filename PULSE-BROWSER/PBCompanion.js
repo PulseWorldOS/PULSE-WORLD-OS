@@ -8,6 +8,7 @@ let aiSettingsSize = 0;
 let aiPopupSize = 0;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
+let CompanionNarcolepsy = true;
 let TakeOfflineSnapshot = false;
 let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
@@ -22,6 +23,7 @@ let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
+let MyLocalMemoryLayer = {};
 let WeLocalMemoryLayer = {};
 let LocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
@@ -1841,7 +1843,7 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if (chrome && chrome.power) {
+    if ((chrome && chrome.power) && !CompanionNarcolepsy) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }
@@ -2134,6 +2136,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           WeLocalMemoryLayerMBackup = 0;
         }
       }
+      (async () => {
+        MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+      })();
       break;
 
     case "PBACC_WARMPATH":

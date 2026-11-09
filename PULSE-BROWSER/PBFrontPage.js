@@ -11,7 +11,7 @@ let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-let CompanionNarcolepsy = false;
+let CompanionNarcolepsy = true;
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
@@ -198,7 +198,6 @@ async function runProtectedCompute(computeTaskFunction) {
     // 1. Lock the system right on that invisible line before the execution
     if (chrome && chrome.power) {
       chrome.power.requestKeepAwake("system");
-      CompanionNarcolepsy = true;
       console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
 
@@ -208,12 +207,11 @@ async function runProtectedCompute(computeTaskFunction) {
 
   } catch (error) {
     console.error("[POWER GOVERNOR] Calculation crashed:", error);
-    CompanionNarcolepsy = false;
     throw error;
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && CompanionNarcolepsy) {
+    if ((chrome && chrome.power) && !CompanionNarcolepsy) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }

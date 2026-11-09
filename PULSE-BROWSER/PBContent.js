@@ -7,7 +7,7 @@ let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
 let PBFAVICON_CACHE = {};
-let CompanionNarcolepsy = false;
+let CompanionNarcolepsy = true;
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
@@ -619,7 +619,6 @@ async function runProtectedCompute(computeTaskFunction) {
     // 1. Lock the system right on that invisible line before the execution
     if (chrome && chrome.power) {
       chrome.power.requestKeepAwake("system");
-      CompanionNarcolepsy = true;
       console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
 
@@ -629,12 +628,11 @@ async function runProtectedCompute(computeTaskFunction) {
 
   } catch (error) {
     console.error("[POWER GOVERNOR] Calculation crashed:", error);
-    CompanionNarcolepsy = false;
     throw error;
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && CompanionNarcolepsy) {
+    if ((chrome && chrome.power) && !CompanionNarcolepsy) {
       chrome.power.releaseKeepAwake();
       console.log("[POWER GOVERNOR] System lock released cleanly.");
     }
