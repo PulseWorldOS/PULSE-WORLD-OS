@@ -1572,7 +1572,7 @@ async function collectAndWarmAssetsFront() {
 
 setTimeout(collectAndWarmAssetsFront, 1000);
 
-function savePulseTabs() {
+function savePulseTabs(WeLocalMemoryLayerMB) {
   console.log("Snapshot Memory Save: ", WeLocalMemoryLayerMB);
   PulsesafeStorageSet({ pulseTabs });
 }
@@ -1624,7 +1624,7 @@ async function openNamedTab(name, url) {
           if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
         });
         pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
-        savePulseTabs();
+        savePulseTabs(WeLocalMemoryLayerMB);
       });
 
       PulseURL = url;
@@ -1657,7 +1657,7 @@ async function openNamedTab(name, url) {
                 if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
               });
               pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
-              savePulseTabs();
+              savePulseTabs(WeLocalMemoryLayerMB);
             });
 
             PulseURL = url;
@@ -1685,7 +1685,7 @@ async function openNamedTab(name, url) {
             if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
           });
           pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
-          savePulseTabs();
+          savePulseTabs(WeLocalMemoryLayerMB);
         });
 
         PulseURL = url;
@@ -1718,7 +1718,7 @@ async function openNamedTab(name, url) {
         if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
       });
       pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
-      savePulseTabs();
+      savePulseTabs(WeLocalMemoryLayerMB);
     });
 
     PulseURL = url;
@@ -1748,7 +1748,7 @@ async function openNamedTab(name, url) {
       if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
     });
     pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
-    savePulseTabs();
+    savePulseTabs(WeLocalMemoryLayerMB);
   });
 
   PulseURL = url;
