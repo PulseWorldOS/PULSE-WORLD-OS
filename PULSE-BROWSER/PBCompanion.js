@@ -2138,6 +2138,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       (async () => {
         MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+        PB_LOG2.info("PBCHECK_MEMORY: SYSTEM", MyLocalMemoryLayer);
       })();
       break;
 
