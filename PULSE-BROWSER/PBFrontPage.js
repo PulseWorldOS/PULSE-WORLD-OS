@@ -2,6 +2,8 @@
 
 let userInteracted = false;
 let engineType = "text";
+let predictionText = "Running Stable";
+let statsHTMLShell = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
@@ -696,9 +698,6 @@ async function CheckEarnState() {
 setTimeout(CheckEarnState, 50);
 setTimeout(CheckEarnDetailsState, 50);
 
-let predictionText = "Running Stable";
-let statsHTMLShell = null;
-
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
@@ -1303,6 +1302,11 @@ function getCharacterInterval() {
   return base;
 }
 
+function getMainInterval() {
+  const base = 8100;
+  return base;
+}
+
 function injectPulseScreenFromMemory(play) {
   loadLastSavedVideo(entry => {
     if (!entry) return;
@@ -1397,6 +1401,7 @@ async function pulseGPUInspector(adapter, device) {
   });
 }
 
+const intervalA = getCharacterInterval();
 // Optional: Real-time heartbeat
 setInterval(async () => {
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
@@ -1435,7 +1440,7 @@ setInterval(async () => {
     }
   });
   await pbRenderCacheList2();
-}, 5000);
+}, intervalA);
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
@@ -1829,7 +1834,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
   }
 }
 
-
+const intervalB = getMainInterval();
 // Re-render after everything
 setInterval(async () => {
   MyLocalMemoryLayer = getLocalMemoryLayer();
@@ -1840,7 +1845,7 @@ setInterval(async () => {
     }
   });
   await pbRenderCacheList2();
-}, 8000);
+}, intervalB);
 
 
 chrome.tabs.onRemoved.addListener((tabId) => {
