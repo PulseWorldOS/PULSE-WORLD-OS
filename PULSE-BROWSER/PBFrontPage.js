@@ -190,7 +190,6 @@ class PulseWasmEngine {
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-CompanionMessage = "Always Learning and Thriving..";
 PB_LOG3.event("Console: Pulse Earner Online and Listening!", pulseWasmCompute);
 
 async function runProtectedCompute(computeTaskFunction) {
@@ -261,10 +260,6 @@ const PulseorchestratorQueue = new PulseStorageQueue();
 // 3. The Drop-In Replacement Function
 function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
-}
-
-async function PromptMeAI(wrappedPrompt) {
-  await aiSession.prompt(wrappedPrompt);
 }
 
 async function runLocalAI() {
@@ -340,7 +335,7 @@ ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
-    const response = await PromptMeAI(wrappedPrompt);
+    const response = await aiSession.prompt(wrappedPrompt);
     
     console.log("🧠 AI Overmind:", response);
     
@@ -423,15 +418,16 @@ CompanionConsoleSend.onclick = async () => {
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
   const text = CompanionConsoleInput.value.trim();
   if (!text) return;
+  let order = text;
   CompanionConsoleInput.value = "";
   // 3. Fire the wrapped prompt
   if (text.includes("Overmind Orders")) {
-    const order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
+    order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
   } else {
-    appendCompanionMessage(CompanionDetailsMessage, "user", text);
+    appendCompanionMessage(CompanionDetailsMessage, "user", order);
   }
-  const response = await PromptMeAI(text);
+  const response = await aiSession.prompt(order);
   console.log("🧠 AI Overmind: ", response);
   setTimeout(async () => {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);

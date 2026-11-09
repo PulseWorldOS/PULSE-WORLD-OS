@@ -691,23 +691,23 @@ async function pwRun() {
   PW_RUNNING = false;
 }
 
-// Drop this right inside your site tabs / orchestrator loops
-function getLocalMemoryLayer() {
-  if (!performance || !performance.memory) {
-    return { status: "Standard Engine Active" };
-  }
+// // Drop this right inside your site tabs / orchestrator loops
+// function getLocalMemoryLayer() {
+//   if (!performance || !performance.memory) {
+//     return { status: "Standard Engine Active" };
+//   }
 
-  // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
-  const heap = performance.memory;
-  LocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
-  LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
+//   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
+//   const heap = performance.memory;
+//   LocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
+//   LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
 
-  return {
-    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
-    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
-    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(2) + " MB"
-  };
-}
+//   return {
+//     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+//     totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+//     heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(2) + " MB"
+//   };
+// }
 
 
 // ============================================================
@@ -2136,10 +2136,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           WeLocalMemoryLayerMBackup = 0;
         }
       }
-      (async () => {
-        MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
-        PB_LOG2.info("PBCHECK_MEMORY: SYSTEM", MyLocalMemoryLayer);
-      })();
+      // (async () => {
+      //   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+      //   PB_LOG2.info("PBCHECK_MEMORY: SYSTEM", MyLocalMemoryLayer);
+      // })();
       break;
 
     case "PBACC_WARMPATH":
