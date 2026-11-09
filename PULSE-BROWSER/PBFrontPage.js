@@ -428,9 +428,9 @@ chrome.storage.local.get(["globalStart"], (res) => {
       const ItsTime = new Date(GLOBALSTART).toLocaleString();
       CONSENSUS_ORIGIN = ItsTime;
       startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
-      PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-      PB_LOG3.info("PulseBrowser OS Session Start: " + nowFP);
-      PB_LOG3.info("PulseBrowser OS Settings Start: " + lastnowFP);
+      PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+      PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
+      PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
     } else {
       GLOBALSTART = Date.now();
       const ItsTime = new Date(GLOBALSTART).toLocaleString();
@@ -1104,9 +1104,9 @@ async function pbRenderStorageStats2(history) {
     }
   });
 
-  PB_LOG3.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-  PB_LOG3.info("PulseBrowser OS Session Start: " + nowFP);
-  PB_LOG3.info("PulseBrowser OS Settings Start: " + lastnowFP);
+  PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+  PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
+  PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
 
   if (!predictionText.includes("Running")) percentColor2 = "#FF8844";
   if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
@@ -1420,7 +1420,7 @@ setInterval(async () => {
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
@@ -2539,7 +2539,7 @@ async function updateModuleIcons(settings, browser) {
       ServiceWorkerOnline = res.ServiceWorkerOnline;
     }
   });
-  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       return;
@@ -4344,7 +4344,7 @@ function CheckBackTab() {
         }
       });
       gpuWarmExtra();
-      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           return;

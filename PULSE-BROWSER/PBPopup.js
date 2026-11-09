@@ -6,6 +6,8 @@ let PulseRealm = {};
 let PulseRealmSettings = {};
 let lastFailURL = "https://www.pulseworld.net";
 let authorityRealm = null;
+// Load saved PulseTabs from extension storage at startup
+let pulseTabs = {};
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBFAVICON_CACHE = {};
@@ -452,9 +454,6 @@ const PBUniversalBoost = {
 console.log("%c[PULSEBROWSER] PBPopup (Ultra Edition v6.0) loaded",
   "color:#00FF9C; font-weight:bold; font-family:monospace;");
 
-// Load saved PulseTabs from extension storage at startup
-let pulseTabs = {};
-
 function pulseRestoreTabs() {
   chrome.storage.local.get("pulseTabList", ({ pulseTabList }) => {
     if (!pulseTabList) return;
@@ -566,10 +565,10 @@ chrome.downloads.onCreated.addListener(download => {
   }
 });
 
-function openNamedTab(name, url, next) {
+async function openNamedTab(name, url) {
   const identity = normalizeIdentity(url);
-  let instanceIndex = 1;
-  if (next) instanceIndex = getNextInstanceIndex(identity);
+  name = identity;
+  const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
@@ -583,7 +582,9 @@ function openNamedTab(name, url, next) {
         savePulseTabs();
       });
 
-      pulseRehydrateTabs();
+      setTimeout(() => {
+        pulseRehydrateTabs();
+      }, 2000);
       return;
     }
 
@@ -596,7 +597,9 @@ function openNamedTab(name, url, next) {
               savePulseTabs();
             });
 
-            pulseRehydrateTabs();
+            setTimeout(() => {
+              pulseRehydrateTabs();
+            }, 2000);
             return;
           }
 
@@ -604,7 +607,9 @@ function openNamedTab(name, url, next) {
           savePulseTabs();
         });
 
-        pulseRehydrateTabs();
+        setTimeout(() => {
+          pulseRehydrateTabs();
+        }, 2000);
         return;
       }
 
@@ -617,7 +622,9 @@ function openNamedTab(name, url, next) {
       savePulseTabs();
     });
 
-    pulseRehydrateTabs();
+    setTimeout(() => {
+      pulseRehydrateTabs();
+    }, 2000);
     return;
   }
 
@@ -627,7 +634,9 @@ function openNamedTab(name, url, next) {
     savePulseTabs();
   });
 
-  pulseRehydrateTabs();
+  setTimeout(() => {
+    pulseRehydrateTabs();
+  }, 2000);
 }
 
 chrome.tabs.onRemoved.addListener((tabId) => {
@@ -1469,9 +1478,8 @@ setInterval(async () => {
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
     if (chrome.runtime.lastError) return;
     
-    if (response.realm) {
-        authorityRealm = response.realm;
-    }
+    if (response.realm) authorityRealm = response.realm;
+    if (response.pulseTabs) pulseTabs = response.pulseTabs;
   });
   aiPopupSize = await getAI3Size();
   loadOrders(aiPopupSize);
@@ -1519,9 +1527,8 @@ async function loadWorld() {
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
     if (chrome.runtime.lastError) return;
     
-    if (response.realm) {
-        authorityRealm = response.realm;
-    }
+    if (response.realm) authorityRealm = response.realm;
+    if (response.pulseTabs) pulseTabs = response.pulseTabs;
   });
   await CheckOvermindState();
   PulseRealmSettings = await pbLoadExtensionSettings();

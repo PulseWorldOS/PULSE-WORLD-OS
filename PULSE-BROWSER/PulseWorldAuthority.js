@@ -366,9 +366,7 @@ function hidePWLoader() {
     chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
       if (chrome.runtime.lastError) return;
       
-      if (response.realm) {
-          authorityRealm = response.realm;
-      }
+      if (response.realm) authorityRealm = response.realm;
     });
     
     // if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {

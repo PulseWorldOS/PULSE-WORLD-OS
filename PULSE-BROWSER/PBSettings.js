@@ -167,9 +167,9 @@ chrome.storage.local.get(["globalStart"], (res) => {
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
-      PB_LOG.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-      PB_LOG.info("PulseBrowser OS Session Start: " + nowST);
-      PB_LOG.info("PulseBrowser OS Settings Start: " + lastnowST);
+      PB_LOG.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+      PB_LOG.info("PulseBrowser OS Session Start: " + new Date(nowST).toLocaleString());
+      PB_LOG.info("PulseBrowser OS Settings Start: " + new Date(lastnowST).toLocaleString());
     } else {
       GLOBALSTART = Date.now();
     }

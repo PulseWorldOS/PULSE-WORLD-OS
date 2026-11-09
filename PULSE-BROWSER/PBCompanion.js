@@ -6,6 +6,8 @@
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
+// Load saved PulseTabs from extension storage at startup
+let pulseTabs = {};
 let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
@@ -146,9 +148,9 @@ chrome.storage.local.get(["globalStart"], (res) => {
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
-      PB_LOG2.info("PulseBrowser OS Ignition Date: " + GLOBALSTART);
-      PB_LOG2.info("PulseBrowser OS Session Start: " + nowSW);
-      PB_LOG2.info("PulseBrowser OS Settings Start: " + lastnowSW);
+      PB_LOG2.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+      PB_LOG2.info("PulseBrowser OS Session Start: " + new Date(nowSW).toLocaleString());
+      PB_LOG2.info("PulseBrowser OS Settings Start: " + new Date(lastnowSW).toLocaleString());
       PB_LOG2.info("PulseBrowser OS Present Moment: " + new Date().toLocaleString());
     } else {
       GLOBALSTART = Date.now();
@@ -1868,6 +1870,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
     
     case "PB_COMPANION_CHECK":
+      if (msg.pulseTabs) {
+        pulseTabs = msg.pulseTabs;
+      }
       // Load cache from storage at startup
       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
         if (res.ServiceWorkerOnline) {
@@ -1910,7 +1915,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAUTHORITY_REALM_CLAIM":
-      sendResponse({ ok: true, realm: authorityRealm });
+      sendResponse({ ok: true, realm: authorityRealm, pulseTabs });
       authorityRealm = null;
       break;
 
