@@ -610,7 +610,7 @@ async function gpuWarmExtra() {
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   OurLocalMemoryLayer = getLocalMemoryLayer();
-  PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
+  PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }
 
@@ -626,7 +626,7 @@ setInterval(() => {
     if (response.HelperHudBoolean) HelperHud();
   });
   OurLocalMemoryLayer = getLocalMemoryLayer();
-  PB_LOG4.info("PBCHECK_MEMORY", OurLocalMemoryLayer);
+  PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }, 1500);
 

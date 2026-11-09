@@ -1640,6 +1640,13 @@ async function openNamedTab(name, url) {
         });
         await pbRenderCacheList2();
       }, 2500);
+
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+      });
       
       setTimeout(() => {
         pulseRehydrateTabs();
@@ -1673,6 +1680,13 @@ async function openNamedTab(name, url) {
               });
               await pbRenderCacheList2();
             }, 2500);
+
+            chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+              if (chrome.runtime.lastError) return;
+              if (response.time && isValid(response.time)) {
+                  nowFP = response.time;
+              }
+            });
             
             setTimeout(() => {
               pulseRehydrateTabs();
@@ -1701,6 +1715,13 @@ async function openNamedTab(name, url) {
           });
           await pbRenderCacheList2();
         }, 2500);
+
+        chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+          if (chrome.runtime.lastError) return;
+          if (response.time && isValid(response.time)) {
+              nowFP = response.time;
+          }
+        });
         
         setTimeout(() => {
           pulseRehydrateTabs();
@@ -1734,6 +1755,13 @@ async function openNamedTab(name, url) {
       });
       await pbRenderCacheList2();
     }, 2500);
+
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.time && isValid(response.time)) {
+          nowFP = response.time;
+      }
+    });
     
     setTimeout(() => {
       pulseRehydrateTabs();
@@ -1764,6 +1792,13 @@ async function openNamedTab(name, url) {
     });
     await pbRenderCacheList2();
   }, 2500);
+
+  chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.time && isValid(response.time)) {
+        nowFP = response.time;
+    }
+  });
   
   setTimeout(() => {
     pulseRehydrateTabs();
