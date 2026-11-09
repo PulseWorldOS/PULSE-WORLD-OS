@@ -27,6 +27,9 @@ let aiSize = 0;
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
 let swSize = 0;
+const interval = getWarmInterval2();
+let intervalId = null;
+let intervalId2 = null;
 // Your cybernetic state architecture
 let aiSession = null;
 let PulsePalMemoryAIBuffer = [];
@@ -4023,12 +4026,11 @@ function CheckBackTab() {
     return Math.floor(interval);
   }
 
-  const interval = getWarmInterval2();
-  let intervalId = null;
-
   function startPulseLoop() {
     if (intervalId) return; // already running
 
+    clearInterval(intervalId2);
+    intervalId2 = null;
     intervalId = setInterval(() => {
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
@@ -4039,8 +4041,21 @@ function CheckBackTab() {
   }
 
   function stopPulseLoop() {
+    if (intervalId2) return; // already running
+
     clearInterval(intervalId);
     intervalId = null;
+    intervalId2 = setInterval(() => {
+      // ---------------------------------------------------------------------------
+      // 1. KERNEL HANDSHAKE
+      // ---------------------------------------------------------------------------
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+      });
+    }, interval);
   }
 
   startBtn.style.cursor = "cursor";
@@ -4221,6 +4236,15 @@ function CheckBackTab() {
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden || document.visibilityState === "visible") {
+      // ---------------------------------------------------------------------------
+      // 1. KERNEL HANDSHAKE
+      // ---------------------------------------------------------------------------
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+      });
       gpuWarmExtra();
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK" }, (response) => {
         if (chrome.runtime.lastError) return;
@@ -4245,15 +4269,6 @@ function CheckBackTab() {
         injectPulseScreenFromMemory();
         pulseRehydrateTabs();
       }, interval3);
-      // ---------------------------------------------------------------------------
-      // 1. KERNEL HANDSHAKE
-      // ---------------------------------------------------------------------------
-      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
-        if (chrome.runtime.lastError) return;
-        if (response.time && isValid(response.time)) {
-            nowFP = response.time;
-        }
-      });
       updateOverlay();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
