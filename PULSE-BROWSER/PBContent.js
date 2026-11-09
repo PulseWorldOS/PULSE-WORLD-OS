@@ -613,6 +613,31 @@ function loadLastSavedVideo(callback) {
   });
 }
 
+async function runProtectedCompute(computeTaskFunction) {
+  try {
+    // 1. Lock the system right on that invisible line before the execution
+    if (chrome && chrome.power) {
+      chrome.power.requestKeepAwake("system");
+      console.log("[POWER GOVERNOR] System locked awake for calculation...");
+    }
+
+    // 2. Execute your pure WASM math proof or WebGPU logic
+    const result = await computeTaskFunction();
+    return result;
+
+  } catch (error) {
+    console.error("[POWER GOVERNOR] Calculation crashed:", error);
+    throw error;
+  } finally {
+    // 3. ALWAYS release the lock inside a 'finally' block!
+    // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
+    if (chrome && chrome.power) {
+      chrome.power.releaseKeepAwake();
+      console.log("[POWER GOVERNOR] System lock released cleanly.");
+    }
+  }
+}
+
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   gpuEnabled = "GPU Driver Error";
@@ -655,7 +680,7 @@ async function gpuWarmExtra() {
     vid.src = "PulseWorldOS-Older.mp4";
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  OurLocalMemoryLayer = getLocalMemoryLayer();
+  OurLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
@@ -681,7 +706,7 @@ setInterval(() => {
       }
     }
   });
-  OurLocalMemoryLayer = getLocalMemoryLayer();
+  OurLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
@@ -744,7 +769,7 @@ async function injectHUD() {
   document.body.appendChild(wrap);
 
   const sync = getWarmInterval();
-  OurLocalMemoryLayer = getLocalMemoryLayer();
+  OurLocalMemoryLayer = runProtectedCompute(getLocalMemoryLayer);
   let body = document.getElementById("pb-hud-body");
   updateHUD(body);
   PulseBrowserPreview();
