@@ -2620,7 +2620,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (msg.PulsePalMemoryAIBuffer) {
         PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer;
-        safeStorageSet({ PulsePalMemoryAIBuffer });
         // (async () => {
         //   aiSession = await chrome.storage.local.get(["aiSession"]);
         //   if (!aiSession) {
@@ -2636,6 +2635,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           console.log(SessionAI.PulsePalMemoryAIBuffer);
         })();
       }
+      safeStorageSet({ PulsePalMemoryAIBuffer });
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       sendResponse({ ok: true, PulsePalMemoryAIBuffer });
       return true;
