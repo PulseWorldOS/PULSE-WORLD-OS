@@ -66,7 +66,7 @@ try {
 
 function OvermindCrossTabSync(payload) {
   try {
-    PB_LOG2.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!");
+    PB_LOG2.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
     PulseBrowserChannel.postMessage({
       kind: "command_prompt",
       payload,
@@ -1650,7 +1650,6 @@ function getWarmInterval() {
 function startWarmBootLoop() {
   async function loop() {
     try {
-      OvermindCrossTabSync(OvermindOrders);
       await pbWarmBoot();
     } catch (_) {}
 
@@ -1663,14 +1662,14 @@ function startWarmBootLoop() {
   setTimeout(loop, 600);
 }
 
-function TestingSequence() {
-  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep! Syncing Overmind Orders!");
+function TestingSequence(OvermindOrders) {
+  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep! Syncing Overmind Orders!", OvermindOrders);
   OvermindCrossTabSync(OvermindOrders);
 }
 
 setInterval(() => {
-  TestingSequence();
-}, 45000);
+  TestingSequence(OvermindOrders);
+}, 15000);
 
 startWarmBootLoop();
 
