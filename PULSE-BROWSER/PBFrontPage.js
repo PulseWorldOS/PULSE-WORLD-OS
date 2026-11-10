@@ -489,10 +489,11 @@ async function askLocalModelWithLiveWeb(websiteURL) {
   try {
     // 1. Dynamically fetch current data from an external 2026 API or webpage
     // (Replace with whatever news feed or data API endpoint you want to use)
-    const webResponse = await fetch(websiteURL);
-    const liveData2026 = await webResponse.text(); 
-    console.log(webResponse);
-    console.log(liveData2026);
+    const webResponse = await fetch(`http://web.archive.org/web/` + websiteURL);
+    let liveData2026 = await webResponse.text(); 
+    console.log("WEBRESPONSE: " + webResponse);
+    console.log("LIVEDATA: " + liveData2026);
+    liveData2026 = liveData2026.slice(0, 7500);
 
     // 3. Run your prompt
     const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${liveData2026}. Summarize the latest updates based on the provided text you were just sent.`);
