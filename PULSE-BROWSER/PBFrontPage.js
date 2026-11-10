@@ -12,6 +12,10 @@ let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion"
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let CompanionDeprivation = false;
+let ErrorCount = 0;
+const MAX_ERRORS = 1000;
+let ErrorOverflow = false;
+let errorLock = false;
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
@@ -143,9 +147,10 @@ class PulseWasmEngine {
   async EarnerLockedandLoaded() {
     this.isLoaded = true;
     if (chrome && chrome.power) chrome.power.requestKeepAwake("system");
+    console.log("[CONSOLE WASM ENGINE] Locked and Loaded!");
   }
 
-  // Load the pure binary math module into memory
+    // Load the pure binary math module into memory
   async initEngine(wasmBinaryUrl) {
     if (!wasmBinaryUrl) wasmBinaryUrl = chrome.runtime.getURL("PulseEarnWarmer.wasm");
     if (this.isLoaded) return;
@@ -155,47 +160,121 @@ class PulseWasmEngine {
       const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
       // Safety Check: Ensure the server actually returned a successful response
       if (!response.ok) {
-        throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
       }
       const buffer = await response.arrayBuffer();
       
       // Compile natively right on that 1ms service worker line
       const module = await WebAssembly.compile(buffer);
+      
+      // Match the exact namespace strings the binary expects
       this.wasmInstance = await WebAssembly.instantiate(module, {
+        my_namespace: {
+          imported_func: (arg) => { 
+            console.log("[CONSOLE WASM CALLBACK] Function invoked from WASM:", arg); 
+          }
+        },
         env: {
           memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
-          abort: () => { console.error("[WASM ABORT] Critical execution crash"); }
+          abort: () => { console.error("[CONSOLE WASM ABORT] Critical execution crash"); }
         }
       });
 
       await this.EarnerLockedandLoaded();
-      console.log("[WASM ENGINE] Pure mathematical module stable and hot.");
+      console.log("[CONSOLE WASM ENGINE] Pure mathematical module stable and hot.");
     } catch (err) {
-      console.error("[WASM ENGINE] Initialization failed:", err);
+      console.error("[CONSOLE WASM ENGINE] Initialization failed:", err);
     }
   }
 
-  // The pure compute pipeline: Input bytes -> Output proofs
+    // The pure compute pipeline: Input bytes -> Output proofs
   async executeProofJob(rawPayloadData) {
     if (!this.isLoaded) throw new Error("WASM engine not ready");
     
     // 1. Transform payload data into a dense binary array
     const inputArray = new Uint8Array(rawPayloadData);
+    const length = inputArray.length;
+
+    // 2. Allocate spaces inside WASM memory if your module exposes allocation exports
+    // (Commonly named 'malloc', 'allocate', or custom buffer management exports)
+    let inputAddress = 0;
+    if (typeof this.wasmInstance.exports.malloc === 'function') {
+      inputAddress = this.wasmInstance.exports.malloc(length);
+    } else if (this.wasmInstance.exports.input_buffer_pointer) {
+      // Alternate pattern: Static pre-allocated buffer address
+      inputAddress = this.wasmInstance.exports.input_buffer_pointer.value || this.wasmInstance.exports.input_buffer_pointer;
+    }
+
+    // 3. Copy the JS array data into the WebAssembly memory buffer view
+    const wasmMemoryBuffer = new Uint8Array(this.wasmInstance.exports.memory.buffer);
+    wasmMemoryBuffer.set(inputArray, inputAddress);
     
-    // 2. Run your specific math execution (e.g., factoring out formulas)
-    // This executes at raw native silicon speeds inside the worker
-    const resultAddress = this.wasmInstance.exports.computeMathProofs(inputArray);
+    // 4. Run your specific math execution, passing the address pointer and length
+    // Note: If your custom WASM module strictly maps to a single default memory view,
+    // modify these parameters to match your binary signature.
+    const resultAddress = this.wasmInstance.exports.computeMathProofs(inputAddress, length);
     
-    // 3. Extract the high-density result from WASM memory
-    const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress);
-    if (chrome && chrome.power) chrome.power.releaseKeepAwake();
-    return proofResult;
+    // 5. Extract the high-density result from WASM memory
+    // Important: Determine the response size (here assuming a fixed size or a known layout)
+    const resultLength = 32; // Replace with your exact expected output proof size in bytes
+    const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress, resultLength);
+
+    // Free memory if your module exposes a 'free' command to prevent leaks
+    if (typeof this.wasmInstance.exports.free === 'function') {
+      this.wasmInstance.exports.free(inputAddress);
+    }
+
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.releaseKeepAwake();
+    }
+    
+    // Slice returns a decoupled JS array so WASM memory garbage collection can safely run
+    return proofResult.slice();
   }
+
+  // // The pure compute pipeline: Input bytes -> Output proofs
+  // async executeProofJob(rawPayloadData) {
+  //   if (!this.isLoaded) throw new Error("WASM engine not ready");
+    
+  //   // 1. Transform payload data into a dense binary array
+  //   const inputArray = new Uint8Array(rawPayloadData);
+    
+  //   // 2. Run your specific math execution (e.g., factoring out formulas)
+  //   // This executes at raw native silicon speeds inside the worker
+  //   const resultAddress = this.wasmInstance.exports.computeMathProofs(inputArray);
+    
+  //   // 3. Extract the high-density result from WASM memory
+  //   const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress);
+  //   if (chrome && chrome.power) chrome.power.releaseKeepAwake();
+  //   return proofResult;
+  // }
 }
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
-PB_LOG3.event("Console: Pulse Earner Online and Listening!", pulseWasmCompute);
+PB_LOG3.event("Console Companion: Pulse Earner Online and Listening!", pulseWasmCompute);
+
+async function runEngineTest() {
+  console.log("[TEST] Initializing WASM engine testing rig...");
+  
+  await pulseWasmCompute.initEngine();
+
+  // 2. Craft an artificial mock byte payload (e.g., 16 dummy working bytes)
+  const mockPayload = [0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81, 0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09];
+  
+  console.time("[PERFORMANCE] Native WASM Execution Time");
+  try {
+    // 3. Fire the execution job
+    const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
+    
+    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+    console.log("[TEST SUCCESS] Received WASM Proof Bytes back from Silicon:", outputProof);
+    
+  } catch (testError) {
+    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+    console.error("[TEST FAILED] WASM Execution Pipeline broke:", testError);
+  }
+}
 
 async function runProtectedCompute(computeTaskFunction) {
   try {
@@ -1051,7 +1130,33 @@ async function pbRenderCacheList2() {
 //     req.onerror = () => reject(req.error);
 //   });
 // }
+
+function makeBuffered(fn) {
+  return (...args) => {
+      if (ErrorCount >= MAX_ERRORS) {
+          if (!ErrorOverflow) {
+              ErrorOverflow = true;
+              fn("⚠ Error buffer overflow — further errors suppressed");
+          }
+          return;
+      }
+      ErrorCount++;
+      fn(...args);
+  };
+}
+function safeSpeak(msg) {
+  if (errorLock) return;
+  errorLock = true;
+  try {
+    document.getElementById("searchengineTextbox").textContent = msg;
+  } catch (e) {
+    console.warn("pulsepalSpeak failed:", e);
+  }
+  errorLock = false;
+}
+
 window.onerror = function(message, source, lineno, colno, error) {
+  safeSpeak("[JS ERROR Found] " + makeBuffered(message));
   document.getElementById("subtitle").style.color = "red";
   document.getElementById("subsubtitle").style.color = "red";
 };
@@ -1538,10 +1643,14 @@ setInterval(async () => {
       disablesw.innerText = "Pause Companion";
     }
     if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
-      (async () => {
-        await pulseWasmCompute.initEngine();
-        PB_LOG3.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
-      })();
+      try {
+        (async () => {
+          await pulseWasmCompute.initEngine();
+          PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+        })();
+      } catch (err) {
+        PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+      }
     }
   });
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
@@ -2660,10 +2769,14 @@ async function updateModuleIcons(settings, browser) {
       disablesw.innerText = "Pause Companion";
     }
     if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
-      (async () => {
-        await pulseWasmCompute.initEngine();
-        PB_LOG3.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
-      })();
+      try {
+        (async () => {
+          await pulseWasmCompute.initEngine();
+          PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+        })();
+      } catch (err) {
+        PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+      }
     }
   });
   if (!settings) settings = await pbLoadExtensionSettings();
@@ -4471,10 +4584,14 @@ function CheckBackTab() {
           disablesw.innerText = "Pause Companion";
         }
         if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
-          (async () => {
-            await pulseWasmCompute.initEngine();
-            PB_LOG3.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
-          })();
+          try {
+            (async () => {
+              await pulseWasmCompute.initEngine();
+              PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+            })();
+          } catch (err) {
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+          }
         }
       });
       injectPulseScreenFromMemory(true);

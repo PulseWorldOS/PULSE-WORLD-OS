@@ -134,6 +134,7 @@ function nowMs() {
 let ErrorCount = 0;
 const MAX_ERRORS = 1000;
 let ErrorOverflow = false;
+
 function makeBuffered(fn) {
   return (...args) => {
       if (ErrorCount >= MAX_ERRORS) {
@@ -1225,6 +1226,7 @@ function pulseSinceClock() {
     hour12: true
   });
 }
+
 function safeSpeak(msg) {
   if (errorLock) return;
   errorLock = true;
