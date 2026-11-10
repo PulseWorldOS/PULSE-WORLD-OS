@@ -1728,6 +1728,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   } else if (info.menuItemId === 'attemptOfflineSnapshot') {
     TakeOfflineSnapshot = true;
   } else if (info.menuItemId === 'runWASMTest') {
+    CompanionMessage = "<-- Running User-Called WASM Test Job -->";
     try {
       (async () => {
         await runEngineTest();
@@ -2086,7 +2087,7 @@ async function runEngineTest() {
       } else if (timecolor > 10) {
         timecolor = "gold";
       }
-      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(4).toLocaleString() + ` ms</font>]`;
+      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(6).toLocaleString() + ` ms</font>]`;
       WasmSuccess = true;
       console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     }

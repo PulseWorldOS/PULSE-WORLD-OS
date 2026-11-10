@@ -401,7 +401,7 @@ async function runEngineTest() {
       } else if (timecolor > 10) {
         timecolor = "gold";
       }
-      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(4).toLocaleString() + ` ms</font>]`;
+      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(6).toLocaleString() + ` ms</font>]`;
       WasmSuccess = true;
       console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     }
