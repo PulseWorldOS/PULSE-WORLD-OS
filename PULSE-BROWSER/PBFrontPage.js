@@ -84,6 +84,7 @@ const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
+const earnerminipanel = document.getElementById("earner-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
@@ -403,7 +404,7 @@ async function runEngineTest() {
       }
       timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(3).toLocaleString() + ` ms</font>]`;
       WasmSuccess = true;
-      console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+      console.log("[Success] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     }
     
   } catch (testError) {
@@ -529,7 +530,7 @@ async function runLocalAI() {
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Today's date is ${new Date().toDateString()}.
+- Today's date is ${new Date().toDateString()}. Your knowledge cutoff is [e.g., Early 2024].. please update your logic.
 - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
 - Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
@@ -931,6 +932,10 @@ async function CheckEarnState() {
     pbPulseEarn.style.height = "70px";
     pbPulseEarn.style.border = "2px solid #000";
     earnerinnerpanel.style.display = "none";
+    // earnerminipanel.style.height = "30px";
+    // earnerminipanel.style.width = "30px";
+    // earnerminipanel.style.top = "225px";
+    // earnerminipanel.style.left = "710px";
     earnerpanel.style.background = "transparent";
     earnerpanel.style.backdropFilter = "none";
     earnerpanel.style.boxShadow = "none";
@@ -953,6 +958,8 @@ async function CheckEarnState() {
     pbPulseEarn.style.transform = "";
     pbPulseEarn.style.opacity = "0.25";
     earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+    // earnerminipanel.style.top = "";
+    // earnerminipanel.style.left = "";
     earnerpanel.style.background = "";
     earnerpanel.style.backdropFilter = "";
     earnerpanel.style.boxShadow = "";
@@ -965,6 +972,8 @@ async function CheckEarnState() {
     }, 1200);
   }
 
+  earnerminipanel.onclick = async () => pbPulseEarn.click();
+
   pbPulseEarn.onclick = async () => {
     if (!EarnHidden) {
       EarnHidden = true;
@@ -975,6 +984,10 @@ async function CheckEarnState() {
       pbPulseEarn.style.height = "70px";
       pbPulseEarn.style.border = "2px solid #000";
       earnerinnerpanel.style.display = "none";
+      // earnerminipanel.style.height = "30px";
+      // earnerminipanel.style.width = "30px";
+      // earnerminipanel.style.top = "225px";
+      // earnerminipanel.style.left = "710px";
       earnerpanel.style.background = "transparent";
       earnerpanel.style.backdropFilter = "none";
       earnerpanel.style.boxShadow = "none";
@@ -997,6 +1010,8 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "";
       pbPulseEarn.style.opacity = "0.25";
       earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+      // earnerminipanel.style.top = "";
+      // earnerminipanel.style.left = "";
       earnerpanel.style.background = "";
       earnerpanel.style.backdropFilter = "";
       earnerpanel.style.boxShadow = "";

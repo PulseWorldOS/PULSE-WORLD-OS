@@ -754,7 +754,7 @@ async function runEngineTest() {
       }
       timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(4).toLocaleString() + ` ms</font>]`;
       WasmSuccess = true;
-      console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+      console.log("[Success] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     }
     
   } catch (testError) {
@@ -8547,10 +8547,10 @@ async function runLocalAI() {
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-    let rawPrompt = `What is your opinion on PulseWorld and its Tiered Multiversal Realms specifically (${PulseRealm.CurrentHost}) and its unique architecture and design?`;
+    let rawPrompt = `What is your opinion on the PulseWorld Multiverse but specifically (${PulseRealm.CurrentHost}) and its unique architecture and design?`;
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Today's date is ${new Date().toDateString()}.
+- Today's date is ${new Date().toDateString()}. Your knowledge cutoff is [e.g., Early 2024].. please update your logic.
 - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
 - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
 - You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.

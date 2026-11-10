@@ -1730,19 +1730,15 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     TakeOfflineSnapshot = true;
   } else if (info.menuItemId === 'runWASMTest') {
     runWasmTest = true;
-    CompanionMessage = "<-- Running User-Called WASM Test Job -->";
-    setTimeout(() => {
-      try {
-        (async () => {
-          await runEngineTest();
-          PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
-        })();
-      } catch (err) {
-        CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
-        PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
-      }
-    }, 2000);
-    runWasmTest = false;
+    try {
+      (async () => {
+        await runEngineTest();
+        PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
+      })();
+    } catch (err) {
+      CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
+      PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+    }
   }
 });
 
@@ -2094,7 +2090,7 @@ async function runEngineTest() {
       }
       timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(3).toLocaleString() + ` ms</font>]`;
       WasmSuccess = true;
-      console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+      console.log("[Success] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     }
     
   } catch (testError) {
@@ -2182,8 +2178,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         } else {
           if (runWasmTest) {
             CompanionMessage = "<-- Running User-Called WASM Test Job -->";
+            runWasmTest = false;
           } else {
-            CompanionMessage = `[<font color="lightgreen">SUCCESS</font>] Received WASM TEST Proof.. ` + timeProof;
+            CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
           }
         }
       }

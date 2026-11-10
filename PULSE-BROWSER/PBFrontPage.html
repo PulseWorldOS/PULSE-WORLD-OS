@@ -78,7 +78,6 @@
       border-right: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 5;
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
@@ -128,6 +127,27 @@
       align-items: center;
       background: rgba(0, 0, 0, 0.35);
       backdrop-filter: blur(24px);
+      font-size: 0.8rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+    .earner-mini-panel {
+      position: fixed;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      top: 0;
+      right: 0;
+      height: 48px;
+      width: clamp(45px, 12vw, 50px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
       font-size: 0.8rem;
       border: 2px dashed rgba(255, 255, 255, 0.15);
       border-radius: 30px;
@@ -1441,6 +1461,7 @@
     <!-- Left panel content -->
   </div>
   <div class="earner-panel" id="earner-panel">
+    <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
     <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
@@ -1477,7 +1498,7 @@
   </div>
 
   <div class="side-panel right-panel" id="side-panel right-panel">
-    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+    <div style="font-weight:bold; text-align: center; z-index: 4; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
       PulseBrowser OS - User Overlay
     </div>
 
