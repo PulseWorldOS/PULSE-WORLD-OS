@@ -388,8 +388,9 @@ async function runEngineTest() {
     // 3. Fire the execution job
     const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
     
-    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    console.log("[TEST SUCCESS] Received WASM Proof Bytes back from Silicon:", outputProof);
+    const WasmTime = console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+    console.log("[TEST SUCCESS] Received WASM Proof Bytes back from Silicon:", outputProof);    
+    CompanionMessage = "[TEST SUCCESS] Received WASM Proof: " + WasmTime;
     
   } catch (testError) {
     console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
