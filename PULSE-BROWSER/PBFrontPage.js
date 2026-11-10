@@ -3176,6 +3176,29 @@ async function updateModuleIcons(settings, browser) {
       moduleFav6Icon.style.backgroundRepeat = "no-repeat";
     }
   }
+
+  if (settings.adBlocker === "internal") {
+    AdBlockerOn();
+  } else {
+    AdBlockerOff();
+  }
+}
+
+async function AdBlockerOff() {
+  chrome.declarativeNetRequest.updateEnabledRulesets({
+    disableRulesetIds: ["pulseworld_rules"]
+  }).then(() => {
+    console.log("Ruleset disabled successfully.");
+  });
+}
+
+async function AdBlockerOn() {
+  chrome.declarativeNetRequest.updateEnabledRulesets({
+    enableRulesetIds: ["pulseworld_rules"]
+  }).then(() => {
+    console.log("Ruleset enabled successfully.");
+  });
+
 }
 
 async function setTheStage() {
@@ -3219,6 +3242,7 @@ async function setTheStage() {
   document.addEventListener("keydown", (e) => {
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    if ((e.ctrlKey || e.metaKey)) return;
     if ((e.target === CompanionConsoleInput) || (e.target === CompanionDetailsMessage)) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];

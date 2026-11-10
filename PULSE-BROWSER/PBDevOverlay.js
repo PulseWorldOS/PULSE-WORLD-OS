@@ -126,7 +126,7 @@ function updatePerformance(realm) {
   let lastNAV = realm.navHistory;
   if (lastNAV) lastNAV = realm.navHistory.slice(-1)[0];
   let lastNAVshort = lastNAV;
-  if (lastNAV) lastNAVshort = lastNAV?.slice(0, 39);
+  if (lastNAV) lastNAVshort = lastNAV?.slice(0, 36);
 
   const lastPerf = perf.length > 0 ? perf[perf.length - 1] : null;
 

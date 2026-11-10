@@ -561,11 +561,23 @@ checkPersistentStorage(true);
 //     location.href = `?Impulse=${realm}`;
 //   }
 // })();
+function getReadableName(url) {
+  try {
+    const u = new URL(url);
+
+    let host = u.hostname.replace(/^www\./, "");
+
+    return host;
+
+  } catch {
+    return url;
+  }
+}
 
 const PB_LOG3 = {
   info(label, data) {
     console.log(
-      `%c[${PulseRealm.CurrentHost}][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${getReadableName(PulseRealm.CurrentHost)}][INFO][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#55BBFF; font-weight:bold;",
       data || ""
     );
@@ -573,7 +585,7 @@ const PB_LOG3 = {
 
   change(label, before, after) {
     console.groupCollapsed(
-      `%c[${PulseRealm.CurrentHost}][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${getReadableName(PulseRealm.CurrentHost)}][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00FFAA; font-weight:bold;"
     );
     console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
@@ -583,7 +595,7 @@ const PB_LOG3 = {
 
   save(label, data) {
     console.log(
-      `%c[${PulseRealm.CurrentHost}][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${getReadableName(PulseRealm.CurrentHost)}][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00DDFF; font-weight:bold;",
       data
     );
@@ -591,7 +603,7 @@ const PB_LOG3 = {
 
   load(label, data) {
     console.log(
-      `%c[${PulseRealm.CurrentHost}][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${getReadableName(PulseRealm.CurrentHost)}][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FFD700; font-weight:bold;",
       data
     );
@@ -599,7 +611,7 @@ const PB_LOG3 = {
 
   event(label, data) {
     console.log(
-      `%c[${PulseRealm.CurrentHost}][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${getReadableName(PulseRealm.CurrentHost)}][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FF55AA; font-weight:bold;",
       data
     );

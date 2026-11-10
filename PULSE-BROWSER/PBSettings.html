@@ -485,6 +485,18 @@
     <p class="pw-note1">
       When using Internal Modules, the external link is kept as a backup. When using External Modules, the URL is used directly.
     </p>
+
+    <!-- EMAIL SETTINGS -->
+    <section class="pw-section">
+      <label class="pw-label">Ad Blocker
+      
+      <select id="adBlocker" class="pw-select">
+        <option value="internal" selected>Turn On</option>
+        <option value="external">Turn Off</option>
+      </select>
+      </label>
+    </section>
+
     <!-- EMAIL SETTINGS -->
     <section class="pw-section">
       <label class="pw-label">Email Mode
@@ -670,8 +682,14 @@
       </label>
       <span class="pw-switch-label">Allow Programmatic Banking</span>
 
+      <label class="pw-switch">
+        <input type="checkbox" id="programmaticAI">
+        <span class="pw-slider"></span>
+      </label>
+      <span class="pw-switch-label">Allow AI Cybernetic Actions</span>
+
       <p class="pw-note1">
-        These permissions allow automated, programmatic actions for your email and banking services, using either internal or external providers as configured above.
+        These permissions allow automated, programmatic actions for your email, banking, and AI services, using either internal or external providers as configured above.
       </p>
     </section>
 

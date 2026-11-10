@@ -266,6 +266,7 @@ async function loadExtensionSettingsUI() {
 
   const fields = {    
     emailMode: "emailMode",
+    adBlocker: "adBlocker",
     tetherCode: "tetherCode",
     externalEmailLink: "externalEmailLink",
     acceleratedModule1Link: "acceleratedModule1Link",
@@ -284,6 +285,7 @@ async function loadExtensionSettingsUI() {
     publicLink: "publicLink",
     programmaticEmail: "programmaticEmail",
     programmaticBanking: "programmaticBanking",
+    programmaticAI: "programmaticAI",
     searchMode: "searchMode",
     externalSearchLink: "externalSearchLink",
     socialMode: "socialMode",
@@ -319,6 +321,7 @@ async function saveExtensionSettingsUI() {
   
   const settings = {
     emailMode: document.getElementById("emailMode").value,
+    adBlocker: document.getElementById("adBlocker").value,
     externalEmailLink: document.getElementById("externalEmailLink").value.trim(),
     acceleratedModule1Link: document.getElementById("acceleratedModule1Link").value.trim(),
     acceleratedModule2Link: document.getElementById("acceleratedModule2Link").value.trim(),
@@ -350,7 +353,8 @@ async function saveExtensionSettingsUI() {
     publicLink: document.getElementById("publicLink").value.trim(),
 
     programmaticEmail: document.getElementById("programmaticEmail").checked,
-    programmaticBanking: document.getElementById("programmaticBanking").checked
+    programmaticBanking: document.getElementById("programmaticBanking").checked,
+    programmaticAI: document.getElementById("programmaticAI").checked
   };
 
   await Pulse2safeStorageSet({ [EXTENSION_SETTINGS_KEY2]: settings });
@@ -985,6 +989,7 @@ if (location.href.includes("PBSettings.html")) {
 
     const idsToWatch = [
       "emailMode",
+      "adBlocker",
       "tetherCode",
       "externalEmailLink",
       "acceleratedModule1Link",
@@ -1004,6 +1009,7 @@ if (location.href.includes("PBSettings.html")) {
       "publicLink",
       "programmaticEmail",
       "programmaticBanking",
+      "programmaticAI",
       "searchMode",
       "externalSearchLink",
       "socialMode",
