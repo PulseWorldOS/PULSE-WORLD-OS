@@ -329,6 +329,7 @@ self.addEventListener("install", event => {
     "PBCompanion.js",
     "PBInterceptor.js",
     "PBAccelerator.js",
+    "PulseEarnWarmer.wasm",
     "PBRouter.js",
     "PBSettings.js",
     "PulseOSTabs.png",
@@ -374,7 +375,13 @@ async function handlePulseRequest(req) {
   }
 
   try {
-    const net =  await fetch(req, { cache: 'no-store' });
+    const net = await fetch(req, { cache: 'no-store' });
+
+    // 🚀 FIX: Detect real WASM binaries dynamically by headers, regardless of the URL string
+    const contentType = net.headers.get('content-type') || '';
+    if (contentType.includes('application/wasm')) {
+      return net; // Pass it straight through, do not cache or alter it
+    }
 
     PULSE_ONLINE = true;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 1);
@@ -393,50 +400,40 @@ async function handlePulseRequest(req) {
     return net;
 
   } catch (err) {
+    // If the error happened *during* fetch and it's a known WASM endpoint, rethrow it
+    // so it doesn't get swallowed by the HTML fallback block below
+    if (req.url.includes('wasm') || req.headers.get('Accept')?.includes('application/wasm')) {
+      return Promise.reject(err); 
+    }
 
     PULSE_ONLINE = false;
     pulseSetFlag(PULSE_SHARED_INDEX.ONLINE_FLAG, 0);
 
     // Offline fallback: return last known cached version
     const fallback = await cache.match(req);
-
     if (fallback) return fallback;
 
     if (req.url.startsWith('chrome-extension://')) {
-      const pulseworldURL = req.url
-        .replace(location.origin, "https://www.pulseworld.net");
-
+      const pulseworldURL = req.url.replace(location.origin, "https://pulseworld.net");
       const pulseworldFallback = await cache.match(pulseworldURL);
-
-      if (pulseworldFallback) {
-        return pulseworldFallback;
-      }
+      if (pulseworldFallback) return pulseworldFallback;
     }
 
-    // Try the REAL realm if offline realm missing
     if (req.url.includes("pw=offline")) {
-      const originalUrl = req.url
-        .replace(/[?&]pw=offline/g, "")
-        .replace("?&", "?")
-        .replace(/\?$/, "");
-
+      const originalUrl = req.url.replace(/[?&]pw=offline/g, "").replace("?&", "?").replace(/\?$/, "");
       const originalFallback = await cache.match(originalUrl);
-
-      if (originalFallback) {
-        return originalFallback;
-      }
+      if (originalFallback) return originalFallback;
     }
 
     // Final fallback: offline message
     return new Response("<h1>You are Offline without a Realm!</h1><p>Please Check your Connection!</p>", {
       status: 503,
       statusText: "Realm Unavailable",
-      headers: {
-        "Content-Type": "text/html; charset=utf-8"
-      }
+      headers: { "Content-Type": "text/html; charset=utf-8" }
     });
   }
 }
+
 
 
 // ============================================================
@@ -814,6 +811,10 @@ self.addEventListener('fetch', event => {
   // Only cache GET requests
   if (!ServiceWorkerOnline) return;
   if (req.method !== 'GET') return;
+   // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
+     return; // Bypasses service worker caching entirely
+  }
   // // Skip chrome-extension:// URLs (cannot be cached)
   if (req.url.startsWith('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
@@ -1779,12 +1780,16 @@ class PulseWasmEngine {
 
   // Load the pure binary math module into memory
   async initEngine(wasmBinaryUrl) {
-    if (!wasmBinaryUrl) wasmBinaryUrl = 'https://github.io';
+    if (!wasmBinaryUrl) wasmBinaryUrl = chrome.runtime.getURL("PulseEarnWarmer.wasm");
     if (this.isLoaded) return;
     
     try {
       // Fetch the highly dense compiled binary module
-      const response = await fetchWithYourQueryStringCache(wasmBinaryUrl);
+      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+      // Safety Check: Ensure the server actually returned a successful response
+      if (!response.ok) {
+        throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
+      }
       const buffer = await response.arrayBuffer();
       
       // Compile natively right on that 1ms service worker line
@@ -1796,7 +1801,7 @@ class PulseWasmEngine {
         }
       });
 
-      EarnerLockedandLoaded();
+      await this.EarnerLockedandLoaded();
       console.log("[WASM ENGINE] Pure mathematical module stable and hot.");
     } catch (err) {
       console.error("[WASM ENGINE] Initialization failed:", err);
@@ -1930,7 +1935,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         } else {
           CompanionMessage = "<-- Infusing Earning Adrenaline -->";
           try {
-            pulseWasmCompute.initEngine();
+            (async () => {
+              await pulseWasmCompute.initEngine();
+            })();
             PB_LOG2.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
           } catch (err) {
             PB_LOG2.event("Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);

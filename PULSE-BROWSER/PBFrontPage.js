@@ -147,11 +147,16 @@ class PulseWasmEngine {
 
   // Load the pure binary math module into memory
   async initEngine(wasmBinaryUrl) {
+    if (!wasmBinaryUrl) wasmBinaryUrl = chrome.runtime.getURL("PulseEarnWarmer.wasm");
     if (this.isLoaded) return;
     
     try {
       // Fetch the highly dense compiled binary module
-      const response = await fetchWithYourQueryStringCache(wasmBinaryUrl);
+      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+      // Safety Check: Ensure the server actually returned a successful response
+      if (!response.ok) {
+        throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
+      }
       const buffer = await response.arrayBuffer();
       
       // Compile natively right on that 1ms service worker line
@@ -163,7 +168,7 @@ class PulseWasmEngine {
         }
       });
 
-      EarnerLockedandLoaded();
+      await this.EarnerLockedandLoaded();
       console.log("[WASM ENGINE] Pure mathematical module stable and hot.");
     } catch (err) {
       console.error("[WASM ENGINE] Initialization failed:", err);
@@ -1532,6 +1537,12 @@ setInterval(async () => {
     } else {
       disablesw.innerText = "Pause Companion";
     }
+    if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+      (async () => {
+        await pulseWasmCompute.initEngine();
+        PB_LOG3.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+      })();
+    }
   });
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
@@ -2647,6 +2658,12 @@ async function updateModuleIcons(settings, browser) {
       disablesw.innerText = "Resume Companion";
     } else {
       disablesw.innerText = "Pause Companion";
+    }
+    if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+      (async () => {
+        await pulseWasmCompute.initEngine();
+        PB_LOG3.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+      })();
     }
   });
   if (!settings) settings = await pbLoadExtensionSettings();
@@ -4452,6 +4469,12 @@ function CheckBackTab() {
           disablesw.innerText = "Resume Companion";
         } else {
           disablesw.innerText = "Pause Companion";
+        }
+        if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+          (async () => {
+            await pulseWasmCompute.initEngine();
+            PB_LOG3.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          })();
         }
       });
       injectPulseScreenFromMemory(true);
