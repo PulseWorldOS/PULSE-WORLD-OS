@@ -2158,8 +2158,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
             CompanionMessage = "Earning Adrenaline Infused & Ready..";
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
-            CompanionMessage = "Waiting for Jobs for Scan Approval...";
-          } else if (CompanionMessage === "Waiting for Jobs for Scan Approval...") {
+            CompanionMessage = "Waiting for Jobs for Submission...";
+          } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
             try {
               (async () => {
@@ -2180,13 +2180,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             CompanionMessage = "<-- Running User-Called WASM Test Job -->";
             runWasmTest = false;
           } else {
-            if (CompanionMessage.includes("Received WASM TEST Proof")) {
-              CompanionMessage = "Waiting for Jobs for Submission Testing...";
-            } else if (CompanionMessage = "Waiting for Jobs for Submission Testing...") {
-              CompanionMessage = "Waiting for Jobs for Submission Testing...";
-            } else {
-              CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
-            }
+            CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
           }
         }
       }

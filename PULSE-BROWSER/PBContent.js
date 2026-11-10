@@ -712,7 +712,7 @@ setInterval(async () => {
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
-}, 1500);
+}, 3500);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
