@@ -34,22 +34,22 @@ function isValid(t) {
 }
 
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL2 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================
 
-let PulseBrowserChannel = null;
+let PulseBrowserChannel2 = null;
 try {
-  PulseBrowserChannel = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL);
+  PulseBrowserChannel2 = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL2);
 } catch {
-  PulseBrowserChannel = null;
+  PulseBrowserChannel2 = null;
 }
 
 function OvermindCrossTabSync(payload) {
   try {
     PB_LOG.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
-    PulseBrowserChannel.postMessage({
+    PulseBrowserChannel2.postMessage({
       kind: "command_prompt",
       payload,
       ts: nowPP
@@ -57,8 +57,8 @@ function OvermindCrossTabSync(payload) {
   } catch {}
 }
 
-if (PulseBrowserChannel) {
-  PulseBrowserChannel.onmessage = (ev) => {
+if (PulseBrowserChannel2) {
+  PulseBrowserChannel2.onmessage = (ev) => {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {
@@ -318,7 +318,7 @@ CompanionPopupConsoleSend.onclick = async () => {
   ${rawPrompt}
 
   [PULSE PAL RESPONSE]:`;
-  if (authorityRealm) rawPrompt = text + "--Please Read over this Snapshot of this Website and Tell me A little About it: " + authorityRealm;
+  
   if (authorityRealm) authorityRealm = null;
   let CompanionPopupTitle = document.getElementById("CompanionTitle");
   CompanionPopupTitle.style.marginBottom = "6px;"
@@ -331,6 +331,11 @@ CompanionPopupConsoleSend.onclick = async () => {
   setTimeout(async () => {
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
   }, 300);
+  if (authorityRealm) {
+    const summarizer = await ai.summarizer.create({ type: 'tldr', format: 'markdown' });
+    const summary = await summarizer.summarize(authorityRealm);
+    appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
+  }
 };
 
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {

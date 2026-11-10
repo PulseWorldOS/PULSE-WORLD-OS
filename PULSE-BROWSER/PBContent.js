@@ -60,22 +60,22 @@ const PB_LOG4 = {
 };
 
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================
 
-let PulseBrowserChannel = null;
+let PulseBrowserChannel3 = null;
 try {
-  PulseBrowserChannel = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL);
+  PulseBrowserChannel3 = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL3);
 } catch {
-  PulseBrowserChannel = null;
+  PulseBrowserChannel3 = null;
 }
 
 function OvermindCrossTabSync(payload) {
   try {
     PB_LOG4.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
-    PulseBrowserChannel.postMessage({
+    PulseBrowserChannel3.postMessage({
       kind: "command_prompt",
       payload,
       ts: nowSW
@@ -83,8 +83,8 @@ function OvermindCrossTabSync(payload) {
   } catch {}
 }
 
-if (PulseBrowserChannel) {
-  PulseBrowserChannel.onmessage = (ev) => {
+if (PulseBrowserChannel3) {
+  PulseBrowserChannel3.onmessage = (ev) => {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {

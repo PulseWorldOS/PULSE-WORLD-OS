@@ -56,22 +56,22 @@ chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   }
 });
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL4 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================
 
-let PulseBrowserChannel = null;
+let PulseBrowserChannel4 = null;
 try {
-  PulseBrowserChannel = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL);
+  PulseBrowserChannel4 = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL4);
 } catch {
-  PulseBrowserChannel = null;
+  PulseBrowserChannel4 = null;
 }
 
 function OvermindCrossTabSync(payload) {
   try {
     PB_LOG2.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
-    PulseBrowserChannel.postMessage({
+    PulseBrowserChannel4.postMessage({
       kind: "command_prompt",
       payload,
       ts: nowSW
@@ -79,8 +79,8 @@ function OvermindCrossTabSync(payload) {
   } catch {}
 }
 
-if (PulseBrowserChannel) {
-  PulseBrowserChannel.onmessage = (ev) => {
+if (PulseBrowserChannel4) {
+  PulseBrowserChannel4.onmessage = (ev) => {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {
