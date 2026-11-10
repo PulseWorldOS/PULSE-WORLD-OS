@@ -319,7 +319,6 @@ CompanionPopupConsoleSend.onclick = async () => {
 
   [PULSE PAL RESPONSE]:`;
   
-  if (authorityRealm) authorityRealm = null;
   let CompanionPopupTitle = document.getElementById("CompanionTitle");
   CompanionPopupTitle.style.marginBottom = "6px;"
   CompanionPopupTitle.style.textAlign = "center";
@@ -335,6 +334,7 @@ CompanionPopupConsoleSend.onclick = async () => {
     const summarizer = await ai.summarizer.create({ type: 'tldr', format: 'markdown' });
     const summary = await summarizer.summarize(authorityRealm);
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
+    authorityRealm = null;
   }
 };
 
