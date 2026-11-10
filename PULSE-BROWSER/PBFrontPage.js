@@ -491,6 +491,8 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     // (Replace with whatever news feed or data API endpoint you want to use)
     const webResponse = await fetch(websiteURL);
     const liveData2026 = await webResponse.text(); 
+    console.log(webResponse);
+    console.log(liveData2026);
 
     // 2. Initialize the local session with the live data fed into its context
     aiSession = await LanguageModel.create({
