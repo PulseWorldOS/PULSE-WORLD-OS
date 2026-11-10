@@ -7,7 +7,7 @@ let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
 let WasmSuccess = false;
-// Load saved PulseTabs from extension storage at startup
+let timeProof = null;
 let pulseTabs = {};
 let CompanionDeprivation = false;
 let TakeOfflineSnapshot = false;
@@ -2053,19 +2053,32 @@ async function runEngineTest() {
 
   // 2. Craft an artificial mock byte payload (e.g., 16 dummy working bytes)
   const mockPayload = [0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81, 0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09];
-  
+  const start = performance.now();
   console.time("[PERFORMANCE] Native WASM Execution Time");
   try {
     // 3. Fire the execution job
     const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
-    
-    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    if (outputProof) WasmSuccess = true;
-    console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+        
+    if (outputProof) {
+      console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+      timeProof = performance.now() - start;
+      let timecolor = "lightgreen";
+      if (timecolor > 50) {
+        timecolor = "red";
+      } else if (timecolor > 25) {
+        timecolor = "orange";
+      } else if (timecolor > 10) {
+        timecolor = "gold";
+      }
+      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(4).toLocaleString() + ` ms</font>]`;
+      WasmSuccess = true;
+      console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+    }
     
   } catch (testError) {
     console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
     console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
+    WasmSuccess = false;
   }
 }
 
@@ -2129,7 +2142,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
             CompanionMessage = "Waiting for Jobs for Submission...";
           } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
-            CompanionMessage = "Waiting for Jobs for Submission...";
+            CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
             try {
               (async () => {
                 // Fire the test execution
@@ -2137,6 +2150,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
               })();
             } catch (err) {
+              CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
               PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
             }
           } else {
@@ -2144,7 +2158,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
           CompanionDeprivation = msg.CompanionDeprivation;
         } else {
-          CompanionMessage = "[SUCCESS] Received WASM TEST Proof..";
+          CompanionMessage = `[<font color="lightgreen">SUCCESS</font>] Received WASM TEST Proof.. ` + timeProof;
         }
       }
       // Load cache from storage at startup

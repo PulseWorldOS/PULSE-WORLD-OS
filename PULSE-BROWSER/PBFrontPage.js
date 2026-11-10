@@ -5,6 +5,7 @@ let engineType = "text";
 let predictionText = "Running Stable";
 let statsHTMLShell = null;
 let WasmSuccess = false;
+let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
@@ -384,18 +385,32 @@ async function runEngineTest() {
   // 2. Craft an artificial mock byte payload (e.g., 16 dummy working bytes)
   const mockPayload = [0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81, 0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09];
   
+  const start = performance.now();
   console.time("[PERFORMANCE] Native WASM Execution Time");
   try {
     // 3. Fire the execution job
     const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
     
-    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    if (outputProof) WasmSuccess = true;
-    console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+    if (outputProof) {
+      console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+      timeProof = performance.now() - start;
+      let timecolor = "lightgreen";
+      if (timecolor > 50) {
+        timecolor = "red";
+      } else if (timecolor > 25) {
+        timecolor = "orange";
+      } else if (timecolor > 10) {
+        timecolor = "gold";
+      }
+      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(4).toLocaleString() + ` ms</font>]`;
+      WasmSuccess = true;
+      console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+    }
     
   } catch (testError) {
     console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
     console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
+    WasmSuccess = false;
   }
 }
 
@@ -583,7 +598,7 @@ ${rawPrompt}
 function appendEarnerMessage(area, role, text) {
   const bubble = document.createElement("div");
   if (text.includes("...")) text = `<font color="gold">${text}</font>`;
-  if (text.includes("-->") && text.includes("<--")) text = `<font color="red">${text}</font>`;
+  if (text.includes("-->") && text.includes("<--")) text = `<font color="orange">${text}</font>`;
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Pulse Earner: </font> `) + text + `<br><br>`;
