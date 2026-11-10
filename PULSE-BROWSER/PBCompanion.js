@@ -1853,7 +1853,7 @@ class PulseWasmEngine {
     // If testing using the MDN file, it ignores memory logic and returns 42 immediately
     if (targetFunc === this.wasmInstance.exports.exported_func) {
       const testValue = targetFunc(); // Triggers the internal my_namespace.imported_func callback
-      if (typeof chrome !== 'undefined' && chrome.power) chrome.power.releaseKeepAwake();
+      if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) chrome.power.releaseKeepAwake();
       
       // Return a simulated mock proof containing the numeric test result
       return new Uint8Array([testValue]); 
@@ -1887,7 +1887,7 @@ class PulseWasmEngine {
       this.wasmInstance.exports.free(inputAddress);
     }
 
-    if (typeof chrome !== 'undefined' && chrome.power) {
+    if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) {
       chrome.power.releaseKeepAwake();
     }
     

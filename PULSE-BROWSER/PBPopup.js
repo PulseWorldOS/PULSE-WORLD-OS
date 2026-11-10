@@ -330,7 +330,7 @@ CompanionPopupConsoleSend.onclick = async () => {
   setTimeout(async () => {
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
   }, 300);
-  if (authorityRealm && (text.includes("tab request"))) {
+  if (authorityRealm && ((text.includes("tab request")) || (text.includes("website request")))) {
     const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
     const summary = await summarizer.summarize(authorityRealm);
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
