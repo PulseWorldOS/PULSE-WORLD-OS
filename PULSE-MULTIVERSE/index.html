@@ -565,7 +565,7 @@ checkPersistentStorage(true);
 const PB_LOG3 = {
   info(label, data) {
     console.log(
-      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${PulseRealm.CurrentHost}][INFO][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#55BBFF; font-weight:bold;",
       data || ""
     );
@@ -573,7 +573,7 @@ const PB_LOG3 = {
 
   change(label, before, after) {
     console.groupCollapsed(
-      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${PulseRealm.CurrentHost}][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00FFAA; font-weight:bold;"
     );
     console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
@@ -583,7 +583,7 @@ const PB_LOG3 = {
 
   save(label, data) {
     console.log(
-      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${PulseRealm.CurrentHost}][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#00DDFF; font-weight:bold;",
       data
     );
@@ -591,7 +591,7 @@ const PB_LOG3 = {
 
   load(label, data) {
     console.log(
-      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${PulseRealm.CurrentHost}][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FFD700; font-weight:bold;",
       data
     );
@@ -599,7 +599,7 @@ const PB_LOG3 = {
 
   event(label, data) {
     console.log(
-      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      `%c[${PulseRealm.CurrentHost}][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
       "color:#FF55AA; font-weight:bold;",
       data
     );

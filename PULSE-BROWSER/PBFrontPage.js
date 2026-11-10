@@ -1779,7 +1779,7 @@ setInterval(async () => {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if ((response.CompanionMessage === "Waiting for Jobs for Submission...") || (response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+    if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
         (async () => {
           await runEngineTest();
@@ -2905,7 +2905,7 @@ async function updateModuleIcons(settings, browser) {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if ((response.CompanionMessage === "Waiting for Jobs for Submission...") || (response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+    if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
         (async () => {
           await runEngineTest();
@@ -4720,7 +4720,7 @@ function CheckBackTab() {
         } else {
           disablesw.innerText = "Pause Companion";
         }
-        if ((response.CompanionMessage === "Waiting for Jobs for Submission...") || (response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+        if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
             (async () => {
               await runEngineTest();
