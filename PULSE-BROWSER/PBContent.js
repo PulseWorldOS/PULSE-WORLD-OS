@@ -633,10 +633,10 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && !CompanionDeprivation) {
-      chrome.power.releaseKeepAwake();
-      console.log("[POWER GOVERNOR] System lock released cleanly.");
-    }
+    // if ((chrome && chrome.power) && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    //   console.log("[POWER GOVERNOR] System lock released cleanly.");
+    // }
   }
 }
 

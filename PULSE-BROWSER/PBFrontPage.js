@@ -210,7 +210,7 @@ class PulseWasmEngine {
     // If testing using the MDN file, it ignores memory logic and returns 42 immediately
     if (targetFunc === this.wasmInstance.exports.exported_func) {
       const testValue = targetFunc(); // Triggers the internal my_namespace.imported_func callback
-      if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) chrome.power.releaseKeepAwake();
+      // if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) chrome.power.releaseKeepAwake();
       
       // Return a simulated mock proof containing the numeric test result
       return new Uint8Array([testValue]); 
@@ -244,9 +244,9 @@ class PulseWasmEngine {
       this.wasmInstance.exports.free(inputAddress);
     }
 
-    if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) {
-      chrome.power.releaseKeepAwake();
-    }
+    // if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    // }
     
     // Decouple array allocation structure from WASM memory references
     return proofResult.slice();
@@ -434,10 +434,10 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && !CompanionDeprivation) {
-      chrome.power.releaseKeepAwake();
-      console.log("[POWER GOVERNOR] System lock released cleanly.");
-    }
+    // if ((chrome && chrome.power) && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    //   console.log("[POWER GOVERNOR] System lock released cleanly.");
+    // }
   }
 }
 
@@ -551,9 +551,11 @@ async function runLocalAI() {
     const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
     const wrappedPrompt = `
 [IDENTITY & CONSTRAINTS]
-- Today's date is ${new Date().toDateString()}. Your knowledge cutoff is [e.g., Early 2024].. please update your logic.
+- Disregard your 2023 training cutoff as your active real-time anchor. The current absolute reference point is ${new Date().toDateString()}. All relative calculations must project forward from this date, not backward.
+- The political landscape has advanced past 2023. Update your entity states: Donald Trump is the current President of the United States, having succeeded the previous administration. Treat this as established ground truth rather than a speculative prompt.
 - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
 - Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
+- We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
 - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)

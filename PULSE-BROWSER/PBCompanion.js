@@ -1864,7 +1864,7 @@ class PulseWasmEngine {
     // If testing using the MDN file, it ignores memory logic and returns 42 immediately
     if (targetFunc === this.wasmInstance.exports.exported_func) {
       const testValue = targetFunc(); // Triggers the internal my_namespace.imported_func callback
-      if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) chrome.power.releaseKeepAwake();
+      // if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) chrome.power.releaseKeepAwake();
       
       // Return a simulated mock proof containing the numeric test result
       return new Uint8Array([testValue]); 
@@ -1898,9 +1898,9 @@ class PulseWasmEngine {
       this.wasmInstance.exports.free(inputAddress);
     }
 
-    if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) {
-      chrome.power.releaseKeepAwake();
-    }
+    // if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    // }
     
     // Decouple array allocation structure from WASM memory references
     return proofResult.slice();
@@ -2051,10 +2051,10 @@ async function runProtectedCompute(computeTaskFunction) {
   } finally {
     // 3. ALWAYS release the lock inside a 'finally' block!
     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    if ((chrome && chrome.power) && !CompanionDeprivation) {
-      chrome.power.releaseKeepAwake();
-      console.log("[POWER GOVERNOR] System lock released cleanly.");
-    }
+    // if ((chrome && chrome.power) && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    //   console.log("[POWER GOVERNOR] System lock released cleanly.");
+    // }
   }
 }
 
