@@ -331,7 +331,7 @@ CompanionPopupConsoleSend.onclick = async () => {
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
   }, 300);
   if (authorityRealm) {
-    const summarizer = await ai.summarizer.create({ type: 'tldr', format: 'markdown' });
+    const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
     const summary = await summarizer.summarize(authorityRealm);
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
     authorityRealm = null;

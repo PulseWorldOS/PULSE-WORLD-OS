@@ -2064,7 +2064,7 @@ async function PulseBrowserDomScan() {
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
-  const htmlSummary = clone.innerHTML.slice(0, 2000);
+  const htmlSummary = clone.innerHTML.slice(0, 2500);
 
   const snapshot = {
     url: location.href,
@@ -2089,7 +2089,7 @@ async function PulseBrowserDomScan() {
   realm = realm.replace(window.location.hash, "");
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
-  const authorityRealm = clone.innerHTML;
+  const authorityRealm = clone.innerHTML.slice(0, 5000);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm });
   
   safeStorageSet({ [snapshotKey]: snapshot });
