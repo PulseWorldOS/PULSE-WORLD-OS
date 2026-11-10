@@ -4,6 +4,7 @@ let userInteracted = false;
 let engineType = "text";
 let predictionText = "Running Stable";
 let statsHTMLShell = null;
+let WasmSuccess = false;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let CompanionMessage = null;
@@ -388,13 +389,13 @@ async function runEngineTest() {
     // 3. Fire the execution job
     const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
     
-    const WasmTime = console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    console.log("[TEST SUCCESS] Received WASM Proof Bytes back from Silicon:", outputProof);    
-    CompanionMessage = "[TEST SUCCESS] Received WASM Proof: " + WasmTime;
+    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+    if (outputProof) WasmSuccess = true;
+    console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     
   } catch (testError) {
     console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    console.error("[TEST FAILED] WASM Execution Pipeline broke:", testError);
+    console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
   }
 }
 
@@ -1764,7 +1765,7 @@ setInterval(async () => {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+    if (response.CompanionMessage === "Waiting for Jobs for Submission...") {
       try {
         (async () => {
           await runEngineTest();
@@ -2890,7 +2891,7 @@ async function updateModuleIcons(settings, browser) {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+    if (response.CompanionMessage === "Waiting for Jobs for Submission...") {
       try {
         (async () => {
           await runEngineTest();
@@ -4705,7 +4706,7 @@ function CheckBackTab() {
         } else {
           disablesw.innerText = "Pause Companion";
         }
-        if (response.CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+        if (response.CompanionMessage === "Waiting for Jobs for Submission...") {
           try {
             (async () => {
               await runEngineTest();

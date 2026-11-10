@@ -6,6 +6,7 @@
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
+let WasmSuccess = false;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 let CompanionDeprivation = false;
@@ -2058,13 +2059,13 @@ async function runEngineTest() {
     // 3. Fire the execution job
     const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
     
-    const WasmTime = console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    console.log("[TEST SUCCESS] Received WASM Proof Bytes back from Silicon:", outputProof);
-    CompanionMessage = "[TEST SUCCESS] Received WASM Proof: " + WasmTime;
+    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+    if (outputProof) WasmSuccess = true;
+    console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     
   } catch (testError) {
     console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
-    console.error("[TEST FAILED] WASM Execution Pipeline broke:", testError);
+    console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
   }
 }
 
@@ -2120,27 +2121,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PB_COMPANION_CHECK":
       if (msg.pulseTabs) pulseTabs = msg.pulseTabs;
       if (msg.CompanionDeprivation) {
-        if (!CompanionDeprivation) {
-          CompanionMessage = "Always Learning and Thriving..";
-        } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
-          CompanionMessage = "Earning Adrenaline Infused & Ready..";
-        } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
-          CompanionMessage = "Waiting for Jobs for Submission...";
-        } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
-          CompanionMessage = "Waiting for Jobs for Submission...";
-        } else {
-          CompanionMessage = "<-- Infusing Earning Adrenaline -->";
-          try {
-            (async () => {
-              // Fire the test execution
-              await runEngineTest();
-              PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
-            })();
-          } catch (err) {
-            PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+        if (!WasmSuccess) {
+          if (!CompanionDeprivation) {
+            CompanionMessage = "Always Learning and Thriving..";
+          } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+            CompanionMessage = "Earning Adrenaline Infused & Ready..";
+          } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
+            CompanionMessage = "Waiting for Jobs for Submission...";
+          } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
+            CompanionMessage = "Waiting for Jobs for Submission...";
+            try {
+              (async () => {
+                // Fire the test execution
+                await runEngineTest();
+                PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
+              })();
+            } catch (err) {
+              PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+            }
+          } else {
+            CompanionMessage = "<-- Infusing Earning Adrenaline -->";
           }
+          CompanionDeprivation = msg.CompanionDeprivation;
+        } else {
+          CompanionMessage = "[SUCCESS] Received WASM TEST Proof..";
         }
-        CompanionDeprivation = msg.CompanionDeprivation;
       }
       // Load cache from storage at startup
       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
