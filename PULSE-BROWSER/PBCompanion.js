@@ -6,6 +6,7 @@
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
+let runWasmTest = false;
 let WasmSuccess = false;
 let timeProof = null;
 let pulseTabs = {};
@@ -1728,16 +1729,20 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   } else if (info.menuItemId === 'attemptOfflineSnapshot') {
     TakeOfflineSnapshot = true;
   } else if (info.menuItemId === 'runWASMTest') {
+    runWasmTest = true;
     CompanionMessage = "<-- Running User-Called WASM Test Job -->";
-    try {
-      (async () => {
-        await runEngineTest();
-        PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
-      })();
-    } catch (err) {
-      CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
-      PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
-    }
+    setTimeout(() => {
+      try {
+        (async () => {
+          await runEngineTest();
+          PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
+        })();
+      } catch (err) {
+        CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
+        PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+      }
+    }, 2000);
+    runWasmTest = false;
   }
 });
 
@@ -2087,7 +2092,7 @@ async function runEngineTest() {
       } else if (timecolor > 10) {
         timecolor = "gold";
       }
-      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(6).toLocaleString() + ` ms</font>]`;
+      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(3).toLocaleString() + ` ms</font>]`;
       WasmSuccess = true;
       console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
     }
@@ -2175,7 +2180,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
           CompanionDeprivation = msg.CompanionDeprivation;
         } else {
-          CompanionMessage = `[<font color="lightgreen">SUCCESS</font>] Received WASM TEST Proof.. ` + timeProof;
+          if (runWasmTest) {
+            CompanionMessage = "<-- Running User-Called WASM Test Job -->";
+          } else {
+            CompanionMessage = `[<font color="lightgreen">SUCCESS</font>] Received WASM TEST Proof.. ` + timeProof;
+          }
         }
       }
       // Load cache from storage at startup
