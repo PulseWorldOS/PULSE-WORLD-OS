@@ -67,6 +67,13 @@ let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
 let online = navigator.onLine;
+// Gets a string like "12:00 AM" (stripping the seconds for an exact match)
+const nowTime = new Date().toLocaleTimeString("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true
+});
+const runOnceTime = false;
 const titlediv = document.getElementById("title");
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (Drifting..)";
@@ -493,7 +500,7 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     let liveData2026 = await webResponse.text(); 
     console.log("WEBRESPONSE: " + webResponse);
     console.log("LIVEDATA: " + liveData2026);
-    liveData2026 = liveData2026.slice(0, 7500);
+    liveData2026 = liveData2026.slice(0, 7000);
 
     // 3. Run your prompt
     const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${liveData2026}. Summarize the latest updates based on the provided text you were just sent.`);
@@ -661,6 +668,17 @@ document.getElementById("CompanionConsoleInput").addEventListener("keydown", asy
 
 async function PromptMeAI(prompt) {
   return await aiSession.prompt(prompt);
+}
+
+if (nowTime === "09:45 AM" && !runOnceTime) {
+  runOnceTime = true;
+  let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+  appendCompanionMessage(CompanionDetailsMessage, "user", order);
+  const response = await PromptMeAI(order);
+  console.log("🧠 AI Overmind: ", response);
+  setTimeout(async () => {
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  }, 300);
 }
 
 CompanionConsoleSend.onclick = async () => {
