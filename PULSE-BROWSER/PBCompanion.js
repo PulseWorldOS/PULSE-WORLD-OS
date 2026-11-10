@@ -1701,7 +1701,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
   chrome.contextMenus.create({
     id: 'runWASMTest',
-    title: '🔍 PulseBrowser OS - Run Earn Test',
+    title: '🏦 PulseBrowser OS - Run Earn Test',
     contexts: ['all']
   });
 });
@@ -2068,8 +2068,9 @@ async function runEngineTest() {
 
   // 2. Craft an artificial mock byte payload (e.g., 16 dummy working bytes)
   const mockPayload = [0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81, 0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09];
-  const start = performance.now();
+  
   console.time("[PERFORMANCE] Native WASM Execution Time");
+  const start = performance.now();
   try {
     // 3. Fire the execution job
     const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
