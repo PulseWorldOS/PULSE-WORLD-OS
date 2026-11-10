@@ -92,7 +92,6 @@ const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 
-
 const PB_LOG3 = {
   info(label, data) {
     console.log(
@@ -1780,7 +1779,7 @@ setInterval(async () => {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if (response.CompanionMessage === "Waiting for Jobs for Submission...") {
+    if ((response.CompanionMessage === "Waiting for Jobs for Submission...") || (response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
         (async () => {
           await runEngineTest();
@@ -2906,7 +2905,7 @@ async function updateModuleIcons(settings, browser) {
     } else {
       disablesw.innerText = "Pause Companion";
     }
-    if (response.CompanionMessage === "Waiting for Jobs for Submission...") {
+    if ((response.CompanionMessage === "Waiting for Jobs for Submission...") || (response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
         (async () => {
           await runEngineTest();
@@ -4721,7 +4720,7 @@ function CheckBackTab() {
         } else {
           disablesw.innerText = "Pause Companion";
         }
-        if (response.CompanionMessage === "Waiting for Jobs for Submission...") {
+        if ((response.CompanionMessage === "Waiting for Jobs for Submission...") || (response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
             (async () => {
               await runEngineTest();

@@ -561,6 +561,209 @@ checkPersistentStorage(true);
 //     location.href = `?Impulse=${realm}`;
 //   }
 // })();
+
+const PB_LOG3 = {
+  info(label, data) {
+    console.log(
+      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
+
+class PulseWasmEngine {
+  constructor() {
+    this.wasmInstance = null;
+    this.isLoaded = false;
+  }
+
+  async EarnerLockedandLoaded() {
+    this.isLoaded = true;
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.requestKeepAwake("system");
+    }
+    console.log("[CONSOLE WASM ENGINE] Locked and Loaded!");
+  }
+
+  // Load the pure binary math module into memory
+  async initEngine(wasmBinaryUrl) {
+    if (!wasmBinaryUrl && typeof chrome !== 'undefined' && chrome.runtime) {
+      wasmBinaryUrl = chrome.runtime.getURL("PulseEarnWarmer.wasm");
+    }
+    if (this.isLoaded) return;
+    
+    try {
+      // Fetch the highly dense compiled binary module
+      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
+      }
+      const buffer = await response.arrayBuffer();
+      
+      // Compile natively right on that 1ms service worker line
+      const module = await WebAssembly.compile(buffer);
+      
+      // Match the exact namespace strings the binary expects
+      this.wasmInstance = await WebAssembly.instantiate(module, {
+        my_namespace: {
+          imported_func: (arg) => { 
+            console.log("[CONSOLE WASM CALLBACK] Function invoked from WASM:", arg); 
+          }
+        },
+        env: {
+          memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
+          abort: () => { console.error("[CONSOLE WASM ABORT] Critical execution crash"); }
+        }
+      });
+
+      // Debug aid: Safely lists all real exported names from whatever binary loaded
+      console.log("[CONSOLE WASM EXPORTS] Available keys:", Object.keys(this.wasmInstance.exports));
+
+      await this.EarnerLockedandLoaded();
+      console.log("[CONSOLE WASM ENGINE] Pure mathematical module stable and hot.");
+    } catch (err) {
+      console.error("[CONSOLE WASM ENGINE] Initialization failed:", err);
+    }
+  }
+
+  // The pure compute pipeline: Input bytes -> Output proofs
+  async executeProofJob(rawPayloadData) {
+    if (!this.isLoaded) throw new Error("CONSOLE WASM engine not ready");
+    
+    // Resolve the target function dynamically to ensure runtime stability
+    const targetFunc = this.wasmInstance.exports.computeMathProofs 
+                    || this.wasmInstance.exports._computeMathProofs 
+                    || this.wasmInstance.exports.exported_func;
+
+    if (typeof targetFunc !== 'function') {
+      throw new Error(`Execution failed: Target function signature missing from CONSOLE WASM exports.`);
+    }
+
+    // --- FALLBACK GUARD FOR TEST BINARY (simple.wasm) ---
+    // If testing using the MDN file, it ignores memory logic and returns 42 immediately
+    if (targetFunc === this.wasmInstance.exports.exported_func) {
+      const testValue = targetFunc(); // Triggers the internal my_namespace.imported_func callback
+      if (typeof chrome !== 'undefined' && chrome.power) chrome.power.releaseKeepAwake();
+      
+      // Return a simulated mock proof containing the numeric test result
+      return new Uint8Array([testValue]); 
+    }
+
+    // --- PRODUCTION PIPELINE (PulseEarnWarmer.wasm) ---
+    const inputArray = new Uint8Array(rawPayloadData);
+    const length = inputArray.length;
+
+    // Safely look up or handle memory positioning addresses
+    let inputAddress = 0;
+    if (typeof this.wasmInstance.exports.malloc === 'function') {
+      inputAddress = this.wasmInstance.exports.malloc(length);
+    } else if (this.wasmInstance.exports.input_buffer_pointer) {
+      inputAddress = this.wasmInstance.exports.input_buffer_pointer.value || this.wasmInstance.exports.input_buffer_pointer;
+    }
+
+    // Write your payload to the shared linear memory block
+    const wasmMemoryBuffer = new Uint8Array(this.wasmInstance.exports.memory.buffer);
+    wasmMemoryBuffer.set(inputArray, inputAddress);
+    
+    // Execute computational processing loops
+    const resultAddress = targetFunc(inputAddress, length);
+    
+    // Read the processed byte data out of memory space
+    const resultLength = 32; 
+    const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress, resultLength);
+
+    // Free memory allocations to keep the service worker clean
+    if (typeof this.wasmInstance.exports.free === 'function') {
+      this.wasmInstance.exports.free(inputAddress);
+    }
+
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.releaseKeepAwake();
+    }
+    
+    // Decouple array allocation structure from WASM memory references
+    return proofResult.slice();
+  }
+}
+
+// Instantiate the isolated engine
+const pulseWasmCompute = new PulseWasmEngine();
+if (typeof PB_LOG3 !== 'undefined') {
+  PB_LOG3.event("CONSOLE Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+}
+
+async function runEngineTest() {
+  console.log("[TEST] Initializing WASM engine testing rig...");
+  
+  await pulseWasmCompute.initEngine();
+
+  // 2. Craft an artificial mock byte payload (e.g., 16 dummy working bytes)
+  const mockPayload = [0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81, 0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09];
+  
+  const start = performance.now();
+  console.time("[PERFORMANCE] Native WASM Execution Time");
+  try {
+    // 3. Fire the execution job
+    const outputProof = await pulseWasmCompute.executeProofJob(mockPayload);
+    
+    if (outputProof) {
+      console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+      timeProof = performance.now() - start;
+      let timecolor = "lightgreen";
+      if (timecolor > 50) {
+        timecolor = "red";
+      } else if (timecolor > 25) {
+        timecolor = "orange";
+      } else if (timecolor > 10) {
+        timecolor = "gold";
+      }
+      timeProof = `[<font color="${timecolor}">` + timeProof.toFixed(4).toLocaleString() + ` ms</font>]`;
+      WasmSuccess = true;
+      console.log("[SUCCESS] Received WASM TEST Proof Bytes back from Silicon:", outputProof);
+    }
+    
+  } catch (testError) {
+    console.timeEnd("[PERFORMANCE] Native WASM Execution Time");
+    console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
+    WasmSuccess = false;
+  }
+}
+
 // ============================================================
 //  PULSE PHOTO DATABASE (IndexedDB) + SYNC CACHE
 // ============================================================
@@ -8872,6 +9075,15 @@ if (navigator.gpu) {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     pulseSupabaseSync();
   }, 30000);
+
+  try {
+    (async () => {
+      await runEngineTest();
+      PB_LOG3.event("PulseWorld Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+    })();
+  } catch (err) {
+    PB_LOG3.event("PulseWorld Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+  }
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
