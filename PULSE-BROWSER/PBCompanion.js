@@ -10,6 +10,10 @@ let runWasmTest = false;
 let WasmSuccess = false;
 let timeProof = null;
 let pulseTabs = {};
+let ErrorCount = 0;
+const MAX_ERRORS = 1000;
+let ErrorOverflow = false;
+let errorLock = false;
 let CompanionDeprivation = false;
 let TakeOfflineSnapshot = false;
 let HelperHudBoolean = false;
@@ -2110,6 +2114,35 @@ async function runEngineTest() {
     WasmSuccess = false;
   }
 }
+
+function makeBuffered(fn) {
+  return (...args) => {
+      if (ErrorCount >= MAX_ERRORS) {
+          if (!ErrorOverflow) {
+              ErrorOverflow = true;
+              fn("⚠ Error buffer overflow — further errors suppressed");
+          }
+          return;
+      }
+      ErrorCount++;
+      fn(...args);
+  };
+}
+function safeSpeak(msg) {
+  if (errorLock) return;
+  errorLock = true;
+  try {
+    console.error("[Global Error Caught] ", msg);
+  } catch (e) {
+    console.warn("pulsepalSpeak failed:", e);
+  }
+  errorLock = false;
+}
+
+// In a Service Worker or Background Script
+self.addEventListener('error', (event) => {
+  safeSpeak(event.error);
+});
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;

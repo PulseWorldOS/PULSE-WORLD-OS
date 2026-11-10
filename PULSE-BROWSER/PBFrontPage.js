@@ -8,6 +8,7 @@ let WasmSuccess = false;
 let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
+let bootVideoRunOnce = false;
 let CompanionMessage = null;
 let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
@@ -93,6 +94,7 @@ const pbPulseScreen = document.getElementById("pbPulseScreen");
 const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
+const bootVideo = document.getElementById("pbBootEntrance");
 
 const PB_LOG3 = {
   info(label, data) {
@@ -259,6 +261,39 @@ if (typeof PB_LOG3 !== 'undefined') {
   PB_LOG3.event("CONSOLE Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 }
 
+// ======================================================
+// 4) CLICK-TO-SKIP BOOT VIDEO (PulseWorld Physics)
+// ======================================================
+if (bootVideo) {
+  bootVideoRunOnce = await chrome.storage.local.get(["bootVideoRunOnce"]);
+  bootVideo.onclick = async () => {
+    console.log(
+      "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Boot Video SKIPPED by user.",
+      "color:#H02FHA; font-weight:bold; font-family:monospace;"
+    );
+
+    try {
+      // Stop playback immediately
+      bootVideo.pause();
+      bootVideo.currentTime = 0;
+    } catch (err) {
+      console.warn("BootVideo pause error:", err);
+    }
+
+    // Hide the video membrane
+    bootVideo.style.opacity = "0";
+    bootVideo.style.display = "none";
+  };
+  if (!bootVideoRunOnce) {
+    setTimeout(async () => {
+      // Hide the video membrane
+      bootVideo.style.opacity = "0";
+      bootVideo.style.display = "none";
+      await PulsesafeStorageSet({ bootVideoRunOnce });
+    }, 5000);
+    bootVideoRunOnce = true;
+  }
+}
 // // ============================================================================
 // // PURE WASM EXECUTION ENGINE (ISOLATED COMPUTE LAYER)
 // // ============================================================================
@@ -1333,6 +1368,7 @@ function safeSpeak(msg) {
   errorLock = true;
   try {
     document.getElementById("searchengineTextbox").textContent = msg;
+    console.error(msg);
   } catch (e) {
     console.warn("pulsepalSpeak failed:", e);
   }
@@ -1340,9 +1376,9 @@ function safeSpeak(msg) {
 }
 
 window.onerror = function(message, source, lineno, colno, error) {
-  safeSpeak("[JS ERROR Found] " + makeBuffered(message));
   document.getElementById("subtitle").style.color = "red";
   document.getElementById("subsubtitle").style.color = "red";
+  safeSpeak("[JS ERROR Found] " + makeBuffered(message));
 };
 
 async function getSWSize() {
@@ -1758,7 +1794,7 @@ async function CheckTime() {
     minute: "2-digit",
     hour12: true
   });
-  console.log("NowTime: " + nowTime);
+  
   if (((nowTime === "10:00 PM") || (nowTime === "12:00 AM") || (nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
     runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
