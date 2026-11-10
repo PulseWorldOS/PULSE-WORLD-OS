@@ -67,13 +67,7 @@ let nowFP = Date.now(); // numeric timestamp
 let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
 let online = navigator.onLine;
-// Gets a string like "12:00 AM" (stripping the seconds for an exact match)
-const nowTime = new Date().toLocaleTimeString("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-  hour12: true
-});
-const runOnceTime = false;
+let runOnceTime = false;
 const titlediv = document.getElementById("title");
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (Drifting..)";
@@ -1757,15 +1751,28 @@ function getLocalMemoryLayer() {
 }
 
 async function CheckTime() {
-  if (nowTime === "09:45 AM" && !runOnceTime) {
+  const nowTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
+  console.log("NowTime: " + nowTime);
+  if (((nowTime === "10:00 PM") || (nowTime === "12:00 AM") || (nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
     runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
-    appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
     const response = await PromptMeAI(order);
     console.log("🧠 AI Overmind: ", response);
-    setTimeout(async () => {
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-    }, 300);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else if ((nowTime === "09:00 AM") && !runOnceTime) {
+    runOnceTime = true;
+    let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep.  This is a Test Run During Sleep!";
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await PromptMeAI(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else {
+    runOnceTime = false;
   }
 }
 
