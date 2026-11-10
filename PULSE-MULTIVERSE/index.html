@@ -622,8 +622,8 @@ class PulseWasmEngine {
 
   // Load the pure binary math module into memory
   async initEngine(wasmBinaryUrl) {
-    if (!wasmBinaryUrl && typeof chrome !== 'undefined' && chrome.runtime) {
-      wasmBinaryUrl = chrome.runtime.getURL("PulseEarnWarmer.wasm");
+    if (!wasmBinaryUrl) {
+      wasmBinaryUrl = "./PulseEarnWarmer.wasm";
     }
     if (this.isLoaded) return;
     

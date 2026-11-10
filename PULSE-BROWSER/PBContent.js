@@ -303,9 +303,9 @@ function HelperHud() {
   const body = document.getElementById("pb-hud-body");
   const wrap = document.getElementById("pulsebrowser-dev-overlay");
       
-  updateHUD(body);
-  wrap.style.display = "block";
-  body.style.display = "block";
+  if (body) updateHUD(body);
+  if (wrap) wrap.style.display = "block";
+  if (body) body.style.display = "block";
 
   setTimeout(() => {
     fadeHUD();
