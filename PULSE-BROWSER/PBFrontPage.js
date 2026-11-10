@@ -670,17 +670,6 @@ async function PromptMeAI(prompt) {
   return await aiSession.prompt(prompt);
 }
 
-if (nowTime === "09:45 AM" && !runOnceTime) {
-  runOnceTime = true;
-  let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
-  appendCompanionMessage(CompanionDetailsMessage, "user", order);
-  const response = await PromptMeAI(order);
-  console.log("🧠 AI Overmind: ", response);
-  setTimeout(async () => {
-    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-  }, 300);
-}
-
 CompanionConsoleSend.onclick = async () => {
   CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -1767,6 +1756,19 @@ function getLocalMemoryLayer() {
   };
 }
 
+async function CheckTime() {
+  if (nowTime === "09:45 AM" && !runOnceTime) {
+    runOnceTime = true;
+    let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+    appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await PromptMeAI(order);
+    console.log("🧠 AI Overmind: ", response);
+    setTimeout(async () => {
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+    }, 300);
+  }
+}
+
 async function pulseGPUInspector(adapter, device) {
   // Acquire adapter
   if (!adapter) adapter = await navigator.gpu?.requestAdapter();
@@ -1826,6 +1828,7 @@ setInterval(async () => {
     }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
+  CheckTime();
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -2361,6 +2364,7 @@ setInterval(async () => {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
+  CheckTime();
 }, intervalB);
 
 
@@ -4519,6 +4523,7 @@ setInterval(async () => {
     document.title = "PulseBrowser OS";
   }
   CheckBackTab();
+  CheckTime();
 }, sync);
 
 function CheckBackTab() {
@@ -4580,6 +4585,7 @@ function CheckBackTab() {
     intervalId = setInterval(() => {
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
+      CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
     }, interval);
 
@@ -4677,6 +4683,7 @@ function CheckBackTab() {
           nowFP = response.time;
       }
     });
+    CheckTime();
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
     const settings = await pbLoadExtensionSettings();
