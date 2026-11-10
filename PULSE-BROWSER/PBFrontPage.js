@@ -375,6 +375,9 @@ ${rawPrompt}
 
 function appendEarnerMessage(area, role, text) {
   const bubble = document.createElement("div");
+  if (text.includes("...")) text = `<font color="gold">${text}</font>`;
+  if (text.includes("-->") && text.includes("<--")) text = `<font color="red">${text}</font>`;
+  bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Pulse Earner: </font> `) + text + `<br><br>`;
   area.appendChild(bubble);
@@ -2866,7 +2869,9 @@ async function updateModuleIcons(settings, browser) {
 
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
-  PulseBrowserSettings = await getSettings();
+  PulseBrowserSettings = await getSettings();  
+  updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
@@ -2951,8 +2956,6 @@ async function setTheStage() {
       keyHold2Timer = null;
     }
   });
-
-  updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 }
 
 setTimeout(setTheStage, 150);

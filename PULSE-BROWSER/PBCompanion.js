@@ -1779,6 +1779,7 @@ class PulseWasmEngine {
 
   // Load the pure binary math module into memory
   async initEngine(wasmBinaryUrl) {
+    if (!wasmBinaryUrl) wasmBinaryUrl = 'https://github.io';
     if (this.isLoaded) return;
     
     try {
@@ -1918,12 +1919,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PB_COMPANION_CHECK":
       if (msg.pulseTabs) pulseTabs = msg.pulseTabs;
       if (msg.CompanionDeprivation) {
-        CompanionDeprivation = msg.CompanionDeprivation;
         if (!CompanionDeprivation) {
           CompanionMessage = "Always Learning and Thriving..";
+        } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
+          CompanionMessage = "Earning Adrenaline Infused & Ready..";
+        } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
+          CompanionMessage = "Waiting for Jobs for Submission...";
+        } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
+          CompanionMessage = "Waiting for Jobs for Submission...";
         } else {
-          CompanionMessage = "Pulse Earning Narcolepsy Engaged!";
+          CompanionMessage = "<-- Infusing Earning Adrenaline -->";
+          try {
+            pulseWasmCompute.initEngine();
+            PB_LOG2.event("Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          } catch (err) {
+            PB_LOG2.event("Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+          }
         }
+        CompanionDeprivation = msg.CompanionDeprivation;
       }
       // Load cache from storage at startup
       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
