@@ -1705,6 +1705,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '🏦 PulseEarner - Run Earn Test',
     contexts: ['all']
   });
+  chrome.contextMenus.create({
+    id: 'flipAdblocker',
+    title: '📄 PulseNavigator - Flip AdBlocker Switch',
+    contexts: ['all']
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -1728,6 +1733,12 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     HelperHudBoolean = true;
   } else if (info.menuItemId === 'attemptOfflineSnapshot') {
     TakeOfflineSnapshot = true;
+  } else if (info.menuItemId === 'flipAdblocker') {
+    if (PulseRealmSettings.adBlocker === "internal") {
+      AdBlockerOn();
+    } else {
+      AdBlockerOff();
+    }
   } else if (info.menuItemId === 'runWASMTest') {
     runWasmTest = true;
     try {
