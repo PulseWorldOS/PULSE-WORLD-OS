@@ -1681,22 +1681,27 @@ chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   chrome.contextMenus.create({
     id: 'openSidePanel',
-    title: '🧠 PulseBrowser OS Panel',
+    title: '🧠 PulseBrowser OS - Panel',
     contexts: ['all']
   });
   chrome.contextMenus.create({
     id: 'openSettings',
-    title: '🌐 PulseBrowser OS Settings',
+    title: '🌐 PulseBrowser OS - Settings',
     contexts: ['all']
   });
   chrome.contextMenus.create({
     id: 'viewHUDOverlay',
-    title: '📺 PulseBrowser OS HUD Display',
+    title: '📺 PulseBrowser OS - HUD Display',
     contexts: ['all']
   });
   chrome.contextMenus.create({
     id: 'attemptOfflineSnapshot',
-    title: '🔍 PulseBrowser OS Offline Snapshot',
+    title: '🔍 PulseBrowser OS - Offline Snapshot',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'runWASMTest',
+    title: '🔍 PulseBrowser OS - Run Earn Test',
     contexts: ['all']
   });
 });
@@ -1722,6 +1727,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     HelperHudBoolean = true;
   } else if (info.menuItemId === 'attemptOfflineSnapshot') {
     TakeOfflineSnapshot = true;
+  } else if (info.menuItemId === 'runWASMTest') {
+    try {
+      (async () => {
+        await runEngineTest();
+        PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
+      })();
+    } catch (err) {
+      CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
+      PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+    }
   }
 });
 
