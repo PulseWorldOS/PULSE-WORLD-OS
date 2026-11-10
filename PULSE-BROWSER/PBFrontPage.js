@@ -485,7 +485,7 @@ function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
 }
 
-async function askLocalModelWithLiveWeb(websiteURL, text) {
+async function askLocalModelWithLiveWeb(websiteURL) {
   try {
     // 1. Dynamically fetch current data from an external 2026 API or webpage
     // (Replace with whatever news feed or data API endpoint you want to use)
@@ -494,7 +494,7 @@ async function askLocalModelWithLiveWeb(websiteURL, text) {
 
     // 2. Initialize the local session with the live data fed into its context
     aiSession = await LanguageModel.create({
-      systemPrompt: text + `-- Use this real-time web data to help answer the user's prompt: ${liveData2026}`
+      systemPrompt: `Use this real-time web data to help answer the user's prompt: ${liveData2026}`
     });
 
     // 3. Run your prompt
@@ -668,22 +668,23 @@ async function PromptMeAI(prompt) {
 CompanionConsoleSend.onclick = async () => {
   CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-  const text = CompanionConsoleInput.value.trim();
+  const text = CompanionConsoleInput.value.toLowerCase().trim();
   if (!text) return;
   let order = text;
   CompanionConsoleInput.value = "";
   // 3. Fire the wrapped prompt
-  if (text.includes("overmind orders").toLowerCase()) {
+  if (text.includes("overmind orders")) {
     order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
-  } else if (text.includes("website request").toLowerCase()) {
+  } else if (text.includes("website request")) {
     // Finds any URL starting with http:// or https:// until a space or the end of the text
     const urlRegex = /https?:\/\/[^\s]+/i;
     const match = text.match(urlRegex);
     if (match) {
       const texturl = match[0]; // Extract the matched URL string
-      askLocalModelWithLiveWeb(texturl, text);
+      askLocalModelWithLiveWeb(texturl);
     }
+    appendCompanionMessage(CompanionDetailsMessage, "user", order);
   } else {
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
   }
