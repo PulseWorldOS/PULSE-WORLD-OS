@@ -485,6 +485,28 @@ function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
 }
 
+async function askLocalModelWithLiveWeb(websiteURL, text) {
+  try {
+    // 1. Dynamically fetch current data from an external 2026 API or webpage
+    // (Replace with whatever news feed or data API endpoint you want to use)
+    const webResponse = await fetch(websiteURL);
+    const liveData2026 = await webResponse.text(); 
+
+    // 2. Initialize the local session with the live data fed into its context
+    aiSession = await LanguageModel.create({
+      systemPrompt: text + `-- Use this real-time web data to help answer the user's prompt: ${liveData2026}`
+    });
+
+    // 3. Run your prompt
+    const finalAnswer = await PromptMeAI("Summarize the latest updates based on the provided text.");
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
+    console.log(finalAnswer);
+
+  } catch (error) {
+    console.error("Failed to fetch live data or run the local model:", error);
+  }
+}
+
 async function runLocalAI() {
   if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
@@ -651,9 +673,17 @@ CompanionConsoleSend.onclick = async () => {
   let order = text;
   CompanionConsoleInput.value = "";
   // 3. Fire the wrapped prompt
-  if (text.includes("Overmind Orders")) {
+  if (text.includes("overmind orders").toLowerCase()) {
     order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
+  } else if (text.includes("website request").toLowerCase()) {
+    // Finds any URL starting with http:// or https:// until a space or the end of the text
+    const urlRegex = /https?:\/\/[^\s]+/i;
+    const match = text.match(urlRegex);
+    if (match) {
+      const texturl = match[0]; // Extract the matched URL string
+      askLocalModelWithLiveWeb(texturl, text);
+    }
   } else {
     appendCompanionMessage(CompanionDetailsMessage, "user", order);
   }

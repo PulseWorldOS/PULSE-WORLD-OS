@@ -1692,17 +1692,17 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
   chrome.contextMenus.create({
     id: 'viewHUDOverlay',
-    title: '📺 PulseBrowser OS - HUD Display',
+    title: '📺 PulseBrowser - HUD Display',
     contexts: ['all']
   });
   chrome.contextMenus.create({
     id: 'attemptOfflineSnapshot',
-    title: '🔍 PulseBrowser OS - Offline Snapshot',
+    title: '🔍 PulseBrowser - Offline Snapshot',
     contexts: ['all']
   });
   chrome.contextMenus.create({
     id: 'runWASMTest',
-    title: '🏦 PulseBrowser OS - Run Earn Test',
+    title: '🏦 PulseEarner - Run Earn Test',
     contexts: ['all']
   });
 });
