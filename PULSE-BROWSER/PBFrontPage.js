@@ -494,13 +494,8 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     console.log(webResponse);
     console.log(liveData2026);
 
-    // 2. Initialize the local session with the live data fed into its context
-    aiSession = await LanguageModel.create({
-      systemPrompt: `Use this real-time web data to help answer the user's prompt: ${liveData2026}`
-    });
-
     // 3. Run your prompt
-    const finalAnswer = await PromptMeAI("Summarize the latest updates based on the provided text.");
+    const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${liveData2026}. Summarize the latest updates based on the provided text you were just sent.`);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
     console.log(finalAnswer);
 
