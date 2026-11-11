@@ -161,7 +161,7 @@ const PB_LOG = {
 PB_LOG.info("PBSettings (Ultra Edition v7.1) loaded");
 
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL = `PulseBrowser-OS::${new Date(nowST).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================

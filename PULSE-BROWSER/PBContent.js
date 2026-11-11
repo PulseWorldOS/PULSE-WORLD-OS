@@ -76,7 +76,7 @@ function loadOrders(size) {
   OvermindCrossTabSync(OvermindTheirOrders);
 }
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date(nowCT).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================
@@ -94,7 +94,7 @@ function OvermindCrossTabSync(payload) {
     PulseBrowserChannel3.postMessage({
       kind: "command_prompt",
       payload,
-      ts: nowSW
+      ts: nowCT
     });
   } catch {}
 

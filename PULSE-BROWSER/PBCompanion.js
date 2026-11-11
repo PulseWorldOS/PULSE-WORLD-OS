@@ -60,7 +60,7 @@ chrome.storage.local.get(["PulseBrowserFaviconMultiGo"], (res) => {
   }
 });
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL4 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL4 = `PulseBrowser-OS::${new Date(nowSW).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================

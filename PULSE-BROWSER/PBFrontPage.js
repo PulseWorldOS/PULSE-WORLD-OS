@@ -280,7 +280,7 @@ function loadOrders(size) {
   OvermindCrossTabSync(OvermindMyOrders);
 }
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL5 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL5 = `PulseBrowser-OS::${new Date(nowFP).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================
@@ -298,7 +298,7 @@ function OvermindCrossTabSync(payload) {
     PulseBrowserChannel5.postMessage({
       kind: "command_prompt",
       payload,
-      ts: nowSW
+      ts: nowFP
     });
   } catch {}
 
@@ -1969,8 +1969,8 @@ setInterval(async () => {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
-  loadOrders(aiSize);
   await pbRenderCacheList2();
+  loadOrders(aiSize);
 }, intervalA);
 
 async function gpuWarmExtra() {
@@ -2477,6 +2477,7 @@ setInterval(async () => {
   });
   await pbRenderCacheList2();
   await CheckTime();
+  loadOrders(aiSize);
 }, intervalB);
 
 

@@ -34,7 +34,7 @@ function isValid(t) {
 }
 
 
-let PULSE_OVERMIND_BROADCAST_CHANNEL2 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+let PULSE_OVERMIND_BROADCAST_CHANNEL2 = `PulseBrowser-OS::${new Date(nowPP).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
 // ============================================================
@@ -1522,13 +1522,13 @@ function getReadableName(url) {
 }
 
 setInterval(async () => {
+  aiPopupSize = await getAI3Size();
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
     if (chrome.runtime.lastError) return;
     
     if (response.realm) authorityRealm = response.realm;
     if (response.pulseTabs) pulseTabs = response.pulseTabs;
   });
-  aiPopupSize = await getAI3Size();
   loadOrders(aiPopupSize);
   if (OvermindPopupOrders) {
     appendPopupCompanionMessage(CompanionPopupDetailsMessage, OvermindPopupOrders);
