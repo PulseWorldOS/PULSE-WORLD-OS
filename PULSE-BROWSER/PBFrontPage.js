@@ -570,10 +570,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
-      if (totalJobs > 1000000) {
-        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      if (totalJobs > 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      } else if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " M";
       } else if (totalJobs > 1000000000) {
-        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " B";
       }
       timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
       appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
@@ -592,10 +594,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {      
       tickInterval++;
-      if (totalJobs > 1000000) {
-        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      if (totalJobs > 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      } else if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " M";
       } else if (totalJobs > 1000000000) {
-        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " B";
       }
       const avgJobMs = (batchMs / batchSize).toFixed(3);
       timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
@@ -1825,6 +1829,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     pulseTabs = rebuilt;
     PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
+  CheckFaviconChanges();
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
@@ -4847,7 +4852,6 @@ function CheckBackTab() {
         }
       });
       chrome.runtime.getPlatformInfo();
-      CheckFaviconChanges();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
       await CheckTime();
@@ -5095,7 +5099,6 @@ function CheckBackTab() {
         }
       });
       injectPulseScreenFromMemory(true);
-      CheckFaviconChanges();
       updateOverlay();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       pulseRehydrateTabs(WeLocalMemoryLayerMB);

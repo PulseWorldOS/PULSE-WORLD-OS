@@ -2183,10 +2183,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
-      if (totalJobs > 1000000) {
-        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      if (totalJobs > 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      } else if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " M";
       } else if (totalJobs > 1000000000) {
-        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " B";
       }
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
@@ -2202,10 +2204,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
-      if (totalJobs > 1000000) {
-        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      if (totalJobs > 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      } else if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " M";
       } else if (totalJobs > 1000000000) {
-        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " B";
       }
       const avgJobMs = (batchMs / batchSize).toFixed(3);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
