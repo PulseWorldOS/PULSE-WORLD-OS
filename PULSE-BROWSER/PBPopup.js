@@ -1279,7 +1279,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    const osfallback = chrome.runtime.getURL("PulseOSTabs.png"); // ← your OS bubble icon
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {

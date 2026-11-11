@@ -69,6 +69,7 @@ let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
 let online = navigator.onLine;
 let runOnceTime = false;
+const CACHE_NAME = "PulseBrowser-Companion";
 const titlediv = document.getElementById("title");
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (Drifting..)";
@@ -2308,7 +2309,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const MemoryLayer = WeLocalMemoryLayerMB;
       let bestfavicon = favicon;
       if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
-      const osfallback = chrome.runtime.getURL("PulseOSTab.png");
+      const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
 
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
@@ -2340,7 +2341,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
     if (remaining === 0) {
       topPanel.style.backdropFilter = "blur(24px)";
-      topPanel.style.backgroundImage = "url(PulseOSTabs.png)";
+      topPanel.style.backgroundImage = "url(PulseOSBubbles-Accel.png)";
     } else {
       console.log(`There are ${remaining} bubbles left.`);
     }
@@ -2373,7 +2374,7 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
       if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
       if (link.startsWith("chrome://") && !link.includes("extension")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
-      const os2fallback = chrome.runtime.getURL("PulseOSTab.png");
+      const os2fallback = chrome.runtime.getURL("PulseOSBubble.png");
       let bestfavicon = osfallback;
 
       // ⭐ No inline JS — CSP-safe
@@ -2620,6 +2621,20 @@ async function compressImageTinyPNGStyle(blob) {
   });
 }
 
+async function cacheMyBlob(cache, url, myBlob) {
+  if (!cache) cache = await caches.open(CACHE_NAME);
+  // 1. Wrap the Blob in a Response object
+  const response = new Response(myBlob, {
+    headers: { 
+      'Content-Type': myBlob.type,
+      'Content-Length': myBlob.size
+    }
+  });
+  // 2. Put it in the cache using a URL or custom string as the key
+  await cache.put(url, response);
+}
+
+
 // ---------------------------------------------------------
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
@@ -2645,7 +2660,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    const osfallback = chrome.runtime.getURL("PulseOSTabs.png"); // ← your OS bubble icon
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
@@ -2665,14 +2680,16 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return osfallback;
     }
 
-    // ⭐ Decode-test the blob
-    const valid = await isBlobValidImage(blob);
-    if (!valid) {
-      console.warn("Corrupted favicon detected:", iconUrl);
-      PBROWSERFAVICON_CACHE[host] = osfallback;
-      saveCache();
-      return osfallback;
-    }
+    await cacheMyBlob(false, iconUrl, blob);
+
+    // // ⭐ Decode-test the blob
+    // const valid = await isBlobValidImage(blob);
+    // if (!valid) {
+    //   console.warn("Corrupted favicon detected:", iconUrl);
+    //   PBROWSERFAVICON_CACHE[host] = osfallback;
+    //   saveCache();
+    //   return osfallback;
+    // }
 
     const reader = new FileReader();
 
