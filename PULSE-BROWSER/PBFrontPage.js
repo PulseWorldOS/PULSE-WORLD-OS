@@ -563,10 +563,14 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
+  let tickInterval = 0;
+
   const tick = async () => {
+    tickInterval++;
     if (Date.now() >= endTime) {
       stopSoakTest();
       timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
+      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -581,8 +585,10 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
-      const avgJobMs = (batchMs / batchSize).toFixed(4);
-      timeProof = `[<font color="red">${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
+      const avgJobMs = (batchMs / batchSize).toFixed(3);
+      tickInterval = tickInterval/batchSize;
+      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
+      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
 
