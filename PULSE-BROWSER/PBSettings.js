@@ -189,7 +189,7 @@ if (PulseBrowserChannel) {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {
-        OvermindSettingsOrders = payload;
+        PB_LOG.info("[Sound Off: Orders Received] ", payload);
       }
     } catch {}
   };

@@ -25,6 +25,7 @@ let WeLocalMemoryLayerMB = 0;
 let LocalMemoryLayerMB = 0;
 let socialMode = "Internal";
 let OvermindOrders = null;
+let OvermindMyOrders = null;
 let EarnHidden = false;
 let RunningAI = false;
 let EarnDetailsHidden = false;
@@ -260,6 +261,58 @@ class PulseWasmEngine {
 const pulseWasmCompute = new PulseWasmEngine();
 if (typeof PB_LOG3 !== 'undefined') {
   PB_LOG3.event("CONSOLE Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+}
+
+
+// Utility: load settings
+function loadOrders(size) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.OvermindOrders) {
+      OvermindMyOrders = response.OvermindOrders;
+      PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
+    }
+  });
+  OvermindCrossTabSync(OvermindMyOrders);
+}
+
+let PULSE_OVERMIND_BROADCAST_CHANNEL5 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
+// ============================================================
+//  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
+// ============================================================
+
+let PulseBrowserChannel5 = null;
+try {
+  PulseBrowserChannel5 = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL5);
+} catch {
+  PulseBrowserChannel5 = null;
+}
+
+function OvermindCrossTabSync(payload) {
+  try {
+    PB_LOG4.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    PulseBrowserChannel5.postMessage({
+      kind: "command_prompt",
+      payload,
+      ts: nowSW
+    });
+  } catch {}
+
+}
+
+if (PulseBrowserChannel5) {
+  PulseBrowserChannel5.onmessage = (ev) => {
+    try {
+      const { kind, payload } = ev.data || {};
+      if (kind === "command_prompt") {
+        PB_LOG3.info("[Sound Off: Orders Received] ", payload);
+      }
+    } catch {}
+  };
 }
 
 async function BootMeNowPlease() {
@@ -572,6 +625,7 @@ async function runLocalAI() {
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     aiSize = await getAISize();
+    loadOrders(aiSize);
   } catch (err) {}
 
   try {
@@ -741,6 +795,7 @@ CompanionConsoleSend.onclick = async () => {
     if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
   }, 300);
   aiSize = await getAISize();
+  loadOrders(aiSize);
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -1914,6 +1969,7 @@ setInterval(async () => {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
+  loadOrders(aiSize);
   await pbRenderCacheList2();
 }, intervalA);
 

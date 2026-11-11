@@ -62,7 +62,7 @@ if (PulseBrowserChannel2) {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {
-        OvermindPopupOrders = payload;
+        PB_LOG.info("[Sound Off: Orders Received] ", payload);
       }
     } catch {}
   };
