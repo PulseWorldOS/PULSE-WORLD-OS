@@ -2303,7 +2303,7 @@ async function openNamedTab(name, url) {
 
     chrome.tabs.get(tabId, tab => {
       if (chrome.runtime.lastError || !tab) {
-        chrome.tabs.update(tabId, { url, active: true }, updated => {
+        chrome.tabs.update(tabId, { url, active: true, autoDiscardable: false }, updated => {
           if (chrome.runtime.lastError || !updated) {
             chrome.tabs.create({ url }, newTab => {
               chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {

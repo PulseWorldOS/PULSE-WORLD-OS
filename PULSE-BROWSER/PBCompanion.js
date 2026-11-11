@@ -1683,10 +1683,13 @@ function TestingSequence(OvermindOrders) {
 }
 
 setInterval(async () => {
-  TestingSequence(OvermindOrders);
   chrome.runtime.getPlatformInfo();
-  await start24HourSoakTest();
+  TestingSequence(OvermindOrders);
 }, 15000);
+
+setTimeout(async () => {
+  await start24HourSoakTest();
+}, 6000);
 
 startWarmBootLoop();
 
