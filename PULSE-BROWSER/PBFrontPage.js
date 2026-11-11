@@ -569,7 +569,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     if (Date.now() >= endTime) {
       stopSoakTest();
       timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "Console Earner:", `WASM Batch Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -587,7 +587,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       tickInterval++;
       const avgJobMs = (batchMs / batchSize).toFixed(3);
       timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "Console Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
 
@@ -1966,9 +1966,9 @@ async function CheckTime() {
     const response = await PromptMeAI(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-  } else if ((nowTime === "09:00 AM") && !runOnceTime) {
+  } else if ((nowTime === "10:00 AM") && !runOnceTime && !EarnDetailsHidden) {
     runOnceTime = true;
-    let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep.  This is a Test Run During Sleep!";
+    let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep every night. I use chrome.power.releaseKeepAwake and chrome.runtime.getPlatformInfo but still seems to sleep? Or is it also cause i push the sleep button at night.";
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
     const response = await PromptMeAI(order);
     console.log("🧠 AI Overmind: ", response);
@@ -4753,7 +4753,6 @@ setInterval(async () => {
     document.title = "PulseBrowser OS";
   }
   CheckBackTab();
-  await CheckTime();
 }, sync);
 
 function CheckBackTab() {
