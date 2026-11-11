@@ -370,15 +370,15 @@ chrome.storage.local.get(["SessionStart"], (res) => {
 
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconMultiUniverse"], (res) => {
-  if (res.PulseBrowserFaviconMultiUniverse) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiUniverse;
+chrome.storage.local.get(["PulseBrowserFavicoUniverse"], (res) => {
+  if (res.PulseBrowserFavicoUniverse) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFavicoUniverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
 
 function saveCache() {
-  PulsesafeStorageSet({ PulseBrowserFaviconMultiUniverse: PBROWSERFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseBrowserFavicoUniverse: PBROWSERFAVICON_CACHE });
 }
 
 document.addEventListener("keydown", (e) => {
@@ -1411,7 +1411,7 @@ async function getFavicon(url, flags = {}) {
     iconURL = `https://${root}/favicon.ico`;
   }
 
-  let icon = iconURL;
+  let icon = await fetchAndStoreIcon(host, iconURL);
 
   // ⭐ Special external cases
   try {
