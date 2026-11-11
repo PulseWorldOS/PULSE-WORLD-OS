@@ -569,7 +569,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     if (Date.now() >= endTime) {
       stopSoakTest();
       timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Console Earner:", `WASM Batch Succeeded.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -587,7 +587,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       tickInterval++;
       const avgJobMs = (batchMs / batchSize).toFixed(3);
       timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Console Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
 

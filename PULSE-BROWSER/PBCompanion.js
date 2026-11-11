@@ -2150,7 +2150,7 @@ async function runEngineTest(silent = false) {
         timecolor = "gold";
       }
 
-      timeProof = `[<font color="${timecolor}">${elapsedMs.toFixed(4)} ms</font>]`;
+      timeProof = `*[<font color="${timecolor}">${elapsedMs.toFixed(4)} ms</font>]`;
       WasmSuccess = true;
 
       if (!silent) {
@@ -2184,8 +2184,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
-      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Prime Earner:", `WASM Batch Succeeded.. ` + timeProof);
+      timeProof = `*[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -2202,8 +2201,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     if (totalJobs % 25000 === 0) {
       tickInterval++;
       const avgJobMs = (batchMs / batchSize).toFixed(3);
-      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Prime Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
+      timeProof = `*[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
 
