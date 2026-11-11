@@ -839,7 +839,7 @@ function appendEarnerMessage(area, role, text) {
   if (text.includes("-->") && text.includes("<--")) text = `<font color="orange">${text}</font>`;
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Pulse Earner: </font> `) + text + `<br><br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Pulse Earner: </font> `) + text + `<br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }

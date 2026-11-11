@@ -168,12 +168,16 @@
 
     /* ⭐ Big favicon */
     .CompanionMessage {
-      opacity: 0;
-      position: absolute;
-      font-size: 0.8rem;
-      font-weight: bold;
-      animation: Reveal 12s ease forwards infinite;
-      bottom: 40px;
+      min-width: 90%;
+      margin-top: 10px;
+      min-height: 220px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 6px;
+      border-radius: 10px;
+      background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+      font-size: 12px;
     }
 
     .earner-helper-panel {
@@ -1400,14 +1404,13 @@
       flex: 1;
       width: 90%;
       margin-top: 30px;
-      min-height: 140px;
-      max-height: 190px;
+      min-height: 150px;
+      max-height: 200px;
       overflow-y: auto;
       padding: 6px;
       border-radius: 10px;
       background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
       box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
-      font-size: 12px;
     }
 
     /* BUTTONS */
@@ -1452,6 +1455,7 @@
       color: var(--pw-text);
       font-size: 14px;
       outline: none;
+      margin-bottom: 8px;
     }
 
     #pbBootEntrance {
@@ -1493,9 +1497,11 @@
     <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
-        Pulse Earner - Engine Overlay
+        Pulse Earner - 🌐 Engine Overlay
       </div>
-      <div id="CompanionMessage" class="CompanionMessage"></div>
+      <div id="CompanionMessage" class="CompanionMessage">
+
+      </div>
       <!-- Earner panel content -->
     </div>
   </div>
