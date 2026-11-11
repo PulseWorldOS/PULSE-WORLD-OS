@@ -2107,9 +2107,9 @@ async function PulseBrowserDomScan() {
     favicon = `${location.origin}/favicon.ico`;
   }
 
-  if (isPulseWorld(location.origin)) {
-    favicon = await fetchAndStoreIcon(location.origin, favicon);
-  }
+  // if (isPulseWorld(location.origin)) {
+  favicon = await fetchAndStoreIcon(location.origin, favicon);
+  // }
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
