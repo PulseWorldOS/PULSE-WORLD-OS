@@ -1689,7 +1689,7 @@ setInterval(async () => {
 
 setTimeout(async () => {
   await start24HourSoakTest();
-}, 6000);
+}, 15000);
 
 startWarmBootLoop();
 
