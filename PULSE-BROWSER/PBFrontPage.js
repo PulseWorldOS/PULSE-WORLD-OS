@@ -570,16 +570,16 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
-      if (totalJobs > 1000000000) {
+      if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
-      } else if (totalJobs > 1000000) {
+      } else if (totalJobs >= 1000000) {
         totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
-      } else if (totalJobs > 1000) {
+      } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
-      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
-      console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
+      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      appendEarnerMessage(CompanionMessages, "Prime:", `WASM Batch Succeeded.. ` + timeProof);
+      console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
       return;
     }
 
@@ -594,17 +594,17 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {      
       tickInterval++;
-      if (totalJobs > 1000000000) {
+      if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
-      } else if (totalJobs > 1000000) {
+      } else if (totalJobs >= 1000000) {
         totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
-      } else if (totalJobs > 1000) {
+      } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
-      const avgJobMs = (batchMs / batchSize).toFixed(3);
-      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
-      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
+      const avgJobMs = (batchMs / batchSize).toFixed(4);
+      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      appendEarnerMessage(CompanionMessages, "Prime:", `WASM Batch #${tickInterval}.. ` + timeProof);
+      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Err: ${totalErrors}`);
     }
 
     soakTestTimer = setTimeout(tick, intervalMs);
@@ -839,7 +839,7 @@ function appendEarnerMessage(area, role, text) {
   if (text.includes("-->") && text.includes("<--")) text = `<font color="orange">${text}</font>`;
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Pulse Earner: </font> `) + text + `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">Prime: </font> `) + text + `<br>`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -2066,7 +2066,7 @@ setInterval(async () => {
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Prime:", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
@@ -3212,7 +3212,7 @@ async function updateModuleIcons(settings, browser) {
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Prime:", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
@@ -5081,7 +5081,7 @@ function CheckBackTab() {
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
         if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Prime:", response.CompanionMessage);
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
