@@ -71,6 +71,7 @@ let lastnowFP = Date.now(); // numeric timestamp
 let GLOBALSTART = Date.now();
 let online = navigator.onLine;
 let runOnceTime = false;
+let runOnceDay = null;
 const CACHE_NAME = "PulseBrowser-Companion";
 const titlediv = document.getElementById("title");
 if (!online) {
@@ -1959,8 +1960,12 @@ async function CheckTime() {
     hour12: true
   });
   
+  let dayRan = new Date().toLocaleTimeString();
+  if (dayRan !== runOnceDay) runOnceTime = false;
+  
   if (((nowTime === "10:00 PM") || (nowTime === "12:00 AM") || (nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
     runOnceTime = true;
+    runOnceDay = dayRan;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
     const response = await PromptMeAI(order);
@@ -1968,13 +1973,12 @@ async function CheckTime() {
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   } else if ((nowTime === "10:00 AM") && !runOnceTime && !EarnDetailsHidden) {
     runOnceTime = true;
+    runOnceDay = dayRan;
     let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep every night. I use chrome.power.releaseKeepAwake and chrome.runtime.getPlatformInfo but still seems to sleep? Or is it also cause i push the sleep button at night.";
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
     const response = await PromptMeAI(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-  } else {
-    runOnceTime = false;
   }
 }
 
@@ -3454,8 +3458,7 @@ async function AdBlockerOn() {
 
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
-  PulseBrowserSettings = await getSettings();  
-  await start24HourSoakTest();
+  PulseBrowserSettings = await getSettings();
   updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 
   const PB_HOMES = [
@@ -3543,6 +3546,10 @@ async function setTheStage() {
       keyHold2Timer = null;
     }
   });
+
+  setTimeout(async () => {
+    await start24HourSoakTest();
+  }, 2500);
 }
 
 setTimeout(setTheStage, 50);
