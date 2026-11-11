@@ -3450,6 +3450,7 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();  
+  await start24HourSoakTest();
   updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 
   const PB_HOMES = [
@@ -4818,7 +4819,6 @@ function CheckBackTab() {
     intervalId2 = null;
     intervalId = setInterval(async () => {
       chrome.runtime.getPlatformInfo();
-      await start24HourSoakTest();
       CheckFaviconChanges();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
