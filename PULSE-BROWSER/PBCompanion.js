@@ -918,7 +918,8 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return osfallback;
     }
 
-    await cacheMyBlob(false, iconUrl, blob);
+    let blobUrl = URL.createObjectURL(blob);
+    await cacheMyBlob(false, blobUrl, blob);
 
     // // ⭐ Decode-test the blob
     // const valid = await isBlobValidImage(blob);
