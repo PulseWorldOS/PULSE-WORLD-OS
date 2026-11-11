@@ -12,6 +12,7 @@ let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
 let OurLocalMemoryLayerMB = 0;
+let OvermindTheirOrders = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 
@@ -59,6 +60,21 @@ const PB_LOG4 = {
   }
 };
 
+// Utility: load settings
+function loadOrders(size) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.OvermindOrders) {
+      OvermindTheirOrders = response.OvermindOrders;
+      PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
+    }
+  });
+  OvermindCrossTabSync(OvermindTheirOrders);
+}
 
 let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date().toLocaleTimeString()}`;
 // ============================================================
@@ -81,6 +97,7 @@ function OvermindCrossTabSync(payload) {
       ts: nowSW
     });
   } catch {}
+
 }
 
 if (PulseBrowserChannel3) {
@@ -712,6 +729,7 @@ setInterval(async () => {
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
+  loadOrders(null);
 }, 3500);
 
 async function injectHUD() {
@@ -1959,14 +1977,14 @@ async function isBlobValidImage(blob) {
 async function PulseBrowserDomScan() {
   const snapshotKey = `pulse_snapshot_${location.hostname}`;
   const origin = location.hostname;
-
+  
   if (
     !origin ||
     (origin.startsWith("chrome://") && !origin.includes("newtab"))
   ) {
     return;
   }
-
+  window.getSelection().selectAllChildren(document.body);
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
   

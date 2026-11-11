@@ -243,6 +243,7 @@ function loadOrders(aiPopupSize) {
       PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
     }
   });
+  OvermindCrossTabSync(OvermindPopupOrders);
 }
 
 async function initializeExoskeleton() {

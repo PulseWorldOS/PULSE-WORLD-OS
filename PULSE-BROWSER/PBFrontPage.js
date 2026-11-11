@@ -1113,6 +1113,7 @@ setTimeout(CheckEarnDetailsState, 50);
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
   if (!result || (!result.caches && !result.pulsecaches)) {
@@ -1142,10 +1143,6 @@ async function pbRenderCacheList2() {
     </div>
   `;
 
-  const store = await chrome.storage.local.get(["pb_fail_cache"]);
-  const fails = store.pb_fail_cache || {};
-  const failCount = Object.keys(fails).length;
-
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
   const history = await new Promise(resolve =>
@@ -1174,6 +1171,8 @@ async function pbRenderCacheList2() {
   let best = false;
   let pulsebest = false;
   let li = document.getElementById("li");
+  
+  const fails = store.pb_fail_cache || {};
 
   if (caches) caches.forEach(cache => {
     if (!li) li = document.createElement("li");
@@ -1239,8 +1238,7 @@ async function pbRenderCacheList2() {
     }
     
     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
-
-    
+    const failCount = Object.keys(fails).length;
     if (!li) li = document.getElementById("li");
     const u = new URL(lastFailURL);
     const RealmURL = getReadableName(u);
