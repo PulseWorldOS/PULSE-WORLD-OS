@@ -1310,8 +1310,8 @@ async function pbRenderCacheList2() {
       Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
-      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+      First: <font color="lightgreen">${cache.firstEntry?.slice(0, 38) || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 65) || "none"}</font>
     `;
 
     if (cache.lastEntry) {
@@ -2309,6 +2309,9 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const MemoryLayer = WeLocalMemoryLayerMB;
       let bestfavicon = favicon;
       if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
+      if (PBROWSERFAVICON_CACHE[realm]) {
+        PBROWSERFAVICON_CACHE[realm] = bestfavicon;
+      }
       const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
 
       // ⭐ No inline JS — CSP-safe
