@@ -1269,18 +1269,18 @@ async function compressImageTinyPNGStyle(blob) {
   });
 }
 
-async function cacheMyBlob(cache, url, myBlob) {
-  if (!cache) cache = await caches.open(CACHE_NAME);
-  // 1. Wrap the Blob in a Response object
-  const response = new Response(myBlob, {
-    headers: { 
-      'Content-Type': myBlob.type,
-      'Content-Length': myBlob.size
-    }
-  });
-  // 2. Put it in the cache using a URL or custom string as the key
-  await cache.put(url, response);
-}
+// async function cacheMyBlob(cache, url, myBlob) {
+//   if (!cache) cache = await caches.open(CACHE_NAME);
+//   // 1. Wrap the Blob in a Response object
+//   const response = new Response(myBlob, {
+//     headers: { 
+//       'Content-Type': myBlob.type,
+//       'Content-Length': myBlob.size
+//     }
+//   });
+//   // 2. Put it in the cache using a URL or custom string as the key
+//   await cache.put(url, response);
+// }
 
 // ---------------------------------------------------------
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
@@ -1327,8 +1327,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return osfallback;
     }
 
-    let blobUrl = URL.createObjectURL(blob);
-    await cacheMyBlob(false, blobUrl, blob);
     // // ⭐ Decode-test the blob
     // const valid = await isBlobValidImage(blob);
     // if (!valid) {

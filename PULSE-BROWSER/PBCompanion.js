@@ -918,9 +918,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return osfallback;
     }
 
-    let blobUrl = URL.createObjectURL(blob);
-    await cacheMyBlob(false, blobUrl, blob);
-
     // // ⭐ Decode-test the blob
     // const valid = await isBlobValidImage(blob);
     // if (!valid) {
@@ -2813,7 +2810,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           const blob = await res.blob();
           const buffer = await blob.arrayBuffer();
           const pwoffline = makeOfflineKey(url);
-          if (url !== pwoffline) cacheMyBlob(cache, pwoffline, blob);
+          if (url !== pwoffline) await cacheMyBlob(cache, pwoffline, blob);
 
           // ⭐ Store the REAL file bytes
           __PULSE_CACHE_FILE = {

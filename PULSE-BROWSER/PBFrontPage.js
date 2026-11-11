@@ -2373,6 +2373,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const MemoryLayer = WeLocalMemoryLayerMB;
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
+        saveCache();
       }
       const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
 
@@ -2687,18 +2688,18 @@ async function compressImageTinyPNGStyle(blob) {
   });
 }
 
-async function cacheMyBlob(cache, url, myBlob) {
-  if (!cache) cache = await caches.open(CACHE_NAME);
-  // 1. Wrap the Blob in a Response object
-  const response = new Response(myBlob, {
-    headers: { 
-      'Content-Type': myBlob.type,
-      'Content-Length': myBlob.size
-    }
-  });
-  // 2. Put it in the cache using a URL or custom string as the key
-  await cache.put(url, response);
-}
+// async function cacheMyBlob(cache, url, myBlob) {
+//   if (!cache) cache = await caches.open(CACHE_NAME);
+//   // 1. Wrap the Blob in a Response object
+//   const response = new Response(myBlob, {
+//     headers: { 
+//       'Content-Type': myBlob.type,
+//       'Content-Length': myBlob.size
+//     }
+//   });
+//   // 2. Put it in the cache using a URL or custom string as the key
+//   await cache.put(url, response);
+// }
 
 
 // ---------------------------------------------------------
@@ -2745,9 +2746,6 @@ async function fetchAndStoreIcon(host, iconUrl) {
       saveCache();
       return osfallback;
     }
-
-    let blobUrl = URL.createObjectURL(blob);
-    await cacheMyBlob(false, blobUrl, blob);
 
     // // ⭐ Decode-test the blob
     // const valid = await isBlobValidImage(blob);
