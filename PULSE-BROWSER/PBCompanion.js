@@ -88,7 +88,7 @@ if (PulseBrowserChannel4) {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {
-        PB_LOG2.info("[Sound Off: Orders Received] ", payload);
+        PB_LOG2.info("[Sound Off: Command Prompt Received] ", payload);
       }
     } catch {}
   };

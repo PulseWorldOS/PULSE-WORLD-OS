@@ -309,7 +309,7 @@ if (PulseBrowserChannel5) {
     try {
       const { kind, payload } = ev.data || {};
       if (kind === "command_prompt") {
-        PB_LOG3.info("[Sound Off: Orders Received] ", payload);
+        PB_LOG3.info("[Sound Off: Command Prompt Received] ", payload);
       }
     } catch {}
   };
