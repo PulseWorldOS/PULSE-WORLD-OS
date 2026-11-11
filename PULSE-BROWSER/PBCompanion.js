@@ -1682,8 +1682,10 @@ function TestingSequence(OvermindOrders) {
   OvermindCrossTabSync(OvermindOrders);
 }
 
-setInterval(() => {
+setInterval(async () => {
   TestingSequence(OvermindOrders);
+  chrome.runtime.getPlatformInfo();
+  await start24HourSoakTest();
 }, 15000);
 
 startWarmBootLoop();

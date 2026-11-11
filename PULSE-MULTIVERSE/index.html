@@ -4588,7 +4588,7 @@ function togglePulseBandPanel() {
     pbPanel.style.display = "none";
 
     if (!PBIntervalSlow) {
-      PBIntervalSlow = setInterval(() => {
+      PBIntervalSlow = setInterval(async () => {
         timeClock.textContent = pulseClock();
         timeClock.style.color = "#0FF";
         speedPulse.textContent = PulseRealm.PulseSpeed;
@@ -9187,7 +9187,9 @@ if (navigator.gpu) {
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
-  PBIntervalSlow = setInterval(() => {
+  PBIntervalSlow = setInterval(async () => {
+    chrome.runtime.getPlatformInfo();
+    await start24HourSoakTest();
     timeClock.textContent = pulseClock();
     timeClock.style.color = "#0FF";
     speedPulse.textContent = PulseRealm.PulseSpeed;

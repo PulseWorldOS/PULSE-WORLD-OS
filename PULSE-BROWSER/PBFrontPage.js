@@ -566,6 +566,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
+      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -581,7 +582,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
       const avgJobMs = (batchMs / batchSize).toFixed(4);
-      timeProof = `[<font color="red">${avgJobMs} ms</font>] (Jobs: ${totalJobs})`;
+      timeProof = `[<font color="red">${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
 
@@ -3449,7 +3450,6 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();  
-  await start24HourSoakTest();
   updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 
   const PB_HOMES = [
@@ -4818,6 +4818,7 @@ function CheckBackTab() {
     intervalId2 = null;
     intervalId = setInterval(async () => {
       chrome.runtime.getPlatformInfo();
+      await start24HourSoakTest();
       CheckFaviconChanges();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
