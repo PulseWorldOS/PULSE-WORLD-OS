@@ -915,14 +915,16 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return osfallback;
     }
 
-    // ⭐ Decode-test the blob
-    const valid = await isBlobValidImage(blob);
-    if (!valid) {
-      console.warn("Corrupted favicon detected:", iconUrl);
-      PBROWSERFAVICON_CACHE[host] = osfallback;
-      saveCache();
-      return osfallback;
-    }
+    await cacheMyBlob(false, iconUrl, blob);
+
+    // // ⭐ Decode-test the blob
+    // const valid = await isBlobValidImage(blob);
+    // if (!valid) {
+    //   console.warn("Corrupted favicon detected:", iconUrl);
+    //   PBROWSERFAVICON_CACHE[host] = osfallback;
+    //   saveCache();
+    //   return osfallback;
+    // }
 
     const reader = new FileReader();
 
@@ -2917,10 +2919,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
       
     case "PULSE_OS_CLEAR_LOCAL_STORAGE":
-      chrome.storage.local.clear(async () => {
+      (async () => {
         PulseBrowserSettings = await getSettings();
+      })();
+      chrome.storage.local.clear(() => {
         console.log("PulseWorld local storage cleared.");
       });
+      pbSaveSettings(PulseBrowserSettings);
       break;
 
     case "OPEN_PULSEWORLD_PANEL":

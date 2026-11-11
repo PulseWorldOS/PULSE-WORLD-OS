@@ -167,7 +167,7 @@ function updateWarm(realm) {
     Warm-Nova: <font color="gold">${PulseTempModuleCount ? `PulseBrowser Temp Modules (<font color="#0FF">${PulseTempModuleCount}</font>)` : "Search the World for New Realms!"}</font><br/>
   `;
 
-  if (PulseModuleCount) {
+  // if (PulseModuleCount) {
     el.style.cssText = el.style.cssText + `
       cursor: pointer;
     `;
@@ -199,7 +199,7 @@ function updateWarm(realm) {
         });
       })();
     };
-  }
+  // }
 }
 
 // ---------------------------------------------------------------------------
