@@ -1632,9 +1632,9 @@ async function pbRenderStorageStats2(history) {
   if (percent >= 40) percentColor2 = "gold";
   if (percent >= 70) percentColor2 = "orange";
   if (percent >= 90) percentColor2 = "red";
-  if (MyLocalMemoryLayerMB >= 80) percentColor3 = "gold";
-  if (MyLocalMemoryLayerMB >= 150) percentColor3 = "orange";
-  if (MyLocalMemoryLayerMB >= 250) percentColor3 = "red";
+  if (MyLocalMemoryLayerMB >= 180) percentColor3 = "gold";
+  if (MyLocalMemoryLayerMB >= 250) percentColor3 = "orange";
+  if (MyLocalMemoryLayerMB >= 350) percentColor3 = "red";
 
   // ⭐ Status text
   let statusText = "SAFE";
@@ -3475,7 +3475,6 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
-  updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 
   const PB_HOMES = [
     "https://www.pulseworld.me",
@@ -3563,12 +3562,15 @@ async function setTheStage() {
     }
   });
 
+  updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+
   setTimeout(async () => {
     await start24HourSoakTest();
+    updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
   }, 2500);
 }
 
-setTimeout(setTheStage, 50);
+setTimeout(setTheStage, 500);
 
 setTimeout(pbModuleWarmBoot, 150);
 
