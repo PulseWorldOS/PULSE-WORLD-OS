@@ -907,16 +907,16 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconMultiG"], (res) => {
-  if (res.PulseBrowserFaviconMultiG) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiG;
+chrome.storage.local.get(["PulseBrowserFaviconMultiUniverse"], (res) => {
+  if (res.PulseBrowserFaviconMultiUniverse) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiUniverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
 
 
 function saveCache() {
-  PulsesafeStorageSet({ PulseBrowserFaviconMultiG: PBROWSERFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseBrowserFaviconMultiUniverse: PBROWSERFAVICON_CACHE });
 }
 
 async function pbRequestCacheList2() {
@@ -4717,9 +4717,9 @@ function CheckBackTab() {
 
   async function CheckFaviconChanges() {
     // Load cache from storage at startup
-    chrome.storage.local.get(["PulseBrowserFaviconMultiG"], (res) => {
-      if (res.PulseBrowserFaviconMultiG) {
-        PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiG;
+    chrome.storage.local.get(["PulseBrowserFaviconMultiUniverse"], (res) => {
+      if (res.PulseBrowserFaviconMultiUniverse) {
+        PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiUniverse;
         console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
       }
     });

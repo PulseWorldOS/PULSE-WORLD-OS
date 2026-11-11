@@ -54,9 +54,9 @@ let totalUsed = 0;
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconMultiG"], (res) => {
-  if (res.PulseBrowserFaviconMultiG) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiG;
+chrome.storage.local.get(["PulseBrowserFaviconMultiUniverse"], (res) => {
+  if (res.PulseBrowserFaviconMultiUniverse) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiUniverse;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -202,7 +202,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFaviconMultiG: PBROWSERFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiUniverse: PBROWSERFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
