@@ -2108,7 +2108,7 @@ async function PulseBrowserDomScan() {
   }
 
   // if (isPulseWorld(location.origin)) {
-  favicon = await fetchAndStoreIcon(location.origin, favicon);
+  let regfavicon = await fetchAndStoreIcon(location.origin, favicon);
   // }
 
   // ⭐ NEW: Tiny HTML summary instead of full DOM
@@ -2128,7 +2128,8 @@ async function PulseBrowserDomScan() {
     counts,
     links: tinyLinks,
     images: tinyImages,
-    regfavicon: favicon,
+    regfavicon,
+    favicon,
     tabMemory: OurLocalMemoryLayerMB
   };
 

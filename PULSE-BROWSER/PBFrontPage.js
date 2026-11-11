@@ -2368,13 +2368,11 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.id = bubbleId;
       div.className = bubbleId;
 
-      const regfavicon = await getFavicon(realm);
-      const favicon = snapshot.regfavicon ?? regfavicon;
+      // const regfavicon = await getFavicon(realm);
+      const favicon = snapshot.regfavicon ?? snapshot.favicon;
       const MemoryLayer = WeLocalMemoryLayerMB;
-      let bestfavicon = favicon;
-      if (bestfavicon.startsWith("//")) bestfavicon = regfavicon;
       if (PBROWSERFAVICON_CACHE[realm]) {
-        PBROWSERFAVICON_CACHE[realm] = bestfavicon;
+        PBROWSERFAVICON_CACHE[realm] = favicon;
       }
       const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
 
@@ -2382,7 +2380,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
-               src="${bestfavicon}"
+               src="${favicon}"
                alt="${MemoryLayer} MB" />
         </div>
       `;
