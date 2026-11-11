@@ -4714,7 +4714,7 @@ function CheckBackTab() {
     return Math.floor(interval);
   }
 
-  async function CheckFaviconChanges() {
+  function CheckFaviconChanges() {
     // Load cache from storage at startup
     chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
       if (res.PulseFaviconsUniverse) {
@@ -4731,9 +4731,9 @@ function CheckBackTab() {
     clearInterval(intervalId2);
     intervalId2 = null;
     intervalId = setInterval(async () => {
+      CheckFaviconChanges();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
-      await CheckFaviconChanges();
       await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
     }, interval);
@@ -4975,6 +4975,10 @@ function CheckBackTab() {
         }
       });
       injectPulseScreenFromMemory(true);
+      CheckFaviconChanges();
+      updateOverlay();
+      updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
       const interval3 = getCharacterInterval();
       setTimeout(() => {
         pbPulseScreen.currentTime = 0;
@@ -4982,7 +4986,6 @@ function CheckBackTab() {
         injectPulseScreenFromMemory();
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
       }, interval3);
-      updateOverlay();
       // Force Chrome to rebuild the GPU layer
       const body = document.body;
       // Add a temporary class that breaks the stale GPU layer
@@ -4990,7 +4993,6 @@ function CheckBackTab() {
       // Remove it on the next frame so the repaint happens cleanly
       requestAnimationFrame(() => {
         body.classList.remove("pulse-gpu-reset");
-        pulseRehydrateTabs(WeLocalMemoryLayerMB);
         startPulseLoop();
       });
     } else {
