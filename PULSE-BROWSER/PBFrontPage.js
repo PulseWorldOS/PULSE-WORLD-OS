@@ -10,6 +10,7 @@ let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
 let CompanionMessage = null;
+let realmSummary = null;
 let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
@@ -265,8 +266,8 @@ if (typeof PB_LOG3 !== 'undefined') {
 
 
 // Utility: load settings
-function loadOrders(size) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size }, (response) => {
+function loadOrders() {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
@@ -594,6 +595,13 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     console.log("LIVEDATA: " + liveData2026);
     liveData2026 = liveData2026.slice(0, 7000);
 
+    if (realmSummary) {
+      const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
+      const summary = await summarizer.summarize(realmSummary);
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
+      realmSummary = null;
+    }
+
     // 3. Run your prompt
     const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${liveData2026}. Summarize the latest updates based on the provided text you were just sent.`);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
@@ -625,7 +633,7 @@ async function runLocalAI() {
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     aiSize = await getAISize();
-    loadOrders(aiSize);
+    loadOrders();
   } catch (err) {}
 
   try {
@@ -795,7 +803,7 @@ CompanionConsoleSend.onclick = async () => {
     if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
   }, 300);
   aiSize = await getAISize();
-  loadOrders(aiSize);
+  loadOrders();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -1944,6 +1952,7 @@ setInterval(async () => {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
+    if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
     if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
@@ -1970,7 +1979,7 @@ setInterval(async () => {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
-  loadOrders(aiSize);
+  loadOrders();
 }, intervalA);
 
 async function gpuWarmExtra() {
@@ -2477,7 +2486,7 @@ setInterval(async () => {
   });
   await pbRenderCacheList2();
   await CheckTime();
-  loadOrders(aiSize);
+  loadOrders();
 }, intervalB);
 
 
@@ -3092,6 +3101,7 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
+    if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
     if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
@@ -4945,6 +4955,7 @@ function CheckBackTab() {
           return;
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
+        if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
         if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "Pulse Earner:", response.CompanionMessage);
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;

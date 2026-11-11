@@ -7,12 +7,12 @@ const params = new URLSearchParams(location.search);
 const origin = params.get("from");
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
-const pageSettings = document.getElementById("pw-settings-page");
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
 let aiSettings2Size = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
+const pageSettings = document.getElementById("pw-settings-page");
 let CompanionSettingsDetailsMessage = document.getElementById("consoleOvermindSettingsCompanion");
 let CompanionSettingsConsoleSend = document.getElementById("consoleSettingsOvermindCompanionSend");
 let CompanionSettingsConsoleInput = document.getElementById("CompanionSettingsConsoleInput");
@@ -805,7 +805,7 @@ async function CheckEarnDetailsState() {
   PulseSettingsAIPalMemoryBuffer.forEach(push => { CompanionSettingsDetailsMessage.innerHTML += push; });
   CompanionSettingsDetailsMessage.style.fontSize = "0.6rem";
   CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
-  console.log("AI Memory Settings Buffer:" + SessionAI2.PulseSettingsAIPalMemoryBuffer);
+  console.log("AI Memory Settings Buffer:" + PulseSettingsAIPalMemoryBuffer);
   aiSettings2Size = await getAI2Size();
   if (CompanionSettingsDetailsMessage) CompanionSettingsDetailsMessage.scrollTop = CompanionSettingsDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["OvermindInVisible"]);
@@ -974,6 +974,23 @@ async function appendOvermindPrimeMessage(area, text) {
   Pulse2safeStorageSet({ PulseSettingsAIPalMemoryBuffer });
 }
 
+setTimeout(updateLinkedPWInputs, 250);
+
+// Utility: load settings
+function loadOrders(aiSettingsSize) {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.OvermindOrders) {
+      OvermindSettingsOrders = response.OvermindOrders;
+      PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);
+    }
+  });
+  OvermindCrossTabSync(OvermindSettingsOrders);
+}
 
 // ============================================================================
 //  SECTION 5 — SETTINGS PAGE INITIALIZER
@@ -1153,70 +1170,54 @@ if (location.href.includes("PBSettings.html")) {
     toggleSetting("enablePulseEarnerEngine", "PulseEarner");
     toggleSetting("enablePulseEarnOverlay", "PulseEarnOverlay");
   }
-}
 
-setTimeout(updateLinkedPWInputs, 250);
-
-window.onerror = function(message, source, lineno, colno, error) {
-  document.getElementById("earnerhelperApanel").style.border = "2px dashed red";
-};
-
-// Utility: load settings
-function loadOrders(aiSettingsSize) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
-      return;
-    }
-    if (response.OvermindOrders) {
-      OvermindSettingsOrders = response.OvermindOrders;
-      PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);
-    }
-  });
-  OvermindCrossTabSync(OvermindSettingsOrders);
-}
-
-if (backBtn) {
-  backBtn.onclick = () => {
-    if (origin === "popup") {
-      // Go back to popup
-      window.location.href = chrome.runtime.getURL("PBPopup.html");
-    } else if (origin === "newtab") {
-      // Go back to new tab override
-      window.location.href = chrome.runtime.getURL("PBFrontPage.html");
-    } else {
-      // Fallback: go to popup
-      window.location.href = chrome.runtime.getURL("PBPopup.html");
-    }
+  
+  window.onerror = function(message, source, lineno, colno, error) {
+    earnerhelperApanel.style.border = "2px dashed red";
   };
-}
+
+  
+  if (backBtn) {
+    backBtn.onclick = () => {
+      if (origin === "popup") {
+        // Go back to popup
+        window.location.href = chrome.runtime.getURL("PBPopup.html");
+      } else if (origin === "newtab") {
+        // Go back to new tab override
+        window.location.href = chrome.runtime.getURL("PBFrontPage.html");
+      } else {
+        // Fallback: go to popup
+        window.location.href = chrome.runtime.getURL("PBPopup.html");
+      }
+    };
+  }
 
 
-if (document.getElementById("tetherBtn")) {
-  document.getElementById("tetherBtn").onclick = () => {
-    if (document.getElementById("tetherCode").value && document.getElementById("tetherCode").value.length === 4) {
-      try {
-        fetch("/.netlify/functions/PULSE-SERVER-SQL", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-          body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
-        }).then((response) => {
-          if (!response.ok) document.getElementById("tetherCode").value = "";
-        }).catch(() => {
+  if (document.getElementById("tetherBtn")) {
+    document.getElementById("tetherBtn").onclick = () => {
+      if (document.getElementById("tetherCode").value && document.getElementById("tetherCode").value.length === 4) {
+        try {
+          fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+            body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowserOS", online: true, inactive: false })
+          }).then((response) => {
+            if (!response.ok) document.getElementById("tetherCode").value = "";
+          }).catch(() => {
+            document.getElementById("tetherCode").style.backgroundColor = "red";
+          });
+        } catch (err) {
           document.getElementById("tetherCode").style.backgroundColor = "red";
-        });
-      } catch (err) {
+          setTimeout(() => {
+            document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
+          }, 2000);
+        }
+      } else {
         document.getElementById("tetherCode").style.backgroundColor = "red";
         setTimeout(() => {
           document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
         }, 2000);
-      }
-    } else {
-      document.getElementById("tetherCode").style.backgroundColor = "red";
-      setTimeout(() => {
-        document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
-      }, 2000);
+      };
     };
   };
-};
+}

@@ -15,6 +15,7 @@ let OurLocalMemoryLayerMB = 0;
 let OvermindTheirOrders = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
+let realmSummary = document.body.innerText;
 
 const PB_LOG4 = {
   info(label, data) {
@@ -1984,7 +1985,21 @@ async function PulseBrowserDomScan() {
   ) {
     return;
   }
-  window.getSelection().selectAllChildren(document.body);
+
+  (async () => {
+    try {
+      // 1. Get the visible text content of the body
+      realmSummary = document.body.innerText;
+      // 2. Slice the text to the first 7000 characters
+      realmSummary = realmSummary.slice(0, 7000);
+      //   await navigator.clipboard.writeText(trimmedText);
+      //   console.log('Text successfully copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  })();
+
+  
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
   
@@ -2108,7 +2123,7 @@ async function PulseBrowserDomScan() {
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
   const authorityRealm = clone.innerHTML.slice(0, 5000);
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm });
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm, realmSummary });
   
   safeStorageSet({ [snapshotKey]: snapshot });
 }

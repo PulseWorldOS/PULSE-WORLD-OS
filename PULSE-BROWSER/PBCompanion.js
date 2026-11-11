@@ -11,6 +11,7 @@ let WasmSuccess = false;
 let timeProof = null;
 let pulseTabs = {};
 let ErrorCount = 0;
+let realmSummary = null;
 const MAX_ERRORS = 1000;
 let ErrorOverflow = false;
 let errorLock = false;
@@ -2248,7 +2249,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           ServiceWorkerOnline = res.ServiceWorkerOnline;
         }
       });
-      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage });
+      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, realmSummary });
       return true;
     
     case "PBEXTSETTINGS_GET":
@@ -2271,8 +2272,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAUTHORITY_REALM":
       if (msg.realm) {
         authorityRealm = msg.realm;
-        sendResponse({ ok: true });
       }
+      if (msg.realmSummary) {
+        realmSummary = msg.realmSummary;
+      }
+      sendResponse({ ok: true });
       break;
 
     case "PBEARNER_HIDDEN":
@@ -2284,7 +2288,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAUTHORITY_REALM_CLAIM":
-      sendResponse({ ok: true, realm: authorityRealm, pulseTabs });
+      sendResponse({ ok: true, realm: authorityRealm, pulseTabs, realmSummary });
       authorityRealm = null;
       break;
 

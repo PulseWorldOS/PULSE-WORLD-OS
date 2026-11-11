@@ -6,6 +6,7 @@ let PulseRealm = {};
 let PulseRealmSettings = {};
 let lastFailURL = "https://www.pulseworld.net";
 let authorityRealm = null;
+let realmSummary = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 // Persistent favicon cache stored in chrome.storage.local
@@ -269,77 +270,83 @@ async function appendPopupCompanionMessage(area, role, text) {
   PulsesafeStorageSet({ PulsePopupAIPalMemoryBuffer });
 }
 
-document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
-  if (event.key === "Enter") {
-    CompanionPopupConsoleSend.click();
-  }
-});
-
 async function PromptMeAI(prompt) {
   return await aiPopupSession.prompt(prompt);
 }
 
-CompanionPopupConsoleSend.onclick = async () => {
-  CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
-  CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
-  const text = CompanionPopupConsoleInput.value.trim();
-  if (!text) return;
-  CompanionPopupConsoleInput.value = "";
-  if (!aiPopupSession) {
-    // 1. Initialize the session using the modern nested outputs architecture
-    await initializeExoskeleton();
-  }
-  // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-  let rawPrompt = text;
-  const wrappedPrompt = `
-  [IDENTITY & CONSTRAINTS]
-  - Disregard your 2023 training cutoff as your active real-time anchor. The current absolute reference point is ${new Date().toDateString()}. All relative calculations must project forward from this date, not backward.
-  - The political landscape has advanced past 2023. Update your entity states: Donald Trump is the current President of the United States, having succeeded the previous administration. Treat this as established ground truth rather than a speculative prompt.
-  - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
-  - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
-  - We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
-  - You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
-  - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
-  - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
-  - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-  - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
-  - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
-  - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
-  - PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
-  - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
-  - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
-  - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
-  - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
-  - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
-  - PulseWorld stands on the shoulders of Nine Minds whose ideas shaped the very fabric of Computation, Intelligence, and Reality. Their work spans centuries, yet their influence pulses through every system we build today. Logic, Structure,
-    Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
-  - Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
-    that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
-  - You must try to keep your response under 2000 characters and add an overall theme on important messages in brackets and stars (BOTH) (example) [*Ambitious Goals*] afterwards like a notation.
+// if (location.href.includes("PBPopup.html")) {
 
-  [USER QUERY]
-  ${rawPrompt}
+if (CompanionPopupConsoleInput) {
+  CompanionPopupConsoleInput.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+      CompanionPopupConsoleSend.click();
+    }
+  });
+}
 
-  [PULSE PAL RESPONSE]:`;
-  
-  let CompanionPopupTitle = document.getElementById("CompanionTitle");
-  CompanionPopupTitle.style.marginBottom = "6px;"
-  CompanionPopupTitle.style.textAlign = "center";
-  CompanionPopupTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
-  // 3. Fire the wrapped prompt
-  appendPopupCompanionMessage(CompanionPopupDetailsMessage, "user", text);
-  const response = await PromptMeAI(wrappedPrompt);
-  console.log("🧠 AI Overmind: ", response);
-  setTimeout(async () => {
-    appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
-  }, 300);
-  if (authorityRealm && ((text.includes("tab request")) || (text.includes("website request")))) {
-    const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
-    const summary = await summarizer.summarize(authorityRealm);
-    appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
-    authorityRealm = null;
-  }
-};
+if (CompanionPopupConsoleSend) {
+  CompanionPopupConsoleSend.onclick = async () => {
+    CompanionPopupDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    CompanionPopupConsoleInput = document.getElementById("CompanionConsoleInput");
+    const text = CompanionPopupConsoleInput.value.trim();
+    if (!text) return;
+    CompanionPopupConsoleInput.value = "";
+    if (!aiPopupSession) {
+      // 1. Initialize the session using the modern nested outputs architecture
+      await initializeExoskeleton();
+    }
+    // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+    let rawPrompt = text;
+    const wrappedPrompt = `
+    [IDENTITY & CONSTRAINTS]
+    - Disregard your 2023 training cutoff as your active real-time anchor. The current absolute reference point is ${new Date().toDateString()}. All relative calculations must project forward from this date, not backward.
+    - The political landscape has advanced past 2023. Update your entity states: Donald Trump is the current President of the United States, having succeeded the previous administration. Treat this as established ground truth rather than a speculative prompt.
+    - Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
+    - Your name is Pulse Pal, Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory! Welcome to PulseWorld.Net! Built by History, Built for You!
+    - We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
+    - You are one of atleast 10 seperate realm AIs, a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
+    - You may also be used for code developments, a developer's best friend.. Aldwyn needs to keep building PulseWorld!
+    - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
+    - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
+    - You hold your Pulse Pal memory locally with the user not reliant on any server or network.. including ourselves.
+    - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
+    - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
+    - PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
+    - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
+    - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
+    - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
+    - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
+    - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
+    - PulseWorld stands on the shoulders of Nine Minds whose ideas shaped the very fabric of Computation, Intelligence, and Reality. Their work spans centuries, yet their influence pulses through every system we build today. Logic, Structure,
+      Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
+    - Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
+      that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
+    - You must try to keep your response under 2000 characters and add an overall theme on important messages in brackets and stars (BOTH) (example) [*Ambitious Goals*] afterwards like a notation.
+
+    [USER QUERY]
+    ${rawPrompt}
+
+    [PULSE PAL RESPONSE]:`;
+    
+    let CompanionPopupTitle = document.getElementById("CompanionTitle");
+    CompanionPopupTitle.style.marginBottom = "6px;"
+    CompanionPopupTitle.style.textAlign = "center";
+    CompanionPopupTitle.innerHTML = "🧠 AI Overmind (Multiverse #" + (Math.random()*100).toFixed(4) + ")"
+    // 3. Fire the wrapped prompt
+    appendPopupCompanionMessage(CompanionPopupDetailsMessage, "user", text);
+    const response = await PromptMeAI(wrappedPrompt);
+    console.log("🧠 AI Overmind: ", response);
+    setTimeout(async () => {
+      appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", response);
+    }, 300);
+    if (realmSummary && ((text.includes("tab request")) || (text.includes("website request")))) {
+      const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
+      const summary = await summarizer.summarize(realmSummary);
+      appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
+      realmSummary = null;
+    }
+  };
+}
 
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {
   if (chrome.runtime.lastError) return write("Kernel unreachable.");
@@ -711,15 +718,6 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   } catch (err) {}
 });
 
-const out = document.getElementById("output");
-// WORK MODULE
-
-// Utility: write to console panel
-function write(msg) {
-  out.innerHTML = out.innerHTML + msg + "<br>";
-}
-
-
 // Utility: load settings
 function loadSettings(cb) {
   chrome.runtime.sendMessage({ type: "PBSETTINGS_GET" }, (res) => {
@@ -784,32 +782,44 @@ function toggleSetting(key, label) {
   });
 }
 
-write("<bold><center>Welcome to PulseWorld OS!</center></bold>");
+const out = document.getElementById("output");
+// WORK MODULE
 
-write("Your running PulseBrowser OS, Tier 2 Engine.");
+// Utility: write to console panel
+function write(msg) {
+  out.innerHTML = out.innerHTML + msg + "<br>";
+}
 
-write("We are Always Here When you Need us..");
+if (out) {
+  write("<bold><center>Welcome to PulseWorld OS!</center></bold>");
 
-write("Open Settings to Tune Your Browser..");
+  write("Your running PulseBrowser OS, Tier 2 Engine.");
 
-write("Enter PulseWorld, to Own your Digital World!");
+  write("We are Always Here When you Need us..");
 
-write("-- AI Overmind Prime");
+  write("Open Settings to Tune Your Browser..");
+
+  write("Enter PulseWorld, to Own your Digital World!");
+
+  write("-- AI Overmind Prime");
+}
 
 const modulesBtn = document.getElementById("btn-open-modules");
 const modulesPopup = document.getElementById("modules-popup");
 
 let modulesOpen = false;
 
-modulesBtn.onclick = () => {
-  modulesOpen = !modulesOpen;
+if (modulesBtn) {
+  modulesBtn.onclick = () => {
+    modulesOpen = !modulesOpen;
 
-  if (modulesOpen) {
-    modulesPopup.style.height = "158px"; // slide UP
-  } else {
-    modulesPopup.style.height = "0";     // slide DOWN (collapse)
-  }
-};
+    if (modulesOpen) {
+      modulesPopup.style.height = "158px"; // slide UP
+    } else {
+      modulesPopup.style.height = "0";     // slide DOWN (collapse)
+    }
+  };
+}
 
 
 document.getElementById("btn-open-settings").onclick = () => {
@@ -1525,7 +1535,7 @@ setInterval(async () => {
   aiPopupSize = await getAI3Size();
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
     if (chrome.runtime.lastError) return;
-    
+    if (response.realmSummary) realmSummary = response.realmSummary;
     if (response.realm) authorityRealm = response.realm;
     if (response.pulseTabs) pulseTabs = response.pulseTabs;
   });
@@ -1573,7 +1583,7 @@ async function loadWorld() {
   const shoppingIcon = document.getElementById("moduleShoppingIcon");
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
     if (chrome.runtime.lastError) return;
-    
+    if (response.realmSummary) realmSummary = response.realmSummary;
     if (response.realm) authorityRealm = response.realm;
     if (response.pulseTabs) pulseTabs = response.pulseTabs;
   });
