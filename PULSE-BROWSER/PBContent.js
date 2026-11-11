@@ -216,9 +216,9 @@ console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected"
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconMultiGo"], (res) => {
-  if (res.PulseBrowserFaviconMultiGo) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiGo;
+chrome.storage.local.get(["PulseBrowserFaviconMultiG"], (res) => {
+  if (res.PulseBrowserFaviconMultiG) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiG;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -1867,18 +1867,18 @@ function PreviewListener(preview) {
   window.addEventListener("mousemove", () => preview.remove(), { once: true });
 }
 
-async function cacheMyBlob(cache, url, myBlob) {
-  if (!cache) cache = await caches.open(CACHE_NAME);
-  // 1. Wrap the Blob in a Response object
-  const response = new Response(myBlob, {
-    headers: { 
-      'Content-Type': myBlob.type,
-      'Content-Length': myBlob.size
-    }
-  });
-  // 2. Put it in the cache using a URL or custom string as the key
-  await cache.put(url, response);
-}
+// async function cacheMyBlob(cache, url, myBlob) {
+//   if (!cache) cache = await caches.open(CACHE_NAME);
+//   // 1. Wrap the Blob in a Response object
+//   const response = new Response(myBlob, {
+//     headers: { 
+//       'Content-Type': myBlob.type,
+//       'Content-Length': myBlob.size
+//     }
+//   });
+//   // 2. Put it in the cache using a URL or custom string as the key
+//   await cache.put(url, response);
+// }
 
 async function fetchAndStoreIcon(host, iconUrl) {
 
@@ -1922,8 +1922,8 @@ async function fetchAndStoreIcon(host, iconUrl) {
       return osfallback;
     }
 
-    let blobUrl = URL.createObjectURL(blob);
-    await cacheMyBlob(false, blobUrl, blob);
+    // let blobUrl = URL.createObjectURL(blob);
+    // await cacheMyBlob(false, blobUrl, blob);
 
     const reader = new FileReader();
 
@@ -2146,5 +2146,5 @@ async function PulseBrowserDomScan() {
 
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFaviconMultiGo: PBROWSERFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiG: PBROWSERFAVICON_CACHE });
 }
