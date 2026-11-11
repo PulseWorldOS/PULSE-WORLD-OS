@@ -600,12 +600,12 @@ async function askLocalModelWithLiveWeb(websiteURL) {
       const summary = await summarizer.summarize(realmSummary);
       appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
       realmSummary = null;
+    } else {
+      // 3. Run your prompt
+      const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${liveData2026}. Summarize the latest updates based on the provided text you were just sent.`);
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
+      console.log(finalAnswer);
     }
-
-    // 3. Run your prompt
-    const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${liveData2026}. Summarize the latest updates based on the provided text you were just sent.`);
-    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
-    console.log(finalAnswer);
 
   } catch (error) {
     console.error("Failed to fetch live data or run the local model:", error);
