@@ -15,7 +15,7 @@ let OurLocalMemoryLayerMB = 0;
 let OvermindTheirOrders = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
-let realmSummary = document.body.innerText;
+let realmSummary = null;
 
 const PB_LOG4 = {
   info(label, data) {

@@ -343,6 +343,10 @@ if (CompanionPopupConsoleSend) {
       const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
       const summary = await summarizer.summarize(realmSummary);
       appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", summary);
+      // 3. Run your prompt
+      const finalAnswer = await PromptMeAI(`Use this real-time web data to help answer the user's prompt: ${realmSummary}. Summarize the latest updates based on the provided text you were just sent.`);
+      appendPopupCompanionMessage(CompanionPopupDetailsMessage, "🧠 AI Overmind", finalAnswer);
+      console.log(finalAnswer);
       realmSummary = null;
     }
   };
