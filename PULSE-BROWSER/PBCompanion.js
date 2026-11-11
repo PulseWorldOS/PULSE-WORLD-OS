@@ -54,9 +54,10 @@ let totalUsed = 0;
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFavicoUniverse"], (res) => {
-  if (res.PulseBrowserFavicoUniverse) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFavicoUniverse;
+chrome.storage.local.get(["PulseBrowserFaviconsUniverse"], (res) => {
+  if (res.PulseBrowserFaviconsUniverse) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconsUniverse;
+    saveCache();
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -202,7 +203,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFavicoUniverse: PBROWSERFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconsUniverse: PBROWSERFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -992,7 +993,8 @@ async function getFavicon(url, flags = {}) {
     const root = parts.slice(parts.length - 2).join(".");
     iconURL = `https://${root}/favicon.ico`;
   }
-  let icon = await fetchAndStoreIcon(host, iconURL);
+
+  let icon = iconURL;
   // ⭐ Special external cases
   try {
     if (host.includes("google.com")) {

@@ -216,9 +216,10 @@ console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected"
   "color:#00C8FF; font-weight:bold; font-family:monospace;");
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFavicoUniverse"], (res) => {
-  if (res.PulseBrowserFavicoUniverse) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFavicoUniverse;
+chrome.storage.local.get(["PulseBrowserFaviconsUniverse"], (res) => {
+  if (res.PulseBrowserFaviconsUniverse) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconsUniverse;
+    saveCache();
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -2147,5 +2148,5 @@ async function PulseBrowserDomScan() {
 
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFavicoUniverse: PBROWSERFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconsUniverse: PBROWSERFAVICON_CACHE });
 }
