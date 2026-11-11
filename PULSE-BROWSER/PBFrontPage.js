@@ -570,12 +570,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
-      if (totalJobs > 1000) {
-        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      if (totalJobs > 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs > 1000000) {
-        totalJobsString = (totalJobs/1000000).toFixed(0) + " M";
-      } else if (totalJobs > 1000000000) {
-        totalJobsString = (totalJobs/1000000000).toFixed(0) + " B";
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs > 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
       appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
@@ -594,12 +594,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {      
       tickInterval++;
-      if (totalJobs > 1000) {
-        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      if (totalJobs > 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs > 1000000) {
-        totalJobsString = (totalJobs/1000000).toFixed(0) + " M";
-      } else if (totalJobs > 1000000000) {
-        totalJobsString = (totalJobs/1000000000).toFixed(0) + " B";
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs > 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       const avgJobMs = (batchMs / batchSize).toFixed(3);
       timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
