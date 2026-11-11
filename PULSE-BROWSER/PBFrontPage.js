@@ -1222,8 +1222,8 @@ async function pbRenderCacheList2() {
       Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
       PulseRank: <font color="gold">${pulseRank}</font><br>
-      First: <font color="lightgreen">${cache.firstEntry || "none"}</font><br>
-      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 100) || "none"}</font>
+      First: <font color="lightgreen">${cache.firstEntry?.slice(0, 38) || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 65) || "none"}</font>
     `;
 
     if (cache.lastEntry) {
@@ -2341,7 +2341,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
     if (remaining === 0) {
       topPanel.style.backdropFilter = "blur(24px)";
-      topPanel.style.backgroundImage = "url(PulseOSBubbles-Accel.png)";
+      topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
     } else {
       console.log(`There are ${remaining} bubbles left.`);
     }
