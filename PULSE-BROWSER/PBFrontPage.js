@@ -1883,7 +1883,7 @@ setInterval(async () => {
     }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
-  CheckTime();
+  await CheckTime();
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -2422,7 +2422,7 @@ setInterval(async () => {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await pbRenderCacheList2();
-  CheckTime();
+  await CheckTime();
 }, intervalB);
 
 
@@ -4597,7 +4597,7 @@ setInterval(async () => {
     document.title = "PulseBrowser OS";
   }
   CheckBackTab();
-  CheckTime();
+  await CheckTime();
 }, sync);
 
 function CheckBackTab() {
@@ -4650,16 +4650,27 @@ function CheckBackTab() {
     return Math.floor(interval);
   }
 
+  async function CheckFaviconChanges() {
+    // Load cache from storage at startup
+    chrome.storage.local.get(["PulseBrowserFaviconMultiGo"], (res) => {
+      if (res.PulseBrowserFaviconMultiGo) {
+        PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiGo;
+        console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
+      }
+    });
+  }
+
   function startPulseLoop() {
     if (intervalId) return; // already running
     const interval = getWarmInterval2();
 
     clearInterval(intervalId2);
     intervalId2 = null;
-    intervalId = setInterval(() => {
+    intervalId = setInterval(async () => {
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
-      CheckTime();
+      await CheckFaviconChanges();
+      await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
     }, interval);
 
@@ -4757,7 +4768,7 @@ function CheckBackTab() {
           nowFP = response.time;
       }
     });
-    CheckTime();
+    await CheckTime();
     const now = new Date().toLocaleString();
     console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
     const settings = await pbLoadExtensionSettings();
