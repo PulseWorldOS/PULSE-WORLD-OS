@@ -2176,12 +2176,18 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
   let totalJobs = 0;
   let totalErrors = 0;
+  let totalJobsString = Number(totalJobs);
 
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
+      if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      } else if (totalJobs > 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+      }
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -2196,6 +2202,11 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
+      if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      } else if (totalJobs > 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+      }
       const avgJobMs = (batchMs / batchSize).toFixed(3);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
@@ -2325,6 +2336,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
             CompanionMessage = "Waiting for Jobs for Submission...";
           } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
+            CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
+          } else if (CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->") {
             CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
           }
         }

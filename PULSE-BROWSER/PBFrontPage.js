@@ -561,6 +561,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
   let totalJobs = 0;
   let totalErrors = 0;
+  let totalJobsString = Number(totalJobs);
 
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
@@ -569,7 +570,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
-      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
+      if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      } else if (totalJobs > 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+      }
+      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
       appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
@@ -586,8 +592,13 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {      
       tickInterval++;
+      if (totalJobs > 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(0) + " Million";
+      } else if (totalJobs > 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(0) + " Billion";
+      }
       const avgJobMs = (batchMs / batchSize).toFixed(3);
-      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobs} | Errors: ${totalErrors})`;
+      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Errors: ${totalErrors})`;
       appendEarnerMessage(CompanionMessages, "Pulse Earner:", `WASM Batch #${tickInterval}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
     }
@@ -4829,6 +4840,12 @@ function CheckBackTab() {
     clearInterval(intervalId2);
     intervalId2 = null;
     intervalId = setInterval(async () => {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+      });
       chrome.runtime.getPlatformInfo();
       CheckFaviconChanges();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
@@ -4846,7 +4863,7 @@ function CheckBackTab() {
 
     clearInterval(intervalId);
     intervalId = null;
-    intervalId2 = setInterval(() => {
+    intervalId2 = setInterval(async () => {
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
@@ -4856,6 +4873,10 @@ function CheckBackTab() {
             nowFP = response.time;
         }
       });
+      chrome.runtime.getPlatformInfo();
+      await CheckTime();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      await start24HourSoakTest();
     }, interval);
   }
 
