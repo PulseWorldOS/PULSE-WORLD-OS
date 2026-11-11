@@ -51,12 +51,12 @@ let GLOBALSTART = Date.now();
 let totalUsed = 0;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
-let PBFAVICON_CACHE = {};
+let PBROWSERFAVICON_CACHE = {};
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   if (res.PulseBrowserFaviconMultiverse) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
-    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
+    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
 
@@ -201,7 +201,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiverse: PBROWSERFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -879,8 +879,8 @@ async function compressImageTinyPNGStyle(blob) {
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 1. Check cache first
-  if (PBFAVICON_CACHE[host]) {
-    const cached = PBFAVICON_CACHE[host];
+  if (PBROWSERFAVICON_CACHE[host]) {
+    const cached = PBROWSERFAVICON_CACHE[host];
     // Valid Base64 favicon
     if (typeof cached === "string" &&
         cached.startsWith("data:image") &&
@@ -900,7 +900,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
       console.warn("Invalid favicon response:", iconUrl, response.status);
-      PBFAVICON_CACHE[host] = osfallback;
+      PBROWSERFAVICON_CACHE[host] = osfallback;
       saveCache();
       return osfallback; // ← triggers your fallback system
     }
@@ -910,7 +910,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
       console.warn("Empty favicon blob, falling back:", osfallback);
-      PBFAVICON_CACHE[host] = osfallback;
+      PBROWSERFAVICON_CACHE[host] = osfallback;
       saveCache();
       return osfallback;
     }
@@ -919,7 +919,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     const valid = await isBlobValidImage(blob);
     if (!valid) {
       console.warn("Corrupted favicon detected:", iconUrl);
-      PBFAVICON_CACHE[host] = osfallback;
+      PBROWSERFAVICON_CACHE[host] = osfallback;
       saveCache();
       return osfallback;
     }
@@ -938,20 +938,20 @@ async function fetchAndStoreIcon(host, iconUrl) {
           base64.startsWith("data:text")
         ) {
           console.warn("Invalid Base64 favicon, falling back:", iconUrl);
-          PBFAVICON_CACHE[host] = iconUrl;
+          PBROWSERFAVICON_CACHE[host] = iconUrl;
           saveCache();
           resolve(iconUrl);
           return;
         }
         // ⭐ Save compressed Base64
-        PBFAVICON_CACHE[host] = base64;
+        PBROWSERFAVICON_CACHE[host] = base64;
         saveCache();
         resolve(base64);
       };
 
       reader.onerror = () => {
         console.warn("FileReader failed, falling back:", iconUrl);
-        PBFAVICON_CACHE[host] = iconUrl;
+        PBROWSERFAVICON_CACHE[host] = iconUrl;
         saveCache();
         resolve(iconUrl);
       };
@@ -962,7 +962,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
   } catch (err) {
     console.warn("Favicon fetch failed:", iconUrl, err);
     // ⭐ Last resort fallback
-    PBFAVICON_CACHE[host] = iconUrl;
+    PBROWSERFAVICON_CACHE[host] = iconUrl;
     saveCache();
     return iconUrl;
   }
@@ -995,7 +995,7 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("google.com")) {
       iconURL = "https://www.google.com/favicon.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -1003,7 +1003,7 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("mail.google.com") || host.includes("gmail.com")) {
       iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -1011,7 +1011,7 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("chase.com")) {
       iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -1019,7 +1019,7 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("office.com")) {
       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -1027,7 +1027,7 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("github.com")) {
       iconURL = "https://github.githubassets.com/favicons/favicon.svg";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -1035,7 +1035,7 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("youtube.com")) {
       iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
@@ -1043,24 +1043,24 @@ async function getFavicon(url, flags = {}) {
     if (host.includes("discord.com")) {
       iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
       icon = await fetchAndStoreIcon(host, iconURL);
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
   } catch {
-    PBFAVICON_CACHE[host] = iconURL;
+    PBROWSERFAVICON_CACHE[host] = iconURL;
     saveCache();
     return iconURL;
   }
 
   // ⭐ Cached → return instantly
-  if (PBFAVICON_CACHE[host]) {
+  if (PBROWSERFAVICON_CACHE[host]) {
     console.log(
       "%c[PULSEBROWSER OS KERNEL] SAVED FAVICON LOCATED: " + host,
       "color:#00FF9C; font-weight:bold; font-family:monospace;"
     );
-    return PBFAVICON_CACHE[host];
+    return PBROWSERFAVICON_CACHE[host];
   }
 
   // ⭐ PulseWorld realm detection (automatic)
@@ -1083,19 +1083,19 @@ async function getFavicon(url, flags = {}) {
       iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
       icon = await fetchAndStoreIcon(host, iconURL);
 
-      PBFAVICON_CACHE[host] = icon;
+      PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     // ⭐ Normal external favicon fetch
     icon = await fetchAndStoreIcon(host, iconURL);
-    PBFAVICON_CACHE[host] = icon;
+    PBROWSERFAVICON_CACHE[host] = icon;
     saveCache();
     return icon;
 
   } catch {
-    PBFAVICON_CACHE[host] = iconURL;
+    PBROWSERFAVICON_CACHE[host] = iconURL;
     saveCache();
     return iconURL;
   }
@@ -1714,6 +1714,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '📄 PulseNavigator - Flip AdBlocker Switch',
     contexts: ['all']
   });
+  chrome.contextMenus.create({
+    id: 'resetBootVideo',
+    title: '🎭 PulseRouter - Reset Boot Sequence',
+    contexts: ['all']
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -1743,6 +1748,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } else {
       AdBlockerOff();
     }
+  } else if (info.menuItemId === 'resetBootVideo') {
+    const bootVideoRunOnce = false;
+    await safeStorageSet({ bootVideoRunOnce });
   } else if (info.menuItemId === 'runWASMTest') {
     runWasmTest = true;
     try {

@@ -6,7 +6,7 @@
 let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
-let PBFAVICON_CACHE = {};
+let PBROWSERFAVICON_CACHE = {};
 let CompanionDeprivation = false;
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
@@ -199,8 +199,8 @@ console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected"
 // Load cache from storage at startup
 chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
   if (res.PulseBrowserFaviconMultiverse) {
-    PBFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
-    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBFAVICON_CACHE);
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
+    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
 
@@ -1851,8 +1851,8 @@ function PreviewListener(preview) {
 async function fetchAndStoreIcon(host, iconUrl) {
 
   // ⭐ 1. Check cache first
-  if (PBFAVICON_CACHE[host]) {
-    const cached = PBFAVICON_CACHE[host];
+  if (PBROWSERFAVICON_CACHE[host]) {
+    const cached = PBROWSERFAVICON_CACHE[host];
 
     // Valid Base64 favicon
     if (typeof cached === "string" &&
@@ -1875,7 +1875,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
       console.warn("Invalid favicon response:", iconUrl, response.status);
-      PBFAVICON_CACHE[host] = osfallback;
+      PBROWSERFAVICON_CACHE[host] = osfallback;
       saveCache();
       return osfallback; // ← triggers your fallback system
     }
@@ -1885,7 +1885,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     // ⭐ Fallback if blob is empty
     if (!blob || blob.size === 0) {
       console.warn("Empty favicon blob, falling back:", osfallback);
-      PBFAVICON_CACHE[host] = osfallback;
+      PBROWSERFAVICON_CACHE[host] = osfallback;
       saveCache();
       return osfallback;
     }
@@ -1905,21 +1905,21 @@ async function fetchAndStoreIcon(host, iconUrl) {
           base64.startsWith("data:text")
         ) {
           console.warn("Invalid Base64 favicon, falling back:", iconUrl);
-          PBFAVICON_CACHE[host] = iconUrl;
+          PBROWSERFAVICON_CACHE[host] = iconUrl;
           saveCache();
           resolve(iconUrl);
           return;
         }
 
         // ⭐ Save compressed Base64
-        PBFAVICON_CACHE[host] = base64;
+        PBROWSERFAVICON_CACHE[host] = base64;
         saveCache();
         resolve(base64);
       };
 
       reader.onerror = () => {
         console.warn("FileReader failed, falling back:", iconUrl);
-        PBFAVICON_CACHE[host] = iconUrl;
+        PBROWSERFAVICON_CACHE[host] = iconUrl;
         saveCache();
         resolve(iconUrl);
       };
@@ -1931,7 +1931,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
     console.warn("Favicon fetch failed:", iconUrl, err);
 
     // ⭐ Last resort fallback
-    PBFAVICON_CACHE[host] = iconUrl;
+    PBROWSERFAVICON_CACHE[host] = iconUrl;
     saveCache();
     return iconUrl;
   }
@@ -2097,5 +2097,5 @@ async function PulseBrowserDomScan() {
 
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFaviconMultiverse: PBFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiverse: PBROWSERFAVICON_CACHE });
 }
