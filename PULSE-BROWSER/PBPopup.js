@@ -355,7 +355,7 @@ if (CompanionPopupConsoleSend) {
 
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowPP }, (response) => {
   if (chrome.runtime.lastError) return write("Kernel unreachable.");
-  write("Kernel Response:\n" + JSON.stringify(response, null, 2));
+  write("\nKernel Response:\n" + JSON.stringify(response, null, 2));
   if (response.time && isValid(response.time)) {
       nowPP = response.time;
   }
@@ -793,6 +793,7 @@ const out = document.getElementById("output");
 // Utility: write to console panel
 function write(msg) {
   out.innerHTML = out.innerHTML + msg + "<br>";
+  out.scrollTop = out.scrollHeight;
 }
 
 if (out) {
