@@ -842,16 +842,16 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
-  if (res.PulseBrowserFaviconMultiverse) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
+chrome.storage.local.get(["PulseBrowserFaviconMultiGo"], (res) => {
+  if (res.PulseBrowserFaviconMultiGo) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiGo;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
 
 
 function saveCache() {
-  PulsesafeStorageSet({ PulseBrowserFaviconMultiverse: PBROWSERFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseBrowserFaviconMultiGo: PBROWSERFAVICON_CACHE });
 }
 
 async function pbRequestCacheList2() {
@@ -2929,7 +2929,7 @@ async function pbModuleWarmBoot() {
     PulseRealmSettings.acceleratedModule5Link,
     PulseRealmSettings.acceleratedModule6Link,
     "https://www.google.com"
-  ].filter(u => u && u.startsWith("http"));
+  ].filter(link => link !== undefined).filter(u => u && u.startsWith("http"));
 
   if (warmTargets.length === 0) return;
 

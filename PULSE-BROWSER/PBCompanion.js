@@ -53,9 +53,9 @@ let totalUsed = 0;
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseBrowserFaviconMultiverse"], (res) => {
-  if (res.PulseBrowserFaviconMultiverse) {
-    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiverse;
+chrome.storage.local.get(["PulseBrowserFaviconMultiGo"], (res) => {
+  if (res.PulseBrowserFaviconMultiGo) {
+    PBROWSERFAVICON_CACHE = res.PulseBrowserFaviconMultiGo;
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -201,7 +201,7 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 function saveCache() {
-  safeStorageSet({ PulseBrowserFaviconMultiverse: PBROWSERFAVICON_CACHE });
+  safeStorageSet({ PulseBrowserFaviconMultiGo: PBROWSERFAVICON_CACHE });
 }
 // ============================================================================
 //  SECTION 1 — INTERNAL STATE (Realm)
@@ -1155,6 +1155,7 @@ function pbDomainClass(url) {
   if (IsPartner(url)) return "Partner";
   if (isChrome(url)) return "Chrome";
   let warmclass = false;
+  console.log(warmTargets);
   if (warmTargets.length > 0) {
     warmTargets.forEach(origin => {
       let host = new URL(origin).hostname;
@@ -1165,6 +1166,7 @@ function pbDomainClass(url) {
     });
     if (warmclass) return "Warm-Galaxy";
   }
+  console.log(temporaryLinks);
   if (temporaryLinks.length > 0) {
     temporaryLinks.forEach(origin => {
       let host = new URL(origin).hostname;
@@ -1626,7 +1628,7 @@ async function pbModuleWarmBoot() {
     settings.acceleratedModule4Link,
     settings.acceleratedModule5Link,
     settings.acceleratedModule6Link
-  ];
+  ].filter(link => link !== undefined).filter(u => u && u.startsWith("http"));
 
   if (warmTargets.length === 0) return;
 
@@ -2915,11 +2917,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
       
     case "PULSE_OS_CLEAR_LOCAL_STORAGE":
-      chrome.storage.local.clear(() => {
+      chrome.storage.local.clear(async () => {
+        PulseBrowserSettings = await getSettings();
         console.log("PulseWorld local storage cleared.");
-      });
-      chrome.storage.sync.get(PB_SW_SETTINGS, (data) => {
-        resolve(data || PB_SW_SETTINGS);
       });
       break;
 
