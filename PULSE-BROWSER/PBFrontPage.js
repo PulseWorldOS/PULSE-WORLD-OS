@@ -1751,6 +1751,7 @@ async function pbRenderStorageStats2(history) {
   const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
   const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
+  const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
   const syncKB = (aiSize / 1024).toFixed(2);
@@ -1777,11 +1778,12 @@ async function pbRenderStorageStats2(history) {
 
   // ⭐ Sync display formatting
   let aisyncDisplay = syncMB + " MB";
-  // if (aiSize < 1024 * 1024) {
-  //    aisyncDisplay = syncKB + " KB";
-  //  } else {
-  //   aisyncDisplay = syncMB + " MB";
-  //  }
+  let totalDisplay = totalMB + " MB";
+  if (totalUsed < (1024 * 1024 * 1024)) {
+    totalDisplay = totalMB + " MB";
+  } else {
+    totalDisplay = totalGB + " GB";
+  }
   
   // ⭐ Compute growth rate + projected fill time
   if (history.pulseStorageHistory) {
@@ -1864,7 +1866,7 @@ async function pbRenderStorageStats2(history) {
           • <span style="color:lightgreen">${swMB} MB</span><br>
 
           <strong>Local Storage:</strong><br>
-          • <span style="color:lightgreen">${totalMB} MB</span><br>
+          • <span style="color:lightgreen">${totalDisplay}</span><br>
         </div>
 
         <div style="flex:1;">
