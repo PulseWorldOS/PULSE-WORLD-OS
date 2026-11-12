@@ -334,6 +334,7 @@ self.addEventListener("install", event => {
     "PBFrontPage.js",
     "PBDevOverlay.js",
     "PBCompanion.js",
+    "OvermindPrimes.js",
     "PBInterceptor.js",
     "PBAccelerator.js",
     "PulseEarnWarmer.wasm",

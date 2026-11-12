@@ -1,3 +1,15 @@
+import { CreateMLCEngine } from chrome.runtime.getURL("OvermindPrimes.js");
+
+// Callback function to update model loading progress
+const initProgressCallback = (initProgress) => {
+  console.log(initProgress);
+};
+const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+
+const engine = await CreateMLCEngine(
+  selectedModel,
+  { initProgressCallback: initProgressCallback }, // engineConfig
+);
 // ============================================================================
 //  PBSettings.js — PulseBrowser OS Settings Registry (Ultra Edition v7.0)
 //  Unified OS Registry + Extension Settings Page + MV3-Compliant Storage

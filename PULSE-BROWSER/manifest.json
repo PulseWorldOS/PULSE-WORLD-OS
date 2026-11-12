@@ -109,6 +109,7 @@
       "PBRouter.js",
       "PBPopup.js",      
       "PBCompanion.js",
+      "OvermindPrimes.js",
       "PBAccelerator.js",
       "PulseEarnWarmer.wasm",
       "PBSettings.js",
