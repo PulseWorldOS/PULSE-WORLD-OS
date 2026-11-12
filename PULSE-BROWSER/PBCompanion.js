@@ -9,6 +9,7 @@ let aiSettingsSize = 0;
 let PulseRecoverySettings = null;
 let aiPopupSize = 0;
 let assumedValue = 0;
+let WeassumedValue = 0;
 let runWasmTest = false;
 let WasmSuccess = false;
 let timeProof = null;
@@ -3431,10 +3432,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           console.log(SessionAI.PulsePalMemoryAIBuffer);
         })();
       }
-      if (msg.assumedValue) assumedValue = assumedValue + msg.assumedValue;
+      if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
       safeStorageSet({ PulsePalMemoryAIBuffer });
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer, assumedValue });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer, WeassumedValue });
       return true;
 
     case "PBCONSOLE_GET":

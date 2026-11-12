@@ -951,7 +951,7 @@ async function runLocalAI() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.assumedValue) OurassumedValue = response.assumedValue;
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1020,7 +1020,7 @@ ${rawPrompt}
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      if (response.assumedValue) OurassumedValue = response.assumedValue;
+      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1066,7 +1066,7 @@ async function appendCompanionMessage(area, role, text) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.assumedValue) OurassumedValue = response.assumedValue;
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1122,7 +1122,7 @@ CompanionConsoleSend.onclick = async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.assumedValue) OurassumedValue = response.assumedValue;
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2271,7 +2271,7 @@ setInterval(async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.assumedValue) OurassumedValue = response.assumedValue;
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
