@@ -8,6 +8,7 @@ let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let PulseRecoverySettings = null;
 let aiPopupSize = 0;
+let assumedValue = 0;
 let runWasmTest = false;
 let WasmSuccess = false;
 let timeProof = null;
@@ -2461,7 +2462,6 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
   let tickInterval = 0;
-  let assumedValue = 0;
 
   const tick = async () => {
     if (Date.now() >= endTime) {

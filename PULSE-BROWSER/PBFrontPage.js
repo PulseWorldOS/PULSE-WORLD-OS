@@ -11,6 +11,8 @@ let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
 let CompanionMessage = null;
 let realmSummary = null;
+let assumedValue = 0;
+let OurassumedValue = 0;
 let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
@@ -746,7 +748,6 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
   let tickInterval = 0;
-  let assumedValue = 0;
 
   const tick = async () => {
     if (Date.now() >= endTime) {
@@ -950,7 +951,7 @@ async function runLocalAI() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-        if (response.assumedValue) assumedValue = response.assumedValue;
+        if (response.assumedValue) OurassumedValue = response.assumedValue;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1019,7 +1020,7 @@ ${rawPrompt}
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      if (response.assumedValue) assumedValue = response.assumedValue;
+      if (response.assumedValue) OurassumedValue = response.assumedValue;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1040,7 +1041,7 @@ function appendEarnerMessage(area, role, text) {
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
-  earnerminipanel.textContent = currency(assumedValue);
+  earnerminipanel.textContent = currency(OurassumedValue);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -1065,7 +1066,7 @@ async function appendCompanionMessage(area, role, text) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.assumedValue) assumedValue = response.assumedValue;
+    if (response.assumedValue) OurassumedValue = response.assumedValue;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1121,7 +1122,7 @@ CompanionConsoleSend.onclick = async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.assumedValue) assumedValue = response.assumedValue;
+    if (response.assumedValue) OurassumedValue = response.assumedValue;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2270,7 +2271,7 @@ setInterval(async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.assumedValue) assumedValue = response.assumedValue;
+    if (response.assumedValue) OurassumedValue = response.assumedValue;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
