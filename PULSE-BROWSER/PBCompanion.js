@@ -2527,7 +2527,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       if (totalErrors === 0) {
         totalUnit = "Value: ";
-        totalUnits = assumedValue;
+        totalUnits = jobReward;
       } else {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
