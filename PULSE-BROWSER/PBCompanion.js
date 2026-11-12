@@ -2477,8 +2477,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       if (totalErrors === 0) {
-        totalUnit = "Value: ";
-        totalUnits = assumedValue;
+        totalUnit = "Val: ";
+        totalUnits = currency(assumedValue);
       } else {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
@@ -2526,8 +2526,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       if (totalErrors === 0) {
-        totalUnit = "Value: ";
-        totalUnits = jobReward;
+        totalUnit = "Val: ";
+        totalUnits = currency(jobReward);
       } else {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
