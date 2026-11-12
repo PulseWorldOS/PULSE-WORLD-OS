@@ -719,6 +719,16 @@ async function runEngineTest(silent = false) {
   }
 }
 
+function currency(amount, displayCurrency = "$") {
+  let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
+  const num = Number(raw);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(2);
+
+  let cur = String(displayCurrency || "$").trim().toUpperCase();
+  cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
+
+  return `${cur}${safe}`;
+}
 
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
@@ -748,7 +758,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
-      console.log("WASM Daily Total Value: " + assumedValue);
+      console.log("WASM Daily Total Value: " + currency(assumedValue));
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
       appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
@@ -767,7 +777,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     if (totalJobs % 25000 === 0) {      
       tickInterval++;
       assumedValue = assumedValue + 0.005;
-      console.log("WASM Batch Assumed Value: " + assumedValue);
+      console.log("WASM Batch Assumed Value: " + currency(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
@@ -5113,7 +5123,6 @@ function CheckBackTab() {
       chrome.runtime.getPlatformInfo();
       await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
-      await start24HourSoakTest();
     }, interval);
   }
 
