@@ -3429,7 +3429,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         (async () => {
           const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
           PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
-          console.log(SessionAI.PulsePalMemoryAIBuffer);
+          console.log(PulsePalMemoryAIBuffer);
         })();
       }
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;

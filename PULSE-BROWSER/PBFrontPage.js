@@ -1585,7 +1585,7 @@ async function pbRenderCacheList2() {
     const KBperEntry = (1024 / cache.density).toFixed(0);
     
     let pausedoffline = ``;
-    if (!best) lastPulseActiveEntries = cache.entries ?? 0;
+    lastPulseActiveEntries = cache.entries ?? 0;
     if (!ServiceWorkerOnline) {
       pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
     } else {
