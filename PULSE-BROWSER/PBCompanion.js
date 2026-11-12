@@ -2491,7 +2491,23 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
       tickInterval++;
-      assumedValue = assumedValue + 0.005;
+      // Models realistic DePIN compute payouts (e.g., Golem tasks / Fluence compute units)
+      // 80% lightweight micro-tasks ($0.0005 - $0.0020)
+      // 15% standard compute jobs ($0.0020 - $0.0060)
+      // 5% heavy AI/rendering workloads ($0.0060 - $0.0150)
+
+      const roll = Math.random();
+      let jobReward;
+
+      if (roll < 0.80) {
+        jobReward = 0.0005 + Math.random() * 0.0015;
+      } else if (roll < 0.95) {
+        jobReward = 0.0020 + Math.random() * 0.0040;
+      } else {
+        jobReward = 0.0060 + Math.random() * 0.0090;
+      }
+
+      assumedValue += jobReward;
       console.log("WASM Daily Assumed Value: " + currency(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
