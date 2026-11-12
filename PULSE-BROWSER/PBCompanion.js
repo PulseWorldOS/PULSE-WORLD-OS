@@ -2193,6 +2193,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
+      CompanionMessage = `WASM Batch Succeeded.. [<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
       return;
     }
@@ -2215,6 +2216,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
+      CompanionMessage = `WASM Batch #${tickInterval}.. [<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Err: ${totalErrors}`);
     }
 
