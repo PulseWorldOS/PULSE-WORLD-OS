@@ -1359,7 +1359,7 @@ async function callHigherAI() {
     ],
   });
       
-  console.log("🧠🧠 AI Overmind: ", reply.choices[0].message.content);
+  console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
 }
 
 // ---------------------------------------------------------------------------
@@ -2450,6 +2450,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
   let tickInterval = 0;
+  let assumedValue = 0;
 
   const tick = async () => {
     if (Date.now() >= endTime) {
@@ -2461,7 +2462,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
-      CompanionMessage = `WASM Batch Succeeded.. [<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      console.log("WASM Daily Total Value: " + assumedValue);
+      CompanionMessage = `WASM Daily Batches Succeeded.. [<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
       return;
     }
@@ -2477,6 +2479,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
       tickInterval++;
+      assumedValue = assumedValue + 0.005;
+      console.log("WASM Batch Assumed Value: " + assumedValue);
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
@@ -2486,9 +2490,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
       let avgJobColor = "lightgreen";
-      if (avgJobMs >= 0.005) {
+      if (avgJobMs >= 0.01) {
         avgJobColor = "red";
-      } else if (avgJobMs >= 0.0025) {
+      } else if (avgJobMs >= 0.005) {
         avgJobColor = "orange";
       }
       const nowAllTime = new Date().toLocaleTimeString("en-US", {

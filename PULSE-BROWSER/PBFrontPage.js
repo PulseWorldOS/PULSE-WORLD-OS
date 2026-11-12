@@ -736,6 +736,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
   let tickInterval = 0;
+  let assumedValue = 0;
 
   const tick = async () => {
     if (Date.now() >= endTime) {
@@ -747,8 +748,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
+      console.log("WASM Daily Total Value: " + assumedValue);
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch Succeeded.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
       return;
     }
@@ -764,6 +766,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {      
       tickInterval++;
+      assumedValue = assumedValue + 0.005;
+      console.log("WASM Batch Assumed Value: " + assumedValue);
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
@@ -773,9 +777,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
       let avgJobColor = "lightgreen";
-      if (avgJobMs >= 0.005) {
+      if (avgJobMs >= 0.01) {
         avgJobColor = "red";
-      } else if (avgJobMs >= 0.0025) {
+      } else if (avgJobMs >= 0.005) {
         avgJobColor = "orange";
       } 
       const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -1024,6 +1028,7 @@ function appendEarnerMessage(area, role, text) {
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
+  earnerminipanel.textContent = "";
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -1303,6 +1308,7 @@ function getReadableName(url) {
 
     
     pbPulseDetailsEarn.onclick = async () => {
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       if (!EarnDetailsHidden) {
         EarnDetailsHidden = true;
         // ——— Turn ON (transparent / earning mode) ———
@@ -1353,7 +1359,7 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
-  if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+  if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
@@ -1408,6 +1414,7 @@ async function CheckEarnState() {
   earnerminipanel.onclick = async () => pbPulseEarn.click();
 
   pbPulseEarn.onclick = async () => {
+    if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
     if (!EarnHidden) {
       EarnHidden = true;
       // ——— Turn ON (transparent / earning mode) ———
@@ -2173,19 +2180,21 @@ async function CheckTime() {
   });
   
   let dayRan = new Date().toLocaleTimeString();
-  if (dayRan !== runOnceDay) runOnceTime = false;
+  if (dayRan !== runOnceDay && runOnceTime) {
+    runOnceTime = false;
+  }
   
   if (((nowTime === "10:00 PM") || (nowTime === "12:00 AM") || (nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
-    runOnceTime = true;
     runOnceDay = dayRan;
+    runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
     const response = await PromptMeAI(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   } else if ((nowTime === "10:00 AM") && !runOnceTime && !EarnDetailsHidden) {
-    runOnceTime = true;
     runOnceDay = dayRan;
+    runOnceTime = true;
     let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep every night. I use chrome.power.releaseKeepAwake and chrome.runtime.getPlatformInfo but still seems to sleep? Or is it also cause i push the sleep button at night.";
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
     const response = await PromptMeAI(order);
