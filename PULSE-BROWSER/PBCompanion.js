@@ -2126,6 +2126,138 @@ function backToOriginal() {
   });
 }
 
+async function pulseGPUInspector(adapter, device) {
+  // Acquire adapter
+  if (!adapter) adapter = await navigator.gpu?.requestAdapter();
+  if (!adapter) {
+    console.log("❌ WebGPU: No adapter available");
+    return;
+  }
+
+  // Acquire device
+  if (!device) device = await adapter.requestDevice();
+
+  // Basic info
+  console.log("🎮 WebGPU Inspector");
+  console.log("Adapter Name:", adapter.name ?? "PulseEngine 2028");
+  console.log("Adapter Type:", adapter.isFallbackAdapter ? "Fallback" : "Primary");
+  console.log("Features:", [...adapter.features]);
+
+  // Limits (Deep Telemetry)
+  const L = adapter.limits;
+  console.log("📊 GPU Limits:");
+  console.log("  Max Bind Groups:", L.maxBindGroups);
+  console.log("  Max Dynamic Uniform Buffers:", L.maxDynamicUniformBuffersPerPipelineLayout);
+  console.log("  Max Dynamic Storage Buffers:", L.maxDynamicStorageBuffersPerPipelineLayout);
+  console.log("  Max Storage Buffer Size:", L.maxStorageBufferBindingSize);
+  console.log("  Max Uniform Buffer Size:", L.maxUniformBufferBindingSize);
+  console.log("  Max Buffer Size:", L.maxBufferSize);
+  console.log("  Max Texture Dimension 1D:", L.maxTextureDimension1D);
+  console.log("  Max Texture Dimension 2D:", L.maxTextureDimension2D);
+  console.log("  Max Texture Dimension 3D:", L.maxTextureDimension3D);
+  console.log("  Max Compute Workgroup Size X:", L.maxComputeWorkgroupSizeX);
+  console.log("  Max Compute Workgroup Size Y:", L.maxComputeWorkgroupSizeY);
+  console.log("  Max Compute Workgroup Size Z:", L.maxComputeWorkgroupSizeZ);
+  console.log("  Max Compute Invocations:", L.maxComputeInvocationsPerWorkgroup);
+  console.log("  Max Compute Workgroups Per Dimension:", L.maxComputeWorkgroupsPerDimension);
+
+  // Device object
+  console.log("🔧 Device:", device);
+
+  // Context loss detection
+  device.lost.then((info) => {
+    console.warn("⚠️ GPU Context Lost:", info);
+  });
+}
+
+let gpuContext = null;
+
+// 1. Initialize once at startup (replaces your warm-up snippet)
+async function initWebGPUCompute() {
+  if (!navigator.gpu) return null;
+  const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
+  if (!adapter) return null;
+  const device = await adapter.requestDevice();
+  if (device) pulseGPUInspector(adapter, device);
+  // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
+  const shaderCode = `
+    struct Item256 {
+      low: vec4<u32>,
+      high: vec4<u32>,
+    };
+
+    @group(0) @binding(0) var<storage, read_write> data: array<Item256>;
+
+    @compute @workgroup_size(64)
+    fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+      let i = id.x;
+      if (i >= arrayLength(&data)) { return; }
+
+      // REPLACE THIS WITH YOUR ACTUAL 256-BIT MATH (e.g., XOR, bit-shifts, hashing)
+      data[i].low = data[i].low ^ vec4<u32>(0xDEADBEEFu);
+      data[i].high = data[i].high + vec4<u32>(1u);
+    }
+  `;
+
+  const module = device.createShaderModule({ code: shaderCode });
+  const pipeline = device.createComputePipeline({
+    layout: "auto",
+    compute: { module, entryPoint: "main" },
+  });
+
+  gpuContext = { device, pipeline };
+  return gpuContext;
+}
+
+// 2. Call this instead of your Wasm function for large batches
+async function run256BitJobOnGPU(typedArrayPayload) {
+  const { device, pipeline } = gpuContext;
+  const byteSize = typedArrayPayload.byteLength;
+
+  // Create GPU storage buffer & staging buffer for reading results back
+  const gpuBuffer = device.createBuffer({
+    size: byteSize,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
+  });
+  const readBuffer = device.createBuffer({
+    size: byteSize,
+    usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+  });
+
+  // Upload payload from CPU to GPU
+  device.queue.writeBuffer(gpuBuffer, 0, typedArrayPayload);
+
+  const bindGroup = device.createBindGroup({
+    layout: pipeline.getBindGroupLayout(0),
+    entries: [{ binding: 0, resource: { buffer: gpuBuffer } }],
+  });
+
+  // Dispatch 1 thread per 256-bit element (32 bytes each)
+  const itemCount = byteSize / 32;
+  const workgroups = Math.ceil(itemCount / 64);
+
+  const encoder = device.createCommandEncoder();
+  const pass = encoder.beginComputePass();
+  pass.setPipeline(pipeline);
+  pass.setBindGroup(0, bindGroup);
+  pass.dispatchWorkgroups(workgroups);
+  pass.end();
+
+  // Copy result to CPU-readable buffer
+  encoder.copyBufferToBuffer(gpuBuffer, 0, readBuffer, 0, byteSize);
+  device.queue.submit([encoder.finish()]);
+
+  // Read back to JS
+  await readBuffer.mapAsync(GPUMapMode.READ);
+  const result = new Uint8Array(readBuffer.getMappedRange()).slice();
+  readBuffer.unmap();
+
+  // Clean up VRAM
+  gpuBuffer.destroy();
+  readBuffer.destroy();
+
+  return result;
+}
 
 let soakTestTimer = null;
 
@@ -2140,7 +2272,7 @@ async function runEngineTest(silent = false) {
   //   0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81,
   //   0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09
   // ]);
-  
+
   const mock256Payload = new Uint8Array([
     0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81,
     0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09,
@@ -2311,6 +2443,8 @@ function safeSpeak(msg) {
   }
   errorLock = false;
 }
+
+setTimeout(initWebGPUCompute, 50);
 
 // In a Service Worker or Background Script
 self.addEventListener('error', (event) => {
