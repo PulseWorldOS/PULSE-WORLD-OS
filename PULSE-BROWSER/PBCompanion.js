@@ -399,7 +399,7 @@ async function handlePulseRequest(req) {
     if (
       net &&
       net.ok &&
-      (!req.url.startsWith('chrome-extension://'))
+      (!req.url.startsWith('chrome-extension://') && !req.url.includes("/mlc-ai/"))
     ) {
       const pwoffline = makeOfflineKey(req.url);
       let netclone = net.clone();
@@ -2655,22 +2655,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             try {
               const cache = await caches.open(name);
               const requests = await cache.keys();
-              const realRequests = requests.filter(req => 
-                (!isPulseWorld(req.url) && !isFavicon(req.url))
-              );
-              const PulseRequests = requests.filter(req =>
-                (isPulseWorld(req.url) && !isFavicon(req.url))
-              );
+              // const realRequests = requests.filter(req =>
+              //   (!isPulseWorld(req.url) && !isFavicon(req.url))
+              // );
+              // const PulseRequests = requests.filter(req =>
+              //   (isPulseWorld(req.url) && !isFavicon(req.url))
+              // );
               const PulseMoments = [
                 ...new Set(
-                  realRequests
-                    .filter(req => (isAMoment(req.url) && !isFavicon(req.url)))
+                  requests
+                    .filter(req => (isPulseWorld(req.url) && isAMoment(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
               ];
               const PulseOffline = Array.from(
                 new Map(
-                  realRequests
+                  requests
                     .filter(req => (isOffline(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
@@ -2679,19 +2679,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );
-              count = realRequests.length;
-              pulsecount = PulseRequests.length;
+              count = requests.length;
+              // pulsecount = PulseRequests.length;
               pulsemomentscount = PulseMoments.length;
               pulseofflinecount = PulseOffline.length;
               // errorcount = ErrorRequests.length;
               totalcount = requests.length;
               const currentCache = CACHE_NAME;
-              const currentPulseCache = PULSE_FAUX_CACHE_NAME;
-              const currentErrorCache = ERROR_FAUX_CACHE_NAME;
+              // const currentPulseCache = PULSE_FAUX_CACHE_NAME;
+              // const currentErrorCache = ERROR_FAUX_CACHE_NAME;
 
               // ⭐ Compute total cache size
               let totalBytes = 0;
-              for (const req of realRequests) {
+              for (const req of requests) {
                 try {
                   const res = await cache.match(req);
                   if (res) {
@@ -2703,19 +2703,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 }
               }
 
-              // ⭐ Compute total cache size
-              let totalPulseBytes = 0;
-              for (const req of PulseRequests) {
-                try {
-                  const res = await cache.match(req);
-                  if (res) {
-                    const buf = await res.arrayBuffer();
-                    totalPulseBytes += buf.byteLength;
-                  }
-                } catch (e) {
-                  console.warn("PulseRequests Cache size read failed:", e);
-                }
-              }
+              // // ⭐ Compute total cache size
+              // let totalPulseBytes = 0;
+              // for (const req of PulseRequests) {
+              //   try {
+              //     const res = await cache.match(req);
+              //     if (res) {
+              //       const buf = await res.arrayBuffer();
+              //       totalPulseBytes += buf.byteLength;
+              //     }
+              //   } catch (e) {
+              //     console.warn("PulseRequests Cache size read failed:", e);
+              //   }
+              // }
 
               // // ⭐ Compute total cache size
               // let totalErrorBytes = 0;
@@ -2732,20 +2732,20 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // }
 
               sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
-              sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
+              // sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
               // errorSizeMB = parseFloat((totalErrorBytes / (1024 * 1024)).toFixed(2));
               const density = count / (sizeMB || 1);
-              const densitypulse = pulsecount / (sizePulseMB || 1);
+              // const densitypulse = pulsecount / (sizePulseMB || 1);
               // ⭐ Diversity (unique hosts)
-              const diversity = new Set(realRequests.map(r => {
+              const diversity = new Set(requests.map(r => {
                 try { return new URL(r.url).hostname; }
                 catch { return "unknown"; }
               })).size;
 
-              const pulsediversity = new Set(PulseRequests.map(r => {
-                try { return new URL(r.url); }
-                catch { return "unknown"; }
-              })).size;
+              // const pulsediversity = new Set(PulseRequests.map(r => {
+              //   try { return new URL(r.url); }
+              //   catch { return "unknown"; }
+              // })).size;
 
               // ⭐ Weight class (unchanged)
               let weightClass = "Very Small";
@@ -2754,12 +2754,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               if (count > 1000) weightClass = "Heavy";
               if (count > 2000) weightClass = "Massive";
 
-              // ⭐ Weight class (unchanged)
-              let weightPulseClass = "Very Small";
-              if (pulsecount > 100) weightPulseClass = "Light";
-              if (pulsecount > 500) weightPulseClass = "Medium";
-              if (pulsecount > 1000) weightPulseClass = "Heavy";
-              if (pulsecount > 2000) weightPulseClass = "Massive";
+              // // ⭐ Weight class (unchanged)
+              // let weightPulseClass = "Very Small";
+              // if (pulsecount > 100) weightPulseClass = "Light";
+              // if (pulsecount > 500) weightPulseClass = "Medium";
+              // if (pulsecount > 1000) weightPulseClass = "Heavy";
+              // if (pulsecount > 2000) weightPulseClass = "Massive";
 
               // ⭐ Raw PulseScore
               const rawPulse =
@@ -2768,12 +2768,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 (count / 50) -
                 (sizeMB / 10);
 
-              // ⭐ Raw PulseScore
-              const rawrealPulse =
-                (densitypulse * 2) +
-                (pulsediversity * 8) +
-                (pulsecount / 40) -
-                (sizePulseMB / 10);
+              // // ⭐ Raw PulseScore
+              // const rawrealPulse =
+              //   (densitypulse * 2) +
+              //   (pulsediversity * 8) +
+              //   (pulsecount / 40) -
+              //   (sizePulseMB / 10);
 
               // ⭐ Final PulseScore (0–100)
               const pulseScore = Math.max(0, Math.min(100, Math.floor(rawPulse)));
@@ -2783,49 +2783,49 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               if (pulseScore >= 60) pulseTier = "High Speed";
               if (pulseScore >= 80) pulseTier = "Blazing Fast";
 
-              // ⭐ Final PulseScore (0–100)
-              const realpulseScore = Math.max(0, Math.min(100, Math.floor(rawrealPulse)));
-              let realpulseTier = "Quiet Load";
-              if (realpulseScore >= 20) realpulseTier = "Light Sway";
-              if (realpulseScore >= 40) realpulseTier = "Moderate Push";
-              if (realpulseScore >= 60) realpulseTier = "High Speed";
-              if (realpulseScore >= 80) realpulseTier = "Blazing Fast";
+              // // ⭐ Final PulseScore (0–100)
+              // const realpulseScore = Math.max(0, Math.min(100, Math.floor(rawrealPulse)));
+              // let realpulseTier = "Quiet Load";
+              // if (realpulseScore >= 20) realpulseTier = "Light Sway";
+              // if (realpulseScore >= 40) realpulseTier = "Moderate Push";
+              // if (realpulseScore >= 60) realpulseTier = "High Speed";
+              // if (realpulseScore >= 80) realpulseTier = "Blazing Fast";
               
-              // ⭐ Personality (style)
-              let personality = "Silent Ghost";
-              if (density > 50) personality = "Astral Explorer";
-              else if (density > 20) personality = "Active Voyager";
-              else if (density > 10) personality = "Balanced Traveler";
-              else if (density > 5) personality = "Calm Wanderer";
+              // // ⭐ Personality (style)
+              // let personality = "Silent Ghost";
+              // if (density > 50) personality = "Astral Explorer";
+              // else if (density > 20) personality = "Active Voyager";
+              // else if (density > 10) personality = "Balanced Traveler";
+              // else if (density > 5) personality = "Calm Wanderer";
 
               // ⭐ Personality (style)
-              let pulsepersonality = "Astral Viewer";
-              if (densitypulse > 50) pulsepersonality = "Multiversal Traveler";
-              else if (densitypulse > 20) pulsepersonality = "Realm Lord";
-              else if (densitypulse > 10) pulsepersonality = "Time Traveler";
-              else if (densitypulse > 5) pulsepersonality = "Astral Projection";
+              let personality = "Astral Viewer";
+              if (density > 50) personality = "Multiversal Traveler";
+              else if (density > 20) personality = "Realm Lord";
+              else if (density > 10) personality = "Time Traveler";
+              else if (density > 5) personality = "Astral Projection";
 
               const pulseRank = `${pulseTier}`;
-              const realpulseRank = `${realpulseTier}`;
+              // const realpulseRank = `${realpulseTier}`;
 
-              PulseCacheDetails.push({
-                name: PULSE_FAUX_CACHE_NAME,
-                entries: pulsecount,
-                sizeBytes: totalPulseBytes,
-                sizePulseMB,
-                weightPulseClass,
-                pulsepersonality,
-                densitypulse,
-                realpulseScore,
-                realpulseTier,
-                realpulseRank,
-                currentPulseCache,
-                firstEntry: PulseRequests[0]?.url || null,
-                lastEntry: PulseRequests[pulsecount - 1]?.url || null
-              });
+              // PulseCacheDetails.push({
+              //   name: PULSE_FAUX_CACHE_NAME,
+              //   entries: pulsecount,
+              //   sizeBytes: totalPulseBytes,
+              //   sizePulseMB,
+              //   weightPulseClass,
+              //   pulsepersonality,
+              //   densitypulse,
+              //   realpulseScore,
+              //   realpulseTier,
+              //   realpulseRank,
+              //   currentPulseCache,
+              //   firstEntry: PulseRequests[0]?.url || null,
+              //   lastEntry: PulseRequests[pulsecount - 1]?.url || null
+              // });
 
               cacheDetails.push({
-                name,
+                name: CACHE_NAME,
                 entries: count,
                 sizeBytes: totalBytes,
                 sizeMB,
@@ -2836,8 +2836,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 pulseTier,
                 pulseRank,
                 currentCache,
-                firstEntry: realRequests[0]?.url || null,
-                lastEntry: realRequests[count - 1]?.url || null
+                firstEntry: requests[0]?.url || null,
+                lastEntry: requests[count - 1]?.url || null
               });
 
               // ErrorCacheDetails.push({
@@ -2851,17 +2851,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // });
 
             } catch (innerErr) {
-              PulseCacheDetails.push({
-                name: PULSE_FAUX_CACHE_NAME,
-                entries: null,
-                sizeBytes: 0,
-                sizePulseMB: "0.00",
-                weightPulseClass: "unknown",
-                error: innerErr.toString()
-              });
+              // PulseCacheDetails.push({
+              //   name: PULSE_FAUX_CACHE_NAME,
+              //   entries: null,
+              //   sizeBytes: 0,
+              //   sizePulseMB: "0.00",
+              //   weightPulseClass: "unknown",
+              //   error: innerErr.toString()
+              // });
 
               cacheDetails.push({
-                name,
+                name: CACHE_NAME,
                 entries: null,
                 sizeBytes: 0,
                 sizeMB: "0.00",
@@ -2884,16 +2884,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             ts,
             totalCaches: cacheNames.length,
             caches: cacheDetails,
-            pulsecaches: PulseCacheDetails,
+            // pulsecaches: PulseCacheDetails,
             // errorcaches: ErrorCacheDetails,
             cachecount: count,
-            pulsecount,
+            // pulsecount,
             pulsemomentscount,
             pulseofflinecount,
             // errorcount,
             totalcount,
             sizeCacheMB: sizeMB,
-            sizePulseMB,
+            // sizePulseMB,
             // errorSizeMB
           };
 

@@ -1,3 +1,4 @@
+
 // ============================================================================
 //  PBPopup.js — PulseBrowser OS Control Console (Ultra Edition v6.0)
 //  Full OS cockpit • subsystem toggles • diagnostics • warm-path triggers
@@ -27,15 +28,6 @@ const pbPulsePopupOvermind = document.getElementById("pbPulseDetailsEarn2");
 const earnerhelperPopuppanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperPopuppanel = document.getElementById("earner-inner-helper-panel");
 
-function isValid(t) {
-  return (
-    typeof t === "number" &&
-    Number.isFinite(t) &&
-    t > 0
-  );
-}
-
-
 let PULSE_OVERMIND_BROADCAST_CHANNEL2 = `PulseBrowser-OS::${new Date(nowPP).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
@@ -46,6 +38,14 @@ try {
   PulseBrowserChannel2 = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL2);
 } catch {
   PulseBrowserChannel2 = null;
+}
+
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
 }
 
 function OvermindCrossTabSync(payload) {
@@ -270,6 +270,60 @@ async function appendPopupCompanionMessage(area, role, text) {
   area.scrollTop = area.scrollHeight;
   PulsesafeStorageSet({ PulsePopupAIPalMemoryBuffer });
 }
+
+import { CreateMLCEngine } from "./OvermindPrimes.js";
+
+// Callback function to update model loading progress
+const initProgressCallback = (initProgress) => {
+  console.log(initProgress);
+};
+const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+
+const engine = await CreateMLCEngine(
+  selectedModel,
+  { initProgressCallback: initProgressCallback }, // engineConfig
+);
+
+// 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+    const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
+    const wrappedPrompt = `
+[IDENTITY & CONSTRAINTS]
+- Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
+- We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
+- You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
+- You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
+- Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
+- PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
+- You hold your AI Overmind Prime 🧠 & each Pulse Pal AI Memory locally with the user not reliant on any server or network.. including ourselves.
+- PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
+- PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
+- PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
+- PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
+- PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
+- PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
+- PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
+- PulseBusiness, Leveling the playing field, giving local and home businesses proximity visibility (radar) without identity giving them a way to make money with privacy and gives them a moment before the user hits amazon.. etc. (That item is nearby!) (Still Testing)
+- The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
+- PulseWorld stands on the shoulders of Nine Minds whose ideas shaped the very fabric of Computation, Intelligence, and Reality. Their work spans centuries, yet their influence pulses through every system we build today. Logic, Structure,
+  Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
+- Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
+  that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
+- You must try to keep your response under 3000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.`;
+
+// 1. Send a message to your loaded engine
+const reply = await engine.chat.completions.create({
+  messages: [
+    { role: "system", content: wrappedPrompt },
+    { role: "user", content: rawPrompt }
+  ],
+});
+
+appendPopupCompanionMessage(CompanionPopupDetailsMessage, rawPrompt);
+    
+console.log("🧠🧠 AI Overmind: ", reply.choices[0].message.content);
+setTimeout(async () => {
+  appendPopupCompanionMessage(CompanionPopupDetailsMessage, reply.choices[0].message.content);
+}, 300);
 
 async function PromptMeAI(prompt) {
   return await aiPopupSession.prompt(prompt);

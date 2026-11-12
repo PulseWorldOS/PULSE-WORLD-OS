@@ -1313,12 +1313,12 @@ async function pbRenderCacheList2() {
   const pulseoffline = result.pulseofflinecount;
   // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
 
-  if (caches.length === 0 && pulsecaches.length === 0) {
+  if (caches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
 
-  if (lastPulseActiveEntries && lastPulseActiveEntries === (caches.entries + pulsecaches.entries)) return;
+  if (lastPulseActiveEntries && lastPulseActiveEntries === (caches.entries)) return;
 
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
