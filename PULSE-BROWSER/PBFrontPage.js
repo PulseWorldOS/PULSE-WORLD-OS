@@ -556,7 +556,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     console.warn("[TEST] Soak test is already running.");
     return;
   }
-
+  
   await pulseWasmCompute.initEngine();
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
   let totalJobs = 0;
@@ -577,8 +577,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
-      timeProof = `[<font color="red">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "🧠 Prime:", `WASM Batch Succeeded.. ` + timeProof);
+      timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      appendEarnerMessage(CompanionMessages, "🧠 Prime", `WASM Batch Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
       return;
     }
@@ -602,8 +602,14 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
-      timeProof = `[<font color="red">Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "🧠 Prime:", `WASM Batch #${tickInterval}.. ` + timeProof);
+      let avgJobColor = "lightgreen";
+      if (avgJobMs >= 0.002) {
+        avgJobColor = "red";
+      } else if (avgJobMs >= 0.001) {
+        avgJobColor = "orange";
+      }
+      timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      appendEarnerMessage(CompanionMessages, "🧠 Prime", `WASM Batch #${tickInterval}A.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Err: ${totalErrors}`);
     }
 
@@ -2066,7 +2072,7 @@ setInterval(async () => {
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime:", response.CompanionMessage);
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
@@ -3212,7 +3218,7 @@ async function updateModuleIcons(settings, browser) {
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime:", response.CompanionMessage);
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
@@ -5063,7 +5069,7 @@ function CheckBackTab() {
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden || document.visibilityState === "visible") {
+    if (!document.hidden) {
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
@@ -5081,7 +5087,7 @@ function CheckBackTab() {
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
         if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime:", response.CompanionMessage);
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime", response.CompanionMessage);
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
