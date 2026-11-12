@@ -121,7 +121,7 @@
       top: 0;
       left: 310px;
       height: 280px;
-      width: clamp(350px, 12vw, 400px);
+      width: clamp(400px, 12vw, 450px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -612,8 +612,8 @@
       24%  { transform: translate(157px, 111px); }
       48%  { transform: translate(174px, 111px); }
       64%  { transform: translate(193px, 111px); }
-      80%  { transform: translate(227px, 111px); }
-      100% { transform: translate(240px, 111px); }
+      80%  { transform: translate(217px, 111px); }
+      100% { transform: translate(220px, 111px); }
     }
     
     @keyframes bubbleFloatMinionette2 {
@@ -1090,6 +1090,12 @@
       position: fixed;
     }
 
+    .HigherAuthority {
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+
     .authority {
       bottom: 1px;
       /* TRUE CENTERING WITH NO LEFT/RIGHT */
@@ -1524,7 +1530,7 @@
       </div>
       <div class="CompanionConsoleInputRow">
         <input id="CompanionConsoleInput" class="CompanionConsoleInput" type="text" placeholder="Just Ask AI Overmind.. (PulsePal AI Director)" />
-        <button id="consoleOvermindCompanionSend" class="consoleOvermindCompanionSend">Send</button>
+        <button id="consoleOvermindCompanionSend" class="consoleOvermindCompanionSend">Send</button><span class="HigherAuthority" id="HigherAuthority">🧠</span>
       </div>
     </div>
   </div>

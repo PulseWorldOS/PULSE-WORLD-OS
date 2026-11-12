@@ -1434,7 +1434,7 @@ async function CheckEarnState() {
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";
       pbPulseEarn.style.opacity = "1";
-      pbPulseEarn.style.transform = "translate(240px, 111px)";
+      pbPulseEarn.style.transform = "translate(220px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
     }, 1200);
@@ -1486,7 +1486,7 @@ async function CheckEarnState() {
         pbPulseEarn.id = "pbPulseEarn";
         pbPulseEarn.className = "pbPulseEarn";
         pbPulseEarn.style.opacity = "1";
-        pbPulseEarn.style.transform = "translate(240px, 111px)";
+        pbPulseEarn.style.transform = "translate(220px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
       }, 1200);
@@ -1850,8 +1850,8 @@ async function pbRenderStorageStats2(history) {
     chrome.storage.sync.get(null, resolve)
   );
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
-  aiSize = syncBytes + aiSize;
-  console.log("AI Size: ", aiSize);  
+  swSize = syncBytes + swSize;
+  console.log("SW/Sync Size: ", swSize);  
   aiSize = aiSize + aiSettingsSize;
   console.log("aiSettingsSize Size: ", aiSettingsSize);
   aiSize = aiSize + aiPopupSize;
@@ -1987,7 +1987,7 @@ async function pbRenderStorageStats2(history) {
           <strong>Higher AI LLM:</strong><br>
           • <span style="color:lightgreen">${higherAIGB} GB</span><br>
 
-          <strong>AI Sync Memory:</strong><br>
+          <strong>AISync Memory:</strong><br>
           • <span style="color:lightgreen">${aisyncDisplay}</span><br>
 
           <strong>Local Storage:</strong><br>
@@ -3855,7 +3855,7 @@ async function setTheStage() {
   setTimeout(async () => {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
-  }, 5000);
+  }, 2000);
 }
 
 setTimeout(setTheStage, 500);

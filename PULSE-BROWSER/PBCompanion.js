@@ -2517,6 +2517,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
 
       assumedValue += jobReward;
+
       console.log("WASM Daily Assumed Value: " + currency(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
@@ -2969,22 +2970,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             try {
               const cache = await caches.open(name);
               const requests = await cache.keys();
-              // const realRequests = requests.filter(req =>
-              //   (!isPulseWorld(req.url) && !isFavicon(req.url))
-              // );
+              const realRequests = requests.filter(req =>
+                 (!isFavicon(req.url))
+              );
               // const PulseRequests = requests.filter(req =>
               //   (isPulseWorld(req.url) && !isFavicon(req.url))
               // );
               const PulseMoments = [
                 ...new Set(
-                  requests
+                  realRequests
                     .filter(req => (isAMoment(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
               ];
               const PulseOffline = Array.from(
                 new Map(
-                  requests
+                  realRequests
                     .filter(req => (isOffline(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
@@ -2993,19 +2994,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );
-              count = requests.length;
+              count = realRequests.length;
               // pulsecount = PulseRequests.length;
               pulsemomentscount = PulseMoments.length;
               pulseofflinecount = PulseOffline.length;
               // errorcount = ErrorRequests.length;
-              totalcount = requests.length;
+              totalcount = realRequests.length;
               const currentCache = CACHE_NAME;
               // const currentPulseCache = PULSE_FAUX_CACHE_NAME;
               // const currentErrorCache = ERROR_FAUX_CACHE_NAME;
 
               // ⭐ Compute total cache size
               let totalBytes = 0;
-              for (const req of requests) {
+              for (const req of realRequests) {
                 try {
                   const res = await cache.match(req);
                   if (res) {
@@ -3051,7 +3052,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const density = count / (sizeMB || 1);
               // const densitypulse = pulsecount / (sizePulseMB || 1);
               // ⭐ Diversity (unique hosts)
-              const diversity = new Set(requests.map(r => {
+              const diversity = new Set(realRequests.map(r => {
                 try { return new URL(r.url).hostname; }
                 catch { return "unknown"; }
               })).size;
@@ -3150,8 +3151,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 pulseTier,
                 pulseRank,
                 currentCache,
-                firstEntry: requests[0]?.url || null,
-                lastEntry: requests[count - 1]?.url || null
+                firstEntry: realRequests[0]?.url || null,
+                lastEntry: realRequests[count - 1]?.url || null
               });
 
               // ErrorCacheDetails.push({
