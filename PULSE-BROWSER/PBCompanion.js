@@ -2973,23 +2973,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const realRequests = requests.filter(req =>
                  (!isFavicon(req.url))
               );
-              // const PulseRequests = requests.filter(req =>
-              //   (isPulseWorld(req.url) && !isFavicon(req.url))
-              // );
-              const PulseMoments = [
-                ...new Set(
-                  realRequests
-                    .filter(req => (isAMoment(req.url) && !isFavicon(req.url)))
-                    .map(req => [req.url, req])
-                ).values()
-              ];
-              const PulseOffline = Array.from(
-                new Map(
-                  realRequests
-                    .filter(req => (isOffline(req.url) && !isFavicon(req.url)))
-                    .map(req => [req.url, req])
-                ).values()
+              const PulseOffline = realRequests.filter(req =>
+                (isOffline(req.url))
               );
+              const PulseMoments = realRequests.filter(req =>
+                (isAMoment(req.url))
+              );
+              // const PulseOffline = [
+              //   ...new Set(
+              //     realRequests
+              //       .filter(req => (isOffline(req.url)))
+              //       .map(req => [req.url, req])
+              //   ).values()
+              // ];
+              // const PulseMoments = Array.from(
+              //   new Map(
+              //     realRequests
+              //       .filter(req => (isAMoment(req.url)))
+              //       .map(req => [req.url, req])
+              //   ).values()
+              // );
 
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
@@ -3006,7 +3009,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
               // ⭐ Compute total cache size
               let totalBytes = 0;
-              for (const req of realRequests) {
+              for (const req of requests) {
                 try {
                   const res = await cache.match(req);
                   if (res) {
