@@ -361,7 +361,6 @@ async function saveExtensionSettingsUI() {
   };
 
   await Pulse2safeStorageSet({ [EXTENSION_SETTINGS_KEY2]: settings });
-  const result = await pbRequestCacheList();
 
   PB_LOG.change("Extension Settings Saved", before[EXTENSION_SETTINGS_KEY2], settings);
 }
@@ -1084,6 +1083,7 @@ if (location.href.includes("PBSettings.html")) {
 
     setInterval(async () => {
       aiSettings2Size = await getAI2Size();
+      await pbRequestCacheList();
       loadOrders(aiSettings2Size);
       if (OvermindSettingsOrders) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);

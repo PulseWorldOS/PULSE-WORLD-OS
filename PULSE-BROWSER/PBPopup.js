@@ -1581,6 +1581,22 @@ async function getFavicon(url, flags = {}) {
   }
 }
 
+async function pbRequestCacheList() {
+  PB_LOG.info("Requesting cache list from PBCompanion…");
+
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
+      if (!response || !response.ok) {
+        PB_LOG.info("Cache list unavailable or error", response);
+        resolve(null);
+        return;
+      }
+
+      PB_LOG.load("Cache list received", response.caches);
+      resolve(response);   // ⭐ Return the WHOLE object
+    });
+  });
+}
 
 function getReadableName(url) {
   try {
@@ -1607,6 +1623,7 @@ function getReadableName(url) {
 
 setInterval(async () => {
   aiPopupSize = await getAI3Size();
+  await pbRequestCacheList();
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
     if (chrome.runtime.lastError) return;
     if (response.realmSummary) realmSummary = response.realmSummary;

@@ -5099,7 +5099,7 @@ function CheckBackTab() {
     gpuWarmExtra();
   }
 
-  document.addEventListener("visibilitychange", () => {
+  document.addEventListener("visibilitychange", async () => {
     if (!document.hidden) {
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
@@ -5141,6 +5141,7 @@ function CheckBackTab() {
       updateOverlay();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      await pbRenderCacheList2();
       const interval3 = getCharacterInterval();
       setTimeout(() => {
         pbPulseScreen.currentTime = 0;
