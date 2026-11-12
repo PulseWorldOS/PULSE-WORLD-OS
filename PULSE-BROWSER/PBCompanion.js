@@ -2176,13 +2176,6 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     return;
   }
 
-  const nowAllTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  });
-
   await pulseWasmCompute.initEngine();
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
   let totalJobs = 0;
@@ -2233,6 +2226,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (avgJobMs >= 0.001) {
         avgJobColor = "orange";
       }
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
       CompanionMessage = `WASM Batch ${nowAllTime}.. [<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Err: ${totalErrors}`);
     }
