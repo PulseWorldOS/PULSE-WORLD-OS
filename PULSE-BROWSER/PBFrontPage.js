@@ -2264,18 +2264,6 @@ async function pulseGPUInspector(adapter, device) {
 const intervalA = getCharacterInterval();
 // Optional: Real-time heartbeat
 setInterval(async () => {
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-      return;
-    }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
-      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
-    }
-  });
   setInterval(flickerOrigins, 1500); // every 1.5s
   await CheckTime();
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
@@ -2303,6 +2291,18 @@ setInterval(async () => {
       } catch (err) {
         PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
       }
+    }
+  });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
   });
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
@@ -3798,7 +3798,7 @@ async function setTheStage() {
   setTimeout(async () => {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
-  }, 2500);
+  }, 9000);
 }
 
 setTimeout(setTheStage, 500);
