@@ -2263,16 +2263,20 @@ let soakTestTimer = null;
 
 // Single test execution
 async function runEngineTest(silent = false) {
+  // 1. Ensure Wasm engine is initialized
   if (!pulseWasmCompute.isLoaded) {
     if (!silent) console.log("[TEST] Initializing WASM engine testing rig...");
-    await pulseWasmCompute.initEngine();
+    try {
+      await pulseWasmCompute.initEngine();
+    } catch (initError) {
+      console.error("[FAILED] WASM Engine failed to initialize:", initError);
+      WasmSuccess = false;
+      timeProof = `*[<font color="red">INIT ERR</font>]`;
+      return -1;
+    }
   }
 
-  // const mockPayload = new Uint8Array([
-  //   0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81,
-  //   0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09
-  // ]);
-
+  // 2. Construct fresh 256-byte test payload & snapshot input for mutation/determinism checks
   const mock256Payload = new Uint8Array([
     0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81,
     0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09,
@@ -2307,37 +2311,78 @@ async function runEngineTest(silent = false) {
     0x1F, 0x20, 0x31, 0x42, 0x53, 0x64, 0x75, 0x86,
     0x97, 0xA8, 0xB9, 0xCA, 0xDB, 0xEC, 0xFD, 0x0E
   ]);
+  const inputSnapshot = new Uint8Array(mock256Payload);
 
-
+  // 3. Measure isolated Wasm proof job execution
   const start = performance.now();
   try {
     const outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
     const elapsedMs = performance.now() - start;
 
-    if (outputProof) {
-      let timecolor = "lightgreen";
-      if (elapsedMs > 50) {
-        timecolor = "red";
-      } else if (elapsedMs > 25) {
-        timecolor = "orange";
-      } else if (elapsedMs > 10) {
-        timecolor = "gold";
-      }
-
-      timeProof = `*[<font color="${timecolor}">${elapsedMs.toFixed(4)} ms</font>]`;
-      WasmSuccess = true;
-
-      if (!silent) {
-        console.log(`[Success] ${elapsedMs.toFixed(4)} ms | Proof Bytes:`, outputProof);
-      }
-      return elapsedMs;
+    // 4. Validate output structure & Fluence shared-nothing guarantees
+    if (!outputProof) {
+      throw new Error("executeProofJob returned null or undefined.");
     }
+
+    // Handle both raw Uint8Array returns and Fluence-style { outputPayload / proof } objects
+    const proofBytes =
+      outputProof instanceof Uint8Array
+        ? outputProof
+        : outputProof.outputPayload || outputProof.proof || outputProof.result?.outputPayload;
+
+    if (!(proofBytes instanceof Uint8Array) || proofBytes.length === 0) {
+      throw new Error("Invalid proof format: expected non-empty Uint8Array.");
+    }
+
+    // Verify Wasm didn't just echo back unchanged input bytes or all-zeros
+    const isAllZeros = proofBytes.every((b) => b === 0);
+    const isUnchangedEcho =
+      proofBytes.length === inputSnapshot.length &&
+      proofBytes.every((b, idx) => b === inputSnapshot[idx]);
+
+    if (isAllZeros || isUnchangedEcho) {
+      throw new Error(
+        isAllZeros
+          ? "Proof buffer is all zeros (uninitialized Wasm memory)."
+          : "Proof buffer is identical to input (no-op passthrough)."
+      );
+    }
+
+    // Verify host input buffer remained isolated (not mutated in-place)
+    const inputWasMutated = mock256Payload.some((b, idx) => b !== inputSnapshot[idx]);
+    if (inputWasMutated) {
+      throw new Error("Host input buffer was mutated in-place across Wasm boundary.");
+    }
+
+    // 5. Assign latency badge & update global flags
+    let timecolor = "lightgreen";
+    if (elapsedMs > 50) {
+      timecolor = "red";
+    } else if (elapsedMs > 25) {
+      timecolor = "orange";
+    } else if (elapsedMs > 10) {
+      timecolor = "gold";
+    }
+
+    timeProof = `*[<font color="${timecolor}">${elapsedMs.toFixed(4)} ms</font>]`;
+    WasmSuccess = true;
+
+    if (!silent) {
+      console.log(
+        `[Success] ${elapsedMs.toFixed(4)} ms | Proof (${proofBytes.length}B):`,
+        outputProof
+      );
+    }
+
+    return elapsedMs;
   } catch (testError) {
     console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
     WasmSuccess = false;
+    timeProof = `*[<font color="red">FAILED</font>]`;
     return -1;
   }
 }
+
 
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
