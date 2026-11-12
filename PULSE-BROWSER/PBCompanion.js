@@ -2639,16 +2639,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         try {
           const cacheNames = await caches.keys();
           let cacheDetails = [];
-          let PulseCacheDetails = [];
+          // let PulseCacheDetails = [];
           let pulsemomentscount = 0;
           let pulseofflinecount = 0;
           // let ErrorCacheDetails = [];
           let count = 0;
-          let pulsecount = 0;
+          // let pulsecount = 0;
           // let errorcount = 0;
           let totalcount = 0;
           let sizeMB = 0;
-          let sizePulseMB = 0;
+          // let sizePulseMB = 0;
           // let errorSizeMB = 0;
 
           for (const name of cacheNames) {
@@ -2664,7 +2664,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               const PulseMoments = [
                 ...new Set(
                   requests
-                    .filter(req => (isPulseWorld(req.url) && isAMoment(req.url) && !isFavicon(req.url)))
+                    .filter(req => (isAMoment(req.url) && !isFavicon(req.url)))
                     .map(req => [req.url, req])
                 ).values()
               ];
