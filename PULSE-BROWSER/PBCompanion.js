@@ -2372,10 +2372,10 @@ async function runEngineTest(silent = false) {
     //const outputProof = await run256BitJobOnGPU(mock256Payload);
     const elapsedMs = performance.now() - start;
 
-    // // 4. Validate output structure & Fluence shared-nothing guarantees
-    // if (!outputProof) {
-    //   throw new Error("executeProofJob returned null or undefined.");
-    // }
+    // 4. Validate output structure & Fluence shared-nothing guarantees
+    if (!outputProof) {
+      throw new Error("executeProofJob returned null or undefined.");
+    }
 
     // Handle both raw Uint8Array returns and Fluence-style { outputPayload / proof } objects
     const proofBytes =
@@ -2997,12 +2997,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );
-              count = realRequests.length;
+              count = count + realRequests.length;
               // pulsecount = PulseRequests.length;
-              pulsemomentscount = PulseMoments.length;
-              pulseofflinecount = PulseOffline.length;
+              pulsemomentscount = pulsemomentscount + PulseMoments.length;
+              pulseofflinecount = pulsemomentscount + PulseOffline.length;
               // errorcount = ErrorRequests.length;
-              totalcount = realRequests.length;
+              totalcount = totalcount + realRequests.length;
               const currentCache = CACHE_NAME;
               // const currentPulseCache = PULSE_FAUX_CACHE_NAME;
               // const currentErrorCache = ERROR_FAUX_CACHE_NAME;
