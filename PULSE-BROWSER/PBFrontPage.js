@@ -1051,7 +1051,6 @@ async function pbRequestCacheList2() {
       }
       
       PB_LOG3.load("Cache list received", response.caches);
-      PB_LOG3.load("PulseCache list received", response.pulsecaches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
@@ -1300,13 +1299,13 @@ async function pbRenderCacheList2() {
   const store = await chrome.storage.local.get(["pb_fail_cache"]);
   // ⭐ Fetch cache list
   const result = await pbRequestCacheList2();
-  if (!result || (!result.caches && !result.pulsecaches)) {
+  if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
 
   const caches = result.caches;
-  const pulsecaches = result.pulsecaches;  
+  // const pulsecaches = result.pulsecaches;  
   const errorcount = result.errorcount;
   const totalcount = result.totalcount;
   const pulsemoments = result.pulsemomentscount;
@@ -1345,12 +1344,12 @@ async function pbRenderCacheList2() {
     return (b.entries || 0) - (a.entries || 0);
   });
 
-  // ⭐ Sort: current cache first, then by entry count
-  if (pulsecaches) pulsecaches.sort((a, b) => {
-    if (a.name === a.currentPulseCache) return -1;
-    if (b.name === a.currentPulseCache) return 1;
-    return (b.entries || 0) - (a.entries || 0);
-  });
+  // // ⭐ Sort: current cache first, then by entry count
+  // if (pulsecaches) pulsecaches.sort((a, b) => {
+  //   if (a.name === a.currentPulseCache) return -1;
+  //   if (b.name === a.currentPulseCache) return 1;
+  //   return (b.entries || 0) - (a.entries || 0);
+  // });
 
   let best = false;
   let pulsebest = false;
@@ -1445,74 +1444,74 @@ async function pbRenderCacheList2() {
 
   PB_LOG3.info("Cache list rendered", caches);
 
-  if (pulsecaches) pulsecaches.forEach(cache => {
-    let li = document.getElementById("li");
-    if (!li) li = document.createElement("li");
-    li.className = "PulseCache";
-    li.style.cssText = `
-      margin: 14px 20px;
-      padding: 3px 6px;
-      max-width: clamp(245px, 12vw, 315px);
-      width: clamp(245px, 12vw, 315px);
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-      word-break: break-all;
-    `;
+  // if (pulsecaches) pulsecaches.forEach(cache => {
+  //   let li = document.getElementById("li");
+  //   if (!li) li = document.createElement("li");
+  //   li.className = "PulseCache";
+  //   li.style.cssText = `
+  //     margin: 14px 20px;
+  //     padding: 3px 6px;
+  //     max-width: clamp(245px, 12vw, 315px);
+  //     width: clamp(245px, 12vw, 315px);
+  //     word-wrap: break-word;
+  //     overflow-wrap: anywhere;
+  //     word-break: break-all;
+  //   `;
 
-    // ⭐ Cache size color logic
-    const sizeMB = parseFloat(cache.sizePulseMB || "0");
-    totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
-    let sizeColor = "lightgreen";
+  //   // ⭐ Cache size color logic
+  //   const sizeMB = parseFloat(cache.sizePulseMB || "0");
+  //   totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
+  //   let sizeColor = "lightgreen";
 
-    if (sizeMB >= 150) sizeColor = "gold";     // warming
-    if (sizeMB >= 300) sizeColor = "orange";   // heavy
-    if (sizeMB >= 600) sizeColor = "red";      // critical
+  //   if (sizeMB >= 150) sizeColor = "gold";     // warming
+  //   if (sizeMB >= 300) sizeColor = "orange";   // heavy
+  //   if (sizeMB >= 600) sizeColor = "red";      // critical
 
-    // ⭐ Safe fallback values
-    const weightClass = cache.weightPulseClass || "unknown";
-    const personality = cache.pulsepersonality || "Wanderer";
-    const pulseRank = cache.realpulseRank;
-    const density = cache.densitypulse ?? 0;
-    const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
-    if (!ServiceWorkerOnline) {
-      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
-    } else {
-      pausedoffline = `(System)`;
-    }
-    if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
+  //   // ⭐ Safe fallback values
+  //   const weightClass = cache.weightPulseClass || "unknown";
+  //   const personality = cache.pulsepersonality || "Wanderer";
+  //   const pulseRank = cache.realpulseRank;
+  //   const density = cache.densitypulse ?? 0;
+  //   const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
+  //   if (!ServiceWorkerOnline) {
+  //     pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
+  //   } else {
+  //     pausedoffline = `(System)`;
+  //   }
+  //   if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
 
-    li.innerHTML = `
-      <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
+  //   li.innerHTML = `
+  //     <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="${sizeColor}">${cache.entries}</font><br>
-      Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
+  //     Realm Artifacts: <font color="${sizeColor}">${cache.entries}</font><br>
+  //     Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
 
-      Weight: <font color="#0FF">${weightClass}</font><br>
-      Personality: <font color="#0FF">${personality}</font><br>
-      Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
+  //     Weight: <font color="#0FF">${weightClass}</font><br>
+  //     Personality: <font color="#0FF">${personality}</font><br>
+  //     Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
 
-      PulseRank: <font color="gold">${pulseRank}</font><br>
-      First: <font color="lightgreen">${cache.firstEntry?.slice(0, 38) || "none"}</font><br>
-      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 65) || "none"}</font>
-    `;
+  //     PulseRank: <font color="gold">${pulseRank}</font><br>
+  //     First: <font color="lightgreen">${cache.firstEntry?.slice(0, 38) || "none"}</font><br>
+  //     Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 65) || "none"}</font>
+  //   `;
 
-    if (cache.lastEntry) {
-      let entry = cache.lastEntry;
+  //   if (cache.lastEntry) {
+  //     let entry = cache.lastEntry;
 
-      li.style.cursor = "pointer";
-      const u = new URL(entry);
-      li.onclick = async () => {
-        pbPreconnect([entry]);
-        openNamedTab(u.hostname, entry);
-        await PBUniversalBoost.warmOrigin(entry);
-      };
-    }
+  //     li.style.cursor = "pointer";
+  //     const u = new URL(entry);
+  //     li.onclick = async () => {
+  //       pbPreconnect([entry]);
+  //       openNamedTab(u.hostname, entry);
+  //       await PBUniversalBoost.warmOrigin(entry);
+  //     };
+  //   }
 
-    listEl.appendChild(li);
-    pulsebest = true;
-  });
+  //   listEl.appendChild(li);
+  //   pulsebest = true;
+  // });
 
-  PB_LOG3.info("PulseCache list rendered", pulsecaches);
+  // PB_LOG3.info("PulseCache list rendered", pulsecaches);
 }
 // function writeBigBlob() {
 //   return new Promise((resolve, reject) => {

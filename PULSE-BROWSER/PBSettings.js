@@ -361,6 +361,7 @@ async function saveExtensionSettingsUI() {
   };
 
   await Pulse2safeStorageSet({ [EXTENSION_SETTINGS_KEY2]: settings });
+  const result = await pbRequestCacheList();
 
   PB_LOG.change("Extension Settings Saved", before[EXTENSION_SETTINGS_KEY2], settings);
 }
@@ -380,7 +381,6 @@ async function pbRequestCacheList() {
       }
 
       PB_LOG.load("Cache list received", response.caches);
-      PB_LOG.load("PulseCache list received", response.pulsecaches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });

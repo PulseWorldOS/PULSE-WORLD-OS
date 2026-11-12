@@ -129,7 +129,7 @@ async function CheckOvermindState() {
   PulsePopupAIPalMemoryBuffer.forEach(push => { CompanionPopupDetailsMessage.innerHTML += push; });
   CompanionPopupDetailsMessage.style.fontSize = "0.6rem";
   CompanionPopupDetailsMessage.scrollTop = CompanionPopupDetailsMessage.scrollHeight;
-  console.log("AI Memory Popup Buffer:" + SessionAI2.PulsePopupAIPalMemoryBuffer);
+  console.log("AI Memory Popup Buffer:" + PulsePopupAIPalMemoryBuffer);
   aiPopupSize = await getAI3Size();
   if (CompanionPopupDetailsMessage) CompanionPopupDetailsMessage.scrollTop = CompanionPopupDetailsMessage.scrollHeight;
   const Vis = await chrome.storage.local.get(["OvermindPopupInVisible"]);
