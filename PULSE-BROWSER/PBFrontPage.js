@@ -748,6 +748,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
   let tickInterval = 0;
+  let totalUnit = null;
+  let totalUnits = 0;
 
   const tick = async () => {
     if (Date.now() >= endTime) {
@@ -759,10 +761,17 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
+      if (totalErrors === 0) {
+        totalUnit = "Value: ";
+        totalUnits = assumedValue;
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
       console.log("WASM Daily Total Value: " + currency(assumedValue));
-      timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
-      console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
+      console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, ${totalUnit}${totalUnits}`);
       return;
     }
 
@@ -803,6 +812,13 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (totalJobs >= 1000) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
+      if (totalErrors === 0) {
+        totalUnit = "Value: ";
+        totalUnits = assumedValue;
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
       let avgJobColor = "lightgreen";
       if (avgJobMs >= 0.01) {
@@ -816,9 +832,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         second: "2-digit",
         hour12: true
       });
-      timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
+      timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
-      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Err: ${totalErrors}`);
+      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | ${totalUnit}${totalUnits}`);
     }
 
     soakTestTimer = setTimeout(tick, intervalMs);
@@ -3839,7 +3855,7 @@ async function setTheStage() {
   setTimeout(async () => {
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
     await start24HourSoakTest();
-  }, 7000);
+  }, 9000);
 }
 
 setTimeout(setTheStage, 500);
