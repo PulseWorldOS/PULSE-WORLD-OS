@@ -2486,9 +2486,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
       let avgJobColor = "lightgreen";
-      if (avgJobMs >= 0.002) {
+      if (avgJobMs >= 0.005) {
         avgJobColor = "red";
-      } else if (avgJobMs >= 0.001) {
+      } else if (avgJobMs >= 0.0025) {
         avgJobColor = "orange";
       }
       const nowAllTime = new Date().toLocaleTimeString("en-US", {

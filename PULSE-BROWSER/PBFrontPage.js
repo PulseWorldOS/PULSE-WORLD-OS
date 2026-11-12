@@ -35,6 +35,7 @@ let keyIsDown = false;
 let keyHoldTimer = null;
 let keyHold2Timer = null;
 let aiSize = 0;
+let higherAISize = 0;
 let aiSettingsSize = 0;
 let aiPopupSize = 0;
 let swSize = 0;
@@ -772,9 +773,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
       let avgJobColor = "lightgreen";
-      if (avgJobMs >= 0.002) {
+      if (avgJobMs >= 0.005) {
         avgJobColor = "red";
-      } else if (avgJobMs >= 0.001) {
+      } else if (avgJobMs >= 0.0025) {
         avgJobColor = "orange";
       } 
       const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -921,7 +922,9 @@ async function runLocalAI() {
     PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    swSize = await getSWSize();
     aiSize = await getAISize();
+    higherAISize = await getHigherAISize();
     loadOrders();
   } catch (err) {}
 
@@ -1092,6 +1095,7 @@ CompanionConsoleSend.onclick = async () => {
     if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
   }, 300);
   aiSize = await getAISize();
+  higherAISize = await getHigherAISize();
   loadOrders();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -1751,6 +1755,16 @@ async function getSWSize() {
   }
 }
 
+async function getHigherAISize() {
+  try {
+    const res = await fetch(chrome.runtime.getURL("OvermindPrimes.js"));
+    const text = await res.text();
+    return new Blob([text]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
+
 async function getAISize() {
   try {
     return new Blob([PulsePalMemoryAIBuffer]).size; // returns size in bytes
@@ -1774,7 +1788,7 @@ async function pbRenderStorageStats2(history) {
   const localQuota = estimate.quota || 1;
   swSize = await getSWSize();
   aiSize = await getAISize();
-  
+  higherAISize = await getHigherAISize();
   // ⭐ SYNC STORAGE (chrome.storage.sync)
   const syncItems = await new Promise(resolve =>
     chrome.storage.sync.get(null, resolve)
@@ -1786,6 +1800,8 @@ async function pbRenderStorageStats2(history) {
   console.log("aiSettingsSize Size: ", aiSettingsSize);
   aiSize = aiSize + aiPopupSize;
   console.log("aiPopupSize Size: ", aiPopupSize);
+  aiSize = aiSize + higherAISize;
+  console.log("higherAISize Size: ", higherAISize);
   console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
