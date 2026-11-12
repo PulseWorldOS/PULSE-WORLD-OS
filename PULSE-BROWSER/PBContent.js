@@ -1660,7 +1660,7 @@ if (isPulseWorld(location.href)) {
     }
   });
 
-  setTimeout(initWebGPUCompute, 50);
+  // setTimeout(initWebGPUCompute, 50);
 }
 
 function injectPulseFlag() {
