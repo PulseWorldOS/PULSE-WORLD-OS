@@ -1374,7 +1374,6 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
-  if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
@@ -1425,11 +1424,10 @@ async function CheckEarnState() {
       pbPulseEarn.play();
     }, 1200);
   }
-
+  if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
   earnerminipanel.onclick = async () => pbPulseEarn.click();
 
   pbPulseEarn.onclick = async () => {
-    if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
     if (!EarnHidden) {
       EarnHidden = true;
       // ——— Turn ON (transparent / earning mode) ———
@@ -1479,6 +1477,7 @@ async function CheckEarnState() {
       }, 1200);
       if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
+    if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
     console.log("Earn State:", EarnHidden);
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
   };
@@ -3425,6 +3424,18 @@ async function updateModuleIcons(settings, browser) {
       ServiceWorkerOnline = res.ServiceWorkerOnline;
     }
   });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+  });
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -5100,6 +5111,18 @@ function CheckBackTab() {
             nowFP = response.time;
         }
       });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+      });
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
@@ -5319,7 +5342,18 @@ function CheckBackTab() {
             nowFP = response.time;
         }
       });
-      gpuWarmExtra();
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+      });
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
