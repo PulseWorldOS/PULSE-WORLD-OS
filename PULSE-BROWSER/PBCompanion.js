@@ -1689,7 +1689,7 @@ setInterval(async () => {
 
 setTimeout(async () => {
   await start24HourSoakTest();
-}, 15000);
+}, 10000);
 
 startWarmBootLoop();
 
@@ -2183,6 +2183,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
 
+  let tickInterval = 0;
+
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
@@ -2208,6 +2210,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
+      tickInterval++;
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
@@ -2322,6 +2325,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             CompanionMessage = "Earning Adrenaline Infused & Ready..";
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
             CompanionMessage = "Waiting for Jobs for Submission...";
+          } else if (CompanionMessage.includes(timeProof)) {
           } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
             try {
@@ -2348,6 +2352,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
           } else if (CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->") {
             CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
+          } else if (CompanionMessage.includes(timeProof)) {
           }
         }
       }
