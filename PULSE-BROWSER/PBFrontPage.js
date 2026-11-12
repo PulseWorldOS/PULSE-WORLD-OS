@@ -924,7 +924,7 @@ async function runLocalAI() {
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     swSize = await getSWSize();
     aiSize = await getAISize();
-    higherAISize = await getHigherAISize();
+    // higherAISize = await getHigherAISize();
     loadOrders();
   } catch (err) {}
 
@@ -1095,7 +1095,7 @@ CompanionConsoleSend.onclick = async () => {
     if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
   }, 300);
   aiSize = await getAISize();
-  higherAISize = await getHigherAISize();
+  // higherAISize = await getHigherAISize();
   loadOrders();
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -1757,9 +1757,7 @@ async function getSWSize() {
 
 async function getHigherAISize() {
   try {
-    const res = await fetch(chrome.runtime.getURL("OvermindPrimes.js"));
-    const text = await res.text();
-    return new Blob([text]).size; // returns size in bytes
+    return 0; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -2341,8 +2339,7 @@ setTimeout(gpuWarmExtra, 250);
 
 setTimeout(async () => {
   pulseRehydrateTabs(WeLocalMemoryLayerMB);
-  const result = await pbRequestCacheList2();
-}, 1000);
+}, 3000);
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
