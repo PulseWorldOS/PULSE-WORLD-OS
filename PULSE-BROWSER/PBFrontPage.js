@@ -1828,16 +1828,19 @@ async function pbRenderStorageStats2(history) {
   console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
+  let higherAIDisplay = 4540000000;
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
-
+  
+  totalUsed = totalUsed - higherAIDisplay;
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
   const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
+  const higherAIGB = (higherAIDisplay / (1024 * 1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
   const syncKB = (aiSize / 1024).toFixed(2);
@@ -1948,21 +1951,23 @@ async function pbRenderStorageStats2(history) {
       <div style="display:flex; gap:10px;">
 
         <div style="flex:1;">
-          <strong>System Memory:</strong><br>
-          • <span style="color:lightgreen">${swMB} MB</span><br>
+          <strong>Higher AI LLM:</strong><br>
+          • <span style="color:lightgreen">${higherAIGB} GB</span><br>
+
+          <strong>AI Sync Memory:</strong><br>
+          • <span style="color:lightgreen">${aisyncDisplay}</span><br>
 
           <strong>Local Storage:</strong><br>
           • <span style="color:lightgreen">${totalDisplay}</span><br>
         </div>
 
         <div style="flex:1;">
-          <strong>AI Sync Memory:</strong><br>
-          • <span style="color:lightgreen">${aisyncDisplay}</span><br>
-
           <strong>System Quota:</strong><br>
-          • <span style="color:lightgreen">${quotaGB} GB</span><br><br>
-        </div>
+          • <span style="color:lightgreen">${quotaGB} GB</span><br>
 
+          <strong>System Memory:</strong><br>
+          • <span style="color:lightgreen">${swMB} MB</span><br><br>
+        </div>
       </div>
 
       <strong>Percent Used:</strong>
