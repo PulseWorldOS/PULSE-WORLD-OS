@@ -556,6 +556,13 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     console.warn("[TEST] Soak test is already running.");
     return;
   }
+
+  const nowAllTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
   
   await pulseWasmCompute.initEngine();
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
@@ -578,7 +585,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalJobsString = (totalJobs/1000).toFixed(0) + " K";
       }
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "🧠 Prime", `WASM Batch Succeeded.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch Succeeded.. ` + timeProof);
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Err: ${totalErrors}`);
       return;
     }
@@ -609,7 +616,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         avgJobColor = "orange";
       }
       timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | Err: ${totalErrors})`;
-      appendEarnerMessage(CompanionMessages, "🧠 Prime", `WASM Batch #${tickInterval}A.. ` + timeProof);
+      appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Err: ${totalErrors}`);
     }
 
@@ -2072,7 +2079,7 @@ setInterval(async () => {
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime", response.CompanionMessage);
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
@@ -3218,7 +3225,7 @@ async function updateModuleIcons(settings, browser) {
     }
     ServiceWorkerOnline = response.ServiceWorkerOnline;
     if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime", response.CompanionMessage);
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
@@ -4885,6 +4892,32 @@ function CheckBackTab() {
             nowFP = response.time;
         }
       });
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          return;
+        }
+        ServiceWorkerOnline = response.ServiceWorkerOnline;
+        if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
+        // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+        if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
+        if (!ServiceWorkerOnline) {
+          disablesw.innerText = "Resume Companion";
+        } else {
+          disablesw.innerText = "Pause Companion";
+        }
+        if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+          try {
+            (async () => {
+              await runEngineTest();
+              PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+            })();
+          } catch (err) {
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+          }
+        }
+      });
       chrome.runtime.getPlatformInfo();
       await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
@@ -5087,7 +5120,7 @@ function CheckBackTab() {
         }
         ServiceWorkerOnline = response.ServiceWorkerOnline;
         if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
-        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐 Prime", response.CompanionMessage);
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
