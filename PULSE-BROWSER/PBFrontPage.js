@@ -3798,7 +3798,7 @@ async function setTheStage() {
   setTimeout(async () => {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
-  }, 9000);
+  }, 4000);
 }
 
 setTimeout(setTheStage, 500);
