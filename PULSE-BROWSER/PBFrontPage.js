@@ -952,6 +952,7 @@ async function runLocalAI() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1021,6 +1022,7 @@ ${rawPrompt}
         return;
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+      if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1067,6 +1069,7 @@ async function appendCompanionMessage(area, role, text) {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1123,6 +1126,7 @@ CompanionConsoleSend.onclick = async () => {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2264,6 +2268,19 @@ async function pulseGPUInspector(adapter, device) {
 const intervalA = getCharacterInterval();
 // Optional: Real-time heartbeat
 setInterval(async () => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+  });
   setInterval(flickerOrigins, 1500); // every 1.5s
   await CheckTime();
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
@@ -2300,6 +2317,7 @@ setInterval(async () => {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -3431,6 +3449,7 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -5090,6 +5109,19 @@ function CheckBackTab() {
       swap();
       await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+      });
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
@@ -5118,6 +5150,7 @@ function CheckBackTab() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -5349,6 +5382,7 @@ function CheckBackTab() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
