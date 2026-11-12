@@ -3431,9 +3431,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           console.log(SessionAI.PulsePalMemoryAIBuffer);
         })();
       }
+      if (msg.assumedValue) assumedValue = assumedValue + msg.assumedValue;
       safeStorageSet({ PulsePalMemoryAIBuffer });
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer, assumedValue });
       return true;
 
     case "PBCONSOLE_GET":
