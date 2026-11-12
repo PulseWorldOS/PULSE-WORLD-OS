@@ -334,7 +334,7 @@ self.addEventListener("install", event => {
     "PBFrontPage.js",
     "PBDevOverlay.js",
     "PBCompanion.js",
-    "OvermindPrimes.js",
+    // "OvermindPrimes.js",
     "PBInterceptor.js",
     "PBAccelerator.js",
     "PulseEarnWarmer.wasm",
@@ -399,7 +399,7 @@ async function handlePulseRequest(req) {
     if (
       net &&
       net.ok &&
-      (!req.url.startsWith('chrome-extension://') && !req.url.includes("/mlc-ai/"))
+      (!req.url.startsWith('chrome-extension://') && !req.url.includes("/mlc-ai/") && !req.url.includes("huggingface"))
     ) {
       const pwoffline = makeOfflineKey(req.url);
       let netclone = net.clone();
@@ -3411,6 +3411,8 @@ async function clearPulseCaches() {
     // ⭐ PulseBrowser OS cache naming convention
     const isPulseCache =
       key.includes("Pulse") ||
+      key.includes("webllm") ||
+      key.includes("huggingface") ||
       key.includes("PB") ||
       key.includes("companion") ||
       key.startsWith("pulse_") ||

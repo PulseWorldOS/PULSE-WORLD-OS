@@ -2102,8 +2102,8 @@ setInterval(async () => {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
-  await pbRenderCacheList2();
   loadOrders();
+  await pbRenderCacheList2();
 }, intervalA);
 
 async function gpuWarmExtra() {
@@ -2153,9 +2153,10 @@ async function gpuWarmExtra() {
 
 setTimeout(gpuWarmExtra, 250);
 
-setTimeout(() => {
+setTimeout(async () => {
   pulseRehydrateTabs(WeLocalMemoryLayerMB);
-});
+  const result = await pbRequestCacheList2();
+}, 1000);
 
 // ============================================================================
 // 15. PBContentDecodeWarm++ — Aggressive decode warm
@@ -2607,9 +2608,9 @@ setInterval(async () => {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
-  await pbRenderCacheList2();
   await CheckTime();
   loadOrders();
+  await pbRenderCacheList2();
 }, intervalB);
 
 
@@ -5141,7 +5142,6 @@ function CheckBackTab() {
       updateOverlay();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
-      await pbRenderCacheList2();
       const interval3 = getCharacterInterval();
       setTimeout(() => {
         pbPulseScreen.currentTime = 0;
@@ -5157,6 +5157,7 @@ function CheckBackTab() {
         document.body.classList.remove("pulse-gpu-reset");
         startPulseLoop();
       });
+      await pbRenderCacheList2();
     } else {
       stopPulseLoop();
     }
