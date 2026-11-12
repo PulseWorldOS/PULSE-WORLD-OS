@@ -2490,7 +2490,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     if (totalJobs % 25000 === 0) {
       tickInterval++;
       assumedValue = assumedValue + 0.005;
-      console.log("WASM Batch Assumed Value: " + currency(assumedValue));
+      console.log("WASM Daily Assumed Value: " + currency(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
