@@ -722,7 +722,7 @@ async function runEngineTest(silent = false) {
 function currency(amount, displayCurrency = "$") {
   let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
   const num = Number(raw);
-  const safe = isNaN(num) ? "0.00" : num.toFixed(2);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(3);
 
   let cur = String(displayCurrency || "$").trim().toUpperCase();
   cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";

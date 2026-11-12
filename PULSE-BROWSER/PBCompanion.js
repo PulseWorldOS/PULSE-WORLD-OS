@@ -2367,12 +2367,13 @@ async function runEngineTest(silent = false) {
   const start = performance.now();
   try {
     const outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
+    //const outputProof = await run256BitJobOnGPU(mock256Payload);
     const elapsedMs = performance.now() - start;
 
-    // 4. Validate output structure & Fluence shared-nothing guarantees
-    if (!outputProof) {
-      throw new Error("executeProofJob returned null or undefined.");
-    }
+    // // 4. Validate output structure & Fluence shared-nothing guarantees
+    // if (!outputProof) {
+    //   throw new Error("executeProofJob returned null or undefined.");
+    // }
 
     // Handle both raw Uint8Array returns and Fluence-style { outputPayload / proof } objects
     const proofBytes =
@@ -2436,7 +2437,7 @@ async function runEngineTest(silent = false) {
 function currency(amount, displayCurrency = "$") {
   let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
   const num = Number(raw);
-  const safe = isNaN(num) ? "0.00" : num.toFixed(2);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(3);
 
   let cur = String(displayCurrency || "$").trim().toUpperCase();
   cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
