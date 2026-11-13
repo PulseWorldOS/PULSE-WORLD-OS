@@ -1072,7 +1072,7 @@ ${rawPrompt}
     if (consoleOvermindCognition) {
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
-      const showTime = `[10/27/2112, 04:19:03 AM]`;
+      const showTime = `[Serious Future]`;
       CognitionTitle.style.marginBottom = "6px;"
       CognitionTitle.style.textAlign = "center";
       CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
@@ -1894,7 +1894,7 @@ async function pbRenderStorageStats2(history) {
   console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
-  let higherAIDisplay = 4540300000;
+  let higherAIDisplay = 4540330000;
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
@@ -2017,7 +2017,7 @@ async function pbRenderStorageStats2(history) {
       <div style="display:flex; gap:10px;">
 
         <div style="flex:1;">
-          <strong>Higher AI LLM:</strong><br>
+          <strong>Higher AI Brain:</strong><br>
           • <span style="color:lightgreen">${higherAIGB} GB</span><br>
 
           <strong>AISync Memory:</strong><br>
