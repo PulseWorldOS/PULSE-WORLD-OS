@@ -88,6 +88,7 @@ const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
 // Your PulseWorld Origin Consensus
 let CONSENSUS_ORIGIN = new Date(GLOBALSTART).toLocaleString();
 let totalUsed = 0;
+let loader = document.getElementById("pw-loading");
 let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
@@ -2639,12 +2640,39 @@ async function collectAndWarmAssetsFront() {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
 
-  setTimeout(async () => {
-    await pbRenderCacheList2();
-  }, 1000);
+  await pbRenderCacheList2();
 }
 
-setTimeout(collectAndWarmAssetsFront, 500);
+setTimeout(collectAndWarmAssetsFront, 1000);
+
+function showPWLoader() {
+  // If the loader was removed, recreate it
+  if (!loader) {
+    loader = document.createElement("div");
+    loader.id = "pw-loading";
+    loader.className = "pw-loader";
+    document.body.appendChild(loader);
+  }
+
+  console.log("PROVE YOU HAPPENED!" + Date.now());
+  // Ensure styles apply before fading in
+  requestAnimationFrame(() => {
+    loader.style.opacity = "1";
+    loader.style.pointerEvents = "auto"; // optional if your loader blocks input
+  });
+}
+
+function hidePWLoader() {
+  
+  if (!loader) return;
+
+  console.log("I DIDN'T SEE IT LOL!" + Date.now());
+
+  requestAnimationFrame(() => {
+    loader.style.opacity = "0";
+    loader.style.pointerEvents = "none";
+  });
+}
 
 function savePulseTabs(WeLocalMemoryLayerMB) {
   console.log("Snapshot Memory Save: ", WeLocalMemoryLayerMB);
@@ -2678,6 +2706,7 @@ function getNextInstanceIndex() {
 }
 
 async function openNamedTab(name, url) {
+  showPWLoader();
   const identity = normalizeIdentity(url);
   name = identity;
   const override = true;
@@ -2705,6 +2734,7 @@ async function openNamedTab(name, url) {
       });
 
       PulseURL = url;
+      hidePWLoader();
       PulseSnapshotView = new URL(url).hostname;
 
       setTimeout(async () => {
@@ -2745,6 +2775,7 @@ async function openNamedTab(name, url) {
             });
 
             PulseURL = url;
+            hidePWLoader();
             PulseSnapshotView = new URL(url).hostname;
 
             setTimeout(async () => {
@@ -2780,6 +2811,7 @@ async function openNamedTab(name, url) {
         });
 
         PulseURL = url;
+        hidePWLoader();
         PulseSnapshotView = new URL(url).hostname;
 
         setTimeout(async () => {
@@ -2820,6 +2852,7 @@ async function openNamedTab(name, url) {
     });
 
     PulseURL = url;
+    hidePWLoader();
     PulseSnapshotView = new URL(url).hostname;
 
     setTimeout(async () => {
@@ -2857,6 +2890,7 @@ async function openNamedTab(name, url) {
   });
 
   PulseURL = url;
+  hidePWLoader();
   PulseSnapshotView = new URL(url).hostname;
   
   setTimeout(async () => {

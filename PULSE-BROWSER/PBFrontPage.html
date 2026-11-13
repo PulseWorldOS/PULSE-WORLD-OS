@@ -13,6 +13,7 @@
   <link rel="preload" fetchpriority="high" as="video" href="PulseEarn.mp4" type="video/mp4">
   <link rel="preload" fetchpriority="high" as="video" href="PulsePalDetails.mp4" type="video/mp4">
   <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
+  <link rel="preload" as="image" href="PulseWorldSplash512.png" />
   <link rel="preload" as="image" href="PulseOSBubbles.png" />
 
   <style>
@@ -1519,9 +1520,64 @@
       filter: brightness(1.25) contrast(1.15) saturate(1.25)
               drop-shadow(0 0 25px #0ff);
     }
+
+    #pw-loading {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 40px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    /* PulseWorld Digital Explosion Reveal */
+    @keyframes pwDigitalExplosion {
+      0% {
+        transform: scale(0.1);
+        filter: blur(20px) brightness(0.2);
+        opacity: 0;
+      }
+      20% {
+        transform: scale(0.25);
+        filter: blur(12px) brightness(0.4);
+        opacity: 1;
+      }
+      40% {
+        transform: scale(0.5);
+        filter: blur(6px) brightness(0.7);
+      }
+      60% {
+        transform: scale(0.8);
+        filter: blur(3px) brightness(1);
+      }
+      80% {
+        transform: scale(1.05);
+        filter: blur(1px) brightness(1.2);
+      }
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px #00ffc8);
+      }
+    }
+
+    #pw-loading-logo {
+      width: 440px;
+      height: 440px;
+      border-radius: 40px;
+      animation: pwDigitalExplosion 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
   </style>
 </head>
 <body>
+  <!-- PulseWorld Boot Fade -->
+  <div id="pw-loading">
+    <img src="PulseWorldSplash512.png" id="pw-loading-logo">
+  </div>
   <video id="pbBootEntrance" class="pbBootEntrance" src="PulseBrowserEntrance.mp4" autoplay muted playsinline aria-label="pbBootEntrance"></video>
   <button id="timerBtn" aria-label="Timer" role="button">10</button>
   <div class="nebula" id="nebula"></div>
