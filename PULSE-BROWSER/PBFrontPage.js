@@ -288,7 +288,7 @@ function loadOrders() {
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
-  appendCompanionMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
+  appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
   MyHigherIntellect = null;
   OvermindCrossTabSync(OvermindMyOrders);
 }
@@ -1123,6 +1123,15 @@ function appendEarnerMessage(area, role, text) {
   area.scrollTop = area.scrollHeight;
 }
 
+function appendHigherMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
+  earnerminipanel.textContent = currency(OurassumedValue);
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
 
 async function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
