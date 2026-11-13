@@ -277,7 +277,7 @@ const PB_LOG3 = {
 
 
 // Utility: load settings
-function loadOrders(MemoryAIBuffer) {
+function loadOrders() {
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -296,7 +296,6 @@ function loadOrders(MemoryAIBuffer) {
   });
   MyLowerIntellect = null;
   OvermindCrossTabSync(OvermindMyOrders);
-  if (MemoryAIBuffer.length !== PulseCogMemoryAIBuffer.length) safeStorageSet({ PulseCogMemoryAIBuffer });
 }
 
 let PULSE_OVERMIND_BROADCAST_CHANNEL5 = `PulseBrowser-OS::${new Date(nowFP).toLocaleTimeString()}`;
@@ -988,6 +987,7 @@ async function runLocalAI() {
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
+    loadOrders();
   } catch (err) {}
 
   const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
@@ -1001,6 +1001,7 @@ async function runLocalAI() {
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
+    loadOrders();
   } catch (err) {}
 
   try {
@@ -1020,7 +1021,6 @@ async function runLocalAI() {
         if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-          loadOrders(PulseCogMemoryAIBuffer);
         }
       });
       
@@ -1110,7 +1110,6 @@ ${rawPrompt}
       if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-        loadOrders(PulseCogMemoryAIBuffer);
       }
     });
     RunningAI = false;
@@ -1156,7 +1155,6 @@ function appendHigherMessage(area, role, text) {
     if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      loadOrders(PulseCogMemoryAIBuffer);
     }
   });
 }
@@ -1189,7 +1187,6 @@ async function appendCompanionMessage(area, role, text) {
     if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      loadOrders(PulseCogMemoryAIBuffer);
     }
   });
 }
@@ -1236,6 +1233,7 @@ CompanionConsoleSend.onclick = async () => {
     }, 300);
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
+    loadOrders();
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
@@ -1251,7 +1249,6 @@ CompanionConsoleSend.onclick = async () => {
       if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-        loadOrders(PulseCogMemoryAIBuffer);
       }
     });
   } else {
@@ -1271,9 +1268,9 @@ CompanionConsoleSend.onclick = async () => {
       if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-        loadOrders(PulseCogMemoryAIBuffer);
       }
     });    
+    loadOrders();
   }
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
@@ -1561,7 +1558,7 @@ function getReadableName(url) {
           CompanionDetailsMessage.style.display = "block";
         }
         PulsesafeStorageSet({ HigherAuthorityShown });
-        loadOrders(PulseCogMemoryAIBuffer);
+        loadOrders();
       };
     }
   }
@@ -2476,7 +2473,6 @@ setInterval(async () => {
     if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      loadOrders(PulseCogMemoryAIBuffer);
     }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
@@ -2523,7 +2519,6 @@ setInterval(async () => {
     if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      loadOrders(PulseCogMemoryAIBuffer);
     }
   });
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
@@ -2532,6 +2527,7 @@ setInterval(async () => {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
+  loadOrders();
   await pbRenderCacheList2();
 }, intervalA);
 
@@ -3036,7 +3032,7 @@ setInterval(async () => {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await CheckTime();
-  loadOrders(PulseCogMemoryAIBuffer);
+  loadOrders();
   await pbRenderCacheList2();
 }, intervalB);
 
@@ -3659,7 +3655,6 @@ async function updateModuleIcons(settings, browser) {
     if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      loadOrders(PulseCogMemoryAIBuffer);
     }
   });
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
@@ -5331,7 +5326,6 @@ function CheckBackTab() {
         if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-          loadOrders(PulseCogMemoryAIBuffer);
         }
       });
     }, interval);
@@ -5370,7 +5364,6 @@ function CheckBackTab() {
         if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-          loadOrders(PulseCogMemoryAIBuffer);
         }
       });
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
@@ -5607,7 +5600,6 @@ function CheckBackTab() {
         if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-          loadOrders(PulseCogMemoryAIBuffer);
         }
       });
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {

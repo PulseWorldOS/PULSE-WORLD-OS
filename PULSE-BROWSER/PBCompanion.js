@@ -3540,17 +3540,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer;
       } else {
         (async () => {
-          const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
-          PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
-          console.log(PulsePalMemoryAIBuffer);
-          const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
-          PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
-          console.log(PulseCogMemoryAIBuffer);
+          if (!msg.PulsePalMemoryAIBuffer) {
+            const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
+            PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
+            console.log(PulsePalMemoryAIBuffer);
+          }
+          if (!msg.PulseCogMemoryAIBuffer) {
+            const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
+            PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
+            console.log(PulseCogMemoryAIBuffer);
+          }
         })();
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
       safeStorageSet({ PulsePalMemoryAIBuffer });
+      safeStorageSet({ PulseCogMemoryAIBuffer });
       sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue });
       return true;
 
