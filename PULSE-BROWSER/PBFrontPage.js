@@ -294,7 +294,6 @@ function loadOrders() {
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
-  MyLowerIntellect = null;
   OvermindCrossTabSync(OvermindMyOrders);
 }
 
@@ -1253,6 +1252,7 @@ CompanionConsoleSend.onclick = async () => {
     });
   } else {
     MyLowerIntellect = text;
+    loadOrders();
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
@@ -1269,8 +1269,8 @@ CompanionConsoleSend.onclick = async () => {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
-    });    
-    loadOrders();
+    });
+    MyLowerIntellect = null;    
   }
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
@@ -1431,14 +1431,12 @@ function getReadableName(url) {
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? false;
     if (HigherAuthority) {
-      if (!HigherAuthorityShown) {
-        HigherAuthorityShown = true;
+      if (HigherAuthorityShown) {
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
         CompanionDetailsMessage.style.display = "none";
       } else {
-        HigherAuthorityShown = false;
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";

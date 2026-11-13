@@ -11,7 +11,7 @@ let realmSummary = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 let MyHigherIntellect = null;
-let MyLowerIntellect = null;
+
 let PBROWSERFAVICON_CACHE = {};
 let nowPP = Date.now(); // numeric timestamp
 let lastnowPP = Date.now(); // numeric timestamp
