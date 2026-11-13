@@ -3001,10 +3001,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // const ErrorRequests = requests.filter(req =>
               //   !realRequests.includes(req) && !PulseRequests.includes(req)
               // );
-              count = count + requests.length;
+              count = count + realRequests.length;
               // pulsecount = PulseRequests.length;
-              pulsemomentscount = pulsemomentscount + PulseMoments.length;
-              pulseofflinecount = pulsemomentscount + PulseOffline.length;
+              if (PulseMoments) pulsemomentscount = pulsemomentscount + PulseMoments.length;
+              if (PulseOffline) pulseofflinecount = pulsemomentscount + PulseOffline.length;
               // errorcount = ErrorRequests.length;
               totalcount = totalcount + requests.length;
               const currentCache = CACHE_NAME;
