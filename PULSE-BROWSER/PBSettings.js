@@ -25,6 +25,15 @@ const earnerhelperApanel = document.getElementById("earner-helper-Settings-panel
 const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-Settings-panel");
 const backBtn = document.getElementById("backBtn");
 
+function appendHigherMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
 function toggleSetting(key, label) {
   loadSettings((settings) => {
     settings[key] = !settings[key];
@@ -987,7 +996,11 @@ function loadOrders(aiSettingsSize) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.HigherIntellect) MyHigherIntellect1 = response.HigherIntellect;
+    if (response.HigherIntellect) {
+      MyHigherIntellect1 = response.HigherIntellect;
+      appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect1);
+      MyHigherIntellect1 = null;
+    }
     if (response.OvermindOrders) {
       OvermindSettingsOrders = response.OvermindOrders;
       PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);

@@ -282,14 +282,16 @@ function loadOrders() {
       PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.HigherIntellect) MyHigherIntellect = response.HigherIntellect;
+    if (response.HigherIntellect) {
+      MyHigherIntellect = response.HigherIntellect;
+      appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
+      MyHigherIntellect = null;
+    }
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
-  appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
-  MyHigherIntellect = null;
   OvermindCrossTabSync(OvermindMyOrders);
 }
 
@@ -1128,7 +1130,6 @@ function appendHigherMessage(area, role, text) {
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
-  earnerminipanel.textContent = currency(OurassumedValue);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
