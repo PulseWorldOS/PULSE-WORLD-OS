@@ -66,7 +66,7 @@ const PB_LOG4 = {
 
 // Utility: load settings
 function loadOrders(size) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size, MyLowerIntellect }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);

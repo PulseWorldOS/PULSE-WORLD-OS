@@ -234,7 +234,7 @@ async function CheckOvermindState() {
 
 // Utility: load settings
 function loadOrders(aiPopupSize) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiPopupSize, MyLowerIntellect }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiPopupSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);

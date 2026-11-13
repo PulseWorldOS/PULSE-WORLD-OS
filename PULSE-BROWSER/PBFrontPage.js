@@ -287,7 +287,6 @@ function loadOrders() {
     if (response.HigherIntellect) {
       MyHigherIntellect = response.HigherIntellect;
       appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
-      MyHigherIntellect = null;
     }
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
@@ -295,6 +294,7 @@ function loadOrders() {
     }
   });
   OvermindCrossTabSync(OvermindMyOrders);
+  MyLowerIntellect = null;    
 }
 
 let PULSE_OVERMIND_BROADCAST_CHANNEL5 = `PulseBrowser-OS::${new Date(nowFP).toLocaleTimeString()}`;
@@ -963,6 +963,32 @@ async function askLocalModelWithLiveWeb(websiteURL) {
 }
 
 async function runLocalAI() {
+  if (consoleOvermindCognition) {
+    const futureDate = new Date();
+    futureDate.setFullYear(futureDate.getFullYear() + 86);
+
+    const ItsTime = futureDate.toLocaleString();
+    const showTime = `[${ItsTime}]`;
+
+    CognitionTitle.style.marginBottom = "6px;"
+    CognitionTitle.style.textAlign = "center";
+    CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+    consoleOvermindCognition.style.fontSize = "0.6rem";
+    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+  }
+  const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
+  try {
+    PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
+    PulseCogMemoryAIBuffer.forEach(push => { consoleOvermindCognition.innerHTML += push; });
+    consoleOvermindCognition.style.fontSize = "0.6rem";
+    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+    console.log("Higher AI: " + PulseCogMemoryAIBuffer);
+    swSize = await getSWSize();
+    aiSize = await getAISize();
+    higherAISize = await getHigherAISize();
+    loadOrders();
+  } catch (err) {}
+  
   if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
     console.error("🧠 AI Overmind (Gemini Nano) is not supported in this browser version.");
@@ -971,7 +997,8 @@ async function runLocalAI() {
   RunningAI = true;
 
   const status = await LanguageModel.availability();
-  const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
+  const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);  
+
   if (status === 'unavailable') {
     console.error("🧠 AI Overmind (Gemini Nano) cannot run on this device hardware.");
     return;
@@ -983,20 +1010,6 @@ async function runLocalAI() {
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     console.log("Lower AI: " + PulsePalMemoryAIBuffer);
-    swSize = await getSWSize();
-    aiSize = await getAISize();
-    higherAISize = await getHigherAISize();
-    loadOrders();
-  } catch (err) {}
-
-  const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
-  
-  try {
-    PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
-    PulseCogMemoryAIBuffer.forEach(push => { consoleOvermindCognition.innerHTML += push; });
-    consoleOvermindCognition.style.fontSize = "0.6rem";
-    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
-    console.log("Higher AI: " + PulseCogMemoryAIBuffer);
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
@@ -1080,20 +1093,6 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     
-    if (consoleOvermindCognition) {
-      const futureDate = new Date();
-      futureDate.setFullYear(futureDate.getFullYear() + 86);
-
-      const ItsTime = futureDate.toLocaleString();
-      const showTime = `[${ItsTime}]`;
-
-      CognitionTitle.style.marginBottom = "6px;"
-      CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
-      consoleOvermindCognition.style.fontSize = "0.6rem";
-      consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
-    }
-    
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
@@ -1139,23 +1138,6 @@ function appendHigherMessage(area, role, text) {
   PulseCogMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-      return;
-    }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
-      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
-    }
-    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
-      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
-      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-    }
-  });
 }
 
 async function appendCompanionMessage(area, role, text) {
@@ -1270,7 +1252,6 @@ CompanionConsoleSend.onclick = async () => {
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
-    MyLowerIntellect = null;    
   }
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
