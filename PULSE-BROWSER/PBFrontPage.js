@@ -1537,7 +1537,7 @@ async function pbRenderCacheList2() {
 
   const caches = result.caches;
   // const pulsecaches = result.pulsecaches;  
-  const errorcount = result.errorcount;
+  const cachecount = result.cachecount;
   const totalcount = result.totalcount;
   const pulsemoments = result.pulsemomentscount;
   const pulseoffline = result.pulseofflinecount;
@@ -1548,7 +1548,7 @@ async function pbRenderCacheList2() {
     return;
   }
 
-  if (lastPulseActiveEntries && lastPulseActiveEntries === (caches.entries)) return;
+  if (lastPulseActiveEntries && lastPulseActiveEntries === (cachecount)) return;
 
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
@@ -1627,8 +1627,8 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="${sizeColor}">${cache.entries}</font><br>
-      Multiverse Size: <font color="${sizeColor}">${cache.sizeMB} MB</font><br>
+      Realm Artifacts: <font color="${sizeColor}">${cachecount}</font><br>
+      Multiverse Size: <font color="${sizeColor}">${sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
       Personality: <font color="#0FF">${personality}</font><br>
@@ -5472,8 +5472,8 @@ function CheckBackTab() {
         startPulseLoop();
       });
       await pbRenderCacheList2();
-    // } else {
-    //   stopPulseLoop();
+    } else {
+      stopPulseLoop();
     }
   });
 
