@@ -13,6 +13,7 @@ let CompanionMessage = null;
 let realmSummary = null;
 let assumedValue = 0;
 let OurassumedValue = 0;
+let HigherAuthorityShown = false;
 let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
@@ -66,7 +67,6 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let PulseSnapshotView = null;
 let PulseURL = null;
-let lastPulseActiveEntries = 0;
 let totalBytes = 0;
 let lastFailURL = "https://www.pulseworld.net";
 let nowFP = Date.now(); // numeric timestamp
@@ -102,6 +102,9 @@ const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
+const HigherAuthority = document.getElementById("HigherAuthority");
+const consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+const CognitionTitle = document.getElementById("CognitionTitle");
 
 const PB_LOG3 = {
   info(label, data) {
@@ -317,6 +320,23 @@ if (PulseBrowserChannel5) {
         PB_LOG3.info("[Sound Off: Command Prompt Received] ", payload);
       }
     } catch {}
+  };
+}
+
+if (HigherAuthority) {
+  HigherAuthority.onclick = async () => {
+    if (!HigherAuthorityShown) {
+      HigherAuthorityShown = true;
+      consoleOvermindCognition.style.display = "block";
+      CognitionTitle.style.display = "block";
+      CompanionDetailsMessage.style.display = "none";
+    } else {
+      HigherAuthorityShown = false;
+      consoleOvermindCognition.style.display = "none";
+      CognitionTitle.style.display = "none";
+      CompanionDetailsMessage.style.display = "block";
+    }
+    PulsesafeStorageSet({ HigherAuthorityShown });
   };
 }
 
@@ -1048,6 +1068,17 @@ ${rawPrompt}
       if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
+    
+    if (consoleOvermindCognition) {
+      const now = Date.now();
+      const ItsTime = new Date(now).toLocaleString();
+      const showTime = `[10/27/2112, 04:19:03 AM]`;
+      CognitionTitle.style.marginBottom = "6px;"
+      CognitionTitle.style.textAlign = "center";
+      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+      consoleOvermindCognition.style.fontSize = "0.6rem";
+      consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+    }
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
@@ -1312,6 +1343,8 @@ function getReadableName(url) {
 
   async function CheckEarnDetailsState() {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
+    HigherAuthorityShown = Aly.HigherAuthorityShown ?? false;
     const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
     EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
     console.log("Earn Details State:", EarnDetailsHidden);
@@ -1411,6 +1444,8 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
+  const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
+  HigherAuthorityShown = Aly.HigherAuthorityShown ?? false;
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
@@ -1548,8 +1583,6 @@ async function pbRenderCacheList2() {
     return;
   }
 
-  if (lastPulseActiveEntries && lastPulseActiveEntries === (cachecount)) return;
-
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
     <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
@@ -1618,7 +1651,7 @@ async function pbRenderCacheList2() {
     const KBperEntry = (1024 / cache.density).toFixed(0);
     
     let pausedoffline = ``;
-    lastPulseActiveEntries = cache.entries ?? 0;
+
     if (!ServiceWorkerOnline) {
       pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
     } else {
@@ -1627,7 +1660,7 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="${sizeColor}">${cachecount}</font><br>
+      Realm Artifacts: <font color="${sizeColor}">${totalcount}</font><br>
       Multiverse Size: <font color="${sizeColor}">${sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
@@ -1709,7 +1742,7 @@ async function pbRenderCacheList2() {
   //   } else {
   //     pausedoffline = `(System)`;
   //   }
-  //   if (!pulsebest) lastPulseActiveEntries = lastPulseActiveEntries + (cache.entries ?? 0);
+
 
   //   li.innerHTML = `
   //     <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>

@@ -3003,8 +3003,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               // );
               count = count + realRequests.length;
               // pulsecount = PulseRequests.length;
-              if (PulseMoments) pulsemomentscount = pulsemomentscount + PulseMoments.length;
-              if (PulseOffline) pulseofflinecount = pulsemomentscount + PulseOffline.length;
+              pulsemomentscount = pulsemomentscount + PulseMoments.length;
+              pulseofflinecount = pulsemomentscount + PulseOffline.length;
               // errorcount = ErrorRequests.length;
               totalcount = totalcount + requests.length;
               const currentCache = CACHE_NAME;
@@ -3056,7 +3056,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               sizeMB = parseFloat((totalBytes / (1024 * 1024)).toFixed(2));
               // sizePulseMB = parseFloat((totalPulseBytes / (1024 * 1024)).toFixed(2));
               // errorSizeMB = parseFloat((totalErrorBytes / (1024 * 1024)).toFixed(2));
-              const density = count / (sizeMB || 1);
+              const density = totalcount / (sizeMB || 1);
               // const densitypulse = pulsecount / (sizePulseMB || 1);
               // ⭐ Diversity (unique hosts)
               const diversity = new Set(realRequests.map(r => {
