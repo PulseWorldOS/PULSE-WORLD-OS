@@ -34,6 +34,7 @@ let HigherIntellect = null;
 let LowerIntellect = null;
 let MyLowerIntellect = null;
 let PulsePalMemoryAIBuffer = [];
+let PulseCogMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
 let LocalMemoryLayer = {};
@@ -3518,25 +3519,23 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (msg.PulsePalMemoryAIBuffer) {
         PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer;
-        // (async () => {
-        //   aiSession = await chrome.storage.local.get(["aiSession"]);
-        //   if (!aiSession) {
-                // await initializeExoskeleton();
-        //      safeStorageSet({ aiSession });
-        //   }
-        //   sendResponse({ ok: true, aiSession });
-        // })();
+      } else if (msg.PulseCogMemoryAIBuffer) {
+        PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer;
       } else {
         (async () => {
           const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
           PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
           console.log(PulsePalMemoryAIBuffer);
+          const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
+          PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
+          console.log(PulseCogMemoryAIBuffer);
         })();
       }
+      if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
       safeStorageSet({ PulsePalMemoryAIBuffer });
-      if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer, WeassumedValue });
+      safeStorageSet({ PulseCogMemoryAIBuffer });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue });
       return true;
 
     case "PBCONSOLE_GET":

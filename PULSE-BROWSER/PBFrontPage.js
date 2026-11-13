@@ -50,6 +50,7 @@ let PBROWSERFAVICON_CACHE = {};
 // Your cybernetic state architecture
 let aiSession = null;
 let PulsePalMemoryAIBuffer = [];
+let PulseCogMemoryAIBuffer = [];
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -985,13 +986,26 @@ async function runLocalAI() {
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     swSize = await getSWSize();
     aiSize = await getAISize();
-    // higherAISize = await getHigherAISize();
+    higherAISize = await getHigherAISize();
+    loadOrders();
+  } catch (err) {}
+
+  const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
+  
+  try {
+    PulseCogMemoryAIBuffer = SessionAI.PulseCogMemoryAIBuffer ?? [];
+    PulseCogMemoryAIBuffer.forEach(push => { consoleOvermindCognition.innerHTML += push; });
+    consoleOvermindCognition.style.fontSize = "0.6rem";
+    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+    swSize = await getSWSize();
+    aiSize = await getAISize();
+    higherAISize = await getHigherAISize();
     loadOrders();
   } catch (err) {}
 
   try {
     if (!aiSession) {
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -1002,6 +1016,10 @@ async function runLocalAI() {
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
       
@@ -1076,7 +1094,7 @@ ${rawPrompt}
       consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     }
     
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -1087,6 +1105,10 @@ ${rawPrompt}
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
+      if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+        PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
     RunningAI = false;
@@ -1114,8 +1136,26 @@ function appendHigherMessage(area, role, text) {
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
+  PulseCogMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+    }
+  });
 }
 
 async function appendCompanionMessage(area, role, text) {
@@ -1131,7 +1171,7 @@ async function appendCompanionMessage(area, role, text) {
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -1142,6 +1182,10 @@ async function appendCompanionMessage(area, role, text) {
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
 }
@@ -1187,9 +1231,9 @@ CompanionConsoleSend.onclick = async () => {
       if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
     }, 300);
     aiSize = await getAISize();
-    // higherAISize = await getHigherAISize();
+    higherAISize = await getHigherAISize();
     loadOrders();
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -1200,11 +1244,15 @@ CompanionConsoleSend.onclick = async () => {
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
+      if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+        PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
   } else {
     MyLowerIntellect = text;
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -1215,6 +1263,10 @@ CompanionConsoleSend.onclick = async () => {
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
+      if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+        PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });    
     loadOrders();
@@ -1255,6 +1307,15 @@ async function wipeMemory() {
   await initializeExoskeleton();
 }
 
+// The Absolute Kill Switch Button
+async function wipeHigherMemory() {
+  
+  // 2. Clear your local memory buffers completely
+  PulseCogMemoryAIBuffer = [];
+  
+  console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
+  
+}
 // Compress text to a tiny binary array for local storage
 async function compressMemory(text) {
   const stream = new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'));
@@ -1905,7 +1966,7 @@ async function getSWSize() {
 
 async function getHigherAISize() {
   try {
-    return 0; // returns size in bytes
+    return new Blob([PulseCogMemoryAIBuffer]).size; // returns size in bytes
   } catch (e) {
     return 0;
   }
@@ -2396,7 +2457,7 @@ async function pulseGPUInspector(adapter, device) {
 const intervalA = getCharacterInterval();
 // Optional: Real-time heartbeat
 setInterval(async () => {
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -2407,6 +2468,10 @@ setInterval(async () => {
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
@@ -2438,7 +2503,7 @@ setInterval(async () => {
       }
     }
   });
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -2449,6 +2514,10 @@ setInterval(async () => {
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
@@ -3570,7 +3639,7 @@ async function updateModuleIcons(settings, browser) {
       ServiceWorkerOnline = res.ServiceWorkerOnline;
     }
   });
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -3581,6 +3650,10 @@ async function updateModuleIcons(settings, browser) {
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
@@ -5237,7 +5310,7 @@ function CheckBackTab() {
       swap();
       await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -5248,6 +5321,10 @@ function CheckBackTab() {
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
     }, interval);
@@ -5271,7 +5348,7 @@ function CheckBackTab() {
             nowFP = response.time;
         }
       });
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -5282,6 +5359,10 @@ function CheckBackTab() {
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
@@ -5503,7 +5584,7 @@ function CheckBackTab() {
             nowFP = response.time;
         }
       });
-      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
@@ -5514,6 +5595,10 @@ function CheckBackTab() {
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
