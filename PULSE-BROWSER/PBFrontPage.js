@@ -1162,44 +1162,62 @@ CompanionConsoleSend.onclick = async () => {
   if (!text) return;
   let order = text;
   CompanionConsoleInput.value = "";
-  // 3. Fire the wrapped prompt
-  if (text.includes("overmind orders")) {
-    order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
-    appendCompanionMessage(CompanionDetailsMessage, "user", order);
-  } else if (text.includes("website request")) {
-    // Finds any URL starting with http:// or https:// until a space or the end of the text
-    const urlRegex = /https?:\/\/[^\s]+/i;
-    const match = text.match(urlRegex);
-    if (match) {
-      const texturl = match[0]; // Extract the matched URL string
-      askLocalModelWithLiveWeb(texturl);
+  if (!HigherAuthorityShown) {
+    // 3. Fire the wrapped prompt
+    if (text.includes("overmind orders")) {
+      order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
+      appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    } else if (text.includes("website request")) {
+      // Finds any URL starting with http:// or https:// until a space or the end of the text
+      const urlRegex = /https?:\/\/[^\s]+/i;
+      const match = text.match(urlRegex);
+      if (match) {
+        const texturl = match[0]; // Extract the matched URL string
+        askLocalModelWithLiveWeb(texturl);
+      }
+      appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    } else {
+      appendCompanionMessage(CompanionDetailsMessage, "user", order);
     }
-    appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await PromptMeAI(order);
+    console.log("🧠 AI Overmind: ", response);
+    setTimeout(async () => {
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+      if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
+    }, 300);
+    aiSize = await getAISize();
+    // higherAISize = await getHigherAISize();
+    loadOrders();
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (!response || !response.ok) {
+        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+        return;
+      }
+      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+      if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+        PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
+    });
   } else {
-    appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    MyLowerIntellect = text;
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (!response || !response.ok) {
+        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+        return;
+      }
+      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+      if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+        PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
+    });    
+    loadOrders();
   }
-  const response = await PromptMeAI(order);
-  console.log("🧠 AI Overmind: ", response);
-  setTimeout(async () => {
-    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-    if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
-  }, 300);
-  aiSize = await getAISize();
-  // higherAISize = await getHigherAISize();
-  loadOrders();
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-      return;
-    }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
-      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
-    }
-  });
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
   //   const match = response.match(urlRegex);
