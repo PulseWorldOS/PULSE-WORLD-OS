@@ -14,10 +14,7 @@ let realmSummary = null;
 let assumedValue = 0;
 let OurassumedValue = 0;
 let HigherAuthorityShown = false;
-let CompanionMessages = document.getElementById("CompanionMessage");
-let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
-let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+let MyHigherIntellect = null;
 let CompanionDeprivation = false;
 let ErrorCount = 0;
 const MAX_ERRORS = 1000;
@@ -89,6 +86,10 @@ const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
 // Your PulseWorld Origin Consensus
 let CONSENSUS_ORIGIN = new Date(GLOBALSTART).toLocaleString();
 let totalUsed = 0;
+let CompanionMessages = document.getElementById("CompanionMessage");
+let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
+let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
@@ -105,6 +106,7 @@ const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
 const consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const CognitionTitle = document.getElementById("CognitionTitle");
+const aiOverlay = document.getElementById("ai-overlay");
 
 const PB_LOG3 = {
   info(label, data) {
@@ -280,11 +282,13 @@ function loadOrders() {
       PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
+    if (response.HigherIntellect) MyHigherIntellect = response.HigherIntellect;
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
+  appendCompanionMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
   OvermindCrossTabSync(OvermindMyOrders);
 }
 
@@ -329,11 +333,13 @@ if (HigherAuthority) {
       HigherAuthorityShown = true;
       consoleOvermindCognition.style.display = "block";
       CognitionTitle.style.display = "block";
+      aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
       CompanionDetailsMessage.style.display = "none";
     } else {
       HigherAuthorityShown = false;
       consoleOvermindCognition.style.display = "none";
       CognitionTitle.style.display = "none";
+      aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
       CompanionDetailsMessage.style.display = "block";
     }
     PulsesafeStorageSet({ HigherAuthorityShown });
@@ -1070,15 +1076,19 @@ ${rawPrompt}
     }
     
     if (consoleOvermindCognition) {
-      const now = Date.now();
-      const ItsTime = new Date(now).toLocaleString();
-      const showTime = `[Serious Future]`;
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 86);
+
+      const ItsTime = futureDate.toLocaleString();
+      const showTime = `[${ItsTime}]`;
+
       CognitionTitle.style.marginBottom = "6px;"
       CognitionTitle.style.textAlign = "center";
       CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       consoleOvermindCognition.style.fontSize = "0.6rem";
       consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     }
+    
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {

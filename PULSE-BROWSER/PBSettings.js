@@ -12,6 +12,7 @@ let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
 let GLOBALSTART2 = Date.now();
+let MyHigherIntellect1 = null;
 let aiSettings2Size = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
@@ -986,6 +987,7 @@ function loadOrders(aiSettingsSize) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
+    if (response.HigherIntellect) MyHigherIntellect1 = response.HigherIntellect;
     if (response.OvermindOrders) {
       OvermindSettingsOrders = response.OvermindOrders;
       PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);

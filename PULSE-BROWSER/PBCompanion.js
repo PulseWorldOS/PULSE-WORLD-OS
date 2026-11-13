@@ -30,6 +30,7 @@ let EarnHidden = false;
 let PULSE_ONLINE = false;
 let aiSession = null;
 let OvermindOrders = null;
+let HigherIntellect = null;
 let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
@@ -1360,7 +1361,8 @@ async function callHigherAI() {
       { role: "user", content: rawPrompt }
     ],
   });
-      
+
+  HigherIntellect = reply.choices[0].message.content;
   console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
 }
 
@@ -2622,7 +2624,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.aiPopupSize) {
         aiPopupSize = msg.aiPopupSize;
       }
-      sendResponse({ ok: true, OvermindOrders });
+      sendResponse({ ok: true, OvermindOrders, HigherIntellect });
       OvermindOrders = null;
       break;
 
