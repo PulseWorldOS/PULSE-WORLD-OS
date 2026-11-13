@@ -2626,6 +2626,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       sendResponse({ ok: true, OvermindOrders, HigherIntellect });
       OvermindOrders = null;
+      HigherIntellect = null;
       break;
 
     case "PB_COMPANION_PAUSE":

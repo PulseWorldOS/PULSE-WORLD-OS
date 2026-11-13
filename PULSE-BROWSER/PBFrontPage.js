@@ -289,6 +289,7 @@ function loadOrders() {
     }
   });
   appendCompanionMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
+  MyHigherIntellect = null;
   OvermindCrossTabSync(OvermindMyOrders);
 }
 
