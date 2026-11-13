@@ -15,6 +15,7 @@ let assumedValue = 0;
 let OurassumedValue = 0;
 let HigherAuthorityShown = false;
 let MyHigherIntellect = null;
+let MyLowerIntellect = null;
 let CompanionDeprivation = false;
 let ErrorCount = 0;
 const MAX_ERRORS = 1000;
@@ -276,7 +277,7 @@ const PB_LOG3 = {
 
 // Utility: load settings
 function loadOrders() {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);

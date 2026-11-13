@@ -11,6 +11,7 @@ let realmSummary = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 let MyHigherIntellect = null;
+let MyLowerIntellect = null;
 let PBROWSERFAVICON_CACHE = {};
 let nowPP = Date.now(); // numeric timestamp
 let lastnowPP = Date.now(); // numeric timestamp
@@ -233,7 +234,7 @@ async function CheckOvermindState() {
 
 // Utility: load settings
 function loadOrders(aiPopupSize) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiPopupSize }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiPopupSize, MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);

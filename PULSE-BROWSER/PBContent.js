@@ -9,6 +9,7 @@ let PulseDomScan = false;
 let PBROWSERFAVICON_CACHE = {};
 let CompanionDeprivation = false;
 let MyHigherIntellect = null;
+let MyLowerIntellect = null;
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
@@ -65,7 +66,7 @@ const PB_LOG4 = {
 
 // Utility: load settings
 function loadOrders(size) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size, MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);

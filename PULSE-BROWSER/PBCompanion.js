@@ -31,6 +31,8 @@ let PULSE_ONLINE = false;
 let aiSession = null;
 let OvermindOrders = null;
 let HigherIntellect = null;
+let LowerIntellect = null;
+let MyLowerIntellect = null;
 let PulsePalMemoryAIBuffer = [];
 let lastKnownData = {};
 let temporaryLinks = [];
@@ -1363,8 +1365,32 @@ async function callHigherAI() {
   });
 
   HigherIntellect = reply.choices[0].message.content;
-  console.log(HigherIntellect);
-  console.log(reply.choices[0].message.content);
+  
+  console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
+}
+
+async function recallHigherAI(MyLowerIntellect) {
+  // Callback function to update model loading progress
+  const initProgressCallback = (initProgress) => {
+    console.log(initProgress);
+  };
+  const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+
+  const engine = await CreateMLCEngine(
+    selectedModel,
+    { initProgressCallback: initProgressCallback }, // engineConfig
+  );
+
+  // 1. Send a message to your loaded engine
+  const reply = await engine.chat.completions.create({
+    messages: [
+      { role: "system", content: wrappedPrompt },
+      { role: "user", content: MyLowerIntellect }
+    ],
+  });
+
+  HigherIntellect = reply.choices[0].message.content;
+  
   console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
 }
 
@@ -2620,6 +2646,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PB_GATHER_ORDERS":
+      if (msg.LowerIntellect) {
+        MyLowerIntellect = msg.LowerIntellect;
+        recallHigherAI(MyLowerIntellect);
+      }
       if (msg.aiSettingsSize) {
         aiSettingsSize = msg.aiSettingsSize;
       } 
