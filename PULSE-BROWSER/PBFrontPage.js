@@ -984,6 +984,7 @@ async function runLocalAI() {
     PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    console.log("Lower AI: " + PulsePalMemoryAIBuffer);
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
@@ -993,10 +994,11 @@ async function runLocalAI() {
   const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
   
   try {
-    PulseCogMemoryAIBuffer = SessionAI.PulseCogMemoryAIBuffer ?? [];
+    PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
     PulseCogMemoryAIBuffer.forEach(push => { consoleOvermindCognition.innerHTML += push; });
     consoleOvermindCognition.style.fontSize = "0.6rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+    console.log("Higher AI: " + PulseCogMemoryAIBuffer);
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
