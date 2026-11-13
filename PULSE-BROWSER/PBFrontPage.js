@@ -1894,7 +1894,7 @@ async function pbRenderStorageStats2(history) {
   console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
-  let higherAIDisplay = 4540500000;
+  let higherAIDisplay = 4540300000;
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
   console.log("AI Memory Size:", aiSize, "bytes");
   console.log("PBCompanion.js Size:", swSize, "bytes");
