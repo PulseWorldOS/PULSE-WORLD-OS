@@ -1363,6 +1363,8 @@ async function callHigherAI() {
   });
 
   HigherIntellect = reply.choices[0].message.content;
+  console.log(HigherIntellect);
+  console.log(reply.choices[0].message.content);
   console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
 }
 
