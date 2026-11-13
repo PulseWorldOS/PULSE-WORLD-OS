@@ -1367,7 +1367,7 @@ async function callHigherAI(MyLowerIntellect) {
       { role: "system", content: wrappedPrompt },
       { role: "user", content: rawPrompt }
     ],
-    max_tokens: 200,        // Hard stop on total tokens generated (including thinking)
+    max_tokens: 300,        // Hard stop on total tokens generated (including thinking)
     temperature: 0.6,       // Lower values make responses more focused and less rambling
     top_p: 0.9,
     repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
@@ -2694,6 +2694,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.LowerIntellect) {
         MyLowerIntellect = msg.LowerIntellect;
         callHigherAI(MyLowerIntellect);
+        MyLowerIntellect = null;
       }
       if (msg.aiSettingsSize) {
         aiSettingsSize = msg.aiSettingsSize;
