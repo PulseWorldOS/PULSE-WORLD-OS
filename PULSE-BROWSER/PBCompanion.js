@@ -1324,18 +1324,19 @@ async function callHigherAI() {
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
   };
-  const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-
+  // const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+  const AlphaModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+  
   const engine = await CreateMLCEngine(
-    selectedModel,
+    AlphaModel,
     { initProgressCallback: initProgressCallback }, // engineConfig
   );
 
   // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-      const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
-      const wrappedPrompt = `
+  const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
+  const wrappedPrompt = `
   [IDENTITY & CONSTRAINTS]
-  - Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
+  - Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a higher model for cognition with PulseWorld Flair, Intellect, & Memory!
   - We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
   - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
   - You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
