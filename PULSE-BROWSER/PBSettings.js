@@ -12,8 +12,6 @@ let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
 let aiSettingsSession = null;
 let GLOBALSTART2 = Date.now();
-let MyHigherIntellect1 = null;
-let MyLowerIntellect1 = null;
 let aiSettings2Size = 0;
 let OvermindSettingsOrders = null;
 let OvermindHidden = false;
@@ -991,16 +989,11 @@ setTimeout(updateLinkedPWInputs, 250);
 
 // Utility: load settings
 function loadOrders(aiSettingsSize) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize, MyLowerIntellect1 }, (response) => {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
-    }
-    if (response.HigherIntellect) {
-      if (response.HigherIntellect !== MyHigherIntellect1) MyHigherIntellect1 = response.HigherIntellect;
-      if (response.HigherIntellect !== MyHigherIntellect1) appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect1);
-      MyHigherIntellect1 = null;
     }
     if (response.OvermindOrders) {
       OvermindSettingsOrders = response.OvermindOrders;

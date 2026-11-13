@@ -452,7 +452,7 @@ async function handlePulseRequest(req) {
   }
 }
 
-setTimeout(callHigherAI, 500);
+setTimeout(callHigherAI, 50);
 
 // ============================================================
 // ⭐ PULSE-API HANDLER — network-first (keeps its own cache)
@@ -1320,14 +1320,15 @@ function isAMoment(origin) {
 
 
 async function callHigherAI(MyLowerIntellect) {
+  HigherIntellect = null;
   // Callback function to update model loading progress
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
     // const Progress = initProgress.progress * 100;
     // HigherIntellectStartup = "Loading PulseCache Higher AI - " + Progress.toFixed(2) + "%";
   };
-  // const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-  const selectedModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+  const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+  //const selectedModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
   
   const engine = await CreateMLCEngine(
     selectedModel,
@@ -1370,7 +1371,7 @@ async function callHigherAI(MyLowerIntellect) {
     max_tokens: 300,        // Hard stop on total tokens generated (including thinking)
     temperature: 0.6,       // Lower values make responses more focused and less rambling
     top_p: 0.9,
-    // repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
+    repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
   });
 
   const rawText = reply.choices[0].message.content;
@@ -2707,7 +2708,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         aiPopupSize = msg.aiPopupSize;
       }
       sendResponse({ ok: true, OvermindOrders, HigherIntellect });
-
       OvermindOrders = null;
       break;
 

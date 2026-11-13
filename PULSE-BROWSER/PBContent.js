@@ -8,7 +8,6 @@ let PulseRealmSettings = {};
 let PulseDomScan = false;
 let PBROWSERFAVICON_CACHE = {};
 let CompanionDeprivation = false;
-let MyHigherIntellect = null;
 
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
@@ -72,7 +71,6 @@ function loadOrders(size) {
       PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.HigherIntellect) MyHigherIntellect = response.HigherIntellect;
     if (response.OvermindOrders) {
       OvermindTheirOrders = response.OvermindOrders;
       PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);

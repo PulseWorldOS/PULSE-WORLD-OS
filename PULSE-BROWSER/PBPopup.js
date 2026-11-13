@@ -10,7 +10,6 @@ let authorityRealm = null;
 let realmSummary = null;
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
-let MyHigherIntellect = null;
 
 let PBROWSERFAVICON_CACHE = {};
 let nowPP = Date.now(); // numeric timestamp
@@ -240,7 +239,6 @@ function loadOrders(aiPopupSize) {
       PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
-    if (response.HigherIntellect) MyHigherIntellect = response.HigherIntellect;
     if (response.OvermindOrders) {
       OvermindPopupOrders = response.OvermindOrders;
       PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);

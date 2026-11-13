@@ -285,7 +285,9 @@ function loadOrders() {
       return;
     }
     if (response.HigherIntellect) {
+      PB_LOG3.info("HELP: " + MyHigherIntellect);
       MyHigherIntellect = response.HigherIntellect;
+      PB_LOG3.info("HELP: " + MyHigherIntellect);
       appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
     }
     if (response.OvermindOrders) {
