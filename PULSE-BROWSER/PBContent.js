@@ -1942,18 +1942,7 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    let osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
-    try {
-      // Grab the first inline SVG
-      const firstSvgEl = document.querySelector("svg");
-      const firstSvg = firstSvgEl
-        ? [{
-            src: `data:image/svg+xml;utf8,${encodeURIComponent(firstSvgEl.outerHTML)}`,
-            alt: (firstSvgEl.getAttribute("aria-label") || firstSvgEl.querySelector("title")?.textContent)?.slice(0, 60) || null
-          }]
-        : [];
-      if (firstSvg) osfallback = firstSvg;
-    } catch (err) {}
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {

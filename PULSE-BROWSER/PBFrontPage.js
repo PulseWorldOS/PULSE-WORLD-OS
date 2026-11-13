@@ -1421,11 +1421,13 @@ function getReadableName(url) {
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
+        HigherAuthority.textContent = "🧠";
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
         CompanionDetailsMessage.style.display = "none";
       } else {
+        HigherAuthority.textContent = "🌐";
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
@@ -1533,12 +1535,14 @@ function getReadableName(url) {
       HigherAuthority.onclick = async () => {
         if (!HigherAuthorityShown) {
           HigherAuthorityShown = true;
+          HigherAuthority.textContent = "🧠";
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
           CompanionDetailsMessage.style.display = "none";
         } else {
           HigherAuthorityShown = false;
+          HigherAuthority.textContent = "🌐";
           consoleOvermindCognition.style.display = "none";
           CognitionTitle.style.display = "none";
           aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
@@ -2634,10 +2638,13 @@ async function collectAndWarmAssetsFront() {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
-  await pbRenderCacheList2();
+
+  setTimeout(async () => {
+    await pbRenderCacheList2();
+  }, 1000);
 }
 
-setTimeout(collectAndWarmAssetsFront, 1000);
+setTimeout(collectAndWarmAssetsFront, 500);
 
 function savePulseTabs(WeLocalMemoryLayerMB) {
   console.log("Snapshot Memory Save: ", WeLocalMemoryLayerMB);
