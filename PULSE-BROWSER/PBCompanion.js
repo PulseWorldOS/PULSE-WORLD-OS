@@ -1324,7 +1324,7 @@ async function callHigherAI() {
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
     const Progress = initProgress.progress * 100;
-    HigherIntellect = Progress.toFixed(2) + "%";
+    HigherIntellect = "Loading PulseCache Higher AI - " + Progress.toFixed(2) + "%";
   };
   // const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
   const AlphaModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
@@ -1378,12 +1378,12 @@ async function recallHigherAI(MyLowerIntellect) {
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
     const Progress = initProgress.progress * 100;
-    HigherIntellect = Progress.toFixed(2) + "%";
+    HigherIntellect = "Loading PulseCache Higher AI - " + Progress.toFixed(2) + "%";
   };
-  const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-
+  const AlphaModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+  
   const engine = await CreateMLCEngine(
-    selectedModel,
+    AlphaModel,
     { initProgressCallback: initProgressCallback }, // engineConfig
   );
 
@@ -2690,6 +2690,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       sendResponse({ ok: true, OvermindOrders, HigherIntellect });
       OvermindOrders = null;
+      HigherIntellect = null;
       break;
 
     case "PB_COMPANION_PAUSE":
