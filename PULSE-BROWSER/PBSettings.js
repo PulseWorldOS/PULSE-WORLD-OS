@@ -998,7 +998,7 @@ function loadOrders(aiSettingsSize) {
       return;
     }
     if (response.HigherIntellect) {
-      console.log(response.HigherIntellect);
+      if (response.HigherIntellect !== MyHigherIntellect1) console.log(response.HigherIntellect);
       if (response.HigherIntellect !== MyHigherIntellect1) MyHigherIntellect1 = response.HigherIntellect;
       if (response.HigherIntellect !== MyHigherIntellect1) appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect1);
       MyHigherIntellect1 = null;
