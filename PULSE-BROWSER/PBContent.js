@@ -1942,7 +1942,18 @@ async function fetchAndStoreIcon(host, iconUrl) {
   // ⭐ 2. No valid cache → fetch
   try {
     const response = await fetch(iconUrl);
-    const osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
+    let osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
+    try {
+      // Grab the first inline SVG
+      const firstSvgEl = document.querySelector("svg");
+      const firstSvg = firstSvgEl
+        ? [{
+            src: `data:image/svg+xml;utf8,${encodeURIComponent(firstSvgEl.outerHTML)}`,
+            alt: (firstSvgEl.getAttribute("aria-label") || firstSvgEl.querySelector("title")?.textContent)?.slice(0, 60) || null
+          }]
+        : [];
+      if (firstSvg) osfallback = firstSvg;
+    } catch (err) {}
 
     // ⭐ HARD STOP: do NOT blob invalid responses
     if (!response.ok) {
@@ -2072,13 +2083,25 @@ async function PulseBrowserDomScan() {
   clone.querySelectorAll('link[rel="stylesheet"], meta[http-equiv="refresh"]')
        .forEach(el => el.remove());
 
-  // Tiny image preview (first 10)
+  // Tiny image preview (first 10 images)
   const tinyImages = [...document.querySelectorAll("img[src]")]
     .slice(0, 10)
     .map(img => ({
       src: img.src,
       alt: img.alt?.slice(0, 60) || null
     }));
+
+  // Grab the first inline SVG
+  const firstSvgEl = document.querySelector("svg");
+  const firstSvg = firstSvgEl
+    ? [{
+        src: `data:image/svg+xml;utf8,${encodeURIComponent(firstSvgEl.outerHTML)}`,
+        alt: (firstSvgEl.getAttribute("aria-label") || firstSvgEl.querySelector("title")?.textContent)?.slice(0, 60) || null
+      }]
+    : [];
+
+  // Combine them (first SVG + first 10 images)
+  const previewItems = [...firstSvg, ...tinyImages];
 
   // Meta signals
   const metaDesc =
@@ -2115,7 +2138,7 @@ async function PulseBrowserDomScan() {
   const counts = {
     divs: clone.querySelectorAll("div").length,
     links: clone.querySelectorAll("a").length,
-    images: tinyImages.length
+    images: previewItems.length
   };
 
   // Tiny link preview (first 10)
@@ -2167,7 +2190,8 @@ async function PulseBrowserDomScan() {
     focused,
     counts,
     links: tinyLinks,
-    images: tinyImages,
+    images: previewItems,
+    svg: firstSvg,
     regfavicon,
     favicon,
     tabMemory: OurLocalMemoryLayerMB

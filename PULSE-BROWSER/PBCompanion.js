@@ -1375,14 +1375,10 @@ async function callHigherAI(MyLowerIntellect) {
   });
 
   const rawText = reply.choices[0].message.content;
-
-  console.log("Length:", rawText.length);
-
-  HigherIntellect = rawText;
-
-  console.log("Stored Length:", HigherIntellect.length);
+  const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  HigherIntellect = cleanAnswer;
   
-  console.log("🧠 AI Overmind 🧠: ", HigherIntellect);
+  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
 }
 
 // async function recallHigherAI(MyLowerIntellect) {
@@ -3542,12 +3538,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (msg.PulsePalMemoryAIBuffer) {
         PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer;
-        PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer;
       } else {
         (async () => {
           const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
           PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
           console.log(PulsePalMemoryAIBuffer);
+        })();
+      }
+      if (msg.PulseCogMemoryAIBuffer) {
+        PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer;
+      } else {
+        (async () => {
           const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
           PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
           console.log(PulseCogMemoryAIBuffer);

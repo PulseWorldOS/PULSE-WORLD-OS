@@ -106,8 +106,7 @@ const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
-const consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
-const CognitionTitle = document.getElementById("CognitionTitle");
+let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 
 const PB_LOG3 = {
@@ -278,6 +277,7 @@ const PB_LOG3 = {
 
 // Utility: load settings
 function loadOrders() {
+  consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -286,6 +286,7 @@ function loadOrders() {
     }
     if (response.HigherIntellect) {
       PB_LOG3.info("HELP: " + MyHigherIntellect);
+      MyHigherIntellect = null;
       MyHigherIntellect = response.HigherIntellect;
       PB_LOG3.info("HELP: " + MyHigherIntellect);
       appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
@@ -965,19 +966,8 @@ async function askLocalModelWithLiveWeb(websiteURL) {
 }
 
 async function runLocalAI() {
-  if (consoleOvermindCognition) {
-    const futureDate = new Date();
-    futureDate.setFullYear(futureDate.getFullYear() + 86);
-
-    const ItsTime = futureDate.toLocaleString();
-    const showTime = `[${ItsTime}]`;
-
-    CognitionTitle.style.marginBottom = "6px;"
-    CognitionTitle.style.textAlign = "center";
-    CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
-    consoleOvermindCognition.style.fontSize = "0.6rem";
-    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
-  }
+  if (RunningAI) return; // already running
+  
   const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
   try {
     PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
@@ -991,7 +981,6 @@ async function runLocalAI() {
     loadOrders();
   } catch (err) {}
   
-  if (RunningAI) return; // already running
   if (typeof LanguageModel === 'undefined') {
     console.error("🧠 AI Overmind (Gemini Nano) is not supported in this browser version.");
     return;
@@ -1093,6 +1082,22 @@ ${rawPrompt}
       CompanionDetailsMessage.style.fontSize = "0.6rem";
       if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+
+    let CognitionTitle = document.getElementById("CognitionTitle");
+    consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+    if (consoleOvermindCognition) {
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 86);
+
+      const ItsTime = futureDate.toLocaleString();
+      const showTime = `[${ItsTime}]`;
+
+      CognitionTitle.style.marginBottom = "6px;"
+      CognitionTitle.style.textAlign = "center";
+      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+      consoleOvermindCognition.style.fontSize = "0.6rem";
+      consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     }
     
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
@@ -1413,6 +1418,7 @@ function getReadableName(url) {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? false;
+    consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
         consoleOvermindCognition.style.display = "block";
@@ -1545,8 +1551,7 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
-  const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
-  HigherAuthorityShown = Aly.HigherAuthorityShown ?? false;
+  
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
@@ -2920,7 +2925,11 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const img = div.querySelector(".Snapshot-Favicon");
 
       img.addEventListener("error", () => {
-        img.src = osfallback;
+        if (snapshot.svg) {
+          img.src = snapshot.svg;
+        } else {
+          img.src = osfallback;
+        }
       });
     }
 
