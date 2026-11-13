@@ -1366,11 +1366,17 @@ async function callHigherAI() {
       { role: "system", content: wrappedPrompt },
       { role: "user", content: rawPrompt }
     ],
+    max_tokens: 512,        // Hard stop on total tokens generated (including thinking)
+    temperature: 0.6,       // Lower values make responses more focused and less rambling
+    top_p: 0.9,
+    repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
   });
 
-  HigherIntellect = reply.choices[0].message.content;
+  const rawText = reply.choices[0].message.content;
+  const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  HigherIntellect = cleanAnswer;
   
-  console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
+  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
 }
 
 async function recallHigherAI(MyLowerIntellect) {
@@ -1417,13 +1423,19 @@ async function recallHigherAI(MyLowerIntellect) {
       { role: "system", content: wrappedPrompt },
       { role: "user", content: MyLowerIntellect }
     ],
+    max_tokens: 512,        // Hard stop on total tokens generated (including thinking)
+    temperature: 0.6,       // Lower values make responses more focused and less rambling
+    top_p: 0.9,
+    repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
   });
 
   console.log("You: ", MyLowerIntellect);
 
-  HigherIntellect = reply.choices[0].message.content;
+  const rawText = reply.choices[0].message.content;
+  const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  HigherIntellect = cleanAnswer;
   
-  console.log("🧠 AI Overmind 🧠: ", reply.choices[0].message.content);
+  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
 }
 
 // ---------------------------------------------------------------------------
@@ -2689,6 +2701,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         aiPopupSize = msg.aiPopupSize;
       }
       sendResponse({ ok: true, OvermindOrders, HigherIntellect });
+      HigherIntellect = null;
       OvermindOrders = null;
       break;
 
@@ -3538,7 +3551,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
       safeStorageSet({ PulsePalMemoryAIBuffer });
-      safeStorageSet({ PulseCogMemoryAIBuffer });
       sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue });
       return true;
 
