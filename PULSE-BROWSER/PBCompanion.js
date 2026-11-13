@@ -451,7 +451,7 @@ async function handlePulseRequest(req) {
   }
 }
 
-setTimeout(callHigherAI, 10000);
+setTimeout(callHigherAI, 1000);
 
 // ============================================================
 // ⭐ PULSE-API HANDLER — network-first (keeps its own cache)

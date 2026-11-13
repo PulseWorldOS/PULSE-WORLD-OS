@@ -294,6 +294,7 @@ function loadOrders() {
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
+  MyLowerIntellect = null;
   OvermindCrossTabSync(OvermindMyOrders);
 }
 
@@ -1367,6 +1368,21 @@ function getReadableName(url) {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? false;
+    if (HigherAuthority) {
+      if (!HigherAuthorityShown) {
+        HigherAuthorityShown = true;
+        consoleOvermindCognition.style.display = "block";
+        CognitionTitle.style.display = "block";
+        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
+        CompanionDetailsMessage.style.display = "none";
+      } else {
+        HigherAuthorityShown = false;
+        consoleOvermindCognition.style.display = "none";
+        CognitionTitle.style.display = "none";
+        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
+        CompanionDetailsMessage.style.display = "block";
+      }
+    }
     const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
     EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
     console.log("Earn Details State:", EarnDetailsHidden);
@@ -1466,7 +1482,6 @@ function getReadableName(url) {
     
     if (HigherAuthority) {
       HigherAuthority.onclick = async () => {
-        loadOrders();
         if (!HigherAuthorityShown) {
           HigherAuthorityShown = true;
           consoleOvermindCognition.style.display = "block";
@@ -1481,6 +1496,7 @@ function getReadableName(url) {
           CompanionDetailsMessage.style.display = "block";
         }
         PulsesafeStorageSet({ HigherAuthorityShown });
+        loadOrders();
       };
     }
   }
