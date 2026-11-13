@@ -31,7 +31,7 @@ let PULSE_ONLINE = false;
 let aiSession = null;
 let OvermindOrders = null;
 let HigherIntellect = null;
-let LowerIntellect = null;
+// let HigherIntellectStartup = null;
 let MyLowerIntellect = null;
 let PulsePalMemoryAIBuffer = [];
 let PulseCogMemoryAIBuffer = [];
@@ -1323,14 +1323,14 @@ async function callHigherAI(MyLowerIntellect) {
   // Callback function to update model loading progress
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
-    const Progress = initProgress.progress * 100;
-    HigherIntellect = "Loading PulseCache Higher AI - " + Progress.toFixed(2) + "%";
+    // const Progress = initProgress.progress * 100;
+    // HigherIntellectStartup = "Loading PulseCache Higher AI - " + Progress.toFixed(2) + "%";
   };
   // const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-  const AlphaModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+  const selectedModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
   
   const engine = await CreateMLCEngine(
-    AlphaModel,
+    selectedModel,
     { initProgressCallback: initProgressCallback }, // engineConfig
   );
 
@@ -1374,10 +1374,10 @@ async function callHigherAI(MyLowerIntellect) {
   });
 
   const rawText = reply.choices[0].message.content;
-  const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-  HigherIntellect = cleanAnswer;
+  // const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  HigherIntellect = rawText;
   
-  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
+  console.log("🧠 AI Overmind 🧠: ", HigherIntellect);
 }
 
 // async function recallHigherAI(MyLowerIntellect) {

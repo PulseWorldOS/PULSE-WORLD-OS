@@ -285,11 +285,9 @@ function loadOrders() {
       return;
     }
     if (response.HigherIntellect) {
-      if (response.HigherIntellect !== MyHigherIntellect) {
-        MyHigherIntellect = response.HigherIntellect;
-        appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
-        MyHigherIntellect = null;
-      }
+      MyHigherIntellect = response.HigherIntellect;
+      appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
+      MyHigherIntellect = null;
     }
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
