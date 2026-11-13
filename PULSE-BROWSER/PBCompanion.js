@@ -1374,9 +1374,9 @@ async function callHigherAI() {
 
   const rawText = reply.choices[0].message.content;
   const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-  HigherIntellect = cleanAnswer;
+  HigherIntellect = rawText;
   
-  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
+  console.log("🧠 AI Overmind 🧠: ", rawText);
 }
 
 async function recallHigherAI(MyLowerIntellect) {
@@ -1433,9 +1433,9 @@ async function recallHigherAI(MyLowerIntellect) {
 
   const rawText = reply.choices[0].message.content;
   const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-  HigherIntellect = cleanAnswer;
+  HigherIntellect = rawText;
   
-  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
+  console.log("🧠 AI Overmind 🧠: ", rawText);
 }
 
 // ---------------------------------------------------------------------------
