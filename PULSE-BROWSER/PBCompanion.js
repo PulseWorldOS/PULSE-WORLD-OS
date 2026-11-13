@@ -4022,6 +4022,14 @@ const PBQuantumPrefetch = {
     });
   },
 
+  letsgo(link) {
+    pbPreconnect([link]);
+    try {
+      fetch(link, { cache: "force-cache" }).catch(() => {});
+      console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
+    } catch (_) {}
+  },
+
   tryPrefetch(link) {
     const href = link[0];
     const now = Date.now();
@@ -4037,18 +4045,10 @@ const PBQuantumPrefetch = {
     this.linkCooldowns.set(href, now);
 
     // Perform the prefetch
-    letsgo(link);
+    this.letsgo(link);
   }
 };
 
-
-function letsgo(link) {
-  pbPreconnect([link]);
-  try {
-    fetch(link, { cache: "force-cache" }).catch(() => {});
-    console.log("[PBQuantumPrefetch] Prefetched hovered link:", link);
-  } catch (_) {}
-}
 
 // Example content script usage (PBContent.js):
 // PBQuantumPrefetch.attachToDocument(document);

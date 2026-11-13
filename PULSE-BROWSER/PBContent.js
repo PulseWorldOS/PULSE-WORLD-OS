@@ -266,6 +266,13 @@ const PBQuantumPrefetch = {
     });
   },
 
+  letsgo(link) {
+    if (link && (link.includes("http://") || link.includes("https://"))) {
+      pbPreconnect([link]);
+      fetch(link, { cache: "force-cache" }).catch(() => {});
+    }
+  },
+
   tryPrefetch(link) {
     const href = link[0];
     const now = Date.now();
@@ -290,19 +297,73 @@ const PBQuantumPrefetch = {
     this.linkCooldowns.set(href, now);
 
     // Safe prefetch
-    letsgo(linkURL.href);    
+    this.letsgo(linkURL.href);    
     console.log("[PBQuantumPrefetch] Prefetched hovered link:", linkURL.href);
   }
 
 };
 
-
-function letsgo(link) {
-  if (link && (link.includes("http://") || link.includes("https://"))) {
-    pbPreconnect([link]);
-    fetch(link, { cache: "force-cache" }).catch(() => {});
+// ---------------------------------------------------------------------------
+// 2. HUD INJECTION (DevOverlay) — SAFE VERSION
+// ---------------------------------------------------------------------------
+(function safeInjectHUD() {
+  if (
+      location.protocol === "chrome:" ||
+      location.href.startsWith("chrome://") ||
+      location.protocol === "chrome-extension:"
+    ) {
+      return;
+    }
+  console.log("IT COULD HAVE OCCURED!" + Date.now());
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", async () => {
+      injectHUD();
+    });
+  } else {
+    injectHUD();
   }
-}
+})();
+
+// ---------------------------------------------------------------------------
+// 10. BRANDING FLAG
+// ---------------------------------------------------------------------------
+(function safeInjectPulseFlag() {
+  if (
+      location.protocol === "chrome:" ||
+      location.href.startsWith("chrome://") ||
+      location.protocol === "chrome-extension:"
+    ) {
+      return;
+    }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectPulseFlag);
+  } else {
+    injectPulseFlag();
+  }
+})();
+
+// Safe startup wrapper
+(async function safeWarmPathStart() {
+  // Start immediately if DOM is already interactive or complete
+  if (document.readyState !== "loading") {
+    startWarmPath();
+    createPulseScreen();
+    return;
+  }
+
+  // Start ASAP even before DOMContentLoaded
+  startWarmPath();
+
+  // And run again at DOMContentLoaded for late images
+  document.addEventListener("DOMContentLoaded", async () => {
+    startWarmPath();
+    createPulseScreen();
+  });
+
+  const settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
+})();
 
 function cacheit(link) {
   if (link && (link.includes("http://") || link.includes("https://"))) {
@@ -447,25 +508,6 @@ function getLocalMemoryLayer() {
   };
 }
 
-// Safe startup wrapper
-(async function safeWarmPathStart() {
-  // Start immediately if DOM is already interactive or complete
-  if (document.readyState !== "loading") {
-    startWarmPath();
-    return;
-  }
-
-  // Start ASAP even before DOMContentLoaded
-  startWarmPath();
-
-  // And run again at DOMContentLoaded for late images
-  document.addEventListener("DOMContentLoaded", startWarmPath);
-
-  const settings = await pbLoadExtensionSettings();
-  PulseRealmSettings = settings;
-})();
-
-
 // Intelligent throttle window
 let lastWarm = 0;
 const WARM_COOLDOWN = 1000; // ms
@@ -558,48 +600,6 @@ function createPulseScreen() {
     fadeHUD(vid);
   }, 4000);
 }
-
-// ---------------------------------------------------------------------------
-// 2. HUD INJECTION (DevOverlay) — SAFE VERSION
-// ---------------------------------------------------------------------------
-(function safeInjectHUD() {
-  if (
-      location.protocol === "chrome:" ||
-      location.href.startsWith("chrome://") ||
-      location.protocol === "chrome-extension:"
-    ) {
-      return;
-    }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", async () => {
-      injectHUD();
-      createPulseScreen();
-    });
-  } else {
-    injectHUD();
-    createPulseScreen();
-  }
-})();
-
-// ---------------------------------------------------------------------------
-// 10. BRANDING FLAG
-// ---------------------------------------------------------------------------
-(function safeInjectPulseFlag() {
-  if (
-      location.protocol === "chrome:" ||
-      location.href.startsWith("chrome://") ||
-      location.protocol === "chrome-extension:"
-    ) {
-      return;
-    }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", injectPulseFlag);
-  } else {
-    injectPulseFlag();
-  }
-})();
 
 function getWarmInterval() {
   const base = 60000;
