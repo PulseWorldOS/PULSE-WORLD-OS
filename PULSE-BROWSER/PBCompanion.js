@@ -1323,6 +1323,7 @@ async function callHigherAI() {
   // Callback function to update model loading progress
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
+    HigherIntellect = initProgress.progress.toFixed(2) + "%";
   };
   // const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
   const AlphaModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
@@ -1375,6 +1376,7 @@ async function recallHigherAI(MyLowerIntellect) {
   // Callback function to update model loading progress
   const initProgressCallback = (initProgress) => {
     console.log(initProgress);
+    HigherIntellect = initProgress.progress.toFixed(2) + "%";
   };
   const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
 
