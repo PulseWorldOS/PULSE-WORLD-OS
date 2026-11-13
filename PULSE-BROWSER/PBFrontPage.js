@@ -331,25 +331,6 @@ if (PulseBrowserChannel5) {
   };
 }
 
-if (HigherAuthority) {
-  HigherAuthority.onclick = async () => {
-    if (!HigherAuthorityShown) {
-      HigherAuthorityShown = true;
-      consoleOvermindCognition.style.display = "block";
-      CognitionTitle.style.display = "block";
-      aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
-      CompanionDetailsMessage.style.display = "none";
-    } else {
-      HigherAuthorityShown = false;
-      consoleOvermindCognition.style.display = "none";
-      CognitionTitle.style.display = "none";
-      aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
-      CompanionDetailsMessage.style.display = "block";
-    }
-    PulsesafeStorageSet({ HigherAuthorityShown });
-  };
-}
-
 async function BootMeNowPlease() {
   const Boot = await chrome.storage.local.get(["bootVideoRunOnce"]);
   if (Boot) bootVideoRunOnce = Boot.bootVideoRunOnce ?? false;
@@ -1463,6 +1444,26 @@ function getReadableName(url) {
       console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
+    
+    if (HigherAuthority) {
+      HigherAuthority.onclick = async () => {
+        loadOrders();
+        if (!HigherAuthorityShown) {
+          HigherAuthorityShown = true;
+          consoleOvermindCognition.style.display = "block";
+          CognitionTitle.style.display = "block";
+          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
+          CompanionDetailsMessage.style.display = "none";
+        } else {
+          HigherAuthorityShown = false;
+          consoleOvermindCognition.style.display = "none";
+          CognitionTitle.style.display = "none";
+          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
+          CompanionDetailsMessage.style.display = "block";
+        }
+        PulsesafeStorageSet({ HigherAuthorityShown });
+      };
+    }
   }
 
 async function CheckEarnState() {
@@ -1575,7 +1576,6 @@ async function CheckEarnState() {
     console.log("Earn State:", EarnHidden);
     PulsesafeStorageSet({ EarningInVisible: EarnHidden });
   };
-
 }
 
 setTimeout(CheckEarnState, 50);
