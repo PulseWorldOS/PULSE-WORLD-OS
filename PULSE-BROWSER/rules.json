@@ -8,12 +8,34 @@
         "responseHeaders": [
           { "header": "x-frame-options", "operation": "remove" },
           { "header": "frame-options", "operation": "remove" },
-          { "header": "content-security-policy", "operation": "remove" }
+          { "header": "content-security-policy", "operation": "remove" },
+          { "header": "cross-origin-embedder-policy", "operation": "remove" },
+          { "header": "cross-origin-opener-policy", "operation": "remove" },
+          { "header": "cross-origin-resource-policy", "operation": "remove" },
+          { "header": "access-control-allow-origin", "operation": "set", "value": "*" },
+          { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
+        ],
+        "requestHeaders": [
+          { "header": "sec-fetch-dest", "operation": "set", "value": "document" },
+          { "header": "sec-fetch-site", "operation": "set", "value": "none" },
+          { "header": "sec-fetch-mode", "operation": "set", "value": "navigate" },
+          { "header": "referer", "operation": "remove" },
+          { "header": "origin", "operation": "remove" }
         ]
       },
       "condition": {
         "initiatorDomains": ["mcbbhkdjpaakjabngfjmaeihnoilognk", "kkidimiknkgfkjplagaohacidaagcbjg", "pulseworld.net", "www.pulseworld.net", "pulseworld.me", "www.pulseworld.me", "pulseworld.money", "www.pulseworld.money", "pulseworld.biz", "www.pulseworld.biz"],
-        "resourceTypes": ["sub_frame"]
+        "resourceTypes": [
+          "sub_frame",
+          "xmlhttprequest",
+          "script",
+          "stylesheet",
+          "image",
+          "font",
+          "media",
+          "other"
+        ]
+
       }
     }
   ],
