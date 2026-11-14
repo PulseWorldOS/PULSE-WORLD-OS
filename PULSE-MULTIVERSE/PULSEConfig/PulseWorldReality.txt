@@ -1198,7 +1198,7 @@
     </div>
 
     <p style="margin-top:8px;font-size:0.85rem;">
-      <a href="https://www.yahoo.com" style="color:#00e6c7;">This is a Test!</a>
+      <a href="https://www.yahoo.com?pw=offline" style="color:#00e6c7;">This is a Test!</a>
     </p>
   </div>
 </footer>
