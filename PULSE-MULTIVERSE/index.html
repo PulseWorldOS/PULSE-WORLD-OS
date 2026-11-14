@@ -3735,20 +3735,33 @@ async function loadPulseIdentityContinual() {
   }
 }
 
-function pulseSupabaseSync() {
+async function pulseSupabaseSync() {
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
   try {
-    ensureLocationAccess();
+    const locationResult = await ensureLocationAccess({
+      desiredAccuracy: 30, // Require 30-meter precision
+      maxWaitTime: 12000   // Wait up to 12 seconds
+    });
+
+    if (locationResult.ok) {
+      console.log(`Real location (${locationResult.source}):`, locationResult.coords);
+    } else {
+      console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
+    }
+
     const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
     const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
     const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
+
+    const locationproximity = storedProximity ?? locationResult;
+
     if (!storedIdentity.id) return;
     if (PulseRealm.CurrentHost.includes("netlify")) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: storedProximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
+      body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: locationproximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
     }).then((response) => {
       if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }).catch(() => {
@@ -9494,9 +9507,9 @@ if (navigator.gpu) {
     // // for this page session instead of producing a failed request every 7s.
   }, 7000);
   
-  SupabaseProtocol = setInterval(() => {
+  SupabaseProtocol = setInterval(async () => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    pulseSupabaseSync();
+    await pulseSupabaseSync();
   }, 30000);
 
   try {
@@ -9523,9 +9536,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     savePageToCookie();
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 7000);
-  setTimeout(() => {
+  setTimeout(async () => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    pulseSupabaseSync();
+    await pulseSupabaseSync();
   }, 2000);
      // ============================================================
   // IMPORT 404 LOGS FROM localStorage → INTO OUR CONSOLE SYSTEM
