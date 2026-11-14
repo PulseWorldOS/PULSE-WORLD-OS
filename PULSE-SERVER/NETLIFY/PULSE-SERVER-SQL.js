@@ -192,7 +192,7 @@ export async function handler(event) {
 
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
-      const { identity, photos, host, online, inactive, proximity, lastPage, lastProximity } = body;
+      const { identity, photos, host, online, inactive, proximity, lastPage, lastProximity, tetherCode } = body;
 
       if (!identity?.id && !lastIdentityID) {
         return {

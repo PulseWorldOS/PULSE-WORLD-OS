@@ -8,6 +8,7 @@ let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let PulseRecoverySettings = null;
+let TetherCode = null;
 let aiPopupSize = 0;
 let assumedValue = 0;
 let WeassumedValue = 0;
@@ -2536,7 +2537,7 @@ function pulseSupabaseSync() {
     fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", lastPage: "PulseBrowser OS", online, inactive: false })
+      body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", tetherCode: TetherCode, online, inactive: false })
     }).then((response) => {
       if (!response.ok) __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }).catch(() => {
@@ -2839,6 +2840,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         console.log(EarnHidden);
         sendResponse({ ok: true, EarnHidden });
       }
+      break;
+    
+    case "PULSE_TETHER_ACTIVATE":
+      if (msg.tetherCode) {
+        TetherCode = msg.tetherCode;
+        console.log("Tether Code Found from PulseWorld Extension Page: " + TetherCode);
+      }
+      sendResponse({ ok: true, TetherCode });
       break;
 
     case "PBAUTHORITY_REALM_CLAIM":
