@@ -4145,19 +4145,7 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
-  try {
-    const locationResult = await ensureLocationAccess({
-      desiredAccuracy: 30, // Require 30-meter precision
-      maxWaitTime: 12000   // Wait up to 12 seconds
-    });
-
-    if (locationResult.ok) {
-      console.log(`Real location (${locationResult.source}):`, locationResult.coords);
-    } else {
-      console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
-    }
-  } catch (err) {}
-
+  
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
@@ -4250,6 +4238,19 @@ async function setTheStage() {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
   }, 6000);
+
+  try {
+    const locationResult = await ensureLocationAccess({
+      desiredAccuracy: 30, // Require 30-meter precision
+      maxWaitTime: 12000   // Wait up to 12 seconds
+    });
+
+    if (locationResult.ok) {
+      console.log(`Real location (${locationResult.source}):`, locationResult.coords);
+    } else {
+      console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
+    }
+  } catch (err) {}
 }
 
 setTimeout(setTheStage, 500);
