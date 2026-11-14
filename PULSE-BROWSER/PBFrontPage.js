@@ -977,7 +977,6 @@ async function runLocalAI() {
     PulseCogMemoryAIBuffer.forEach(push => { consoleOvermindCognition.innerHTML += push; });
     consoleOvermindCognition.style.fontSize = "0.6rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
-    console.log("Higher AI: " + PulseCogMemoryAIBuffer);
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
@@ -1003,7 +1002,6 @@ async function runLocalAI() {
     PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
     CompanionDetailsMessage.style.fontSize = "0.6rem";
     CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-    console.log("Lower AI: " + PulsePalMemoryAIBuffer);
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
@@ -1144,7 +1142,10 @@ function appendHigherMessage(area, role, text) {
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
+  const now = Date.now();
+  const ItsTime = new Date(now).toLocaleString();
+  const showTime = `[${ItsTime}]`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${role}:  ${showTime}</font> `) + text + `<br>`;
   PulseCogMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
@@ -5429,8 +5430,8 @@ const nebula = document.getElementById("nebula");
   }, { once: true });
 });
 
-setTimeout(runLocalAI, 50);
-setTimeout(initWebGPUCompute, 50);
+setTimeout(runLocalAI, 3000);
+setTimeout(initWebGPUCompute, 500);
 
 window.addEventListener("blur", () => {
   userInteracted = true;

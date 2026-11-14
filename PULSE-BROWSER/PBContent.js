@@ -8,7 +8,6 @@ let PulseRealmSettings = {};
 let PulseDomScan = false;
 let PBROWSERFAVICON_CACHE = {};
 let CompanionDeprivation = false;
-
 let nowCT = Date.now(); // numeric timestamp
 let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
@@ -18,6 +17,13 @@ const CACHE_NAME = "PulseBrowser-Companion";
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
 let realmSummary = null;
+// content_script.js
+// Mellowtel is available as a global variable from mellowtel.js
+
+(async () => {
+  const mellowtel = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6"); // Replace with your configuration key
+  await mellowtel.initContentScript();
+})();
 
 const PB_LOG4 = {
   info(label, data) {
@@ -811,7 +817,7 @@ async function injectHUD() {
   setTimeout(() => {
     body = document.getElementById("pb-hud-body");
     updateHUD(body);    
-    gpuWarmExtra();
+    initWebGPUCompute();
   }, sync);
   
   setTimeout(() => {

@@ -4,6 +4,13 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 import { CreateMLCEngine } from "./OvermindPrimes.js";
+import './MellowEarner.js';
+
+(async () => {
+    const mellowtel = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6"); // Replace with your configuration key
+    await mellowtel.initBackground();
+})();
+
 let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
@@ -344,6 +351,7 @@ self.addEventListener("install", event => {
     "PBFrontPage.js",
     "PBDevOverlay.js",
     "PBCompanion.js",
+    "MellowEarner.js",
     "OvermindPrimes.js",
     "PBInterceptor.js",
     "PBAccelerator.js",
