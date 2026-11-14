@@ -1927,6 +1927,18 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '🎭 PulseRouter - Reset Boot Sequence',
     contexts: ['all']
   });
+  console.log("Extension Installed or Updated");
+  // If you want to handle install and updates differently
+  /**
+  if(details.reason === "install"){
+      // call a function to handle a first install
+  } else if(details.reason === "update") {
+      // call a function to handle an update
+  }
+  **/
+  // await mellowtel.generateAndOpenOptInLink(); to handle users settings. For more details: opt-in-out docs
+  const uninstallURl = await mellowtel.generateFeedbackLink();
+  chrome.runtime.setUninstallURL(uninstallURl);
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {

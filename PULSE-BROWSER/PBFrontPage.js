@@ -1266,6 +1266,7 @@ CompanionConsoleSend.onclick = async () => {
       appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
       if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
     }, 300);
+    swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
     loadOrders();
