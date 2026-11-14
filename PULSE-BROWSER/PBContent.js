@@ -771,7 +771,9 @@ async function gpuWarmExtra() {
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
-  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+  });
 }
 
 setInterval(async () => {
@@ -796,7 +798,9 @@ setInterval(async () => {
   });
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
-  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+  });
 }, 3500);
 
 async function injectHUD() {
