@@ -6,12 +6,14 @@
 import { CreateMLCEngine } from "./OvermindPrimes.js";
 import './MellowEarner.js';
 
+const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+  integrationId: "intgr-CxPYRSJjKe"
+});
+
 (async () => {
   try {
-    const mellowtel = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-      integrationId: "intgr-CxPYRSJjKe"
-    });
-    await mellowtel.initBackground();
+    
+    await PulseMellowEarner.initBackground();
   } catch {}
 })();
 
@@ -1936,8 +1938,8 @@ chrome.runtime.onInstalled.addListener(async () => {
       // call a function to handle an update
   }
   **/
-  // await mellowtel.generateAndOpenOptInLink(); to handle users settings. For more details: opt-in-out docs
-  const uninstallURl = await mellowtel.generateFeedbackLink();
+  await PulseMellowEarner.generateAndOpenOptInLink();
+  const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
   chrome.runtime.setUninstallURL(uninstallURl);
 });
 
