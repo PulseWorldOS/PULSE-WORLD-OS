@@ -73,21 +73,6 @@ const PB_LOG4 = {
   }
 };
 
-// Utility: load settings
-async function loadOrders() {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (!response || !response.ok) {
-      PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);
-      return;
-    }
-    if (response.OvermindOrders) {
-      OvermindTheirOrders = response.OvermindOrders;
-      PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
-    }
-  });
-}
-
 let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date(nowCT).toLocaleTimeString()}`;
 // ============================================================
 //  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
@@ -121,6 +106,22 @@ if (PulseBrowserChannel3) {
       }
     } catch {}
   };
+}
+
+// Utility: load settings
+async function loadOrders() {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.OvermindOrders) {
+      OvermindTheirOrders = response.OvermindOrders;
+      PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
+    }
+  });
+  OvermindCrossTabSync(OvermindTheirOrders);
 }
 
 // 1. The Core Queue Engine
@@ -373,7 +374,7 @@ const PBQuantumPrefetch = {
 
   const settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
-  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  OurLocalMemoryLayer = getLocalMemoryLayer();
 })();
 
 function cacheit(link) {
@@ -653,31 +654,31 @@ function loadLastSavedVideo(callback) {
   });
 }
 
-async function runProtectedCompute(computeTaskFunction) {
-  try {
-    // 1. Lock the system right on that invisible line before the execution
-    if (chrome && chrome.power) {
-      CompanionDeprivation = true;
-      chrome.power.requestKeepAwake("system");
-      console.log("[POWER GOVERNOR] System locked awake for calculation...");
-    }
+// async function runProtectedCompute(computeTaskFunction) {
+//   try {
+//     // 1. Lock the system right on that invisible line before the execution
+//     if (chrome && chrome.power) {
+//       CompanionDeprivation = true;
+//       chrome.power.requestKeepAwake("system");
+//       console.log("[POWER GOVERNOR] System locked awake for calculation...");
+//     }
 
-    // 2. Execute your pure WASM math proof or WebGPU logic
-    const result = await computeTaskFunction();
-    return result;
+//     // 2. Execute your pure WASM math proof or WebGPU logic
+//     const result = await computeTaskFunction();
+//     return result;
 
-  } catch (error) {
-    console.error("[POWER GOVERNOR] Calculation crashed:", error);
-    throw error;
-  } finally {
-    // 3. ALWAYS release the lock inside a 'finally' block!
-    // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-    // if ((chrome && chrome.power) && !CompanionDeprivation) {
-    //   chrome.power.releaseKeepAwake();
-    //   console.log("[POWER GOVERNOR] System lock released cleanly.");
-    // }
-  }
-}
+//   } catch (error) {
+//     console.error("[POWER GOVERNOR] Calculation crashed:", error);
+//     throw error;
+//   } finally {
+//     // 3. ALWAYS release the lock inside a 'finally' block!
+//     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
+//     // if ((chrome && chrome.power) && !CompanionDeprivation) {
+//     //   chrome.power.releaseKeepAwake();
+//     //   console.log("[POWER GOVERNOR] System lock released cleanly.");
+//     // }
+//   }
+// }
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
@@ -721,7 +722,7 @@ async function gpuWarmExtra() {
     vid.src = "PulseWorldOS-Older.mp4";
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
@@ -745,12 +746,11 @@ setInterval(async () => {
       }
     }
   });
-  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
   loadOrders();
-  OvermindCrossTabSync(OvermindTheirOrders);
 }, 3500);
 
 async function injectHUD() {
