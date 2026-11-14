@@ -5339,7 +5339,6 @@ function CheckBackTab() {
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
-      await CheckTime();
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
       chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
         if (chrome.runtime.lastError) return;
@@ -5358,6 +5357,8 @@ function CheckBackTab() {
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
+      await pbRenderCacheList2();
+      await CheckTime();
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
@@ -5427,8 +5428,6 @@ function CheckBackTab() {
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
     }, interval);
   }
-
-  startBtn.style.cursor = "cursor";
 
   // Flicker engine
   function flickerOrigins() {
