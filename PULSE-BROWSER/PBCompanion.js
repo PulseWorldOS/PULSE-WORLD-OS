@@ -1976,8 +1976,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       AdBlockerOff();
     }
   } else if (info.menuItemId === 'runMellowEarner') {
+    await PulseMellowEarner.generateAndOpenOptInLink();
     await PulseMellowEarner.optIn();
     await PulseMellowEarner.start();
+    PB_LOG2.event("Pulse Mellow Earner: Starting Bandwidth Market..", PulseMellowEarner);
   } else if (info.menuItemId === 'resetBootVideo') {
     const bootVideoRunOnce = false;
     await safeStorageSet({ bootVideoRunOnce });
