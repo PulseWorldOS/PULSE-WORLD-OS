@@ -354,6 +354,7 @@ const PBQuantumPrefetch = {
 
   // Start ASAP even before DOMContentLoaded
   startWarmPath();
+  createPulseScreen();
 
   // And run again at DOMContentLoaded for late images
   document.addEventListener("DOMContentLoaded", async () => {
@@ -363,6 +364,7 @@ const PBQuantumPrefetch = {
 
   const settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
+  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
 })();
 
 function cacheit(link) {
@@ -601,6 +603,18 @@ function createPulseScreen() {
   }, 4000);
 }
 
+function getSyncInterval3() {
+  const base = 2200;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.11;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
 function getWarmInterval() {
   const base = 60000;
 // ⭐ Add human-like jitter (±20%)
@@ -791,21 +805,21 @@ async function injectHUD() {
 
   document.body.appendChild(wrap);
 
-  const sync = getWarmInterval();
-  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  const sync = getSyncInterval3();
+  
   let body = document.getElementById("pb-hud-body");
   updateHUD(body);
   PulseBrowserPreview();
   setTimeout(() => {
     body = document.getElementById("pb-hud-body");
+    updateHUD(body);    
     gpuWarmExtra();
-    updateHUD(body);
   }, sync);
   
   setTimeout(() => {
     body = document.getElementById("pb-hud-body");
-    PulseBrowserDomScan();
     updateHUD(body);
+    PulseBrowserDomScan();
   }, 4500);
   setTimeout(() => {
     DomScanPreview();
