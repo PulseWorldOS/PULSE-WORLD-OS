@@ -1,10 +1,22 @@
 [
-  {
-    "id": 1,
-    "priority": 1,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*doubleclick.net*" }
-  },
+  [
+    {
+      "id": 1,
+      "priority": 1,
+      "action": {
+        "type": "modifyHeaders",
+        "responseHeaders": [
+          { "header": "x-frame-options", "operation": "remove" },
+          { "header": "frame-options", "operation": "remove" },
+          { "header": "content-security-policy", "operation": "remove" }
+        ]
+      },
+      "condition": {
+        "initiatorDomains": ["mcbbhkdjpaakjabngfjmaeihnoilognk", "kkidimiknkgfkjplagaohacidaagcbjg", "pulseworld.net", "www.pulseworld.net", "pulseworld.me", "www.pulseworld.me", "pulseworld.money", "www.pulseworld.money", "pulseworld.biz", "www.pulseworld.biz"],
+        "resourceTypes": ["sub_frame"]
+      }
+    }
+  ],
   {
     "id": 2,
     "priority": 1,
@@ -100,5 +112,11 @@
     "priority": 1,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*segment.io*" }
+  },
+  {
+    "id": 21,
+    "priority": 1,
+    "action": { "type": "block" },
+    "condition": { "urlFilter": "*doubleclick.net*" }
   }
 ]

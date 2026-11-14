@@ -1619,11 +1619,28 @@ let gpuContext = null;
 
 // 1. Initialize once at startup (replaces your warm-up snippet)
 async function initWebGPUCompute() {
+  const elements = document.querySelectorAll("canvas, video");
+  gpuEnabled = "GPU Driver Error";
+
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
+    try { el.getContext?.("2d"); } catch (_) {}
+    // try { el.play?.().catch(() => {}); } catch (_) {}
+  });
+  
   if (!navigator.gpu) return null;
   const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
   if (!adapter) return null;
   const device = await adapter.requestDevice();
-  if (device) pulseGPUInspector(adapter, device);
+  if (device) {
+    gpuEnabled = "WebGPU";
+    pulseGPUInspector(adapter, device);
+  }
   // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
   const shaderCode = `
     struct Item256 {
@@ -1649,6 +1666,13 @@ async function initWebGPUCompute() {
     layout: "auto",
     compute: { module, entryPoint: "main" },
   });
+
+  console.log("GPU Warmed!");
+  if (gpuEnabled === "GPU Driver Error") {
+    pbPulseScreen.src = "PulseWorldOS-Older.mp4";
+  }
+  chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
 
   gpuContext = { device, pipeline };
   return gpuContext;

@@ -753,7 +753,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     console.warn("[TEST] Soak test is already running.");
     return;
   }
-
+  gpuWarmExtra();
   await pulseWasmCompute.initEngine();
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
   let totalJobs = 0;
@@ -786,6 +786,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       console.log("WASM Daily Total Value: " + currency(assumedValue));
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
+      setTimeout(() => {
+        appendEarnerMessage(CompanionMessages, "🧠", "Waiting for PulseEarner Job Submissions...");
+      }, 4000);     
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, ${totalUnit}${totalUnits}`);
       return;
     }

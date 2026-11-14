@@ -1799,6 +1799,7 @@ function startWarmBootLoop() {
     } catch (_) {}
 
     const interval = getWarmInterval();
+    
     PB_LOG2.info("[PBWarmBootLoop] Next warm in " + interval + " ms");
     
     setTimeout(loop, interval);
@@ -1815,6 +1816,7 @@ function TestingSequence(OvermindOrders) {
 setInterval(async () => {
   chrome.runtime.getPlatformInfo();
   TestingSequence(OvermindOrders);
+  pulseSupabaseSync();
 }, 15000);
 
 setTimeout(async () => {
@@ -2523,6 +2525,26 @@ function currency(amount, displayCurrency = "$") {
   return `${cur}${safe}`;
 }
 
+let __PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
+
+function pulseSupabaseSync() {
+  if (__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
+  
+  try {
+    
+    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+    }).then((response) => {
+      if (!response.ok) __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    }).catch(() => {
+      __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    });
+  } catch {
+    __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+  }
+}
+
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   if (soakTestTimer) {
@@ -2561,6 +2583,9 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       console.log("WASM Daily Total Value: " + currency(assumedValue));
       CompanionMessage = `WASM Daily Batches Succeeded.. [<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      setTimeout(() => {
+        CompanionMessage = "Waiting for PulseEarner Job Submissions...";
+      }, 4000);      
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, ${totalUnit}${totalUnits}`);
       return;
     }
@@ -2734,9 +2759,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
             CompanionMessage = "Earning Adrenaline Infused & Ready..";
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
-            CompanionMessage = "Starting up PulseGPU Engine...";
+            CompanionMessage = "Starting up PulseEarner GPU Engine...";
           } else if (CompanionMessage.includes(timeProof)) {
-          } else if (CompanionMessage === "Starting up PulseGPU Engine...") {
+          } else if (CompanionMessage === "Starting up PulseEarner GPU Engine...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
             try {
               (async () => {
@@ -2757,15 +2782,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             CompanionMessage = "<-- Running User-Called WASM Test Job -->";
             runWasmTest = false;
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
-            CompanionMessage = "Starting up PulseGPU Engine...";
-          } else if (CompanionMessage === "Starting up PulseGPU Engine...") {
+            CompanionMessage = "Starting up PulseEarner GPU Engine...";
+          } else if (CompanionMessage === "Starting up PulseEarner GPU Engine...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
           } else if (CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->") {
             CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
           } else if (CompanionMessage.includes("Received WASM TEST Proof")) {
             CompanionMessage = `<-- Starting Up 2 PulseEarners to Test -->`;
           } else if (CompanionMessage.includes("Starting Up 2 PulseEarners")) {
-            CompanionMessage = "Waiting for 2 Prime Earners...";
+            CompanionMessage = "Waiting for PulseEarners to Send Test Batches...";
           } else if (CompanionMessage.includes(timeProof) && !CompanionMessage.includes("Received WASM TEST Proof")) {
           }
         }

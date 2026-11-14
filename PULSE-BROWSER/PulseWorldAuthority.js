@@ -355,45 +355,45 @@ function hidePWLoader() {
   });
 }
 
-// ---------------------------------------------------------
-// Minimal Authority Gateway + Video Extraction + Saving
-// ---------------------------------------------------------
-(async () => {
-  try {
-    showPWLoader();
-    let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldFounders.txt";
-    if (origin2) url = "https://" + origin2;
-    chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
-      if (chrome.runtime.lastError) return;
+// // ---------------------------------------------------------
+// // Minimal Authority Gateway + Video Extraction + Saving
+// // ---------------------------------------------------------
+// (async () => {
+//   try {
+//     showPWLoader();
+//     let url = "https://www.pulseworld.net/PULSEConfig/PulseWorldFounders.txt";
+//     if (origin2) url = "https://" + origin2;
+//     chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM_CLAIM"  }, (response) => {
+//       if (chrome.runtime.lastError) return;
       
-      if (response.realm) authorityRealm = response.realm;
-    });
+//       if (response.realm) authorityRealm = response.realm;
+//     });
     
-    // if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
-    //   const separator = url.includes("?") ? "&" : "?";
-    //   url = url + separator + "pw=offline";
-    // }
+//     // if (url !== "https://www.pulseworld.net/PULSEConfig/PulseWorldTeam.txt") {
+//     //   const separator = url.includes("?") ? "&" : "?";
+//     //   url = url + separator + "pw=offline";
+//     // }
 
-    const response = await fetch(url, { mode: "cors" });
-    let html = await response.text();
-    if (authorityRealm) html = authorityRealm;
-    html = html.replace(/\.\/DriftCompanion.js/g, "https://www.pulseworld.net/DriftCompanion.js");
-    html = html.replace(/\.\/_EXPRESSIONS/g, "https://www.pulseworld.net/_EXPRESSIONS");
+//     const response = await fetch(url, { mode: "cors" });
+//     let html = await response.text();
+//     if (authorityRealm) html = authorityRealm;
+//     html = html.replace(/\.\/DriftCompanion.js/g, "https://www.pulseworld.net/DriftCompanion.js");
+//     html = html.replace(/\.\/_EXPRESSIONS/g, "https://www.pulseworld.net/_EXPRESSIONS");
     
-    const container = document.getElementById("pulseworld");
+//     const container = document.getElementById("pulseworld");
         
-    // latestSnapshot(host, container, html);
-    container.innerHTML = html;
+//     // latestSnapshot(host, container, html);
+//     container.innerHTML = html;
     
-    setTimeout(pullall(container), 1000);
-    hidePWLoader();
+//     setTimeout(pullall(container), 1000);
+//     hidePWLoader();
 
-  } catch (err) {
-    document.getElementById("pulseworld").innerHTML =
-      "<p style='color:red;'>PulseWorld could not load.</p>";
-    console.error("PulseWorldAuthority error:", err);
-  }
-})();
+//   } catch (err) {
+//     document.getElementById("pulseworld").innerHTML =
+//       "<p style='color:red;'>PulseWorld could not load.</p>";
+//     console.error("PulseWorldAuthority error:", err);
+//   }
+// })();
 
 
 // // ---------------------------------------------------------

@@ -162,7 +162,7 @@
     scrollbar-color: #00eaff #0a0a0a;
     scrollbar-width: thin;
   }
-  
+/*   
   #pw-loading {
     position: fixed;
     inset: 0;
@@ -212,16 +212,23 @@
     height: 440px;
     border-radius: 40px;
     animation: pwDigitalExplosion 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
+  } */
 </style>
 </head>
 
 <body>
 <!-- PulseWorld Boot Fade -->
-<div id="pw-loading">
-  <img src="https://www.pulseworld.net/_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" id="pw-loading-logo">
-</div>
-<div id="pulseworld">Loading PulseWorld…</div>
+<!-- <div id="pw-loading">
+  <img src="PulseWorldSplash512.png" id="pw-loading-logo">
+</div> -->
+<iframe
+  id="PulseFrame"
+  src="https://www.pulseworld.net?pw=offline"
+  style="width: 100%; height: 100%; border: 2px solid red;"
+  allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
+  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
+></iframe>
+<!-- <div id="pulseworld">Loading PulseWorld…</div> -->
 <script src="PulseWorldAuthority.js"></script>
 
 </body>
