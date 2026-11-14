@@ -95,9 +95,9 @@ try {
 }
 
 // Safe fallbacks in case globals are undefined in certain contexts
-const logger = typeof PB_LOG4 !== "undefined" ? PB_LOG4 : console;
-const channel = typeof PulseBrowserChannel3 !== "undefined" ? PulseBrowserChannel3 : null;
-const getTimestamp = () => (typeof nowCT !== "undefined" ? nowCT : Date.now());
+const logger = typeof PB_LOG2 !== "undefined" ? PB_LOG2 : console;
+const channel = typeof PulseBrowserChannel4 !== "undefined" ? PulseBrowserChannel4 : null;
+const getTimestamp = () => (typeof nowSW !== "undefined" ? nowSW : Date.now());
 
 /**
  * Broadcasts an Overmind command payload to other open tabs.
