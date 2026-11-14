@@ -13,13 +13,14 @@
   for = "/*"
   [headers.values]
     Cross-Origin-Opener-Policy   = "same-origin"
-    Cross-Origin-Embedder-Policy = "require-corp"
+    Cross-Origin-Embedder-Policy = "credentialless"
     Cross-Origin-Resource-Policy = "cross-origin"
     Timing-Allow-Origin          = "*"
     Access-Control-Allow-Origin  = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD"
     Access-Control-Allow-Headers = "Accept, Accept-Language, Accept-Encoding, Authorization, Cache-Control, Content-Type, Content-Length, DNT, If-Modified-Since, Keep-Alive, Origin, Pragma, Range, Referer, User-Agent, X-Requested-With, X-HTTP-Method-Override, x-pulse-mode"
     Access-Control-Max-Age       = "86400"
+
 
 
 # ============================================================================
