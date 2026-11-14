@@ -1,15 +1,16 @@
 
+// import './MellowEarner.js';
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe"
-});
+// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+//   integrationId: "intgr-CxPYRSJjKe"
+// });
 
-(async () => {
-  try {
+// (async () => {
+//   try {
     
-    await PulseMellowEarner.initBackground();
-  } catch {}
-})();
+//     await PulseMellowEarner.initBackground();
+//   } catch {}
+// })();
 
 let userInteracted = false;
 let engineType = "text";
@@ -1615,8 +1616,6 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
-  await PulseMellowEarner.optIn();
-  await PulseMellowEarner.start();
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
