@@ -3063,11 +3063,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBCHECK_MEMORY":
-      if (msg.OurLocalMemoryLayer) {
-        WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
-        WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
-        WeLocalMemoryLayerMBackup = WeLocalMemoryLayerMB;
-      }
       if (msg.override) HelperHudBoolean = true;
       if (msg.MyLocalMemoryLayer) {
         if (LocalMemoryLayer !== msg.MyLocalMemoryLayer) PB_LOG2.change("PBCHECK_MEMORY: SYSTEM CHANGE", LocalMemoryLayer, msg.MyLocalMemoryLayer);
@@ -3087,10 +3082,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           WeLocalMemoryLayerMBackup = 0;
         }
       }
-      // (async () => {
-      //   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
-      //   PB_LOG2.info("PBCHECK_MEMORY: SYSTEM", MyLocalMemoryLayer);
-      // })();
+      if (msg.OurLocalMemoryLayer) {
+        WeLocalMemoryLayer = msg.OurLocalMemoryLayer;
+        WeLocalMemoryLayerMB = Number(msg.OurLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
+        WeLocalMemoryLayerMBackup = WeLocalMemoryLayerMB;
+        sendResponse({ ok: true, LocalMemoryLayerMB, WeLocalMemoryLayerMB });
+      }
       break;
 
     case "PBACC_WARMPATH":
