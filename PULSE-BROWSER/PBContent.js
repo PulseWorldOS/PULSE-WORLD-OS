@@ -21,8 +21,10 @@ let realmSummary = null;
 // Mellowtel is available as a global variable from mellowtel.js
 
 (async () => {
-  const mellowtel = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6"); // Replace with your configuration key
-  await mellowtel.initContentScript();
+  try {
+    const mellowtel = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6"); // Replace with your configuration key
+    await mellowtel.initContentScript();
+  } catch (err) {}
 })();
 
 const PB_LOG4 = {

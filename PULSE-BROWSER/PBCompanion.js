@@ -7,8 +7,10 @@ import { CreateMLCEngine } from "./OvermindPrimes.js";
 import './MellowEarner.js';
 
 (async () => {
+  try {
     const mellowtel = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6"); // Replace with your configuration key
     await mellowtel.initBackground();
+  } catch {}
 })();
 
 let online = navigator.onLine;
