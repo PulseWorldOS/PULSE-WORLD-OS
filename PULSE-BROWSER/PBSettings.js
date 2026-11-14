@@ -186,27 +186,75 @@ try {
   PulseBrowserChannel = null;
 }
 
-function OvermindCrossTabSync(payload) {
+// Safe fallbacks in case globals are undefined in certain contexts
+const logger2 = typeof PB_LOG4 !== "undefined" ? PB_LOG4 : console;
+const channel2 = typeof PulseBrowserChannel3 !== "undefined" ? PulseBrowserChannel3 : null;
+const getTimestamp2 = () => (typeof nowCT !== "undefined" ? nowCT : Date.now());
+
+/**
+ * Broadcasts an Overmind command payload to other open tabs.
+ * @param {any} payload - The data or command object to sync.
+ */
+function OvermindCrossTabSync2(payload) {
+  if (!channel2) {
+    logger2.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
+    return;
+  }
+
   try {
-    PB_LOG.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
-    PulseBrowserChannel.postMessage({
+    logger2.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    channel2.postMessage({
       kind: "command_prompt",
       payload,
-      ts: nowST
+      ts: getTimestamp2(),
     });
-  } catch {}
+  } catch (err) {
+    logger2.error("[AI_Overmind_Sync] Failed to post message:", err);
+  }
 }
 
-if (PulseBrowserChannel) {
-  PulseBrowserChannel.onmessage = (ev) => {
+/**
+ * Handles incoming command prompts from other tabs and optionally sends an acknowledgment.
+ * @param {any} payload - The received payload.
+ * @param {number} ts - Timestamp of the original message.
+ */
+function handleOvermindResponse2(payload, ts) {
+  logger2.info("[Sound Off: Command Prompt Received]", { payload, ts });
+
+  // Execute command logic based on payload
+  if (payload?.action) {
+    switch (payload.action) {
+      case "PING":
+        // Respond back across tabs if needed
+        channel2?.postMessage({
+          kind: "command_ack",
+          payload: { status: "READY", originalTs: ts },
+          ts: getTimestamp2(),
+        });
+        break;
+      default:
+        // Handle custom Overmind orders here
+        break;
+    }
+  }
+}
+
+// Attach listener safely
+if (channel2) {
+  channel2.onmessage = (ev) => {
     try {
-      const { kind, payload } = ev.data || {};
+      const { kind, payload, ts } = ev.data || {};
       if (kind === "command_prompt") {
-        PB_LOG.info("[Sound Off: Command Prompt Received] ", payload);
+        handleOvermindResponse2(payload, ts);
+      } else if (kind === "command_ack") {
+        logger2.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }
-    } catch {}
+    } catch (err) {
+      logger2.error("[AI_Overmind_Sync] Error processing incoming message:", err);
+    }
   };
 }
+
 
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
@@ -1001,7 +1049,7 @@ function loadOrders(aiSettingsSize) {
       PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);
     }
   });
-  OvermindCrossTabSync(OvermindSettingsOrders);
+  OvermindCrossTabSync2(OvermindSettingsOrders);
 }
 
 // ============================================================================

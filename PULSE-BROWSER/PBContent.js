@@ -85,28 +85,75 @@ try {
   PulseBrowserChannel3 = null;
 }
 
+// Safe fallbacks in case globals are undefined in certain contexts
+const logger = typeof PB_LOG4 !== "undefined" ? PB_LOG4 : console;
+const channel = typeof PulseBrowserChannel3 !== "undefined" ? PulseBrowserChannel3 : null;
+const getTimestamp = () => (typeof nowCT !== "undefined" ? nowCT : Date.now());
+
+/**
+ * Broadcasts an Overmind command payload to other open tabs.
+ * @param {any} payload - The data or command object to sync.
+ */
 function OvermindCrossTabSync(payload) {
+  if (!channel) {
+    logger.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
+    return;
+  }
+
   try {
-    PB_LOG4.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
-    PulseBrowserChannel3.postMessage({
+    logger.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    channel.postMessage({
       kind: "command_prompt",
       payload,
-      ts: nowCT
+      ts: getTimestamp(),
     });
-  } catch {}
-
+  } catch (err) {
+    logger.error("[AI_Overmind_Sync] Failed to post message:", err);
+  }
 }
 
-if (PulseBrowserChannel3) {
-  PulseBrowserChannel3.onmessage = (ev) => {
+/**
+ * Handles incoming command prompts from other tabs and optionally sends an acknowledgment.
+ * @param {any} payload - The received payload.
+ * @param {number} ts - Timestamp of the original message.
+ */
+function handleOvermindResponse(payload, ts) {
+  logger.info("[Sound Off: Command Prompt Received]", { payload, ts });
+
+  // Execute command logic based on payload
+  if (payload?.action) {
+    switch (payload.action) {
+      case "PING":
+        // Respond back across tabs if needed
+        channel?.postMessage({
+          kind: "command_ack",
+          payload: { status: "READY", originalTs: ts },
+          ts: getTimestamp(),
+        });
+        break;
+      default:
+        // Handle custom Overmind orders here
+        break;
+    }
+  }
+}
+
+// Attach listener safely
+if (channel) {
+  channel.onmessage = (ev) => {
     try {
-      const { kind, payload } = ev.data || {};
+      const { kind, payload, ts } = ev.data || {};
       if (kind === "command_prompt") {
-        PB_LOG4.info("[Sound Off: Command Prompt Received] ", payload);
+        handleOvermindResponse(payload, ts);
+      } else if (kind === "command_ack") {
+        logger.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }
-    } catch {}
+    } catch (err) {
+      logger.error("[AI_Overmind_Sync] Error processing incoming message:", err);
+    }
   };
 }
+
 
 // Utility: load settings
 async function loadOrders() {
