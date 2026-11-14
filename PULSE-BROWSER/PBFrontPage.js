@@ -5904,12 +5904,10 @@ function CheckBackTab() {
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
             (async () => {
-              (async () => {
-                setTimeout(async () => {
-                  await runEngineTest();
-                  PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
-                }, 3000);
-              })();
+              setTimeout(async () => {
+                await runEngineTest();
+                PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+              }, 3000);
             })();
           } catch (err) {
             PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);

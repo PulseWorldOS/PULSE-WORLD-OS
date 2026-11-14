@@ -730,7 +730,7 @@ function loadLastSavedVideo(callback) {
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   gpuEnabled = "GPU Driver Error";
-
+  OurLocalMemoryLayer = getLocalMemoryLayer();
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try {
@@ -769,13 +769,13 @@ async function gpuWarmExtra() {
     vid.src = "PulseWorldOS-Older.mp4";
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
 }
 
 setInterval(async () => {
+  OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
@@ -794,7 +794,6 @@ setInterval(async () => {
       }
     }
   });
-  OurLocalMemoryLayer = getLocalMemoryLayer();
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });

@@ -1960,15 +1960,15 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     await safeStorageSet({ bootVideoRunOnce });
   } else if (info.menuItemId === 'runWASMTest') {
     runWasmTest = true;
-    try {
-      (async () => {
+    (async () => {
+      try {
         await runEngineTest();
         PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
-      })();
-    } catch (err) {
-      CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
-      PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
-    }
+      } catch (err) {
+        CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
+        PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+      }
+    })();
   }
 });
 
@@ -2827,16 +2827,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage.includes(timeProof)) {
           } else if (CompanionMessage === "Starting up PulseEarner GPU Engine...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
-            try {
-              (async () => {
-                // Fire the test execution
+            (async () => {
+              try {
                 await runEngineTest();
                 PB_LOG2.event("System Companion: Pulse Earner Wasm Engine Initiating for Backup..", pulseWasmCompute);
-              })();
-            } catch (err) {
-              CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
-              PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
-            }
+              } catch (err) {
+                CompanionMessage = `[<font color="red">FAILURE</font>] Pulse WASM TEST Failed.. ` + timeProof;
+                PB_LOG2.event("System Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+              }
+            })();
           } else {
             CompanionMessage = "<-- Infusing Earning Adrenaline -->";
           }
@@ -2859,14 +2858,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
         }
       }
-      // Load cache from storage at startup
-      chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
-        if (res.ServiceWorkerOnline) {
+       chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
+        if (res.ServiceWorkerOnline !== undefined) {
           ServiceWorkerOnline = res.ServiceWorkerOnline;
         }
+        // Send the response INSIDE the callback!
+        sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, realmSummary });
       });
-      sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, realmSummary });
-      return true;
+
+      return true; // Now this is valid because sendResponse is called asynchronously above!
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {
@@ -3751,6 +3751,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     default:
       console.log("[PULSEBROWSER OS KERNEL] Unknown Event:", msg);
+      break;
   }
 });
 
