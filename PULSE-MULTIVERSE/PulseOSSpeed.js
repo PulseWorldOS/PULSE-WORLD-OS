@@ -206,7 +206,8 @@ if (typeof navigator !== "undefined" && navigator.serviceWorker && PulseRealm.Se
 // ============================================================================
 // ⭐ ATOMIC SPEED COUNTER
 // ============================================================================
-PulseRealm.__atomic.speedCounter = new Int32Array(new SharedArrayBuffer(4));
+PulseRealm.__atomic.speedminiBuffer = new SharedArrayBuffer(4);
+PulseRealm.__atomic.speedCounter = new Int32Array(PulseRealm.__atomic.speedminiBuffer);
 
 PulseRealm.incrementSpeed = () => {
   Atomics.add(PulseRealm.__atomic.speedCounter, 0, 1);

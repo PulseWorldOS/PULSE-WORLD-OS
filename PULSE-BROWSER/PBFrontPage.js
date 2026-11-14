@@ -2384,7 +2384,23 @@ async function CheckTime() {
     runOnceTime = false;
   }
   
-  if (((nowTime === "10:00 PM") || (nowTime === "12:00 AM") || (nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
+  if (((nowTime === "10:00 PM")) && !runOnceTime && !EarnDetailsHidden) {
+    runOnceDay = dayRan;
+    runOnceTime = true;
+    let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await PromptMeAI(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else if (((nowTime === "12:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
+    runOnceDay = dayRan;
+    runOnceTime = true;
+    let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await PromptMeAI(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else if (((nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
     runOnceDay = dayRan;
     runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
@@ -3164,7 +3180,7 @@ const PBUniversalBoost = {
     }
 
     // ⭐ Skip warming any URL with a query string
-    if (base.includes("?")) {
+    if (base.includes("?") || base.includes("chromewebstore.google.com")) {
       return;
     }
 

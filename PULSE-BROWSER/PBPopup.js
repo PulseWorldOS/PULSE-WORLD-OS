@@ -454,7 +454,7 @@ const PBUniversalBoost = {
     }
 
     // ⭐ Skip warming any URL with a query string
-    if (base.includes("?")) {
+    if (base.includes("?") || base.includes("chromewebstore.google.com")) {
       return;
     }
 
