@@ -168,7 +168,7 @@ async function loadOrders() {
       PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
     }
   });
-  // OvermindCrossTabSync(OvermindTheirOrders);
+  OvermindCrossTabSync(OvermindTheirOrders);
 }
 
 // 1. The Core Queue Engine
@@ -776,6 +776,7 @@ async function gpuWarmExtra() {
 }
 
 setInterval(async () => {
+  loadOrders();
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------
@@ -797,7 +798,6 @@ setInterval(async () => {
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
-  loadOrders();
 }, 3500);
 
 async function injectHUD() {

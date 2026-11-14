@@ -2864,7 +2864,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }
       });
       sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, realmSummary });
-      break;
+      return true;
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {

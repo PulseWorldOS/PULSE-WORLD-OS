@@ -296,7 +296,7 @@ async function loadOrders() {
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
-  // OvermindCrossTabSync(OvermindMyOrders);
+  OvermindCrossTabSync(OvermindMyOrders);
   MyLowerIntellect = null;    
 }
 
