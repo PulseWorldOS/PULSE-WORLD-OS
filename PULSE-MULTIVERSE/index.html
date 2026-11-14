@@ -3880,58 +3880,156 @@ function preloadBootVideo(path, audio) {
 }
 let pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
 
-async function ensureLocationAccess() {
+/**
+ * Acquires high-precision user location by actively warming up the GPS
+ * and filtering out inaccurate IP/cell-tower fallbacks.
+ */
+async function ensureLocationAccess(options = {}) {
+  const {
+    desiredAccuracy = 50,      // Target accuracy in meters (e.g., 50m = real GPS)
+    maxWaitTime = 15000,       // Max ms to wait for GPS lock
+    fallbackToCache = true     // Use recent cached location if live GPS fails
+  } = options;
+
+  // 1. Check Browser & HTTPS Support
   if (!("geolocation" in navigator)) {
-    console.warn("[PulseWorld] Geolocation not supported in this browser.");
-    return null;
+    return { ok: false, reason: "UNSUPPORTED", message: "Geolocation not supported." };
   }
 
-  // ⭐ Store proximity coordinates locally
+  if (!window.isSecureContext) {
+    console.warn("[PulseWorld] Geolocation requires HTTPS or localhost.");
+    return { ok: false, reason: "INSECURE_CONTEXT", message: "HTTPS is required for GPS." };
+  }
+
+  // 2. Safely retrieve previous coordinates
+  let pastProximity = null;
   try {
-    pastProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
+    const raw = localStorage.getItem("PulseProximityCoords");
+    if (raw) pastProximity = JSON.parse(raw);
   } catch (e) {
-    console.warn("[PulseWorld] Failed to store past proximity coords:", e);
+    console.warn("[PulseWorld] Failed to read past proximity coords:", e);
   }
-  
 
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const coords = {
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-          acc: pos.coords.accuracy,
-          ts: pos.timestamp
+  // 3. Check Permission State upfront (avoids silent hangs)
+  if (navigator.permissions && navigator.permissions.query) {
+    try {
+      const status = await navigator.permissions.query({ name: "geolocation" });
+      if (status.state === "denied") {
+        return {
+          ok: false,
+          reason: "PERMISSION_DENIED",
+          message: "Location access is blocked in browser settings.",
+          pastCoords: pastProximity
         };
+      }
+    } catch (e) {
+      // Safari/older browsers may not support permissions.query for geolocation; continue normally
+    }
+  }
 
-        // ⭐ Store proximity coordinates locally
-        try {
-          localStorage.setItem("PulseProximityCoords", JSON.stringify(coords));
-        } catch (e) {
-          console.warn("[PulseWorld] Failed to store proximity coords:", e);
+  // 4. Actively refine GPS via watchPosition
+  return new Promise((resolve) => {
+    let bestPosition = null;
+    let watchId = null;
+    let isResolved = false;
+
+    const cleanup = () => {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      clearTimeout(timer);
+    };
+
+    const finalize = (result) => {
+      if (isResolved) return;
+      isResolved = true;
+      cleanup();
+      resolve(result);
+    };
+
+    const saveCoords = (pos) => {
+      const coords = {
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        acc: Math.round(pos.coords.accuracy),
+        alt: pos.coords.altitude,
+        speed: pos.coords.speed,
+        ts: pos.timestamp
+      };
+      try {
+        localStorage.setItem("PulseProximityCoords", JSON.stringify(coords));
+      } catch (e) {
+        console.warn("[PulseWorld] Storage error:", e);
+      }
+      return coords;
+    };
+
+    // Stop waiting after maxWaitTime and use the best reading we got
+    const timer = setTimeout(() => {
+      if (bestPosition) {
+        const coords = saveCoords(bestPosition);
+        finalize({
+          ok: true,
+          source: "gps-partial",
+          coords,
+          pastCoords: pastProximity,
+          warning: `Accuracy (${coords.acc}m) did not reach target (${desiredAccuracy}m).`
+        });
+      } else if (fallbackToCache && pastProximity && Date.now() - pastProximity.ts < 3600000) {
+        // Fallback to cache if less than 1 hour old
+        finalize({
+          ok: true,
+          source: "cache",
+          coords: pastProximity
+        });
+      } else {
+        finalize({
+          ok: false,
+          reason: "TIMEOUT",
+          message: "GPS signal timed out. Try moving near a window or outdoors."
+        });
+      }
+    }, maxWaitTime);
+
+    // Start watching position to let GPS lock on
+    watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        // Keep track of the most accurate reading seen so far
+        if (!bestPosition || pos.coords.accuracy < bestPosition.coords.accuracy) {
+          bestPosition = pos;
         }
 
-        resolve({
-          ok: true,
-          coords,
-          timestamp: pos.timestamp
-        });
+        // Once accuracy meets our threshold, lock it in immediately!
+        if (pos.coords.accuracy <= desiredAccuracy) {
+          const coords = saveCoords(pos);
+          finalize({
+            ok: true,
+            source: "gps-exact",
+            coords,
+            pastCoords: pastProximity
+          });
+        }
       },
       (err) => {
-        console.warn("[PulseWorld] Geolocation denied or unavailable:", err);
-        resolve({
+        const errorMap = {
+          1: "PERMISSION_DENIED",
+          2: "POSITION_UNAVAILABLE",
+          3: "TIMEOUT"
+        };
+        finalize({
           ok: false,
-          error: err
+          reason: errorMap[err.code] || "UNKNOWN_ERROR",
+          message: err.message,
+          pastCoords: pastProximity
         });
       },
       {
         enableHighAccuracy: true,
-        timeout: 8000,
-        maximumAge: 0
+        maximumAge: 0,
+        timeout: maxWaitTime
       }
     );
   });
 }
+
 
 
 async function ensureNotificationAccess() {
