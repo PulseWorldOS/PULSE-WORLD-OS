@@ -8976,7 +8976,11 @@ async function runLocalAI() {
   try {
     if (!aiSession) {
       // 1. Initialize the session using the modern nested outputs architecture
-      await initializeExoskeleton();
+      // await initializeExoskeleton();
+      aiSession = await LanguageModel.create({
+        systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+        expectedOutputs: [{ type: "text", languages: ["en"] }]
+      });
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
@@ -9012,7 +9016,7 @@ ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
-    const response = await PromptMeAI(wrappedPrompt);
+    const response = await aiSession.prompt(wrappedPrompt);
     console.log("Pulse Pal:", response);
     // if (aiLogBox) aiLogBox.appendChild(response);
     pulsepalSpeak("Pulse Pal: " + response);

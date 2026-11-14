@@ -1560,11 +1560,11 @@ async function pbPrefetch(urls = []) {
     if (
       !url ||
       (url.startsWith("chrome://") && !url.includes("newtab")) ||
-      (url.startsWith("chrome-extension://") || url.includes("chromewebstore.google.com"))
+      (url.startsWith("chrome-extension://")) || (url.includes("chromewebstore.google.com"))
     ) {
       continue;
     }
-    
+
     // ⭐ Skip permanently failed URLs
     if (fails[url] >= 2) {
       continue;
@@ -1613,7 +1613,7 @@ async function pbPreload(origin) {
     if (
       !url ||
       (url.startsWith("chrome://") && !url.includes("newtab")) ||
-      (url.startsWith("chrome-extension://") || url.includes("chromewebstore.google.com"))
+      (url.startsWith("chrome-extension://")) || (url.includes("chromewebstore.google.com"))
     ) {
       continue;
     }
