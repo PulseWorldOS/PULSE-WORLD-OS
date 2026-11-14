@@ -94,6 +94,52 @@ try {
   PulseBrowserChannel4 = null;
 }
 
+
+const PB_LOG2 = {
+  info(label, data) {
+    console.log(
+      `%c[PBCompanion][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBCompanion][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBCompanion][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBCompanion][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBCompanion][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
+
+
 // Safe fallbacks in case globals are undefined in certain contexts
 const logger = typeof PB_LOG2 !== "undefined" ? PB_LOG2 : console;
 const channel = typeof PulseBrowserChannel4 !== "undefined" ? PulseBrowserChannel4 : null;
@@ -208,50 +254,6 @@ const orchestratorQueue = new StorageQueue();
 function safeStorageSet(dataObject) {
   orchestratorQueue.enqueue(dataObject);
 }
-
-const PB_LOG2 = {
-  info(label, data) {
-    console.log(
-      `%c[PBCompanion][INFO][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#55BBFF; font-weight:bold;",
-      data || ""
-    );
-  },
-
-  change(label, before, after) {
-    console.groupCollapsed(
-      `%c[PBCompanion][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00FFAA; font-weight:bold;"
-    );
-    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
-    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
-    console.groupEnd();
-  },
-
-  save(label, data) {
-    console.log(
-      `%c[PBCompanion][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00DDFF; font-weight:bold;",
-      data
-    );
-  },
-
-  load(label, data) {
-    console.log(
-      `%c[PBCompanion][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FFD700; font-weight:bold;",
-      data
-    );
-  },
-
-  event(label, data) {
-    console.log(
-      `%c[PBCompanion][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FF55AA; font-weight:bold;",
-      data
-    );
-  }
-};
 
 chrome.storage.local.get(["globalStart"], (res) => {
   if (!res.globalStart) {
