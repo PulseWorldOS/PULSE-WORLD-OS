@@ -755,14 +755,14 @@ class PulseWasmEngine {
     if (typeof chrome !== 'undefined' && chrome.power) {
       chrome.power.releaseKeepAwake();
     }
-    console.log("[CONSOLE WASM ENGINE] Shut down and released power lock.");
+    console.log("[Console WASM ENGINE] Shut down and released power lock.");
   }
 }
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
 if (typeof PB_LOG3 !== 'undefined') {
-  PB_LOG3.event("CONSOLE Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+  PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 }
 
 async function pulseGPUInspector(adapter, device) {
@@ -9524,7 +9524,6 @@ if (navigator.gpu) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   PBIntervalSlow = setInterval(async () => {
-    await start24HourSoakTest();
     timeClock.textContent = pulseClock();
     timeClock.style.color = "#0FF";
     speedPulse.textContent = PulseRealm.PulseSpeed;
@@ -9657,6 +9656,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setTimeout(async () => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     await pulseSupabaseSync();
+    await start24HourSoakTest();
   }, 2000);
 });
 

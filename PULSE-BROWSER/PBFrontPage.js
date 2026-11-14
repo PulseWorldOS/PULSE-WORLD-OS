@@ -271,7 +271,7 @@ const PB_LOG3 = {
 // // Instantiate the isolated engine
 // const pulseWasmCompute = new PulseWasmEngine();
 // if (typeof PB_LOG3 !== 'undefined') {
-//   PB_LOG3.event("CONSOLE Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+//   PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 // }
 
 
@@ -289,7 +289,7 @@ function loadOrders() {
       MyHigherIntellect = null;
       MyHigherIntellect = response.HigherIntellect;
       PB_LOG3.info("HELP: " + MyHigherIntellect);
-      appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
+      if (PulseCogMemoryAIBuffer.length === 0) appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
     }
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
@@ -514,14 +514,14 @@ class PulseWasmEngine {
     if (typeof chrome !== 'undefined' && chrome.power) {
       chrome.power.releaseKeepAwake();
     }
-    console.log("[CONSOLE WASM ENGINE] Shut down and released power lock.");
+    console.log("[Console WASM ENGINE] Shut down and released power lock.");
   }
 }
 
 // Instantiate the isolated engine
 const pulseWasmCompute = new PulseWasmEngine();
 if (typeof PB_LOG3 !== 'undefined') {
-  PB_LOG3.event("CONSOLE Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+  PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 }
 let gpuContext = null;
 
@@ -2518,8 +2518,10 @@ setInterval(async () => {
     if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
         (async () => {
-          await runEngineTest();
-          PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          setTimeout(async () => {
+            await runEngineTest();
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          }, 2500);
         })();
       } catch (err) {
         PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
@@ -3893,8 +3895,10 @@ async function updateModuleIcons(settings, browser) {
     if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
         (async () => {
-          await runEngineTest();
-          PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          setTimeout(async () => {
+            await runEngineTest();
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          }, 1500);
         })();
       } catch (err) {
         PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
@@ -5616,8 +5620,10 @@ function CheckBackTab() {
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
             (async () => {
-              await runEngineTest();
-              PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+              setTimeout(async () => {
+                await runEngineTest();
+                PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+              }, 2000);
             })();
           } catch (err) {
             PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
@@ -5850,8 +5856,12 @@ function CheckBackTab() {
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
             (async () => {
-              await runEngineTest();
-              PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+              (async () => {
+                setTimeout(async () => {
+                  await runEngineTest();
+                  PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+                }, 3000);
+              })();
             })();
           } catch (err) {
             PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
