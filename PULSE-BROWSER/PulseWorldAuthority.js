@@ -308,7 +308,22 @@ async function pullall(container) {
 }
 
 
-if (isPulseWorld(location.href)) {
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
+
+const PulseFrame = document.getElementById("PulseFrame");
+
+if (isPulseWorld(PulseFrame.src)) {
   document.addEventListener("click", e => {
     const vid = e.target.closest("video");
     if (!vid) return;
