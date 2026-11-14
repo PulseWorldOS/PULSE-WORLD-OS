@@ -2314,12 +2314,26 @@ function loadLastSavedVideo(callback) {
 
 function getCharacterInterval() {
   const base = 5150;
-  return base;
+  // ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.22;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
 }
 
 function getMainInterval() {
   const base = 8075;
-  return base;
+  // ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.13;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
 }
 
 function injectPulseScreenFromMemory(play) {
@@ -4145,7 +4159,7 @@ async function setTheStage() {
       console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
     }
   } catch (err) {}
-  
+
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",

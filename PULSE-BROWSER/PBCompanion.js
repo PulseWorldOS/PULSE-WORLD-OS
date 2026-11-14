@@ -1783,15 +1783,15 @@ async function pbModuleWarmBoot() {
 }
 
 function getWarmInterval() {
-    const base = 45000;
+  const base = 45000;
 // ⭐ Add human-like jitter (±20%)
-    const jitterRange = base * 0.17;
-    const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+  const jitterRange = base * 0.17;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
 
-    // ⭐ Final interval
-    const interval = Math.max(5000, base + jitter); // never below 5s
+  // ⭐ Final interval
+  const interval = Math.max(5000, base + jitter); // never below 5s
 
-    return Math.floor(interval);
+  return Math.floor(interval);
 }
 
 function startWarmBootLoop() {
