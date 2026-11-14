@@ -410,8 +410,6 @@ function HelperHud() {
 // ---------------------------------------------------------------------------
 chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) => {
   if (chrome.runtime.lastError) return;
-  console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
-    "color:#00C8FF; font-family:monospace;", response);
   if (response.time && isValid(response.time)) nowCT = response.time;
   if (response.HelperHudBoolean) HelperHud();
   if (response.pulseTabs) pulseTabs = response.pulseTabs;
@@ -736,8 +734,6 @@ setInterval(async () => {
   // ---------------------------------------------------------------------------
   chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowCT  }, (response) => {
     if (chrome.runtime.lastError) return;
-    console.log("%c[PULSEWORLD CONTENT] Kernel handshake:",
-      "color:#00C8FF; font-family:monospace;", response);
     if (response.time && isValid(response.time)) nowCT = response.time;
     if (response.HelperHudBoolean) HelperHud();
     if (response.pulseTabs) pulseTabs = response.pulseTabs;
