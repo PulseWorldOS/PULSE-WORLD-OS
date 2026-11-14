@@ -7,7 +7,7 @@
 // ============================================================================
 const params = new URLSearchParams(location.search);
 const origin = params.get("from");
-let online = navigator.onLine;
+let online2 = navigator.onLine;
 let nowST = Date.now(); // numeric timestamp
 let lastnowST = Date.now(); // numeric timestamp
 let PulseSettingsAIPalMemoryBuffer = [];
@@ -1213,7 +1213,7 @@ if (location.href.includes("PBSettings.html")) {
           fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
             method: "POST",
             headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-            body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowser OS", online, inactive: false })
+            body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowser OS", online: online2, inactive: false })
           }).then((response) => {
             if (!response.ok) document.getElementById("tetherCode").value = "";
           }).catch(() => {
