@@ -9506,11 +9506,6 @@ if (navigator.gpu) {
     // // Supabase is a background backup only. One backend failure suspends sync
     // // for this page session instead of producing a failed request every 7s.
   }, 7000);
-  
-  SupabaseProtocol = setInterval(async () => {
-    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    await pulseSupabaseSync();
-  }, 30000);
 
   try {
     (async () => {
@@ -9520,6 +9515,11 @@ if (navigator.gpu) {
   } catch (err) {
     PB_LOG3.event("PulseWorld Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
   }
+
+  SupabaseProtocol = setInterval(async () => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+    await pulseSupabaseSync();
+  }, 30000);
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -9536,10 +9536,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     savePageToCookie();
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 7000);
-  setTimeout(async () => {
-    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    await pulseSupabaseSync();
-  }, 2000);
+
      // ============================================================
   // IMPORT 404 LOGS FROM localStorage → INTO OUR CONSOLE SYSTEM
   // ============================================================
@@ -9657,6 +9654,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     passport
   });
   
+  setTimeout(async () => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+    await pulseSupabaseSync();
+  }, 2000);
 });
 
 // document.addEventListener("visibilitychange", () => {
