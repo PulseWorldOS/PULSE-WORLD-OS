@@ -435,7 +435,6 @@ function pbDNSWarm(origin) {
     link.href = origin;
     document.head.appendChild(link);
 
-    console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
 
@@ -451,7 +450,6 @@ function pbTLSWarm(origin) {
     link.href = origin;
     document.head.appendChild(link);
 
-    console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
 

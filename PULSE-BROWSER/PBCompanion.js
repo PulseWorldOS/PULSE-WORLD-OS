@@ -201,10 +201,10 @@ chrome.storage.local.get(["globalStart"], (res) => {
   } else {
     if (isValid(res.globalStart)) {
       GLOBALSTART = res.globalStart;
-      PB_LOG2.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
-      PB_LOG2.info("PulseBrowser OS Session Start: " + new Date(nowSW).toLocaleString());
-      PB_LOG2.info("PulseBrowser OS Settings Start: " + new Date(lastnowSW).toLocaleString());
-      PB_LOG2.info("PulseBrowser OS Present Moment: " + new Date().toLocaleString());
+      // PB_LOG2.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+      // PB_LOG2.info("PulseBrowser OS Session Start: " + new Date(nowSW).toLocaleString());
+      // PB_LOG2.info("PulseBrowser OS Settings Start: " + new Date(lastnowSW).toLocaleString());
+      // PB_LOG2.info("PulseBrowser OS Present Moment: " + new Date().toLocaleString());
     } else {
       GLOBALSTART = Date.now();
     }
@@ -1453,7 +1453,6 @@ function pbDNSWarm(origin) {
     link.href = origin;
     document.head.appendChild(link);
 
-    console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
 
@@ -1469,7 +1468,6 @@ function pbTLSWarm(origin) {
     link.href = origin;
     document.head.appendChild(link);
 
-    console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
 

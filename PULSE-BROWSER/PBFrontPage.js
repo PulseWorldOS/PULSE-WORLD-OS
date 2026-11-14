@@ -1350,9 +1350,9 @@ chrome.storage.local.get(["globalStart"], (res) => {
       const ItsTime = new Date(GLOBALSTART).toLocaleString();
       CONSENSUS_ORIGIN = ItsTime;
       startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
-      PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
-      PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
-      PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
+      // PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+      // PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
+      // PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
     } else {
       GLOBALSTART = Date.now();
       const ItsTime = new Date(GLOBALSTART).toLocaleString();
@@ -1995,20 +1995,20 @@ async function pbRenderStorageStats2(history) {
   );
   const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
   swSize = syncBytes + swSize;
-  console.log("SW/Sync Size: ", swSize);  
+  // console.log("SW/Sync Size: ", swSize);  
   aiSize = aiSize + aiSettingsSize;
-  console.log("aiSettingsSize Size: ", aiSettingsSize);
+  // console.log("aiSettingsSize Size: ", aiSettingsSize);
   aiSize = aiSize + aiPopupSize;
-  console.log("aiPopupSize Size: ", aiPopupSize);
+  // console.log("aiPopupSize Size: ", aiPopupSize);
   aiSize = aiSize + higherAISize;
-  console.log("higherAISize Size: ", higherAISize);
-  console.log("AI Size: ", aiSize); 
+  // console.log("higherAISize Size: ", higherAISize);
+  // console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
   let higherAIDisplay = 4540330000;
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
-  console.log("AI Memory Size:", aiSize, "bytes");
-  console.log("PBCompanion.js Size:", swSize, "bytes");
+  // console.log("AI Memory Size:", aiSize, "bytes");
+  // console.log("PBCompanion.js Size:", swSize, "bytes");
   
   totalUsed = totalUsed - higherAIDisplay;
   // ⭐ Conversions
@@ -2111,9 +2111,9 @@ async function pbRenderStorageStats2(history) {
     }
   });
 
-  PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
-  PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
-  PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
+  // PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+  // PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
+  // PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
 
   if (!predictionText.includes("Running")) percentColor2 = "#FF8844";
   if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
@@ -3729,7 +3729,6 @@ function pbDNSWarm(origin) {
     link.href = origin;
     document.head.appendChild(link);
 
-    console.log("%c[PBAccelerator] DNS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
 
@@ -3745,7 +3744,6 @@ function pbTLSWarm(origin) {
     link.href = origin;
     document.head.appendChild(link);
 
-    console.log("%c[PBAccelerator] TLS Warm:", "color:#00C8FF;", origin);
   } catch (_) {}
 }
 
@@ -4131,7 +4129,7 @@ async function AdBlockerOff() {
   chrome.declarativeNetRequest.updateEnabledRulesets({
     disableRulesetIds: ["pulseworld_rules"]
   }).then(() => {
-    console.log("Ruleset disabled successfully.");
+    console.log("AdBlockerOff Ruleset disabled successfully.");
   });
 }
 
@@ -4139,7 +4137,7 @@ async function AdBlockerOn() {
   chrome.declarativeNetRequest.updateEnabledRulesets({
     enableRulesetIds: ["pulseworld_rules"]
   }).then(() => {
-    console.log("Ruleset enabled successfully.");
+    console.log("AdBlockerOn Ruleset enabled successfully.");
   });
 
 }
