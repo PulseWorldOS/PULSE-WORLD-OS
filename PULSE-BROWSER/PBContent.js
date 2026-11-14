@@ -168,7 +168,7 @@ async function loadOrders() {
       PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
     }
   });
-  OvermindCrossTabSync(OvermindTheirOrders);
+  // OvermindCrossTabSync(OvermindTheirOrders);
 }
 
 // 1. The Core Queue Engine

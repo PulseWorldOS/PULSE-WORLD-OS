@@ -1049,7 +1049,7 @@ function loadOrders(aiSettingsSize) {
       PB_LOG.change("PB_GATHER_ORDERS", OvermindSettingsOrders, response.OvermindOrders);
     }
   });
-  OvermindCrossTabSync2(OvermindSettingsOrders);
+  // OvermindCrossTabSync2(OvermindSettingsOrders);
 }
 
 // ============================================================================
