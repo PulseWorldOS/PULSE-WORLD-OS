@@ -74,8 +74,8 @@ const PB_LOG4 = {
 };
 
 // Utility: load settings
-function loadOrders(size) {
-  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", size }, (response) => {
+async function loadOrders() {
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
       PB_LOG4.info("PB_GATHER_ORDERS unavailable or error", response);
@@ -750,7 +750,7 @@ setInterval(async () => {
   PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
-  loadOrders(null);
+  await loadOrders();
 }, 3500);
 
 async function injectHUD() {

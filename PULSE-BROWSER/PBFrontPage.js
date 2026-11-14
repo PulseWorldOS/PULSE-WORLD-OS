@@ -276,7 +276,7 @@ const PB_LOG3 = {
 
 
 // Utility: load settings
-function loadOrders() {
+async function loadOrders() {
   consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -980,7 +980,7 @@ async function runLocalAI() {
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
-    loadOrders();
+    await loadOrders();
   } catch (err) {}
   
   if (typeof LanguageModel === 'undefined') {
@@ -1005,7 +1005,7 @@ async function runLocalAI() {
     swSize = await getSWSize();
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
-    loadOrders();
+    await loadOrders();
   } catch (err) {}
 
   try {
@@ -1225,7 +1225,7 @@ CompanionConsoleSend.onclick = async () => {
     }, 300);
     aiSize = await getAISize();
     higherAISize = await getHigherAISize();
-    loadOrders();
+    await loadOrders();
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
@@ -1245,7 +1245,7 @@ CompanionConsoleSend.onclick = async () => {
     });
   } else {
     MyLowerIntellect = text;
-    loadOrders();
+    await loadOrders();
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
       if (!response || !response.ok) {
@@ -1553,7 +1553,7 @@ function getReadableName(url) {
           CompanionDetailsMessage.style.display = "block";
         }
         PulsesafeStorageSet({ HigherAuthorityShown });
-        loadOrders();
+        await loadOrders();
       };
     }
   }
@@ -2552,7 +2552,7 @@ setInterval(async () => {
     if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
-  loadOrders();
+  await loadOrders();
   await pbRenderCacheList2();
 }, intervalA);
 
@@ -3095,7 +3095,7 @@ setInterval(async () => {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   await CheckTime();
-  loadOrders();
+  await loadOrders();
   await pbRenderCacheList2();
 }, intervalB);
 

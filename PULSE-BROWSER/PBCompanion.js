@@ -1827,8 +1827,9 @@ function TestingSequence(OvermindOrders) {
 
 setInterval(async () => {
   chrome.runtime.getPlatformInfo();
+  console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+  await pulseSupabaseSync();
   TestingSequence(OvermindOrders);
-  pulseSupabaseSync();
 }, 15000);
 
 setTimeout(async () => {
@@ -2539,7 +2540,7 @@ function currency(amount, displayCurrency = "$") {
 
 let __PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
 
-function pulseSupabaseSync() {
+async function pulseSupabaseSync() {
   if (__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
   try {
