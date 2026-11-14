@@ -1560,10 +1560,11 @@ async function pbPrefetch(urls = []) {
     if (
       !url ||
       (url.startsWith("chrome://") && !url.includes("newtab")) ||
-      url.startsWith("chrome-extension://")
+      (url.startsWith("chrome-extension://") || url.includes("chromewebstore.google.com"))
     ) {
       continue;
     }
+    
     // ⭐ Skip permanently failed URLs
     if (fails[url] >= 2) {
       continue;
@@ -1612,7 +1613,7 @@ async function pbPreload(origin) {
     if (
       !url ||
       (url.startsWith("chrome://") && !url.includes("newtab")) ||
-      url.startsWith("chrome-extension://")
+      (url.startsWith("chrome-extension://") || url.includes("chromewebstore.google.com"))
     ) {
       continue;
     }
@@ -3065,7 +3066,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCHECK_MEMORY":
       if (msg.override) HelperHudBoolean = true;
       if (msg.MyLocalMemoryLayer) {
-        if (LocalMemoryLayer !== msg.MyLocalMemoryLayer) PB_LOG2.change("PBCHECK_MEMORY: SYSTEM CHANGE", LocalMemoryLayer, msg.MyLocalMemoryLayer);
+        // if (LocalMemoryLayer !== msg.MyLocalMemoryLayer) PB_LOG2.change("PBCHECK_MEMORY: SYSTEM CHANGE", LocalMemoryLayer, msg.MyLocalMemoryLayer);
         PB_LOG2.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());

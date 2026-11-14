@@ -25,7 +25,7 @@
       },
       "condition": {
         "initiatorDomains": ["mcbbhkdjpaakjabngfjmaeihnoilognk", "kkidimiknkgfkjplagaohacidaagcbjg", "pulseworld.net", "pulseworld.me", "pulseworld.money", "pulseworld.biz"],
-        "excludedRequestDomains": ["://google.com", "://cloudflare.com"],
+        
         "resourceTypes": [
           "main_frame",
           "sub_frame",
