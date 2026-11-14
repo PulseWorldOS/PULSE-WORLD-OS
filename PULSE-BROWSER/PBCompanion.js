@@ -4,6 +4,7 @@
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
 import { CreateMLCEngine } from "./OvermindPrimes.js";
+let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
 let PulseRecoverySettings = null;
@@ -2532,9 +2533,10 @@ function pulseSupabaseSync() {
   
   try {
     
-    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+    fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+      body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", lastPage: "PulseBrowser OS", online, inactive: false })
     }).then((response) => {
       if (!response.ok) __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }).catch(() => {

@@ -1,6 +1,9 @@
 // netlify/functions/pulse-sql.js
 import { createClient } from "@supabase/supabase-js";
 
+let lastIdentityID = null;
+let storedIdentity = null;
+
 // ⭐ Lazy Supabase client — only created when handler runs, not at module load
 // This prevents crashes during cold starts if env vars are momentarily unavailable
 let _supabase = null;
@@ -191,7 +194,7 @@ export async function handler(event) {
     if (body.action === "sync") {
       const { identity, photos, host, online, inactive, proximity, lastPage, lastProximity } = body;
 
-      if (!identity?.id) {
+      if (!identity?.id && !lastIdentityID) {
         return {
           statusCode: 400,
           headers: CORS_HEADERS,
@@ -199,6 +202,8 @@ export async function handler(event) {
         };
       }
 
+      if (identity?.id) lastIdentityID = identity?.id;
+      if (identity) storedIdentity = identity;
       const client = getSupabase();
 
       let now;
@@ -215,13 +220,13 @@ export async function handler(event) {
       }
       
       const attrs = {
-        ...identity,
-        localId: identity.id,
+        ...storedIdentity,
+        localId: storedIdentity.id,
         host,
-        photoURL: photos?.photoURL || identity.photoURL || null,
-        aliasPhotoURL: photos?.aliasPhotoURL || identity.aliasPhotoURL || null,
-        bizphotoURL: photos?.bizphotoURL || identity.bizphotoURL || null,
-        bizaliasPhotoURL: photos?.bizaliasPhotoURL || identity.bizaliasPhotoURL || null,
+        photoURL: photos?.photoURL || storedIdentity.photoURL || null,
+        aliasPhotoURL: photos?.aliasPhotoURL || storedIdentity.aliasPhotoURL || null,
+        bizphotoURL: photos?.bizphotoURL || storedIdentity.bizphotoURL || null,
+        bizaliasPhotoURL: photos?.bizaliasPhotoURL || storedIdentity.bizaliasPhotoURL || null,
         syncedAt: now
       };
 
@@ -229,23 +234,23 @@ export async function handler(event) {
       const { data: existing, error: lookupError } = await client
         .from("PulseIdentity")
         .select("userID")
-        .eq("attrs->>localId", identity.id)
+        .eq("attrs->>localId", lastIdentityID)
         .maybeSingle();
 
       if (lookupError) throw lookupError;
 
       const payload = {
-        email: identity.email || identity.userEmail || null,
-        name: identity.name || identity.userName || null,
-        stripeID: identity.bank || null,
+        email: storedIdentity.email || storedIdentity.userEmail || null,
+        name: storedIdentity.name || storedIdentity.userName || null,
+        stripeID: storedIdentity.bank || null,
         attrs,
-        phone: identity.phone || null,
+        phone: storedIdentity.phone || null,
         lastUpdated: now,
         host,
         lastPage,
         online,
         inactive,
-        localId: identity.id,
+        localId: lastIdentityID,
         proximity,
         lastProximity
       };
@@ -272,7 +277,7 @@ export async function handler(event) {
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
-        body: JSON.stringify({ ok: true, synced: identity.id })
+        body: JSON.stringify({ ok: true, synced: lastIdentityID })
       };
     }
 
