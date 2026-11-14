@@ -1113,7 +1113,7 @@ ${rawPrompt}
 
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
-    const response = await PromptMeAI(wrappedPrompt);
+    const response = await aiSession.prompt(wrappedPrompt);
     
     console.log("🧠 AI Overmind:", response);
     
@@ -1236,10 +1236,6 @@ document.getElementById("CompanionConsoleInput").addEventListener("keydown", asy
   }
 });
 
-async function PromptMeAI(prompt) {
-  return await aiSession.prompt(prompt);
-}
-
 CompanionConsoleSend.onclick = async () => {
   CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
@@ -1264,7 +1260,7 @@ CompanionConsoleSend.onclick = async () => {
     } else {
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
     }
-    const response = await PromptMeAI(order);
+    const response = await aiSession.prompt(order);
     console.log("🧠 AI Overmind: ", response);
     setTimeout(async () => {
       appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
@@ -2451,7 +2447,7 @@ async function CheckTime() {
     runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    const response = await PromptMeAI(order);
+    const response = await aiSession.prompt(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   } else if (((nowTime === "12:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
@@ -2459,7 +2455,7 @@ async function CheckTime() {
     runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    const response = await PromptMeAI(order);
+    const response = await aiSession.prompt(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   } else if (((nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
@@ -2467,7 +2463,7 @@ async function CheckTime() {
     runOnceTime = true;
     let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    const response = await PromptMeAI(order);
+    const response = await aiSession.prompt(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   } else if ((nowTime === "10:00 AM") && !runOnceTime && !EarnDetailsHidden) {
@@ -2475,7 +2471,7 @@ async function CheckTime() {
     runOnceTime = true;
     let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep every night. I use chrome.power.releaseKeepAwake and chrome.runtime.getPlatformInfo but still seems to sleep? Or is it also cause i push the sleep button at night.";
     // appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    const response = await PromptMeAI(order);
+    const response = await aiSession.prompt(order);
     console.log("🧠 AI Overmind: ", response);
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
   }
