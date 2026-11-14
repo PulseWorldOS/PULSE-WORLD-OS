@@ -2816,7 +2816,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }
       });
       sendResponse({ ok: true, ServiceWorkerOnline, CompanionMessage, realmSummary });
-      return true;
+      break;
     
     case "PBEXTSETTINGS_GET":
       pbLoadExtensionSettings().then((settings) => {
@@ -3433,7 +3433,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
       return true;
 
-    case "PULSE_OS_PING": {
+    case "PULSE_OS_PING": 
       if (msg.time && isValid(msg.time)) {
         sendPulseHeartbeat();
         PulseRealmState.lastPing = new Date().toLocaleString();
@@ -3463,9 +3463,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       TakeOfflineSnapshot = false;
       HelperHudBoolean = false;
       break;
-    }
-
-
+    
     case "PULSE_OS_CLEAR_PULSE_CACHES":
       clearPulseCaches().then(() => sendResponse({ ok: true }));
       return true;
@@ -3512,7 +3510,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       (async () => {
         await pbLoadSettings(PulseRecoverySettings);
       })();
-      break;
+      return true;
 
     case "OPEN_PULSEWORLD_PANEL":
       (async () => {
@@ -3585,6 +3583,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       if (msg.PulsePalMemoryAIBuffer) {
         PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer;
+        safeStorageSet({ PulsePalMemoryAIBuffer });      
       } else {
         (async () => {
           const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
@@ -3594,6 +3593,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.PulseCogMemoryAIBuffer) {
         PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer;
+        safeStorageSet({ PulseCogMemoryAIBuffer });
       } else {
         (async () => {
           const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
@@ -3603,8 +3603,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-      safeStorageSet({ PulsePalMemoryAIBuffer });      
-      safeStorageSet({ PulseCogMemoryAIBuffer });
       sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue });
       return true;
 

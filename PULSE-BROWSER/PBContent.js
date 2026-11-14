@@ -86,7 +86,6 @@ async function loadOrders() {
       PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
     }
   });
-  OvermindCrossTabSync(OvermindTheirOrders);
 }
 
 let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date(nowCT).toLocaleTimeString()}`;
@@ -751,6 +750,7 @@ setInterval(async () => {
   PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer });
   await loadOrders();
+  OvermindCrossTabSync(OvermindTheirOrders);
 }, 3500);
 
 async function injectHUD() {
