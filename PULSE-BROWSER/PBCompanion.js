@@ -2734,9 +2734,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
             CompanionMessage = "Earning Adrenaline Infused & Ready..";
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
-            CompanionMessage = "Waiting for Jobs for Submission...";
+            CompanionMessage = "Starting up PulseGPU Engine...";
           } else if (CompanionMessage.includes(timeProof)) {
-          } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
+          } else if (CompanionMessage === "Starting up PulseGPU Engine...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
             try {
               (async () => {
@@ -2757,8 +2757,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             CompanionMessage = "<-- Running User-Called WASM Test Job -->";
             runWasmTest = false;
           } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
-            CompanionMessage = "Waiting for Jobs for Submission...";
-          } else if (CompanionMessage === "Waiting for Jobs for Submission...") {
+            CompanionMessage = "Starting up PulseGPU Engine...";
+          } else if (CompanionMessage === "Starting up PulseGPU Engine...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
           } else if (CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->") {
             CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;

@@ -3,7 +3,6 @@
 let userInteracted = false;
 let engineType = "text";
 let predictionText = "Running Stable";
-let statsHTMLShell = null;
 let WasmSuccess = false;
 let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
@@ -1708,8 +1707,7 @@ async function pbRenderCacheList2() {
   
   const statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
-  if (statsHTML !== statsHTMLShell) listEl.insertAdjacentHTML("beforeend", statsHTML);
-  statsHTMLShell = statsHTML;
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Sort: current cache first, then by entry count
   if (caches) caches.sort((a, b) => {
