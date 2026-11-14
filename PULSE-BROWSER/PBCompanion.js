@@ -13,8 +13,6 @@ const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", 
 (async () => {
   try {
     await PulseMellowEarner.initBackground();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
   } catch {}
 })();
 
@@ -1893,6 +1891,7 @@ setTimeout(async () => {
 
 startWarmBootLoop();
 
+
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   chrome.contextMenus.create({
@@ -1917,7 +1916,12 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
   chrome.contextMenus.create({
     id: 'runWASMTest',
-    title: '🏦 PulseEarner - Run Earn Test',
+    title: '🏦 PulseEarner - Run Compute Test',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'runMellowEarner',
+    title: '🏦 PulseEarner - Sell Bandwidth',
     contexts: ['all']
   });
   chrome.contextMenus.create({
@@ -1971,6 +1975,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } else {
       AdBlockerOff();
     }
+  } else if (info.menuItemId === 'runMellowEarner') {
+    await PulseMellowEarner.optIn();
+    await PulseMellowEarner.start();
   } else if (info.menuItemId === 'resetBootVideo') {
     const bootVideoRunOnce = false;
     await safeStorageSet({ bootVideoRunOnce });
