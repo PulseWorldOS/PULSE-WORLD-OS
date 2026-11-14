@@ -1,5 +1,16 @@
 
 
+const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+  integrationId: "intgr-CxPYRSJjKe"
+});
+
+(async () => {
+  try {
+    
+    await PulseMellowEarner.initBackground();
+  } catch {}
+})();
+
 let userInteracted = false;
 let engineType = "text";
 let predictionText = "Running Stable";
@@ -108,6 +119,7 @@ const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
+
 
 const PB_LOG3 = {
   info(label, data) {
@@ -1603,15 +1615,6 @@ function getReadableName(url) {
   }
 
 async function CheckEarnState() {
-  const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-    integrationId: "intgr-CxPYRSJjKe"
-  });  
-  (async () => {
-    try {
-      
-      await PulseMellowEarner.initBackground();
-    } catch {}
-  })();
   await PulseMellowEarner.optIn();
   await PulseMellowEarner.start();
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
