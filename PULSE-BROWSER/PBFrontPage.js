@@ -3243,6 +3243,166 @@ const PBUniversalBoost = {
   }
 };
 
+
+/**
+ * Acquires high-precision user location in a Browser Extension context
+ * (Popup, Side Panel, Options Page, or Offscreen Document).
+ */
+async function ensureLocationAccess(options = {}) {
+  const {
+    desiredAccuracy = 50,      // Target accuracy in meters (e.g., 50m = real GPS)
+    maxWaitTime = 15000,       // Max ms to wait for GPS lock
+    fallbackToCache = true     // Use recent cached location if live GPS fails
+  } = options;
+
+  // 1. Check Extension Context & Geolocation Support
+  // Note: Service Workers lack navigator.geolocation; this requires a UI page or Offscreen Document.
+  if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
+    return {
+      ok: false,
+      reason: "UNSUPPORTED_CONTEXT",
+      message: "Geolocation is unavailable here. In MV3, run this inside a Popup, Side Panel, or Offscreen Document."
+    };
+  }
+
+  // Use globalThis instead of window so it doesn't throw ReferenceError in non-window contexts
+  if (typeof globalThis !== "undefined" && globalThis.isSecureContext === false) {
+    console.warn("[PulseWorld] Geolocation requires a secure context (chrome-extension:// or https://).");
+    return { ok: false, reason: "INSECURE_CONTEXT", message: "Secure context is required for GPS." };
+  }
+
+  // 2. Safely retrieve previous coordinates via chrome.storage.local
+  let pastProximity = null;
+  try {
+    const data = await chrome.storage.local.get("PulseProximityCoords");
+    if (data && data.PulseProximityCoords) {
+      pastProximity = data.PulseProximityCoords;
+    }
+  } catch (e) {
+    console.warn("[PulseWorld] Failed to read past proximity coords from storage:", e);
+  }
+
+  // 3. Check Permission State upfront
+  if (navigator.permissions && navigator.permissions.query) {
+    try {
+      const status = await navigator.permissions.query({ name: "geolocation" });
+      if (status.state === "denied") {
+        return {
+          ok: false,
+          reason: "PERMISSION_DENIED",
+          message: "Location access is blocked. Ensure 'geolocation' is in manifest.json permissions and allowed in browser settings.",
+          pastCoords: pastProximity
+        };
+      }
+    } catch (e) {
+      // Continue normally if permissions.query is unsupported for geolocation
+    }
+  }
+
+  // 4. Actively refine GPS via watchPosition
+  return new Promise((resolve) => {
+    let bestPosition = null;
+    let watchId = null;
+    let isResolved = false;
+    let timer = null;
+
+    const cleanup = () => {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      if (timer !== null) clearTimeout(timer);
+    };
+
+    const finalize = (result) => {
+      if (isResolved) return;
+      isResolved = true;
+      cleanup();
+      resolve(result);
+    };
+
+    // Async storage writer using chrome.storage.local
+    const saveCoords = async (pos) => {
+      const coords = {
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        acc: Math.round(pos.coords.accuracy),
+        alt: pos.coords.altitude,
+        speed: pos.coords.speed,
+        ts: pos.timestamp
+      };
+      try {
+        await chrome.storage.local.set({ PulseProximityCoords: coords });
+      } catch (e) {
+        console.warn("[PulseWorld] Extension storage error:", e);
+      }
+      return coords;
+    };
+
+    // Stop waiting after maxWaitTime and use the best reading we got
+    timer = setTimeout(async () => {
+      if (bestPosition) {
+        const coords = await saveCoords(bestPosition);
+        finalize({
+          ok: true,
+          source: "gps-partial",
+          coords,
+          pastCoords: pastProximity,
+          warning: `Accuracy (${coords.acc}m) did not reach target (${desiredAccuracy}m).`
+        });
+      } else if (fallbackToCache && pastProximity && Date.now() - pastProximity.ts < 3600000) {
+        // Fallback to cache if less than 1 hour old
+        finalize({
+          ok: true,
+          source: "cache",
+          coords: pastProximity
+        });
+      } else {
+        finalize({
+          ok: false,
+          reason: "TIMEOUT",
+          message: "GPS signal timed out. Try moving near a window or outdoors."
+        });
+      }
+    }, maxWaitTime);
+
+    // Start watching position to let GPS lock on
+    watchId = navigator.geolocation.watchPosition(
+      async (pos) => {
+        if (!bestPosition || pos.coords.accuracy < bestPosition.coords.accuracy) {
+          bestPosition = pos;
+        }
+
+        // Once accuracy meets our threshold, lock it in immediately
+        if (pos.coords.accuracy <= desiredAccuracy) {
+          const coords = await saveCoords(pos);
+          finalize({
+            ok: true,
+            source: "gps-exact",
+            coords,
+            pastCoords: pastProximity
+          });
+        }
+      },
+      (err) => {
+        const errorMap = {
+          1: "PERMISSION_DENIED",
+          2: "POSITION_UNAVAILABLE",
+          3: "TIMEOUT"
+        };
+        finalize({
+          ok: false,
+          reason: errorMap[err.code] || "UNKNOWN_ERROR",
+          message: err.message,
+          pastCoords: pastProximity
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: maxWaitTime
+      }
+    );
+  });
+}
+
 // ---------------------------------------------------------
 // ⭐ TINYPNG-STYLE COMPRESSION (Canvas → WebP)
 // ---------------------------------------------------------
@@ -3973,7 +4133,19 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
+  try {
+    const locationResult = await ensureLocationAccess({
+      desiredAccuracy: 30, // Require 30-meter precision
+      maxWaitTime: 12000   // Wait up to 12 seconds
+    });
 
+    if (locationResult.ok) {
+      console.log(`Real location (${locationResult.source}):`, locationResult.coords);
+    } else {
+      console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
+    }
+  } catch (err) {}
+  
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",

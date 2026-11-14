@@ -48,6 +48,7 @@
   "permissions": [
     "tabs",
     "downloads",
+    "geolocation",
     "storage",
     "unlimitedStorage",
     "contextMenus",
