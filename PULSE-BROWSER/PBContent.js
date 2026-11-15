@@ -3,7 +3,7 @@
 //  Full DOM physics engine: warm-path, GPU, decode, mutation, performance,
 //  realm sync, HUD, world-band extraction, kernel bridge.
 // ============================================================================
-
+let assumedValue = 0;
 let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
@@ -1414,9 +1414,9 @@ perfObserver.observe({
 // ---------------------------------------------------------------------------
 function extractWorldBands(wwwCheck) {
   const bands = {};
-  let bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold>¢</font>";
+  let bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold><strong>¢</strong></font>";
   if (wwwCheck === "WWW") {
-    bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold>¢</font>";
+    bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold><strong>¢</strong></font>";
   } else {
     bandstring = "PulseBand";
   }
