@@ -1391,21 +1391,59 @@ function isAMoment(origin) {
 }
 
 
-async function callHigherAI(MyLowerIntellect) {
-  HigherIntellect = null;
-  // Callback function to update model loading progress
-  const initProgressCallback = (initProgress) => {
-    console.log(initProgress);
-    // const Progress = initProgress.progress * 100;
-    // HigherIntellectStartup = "Loading PulseCache Higher AI - " + Progress.toFixed(2) + "%";
-  };
-  const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-  //const selectedModel = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
-  
-  const engine = await CreateMLCEngine(
-    selectedModel,
-    { initProgressCallback: initProgressCallback }, // engineConfig
-  );
+// ============================================================================
+// HIGHER AI (WebLLM) — Phase 1
+//  • ONE shared engine (created once, reused for every prompt)
+//  • Requests run one at a time (queue), each with an id
+//  • The finished reply is PUSHED to the open PulseBrowser page (PB_HIGHER_REPLY)
+//    instead of only being logged. If no page is open it is kept in
+//    HigherIntellect and delivered on the next PB_GATHER_ORDERS poll (once).
+// ============================================================================
+const HIGHER_MODEL_ID = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+//const HIGHER_MODEL_ID = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+const HIGHER_MAX_TOKENS = 1536; // room for <think> + the real answer (was 300)
+let higherEnginePromise = null;
+let higherQueue = Promise.resolve();
+let higherReqCounter = 0;
+let HigherIntellectId = null;
+
+function getHigherEngine() {
+  if (!higherEnginePromise) {
+    higherEnginePromise = CreateMLCEngine(
+      HIGHER_MODEL_ID,
+      { initProgressCallback: (initProgress) => console.log(initProgress) } // engineConfig
+    ).catch((err) => {
+      higherEnginePromise = null; // allow a retry on the next prompt
+      throw err;
+    });
+  }
+  return higherEnginePromise;
+}
+
+function deliverHigherReply(payload) {
+  HigherIntellect = payload.text;
+  HigherIntellectId = payload.id;
+  try {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_REPLY", ...payload }, (res) => {
+      if (chrome.runtime.lastError) return; // no page listening: keep for the next poll
+      if (res && res.ok && HigherIntellectId === payload.id) {
+        HigherIntellect = null; // delivered, don't send it again
+        HigherIntellectId = null;
+      }
+    });
+  } catch (e) { /* keep for the next poll */ }
+}
+
+function callHigherAI(MyLowerIntellect) {
+  const id = ++higherReqCounter;
+  const run = higherQueue.then(() => runHigherAI(MyLowerIntellect, id));
+  higherQueue = run.catch(() => {});
+  return run;
+}
+
+async function runHigherAI(MyLowerIntellect, id) {
+  try {
+  const engine = await getHigherEngine();
 
   // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
   let rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
@@ -1440,17 +1478,25 @@ async function callHigherAI(MyLowerIntellect) {
       { role: "system", content: wrappedPrompt },
       { role: "user", content: rawPrompt }
     ],
-    max_tokens: 300,        // Hard stop on total tokens generated (including thinking)
+    max_tokens: HIGHER_MAX_TOKENS, // Hard stop on total tokens generated (including thinking)
     temperature: 0.6,       // Lower values make responses more focused and less rambling
     top_p: 0.9,
     repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
   });
 
-  const rawText = reply.choices[0].message.content;
-  const cleanAnswer = rawText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-  HigherIntellect = cleanAnswer;
-  
-  console.log("🧠 AI Overmind 🧠: ", cleanAnswer);
+  // Keep the raw text: the console shows <think>…</think> as a collapsible block
+  const rawText = reply.choices[0].message.content || "";
+  console.log("🧠 AI Overmind 🧠: ", rawText);
+  deliverHigherReply({ id, prompt: MyLowerIntellect || null, text: rawText.trim() });
+  } catch (err) {
+    console.error("🧠 AI Overmind error:", err);
+    deliverHigherReply({
+      id,
+      prompt: MyLowerIntellect || null,
+      text: "⚠️ AI Overmind could not answer: " + (err && err.message ? err.message : String(err)),
+      error: true
+    });
+  }
 }
 
 // async function recallHigherAI(MyLowerIntellect) {
@@ -2824,9 +2870,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PB_GATHER_ORDERS":
-      if (msg.LowerIntellect) {
-        MyLowerIntellect = msg.LowerIntellect;
-        callHigherAI(MyLowerIntellect);
+      // The page sends the prompt as MyLowerIntellect (older code used LowerIntellect) — accept both
+      if (msg.LowerIntellect || msg.MyLowerIntellect) {
+        MyLowerIntellect = msg.LowerIntellect || msg.MyLowerIntellect;
+        callHigherAI(MyLowerIntellect); // async: the answer is pushed later (PB_HIGHER_REPLY)
         MyLowerIntellect = null;
       }
       if (msg.aiSettingsSize) {
@@ -2835,7 +2882,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.aiPopupSize) {
         aiPopupSize = msg.aiPopupSize;
       }
-      sendResponse({ ok: true, OvermindOrders, HigherIntellect });
+      sendResponse({ ok: true, OvermindOrders, HigherIntellect, HigherIntellectId });
+      HigherIntellect = null; // hand a reply over only once
+      HigherIntellectId = null;
       OvermindOrders = null;
       break;
 
