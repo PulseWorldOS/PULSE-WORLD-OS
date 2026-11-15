@@ -1,5 +1,5 @@
 
-import './MellowEarner.js';
+
 // ============================================================================
 //  PBSettings.js — PulseBrowser OS Settings Registry (Ultra Edition v7.0)
 //  Unified OS Registry + Extension Settings Page + MV3-Compliant Storage
@@ -24,19 +24,6 @@ const pbPulseOvermind = document.getElementById("pbPulseDetailsEarn3");
 const earnerhelperApanel = document.getElementById("earner-helper-Settings-panel");
 const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-Settings-panel");
 const backBtn = document.getElementById("backBtn");
-
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
-
-(async () => {
-  try {
-    await PulseMellowEarner.initContentScript();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch {}
-})();
 
 function appendHigherMessage(area, role, text) {
   const bubble = document.createElement("div");
