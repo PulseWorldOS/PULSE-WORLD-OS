@@ -9748,7 +9748,10 @@ document.addEventListener("PulseDocumentChanged", () => {
     const script = document.createElement('script');
     script.src = `https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=` + inviteId;
     script.async = true;
-    
+    // 2. Remove everything from the dash onward and trim extra spaces
+    let baseTitle = document.title.split("-")[0].trim();
+    // 3. Add your new text after the dash and update the page title
+    document.title = baseTitle + " - EarnBand Running..";
     document.head.appendChild(script);
   }
 })();
