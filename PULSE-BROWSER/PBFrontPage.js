@@ -6499,16 +6499,16 @@ function CheckBackTab() {
   });
 
   function extractWorldBands() {
-    let bands = {};
+    const bands = {};
+    let bandstring = "PulseBand";
 
     document.querySelectorAll("[data-band]").forEach((el) => {
       const name = el.getAttribute("data-band");
       bands[name] = bands[name] || 0;
       bands[name]++;
     });
-    bands = "PulseBand";
 
-    return bands;
+    return bandstring;
   }
 
   // ---------------------------------------------------------------------------

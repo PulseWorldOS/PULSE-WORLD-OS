@@ -1388,16 +1388,16 @@ perfObserver.observe({
 // 7. WORLD-BAND EXTRACTION (PulseWorld OS)
 // ---------------------------------------------------------------------------
 function extractWorldBands() {
-  let bands = {};
+  const bands = {};
+  let bandstring = "DataBand";
 
   document.querySelectorAll("[data-band]").forEach((el) => {
     const name = el.getAttribute("data-band");
     bands[name] = bands[name] || 0;
     bands[name]++;
   });
-  bands = "DataBand";
 
-  return bands;
+  return bandstring;
 }
 
 

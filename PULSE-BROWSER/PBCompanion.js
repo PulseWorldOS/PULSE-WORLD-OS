@@ -294,7 +294,7 @@ const PulseRealmState = {
   lastDomainClass: null,
   gpuEnabled: null,
   // Bands (PulseWorld / OS)
-  band: "PulseBand",
+  bands: "PulseBand",
   
     // accelBand: null,
     // routerBand: null,
@@ -4010,6 +4010,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
+      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
       sendResponse({ ok: true });
       break;
 
@@ -4134,6 +4135,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
       PulseRealmState.lastDomainClass = msg.domainClass || PulseRealmState.lastDomainClass;
+      PulseRealmState.bands = msg.bands || PulseRealmState.bands;
       sendResponse({ ok: true });
       break;
 
