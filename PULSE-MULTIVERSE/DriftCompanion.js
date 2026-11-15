@@ -406,13 +406,15 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // API writes and reads must always reach the server, never a cached mirror.
-  if (req.method !== 'GET' || url.pathname.startsWith('/.netlify/functions/')) return;
-
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
+  if (req.method !== 'GET') return;
+   // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
+  if (url.endsWith('.wasm') || url.includes('.wasm') || url.pathname.startsWith('/.netlify/functions/') || url.startsWith('chrome://extensions')) {
      return; // Bypasses service worker caching entirely
   }
-
+  // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
+  if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
+    return; 
+  }
   // Fetch current application code on return visits, retaining an offline fallback.
   if (url.origin === self.location.origin &&
       (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(url.pathname))) {

@@ -895,18 +895,20 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener('fetch', event => {
   const req = event.request;
+  const url = new URL(req.url);
   // Only cache GET requests
   if (!ServiceWorkerOnline) return;
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
+  if (url.endsWith('.wasm') || url.includes('.wasm') || url.pathname.startsWith('/.netlify/functions/') || url.startsWith('chrome://extensions')) {
      return; // Bypasses service worker caching entirely
   }
-  // // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.startsWith('chrome://extensions')) {
-     return; // Let the browser handle extension assets normally
-  }  
+  // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
+  if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
+    return; 
+  }
+  
   event.respondWith(handlePulseRequest(req));
 });
 
