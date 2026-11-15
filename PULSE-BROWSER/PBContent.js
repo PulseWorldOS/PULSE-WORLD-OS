@@ -25,14 +25,42 @@ const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", 
   disableLogs: false
 });
 
-(async () => {
-  try {
-    
-    await PulseMellowEarner.initContentScript();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch (err) {}
-})();
+// ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
+
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
+// ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
+function pbDomainClass(url) {
+  if (isPulseWorld(url)) return "PulseWorld";
+  if (IsPartner(url)) return "Partner";
+  return "WWW";
+}
+
+
+if (isPulseWorld(location.href)) {
+  (async () => {
+    try {
+      
+      await PulseMellowEarner.initContentScript();
+      await PulseMellowEarner.optIn();
+      await PulseMellowEarner.start();
+    } catch (err) {}
+  })();
+}
 
 const PB_LOG4 = {
   info(label, data) {
@@ -1476,31 +1504,6 @@ const PB_HOMES = [
   "www.orbitalmap.net",
   "www.pulseworld.net"
 ];
-// ---------------------------------------------------------------------------
-// DOMAIN CLASSIFIER
-// ---------------------------------------------------------------------------
-
-function isPulseWorld(origin) {
-  return origin.includes("pulseworld.net")
-      || origin.includes("orbitalmap.net")
-      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
-      || origin.includes("booleanlogic.net")
-      || origin.includes("binaryos.net")
-      || origin.includes("serviceworker.net")
-      || origin.includes("gpuprocessing.net")
-      || origin.includes("pulseworld.me")
-      || origin.includes("pulseworld.money")
-      || origin.includes("pulseworld.biz");
-}
-// ---------------------------------------------------------------------------
-// DOMAIN CLASSIFIER
-// ---------------------------------------------------------------------------
-function pbDomainClass(url) {
-  if (isPulseWorld(url)) return "PulseWorld";
-  if (IsPartner(url)) return "Partner";
-  return "WWW";
-}
-
 
 document.addEventListener("PulseDocumentChanged", (ev) => {
   chrome.runtime.sendMessage({

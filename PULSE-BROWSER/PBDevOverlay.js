@@ -84,7 +84,7 @@ function updateKernel(realm, SessionStart) {
     Last Title: <font color="#0FF">${lastTitleshort || "-"}</font><br/>
     Last URL: <font color="#0FF">${lastURLshort || "-"}</font><br/>
     Domain Class: <font color="#0FF">${realm.lastDomainClass || "PulseWorld"}</font><br/>
-    Data Band: <font color="#0FF">${realm.band || "-"}</font><br/>
+    Data Band: <font color="#0FF">${realm.bands || "-"}</font><br/>
     Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
   `;
 
