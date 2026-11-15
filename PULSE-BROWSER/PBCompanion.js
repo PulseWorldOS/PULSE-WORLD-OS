@@ -896,21 +896,21 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener('fetch', event => {
   const req = event.request;
-  const url = new URL(req.url);
+  
   // Only cache GET requests
   if (!ServiceWorkerOnline) return;
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (url.endsWith('.wasm') || url.includes('.wasm')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (url.protocol === 'http:') {
+  if (req.url.protocol === 'http:') {
     return; 
   }
   // // Skip chrome-extension:// URLs (cannot be cached)
-  if (url.includes('chrome://extensions')) {
+  if (req.url.includes('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
   }  
   event.respondWith(handlePulseRequest(req));

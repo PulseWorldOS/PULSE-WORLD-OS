@@ -106,7 +106,6 @@ function OvermindCrossTabSync(payload) {
   }
 
   try {
-    logger.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
     channel.postMessage({
       kind: "command_prompt",
       payload,
