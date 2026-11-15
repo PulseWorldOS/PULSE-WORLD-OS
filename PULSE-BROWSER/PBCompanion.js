@@ -6,7 +6,11 @@
 import { CreateMLCEngine } from "./OvermindPrimes.js";
 import './MellowEarner.js';
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", { integrationId: "intgr-CxPYRSJjKe" }, { disableLogs: false });
+const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+  integrationId: "intgr-CxPYRSJjKe",
+  disableLogs: false
+});
+
 
 (async () => {
   try {
