@@ -62,7 +62,7 @@ function isValid(t) {
 }
 
 
-const PB_LOG = {
+const PB_LOG7 = {
   info(label, data) {
     console.log(
       `%c[PBSettings][INFO][${new Date().toLocaleTimeString()}] ${label}`,
@@ -108,7 +108,7 @@ const PB_LOG = {
 
 
 // Safe fallbacks in case globals are undefined in certain contexts
-const logger = typeof PB_LOG !== "undefined" ? PB_LOG : console;
+const logger = typeof PB_LOG7 !== "undefined" ? PB_LOG7 : console;
 const channel = typeof PulseBrowserChannel2 !== "undefined" ? PulseBrowserChannel2 : null;
 const getTimestamp = () => (typeof nowPP !== "undefined" ? nowPP : Date.now());
 
@@ -344,12 +344,12 @@ function loadOrders(aiPopupSize) {
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiPopupSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
-      PB_LOG.info("PB_GATHER_ORDERS unavailable or error", response);
+      PB_LOG7.info("PB_GATHER_ORDERS unavailable or error", response);
       return;
     }
     if (response.OvermindOrders) {
       OvermindPopupOrders = response.OvermindOrders;
-      PB_LOG.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
+      PB_LOG7.change("PB_GATHER_ORDERS", OvermindPopupOrders, response.OvermindOrders);
     }
   });
   OvermindCrossTabSync(OvermindPopupOrders);
@@ -1635,17 +1635,17 @@ async function getFavicon(url, flags = {}) {
 }
 
 async function pbRequestCacheList() {
-  PB_LOG.info("Requesting cache list from PBCompanion…");
+  PB_LOG7.info("Requesting cache list from PBCompanion…");
 
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
       if (!response || !response.ok) {
-        PB_LOG.info("Cache list unavailable or error", response);
+        PB_LOG7.info("Cache list unavailable or error", response);
         resolve(null);
         return;
       }
 
-      PB_LOG.load("Cache list received", response.caches);
+      PB_LOG7.load("Cache list received", response.caches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
@@ -1714,7 +1714,7 @@ async function pbLoadExtensionSettings() {
 
     return settings;
   } catch (err) {
-    PB_LOG.error("pbLoadExtensionSettings() FAILED", err);
+    PB_LOG7.error("pbLoadExtensionSettings() FAILED", err);
     return {};
   }
 }
