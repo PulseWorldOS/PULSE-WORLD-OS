@@ -897,6 +897,7 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   // Only cache GET requests
   if (!ServiceWorkerOnline) return;
+  
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
   if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes('olostep.com') || req.url.includes('speed.cloudflare.com')) {
