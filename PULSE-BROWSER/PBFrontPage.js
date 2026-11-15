@@ -3770,6 +3770,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   try {
     backToOriginal();
   } catch (err) {}
+  emitFullPageContext();
   // injectPulseScreenFromMemory();
   // location.reload();
 });

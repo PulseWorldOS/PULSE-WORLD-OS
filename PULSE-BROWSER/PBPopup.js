@@ -831,6 +831,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   try {
     backToOriginal();
   } catch (err) {}
+  emitFullPageContext();
 });
 
 // Utility: load settings
