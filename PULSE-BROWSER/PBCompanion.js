@@ -521,7 +521,8 @@ async function handlePulseRequest(req) {
   }
 }
 
-setTimeout(callHigherAI, 5000);
+// [Phase 2] REMOVED auto-start — model now loads only when user enables it
+// setTimeout(callHigherAI, 5000);
 
 // ============================================================
 // ⭐ PULSE-API HANDLER — network-first (keeps its own cache)
@@ -1395,33 +1396,147 @@ function isAMoment(origin) {
 
 
 // ============================================================================
-// HIGHER AI (WebLLM) — Phase 1
+// HIGHER AI (WebLLM) — Phase 2
 //  • ONE shared engine (created once, reused for every prompt)
 //  • Requests run one at a time (queue), each with an id
 //  • The finished reply is PUSHED to the open PulseBrowser page (PB_HIGHER_REPLY)
 //    instead of only being logged. If no page is open it is kept in
 //    HigherIntellect and delivered on the next PB_GATHER_ORDERS poll (once).
+//  • ON-DEMAND: engine only loads when the user enables it (PB_HIGHER_ENABLE)
+//  • GPU CHECK: detects VRAM and picks the right model size automatically
+//  • MODEL REGISTRY: Qwen default, Llama available, easy to add more
 // ============================================================================
-const HIGHER_MODEL_ID = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-//const HIGHER_MODEL_ID = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+
+// ---- Model Registry --------------------------------------------------------
+// Each entry: { id, label, vramMinMB }
+// vramMinMB = approximate minimum GPU memory needed to run the model
+const HIGHER_MODELS = {
+  // Qwen (default family) — smallest to largest
+  "qwen-0.5b":  { id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",  label: "Qwen 0.5B (Ultra-Light)", vramMinMB: 512  },
+  "qwen-1.5b":  { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",  label: "Qwen 1.5B (Light)",       vramMinMB: 1200 },
+  "qwen-3b":    { id: "Qwen2.5-3B-Instruct-q4f16_1-MLC",     label: "Qwen 3B (Standard)",      vramMinMB: 2500 },
+  "qwen-7b":    { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",     label: "Qwen 7B (Full)",          vramMinMB: 4500 },
+  // Llama (kept for backward compat / user choice)
+  "llama-1b":   { id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",   label: "Llama 1B (Light)",        vramMinMB: 1000 },
+  "llama-3b":   { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC",   label: "Llama 3B (Standard)",     vramMinMB: 2500 },
+  "llama-8b":   { id: "Llama-3.1-8B-Instruct-q4f32_1-MLC",   label: "Llama 8B (Full)",         vramMinMB: 5000 },
+  // DeepSeek (kept commented reference)
+  "deepseek-7b":{ id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC", label: "DeepSeek-R1 7B",      vramMinMB: 4500 },
+};
+const HIGHER_DEFAULT_KEY   = "qwen-1.5b";   // safe default for most GPUs
+const HIGHER_FALLBACK_KEY  = "qwen-0.5b";   // for very low-end GPUs (< 1.2 GB)
+// Old hardcoded ID (kept as comment for reference):
+// const HIGHER_MODEL_ID = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+// const HIGHER_MODEL_ID = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
+
 const HIGHER_MAX_TOKENS = 1536; // room for <think> + the real answer (was 300)
 let higherEnginePromise = null;
 let higherQueue = Promise.resolve();
 let higherReqCounter = 0;
 let HigherIntellectId = null;
+let higherEnabled = false;       // [Phase 2] gated — only true after PB_HIGHER_ENABLE
+let higherActiveModelKey = null;  // which registry key is loaded
+let higherGpuInfo = null;         // cached GPU detection result
 
+// ---- GPU Detection ---------------------------------------------------------
+// Returns { supported, vramMB, vendor, description } or { supported: false }
+async function detectGPUCapacity() {
+  if (higherGpuInfo) return higherGpuInfo; // cached
+  try {
+    if (typeof navigator === "undefined" || !navigator.gpu) {
+      higherGpuInfo = { supported: false, reason: "WebGPU not available" };
+      return higherGpuInfo;
+    }
+    const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
+    if (!adapter) {
+      higherGpuInfo = { supported: false, reason: "No GPU adapter found" };
+      return higherGpuInfo;
+    }
+    // maxBufferSize is the best proxy for usable VRAM in WebGPU
+    const maxBuf = adapter.limits.maxBufferSize || 0;
+    const vramMB = Math.round(maxBuf / (1024 * 1024));
+    let description = "";
+    let vendor = "";
+    try {
+      const info = await adapter.requestAdapterInfo();
+      description = info.description || info.device || "";
+      vendor = info.vendor || "";
+    } catch (_) { /* older browsers may not support requestAdapterInfo */ }
+    higherGpuInfo = { supported: true, vramMB, vendor, description };
+    return higherGpuInfo;
+  } catch (err) {
+    higherGpuInfo = { supported: false, reason: String(err.message || err) };
+    return higherGpuInfo;
+  }
+}
+
+// ---- Pick the best model for this GPU --------------------------------------
+function pickModelForGPU(gpuInfo, preferredKey) {
+  // If user explicitly chose a model, honour it
+  if (preferredKey && HIGHER_MODELS[preferredKey]) {
+    return preferredKey;
+  }
+  if (!gpuInfo.supported) return HIGHER_FALLBACK_KEY;
+  const vram = gpuInfo.vramMB || 0;
+  // Walk from the default down to fallback based on VRAM
+  if (vram >= HIGHER_MODELS[HIGHER_DEFAULT_KEY].vramMinMB) return HIGHER_DEFAULT_KEY;
+  return HIGHER_FALLBACK_KEY;
+}
+
+// ---- Broadcast progress to open pages --------------------------------------
+function broadcastHigherProgress(progress) {
+  try {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_PROGRESS", ...progress }, () => {
+      if (chrome.runtime.lastError) return; // no page listening
+    });
+  } catch (_) { /* ignore */ }
+}
+
+// ---- Engine creation (on-demand, with progress) ----------------------------
 function getHigherEngine() {
   if (!higherEnginePromise) {
+    const modelKey = higherActiveModelKey || HIGHER_DEFAULT_KEY;
+    const entry = HIGHER_MODELS[modelKey] || HIGHER_MODELS[HIGHER_DEFAULT_KEY];
+    console.log(`🧠 Loading AI model: ${entry.label} (${entry.id})`);
+    broadcastHigherProgress({ stage: "loading", modelLabel: entry.label, progress: 0, text: "Initializing AI engine…" });
+
     higherEnginePromise = CreateMLCEngine(
-      HIGHER_MODEL_ID,
-      { initProgressCallback: (initProgress) => console.log(initProgress) } // engineConfig
-    ).catch((err) => {
+      entry.id,
+      {
+        initProgressCallback: (initProgress) => {
+          console.log(initProgress);
+          // Push every progress tick to the page so the console can show a progress bar
+          broadcastHigherProgress({
+            stage: "loading",
+            modelLabel: entry.label,
+            progress: initProgress.progress ?? 0,       // 0..1
+            text: initProgress.text || "Loading…",
+            timeElapsed: initProgress.timeElapsed || 0,
+          });
+        }
+      }
+    ).then((engine) => {
+      broadcastHigherProgress({ stage: "ready", modelLabel: entry.label, progress: 1, text: "AI Ready 🧠" });
+      return engine;
+    }).catch((err) => {
       higherEnginePromise = null; // allow a retry on the next prompt
+      broadcastHigherProgress({ stage: "error", modelLabel: entry.label, text: "AI failed to load: " + (err.message || err) });
       throw err;
     });
   }
   return higherEnginePromise;
 }
+
+// ---- Restore AI state from last session ------------------------------------
+// If the user previously enabled AI, restore that state (but don't auto-load
+// the model — it will load on the first prompt or if the page sends PB_HIGHER_ENABLE)
+chrome.storage.local.get(["higherEnabled", "higherActiveModelKey"], (res) => {
+  if (chrome.runtime.lastError) return;
+  if (res.higherEnabled) higherEnabled = true;
+  if (res.higherActiveModelKey && HIGHER_MODELS[res.higherActiveModelKey]) {
+    higherActiveModelKey = res.higherActiveModelKey;
+  }
+});
 
 function deliverHigherReply(payload) {
   HigherIntellect = payload.text;
@@ -1438,6 +1553,17 @@ function deliverHigherReply(payload) {
 }
 
 function callHigherAI(MyLowerIntellect) {
+  // [Phase 2] Don't load the model until the user has enabled AI
+  if (!higherEnabled) {
+    const id = ++higherReqCounter;
+    deliverHigherReply({
+      id,
+      prompt: MyLowerIntellect || null,
+      text: "⚠️ AI is not enabled yet. Click the 🧠 Enable AI button to download and start the model first.",
+      error: true
+    });
+    return Promise.resolve();
+  }
   const id = ++higherReqCounter;
   const run = higherQueue.then(() => runHigherAI(MyLowerIntellect, id));
   higherQueue = run.catch(() => {});
@@ -2895,6 +3021,81 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       ServiceWorkerOnline = false;
       safeStorageSet({ ServiceWorkerOnline });
       sendResponse({ ok: true, ServiceWorkerOnline });
+      break;
+
+    // ---- Phase 2: On-Demand AI Enable / Status / Model Switch ----
+
+    case "PB_HIGHER_ENABLE": {
+      // User clicked "Enable AI" — detect GPU, pick model, start loading
+      (async () => {
+        try {
+          const gpuInfo = await detectGPUCapacity();
+          const preferredKey = msg.modelKey || null; // user may request a specific model
+          const modelKey = pickModelForGPU(gpuInfo, preferredKey);
+          higherActiveModelKey = modelKey;
+          higherEnabled = true;
+          // Persist choice
+          safeStorageSet({ higherEnabled: true, higherActiveModelKey: modelKey });
+          const entry = HIGHER_MODELS[modelKey];
+          console.log(`🧠 AI enabled — GPU: ${gpuInfo.vramMB || "?"}MB — Model: ${entry.label}`);
+          sendResponse({ ok: true, gpuInfo, modelKey, modelLabel: entry.label });
+          // Kick off engine pre-load so it's ready for the first prompt
+          getHigherEngine().catch((err) => console.error("🧠 Pre-load failed:", err));
+        } catch (err) {
+          sendResponse({ ok: false, error: err.message || String(err) });
+        }
+      })();
+      return true; // keep sendResponse alive for async
+    }
+
+    case "PB_HIGHER_STATUS": {
+      // Page asks: is AI enabled? which model? GPU info?
+      (async () => {
+        const gpuInfo = await detectGPUCapacity();
+        const modelKey = higherActiveModelKey || HIGHER_DEFAULT_KEY;
+        const entry = HIGHER_MODELS[modelKey];
+        const ready = higherEnabled && higherEnginePromise !== null;
+        sendResponse({
+          ok: true,
+          enabled: higherEnabled,
+          ready,
+          modelKey,
+          modelLabel: entry.label,
+          gpuInfo,
+          models: Object.entries(HIGHER_MODELS).map(([k, v]) => ({ key: k, label: v.label, vramMinMB: v.vramMinMB })),
+        });
+      })();
+      return true;
+    }
+
+    case "PB_HIGHER_SWITCH_MODEL": {
+      // User picked a different model from the switcher
+      const newKey = msg.modelKey;
+      if (!newKey || !HIGHER_MODELS[newKey]) {
+        sendResponse({ ok: false, error: "Unknown model: " + newKey });
+        break;
+      }
+      // Tear down current engine so the next prompt uses the new model
+      higherEnginePromise = null;
+      higherActiveModelKey = newKey;
+      safeStorageSet({ higherActiveModelKey: newKey });
+      const entry = HIGHER_MODELS[newKey];
+      console.log(`🧠 Switching model to ${entry.label}`);
+      if (higherEnabled) {
+        // Pre-load the new model right away
+        getHigherEngine().catch((err) => console.error("🧠 Switch pre-load failed:", err));
+      }
+      sendResponse({ ok: true, modelKey: newKey, modelLabel: entry.label });
+      break;
+    }
+
+    case "PB_HIGHER_DISABLE":
+      // Turn off the AI engine to free memory
+      higherEnabled = false;
+      higherEnginePromise = null;
+      safeStorageSet({ higherEnabled: false });
+      console.log("🧠 AI disabled by user");
+      sendResponse({ ok: true });
       break;
 
     case "PB_COMPANION_RESUME":

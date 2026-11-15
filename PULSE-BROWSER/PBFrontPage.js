@@ -1302,7 +1302,130 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     showHigherReply({ id: msg.id, text: msg.text, prompt: msg.prompt });
     sendResponse({ ok: true });
   }
+  // [Phase 2] Progress updates from the background during model download
+  if (msg && msg.type === "PB_HIGHER_PROGRESS") {
+    showHigherProgress(msg);
+    sendResponse({ ok: true });
+  }
 });
+
+// ---- Phase 2: On-Demand AI — progress bar, enable/disable, model info ----
+
+let higherAIEnabled = false;   // tracks local state
+
+// Show download / loading progress in the Higher console
+function showHigherProgress(info) {
+  const area = document.getElementById("consoleOvermindCognition");
+  if (!area) return;
+
+  let bar = document.getElementById("higherProgressBar");
+  if (!bar && info.stage === "loading") {
+    // Create the progress container
+    bar = document.createElement("div");
+    bar.id = "higherProgressBar";
+    bar.style.cssText = "padding:4px 0; font-size:0.6rem; color:#7fdfff;";
+    bar.innerHTML = `
+      <div style="margin-bottom:2px">🧠 <span id="higherProgressLabel">Loading…</span></div>
+      <div style="background:#1a2a3a; border-radius:4px; overflow:hidden; height:8px; width:100%;">
+        <div id="higherProgressFill" style="background:linear-gradient(90deg,#00c8ff,#00ffc8); height:100%; width:0%; transition:width 0.3s;"></div>
+      </div>
+    `;
+    area.appendChild(bar);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  if (bar) {
+    const label = document.getElementById("higherProgressLabel");
+    const fill  = document.getElementById("higherProgressFill");
+    if (label) label.textContent = info.text || "Loading…";
+    if (fill)  fill.style.width = Math.round((info.progress || 0) * 100) + "%";
+  }
+
+  if (info.stage === "ready") {
+    higherAIEnabled = true;
+    // Remove progress bar and show ready message after a moment
+    setTimeout(() => {
+      if (bar) bar.remove();
+      appendHigherMessage(area, "🧠 System", `✅ ${info.modelLabel || "AI"} loaded and ready! Ask me anything.`);
+    }, 600);
+  }
+
+  if (info.stage === "error") {
+    if (bar) bar.remove();
+    appendHigherMessage(area, "🧠 System", `❌ ${info.text || "AI failed to load"}`);
+  }
+}
+
+// Enable AI — sends message to background to detect GPU and load model
+async function enableHigherAI(modelKey) {
+  const area = document.getElementById("consoleOvermindCognition");
+  if (area) {
+    appendHigherMessage(area, "🧠 System", "🔍 Checking your GPU and preparing AI…");
+  }
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_ENABLE", modelKey: modelKey || null }, (res) => {
+      if (chrome.runtime.lastError) {
+        if (area) appendHigherMessage(area, "🧠 System", "❌ Could not start AI: " + chrome.runtime.lastError.message);
+        resolve(false);
+        return;
+      }
+      if (res && res.ok) {
+        higherAIEnabled = true;
+        const gpu = res.gpuInfo || {};
+        if (area) {
+          let gpuMsg = gpu.supported
+            ? `GPU detected: ${gpu.description || gpu.vendor || "Unknown"} (~${gpu.vramMB}MB)`
+            : `No GPU detected — using lightweight model`;
+          appendHigherMessage(area, "🧠 System", `${gpuMsg}. Loading ${res.modelLabel}…`);
+        }
+        resolve(true);
+      } else {
+        if (area) appendHigherMessage(area, "🧠 System", "❌ " + (res?.error || "Could not start AI"));
+        resolve(false);
+      }
+    });
+  });
+}
+
+// Disable AI — tell background to unload the model
+function disableHigherAI() {
+  chrome.runtime.sendMessage({ type: "PB_HIGHER_DISABLE" }, () => { void chrome.runtime.lastError; });
+  higherAIEnabled = false;
+  const area = document.getElementById("consoleOvermindCognition");
+  if (area) appendHigherMessage(area, "🧠 System", "AI disabled. Model unloaded to free memory.");
+}
+
+// Check AI status from background
+async function checkHigherAIStatus() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_STATUS" }, (res) => {
+      if (chrome.runtime.lastError) { resolve(null); return; }
+      if (res && res.ok) {
+        higherAIEnabled = res.enabled;
+        resolve(res);
+      } else {
+        resolve(null);
+      }
+    });
+  });
+}
+
+// Switch to a different model
+async function switchHigherModel(modelKey) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_SWITCH_MODEL", modelKey }, (res) => {
+      if (chrome.runtime.lastError) { resolve(false); return; }
+      const area = document.getElementById("consoleOvermindCognition");
+      if (res && res.ok) {
+        if (area) appendHigherMessage(area, "🧠 System", `Switching to ${res.modelLabel}… The new model will load on your next prompt.`);
+        resolve(true);
+      } else {
+        if (area) appendHigherMessage(area, "🧠 System", "❌ " + (res?.error || "Could not switch model"));
+        resolve(false);
+      }
+    });
+  });
+}
 
 // Copy button inside code blocks (works for saved history too)
 document.addEventListener("click", (e) => {
@@ -1409,7 +1532,14 @@ CompanionConsoleSend.onclick = async () => {
     });
   } else {
     // Higher Intellect: show what the user typed, then ask the model
-    appendHigherMessage(consoleOvermindCognition, "user", originalText);
+    // [Phase 2] Auto-enable AI if the user tries to chat before enabling
+    if (!higherAIEnabled) {
+      appendHigherMessage(consoleOvermindCognition, "user", originalText);
+      appendHigherMessage(consoleOvermindCognition, "🧠 System", "Starting AI for the first time — checking GPU and downloading model…");
+      await enableHigherAI();
+    } else {
+      appendHigherMessage(consoleOvermindCognition, "user", originalText);
+    }
     showHigherThinking();
     MyLowerIntellect = originalText;
     loadOrders();
@@ -1597,6 +1727,8 @@ function getReadableName(url) {
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
         CompanionDetailsMessage.style.display = "none";
+        // [Phase 2] Restore AI status when Higher console was previously shown
+        checkHigherAIStatus();
       } else {
         HigherAuthority.textContent = "🌐";
         consoleOvermindCognition.style.display = "none";
@@ -1711,6 +1843,10 @@ function getReadableName(url) {
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
           CompanionDetailsMessage.style.display = "none";
+          // [Phase 2] Auto-enable AI the first time the Higher console is shown
+          if (!higherAIEnabled) {
+            enableHigherAI(); // async — starts GPU check + model download in background
+          }
         } else {
           HigherAuthorityShown = false;
           HigherAuthority.textContent = "🌐";
