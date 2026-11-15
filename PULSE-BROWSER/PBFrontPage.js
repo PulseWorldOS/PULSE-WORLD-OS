@@ -2904,6 +2904,22 @@ setInterval(async () => {
   await pbRenderCacheList2();
 }, intervalA);
 
+// [Fix] Render cache + earner value immediately on load — don't wait for first interval tick
+(async () => {
+  try {
+    // Show earner value from stored session immediately
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response && response.ok && response.WeassumedValue) {
+        OurassumedValue = response.WeassumedValue;
+        earnerminipanel.textContent = currency(OurassumedValue);
+      }
+    });
+    // Render cache list immediately
+    await pbRenderCacheList2();
+  } catch (e) { console.warn("[Quick Load] Cache pre-render skipped:", e); }
+})();
+
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   let gpuEnabled = "GPU Driver Error";
@@ -4587,10 +4603,12 @@ async function setTheStage() {
 
   updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 
+  // [Fix] Start earner faster on tab refresh — was 6000ms, now 1000ms so it's nearly instant
+  appendEarnerMessage(CompanionMessages, "⚡", "Earner restarting…");
   setTimeout(async () => {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
-  }, 6000);
+  }, 1000);
 
   try {
     const locationResult = await ensureLocationAccess({
@@ -6219,6 +6237,8 @@ function CheckBackTab() {
       updateOverlay();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      // [Fix] Immediately refresh cache display when tab becomes visible again
+      pbRenderCacheList2().catch(() => {});
       const interval3 = getCharacterInterval();
       setTimeout(() => {
         pbPulseScreen.currentTime = 0;
