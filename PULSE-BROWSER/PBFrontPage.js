@@ -1387,12 +1387,25 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 // ---- Phase 2: On-Demand AI — persistent GPU status, model switcher & progress bar ----
 
 function getNextBiggerModelKey(currentKey) {
-  const ladder = ["qwen-0.5b", "qwen-1.5b", "qwen-3b", "qwen-7b"];
+  const ladder = ["qwen-0.5b", "qwen-1.5b", "qwen-3b", "qwen-7b", "qwen3-8b", "qwen3.5-9b", "llama-13b"];
   const idx = ladder.indexOf(currentKey);
   if (idx >= 0 && idx < ladder.length - 1) return ladder[idx + 1];
   if (currentKey === "llama-1b") return "llama-3b";
   if (currentKey === "llama-3b") return "llama-8b";
+  if (currentKey === "llama-8b") return "llama-13b";
   return null;
+}
+
+function getHighRamWarningText(modelEntry, gpu) {
+  if (!modelEntry || (!modelEntry.highRam && (modelEntry.vramMinMB || 0) < 4000)) return "";
+  const gb = (modelEntry.vramMinMB / 1024).toFixed(1);
+  const vramNote = (gpu && gpu.supported && gpu.vramMB && modelEntry.vramMinMB > gpu.vramMB)
+    ? ` (exceeds detected ${gpu.vramMB}MB buffer)`
+    : "";
+  if (modelEntry.vramMinMB >= 10000) {
+    return `⚠️ Very High RAM/VRAM (~${gb} GB)${vramNote} — only for high-memory workstations; lighter PCs may lag or fail.`;
+  }
+  return `⚠️ High RAM/VRAM (~${gb} GB)${vramNote} — great for heavy decisions, may slow down lighter devices.`;
 }
 
 function renderHigherStatusPanel(status, checkingText) {
@@ -1434,16 +1447,26 @@ function renderHigherStatusPanel(status, checkingText) {
   }
 
   const models = Array.isArray(status.models) ? status.models : [];
-  const optionsHtml = models.map((m) => {
+  const renderOpt = (m) => {
     const selected = m.key === status.modelKey ? "selected" : "";
     const tag = m.key === status.recommendedKey ? " ★" : "";
-    return `<option value="${escapeHTML(m.key)}" ${selected}>${escapeHTML(m.label)} (${m.vramMinMB}MB)${tag}</option>`;
-  }).join("");
+    const warn = (m.highRam || (m.vramMinMB || 0) >= 4000) ? " ⚠️" : "";
+    return `<option value="${escapeHTML(m.key)}" ${selected}>${escapeHTML(m.label)} (${m.vramMinMB}MB)${warn}${tag}</option>`;
+  };
+  const featuredModels = models.filter((m) => m.group !== "all");
+  const allOtherModels = models.filter((m) => m.group === "all");
+  const optionsHtml = allOtherModels.length > 0
+    ? `<optgroup label="⭐ Recommended & High-Power Tiers">${featuredModels.map(renderOpt).join("")}</optgroup>` +
+      `<optgroup label="📦 All WebLLM Models (${models.length})">${allOtherModels.map(renderOpt).join("")}</optgroup>`
+    : models.map(renderOpt).join("");
+
+  const activeEntry = models.find((m) => m.key === status.modelKey);
+  const initialWarn = getHighRamWarningText(activeEntry, gpu);
 
   const nextBiggerKey = getNextBiggerModelKey(status.modelKey);
   const nextBiggerEntry = nextBiggerKey ? models.find((m) => m.key === nextBiggerKey) : null;
   const biggerBtnHtml = nextBiggerEntry
-    ? `<button id="higherBiggerBtn" type="button" title="Switch to ${escapeHTML(nextBiggerEntry.label)}" style="cursor:pointer;background:#122b45;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:1px 5px;font-size:0.55rem;">⬆️ ${escapeHTML(nextBiggerEntry.label.split(" (")[0])}</button>`
+    ? `<button id="higherBiggerBtn" type="button" title="Switch to ${escapeHTML(nextBiggerEntry.label)} (${nextBiggerEntry.vramMinMB}MB)" style="cursor:pointer;background:#122b45;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:1px 5px;font-size:0.55rem;">⬆️ ${escapeHTML(nextBiggerEntry.label.split(" (")[0])}</button>`
     : "";
 
   const toggleBtnLabel = status.enabled ? "Off" : "Enable";
@@ -1465,6 +1488,7 @@ function renderHigherStatusPanel(status, checkingText) {
       ${biggerBtnHtml}
       <button id="higherToggleEnableBtn" type="button" style="${toggleBtnStyle}">${toggleBtnLabel}</button>
     </div>
+    <div id="higherRamWarning" style="display:${initialWarn ? "block" : "none"};margin-top:3px;font-size:0.53rem;color:#ffbe76;">${escapeHTML(initialWarn)}</div>
     <div id="higherProgressSlot"></div>
   `;
 
@@ -1477,6 +1501,16 @@ function renderHigherStatusPanel(status, checkingText) {
   const loadBtn = document.getElementById("higherLoadModelBtn");
   const biggerBtn = document.getElementById("higherBiggerBtn");
   const toggleBtn = document.getElementById("higherToggleEnableBtn");
+  const warnEl = document.getElementById("higherRamWarning");
+
+  if (selectEl && warnEl) {
+    selectEl.onchange = () => {
+      const picked = models.find((m) => m.key === selectEl.value);
+      const warnMsg = getHighRamWarningText(picked, gpu);
+      warnEl.textContent = warnMsg;
+      warnEl.style.display = warnMsg ? "block" : "none";
+    };
+  }
 
   if (loadBtn && selectEl) {
     loadBtn.onclick = async () => {

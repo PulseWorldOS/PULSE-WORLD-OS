@@ -3,7 +3,7 @@
 //  Manifest V3 Service Worker — full OS kernel
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
-import { CreateMLCEngine } from "./OvermindPrimes.js";
+import { CreateMLCEngine, prebuiltAppConfig } from "./OvermindPrimes.js";
 import './MellowEarner.js';
 
 let online = navigator.onLine;
@@ -1410,21 +1410,52 @@ function isAMoment(origin) {
 // ============================================================================
 
 // ---- Model Registry --------------------------------------------------------
-// Each entry: { id, label, vramMinMB }
+// Each entry: { id, label, vramMinMB, group, highRam }
 // vramMinMB = approximate minimum GPU memory needed to run the model
 const HIGHER_MODELS = {
   // Qwen (default family) — smallest to largest
-  "qwen-0.5b":  { id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",  label: "Qwen 0.5B (Ultra-Light)", vramMinMB: 512  },
-  "qwen-1.5b":  { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",  label: "Qwen 1.5B (Light)",       vramMinMB: 1200 },
-  "qwen-3b":    { id: "Qwen2.5-3B-Instruct-q4f16_1-MLC",     label: "Qwen 3B (Standard)",      vramMinMB: 2500 },
-  "qwen-7b":    { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",     label: "Qwen 7B (Full)",          vramMinMB: 4500 },
-  // Llama (kept for backward compat / user choice)
-  "llama-1b":   { id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",   label: "Llama 1B (Light)",        vramMinMB: 1000 },
-  "llama-3b":   { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC",   label: "Llama 3B (Standard)",     vramMinMB: 2500 },
-  "llama-8b":   { id: "Llama-3.1-8B-Instruct-q4f32_1-MLC",   label: "Llama 8B (Full)",         vramMinMB: 5000 },
-  // DeepSeek (kept commented reference)
-  "deepseek-7b":{ id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC", label: "DeepSeek-R1 7B",      vramMinMB: 4500 },
+  "qwen-0.5b":     { id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",       label: "Qwen 2.5 0.5B (Ultra-Light)",     vramMinMB: 512,   group: "featured" },
+  "qwen-1.5b":     { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",       label: "Qwen 2.5 1.5B (Light)",           vramMinMB: 1200,  group: "featured" },
+  "qwen-3b":       { id: "Qwen2.5-3B-Instruct-q4f16_1-MLC",         label: "Qwen 2.5 3B (Standard)",          vramMinMB: 2500,  group: "featured" },
+  "qwen-7b":       { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",         label: "Qwen 2.5 7B (High RAM)",          vramMinMB: 4500,  group: "featured" },
+  "qwen-coder-7b": { id: "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC",   label: "Qwen 2.5 Coder 7B (High RAM)",    vramMinMB: 5107,  group: "featured" },
+  "qwen3-8b":      { id: "Qwen3-8B-q4f16_1-MLC",                    label: "Qwen 3 8B (High RAM)",            vramMinMB: 5696,  group: "featured" },
+  "qwen3.5-9b":    { id: "Qwen3.5-9B-q4f16_1-MLC",                  label: "Qwen 3.5 9B (Max Qwen • High RAM)", vramMinMB: 6433, group: "featured" },
+  // DeepSeek / Gemma / Llama — standard to heavy decision tiers
+  "deepseek-7b":   { id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC", label: "DeepSeek-R1 Qwen 7B (High RAM)",  vramMinMB: 4500,  group: "featured" },
+  "deepseek-8b":   { id: "DeepSeek-R1-Distill-Llama-8B-q4f16_1-MLC",label: "DeepSeek-R1 Llama 8B (High RAM)", vramMinMB: 5001,  group: "featured" },
+  "gemma-9b":      { id: "gemma-2-9b-it-q4f16_1-MLC",               label: "Gemma 2 9B (High RAM)",           vramMinMB: 6422,  group: "featured" },
+  "llama-1b":      { id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",       label: "Llama 3.2 1B (Light)",            vramMinMB: 1000,  group: "featured" },
+  "llama-3b":      { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC",       label: "Llama 3.2 3B (Standard)",         vramMinMB: 2500,  group: "featured" },
+  "llama-8b":      { id: "Llama-3.1-8B-Instruct-q4f32_1-MLC",       label: "Llama 3.1 8B (High RAM)",         vramMinMB: 5000,  group: "featured" },
+  "llama-13b":     { id: "Llama-2-13b-chat-hf-q4f16_1-MLC",         label: "Llama 2 13B (Very High RAM)",     vramMinMB: 11814, group: "featured" },
+  "llama-70b":     { id: "Llama-3.1-70B-Instruct-q3f16_1-MLC",      label: "Llama 3.1 70B (Extreme RAM)",     vramMinMB: 31153, group: "featured" },
+  "phi-3.5-vision":{ id: "Phi-3.5-vision-instruct-q4f16_1-MLC",     label: "Phi 3.5 Vision (High RAM)",       vramMinMB: 3952,  group: "featured" },
 };
+
+// Expose every remaining chat/vision model bundled in OvermindPrimes.js (excluding embeddings)
+(function registerAllWebLLMModels() {
+  const curatedIds = new Set(Object.values(HIGHER_MODELS).map((m) => m.id));
+  const list = (prebuiltAppConfig && Array.isArray(prebuiltAppConfig.model_list))
+    ? prebuiltAppConfig.model_list
+    : [];
+  for (const m of list) {
+    if (!m || !m.model_id) continue;
+    if (m.model_type === 1 || /embed/i.test(m.model_id)) continue; // skip embedding-only models
+    if (curatedIds.has(m.model_id)) continue;
+    const vramMinMB = Math.round(m.vram_required_MB || 2000);
+    const shortName = m.model_id.replace(/-MLC$/, "");
+    HIGHER_MODELS[m.model_id] = {
+      id: m.model_id,
+      label: vramMinMB >= 4000 ? `${shortName} (High RAM)` : shortName,
+      vramMinMB,
+      group: "all",
+    };
+  }
+  for (const key of Object.keys(HIGHER_MODELS)) {
+    HIGHER_MODELS[key].highRam = (HIGHER_MODELS[key].vramMinMB || 0) >= 4000;
+  }
+})();
 const HIGHER_DEFAULT_KEY   = "qwen-1.5b";   // safe default for most GPUs
 const HIGHER_FALLBACK_KEY  = "qwen-0.5b";   // for very low-end GPUs (< 1.2 GB)
 // Old hardcoded ID (kept as comment for reference):
@@ -3147,7 +3178,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           recommendedKey,
           recommendedLabel: recommendedEntry.label,
           gpuInfo,
-          models: Object.entries(HIGHER_MODELS).map(([k, v]) => ({ key: k, label: v.label, vramMinMB: v.vramMinMB })),
+          models: Object.entries(HIGHER_MODELS).map(([k, v]) => ({
+            key: k,
+            label: v.label,
+            vramMinMB: v.vramMinMB,
+            highRam: Boolean(v.highRam),
+            group: v.group || "all",
+          })),
         });
       })();
       return true;
