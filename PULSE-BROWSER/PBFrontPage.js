@@ -2022,6 +2022,7 @@ function getReadableName(url) {
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
+        pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
         HigherAuthority.textContent = "🧠";
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
@@ -2030,6 +2031,7 @@ function getReadableName(url) {
         // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
         initHigherAIConsoleOnTabStart(true);
       } else {
+        pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
         HigherAuthority.textContent = "🌐";
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
@@ -2138,6 +2140,7 @@ function getReadableName(url) {
       HigherAuthority.onclick = async () => {
         if (!HigherAuthorityShown) {
           HigherAuthorityShown = true;
+          pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
@@ -2147,6 +2150,7 @@ function getReadableName(url) {
           initHigherAIConsoleOnTabStart(true);
         } else {
           HigherAuthorityShown = false;
+          pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
           HigherAuthority.textContent = "🌐";
           consoleOvermindCognition.style.display = "none";
           CognitionTitle.style.display = "none";
