@@ -2733,17 +2733,18 @@ async function runEngineTest(silent = false) {
   ]);
   const inputSnapshot = new Uint8Array(mock256Payload);
 
-  // 3. Measure isolated Wasm proof job execution
+  // 3. Measure isolated proof job execution
   const start = performance.now();
   try {
-    // [Phase 4] Try GPU first for heavy payloads, fall back to WASM
+    // [Phase 4] GPU only for large payloads (1KB+). Small jobs stay on WASM — GPU overhead is too high for tiny batches.
+    const GPU_MIN_BYTES = 1024;
     let outputProof = null;
     let usedGPU = false;
-    if (gpuContext) {
+    if (gpuContext && mock256Payload.byteLength >= GPU_MIN_BYTES) {
       outputProof = await run256BitJobOnGPU(mock256Payload);
       if (outputProof) usedGPU = true;
     }
-    // WASM fallback if GPU unavailable or failed
+    // WASM handles small payloads and GPU fallback
     if (!outputProof) {
       outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
     }
