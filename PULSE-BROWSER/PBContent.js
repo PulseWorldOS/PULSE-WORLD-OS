@@ -806,7 +806,6 @@ async function gpuWarmExtra() {
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
-  emitFullPageContext();
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------
@@ -1415,9 +1414,9 @@ perfObserver.observe({
 // ---------------------------------------------------------------------------
 function extractWorldBands(wwwCheck) {
   const bands = {};
-  let bandstring = "EarnBand ¢";
+  let bandstring = "<font color=gold>EarnBand ¢</font>";
   if (wwwCheck === "WWW") {
-    bandstring = "EarnBand ¢";
+    bandstring = "<font color=gold>EarnBand ¢</font>";
   } else {
     bandstring = "PulseBand";
   }
@@ -1514,6 +1513,7 @@ document.addEventListener("PulseDocumentChanged", (ev) => {
     page: ev.detail.page,
     file: ev.detail.file,
     domainClass: pbDomainClass(location.href),
+    bands: extractWorldBands(pbDomainClass(location.href)),
     ts: Date.now()
   });
 });

@@ -3386,6 +3386,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         } else {
           PulseRealmState.lastDomainClass = msg.domainClass;
         }
+        PulseRealmState.bands = msg.bands;
         let origin = new URL(realm).origin
         PulseRealmState.lastWarmOrigin = origin;
         PulseRealmState.lastURL = realm;
