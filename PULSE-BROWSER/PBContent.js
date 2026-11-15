@@ -1414,9 +1414,9 @@ perfObserver.observe({
 // ---------------------------------------------------------------------------
 function extractWorldBands(wwwCheck) {
   const bands = {};
-  let bandstring = "<font color=gold>EarnBand ¢</font>";
+  let bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold>¢</font>";
   if (wwwCheck === "WWW") {
-    bandstring = "<font color=gold>EarnBand ¢</font>";
+    bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold>¢</font>";
   } else {
     bandstring = "PulseBand";
   }
