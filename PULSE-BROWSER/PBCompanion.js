@@ -4344,6 +4344,7 @@ async function clearPulseCaches() {
     const isPulseCache =
       key.includes("Pulse") ||
       key.includes("webllm") ||
+      key.includes("mlc") ||
       key.includes("huggingface") ||
       key.includes("PB") ||
       key.includes("companion") ||
