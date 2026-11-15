@@ -300,11 +300,9 @@ async function loadOrders() {
       return;
     }
     if (response.HigherIntellect) {
-      PB_LOG3.info("HELP: " + MyHigherIntellect);
-      MyHigherIntellect = null;
+      // Fallback path: a reply that was finished while no page was listening
       MyHigherIntellect = response.HigherIntellect;
-      PB_LOG3.info("HELP: " + MyHigherIntellect);
-      if (PulseCogMemoryAIBuffer.length === 0) appendHigherMessage(consoleOvermindCognition, "🧠 AI Overmind 🧠", MyHigherIntellect);
+      showHigherReply({ id: response.HigherIntellectId, text: MyHigherIntellect, prompt: null });
     }
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
@@ -1200,18 +1198,124 @@ function appendEarnerMessage(area, role, text) {
   area.scrollTop = area.scrollHeight;
 }
 
+// ============================================================================
+//  HIGHER AI CONSOLE — safe rich-text output (Phase 1)
+//  Everything the model writes is HTML-escaped FIRST, then turned into a small
+//  safe set of elements. HTML/JS in a reply is shown as text/code, never run.
+// ============================================================================
+function escapeHTML(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function renderAIMarkdown(raw) {
+  let text = String(raw ?? "");
+  const stash = [];
+  const keep = (html) => "\u0000" + (stash.push(html) - 1) + "\u0000";
+
+  // 1. <think>…</think> (also an unfinished one) -> collapsible block
+  text = text.replace(/<think>([\s\S]*?)(?:<\/think>|$)/gi, (_, inner) =>
+    keep(`<details style="margin:2px 0;opacity:.75"><summary style="cursor:pointer">🧠 thinking…</summary>${escapeHTML(inner.trim()).replace(/\n/g, "<br>")}</details>`));
+
+  // 2. fenced code blocks -> <pre> with a copy button
+  text = text.replace(/```([a-zA-Z0-9_+-]*)[ \t]*\n?([\s\S]*?)(?:```|$)/g, (_, lang, code) =>
+    keep(`<div class="pw-code" style="margin:4px 0;border:1px solid #234;border-radius:6px;background:#050a12">` +
+      `<div style="display:flex;justify-content:space-between;padding:2px 6px;background:#0b1626;color:#7fdfff">` +
+      `<span>${escapeHTML(lang || "code")}</span><button data-pw-copy="1" style="cursor:pointer;background:none;border:0;color:#0FF;font-size:inherit">copy</button></div>` +
+      `<pre style="margin:0;padding:6px;overflow:auto;white-space:pre-wrap;word-break:break-word"><code>${escapeHTML(code.replace(/\n$/, ""))}</code></pre></div>`));
+
+  // 3. inline code
+  text = text.replace(/`([^`\n]+)`/g, (_, c) =>
+    keep(`<code style="background:#0b1626;padding:0 3px;border-radius:3px">${escapeHTML(c)}</code>`));
+
+  // 4. escape everything that is left
+  text = escapeHTML(text);
+
+  // 5. images / links (http(s) and inline data:image only — never javascript:)
+  text = text.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|data:image\/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+\/=]+)\)/g,
+    (_, alt, url) => `<img src="${url}" alt="${alt}" style="max-width:100%;border-radius:6px;display:block;margin:4px 0">`);
+  text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#0FF">$1</a>');
+
+  // 6. light markdown: headings, bold, newlines
+  text = text.replace(/^#{1,3}[ \t]+(.+)$/gm, "<b>$1</b>");
+  text = text.replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>");
+  text = text.replace(/\n/g, "<br>");
+
+  // 7. put the protected blocks back
+  return text.replace(/\u0000(\d+)\u0000/g, (_, i) => stash[Number(i)]);
+}
+
 function appendHigherMessage(area, role, text) {
+  if (!area) return;
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
-  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  bubble.style.color = "#f9f9f9";
   const now = Date.now();
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${role}:  ${showTime}</font> `) + text + `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}:  ${showTime}</font> `) + renderAIMarkdown(text) + `<br>`;
   PulseCogMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
+
+// "thinking…" line while the model works (not saved to history)
+function showHigherThinking() {
+  const area = document.getElementById("consoleOvermindCognition");
+  if (!area || document.getElementById("higherThinking")) return;
+  const el = document.createElement("div");
+  el.id = "higherThinking";
+  el.style.fontSize = "0.6rem";
+  el.style.color = "#7fdfff";
+  el.textContent = "🧠 AI Overmind is thinking… (the first answer can take a while if the model is still loading)";
+  area.appendChild(el);
+  area.scrollTop = area.scrollHeight;
+}
+
+function hideHigherThinking() {
+  const el = document.getElementById("higherThinking");
+  if (el) el.remove();
+}
+
+// One reply, shown once (replies can arrive by push AND by the PB_GATHER_ORDERS poll)
+const shownHigherReplyIds = new Set();
+function showHigherReply({ id, text, prompt }) {
+  if (!text) return;
+  if (id != null) {
+    if (shownHigherReplyIds.has(id)) return;
+    shownHigherReplyIds.add(id);
+  }
+  // The automatic start-up greeting (no prompt) only shows on an empty history, as before
+  if (!prompt && PulseCogMemoryAIBuffer.length > 0) return;
+  hideHigherThinking();
+  const area = document.getElementById("consoleOvermindCognition");
+  appendHigherMessage(area, "🧠 AI Overmind 🧠", text);
+  // save the conversation like the other consoles do
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, () => { void chrome.runtime.lastError; });
+}
+
+// The background worker pushes the finished WebLLM reply here
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg && msg.type === "PB_HIGHER_REPLY") {
+    showHigherReply({ id: msg.id, text: msg.text, prompt: msg.prompt });
+    sendResponse({ ok: true });
+  }
+});
+
+// Copy button inside code blocks (works for saved history too)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest("[data-pw-copy]");
+  if (!btn) return;
+  const code = btn.closest(".pw-code")?.querySelector("pre");
+  if (code && navigator.clipboard) {
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      btn.textContent = "copied";
+      setTimeout(() => { btn.textContent = "copy"; }, 1200);
+    }).catch(() => {});
+  }
+});
 
 async function appendCompanionMessage(area, role, text) {
   const bubble = document.createElement("div");
@@ -1254,6 +1358,7 @@ document.getElementById("CompanionConsoleInput").addEventListener("keydown", asy
 CompanionConsoleSend.onclick = async () => {
   CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
   CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+  const originalText = CompanionConsoleInput.value.trim(); // keeps capitals (code!) for the Higher AI
   const text = CompanionConsoleInput.value.toLowerCase().trim();
   if (!text) return;
   let order = text;
@@ -1303,7 +1408,10 @@ CompanionConsoleSend.onclick = async () => {
       }
     });
   } else {
-    MyLowerIntellect = text;
+    // Higher Intellect: show what the user typed, then ask the model
+    appendHigherMessage(consoleOvermindCognition, "user", originalText);
+    showHigherThinking();
+    MyLowerIntellect = originalText;
     loadOrders();
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
