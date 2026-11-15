@@ -897,10 +897,10 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   // Only cache GET requests
   if (!ServiceWorkerOnline) return;
-  
+
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes('olostep.com') || req.url.includes('speed.cloudflare.com')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
      return; // Bypasses service worker caching entirely
   }
   // // Skip chrome-extension:// URLs (cannot be cached)
@@ -1992,6 +1992,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     await PulseMellowEarner.generateAndOpenOptInLink();
     await PulseMellowEarner.optIn();
     await PulseMellowEarner.start();
+    const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
+    const hasOptedIn = await PulseMellowEarner.getOptInStatus();
+    console.log(hasOptedIn);
     PB_LOG2.event("Pulse Mellow Earner: Starting Bandwidth Market..", PulseMellowEarner);
   } else if (info.menuItemId === 'resetBootVideo') {
     const bootVideoRunOnce = false;

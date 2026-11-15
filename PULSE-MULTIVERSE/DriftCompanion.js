@@ -409,7 +409,7 @@ self.addEventListener('fetch', event => {
   // API writes and reads must always reach the server, never a cached mirror.
   if (req.method !== 'GET' || url.pathname.startsWith('/.netlify/functions/')) return;
 
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes('olostep.com') || req.url.includes('speed.cloudflare.com')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
      return; // Bypasses service worker caching entirely
   }
 
