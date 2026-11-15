@@ -1,4 +1,4 @@
-import './MellowEarner.js';
+
 // ============================================================================
 //  PBPopup.js — PulseBrowser OS Control Console (Ultra Edition v6.0)
 //  Full OS cockpit • subsystem toggles • diagnostics • warm-path triggers
@@ -27,19 +27,19 @@ const pbPulsePopupOvermind = document.getElementById("pbPulseDetailsEarn2");
 const earnerhelperPopuppanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperPopuppanel = document.getElementById("earner-inner-helper-panel");
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
+// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+//   integrationId: "intgr-CxPYRSJjKe",
+//   disableLogs: false
+// });
 
 
-(async () => {
-  try {
-    await PulseMellowEarner.initContentScript();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch {}
-})();
+// (async () => {
+//   try {
+//     await PulseMellowEarner.initContentScript();
+//     await PulseMellowEarner.optIn();
+//     await PulseMellowEarner.start();
+//   } catch {}
+// })();
 
 
 let PULSE_OVERMIND_BROADCAST_CHANNEL2 = `PulseBrowser-OS::${new Date(nowPP).toLocaleTimeString()}`;
