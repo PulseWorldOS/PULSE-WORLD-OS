@@ -2050,7 +2050,7 @@ async function pbRenderCacheList2() {
 
     // ⭐ Cache size color logic
     const sizeMB = parseFloat(cache.sizeMB || "0");
-    totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
+    totalBytes = totalBytes + Math.round(sizeMB * 1024 * 1024); // [Phase 3] was .toFixed(0) — string concatenation bug
     let sizeColor = "lightgreen";
 
     if (sizeMB >= 150) sizeColor = "gold";     // warming
@@ -2308,12 +2308,35 @@ async function pbRenderStorageStats2(history) {
   // console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
-  let higherAIDisplay = 4540330000;
+  // [Phase 3] Measure real AI model cache size instead of hardcoded 4.54 GB
+  // Uses navigator.storage.estimate() which already includes cached model data in localUsed
+  // We just need to show the AI-specific portion properly
+  let higherAIDisplay = 0;
+  try {
+    // Check each model in the registry to see if it's cached
+    // The model weights are stored in Cache Storage by WebLLM
+    const cacheNames = await caches.keys();
+    for (const name of cacheNames) {
+      // WebLLM stores model data in caches named with the model ID
+      if (name.includes("webllm") || name.includes("mlc") || name.includes("model")) {
+        const cache = await caches.open(name);
+        const keys = await cache.keys();
+        for (const req of keys) {
+          try {
+            const resp = await cache.match(req);
+            if (resp) {
+              const blob = await resp.clone().blob();
+              higherAIDisplay += blob.size;
+            }
+          } catch (_) { /* skip unreadable entries */ }
+        }
+      }
+    }
+  } catch (_) { /* if cache inspection fails, show 0 */ }
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
-  // console.log("AI Memory Size:", aiSize, "bytes");
-  // console.log("PBCompanion.js Size:", swSize, "bytes");
-  
-  totalUsed = totalUsed - higherAIDisplay;
+
+  // [Phase 3] Don't subtract — the model cache is already part of localUsed
+  // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
   // ⭐ Conversions
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
