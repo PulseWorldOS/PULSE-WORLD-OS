@@ -113,11 +113,5 @@
     "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*mouseflow.com*" }
-  },
-  {
-    "id": 18,
-    "priority": 3,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*intercom.io*" }
   }
 ]
