@@ -1412,10 +1412,14 @@ perfObserver.observe({
 // ---------------------------------------------------------------------------
 // 7. WORLD-BAND EXTRACTION (PulseWorld OS)
 // ---------------------------------------------------------------------------
-function extractWorldBands() {
+function extractWorldBands(wwwCheck) {
   const bands = {};
   let bandstring = "DataBand";
-
+  if (wwwCheck === "WWW") {
+    bandstring = "DataBand";
+  } else {
+    bandstring = "PulseBand";
+  }
   document.querySelectorAll("[data-band]").forEach((el) => {
     const name = el.getAttribute("data-band");
     bands[name] = bands[name] || 0;
@@ -1991,7 +1995,7 @@ function emitFullPageContext() {
     url: location.href,
     title: documentTitle(),
     domainClass: pbDomainClass(location.href),
-    bands: extractWorldBands()
+    bands: extractWorldBands(pbDomainClass(location.href))
   });
 }
 
