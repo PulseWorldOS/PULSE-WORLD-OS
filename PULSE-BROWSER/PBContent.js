@@ -806,6 +806,7 @@ async function gpuWarmExtra() {
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
+  emitFullPageContext();
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------
