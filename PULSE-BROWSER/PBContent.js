@@ -1414,9 +1414,9 @@ perfObserver.observe({
 // ---------------------------------------------------------------------------
 function extractWorldBands(wwwCheck) {
   const bands = {};
-  let bandstring = "EarnBand";
+  let bandstring = "EarnBand ¢";
   if (wwwCheck === "WWW") {
-    bandstring = "EarnBand";
+    bandstring = "EarnBand ¢";
   } else {
     bandstring = "PulseBand";
   }
