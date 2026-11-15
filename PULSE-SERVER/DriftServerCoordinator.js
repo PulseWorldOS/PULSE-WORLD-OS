@@ -200,29 +200,34 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.pathname.startsWith('/.netlify/functions/') || req.url.startsWith('chrome://extensions')) {
+  if (url.endsWith('.wasm') || url.includes('.wasm') || url.pathname.includes('/.netlify/functions/')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (req.url.protocol !== 'https:' && req.url.hostname !== 'localhost') {
+  if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
     return; 
   }
 
-  if (req.url.pathname.includes('-TEST') ||
-      req.url.pathname.includes('/PulseAdmin') ||
-      req.url.pathname.includes('PulseStreamingHeartbeat')) {
+  if (url.pathname.includes('-TEST') ||
+      url.pathname.includes('/PulseAdmin') ||
+      url.pathname.includes('PulseStreamingHeartbeat')) {
     return;
   }
 
   const isPulseRoute =
-    req.url.pathname.startsWith('/') &&
-    !req.url.pathname.startsWith('/PulseServer') &&
-    !req.url.pathname.startsWith('/PulseAPI') &&
-    !req.url.pathname.startsWith('/PulseAdmin');
+    url.pathname.startsWith('/') &&
+    !url.pathname.startsWith('/PulseServer') &&
+    !url.pathname.startsWith('/PulseAPI') &&
+    !url.pathname.startsWith('/PulseAdmin');
 
   if (!isPulseRoute) {
     return;
   }
+
+  // // Skip chrome-extension:// URLs (cannot be cached)
+  if (req.url.includes('chrome://extensions')) {
+     return; // Let the browser handle extension assets normally
+  }  
 
   event.respondWith(handlePulseRequest(req));
 });
