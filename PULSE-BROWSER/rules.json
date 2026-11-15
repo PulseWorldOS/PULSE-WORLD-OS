@@ -1,171 +1,169 @@
 [
-  [
-    {
-      "id": 1,
-      "priority": 1,
-      "action": {
-        "type": "modifyHeaders",
-        "responseHeaders": [
-          { "header": "x-frame-options", "operation": "remove" },
-          { "header": "frame-options", "operation": "remove" },
-          { "header": "content-security-policy", "operation": "remove" },
-          { "header": "content-security-policy-report-only", "operation": "remove" },
-          { "header": "cross-origin-embedder-policy", "operation": "remove" },
-          { "header": "cross-origin-opener-policy", "operation": "remove" },
-          { "header": "cross-origin-resource-policy", "operation": "remove" },
-          { "header": "access-control-allow-origin", "operation": "set", "value": "*" },
-          { "header": "access-control-allow-methods", "operation": "set", "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD" },
-          { "header": "access-control-allow-headers", "operation": "set", "value": "*" },
-          { "header": "access-control-expose-headers", "operation": "set", "value": "*" }
-        ]
-      },
-      "condition": {
-        "urlFilter": "*",
-        "resourceTypes": [
-          "main_frame",
-          "sub_frame",
-          "xmlhttprequest",
-          "script",
-          "stylesheet",
-          "image",
-          "font",
-          "media",
-          "ping",
-          "other"
-        ]
-      }
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "x-frame-options", "operation": "remove" },
+        { "header": "frame-options", "operation": "remove" },
+        { "header": "content-security-policy", "operation": "remove" },
+        { "header": "content-security-policy-report-only", "operation": "remove" },
+        { "header": "cross-origin-embedder-policy", "operation": "remove" },
+        { "header": "cross-origin-opener-policy", "operation": "remove" },
+        { "header": "cross-origin-resource-policy", "operation": "remove" },
+        { "header": "access-control-allow-origin", "operation": "set", "value": "*" },
+        { "header": "access-control-allow-methods", "operation": "set", "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD" },
+        { "header": "access-control-allow-headers", "operation": "set", "value": "*" },
+        { "header": "access-control-expose-headers", "operation": "set", "value": "*" }
+      ]
     },
-    {
-      "id": 2,
-      "priority": 2,
-      "action": {
-        "type": "modifyHeaders",
-        "responseHeaders": [
-          { "header": "access-control-allow-origin", "operation": "set", "value": "https://pulseworld.net" },
-          { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
-        ]
-      },
-      "condition": {
-        "initiatorDomains": ["pulseworld.net"],
-        "resourceTypes": ["xmlhttprequest", "sub_frame", "other"]
-      }
-    },
-    {
-      "id": 3,
-      "priority": 2,
-      "action": {
-        "type": "modifyHeaders",
-        "responseHeaders": [
-          { "header": "access-control-allow-origin", "operation": "set", "value": "https://pulseworld.net" },
-          { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
-        ]
-      },
-      "condition": {
-        "initiatorDomains": ["pulseworld.net"],
-        "excludedRequestDomains": ["www.pulseworld.net"],
-        "resourceTypes": ["xmlhttprequest", "sub_frame", "other"]
-      }
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "xmlhttprequest",
+        "script",
+        "stylesheet",
+        "image",
+        "font",
+        "media",
+        "ping",
+        "other"
+      ]
     }
-  ],
+  },
   {
     "id": 2,
-    "priority": 1,
+    "priority": 2,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "access-control-allow-origin", "operation": "set", "value": "https://www.pulseworld.net" },
+        { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
+      ]
+    },
+    "condition": {
+      "initiatorDomains": ["pulseworld.net"],
+      "resourceTypes": ["xmlhttprequest", "sub_frame", "other"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 2,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "access-control-allow-origin", "operation": "set", "value": "https://pulseworld.net" },
+        { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
+      ]
+    },
+    "condition": {
+      "initiatorDomains": ["pulseworld.net"],
+      "excludedRequestDomains": ["www.pulseworld.net"],
+      "resourceTypes": ["xmlhttprequest", "sub_frame", "other"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*googlesyndication.com*" }
   },
   {
-    "id": 3,
-    "priority": 1,
+    "id": 5,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*google-analytics.com*" }
   },
   {
     "id": 6,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*scorecardresearch.com*" }
   },
   {
     "id": 7,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*quantserve.com*" }
   },
   {
     "id": 8,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*adservice.google.com*" }
   },
   {
     "id": 9,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*taboola.com*" }
   },
   {
     "id": 10,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*outbrain.com*" }
   },
   {
     "id": 11,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*tiqcdn.com*" }
   },
   {
     "id": 12,
-    "priority": 1,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*cdn.ampproject.org*" }
   },
   {
-    "id": 14,
-    "priority": 1,
+    "id": 13,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*cloudflareinsights.com*" }
   },
   {
-    "id": 15,
-    "priority": 1,
+    "id": 14,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*newrelic.com*" }
   },
   {
-    "id": 16,
-    "priority": 1,
+    "id": 15,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*mixpanel.com*" }
   },
   {
-    "id": 17,
-    "priority": 1,
+    "id": 16,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*hotjar.com*" }
   },
   {
-    "id": 18,
-    "priority": 1,
+    "id": 17,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*mouseflow.com*" }
   },
   {
-    "id": 19,
-    "priority": 1,
+    "id": 18,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*intercom.io*" }
   },
   {
-    "id": 20,
-    "priority": 1,
+    "id": 19,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*segment.io*" }
   },
   {
-    "id": 21,
-    "priority": 1,
+    "id": 20,
+    "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*doubleclick.net*" }
   }

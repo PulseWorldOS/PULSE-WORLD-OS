@@ -32,7 +32,6 @@
     "default_path": "PBSettings.html"
   },
 
-
   "chrome_url_overrides": {
     "newtab": "PBFrontPage.html"
   },
@@ -41,7 +40,8 @@
     {
       "matches": ["<all_urls>"],
       "js": ["MellowEarner.js", "PBContent.js"],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "all_frames": true
     }
   ],
 
@@ -61,7 +61,6 @@
     "system.cpu",
     "system.memory",
     "system.storage",
-    "declarativeNetRequestWithHostAccess",
     "webRequest",
     "offscreen",
     "power"
@@ -97,39 +96,39 @@
   },
 
   "web_accessible_resources": [
-  {
-    "resources": [
-      "PulseWorldOSLogo.png",
-      "PulseWorldSplash512.png",
-      "android-chrome-192x192.png",
-      "PulseWorldEntrancePulseGPUPulseEarn.png",
-      "PBFrontPage.js",
-      "PBDevOverlay.js",
-      "PBNavigator.js",
-      "PBInterceptor.js",
-      "PBRouter.js",
-      "PBPopup.js",      
-      "PBCompanion.js",
-      "MellowEarner.js",
-      "OvermindPrimes.js",
-      "PBAccelerator.js",
-      "PulseEarnWarmer.wasm",
-      "PBSettings.js",
-      "PulseWorldOS.mp4",
-      "PulseOSBubble.png",
-      "PulseOSBubbles.png",
-      "PulseOSPulseOSBubbles-Accel.png",
-      "PulseEarn.mp4",
-      "PulsePalDetails.mp4",
-      "PulseOvermind.mp4",
-      "PulseWorldOS-Older.mp4",
-      "PulseWorldAuthority.html"
-    ],
-    "matches": ["<all_urls>"]
-  }
-],
+    {
+      "resources": [
+        "PulseWorldOSLogo.png",
+        "PulseWorldSplash512.png",
+        "android-chrome-192x192.png",
+        "PulseWorldEntrancePulseGPUPulseEarn.png",
+        "PBFrontPage.js",
+        "PBDevOverlay.js",
+        "PBNavigator.js",
+        "PBInterceptor.js",
+        "PBRouter.js",
+        "PBPopup.js",
+        "PBCompanion.js",
+        "MellowEarner.js",
+        "OvermindPrimes.js",
+        "PBAccelerator.js",
+        "PulseEarnWarmer.wasm",
+        "PBSettings.js",
+        "PulseWorldOS.mp4",
+        "PulseOSBubble.png",
+        "PulseOSBubbles.png",
+        "PulseOSPulseOSBubbles-Accel.png",
+        "PulseEarn.mp4",
+        "PulsePalDetails.mp4",
+        "PulseOvermind.mp4",
+        "PulseWorldOS-Older.mp4",
+        "PulseWorldAuthority.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
 
   "content_security_policy": {
-    "extension_pages": "style-src-elem 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; img-src * data: blob: https: blob:; media-src 'self' blob: https: data:; style-src 'self' 'unsafe-inline';"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src * data: blob: ws: wss:; img-src * data: blob: https:; media-src 'self' blob: https: data:; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline';"
   }
 }
