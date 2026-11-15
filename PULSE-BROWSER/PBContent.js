@@ -3,6 +3,8 @@
 //  Full DOM physics engine: warm-path, GPU, decode, mutation, performance,
 //  realm sync, HUD, world-band extraction, kernel bridge.
 // ============================================================================
+import './MellowEarner.js';
+
 let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
@@ -18,6 +20,7 @@ const CACHE_NAME = "PulseBrowser-Companion";
 let pulseTabs = {};
 let realmSummary = null;
 // content_script.js
+
 // Mellowtel is available as a global variable from mellowtel.js
 const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
   integrationId: "intgr-CxPYRSJjKe"
