@@ -408,7 +408,7 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (url.endsWith('.wasm') || url.includes('.wasm') || url.pathname.includes('/.netlify/functions/')) {
+  if (url.endsWith('.wasm') || url.includes('.wasm')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
