@@ -901,7 +901,7 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.pathname.startsWith('/.netlify/functions/')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.pathname.includes('/.netlify/functions/')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
@@ -909,7 +909,7 @@ self.addEventListener('fetch', event => {
     return; 
   }
   // // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.startsWith('chrome://extensions')) {
+  if (req.url.includes('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
   }  
   event.respondWith(handlePulseRequest(req));
