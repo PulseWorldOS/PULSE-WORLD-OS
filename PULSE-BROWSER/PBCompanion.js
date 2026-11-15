@@ -901,11 +901,11 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (url.endsWith('.wasm') || url.includes('.wasm') || url.pathname.startsWith('/.netlify/functions/') || url.startsWith('chrome://extensions')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.pathname.startsWith('/.netlify/functions/') || req.url.startsWith('chrome://extensions')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
+  if (req.url.protocol !== 'https:' && req.url.hostname !== 'localhost') {
     return; 
   }
   

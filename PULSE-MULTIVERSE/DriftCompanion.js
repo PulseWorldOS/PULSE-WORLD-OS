@@ -408,16 +408,16 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (url.endsWith('.wasm') || url.includes('.wasm') || url.pathname.startsWith('/.netlify/functions/') || url.startsWith('chrome://extensions')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.pathname.startsWith('/.netlify/functions/') || req.url.startsWith('chrome://extensions')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
+  if (req.url.protocol !== 'https:' && req.url.hostname !== 'localhost') {
     return; 
   }
   // Fetch current application code on return visits, retaining an offline fallback.
-  if (url.origin === self.location.origin &&
-      (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(url.pathname))) {
+  if (req.url.origin === self.location.origin &&
+      (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(req.url.pathname))) {
     event.respondWith((async () => {
       try {
         const response = await fetch(req, { cache: 'no-store' });
@@ -430,18 +430,18 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (url.pathname.includes('-TEST') ||
-      url.pathname.includes('/PulseAdmin') ||
-      url.pathname.includes('/PULSE-SERVER') ||
-      url.pathname.includes('PulseStreamingHeartbeat')) {
+  if (req.url.pathname.includes('-TEST') ||
+      req.url.pathname.includes('/PulseAdmin') ||
+      req.url.pathname.includes('/PULSE-SERVER') ||
+      req.url.pathname.includes('PulseStreamingHeartbeat')) {
     return;
   }
 
   const isPulseRoute =
-    url.pathname.startsWith('/') &&
-    !url.pathname.startsWith('/PulseServer') &&
-    !url.pathname.startsWith('/PulseAPI') &&
-    !url.pathname.startsWith('/PulseAdmin');
+    req.url.pathname.startsWith('/') &&
+    !req.url.pathname.startsWith('/PulseServer') &&
+    !req.url.pathname.startsWith('/PulseAPI') &&
+    !req.url.pathname.startsWith('/PulseAdmin');
 
   if (!isPulseRoute) {
     return;
