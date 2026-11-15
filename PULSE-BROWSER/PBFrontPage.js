@@ -624,6 +624,11 @@ async function initWebGPUCompute() {
 
 // 2. Call this instead of your Wasm function for large batches
 async function run256BitJobOnGPU(typedArrayPayload) {
+  // [Phase 4] Guard: if GPU was never initialized or failed, return null so caller can fallback
+  if (!gpuContext || !gpuContext.device || !gpuContext.pipeline) {
+    return null;
+  }
+  try {
   const { device, pipeline } = gpuContext;
   const byteSize = typedArrayPayload.byteLength;
 
@@ -670,6 +675,10 @@ async function run256BitJobOnGPU(typedArrayPayload) {
   readBuffer.destroy();
 
   return result;
+  } catch (gpuErr) {
+    console.warn("[GPU] run256BitJobOnGPU failed, returning null for WASM fallback:", gpuErr);
+    return null;
+  }
 }
 
 let soakTestTimer = null;
@@ -726,10 +735,20 @@ async function runEngineTest(silent = false) {
   ]);
   const inputSnapshot = new Uint8Array(mock256Payload);
 
-  // 3. Measure isolated Wasm proof job execution
+  // 3. Measure isolated proof job execution
   const start = performance.now();
   try {
-    const outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
+    // [Phase 4] Try GPU first for heavy payloads, fall back to WASM
+    let outputProof = null;
+    let usedGPU = false;
+    if (gpuContext) {
+      outputProof = await run256BitJobOnGPU(mock256Payload);
+      if (outputProof) usedGPU = true;
+    }
+    // WASM fallback if GPU unavailable or failed
+    if (!outputProof) {
+      outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
+    }
     const elapsedMs = performance.now() - start;
 
     // 4. Validate output structure & Fluence shared-nothing guarantees
@@ -781,8 +800,9 @@ async function runEngineTest(silent = false) {
     WasmSuccess = true;
 
     if (!silent) {
+      const engine = usedGPU ? "WebGPU" : "WASM";
       console.log(
-        `[Success] ${elapsedMs.toFixed(4)} ms | Proof (${proofBytes.length}B):`,
+        `[Success][${engine}] ${elapsedMs.toFixed(4)} ms | Proof (${proofBytes.length}B):`,
         outputProof
       );
     }
