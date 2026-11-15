@@ -51,7 +51,7 @@ function pbDomainClass(url) {
 }
 
 
-if (isPulseWorld(location.href)) {
+if (isPulseWorld(location.href) || IsPartner(location.href)) {
   (async () => {
     try {
       

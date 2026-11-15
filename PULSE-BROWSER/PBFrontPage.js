@@ -6,15 +6,14 @@
 //   disableLogs: false
 // });
 
-
 // (async () => {
 //   try {
-    
-//     await PulseMellowEarner.initContentScript();
+//     await PulseMellowEarner.initBackground();
 //     await PulseMellowEarner.optIn();
 //     await PulseMellowEarner.start();
 //   } catch {}
 // })();
+
 
 let userInteracted = false;
 let engineType = "text";
@@ -4908,29 +4907,6 @@ async function pulseTeleportKey(event) {
   pbPreconnect([link]);
   openNamedTab("PulseWorldModule", link);
   await PBUniversalBoost.warmOrigin(link);
-}
-
-
-function getReadableName(url) {
-  try {
-    const u = new URL(url);
-
-    // Remove protocol + www
-    let host = u.hostname.replace("www.", "");
-
-    // Remove TLD (.com, .net, etc)
-    host = host.split(".")[0];
-
-    // Replace dashes with spaces
-    host = host.replace(/[-_]/g, " ");
-
-    // Capitalize each word
-    host = host.replace(/\b\w/g, c => c.toUpperCase());
-
-    return host;
-  } catch {
-    return url;
-  }
 }
 
 function cleanQuery(query) {
