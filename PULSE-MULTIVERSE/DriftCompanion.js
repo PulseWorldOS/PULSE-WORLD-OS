@@ -412,7 +412,7 @@ self.addEventListener('fetch', event => {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
+  if (url.protocol === 'http:') {
     return; 
   }
   // Fetch current application code on return visits, retaining an offline fallback.
@@ -448,7 +448,7 @@ self.addEventListener('fetch', event => {
   }
 
   // // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.includes('chrome://extensions')) {
+  if (url.includes('chrome://extensions')) {
      return; // Let the browser handle extension assets normally
   }  
 

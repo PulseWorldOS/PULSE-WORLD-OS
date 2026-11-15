@@ -73,18 +73,6 @@
     }
   },
   {
-    "id": 4,
-    "priority": 3,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*googlesyndication.com*" }
-  },
-  {
-    "id": 5,
-    "priority": 3,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*google-analytics.com*" }
-  },
-  {
     "id": 6,
     "priority": 3,
     "action": { "type": "block" },
