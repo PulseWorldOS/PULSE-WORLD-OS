@@ -425,6 +425,7 @@ self.addEventListener("install", event => {
     "PulseEarn.mp4",
     "PulsePalDetails.mp4",
     "PulseOvermind.mp4",
+    "PulseOvermindPrime.mp4",
     "android-chrome-192x192.png",
     "PulseWorldOSMarketplace-White.png",
     "PulseWorldEntrancePulseGPUPulseEarn.png",
