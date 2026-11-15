@@ -11,6 +11,7 @@
         { "header": "content-security-policy-report-only", "operation": "remove" },
         { "header": "cross-origin-embedder-policy", "operation": "remove" },
         { "header": "cross-origin-opener-policy", "operation": "remove" },
+        { "header": "cross-origin-resource-policy", "operation": "remove" },
         { "header": "access-control-allow-origin", "operation": "set", "value": "*" },
         { "header": "access-control-allow-methods", "operation": "set", "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD" },
         { "header": "access-control-allow-headers", "operation": "set", "value": "*" },
@@ -127,12 +128,6 @@
     "condition": { "urlFilter": "*cdn.ampproject.org*" }
   },
   {
-    "id": 13,
-    "priority": 3,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*cloudflareinsights.com*" }
-  },
-  {
     "id": 14,
     "priority": 3,
     "action": { "type": "block" },
@@ -161,17 +156,5 @@
     "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*intercom.io*" }
-  },
-  {
-    "id": 19,
-    "priority": 3,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*segment.io*" }
-  },
-  {
-    "id": 20,
-    "priority": 3,
-    "action": { "type": "block" },
-    "condition": { "urlFilter": "*doubleclick.net*" }
   }
 ]
