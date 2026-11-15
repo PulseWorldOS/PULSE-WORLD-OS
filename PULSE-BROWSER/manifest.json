@@ -129,6 +129,6 @@
   ],
 
   "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src * data: blob: ws: wss:; img-src * data: blob: https:; media-src 'self' blob: https: data:; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline';"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src * blob: ws: wss:; img-src * data: blob: https:; media-src 'self' blob: https: data:; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline';"
   }
 }
