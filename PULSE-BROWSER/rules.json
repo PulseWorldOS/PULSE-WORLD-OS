@@ -19,7 +19,15 @@
       ]
     },
     "condition": {
-      "urlFilter": "*",
+      "initiatorDomains": [
+        "mcbbhkdjpaakjabngfjmaeihnoilognk",
+        "kkidimiknkgfkjplagaohacidaagcbjg",
+        "pulseworld.net",
+        "pulseworld.me",
+        "pulseworld.money",
+        "pulseworld.biz",
+        "olostep.com"
+      ],
       "resourceTypes": [
         "main_frame",
         "sub_frame",
