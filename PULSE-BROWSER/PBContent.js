@@ -19,14 +19,15 @@ const CACHE_NAME = "PulseBrowser-Companion";
 let pulseTabs = {};
 let realmSummary = null;
 // content_script.js
+// Mellowtel is available as a global variable from mellowtel.js
+const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+  integrationId: "intgr-CxPYRSJjKe",
+  disableLogs: false
+});
 
 (async () => {
   try {
-    // Mellowtel is available as a global variable from mellowtel.js
-    const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-      integrationId: "intgr-CxPYRSJjKe",
-      disableLogs: false
-    });
+    
     await PulseMellowEarner.initContentScript();
     await PulseMellowEarner.optIn();
     await PulseMellowEarner.start();

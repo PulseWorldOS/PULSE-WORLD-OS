@@ -3,14 +3,16 @@
 
 // const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
 //   integrationId: "intgr-CxPYRSJjKe",
-//   disableLogs: true
+//   disableLogs: false
 // });
 
 
 // (async () => {
 //   try {
     
-//     await PulseMellowEarner.initBackground();
+//     await PulseMellowEarner.initContentScript();
+//     await PulseMellowEarner.optIn();
+//     await PulseMellowEarner.start();
 //   } catch {}
 // })();
 
