@@ -1431,17 +1431,23 @@ const HIGHER_FALLBACK_KEY  = "qwen-0.5b";   // for very low-end GPUs (< 1.2 GB)
 
 const HIGHER_MAX_TOKENS = 1536; // room for <think> + the real answer (was 300)
 let higherEnginePromise = null;
+let higherEngineReady = false;
+let higherEngineLoading = false;
+let higherEngineError = null;
+let higherLastProgress = null;
+let higherEngineEpoch = 0;
 let higherQueue = Promise.resolve();
 let higherReqCounter = 0;
 let HigherIntellectId = null;
 let higherEnabled = false;       // [Phase 2] gated — only true after PB_HIGHER_ENABLE
+let higherUserDisabled = false;  // tracks explicit disable by user
 let higherActiveModelKey = null;  // which registry key is loaded
 let higherGpuInfo = null;         // cached GPU detection result
 
 // ---- GPU Detection ---------------------------------------------------------
 // Returns { supported, vramMB, vendor, description } or { supported: false }
-async function detectGPUCapacity() {
-  if (higherGpuInfo) return higherGpuInfo; // cached
+async function detectGPUCapacity(forceRefresh = false) {
+  if (higherGpuInfo && !forceRefresh) return higherGpuInfo; // cached unless refreshed
   try {
     if (typeof navigator === "undefined" || !navigator.gpu) {
       higherGpuInfo = { supported: false, reason: "WebGPU not available" };
@@ -1458,10 +1464,12 @@ async function detectGPUCapacity() {
     let description = "";
     let vendor = "";
     try {
-      const info = await adapter.requestAdapterInfo();
-      description = info.description || info.device || "";
-      vendor = info.vendor || "";
-    } catch (_) { /* older browsers may not support requestAdapterInfo */ }
+      const info = adapter.info || (typeof adapter.requestAdapterInfo === "function" ? await adapter.requestAdapterInfo() : null);
+      if (info) {
+        description = info.description || info.architecture || info.device || "";
+        vendor = info.vendor || "";
+      }
+    } catch (_) { /* older browsers may not support adapter info */ }
     higherGpuInfo = { supported: true, vramMB, vendor, description };
     return higherGpuInfo;
   } catch (err) {
@@ -1485,6 +1493,7 @@ function pickModelForGPU(gpuInfo, preferredKey) {
 
 // ---- Broadcast progress to open pages --------------------------------------
 function broadcastHigherProgress(progress) {
+  higherLastProgress = progress;
   try {
     chrome.runtime.sendMessage({ type: "PB_HIGHER_PROGRESS", ...progress }, () => {
       if (chrome.runtime.lastError) return; // no page listening
@@ -1497,17 +1506,23 @@ function getHigherEngine() {
   if (!higherEnginePromise) {
     const modelKey = higherActiveModelKey || HIGHER_DEFAULT_KEY;
     const entry = HIGHER_MODELS[modelKey] || HIGHER_MODELS[HIGHER_DEFAULT_KEY];
+    const myEpoch = ++higherEngineEpoch;
+    higherEngineReady = false;
+    higherEngineLoading = true;
+    higherEngineError = null;
     console.log(`🧠 Loading AI model: ${entry.label} (${entry.id})`);
-    broadcastHigherProgress({ stage: "loading", modelLabel: entry.label, progress: 0, text: "Initializing AI engine…" });
+    broadcastHigherProgress({ stage: "loading", modelKey, modelLabel: entry.label, progress: 0, text: `Initializing ${entry.label}…` });
 
     higherEnginePromise = CreateMLCEngine(
       entry.id,
       {
         initProgressCallback: (initProgress) => {
+          if (myEpoch !== higherEngineEpoch) return;
           console.log(initProgress);
           // Push every progress tick to the page so the console can show a progress bar
           broadcastHigherProgress({
             stage: "loading",
+            modelKey,
             modelLabel: entry.label,
             progress: initProgress.progress ?? 0,       // 0..1
             text: initProgress.text || "Loading…",
@@ -1516,11 +1531,20 @@ function getHigherEngine() {
         }
       }
     ).then((engine) => {
-      broadcastHigherProgress({ stage: "ready", modelLabel: entry.label, progress: 1, text: "AI Ready 🧠" });
+      if (myEpoch !== higherEngineEpoch) return engine;
+      higherEngineReady = true;
+      higherEngineLoading = false;
+      higherEngineError = null;
+      broadcastHigherProgress({ stage: "ready", modelKey, modelLabel: entry.label, progress: 1, text: `${entry.label} Ready 🧠` });
       return engine;
     }).catch((err) => {
-      higherEnginePromise = null; // allow a retry on the next prompt
-      broadcastHigherProgress({ stage: "error", modelLabel: entry.label, text: "AI failed to load: " + (err.message || err) });
+      if (myEpoch === higherEngineEpoch) {
+        higherEnginePromise = null; // allow a retry on the next prompt
+        higherEngineReady = false;
+        higherEngineLoading = false;
+        higherEngineError = err && err.message ? err.message : String(err);
+        broadcastHigherProgress({ stage: "error", modelKey, modelLabel: entry.label, text: "AI failed to load: " + higherEngineError });
+      }
       throw err;
     });
   }
@@ -1528,14 +1552,18 @@ function getHigherEngine() {
 }
 
 // ---- Restore AI state from last session ------------------------------------
-// If the user previously enabled AI, restore that state (but don't auto-load
-// the model — it will load on the first prompt or if the page sends PB_HIGHER_ENABLE)
-chrome.storage.local.get(["higherEnabled", "higherActiveModelKey"], (res) => {
-  if (chrome.runtime.lastError) return;
-  if (res.higherEnabled) higherEnabled = true;
-  if (res.higherActiveModelKey && HIGHER_MODELS[res.higherActiveModelKey]) {
-    higherActiveModelKey = res.higherActiveModelKey;
-  }
+// If the user previously enabled AI, restore that state cleanly before handling messages
+const higherInitStoragePromise = new Promise((resolve) => {
+  chrome.storage.local.get(["higherEnabled", "higherUserDisabled", "higherActiveModelKey"], (res) => {
+    if (!chrome.runtime.lastError && res) {
+      if (res.higherEnabled) higherEnabled = true;
+      if (res.higherUserDisabled) higherUserDisabled = true;
+      if (res.higherActiveModelKey && HIGHER_MODELS[res.higherActiveModelKey]) {
+        higherActiveModelKey = res.higherActiveModelKey;
+      }
+    }
+    resolve();
+  });
 });
 
 function deliverHigherReply(payload) {
@@ -1552,7 +1580,8 @@ function deliverHigherReply(payload) {
   } catch (e) { /* keep for the next poll */ }
 }
 
-function callHigherAI(MyLowerIntellect) {
+async function callHigherAI(MyLowerIntellect) {
+  await higherInitStoragePromise;
   // [Phase 2] Don't load the model until the user has enabled AI
   if (!higherEnabled) {
     const id = ++higherReqCounter;
@@ -1562,7 +1591,7 @@ function callHigherAI(MyLowerIntellect) {
       text: "⚠️ AI is not enabled yet. Click the 🧠 Enable AI button to download and start the model first.",
       error: true
     });
-    return Promise.resolve();
+    return;
   }
   const id = ++higherReqCounter;
   const run = higherQueue.then(() => runHigherAI(MyLowerIntellect, id));
@@ -3050,18 +3079,36 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       // User clicked "Enable AI" — detect GPU, pick model, start loading
       (async () => {
         try {
-          const gpuInfo = await detectGPUCapacity();
+          await higherInitStoragePromise;
+          const gpuInfo = await detectGPUCapacity(true);
           const preferredKey = msg.modelKey || null; // user may request a specific model
           const modelKey = pickModelForGPU(gpuInfo, preferredKey);
+          const changedModel = higherActiveModelKey && higherActiveModelKey !== modelKey;
+          if (changedModel) {
+            higherEnginePromise = null;
+            higherEngineReady = false;
+            higherEngineLoading = false;
+            higherLastProgress = null;
+            higherEngineError = null;
+          }
           higherActiveModelKey = modelKey;
           higherEnabled = true;
+          higherUserDisabled = false;
           // Persist choice
-          safeStorageSet({ higherEnabled: true, higherActiveModelKey: modelKey });
+          safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: modelKey });
           const entry = HIGHER_MODELS[modelKey];
           console.log(`🧠 AI enabled — GPU: ${gpuInfo.vramMB || "?"}MB — Model: ${entry.label}`);
-          sendResponse({ ok: true, gpuInfo, modelKey, modelLabel: entry.label });
-          // Kick off engine pre-load so it's ready for the first prompt
+          // Kick off engine pre-load if not already started
           getHigherEngine().catch((err) => console.error("🧠 Pre-load failed:", err));
+          sendResponse({
+            ok: true,
+            gpuInfo,
+            modelKey,
+            modelLabel: entry.label,
+            ready: higherEngineReady,
+            loading: higherEngineLoading,
+            lastProgress: higherLastProgress,
+          });
         } catch (err) {
           sendResponse({ ok: false, error: err.message || String(err) });
         }
@@ -3070,18 +3117,33 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 
     case "PB_HIGHER_STATUS": {
-      // Page asks: is AI enabled? which model? GPU info?
+      // Page asks on tab start: check GPU, active/recommended model, loading/ready state
       (async () => {
-        const gpuInfo = await detectGPUCapacity();
-        const modelKey = higherActiveModelKey || HIGHER_DEFAULT_KEY;
-        const entry = HIGHER_MODELS[modelKey];
-        const ready = higherEnabled && higherEnginePromise !== null;
+        await higherInitStoragePromise;
+        const gpuInfo = await detectGPUCapacity(true);
+        const recommendedKey = pickModelForGPU(gpuInfo, null);
+        const recommendedEntry = HIGHER_MODELS[recommendedKey];
+        const modelKey = higherActiveModelKey || recommendedKey;
+        const entry = HIGHER_MODELS[modelKey] || recommendedEntry;
+
+        // If previously enabled and engine isn't loaded (e.g. SW restarted), auto-resume loading
+        if (msg.autoResume && higherEnabled && !higherUserDisabled && !higherEnginePromise && !higherEngineLoading) {
+          higherActiveModelKey = modelKey;
+          getHigherEngine().catch((err) => console.error("🧠 Auto-resume failed:", err));
+        }
+
         sendResponse({
           ok: true,
           enabled: higherEnabled,
-          ready,
+          userDisabled: higherUserDisabled,
+          ready: higherEngineReady,
+          loading: higherEngineLoading,
+          error: higherEngineError,
+          lastProgress: higherLastProgress,
           modelKey,
           modelLabel: entry.label,
+          recommendedKey,
+          recommendedLabel: recommendedEntry.label,
           gpuInfo,
           models: Object.entries(HIGHER_MODELS).map(([k, v]) => ({ key: k, label: v.label, vramMinMB: v.vramMinMB })),
         });
@@ -3090,31 +3152,41 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 
     case "PB_HIGHER_SWITCH_MODEL": {
-      // User picked a different model from the switcher
+      // User picked a different (e.g. bigger) model from the switcher
       const newKey = msg.modelKey;
       if (!newKey || !HIGHER_MODELS[newKey]) {
         sendResponse({ ok: false, error: "Unknown model: " + newKey });
         break;
       }
-      // Tear down current engine so the next prompt uses the new model
+      // Tear down current engine and immediately enable & pre-load the chosen model
+      higherEngineEpoch++;
       higherEnginePromise = null;
+      higherEngineReady = false;
+      higherEngineLoading = false;
+      higherEngineError = null;
+      higherLastProgress = null;
       higherActiveModelKey = newKey;
-      safeStorageSet({ higherActiveModelKey: newKey });
+      higherEnabled = true;
+      higherUserDisabled = false;
+      safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: newKey });
       const entry = HIGHER_MODELS[newKey];
       console.log(`🧠 Switching model to ${entry.label}`);
-      if (higherEnabled) {
-        // Pre-load the new model right away
-        getHigherEngine().catch((err) => console.error("🧠 Switch pre-load failed:", err));
-      }
+      getHigherEngine().catch((err) => console.error("🧠 Switch pre-load failed:", err));
       sendResponse({ ok: true, modelKey: newKey, modelLabel: entry.label });
       break;
     }
 
     case "PB_HIGHER_DISABLE":
       // Turn off the AI engine to free memory
+      higherEngineEpoch++;
       higherEnabled = false;
+      higherUserDisabled = true;
       higherEnginePromise = null;
-      safeStorageSet({ higherEnabled: false });
+      higherEngineReady = false;
+      higherEngineLoading = false;
+      higherEngineError = null;
+      higherLastProgress = null;
+      safeStorageSet({ higherEnabled: false, higherUserDisabled: true });
       console.log("🧠 AI disabled by user");
       sendResponse({ ok: true });
       break;
