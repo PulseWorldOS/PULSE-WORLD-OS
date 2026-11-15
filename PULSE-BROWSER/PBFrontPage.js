@@ -4881,7 +4881,7 @@ async function setTheStage() {
   updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
 
   // [Fix] Start earner faster on tab refresh — was 6000ms, now 1000ms so it's nearly instant
-  appendEarnerMessage(CompanionMessages, "⚡", "PulseEarners Restarting…");
+  appendEarnerMessage(CompanionMessages, "⚡", "<-- PulseEarners/EarnBand Restarting -->");
   setTimeout(async () => {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
