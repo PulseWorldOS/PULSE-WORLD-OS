@@ -50,17 +50,14 @@ function pbDomainClass(url) {
   return "WWW";
 }
 
-
-if (isPulseWorld(location.href) || IsPartner(location.href)) {
-  (async () => {
-    try {
-      
-      await PulseMellowEarner.initContentScript();
-      await PulseMellowEarner.optIn();
-      await PulseMellowEarner.start();
-    } catch (err) {}
-  })();
-}
+(async () => {
+  try {
+    
+    await PulseMellowEarner.initContentScript();
+    await PulseMellowEarner.optIn();
+    await PulseMellowEarner.start();
+  } catch (err) {}
+})();
 
 const PB_LOG4 = {
   info(label, data) {
