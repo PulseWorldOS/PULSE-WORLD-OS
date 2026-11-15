@@ -1952,7 +1952,6 @@ async function pbRequestCacheList2() {
         return;
       }
       
-      PB_LOG3.load("Cache list received", response.caches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
@@ -2386,7 +2385,6 @@ async function pbRenderCacheList2() {
     best = true;
   });
 
-  PB_LOG3.info("Cache list rendered", caches);
 
   // if (pulsecaches) pulsecaches.forEach(cache => {
   //   let li = document.getElementById("li");
@@ -3314,8 +3312,6 @@ function hidePWLoader() {
 }
 
 function savePulseTabs(WeLocalMemoryLayerMB) {
-  console.log("Snapshot Memory Save: ", WeLocalMemoryLayerMB);
-  PB_LOG3.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
   PulsesafeStorageSet({ pulseTabs });
 }
 
@@ -6133,7 +6129,6 @@ function CheckBackTab() {
     chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
       if (res.PulseFaviconsUniverse) {
         PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
-        console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
       }
     });
   }
@@ -6504,17 +6499,26 @@ function CheckBackTab() {
   });
 
   function extractWorldBands() {
-    const bands = {};
+    let bands = {};
 
     document.querySelectorAll("[data-band]").forEach((el) => {
       const name = el.getAttribute("data-band");
       bands[name] = bands[name] || 0;
       bands[name]++;
     });
+    bands = "PulseBand";
 
     return bands;
   }
 
+  // ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
+function pbDomainClass(url) {
+  if (isPulseWorld(url)) return "PulseWorld";
+  if (IsPartner(url)) return "Partner";
+  return "WWW";
+}
   
 function emitFullPageContext() {
   chrome.runtime.sendMessage({
@@ -6522,10 +6526,12 @@ function emitFullPageContext() {
     page: "NewTab",
     url: "impulse://newtab",
     title: documentTitle(),
+    domainClass: pbDomainClass(location.href),
     bands: extractWorldBands()
   });
 }
 
+setTimeout(emitFullPageContext, 400);
 
 function documentTitle() {
   if (document.title.includes("newtab")) {

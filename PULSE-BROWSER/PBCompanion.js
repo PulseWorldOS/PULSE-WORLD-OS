@@ -6,20 +6,6 @@
 import { CreateMLCEngine } from "./OvermindPrimes.js";
 import './MellowEarner.js';
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
-
-
-(async () => {
-  try {
-    await PulseMellowEarner.initBackground();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch {}
-})();
-
 let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
@@ -76,6 +62,21 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
 let totalUsed = 0;
+
+const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+  integrationId: "intgr-CxPYRSJjKe",
+  disableLogs: false
+});
+
+
+(async () => {
+  try {
+    await PulseMellowEarner.initBackground();
+    await PulseMellowEarner.optIn();
+    await PulseMellowEarner.start();
+  } catch {}
+})();
+
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
@@ -83,6 +84,7 @@ let PBROWSERFAVICON_CACHE = {};
 chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
   if (res.PulseFaviconsUniverse) {
     PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
+    saveCache();
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -290,9 +292,10 @@ const PulseRealmState = {
   lastURL: null,
   lastTitle: null,
   lastDomainClass: null,
+  gpuEnabled: null,
   // Bands (PulseWorld / OS)
   band: "PulseBand",
-  gpuEnabled: null,
+  
     // accelBand: null,
     // routerBand: null,
     // gpuBand: null,
@@ -3454,8 +3457,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBCHECK_MEMORY":
       if (msg.override) HelperHudBoolean = true;
       if (msg.MyLocalMemoryLayer) {
-        // if (LocalMemoryLayer !== msg.MyLocalMemoryLayer) PB_LOG2.change("PBCHECK_MEMORY: SYSTEM CHANGE", LocalMemoryLayer, msg.MyLocalMemoryLayer);
-        PB_LOG2.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
         LocalMemoryLayer = msg.MyLocalMemoryLayer;
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
         LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
@@ -4132,6 +4133,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
+      PulseRealmState.lastDomainClass = msg.domainClass || PulseRealmState.lastDomainClass;
       sendResponse({ ok: true });
       break;
 

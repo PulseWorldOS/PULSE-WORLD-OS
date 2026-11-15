@@ -281,7 +281,6 @@ console.log("%c[PULSEWORLD CONTENT] PBContent.js (Ultra Edition v10.0) injected"
 chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
   if (res.PulseFaviconsUniverse) {
     PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
-    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
 
@@ -773,8 +772,7 @@ async function gpuWarmExtra() {
     vid.src = "PulseWorldOS-Older.mp4";
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-  PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
-  PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
+  
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
   });
@@ -800,8 +798,7 @@ setInterval(async () => {
       }
     }
   });
-  PB_LOG4.info("PBCHECK_MEMORY: TAB ", OurLocalMemoryLayer);
-  PB_LOG4.info("PBCHECK_MEMORY:pulseTabs", pulseTabs);
+  
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
   });
@@ -1391,28 +1388,17 @@ perfObserver.observe({
 // 7. WORLD-BAND EXTRACTION (PulseWorld OS)
 // ---------------------------------------------------------------------------
 function extractWorldBands() {
-  const bands = {};
+  let bands = {};
 
   document.querySelectorAll("[data-band]").forEach((el) => {
     const name = el.getAttribute("data-band");
     bands[name] = bands[name] || 0;
     bands[name]++;
   });
+  bands = "DataBand";
 
   return bands;
 }
-
-// ---------------------------------------------------------------------------
-// 8. PAGE CONTEXT EMITTER (Realm sync)
-// ---------------------------------------------------------------------------
-function emitPageContext() {
-  chrome.runtime.sendMessage({
-    type: "PBREALM_UPDATE",
-    page: location.pathname,
-    bands: extractWorldBands(),
-  });
-}
-emitPageContext();
 
 
 // // ---------------------------------------------------------------------------
@@ -2004,6 +1990,7 @@ function emitFullPageContext() {
     page: location.pathname,
     url: location.href,
     title: documentTitle(),
+    domainClass: pbDomainClass(location.href),
     bands: extractWorldBands()
   });
 }

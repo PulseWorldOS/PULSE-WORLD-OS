@@ -482,6 +482,7 @@ chrome.storage.local.get(["SessionStart"], (res) => {
 chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
   if (res.PulseFaviconsUniverse) {
     PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
+    saveCache();
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
 });
@@ -1645,7 +1646,6 @@ async function pbRequestCacheList() {
         return;
       }
 
-      PB_LOG7.load("Cache list received", response.caches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });

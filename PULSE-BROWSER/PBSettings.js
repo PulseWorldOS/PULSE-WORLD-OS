@@ -436,7 +436,6 @@ async function pbRequestCacheList() {
         return;
       }
 
-      PB_LOG.load("Cache list received", response.caches);
       resolve(response);   // ⭐ Return the WHOLE object
     });
   });
