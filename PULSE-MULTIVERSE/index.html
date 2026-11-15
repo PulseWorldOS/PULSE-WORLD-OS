@@ -9701,10 +9701,40 @@ document.addEventListener("PulseDocumentChanged", () => {
   }
 });
 
+(function() {
+  // 1. Map your domains to their respective Mellowtel invite_ids
+  const domainInviteMap = {
+    'pulseworld.net': '6iyeqjc693s',
+    'pulseworld.me': 'pfzcy82lbn',
+    'pulseworld.biz': 'j0z0h5rh54',
+    'pulseworld.money': 'c85xhamrg8',
+    'binaryos.net': 'ctqgfzdnl7e',
+    'booleanlogic.net': 'uanebzpxdyl',
+    'serviceworker.net': 'zswq3fmt7xj',
+    'orbitalmap.net': 'ecz755xevxw',
+    'gpuprocessing.net': 'qt97rsez1hj'
+  };
+
+  // 2. Get the current hostname and strip 'www.' for cleaner matching
+  const currentHost = window.location.hostname.replace(/^www\./, '').toLowerCase();
+
+  // 3. Look up the matching invite_id
+  const inviteId = domainInviteMap[currentHost];
+
+  // 4. Only inject the script if a matching ID exists for this site
+  if (inviteId) {
+    const script = document.createElement('script');
+    script.src = `https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=` + inviteId;
+    script.async = true;
+    
+    document.head.appendChild(script);
+  }
+})();
 </script>
-<script
+
+<!-- <script
   src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=6iyeqjc693s"
   async>
-</script>
+</script> -->
 </body>
 </html>

@@ -2557,7 +2557,7 @@ setInterval(async () => {
     }
   });
   setInterval(flickerOrigins, 1500); // every 1.5s
-  await CheckTime();
+
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
   chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -3153,7 +3153,7 @@ setInterval(async () => {
     if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
   });
   loadOrders();
-  await CheckTime();
+
   await pbRenderCacheList2();
 }, intervalB);
 
