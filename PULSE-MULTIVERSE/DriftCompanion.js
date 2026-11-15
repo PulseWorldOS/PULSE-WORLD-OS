@@ -404,6 +404,7 @@ self.addEventListener('message', event => {
 
 self.addEventListener('fetch', event => {
   const req = event.request;
+  const url = new URL(req.url);
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
@@ -415,8 +416,8 @@ self.addEventListener('fetch', event => {
     return; 
   }
   // Fetch current application code on return visits, retaining an offline fallback.
-  if (req.url.origin === self.location.origin &&
-      (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(req.url.pathname))) {
+  if (url.origin === self.location.origin &&
+      (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(url.pathname))) {
     event.respondWith((async () => {
       try {
         const response = await fetch(req, { cache: 'no-store' });
@@ -429,18 +430,18 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (req.url.pathname.includes('-TEST') ||
-      req.url.pathname.includes('/PulseAdmin') ||
-      req.url.pathname.includes('/PULSE-SERVER') ||
-      req.url.pathname.includes('PulseStreamingHeartbeat')) {
+  if (url.pathname.includes('-TEST') ||
+      url.pathname.includes('/PulseAdmin') ||
+      url.pathname.includes('/PULSE-SERVER') ||
+      url.pathname.includes('PulseStreamingHeartbeat')) {
     return;
   }
 
   const isPulseRoute =
-    req.url.pathname.startsWith('/') &&
-    !req.url.pathname.startsWith('/PulseServer') &&
-    !req.url.pathname.startsWith('/PulseAPI') &&
-    !req.url.pathname.startsWith('/PulseAdmin');
+    url.pathname.startsWith('/') &&
+    !url.pathname.startsWith('/PulseServer') &&
+    !url.pathname.startsWith('/PulseAPI') &&
+    !url.pathname.startsWith('/PulseAdmin');
 
   if (!isPulseRoute) {
     return;
