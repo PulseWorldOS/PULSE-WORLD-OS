@@ -409,6 +409,10 @@ self.addEventListener('fetch', event => {
   // API writes and reads must always reach the server, never a cached mirror.
   if (req.method !== 'GET' || url.pathname.startsWith('/.netlify/functions/')) return;
 
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes('olostep.com') || req.url.includes('speed.cloudflare.com')) {
+     return; // Bypasses service worker caching entirely
+  }
+
   // Fetch current application code on return visits, retaining an offline fallback.
   if (url.origin === self.location.origin &&
       (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(url.pathname))) {
