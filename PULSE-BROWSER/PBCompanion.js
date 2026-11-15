@@ -6,9 +6,7 @@
 import { CreateMLCEngine } from "./OvermindPrimes.js";
 import './MellowEarner.js';
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe"
-});
+const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", { integrationId: "intgr-CxPYRSJjKe" }, { disableLogs: false });
 
 (async () => {
   try {
@@ -1943,8 +1941,14 @@ chrome.runtime.onInstalled.addListener(async () => {
       // call a function to handle an update
   }
   **/
+  const MellowSettings = await PulseMellowEarner.generateSettingsLink();
+  console.log(MellowSettings);
   await PulseMellowEarner.generateAndOpenOptInLink();
+  await PulseMellowEarner.optIn();
+  await PulseMellowEarner.start();
   const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
+  const hasOptedIn = await PulseMellowEarner.getOptInStatus();
+  console.log(hasOptedIn);
   chrome.runtime.setUninstallURL(uninstallURl);
 });
 
@@ -1976,6 +1980,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       AdBlockerOff();
     }
   } else if (info.menuItemId === 'runMellowEarner') {
+    const MellowSettings = await PulseMellowEarner.generateSettingsLink();
+    console.log(MellowSettings);
     await PulseMellowEarner.generateAndOpenOptInLink();
     await PulseMellowEarner.optIn();
     await PulseMellowEarner.start();
