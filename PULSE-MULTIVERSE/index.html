@@ -57,7 +57,6 @@
 <title>Pulse World Corp - Secure Digital Experience</title>
 <!-- <script type="module" src="https://port.serviceworker.net"></script> -->
 <!-- <script type="module" src="https://port.gpuprocessing.net"></script> -->
-<script type="module" src="./PulseOSSpeed.js"></script>
 <script type="module" src="https://port.binaryos.net"></script>
 <!-- <script type="module" src="./PulseWorldOSImports.js"></script> 
  -->
@@ -1356,7 +1355,11 @@ PulseRealm.PulseHistory = {
   ],
   index: -1
 };
-const regs = navigator.serviceWorker.getRegistrations();
+async function KeepItGoing() {
+  const regs = navigator.serviceWorker.getRegistrations();
+  await navigator.serviceWorker.register("/DriftCompanion.js");
+  PulseRealm.ServiceWorkerOffline = false;
+}
 
 let currencyRates = {
   USD: 1,
@@ -1734,6 +1737,7 @@ if (PulseRealm.ServiceWorkerOffline === true || PulseRealm.ServiceWorkerOffline 
   pulseworkerBtn.style.borderColor = "red";
   PulseRealm.ServiceWorkerOffline === true
 } else {
+  KeepItGoing();
   pulseworkerBtn.style.borderColor = "#0FF";
 }
 const INTERNAL_PREFIX = "IMPULSE://";
