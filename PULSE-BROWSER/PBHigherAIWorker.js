@@ -10,6 +10,8 @@ import {
   HIGHER_MAX_TOKENS,
   detectGPUCapacity,
   pickModelForGPU,
+  resolveModelIdForGPU,
+  getF32FallbackModelId,
   serializeModelsList,
   buildOvermindMessages,
 } from "./PBHigherModels.js";
@@ -88,19 +90,37 @@ function startEngineLoad(modelKey) {
 
   enginePromise = (async () => {
     await unloadCurrentEngineInternalExceptPromise();
-    const engine = await CreateMLCEngine(entry.id, {
-      initProgressCallback: (initProgress) => {
-        if (myEpoch !== epoch) return;
-        broadcastProgress({
-          stage: "loading",
-          modelKey: chosenKey,
-          modelLabel: entry.label,
-          progress: initProgress.progress ?? 0,
-          text: initProgress.text || "Loading…",
-          timeElapsed: initProgress.timeElapsed || 0,
+    const gpu = await ensureGPU(false);
+    let targetModelId = resolveModelIdForGPU(entry.id, gpu);
+    const makeProgressCb = (labelSuffix = "") => (initProgress) => {
+      if (myEpoch !== epoch) return;
+      broadcastProgress({
+        stage: "loading",
+        modelKey: chosenKey,
+        modelLabel: entry.label + labelSuffix,
+        progress: initProgress.progress ?? 0,
+        text: initProgress.text || "Loading…",
+        timeElapsed: initProgress.timeElapsed || 0,
+      });
+    };
+
+    let engine;
+    try {
+      engine = await CreateMLCEngine(targetModelId, {
+        initProgressCallback: makeProgressCb(targetModelId !== entry.id ? " [f32]" : ""),
+      });
+    } catch (firstErr) {
+      const msgErr = String(firstErr?.message || firstErr);
+      const f32Fallback = getF32FallbackModelId(targetModelId);
+      if (f32Fallback && f32Fallback !== targetModelId && /ShaderModule|shader-f16|compute stage|index_kernel/i.test(msgErr)) {
+        targetModelId = f32Fallback;
+        engine = await CreateMLCEngine(targetModelId, {
+          initProgressCallback: makeProgressCb(" [f32]"),
         });
-      },
-    });
+      } else {
+        throw firstErr;
+      }
+    }
     if (myEpoch !== epoch) {
       try { await engine.unload(); } catch (_) {}
       throw new Error("Model switch cancelled this load");

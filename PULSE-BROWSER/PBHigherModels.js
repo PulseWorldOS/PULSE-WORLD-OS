@@ -52,6 +52,37 @@ export const HIGHER_DEFAULT_KEY = "qwen-1.5b";
 export const HIGHER_FALLBACK_KEY = "qwen-0.5b";
 export const HIGHER_MAX_TOKENS = 1024;
 
+const PREBUILT_MODEL_ID_SET = new Set(
+  ((prebuiltAppConfig && Array.isArray(prebuiltAppConfig.model_list)) ? prebuiltAppConfig.model_list : [])
+    .map((m) => m && m.model_id)
+    .filter(Boolean)
+);
+
+export function getF32FallbackModelId(modelId) {
+  if (!modelId || typeof modelId !== "string") return null;
+  const candidates = [
+    modelId.replace("-q4f16_1-", "-q4f32_1-"),
+    modelId.replace("-q4f16_0-", "-q4f32_1-"),
+    modelId.replace("-q0f16-", "-q0f32-"),
+    modelId.replace("-q3f16_1-", "-q3f32_1-"),
+  ];
+  for (const cand of candidates) {
+    if (cand !== modelId && PREBUILT_MODEL_ID_SET.has(cand)) {
+      return cand;
+    }
+  }
+  return null;
+}
+
+export function resolveModelIdForGPU(modelId, gpuInfo) {
+  if (!modelId) return modelId;
+  if (gpuInfo && gpuInfo.supported && gpuInfo.hasF16 === false) {
+    const f32Id = getF32FallbackModelId(modelId);
+    if (f32Id) return f32Id;
+  }
+  return modelId;
+}
+
 export async function detectGPUCapacity() {
   try {
     if (typeof navigator === "undefined" || !navigator.gpu) {
@@ -63,6 +94,7 @@ export async function detectGPUCapacity() {
     }
     const maxBuf = adapter.limits.maxBufferSize || 0;
     const vramMB = Math.round(maxBuf / (1024 * 1024));
+    const hasF16 = Boolean(adapter.features && typeof adapter.features.has === "function" && adapter.features.has("shader-f16"));
     let description = "";
     let vendor = "";
     try {
@@ -72,7 +104,7 @@ export async function detectGPUCapacity() {
         vendor = info.vendor || "";
       }
     } catch (_) {}
-    return { supported: true, vramMB, vendor, description };
+    return { supported: true, vramMB, hasF16, vendor, description };
   } catch (err) {
     return { supported: false, reason: String(err && err.message ? err.message : err) };
   }

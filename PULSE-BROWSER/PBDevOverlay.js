@@ -76,7 +76,7 @@ function updateKernel(realm, SessionStart) {
   if (lastPage) lastPageshort = lastPage.slice(0, 40);
   let lastTitleshort = lastTitle;
   if (lastTitle) lastTitleshort = lastTitle.slice(0, 40);
-  if (lastTitleshort.includes("EarnBand ¢")) {
+  if (lastTitleshort && lastTitleshort.includes("EarnBand ¢")) {
     lastTitleshort = lastTitleshort.replace("EarnBand ¢", "<font color=lightgreen>EarnBand</font> <font color=gold><strong>¢</strong></font>");
   }
   

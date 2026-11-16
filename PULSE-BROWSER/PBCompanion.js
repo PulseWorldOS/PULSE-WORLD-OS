@@ -10,6 +10,8 @@ import {
   HIGHER_MAX_TOKENS,
   detectGPUCapacity as detectSharedGPUCapacity,
   pickModelForGPU,
+  resolveModelIdForGPU,
+  getF32FallbackModelId,
   serializeModelsList,
   buildOvermindMessages,
 } from "./PBHigherModels.js";
@@ -1560,19 +1562,30 @@ function getHigherEngine() {
 
     higherEnginePromise = (async () => {
       await unloadSWEngine();
-      const engine = await CreateMLCEngine(entry.id, {
-        initProgressCallback: (initProgress) => {
-          if (myEpoch !== higherEngineEpoch) return;
-          broadcastHigherProgress({
-            stage: "loading",
-            modelKey,
-            modelLabel: entry.label,
-            progress: initProgress.progress ?? 0,
-            text: initProgress.text || "Loading…",
-            timeElapsed: initProgress.timeElapsed || 0,
-          });
-        },
-      });
+      const gpu = await detectGPUCapacity(false);
+      let targetModelId = resolveModelIdForGPU(entry.id, gpu);
+      const makeProgressCb = (initProgress) => {
+        if (myEpoch !== higherEngineEpoch) return;
+        broadcastHigherProgress({
+          stage: "loading",
+          modelKey,
+          modelLabel: entry.label,
+          progress: initProgress.progress ?? 0,
+          text: initProgress.text || "Loading…",
+          timeElapsed: initProgress.timeElapsed || 0,
+        });
+      };
+      let engine;
+      try {
+        engine = await CreateMLCEngine(targetModelId, { initProgressCallback: makeProgressCb });
+      } catch (firstErr) {
+        const f32Fallback = getF32FallbackModelId(targetModelId);
+        if (f32Fallback && f32Fallback !== targetModelId && /ShaderModule|shader-f16|compute stage|index_kernel/i.test(String(firstErr?.message || firstErr))) {
+          engine = await CreateMLCEngine(f32Fallback, { initProgressCallback: makeProgressCb });
+        } else {
+          throw firstErr;
+        }
+      }
       if (myEpoch !== higherEngineEpoch) {
         try { await engine.unload(); } catch (_) {}
         throw new Error("Model switch cancelled this load");

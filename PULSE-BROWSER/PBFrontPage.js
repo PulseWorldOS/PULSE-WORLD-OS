@@ -1059,7 +1059,31 @@ async function runLocalAI() {
   
   try {
     await hydrateHigherHistoryOnce();
-    consoleOvermindCognition.style.fontSize = "0.6rem";
+    const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
+    PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    if (CompanionDetailsMessage && CompanionDetailsMessage.children.length <= 1 && PulsePalMemoryAIBuffer.length > 0) {
+      PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
+      CompanionDetailsMessage.style.fontSize = "0.62rem";
+      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+    let CompanionTitle = document.getElementById("CompanionTitle");
+    if (CompanionTitle && !CompanionTitle.innerHTML) {
+      const showTime = `[${new Date().toLocaleString()}]`;
+      CompanionTitle.style.marginBottom = "6px";
+      CompanionTitle.style.textAlign = "center";
+      CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+    }
+    let CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && !CognitionTitle.innerHTML) {
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 86);
+      const showTime = `[${futureDate.toLocaleString()}]`;
+      CognitionTitle.style.marginBottom = "6px";
+      CognitionTitle.style.textAlign = "center";
+      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+    }
+    consoleOvermindCognition.style.fontSize = "0.62rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     swSize = await getSWSize();
     aiSize = await getAISize();
@@ -1068,29 +1092,18 @@ async function runLocalAI() {
   } catch (err) {}
   
   if (typeof LanguageModel === 'undefined') {
-    console.error("🧠 AI Overmind (Gemini Nano) is not supported in this browser version.");
+    console.info("🧠 Built-in Gemini Nano unavailable — using local Qwen WebLLM engine for Present & Future modes.");
     return;
   }
   RunningAI = true;
 
   const status = await LanguageModel.availability();
-  const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);  
 
   if (status === 'unavailable') {
-    console.error("🧠 AI Overmind (Gemini Nano) cannot run on this device hardware.");
+    console.info("🧠 Built-in Gemini Nano unavailable on hardware — using local Qwen WebLLM engine.");
+    RunningAI = false;
     return;
   }
-
-  try {
-    PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
-    PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
-    CompanionDetailsMessage.style.fontSize = "0.6rem";
-    CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
-    swSize = await getSWSize();
-    aiSize = await getAISize();
-    higherAISize = await getHigherAISize();
-    loadOrders();
-  } catch (err) {}
 
   try {
     if (!aiSession) {
@@ -1276,6 +1289,8 @@ let higherAIEnabled = false;   // tracks local state
 let higherLastStatus = null;   // latest status payload from backend
 let higherThinkingWatchTimer = null;
 let higherThinkingStartedAt = 0;
+let presentFallbackPending = false;
+let presentFallbackOrderText = "";
 
 function ensureHigherConsoleContainers() {
   const area = document.getElementById("consoleOvermindCognition");
@@ -1375,16 +1390,27 @@ function showHigherThinking(statusText) {
 function updateHigherStream(msg) {
   const { area } = ensureHigherConsoleContainers();
   let el = document.getElementById("higherThinking");
-  if (!el) return;
+  const compEl = document.getElementById("companionThinking");
+  const label = msg.modelLabel ? `🧠 ${msg.modelLabel}` : "🧠 AI Overmind";
+  let html = "";
+  let plain = "";
   if (msg.text && msg.text.trim()) {
-    const label = msg.modelLabel ? `🧠 ${msg.modelLabel}` : "🧠 AI Overmind";
-    el.innerHTML = `<div style="color:#0FF;font-size:0.56rem;margin-bottom:2px;">${escapeHTML(label)} (streaming…)</div>` + renderAIMarkdown(msg.text);
+    html = `<div style="color:#0FF;font-size:0.56rem;margin-bottom:2px;">${escapeHTML(label)} (streaming…)</div>` + renderAIMarkdown(msg.text);
   } else if (msg.phase === "loading") {
-    el.textContent = `⏳ Loading ${msg.modelLabel || "model"} into GPU…`;
+    plain = `⏳ Loading ${msg.modelLabel || "model"} into GPU…`;
   } else if (msg.phase === "prefill") {
-    el.textContent = `🧠 ${msg.modelLabel || "AI"} reading prompt…`;
+    plain = `🧠 ${msg.modelLabel || "AI"} reading prompt…`;
   }
-  if (area) area.scrollTop = area.scrollHeight;
+  if (el) {
+    if (html) el.innerHTML = html;
+    else if (plain) el.textContent = plain;
+    if (area) area.scrollTop = area.scrollHeight;
+  }
+  if (compEl) {
+    if (html) compEl.innerHTML = html;
+    else if (plain) compEl.textContent = plain;
+    if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+  }
 }
 
 function startHigherThinkingWatch() {
@@ -1445,6 +1471,8 @@ function hideHigherThinking() {
   stopHigherThinkingWatch();
   const el = document.getElementById("higherThinking");
   if (el) el.remove();
+  const compEl = document.getElementById("companionThinking");
+  if (compEl) compEl.remove();
 }
 
 // One reply, shown once (replies arrive via push, storage mailbox, or PB_GATHER_ORDERS poll)
@@ -1453,7 +1481,7 @@ function showHigherReply({ id, text, prompt }) {
   if (id != null) {
     if (shownHigherReplyIds.has(id)) return;
   }
-  const hasThinking = Boolean(document.getElementById("higherThinking"));
+  const hasThinking = Boolean(document.getElementById("higherThinking") || document.getElementById("companionThinking"));
   // The automatic start-up greeting (no prompt) only shows on an empty history
   if (!prompt && !hasThinking && PulseCogMemoryAIBuffer.length > 0) return;
 
@@ -1467,6 +1495,17 @@ function showHigherReply({ id, text, prompt }) {
     : "⚠️ AI finished without output tokens — please try sending again.";
   const area = document.getElementById("consoleOvermindCognition");
   appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText);
+  if (presentFallbackPending) {
+    presentFallbackPending = false;
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    if (CompanionDetailsMessage) {
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", renderAIMarkdown(safeText));
+      if (presentFallbackOrderText.includes("overmind orders")) {
+        OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + safeText;
+      }
+    }
+    presentFallbackOrderText = "";
+  }
   // save the conversation like the other consoles do
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, () => { void chrome.runtime.lastError; });
 }
@@ -1928,7 +1967,28 @@ CompanionConsoleSend.onclick = async () => {
       } catch (_) {}
     }
     if (!aiSession) {
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", "⚠️ Built-in Chrome Gemini Nano is not available in this browser. Click 🌐 → 🧠 next to Send to use local Qwen / WebLLM AI!");
+      // Seamless fallback to local Qwen/WebLLM when Chrome's experimental Gemini Nano isn't enabled
+      presentFallbackPending = true;
+      presentFallbackOrderText = text;
+      if (!higherAIEnabled) {
+        const selectedKey = document.getElementById("higherModelSelect")?.value || null;
+        const started = await enableHigherAI(selectedKey);
+        if (!started) {
+          presentFallbackPending = false;
+          return;
+        }
+      }
+      if (CompanionDetailsMessage && !document.getElementById("companionThinking")) {
+        const compThink = document.createElement("div");
+        compThink.id = "companionThinking";
+        compThink.style.cssText = "font-size:0.62rem; line-height:1.4; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
+        compThink.textContent = "🧠 AI Overmind is thinking…";
+        CompanionDetailsMessage.appendChild(compThink);
+        CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      }
+      showHigherThinking("🧠 AI Overmind is thinking…");
+      MyLowerIntellect = originalText;
+      loadOrders();
       return;
     }
     const response = await aiSession.prompt(order);
