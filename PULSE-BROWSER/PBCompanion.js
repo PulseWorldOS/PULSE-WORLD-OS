@@ -2187,7 +2187,7 @@ function TestingSequence(OvermindOrders) {
 setInterval(async () => {
   chrome.runtime.getPlatformInfo();
   console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-  await pulseSupabaseSync();
+  // await pulseSupabaseSync();
   TestingSequence(OvermindOrders);
 }, 15000);
 
@@ -2952,26 +2952,26 @@ function currency(amount, displayCurrency = "$") {
   return `${cur}${safe}`;
 }
 
-let __PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
+// let __PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
 
-async function pulseSupabaseSync() {
-  if (__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
+// async function pulseSupabaseSync() {
+//   if (__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
   
-  try {
+//   try {
     
-    fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", tetherCode: TetherCode, online, inactive: false })
-    }).then((response) => {
-      if (!response.ok) __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-    }).catch(() => {
-      __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-    });
-  } catch {
-    __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-  }
-}
+//     fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+//       body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", tetherCode: TetherCode, online, inactive: false })
+//     }).then((response) => {
+//       if (!response.ok) __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+//     }).catch(() => {
+//       __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+//     });
+//   } catch {
+//     __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+//   }
+// }
 
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
