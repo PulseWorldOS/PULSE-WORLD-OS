@@ -4047,8 +4047,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPing = new Date().toLocaleString();
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
-      PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
+      if ((PulseRealmState.bands) && PulseRealmState.bands.includes("EarnBand")) {
+        PulseRealmState.lastTitle = "PulseBrowser OS - EarnBand ¢";
+      } else {
+        PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
+      }
       sendResponse({ ok: true });
       break;
 
@@ -4171,9 +4175,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPing = new Date().toLocaleString();
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
-      PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
-      PulseRealmState.lastDomainClass = msg.domainClass || PulseRealmState.lastDomainClass;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
+      if ((PulseRealmState.bands) && PulseRealmState.bands.includes("EarnBand")) {
+        PulseRealmState.lastTitle = "PulseBrowser OS - EarnBand ¢";
+      } else {
+        PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
+      }
+      PulseRealmState.lastDomainClass = msg.domainClass || PulseRealmState.lastDomainClass;
       sendResponse({ ok: true });
       break;
 
