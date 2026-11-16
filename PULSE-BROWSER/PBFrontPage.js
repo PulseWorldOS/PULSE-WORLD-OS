@@ -1076,7 +1076,7 @@ async function runLocalAI() {
     }
     let CognitionTitle = document.getElementById("CognitionTitle");
     if (CognitionTitle && !CognitionTitle.innerHTML) {
-      const showUS = `[Choose Your Me]`;
+      const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
       CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showUS;
@@ -1181,7 +1181,7 @@ ${rawPrompt}
     let CognitionTitle = document.getElementById("CognitionTitle");
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (consoleOvermindCognition) {
-      const showUS = `[Choose Your Me]`;
+      const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
       CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showUS;
