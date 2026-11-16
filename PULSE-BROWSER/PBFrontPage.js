@@ -649,6 +649,7 @@ async function initWebGPUCompute() {
   });
   PB_LOG3.info("Pulse GPU Capacity: ", GPUCapacity);
   gpuContext = { device, pipeline };
+  PB_LOG3.info("Pulse GPU Compute Context: ", gpuContext);
   return gpuContext;
 }
 
