@@ -1355,13 +1355,7 @@ PulseRealm.PulseHistory = {
   ],
   index: -1
 };
-
 const regs = navigator.serviceWorker.getRegistrations();
-async function KeepItGoing() {
-  await navigator.serviceWorker.register("/DriftCompanion.js");
-  PulseRealm.ServiceWorkerOffline = false;
-}
-
 let currencyRates = {
   USD: 1,
   EUR: 0.92,
@@ -1738,7 +1732,6 @@ if (PulseRealm.ServiceWorkerOffline === true || PulseRealm.ServiceWorkerOffline 
   pulseworkerBtn.style.borderColor = "red";
   PulseRealm.ServiceWorkerOffline === true
 } else {
-  KeepItGoing();
   pulseworkerBtn.style.borderColor = "#0FF";
 }
 const INTERNAL_PREFIX = "IMPULSE://";
