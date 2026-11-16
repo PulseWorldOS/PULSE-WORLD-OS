@@ -1355,8 +1355,9 @@ PulseRealm.PulseHistory = {
   ],
   index: -1
 };
+
+const regs = navigator.serviceWorker.getRegistrations();
 async function KeepItGoing() {
-  const regs = navigator.serviceWorker.getRegistrations();
   await navigator.serviceWorker.register("/DriftCompanion.js");
   PulseRealm.ServiceWorkerOffline = false;
 }
