@@ -2005,7 +2005,7 @@ function documentTitle() {
     document.title = "impulse://newtab"
   }
   let RealTitle = document.title;
-  if (extractWorldBands(pbDomainClass(location.href)) === "EarnBand") {
+  if (extractWorldBands(pbDomainClass(location.href)) !== "PulseBand") {
     RealTitle = "PulseBrowser OS - EarnBand ¢";
   }
   return RealTitle;

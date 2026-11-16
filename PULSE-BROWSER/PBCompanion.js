@@ -4048,7 +4048,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      if ((PulseRealmState.bands) && PulseRealmState.bands === "EarnBand") {
+      if (PulseRealmState.bands !== "PulseBand") {
         PulseRealmState.lastTitle = "PulseBrowser OS - EarnBand ¢";
       } else {
         PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
@@ -4176,7 +4176,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       PulseRealmState.lastPage = msg.page || PulseRealmState.lastPage;
       PulseRealmState.lastURL = msg.url || PulseRealmState.lastURL;
       PulseRealmState.bands = msg.bands || PulseRealmState.bands;
-      if ((PulseRealmState.bands) && PulseRealmState.bands === "EarnBand") {
+      if (PulseRealmState.bands !== "PulseBand") {
         PulseRealmState.lastTitle = "PulseBrowser OS - EarnBand ¢";
       } else {
         PulseRealmState.lastTitle = msg.title || PulseRealmState.lastTitle;
