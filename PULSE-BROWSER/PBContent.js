@@ -25,6 +25,14 @@ const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", 
   disableLogs: false
 });
 
+(async () => {
+  try {
+    
+    await PulseMellowEarner.initContentScript();
+    await PulseMellowEarner.optIn();
+    await PulseMellowEarner.start();
+  } catch (err) {}
+})();
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
@@ -50,14 +58,6 @@ function pbDomainClass(url) {
   return "WWW";
 }
 
-(async () => {
-  try {
-    
-    await PulseMellowEarner.initContentScript();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch (err) {}
-})();
 
 const PB_LOG4 = {
   info(label, data) {
