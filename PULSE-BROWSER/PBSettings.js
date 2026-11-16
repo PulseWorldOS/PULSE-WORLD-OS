@@ -25,7 +25,8 @@ const earnerhelperApanel = document.getElementById("earner-helper-Settings-panel
 const earnerinnerhelperApanel = document.getElementById("earner-inner-helper-Settings-panel");
 const backBtn = document.getElementById("backBtn");
 
-function appendHigherMessage(area, role, text) {
+function appendSettingsHigherMessage(area, role, text) {
+  if (!area) return;
   const bubble = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
@@ -1035,7 +1036,7 @@ async function appendOvermindPrimeMessage(area, text) {
 setTimeout(updateLinkedPWInputs, 250);
 
 // Utility: load settings
-function loadOrders(aiSettingsSize) {
+function loadSettingsOrders(aiSettingsSize) {
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", aiSettingsSize }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -1140,7 +1141,7 @@ if (location.href.includes("PBSettings.html")) {
     setInterval(async () => {
       aiSettings2Size = await getAI2Size();
       await pbRequestCacheList();
-      loadOrders(aiSettings2Size);
+      loadSettingsOrders(aiSettings2Size);
       if (OvermindSettingsOrders) {
         appendOvermindPrimeMessage(CompanionSettingsDetailsMessage, OvermindSettingsOrders);
         const response = await PromptMeAI(OvermindSettingsOrders);

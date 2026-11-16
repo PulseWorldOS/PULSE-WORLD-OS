@@ -303,7 +303,11 @@ async function loadOrders() {
     if (response.HigherIntellect) {
       // Fallback path: a reply that was finished while no page was listening
       MyHigherIntellect = response.HigherIntellect;
-      showHigherReply({ id: response.HigherIntellectId, text: MyHigherIntellect, prompt: null });
+      showHigherReply({
+        id: response.HigherIntellectId,
+        text: MyHigherIntellect,
+        prompt: response.HigherIntellectPrompt || "__gathered__",
+      });
     }
     if (response.OvermindOrders) {
       OvermindMyOrders = response.OvermindOrders;
@@ -1157,7 +1161,7 @@ ${rawPrompt}
       const now = Date.now();
       const ItsTime = new Date(now).toLocaleString();
       const showTime = `[${ItsTime}]`;
-      CompanionTitle.style.marginBottom = "6px;"
+      CompanionTitle.style.marginBottom = "6px";
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
@@ -1174,7 +1178,7 @@ ${rawPrompt}
       const ItsTime = futureDate.toLocaleString();
       const showTime = `[${ItsTime}]`;
 
-      CognitionTitle.style.marginBottom = "6px;"
+      CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
       CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       consoleOvermindCognition.style.fontSize = "0.6rem";
@@ -1269,7 +1273,9 @@ function renderAIMarkdown(raw) {
 
 let higherHistoryHydrated = false;
 let higherAIEnabled = false;   // tracks local state
-let higherLastStatus = null;   // latest status payload from PBCompanion
+let higherLastStatus = null;   // latest status payload from backend
+let higherThinkingWatchTimer = null;
+let higherThinkingStartedAt = 0;
 
 function ensureHigherConsoleContainers() {
   const area = document.getElementById("consoleOvermindCognition");
@@ -1279,7 +1285,7 @@ function ensureHigherConsoleContainers() {
   if (!statusPanel) {
     statusPanel = document.createElement("div");
     statusPanel.id = "higherStatusPanel";
-    statusPanel.style.cssText = "position:sticky; top:0; z-index:2; background:rgba(5,12,24,0.94); border:1px solid rgba(0,255,255,0.28); border-radius:8px; padding:5px 7px; margin:4px 0 6px; font-size:0.58rem; color:#bfefff; backdrop-filter:blur(6px);";
+    statusPanel.style.cssText = "position:sticky; top:0; z-index:2; background:rgba(5,12,24,0.96); border:1px solid rgba(0,255,255,0.28); border-radius:8px; padding:5px 7px; margin:2px 0 6px; font-size:0.58rem; line-height:1.35; text-align:left; word-break:normal; overflow-wrap:break-word; color:#bfefff; backdrop-filter:blur(6px); box-sizing:border-box;";
     const titleEl = document.getElementById("CognitionTitle");
     if (titleEl && titleEl.parentElement === area) {
       titleEl.insertAdjacentElement("afterend", statusPanel);
@@ -1292,6 +1298,7 @@ function ensureHigherConsoleContainers() {
   if (!history) {
     history = document.createElement("div");
     history.id = "higherChatHistory";
+    history.style.cssText = "text-align:left; line-height:1.4; word-break:normal; overflow-wrap:break-word; width:100%; box-sizing:border-box;";
     area.appendChild(history);
   }
 
@@ -1313,7 +1320,7 @@ async function hydrateHigherHistoryOnce() {
       history.innerHTML = PulseCogMemoryAIBuffer.join("");
     }
     if (area) {
-      area.style.fontSize = "0.6rem";
+      area.style.fontSize = "0.62rem";
       area.scrollTop = area.scrollHeight;
     }
   } catch (_) {}
@@ -1324,60 +1331,157 @@ function appendHigherMessage(area, role, text) {
   const target = area.id === "consoleOvermindCognition" ? ensureHigherConsoleContainers().history : area;
   if (!target) return;
   const bubble = document.createElement("div");
-  bubble.style.fontSize = "0.6rem";
+  bubble.style.fontSize = "0.62rem";
+  bubble.style.lineHeight = "1.4";
+  bubble.style.textAlign = "left";
+  bubble.style.wordBreak = "normal";
+  bubble.style.overflowWrap = "break-word";
+  bubble.style.margin = "3px 0";
   bubble.style.color = "#f9f9f9";
   const now = Date.now();
   const ItsTime = new Date(now).toLocaleString();
   const showTime = `[${ItsTime}]`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}:  ${showTime}</font> `) + renderAIMarkdown(text) + `<br>`;
-  PulseCogMemoryAIBuffer.push(bubble.innerHTML);
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text) + `<br>`;
+  PulseCogMemoryAIBuffer.push(bubble.outerHTML);
   target.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
 
+function stopHigherThinkingWatch() {
+  if (higherThinkingWatchTimer) {
+    clearInterval(higherThinkingWatchTimer);
+    higherThinkingWatchTimer = null;
+  }
+}
+
 // "thinking…" line while the model works (not saved to history)
-function showHigherThinking() {
+function showHigherThinking(statusText) {
   const { area, history } = ensureHigherConsoleContainers();
   const target = history || area;
-  if (!target || document.getElementById("higherThinking")) return;
-  const el = document.createElement("div");
-  el.id = "higherThinking";
-  el.style.fontSize = "0.6rem";
-  el.style.color = "#7fdfff";
-  el.textContent = "🧠 AI Overmind is thinking… (the first answer can take a while if the model is still loading)";
-  target.appendChild(el);
+  if (!target) return;
+  let el = document.getElementById("higherThinking");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "higherThinking";
+    el.style.cssText = "font-size:0.62rem; line-height:1.4; text-align:left; word-break:normal; overflow-wrap:break-word; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
+    target.appendChild(el);
+    higherThinkingStartedAt = Date.now();
+  }
+  el.textContent = statusText || "🧠 AI Overmind is thinking…";
+  if (area) area.scrollTop = area.scrollHeight;
+  startHigherThinkingWatch();
+}
+
+function updateHigherStream(msg) {
+  const { area } = ensureHigherConsoleContainers();
+  let el = document.getElementById("higherThinking");
+  if (!el) return;
+  if (msg.text && msg.text.trim()) {
+    const label = msg.modelLabel ? `🧠 ${msg.modelLabel}` : "🧠 AI Overmind";
+    el.innerHTML = `<div style="color:#0FF;font-size:0.56rem;margin-bottom:2px;">${escapeHTML(label)} (streaming…)</div>` + renderAIMarkdown(msg.text);
+  } else if (msg.phase === "loading") {
+    el.textContent = `⏳ Loading ${msg.modelLabel || "model"} into GPU…`;
+  } else if (msg.phase === "prefill") {
+    el.textContent = `🧠 ${msg.modelLabel || "AI"} reading prompt…`;
+  }
   if (area) area.scrollTop = area.scrollHeight;
 }
 
+function startHigherThinkingWatch() {
+  if (higherThinkingWatchTimer) return;
+  higherThinkingWatchTimer = setInterval(async () => {
+    const thinkingEl = document.getElementById("higherThinking");
+    if (!thinkingEl) {
+      stopHigherThinkingWatch();
+      return;
+    }
+
+    // 1. Check durable reply mailbox in case PB_HIGHER_REPLY push arrived while hidden/reloading
+    try {
+      const store = await chrome.storage.local.get(["higherLastReply", "higherLastDeliveredReplyId"]);
+      const last = store.higherLastReply;
+      if (last && last.id != null && last.id !== store.higherLastDeliveredReplyId && !shownHigherReplyIds.has(last.id)) {
+        if (!last.ts || last.ts >= higherThinkingStartedAt - 5000) {
+          showHigherReply({
+            id: last.id,
+            text: last.text,
+            prompt: last.prompt || "__recovered__",
+          });
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // 2. Check live backend status and reflect loading progress or failures
+    const status = await checkHigherAIStatus(false);
+    if (!status) return;
+    if (status.error && !status.loading && !status.generating) {
+      showHigherReply({
+        id: "err-" + Date.now(),
+        text: "❌ " + status.error,
+        prompt: "__error__",
+      });
+      return;
+    }
+    const elapsedSec = Math.max(1, Math.round((Date.now() - higherThinkingStartedAt) / 1000));
+    // Only overwrite plain thinking line if not already rendering streamed tokens
+    if (!thinkingEl.querySelector("div")) {
+      if (status.loading && status.lastProgress) {
+        const pct = Math.round((status.lastProgress.progress || 0) * 100);
+        const detail = status.lastProgress.text || `Loading ${status.modelLabel}`;
+        thinkingEl.textContent = `⏳ ${detail}${pct > 0 && pct < 100 ? ` (${pct}%)` : ""} — answer will start automatically… (${elapsedSec}s)`;
+      } else if (status.phase === "prefill") {
+        thinkingEl.textContent = `🧠 ${status.modelLabel || "AI"} is reading your prompt… (${elapsedSec}s)`;
+      } else if (status.generating) {
+        thinkingEl.textContent = `🧠 ${status.modelLabel || "AI"} is generating… (${elapsedSec}s)`;
+      } else {
+        thinkingEl.textContent = `🧠 AI Overmind is thinking… (${elapsedSec}s)`;
+      }
+    }
+  }, 1200);
+}
+
 function hideHigherThinking() {
+  stopHigherThinkingWatch();
   const el = document.getElementById("higherThinking");
   if (el) el.remove();
 }
 
-// One reply, shown once (replies can arrive by push AND by the PB_GATHER_ORDERS poll)
+// One reply, shown once (replies arrive via push, storage mailbox, or PB_GATHER_ORDERS poll)
 const shownHigherReplyIds = new Set();
 function showHigherReply({ id, text, prompt }) {
-  if (!text) return;
   if (id != null) {
     if (shownHigherReplyIds.has(id)) return;
-    shownHigherReplyIds.add(id);
   }
-  // The automatic start-up greeting (no prompt) only shows on an empty history, as before
-  if (!prompt && PulseCogMemoryAIBuffer.length > 0) return;
+  const hasThinking = Boolean(document.getElementById("higherThinking"));
+  // The automatic start-up greeting (no prompt) only shows on an empty history
+  if (!prompt && !hasThinking && PulseCogMemoryAIBuffer.length > 0) return;
+
+  if (id != null) {
+    shownHigherReplyIds.add(id);
+    PulsesafeStorageSet({ higherLastDeliveredReplyId: id });
+  }
   hideHigherThinking();
+  const safeText = (text && String(text).trim())
+    ? String(text)
+    : "⚠️ AI finished without output tokens — please try sending again.";
   const area = document.getElementById("consoleOvermindCognition");
-  appendHigherMessage(area, "🧠 AI Overmind 🧠", text);
+  appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText);
   // save the conversation like the other consoles do
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, () => { void chrome.runtime.lastError; });
 }
 
-// The background worker pushes the finished WebLLM reply here
+// The background/offscreen AI pushes streamed chunks, replies, and load progress here
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg && msg.type === "PB_HIGHER_REPLY") {
     showHigherReply({ id: msg.id, text: msg.text, prompt: msg.prompt });
     sendResponse({ ok: true });
   }
-  // [Phase 2] Progress updates from the background during model download
+  if (msg && msg.type === "PB_HIGHER_STREAM") {
+    updateHigherStream(msg);
+    sendResponse({ ok: true });
+  }
+  // [Phase 2] Progress updates during model download
   if (msg && msg.type === "PB_HIGHER_PROGRESS") {
     showHigherProgress(msg);
     sendResponse({ ok: true });
@@ -1466,29 +1570,29 @@ function renderHigherStatusPanel(status, checkingText) {
   const nextBiggerKey = getNextBiggerModelKey(status.modelKey);
   const nextBiggerEntry = nextBiggerKey ? models.find((m) => m.key === nextBiggerKey) : null;
   const biggerBtnHtml = nextBiggerEntry
-    ? `<button id="higherBiggerBtn" type="button" title="Switch to ${escapeHTML(nextBiggerEntry.label)} (${nextBiggerEntry.vramMinMB}MB)" style="cursor:pointer;background:#122b45;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:1px 5px;font-size:0.55rem;">⬆️ ${escapeHTML(nextBiggerEntry.label.split(" (")[0])}</button>`
+    ? `<button id="higherBiggerBtn" type="button" title="Switch to ${escapeHTML(nextBiggerEntry.label)} (${nextBiggerEntry.vramMinMB}MB)" style="cursor:pointer;white-space:nowrap;flex-shrink:0;background:#122b45;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:2px 6px;font-size:0.55rem;">⬆️ ${escapeHTML(nextBiggerEntry.label.split(" (")[0])}</button>`
     : "";
 
   const toggleBtnLabel = status.enabled ? "Off" : "Enable";
   const toggleBtnStyle = status.enabled
-    ? "cursor:pointer;background:#2a1420;border:1px solid #ff6b81;color:#ff9aa2;border-radius:4px;padding:1px 5px;font-size:0.55rem;"
-    : "cursor:pointer;background:#0f3a2e;border:1px solid #00ffc8;color:#5dff9e;border-radius:4px;padding:1px 5px;font-size:0.55rem;";
+    ? "cursor:pointer;white-space:nowrap;flex-shrink:0;background:#2a1420;border:1px solid #ff6b81;color:#ff9aa2;border-radius:4px;padding:2px 6px;font-size:0.55rem;"
+    : "cursor:pointer;white-space:nowrap;flex-shrink:0;background:#0f3a2e;border:1px solid #00ffc8;color:#5dff9e;border-radius:4px;padding:2px 6px;font-size:0.55rem;";
 
   // Preserve an active progress bar element if one is inside statusPanel
   const existingBar = document.getElementById("higherProgressBar");
 
   statusPanel.innerHTML = `
     <div id="higherGpuLine" style="margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${gpuText}</div>
-    <div id="higherStateLine" style="margin-bottom:4px;color:${stateColor};">${stateText}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
-      <select id="higherModelSelect" style="flex:1;min-width:110px;background:#081426;color:#e6f7ff;border:1px solid #24486b;border-radius:4px;padding:1px 3px;font-size:0.55rem;">
+    <div id="higherStateLine" style="margin-bottom:4px;color:${stateColor};word-break:normal;overflow-wrap:break-word;">${stateText}</div>
+    <div style="display:flex;flex-wrap:nowrap;gap:4px;align-items:center;width:100%;box-sizing:border-box;">
+      <select id="higherModelSelect" style="flex:1;min-width:0;max-width:100%;background:#081426;color:#e6f7ff;border:1px solid #24486b;border-radius:4px;padding:2px 4px;font-size:0.55rem;overflow:hidden;text-overflow:ellipsis;">
         ${optionsHtml}
       </select>
-      <button id="higherLoadModelBtn" type="button" style="cursor:pointer;background:#0c2a3a;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:1px 5px;font-size:0.55rem;">Load</button>
+      <button id="higherLoadModelBtn" type="button" style="cursor:pointer;white-space:nowrap;flex-shrink:0;background:#0c2a3a;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:2px 6px;font-size:0.55rem;">Load</button>
       ${biggerBtnHtml}
       <button id="higherToggleEnableBtn" type="button" style="${toggleBtnStyle}">${toggleBtnLabel}</button>
     </div>
-    <div id="higherRamWarning" style="display:${initialWarn ? "block" : "none"};margin-top:3px;font-size:0.53rem;color:#ffbe76;">${escapeHTML(initialWarn)}</div>
+    <div id="higherRamWarning" style="display:${initialWarn ? "block" : "none"};margin-top:3px;font-size:0.53rem;line-height:1.3;word-break:normal;overflow-wrap:break-word;color:#ffbe76;">${escapeHTML(initialWarn)}</div>
     <div id="higherProgressSlot"></div>
   `;
 
@@ -1599,6 +1703,7 @@ function showHigherProgress(info) {
 
   if (info.stage === "error") {
     if (bar) bar.remove();
+    hideHigherThinking();
     if (higherLastStatus) {
       higherLastStatus.loading = false;
       higherLastStatus.ready = false;
@@ -1676,6 +1781,22 @@ async function initHigherAIConsoleOnTabStart(autoEnableIfSupported = false) {
   await hydrateHigherHistoryOnce();
   renderHigherStatusPanel(null, "Checking GPU & enabling right model…");
 
+  // Deliver any reply that finished while the tab was reloading/closed
+  try {
+    const store = await chrome.storage.local.get(["higherLastReply", "higherLastDeliveredReplyId", "higherPendingRequest"]);
+    const last = store.higherLastReply;
+    if (last && last.id != null && last.id !== store.higherLastDeliveredReplyId && !shownHigherReplyIds.has(last.id)) {
+      showHigherReply({
+        id: last.id,
+        text: last.text,
+        prompt: last.prompt || "__recovered__",
+      });
+    } else if (store.higherPendingRequest && store.higherPendingRequest.startedAt && (Date.now() - store.higherPendingRequest.startedAt) < 10 * 60 * 1000) {
+      higherThinkingStartedAt = store.higherPendingRequest.startedAt;
+      showHigherThinking("🧠 AI Overmind is finishing your previous request…");
+    }
+  } catch (_) {}
+
   let status = await checkHigherAIStatus(true);
   if (!status) {
     renderHigherStatusPanel(null, "Waking PulseCompanion service worker & checking GPU…");
@@ -1696,7 +1817,7 @@ async function initHigherAIConsoleOnTabStart(autoEnableIfSupported = false) {
     return;
   }
 
-  // If actively downloading in background SW, restore progress bar immediately
+  // If actively downloading in background, restore progress bar immediately
   if (status.loading && status.lastProgress) {
     showHigherProgress(status.lastProgress);
   }
@@ -1801,6 +1922,15 @@ CompanionConsoleSend.onclick = async () => {
     } else {
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
     }
+    if (!aiSession && typeof LanguageModel !== "undefined") {
+      try {
+        await initializeExoskeleton();
+      } catch (_) {}
+    }
+    if (!aiSession) {
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", "⚠️ Built-in Chrome Gemini Nano is not available in this browser. Click 🌐 → 🧠 next to Send to use local Qwen / WebLLM AI!");
+      return;
+    }
     const response = await aiSession.prompt(order);
     console.log("🧠 AI Overmind: ", response);
     setTimeout(async () => {
@@ -1830,15 +1960,17 @@ CompanionConsoleSend.onclick = async () => {
     });
   } else {
     // Higher Intellect: show what the user typed, then ask the model
-    // [Phase 2] Auto-enable AI if the user tries to chat before enabling
+    // [Phase 2] Auto-enable AI if the user tries to chat before enabling (respect dropdown choice)
     if (!higherAIEnabled) {
+      const selectedKey = document.getElementById("higherModelSelect")?.value || null;
       appendHigherMessage(consoleOvermindCognition, "user", originalText);
-      appendHigherMessage(consoleOvermindCognition, "🧠 System", "Starting AI for the first time — checking GPU and downloading model…");
-      await enableHigherAI();
+      appendHigherMessage(consoleOvermindCognition, "🧠 System", "Starting AI for the first time — checking GPU and preparing model…");
+      const started = await enableHigherAI(selectedKey);
+      if (!started) return;
     } else {
       appendHigherMessage(consoleOvermindCognition, "user", originalText);
     }
-    showHigherThinking();
+    showHigherThinking("🧠 AI Overmind is thinking…");
     MyLowerIntellect = originalText;
     loadOrders();
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
@@ -1897,14 +2029,16 @@ async function wipeMemory() {
 
 // The Absolute Kill Switch Button
 async function wipeHigherMemory() {
-  
-  // 2. Clear your local memory buffers completely
+  hideHigherThinking();
   PulseCogMemoryAIBuffer = [];
   const historyEl = document.getElementById("higherChatHistory");
   if (historyEl) historyEl.innerHTML = "";
-  
+  PulsesafeStorageSet({
+    PulseCogMemoryAIBuffer: [],
+    higherLastReply: null,
+    higherPendingRequest: null,
+  });
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
-  
 }
 // Compress text to a tiny binary array for local storage
 async function compressMemory(text) {

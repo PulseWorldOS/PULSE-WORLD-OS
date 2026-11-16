@@ -3,7 +3,16 @@
 //  Manifest V3 Service Worker — full OS kernel
 //  Subsystems: Interceptor • Router • Navigator • Accelerator • Realm • Settings • DevTools
 // ============================================================================
-import { CreateMLCEngine, prebuiltAppConfig } from "./OvermindPrimes.js";
+import { CreateMLCEngine } from "./OvermindPrimes.js";
+import {
+  HIGHER_MODELS,
+  HIGHER_DEFAULT_KEY,
+  HIGHER_MAX_TOKENS,
+  detectGPUCapacity as detectSharedGPUCapacity,
+  pickModelForGPU,
+  serializeModelsList,
+  buildOvermindMessages,
+} from "./PBHigherModels.js";
 import './MellowEarner.js';
 
 let online = navigator.onLine;
@@ -414,6 +423,10 @@ self.addEventListener("install", event => {
     "PBCompanion.js",
     "MellowEarner.js",
     "OvermindPrimes.js",
+    "PBHigherModels.js",
+    "PBHigherAIWorker.js",
+    "PBHigherAI.js",
+    "PBHigherAI.html",
     "PBInterceptor.js",
     "PBAccelerator.js",
     "PulseEarnWarmer.wasm",
@@ -908,13 +921,20 @@ self.addEventListener('fetch', event => {
   if (req.url.endsWith('.wasm') || req.url.includes('.wasm')) {
      return; // Bypasses service worker caching entirely
   }
-  // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (req.url.protocol === 'http:') {
+  // 🚀 FIX: Only intercept HTTPS requests; let HTTP bypass the SW
+  if (req.url.startsWith('http://')) {
     return; 
   }
-  // // Skip chrome-extension:// URLs (cannot be cached)
-  if (req.url.includes('chrome://extensions')) {
-     return; // Let the browser handle extension assets normally
+  // Skip extension & WebLLM/HuggingFace model CDN URLs so AI downloads never stall in SW fetch cache
+  if (
+    req.url.includes('chrome://extensions') ||
+    req.url.startsWith('chrome-extension://') ||
+    req.url.includes('huggingface.co') ||
+    req.url.includes('hf.co') ||
+    req.url.includes('/mlc-ai/') ||
+    req.url.includes('raw.githubusercontent.com')
+  ) {
+     return;
   }  
   event.respondWith(handlePulseRequest(req));
 });
@@ -1410,61 +1430,9 @@ function isAMoment(origin) {
 //  • MODEL REGISTRY: Qwen default, Llama available, easy to add more
 // ============================================================================
 
-// ---- Model Registry --------------------------------------------------------
-// Each entry: { id, label, vramMinMB, group, highRam }
-// vramMinMB = approximate minimum GPU memory needed to run the model
-const HIGHER_MODELS = {
-  // Qwen (default family) — smallest to largest
-  "qwen-0.5b":     { id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",       label: "Qwen 2.5 0.5B (Ultra-Light)",     vramMinMB: 512,   group: "featured" },
-  "qwen-1.5b":     { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",       label: "Qwen 2.5 1.5B (Light)",           vramMinMB: 1200,  group: "featured" },
-  "qwen-3b":       { id: "Qwen2.5-3B-Instruct-q4f16_1-MLC",         label: "Qwen 2.5 3B (Standard)",          vramMinMB: 2500,  group: "featured" },
-  "qwen-7b":       { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",         label: "Qwen 2.5 7B (High RAM)",          vramMinMB: 4500,  group: "featured" },
-  "qwen-coder-7b": { id: "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC",   label: "Qwen 2.5 Coder 7B (High RAM)",    vramMinMB: 5107,  group: "featured" },
-  "qwen3-8b":      { id: "Qwen3-8B-q4f16_1-MLC",                    label: "Qwen 3 8B (High RAM)",            vramMinMB: 5696,  group: "featured" },
-  "qwen3.5-9b":    { id: "Qwen3.5-9B-q4f16_1-MLC",                  label: "Qwen 3.5 9B (Max Qwen • High RAM)", vramMinMB: 6433, group: "featured" },
-  // DeepSeek / Gemma / Llama — standard to heavy decision tiers
-  "deepseek-7b":   { id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC", label: "DeepSeek-R1 Qwen 7B (High RAM)",  vramMinMB: 4500,  group: "featured" },
-  "deepseek-8b":   { id: "DeepSeek-R1-Distill-Llama-8B-q4f16_1-MLC",label: "DeepSeek-R1 Llama 8B (High RAM)", vramMinMB: 5001,  group: "featured" },
-  "gemma-9b":      { id: "gemma-2-9b-it-q4f16_1-MLC",               label: "Gemma 2 9B (High RAM)",           vramMinMB: 6422,  group: "featured" },
-  "llama-1b":      { id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",       label: "Llama 3.2 1B (Light)",            vramMinMB: 1000,  group: "featured" },
-  "llama-3b":      { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC",       label: "Llama 3.2 3B (Standard)",         vramMinMB: 2500,  group: "featured" },
-  "llama-8b":      { id: "Llama-3.1-8B-Instruct-q4f32_1-MLC",       label: "Llama 3.1 8B (High RAM)",         vramMinMB: 5000,  group: "featured" },
-  "llama-13b":     { id: "Llama-2-13b-chat-hf-q4f16_1-MLC",         label: "Llama 2 13B (Very High RAM)",     vramMinMB: 11814, group: "featured" },
-  "llama-70b":     { id: "Llama-3.1-70B-Instruct-q3f16_1-MLC",      label: "Llama 3.1 70B (Extreme RAM)",     vramMinMB: 31153, group: "featured" },
-  "phi-3.5-vision":{ id: "Phi-3.5-vision-instruct-q4f16_1-MLC",     label: "Phi 3.5 Vision (High RAM)",       vramMinMB: 3952,  group: "featured" },
-};
-
-// Expose every remaining chat/vision model bundled in OvermindPrimes.js (excluding embeddings)
-(function registerAllWebLLMModels() {
-  const curatedIds = new Set(Object.values(HIGHER_MODELS).map((m) => m.id));
-  const list = (prebuiltAppConfig && Array.isArray(prebuiltAppConfig.model_list))
-    ? prebuiltAppConfig.model_list
-    : [];
-  for (const m of list) {
-    if (!m || !m.model_id) continue;
-    if (m.model_type === 1 || /embed/i.test(m.model_id)) continue; // skip embedding-only models
-    if (curatedIds.has(m.model_id)) continue;
-    const vramMinMB = Math.round(m.vram_required_MB || 2000);
-    const shortName = m.model_id.replace(/-MLC$/, "");
-    HIGHER_MODELS[m.model_id] = {
-      id: m.model_id,
-      label: vramMinMB >= 4000 ? `${shortName} (High RAM)` : shortName,
-      vramMinMB,
-      group: "all",
-    };
-  }
-  for (const key of Object.keys(HIGHER_MODELS)) {
-    HIGHER_MODELS[key].highRam = (HIGHER_MODELS[key].vramMinMB || 0) >= 4000;
-  }
-})();
-const HIGHER_DEFAULT_KEY   = "qwen-1.5b";   // safe default for most GPUs
-const HIGHER_FALLBACK_KEY  = "qwen-0.5b";   // for very low-end GPUs (< 1.2 GB)
-// Old hardcoded ID (kept as comment for reference):
-// const HIGHER_MODEL_ID = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
-// const HIGHER_MODEL_ID = "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC";
-
-const HIGHER_MAX_TOKENS = 1536; // room for <think> + the real answer (was 300)
+// ---- State & Shared Config (imported from PBHigherModels.js) ---------------
 let higherEnginePromise = null;
+let higherEngineInstance = null;
 let higherEngineReady = false;
 let higherEngineLoading = false;
 let higherEngineError = null;
@@ -1473,69 +1441,112 @@ let higherEngineEpoch = 0;
 let higherQueue = Promise.resolve();
 let higherReqCounter = 0;
 let HigherIntellectId = null;
-let higherEnabled = false;       // [Phase 2] gated — only true after PB_HIGHER_ENABLE
-let higherUserDisabled = false;  // tracks explicit disable by user
-let higherActiveModelKey = null;  // which registry key is loaded
-let higherGpuInfo = null;         // cached GPU detection result
+let HigherIntellectPrompt = null;
+let higherEnabled = false;
+let higherUserDisabled = false;
+let higherActiveModelKey = null;
+let higherGpuInfo = null;
+let higherOffscreenCreating = null;
 
-// ---- GPU Detection ---------------------------------------------------------
-// Returns { supported, vramMB, vendor, description } or { supported: false }
 async function detectGPUCapacity(forceRefresh = false) {
-  if (higherGpuInfo && !forceRefresh) return higherGpuInfo; // cached unless refreshed
+  if (higherGpuInfo && !forceRefresh) return higherGpuInfo;
+  higherGpuInfo = await detectSharedGPUCapacity();
+  return higherGpuInfo;
+}
+
+async function ensureHigherOffscreen() {
+  if (typeof chrome === "undefined" || !chrome.offscreen || !chrome.offscreen.createDocument) {
+    return false;
+  }
   try {
-    if (typeof navigator === "undefined" || !navigator.gpu) {
-      higherGpuInfo = { supported: false, reason: "WebGPU not available" };
-      return higherGpuInfo;
+    if (typeof chrome.runtime.getContexts === "function") {
+      const contexts = await chrome.runtime.getContexts({
+        contextTypes: ["OFFSCREEN_DOCUMENT"],
+        documentUrls: [chrome.runtime.getURL("PBHigherAI.html")],
+      });
+      if (contexts && contexts.length > 0) return true;
     }
-    const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
-    if (!adapter) {
-      higherGpuInfo = { supported: false, reason: "No GPU adapter found" };
-      return higherGpuInfo;
+    if (!higherOffscreenCreating) {
+      const reasons = [chrome.offscreen.Reason?.WORKERS || "WORKERS"];
+      higherOffscreenCreating = chrome.offscreen.createDocument({
+        url: "PBHigherAI.html",
+        reasons,
+        justification: "Run local WebLLM AI (OvermindPrimes) in an isolated Web Worker without blocking or restarting the service worker.",
+      }).catch((err) => {
+        if (!/Only a single offscreen|already exists/i.test(String(err?.message || err))) {
+          throw err;
+        }
+      }).finally(() => {
+        higherOffscreenCreating = null;
+      });
     }
-    // maxBufferSize is the best proxy for usable VRAM in WebGPU
-    const maxBuf = adapter.limits.maxBufferSize || 0;
-    const vramMB = Math.round(maxBuf / (1024 * 1024));
-    let description = "";
-    let vendor = "";
-    try {
-      const info = adapter.info || (typeof adapter.requestAdapterInfo === "function" ? await adapter.requestAdapterInfo() : null);
-      if (info) {
-        description = info.description || info.architecture || info.device || "";
-        vendor = info.vendor || "";
-      }
-    } catch (_) { /* older browsers may not support adapter info */ }
-    higherGpuInfo = { supported: true, vramMB, vendor, description };
-    return higherGpuInfo;
+    await higherOffscreenCreating;
+    return true;
   } catch (err) {
-    higherGpuInfo = { supported: false, reason: String(err.message || err) };
-    return higherGpuInfo;
+    console.warn("🧠 Offscreen AI host unavailable, using SW fallback:", err);
+    return false;
   }
 }
 
-// ---- Pick the best model for this GPU --------------------------------------
-function pickModelForGPU(gpuInfo, preferredKey) {
-  // If user explicitly chose a model, honour it
-  if (preferredKey && HIGHER_MODELS[preferredKey]) {
-    return preferredKey;
+async function sendToOffscreenAI(op, payload = {}) {
+  const readyHost = await ensureHigherOffscreen();
+  if (!readyHost) return null;
+  let lastErr = "";
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const result = await new Promise((resolve) => {
+      try {
+        chrome.runtime.sendMessage({ target: "pb-offscreen-ai", op, ...payload }, (res) => {
+          const errMsg = chrome.runtime.lastError?.message || "";
+          if (errMsg) {
+            lastErr = errMsg;
+            resolve({ __retryable: /Receiving end does not exist|Could not establish connection/i.test(errMsg) });
+            return;
+          }
+          resolve({ __res: res || null });
+        });
+      } catch (e) {
+        lastErr = String(e?.message || e);
+        resolve({ __res: null });
+      }
+    });
+    if (result && result.__retryable) {
+      await new Promise((r) => setTimeout(r, 80));
+      continue;
+    }
+    const resObj = result ? result.__res : null;
+    if (!resObj) {
+      console.warn(`🧠 Offscreen RPC '${op}' returned empty (lastError: ${lastErr || "none"})`);
+    } else if (!resObj.ok) {
+      console.warn(`🧠 Offscreen RPC '${op}' returned error:`, resObj.error || resObj);
+    }
+    return resObj;
   }
-  if (!gpuInfo.supported) return HIGHER_FALLBACK_KEY;
-  const vram = gpuInfo.vramMB || 0;
-  // Walk from the default down to fallback based on VRAM
-  if (vram >= HIGHER_MODELS[HIGHER_DEFAULT_KEY].vramMinMB) return HIGHER_DEFAULT_KEY;
-  return HIGHER_FALLBACK_KEY;
+  console.warn(`🧠 Offscreen RPC '${op}' exhausted retries (lastError: ${lastErr})`);
+  return null;
 }
 
-// ---- Broadcast progress to open pages --------------------------------------
 function broadcastHigherProgress(progress) {
   higherLastProgress = progress;
   try {
     chrome.runtime.sendMessage({ type: "PB_HIGHER_PROGRESS", ...progress }, () => {
-      if (chrome.runtime.lastError) return; // no page listening
+      if (chrome.runtime.lastError) return;
     });
-  } catch (_) { /* ignore */ }
+  } catch (_) {}
 }
 
-// ---- Engine creation (on-demand, with progress) ----------------------------
+async function unloadSWEngine() {
+  const prev = higherEngineInstance;
+  higherEngineInstance = null;
+  higherEnginePromise = null;
+  higherEngineReady = false;
+  higherEngineLoading = false;
+  if (prev) {
+    try { if (typeof prev.interruptGenerate === "function") prev.interruptGenerate(); } catch (_) {}
+    try { if (typeof prev.unload === "function") await prev.unload(); } catch (_) {}
+  }
+}
+
+// ---- SW Fallback Engine Creation (used only if chrome.offscreen is unavailable) ----
 function getHigherEngine() {
   if (!higherEnginePromise) {
     const modelKey = higherActiveModelKey || HIGHER_DEFAULT_KEY;
@@ -1544,36 +1555,38 @@ function getHigherEngine() {
     higherEngineReady = false;
     higherEngineLoading = true;
     higherEngineError = null;
-    console.log(`🧠 Loading AI model: ${entry.label} (${entry.id})`);
+    console.log(`🧠 [SW Fallback] Loading AI model: ${entry.label} (${entry.id})`);
     broadcastHigherProgress({ stage: "loading", modelKey, modelLabel: entry.label, progress: 0, text: `Initializing ${entry.label}…` });
 
-    higherEnginePromise = CreateMLCEngine(
-      entry.id,
-      {
+    higherEnginePromise = (async () => {
+      await unloadSWEngine();
+      const engine = await CreateMLCEngine(entry.id, {
         initProgressCallback: (initProgress) => {
           if (myEpoch !== higherEngineEpoch) return;
-          console.log(initProgress);
-          // Push every progress tick to the page so the console can show a progress bar
           broadcastHigherProgress({
             stage: "loading",
             modelKey,
             modelLabel: entry.label,
-            progress: initProgress.progress ?? 0,       // 0..1
+            progress: initProgress.progress ?? 0,
             text: initProgress.text || "Loading…",
             timeElapsed: initProgress.timeElapsed || 0,
           });
-        }
+        },
+      });
+      if (myEpoch !== higherEngineEpoch) {
+        try { await engine.unload(); } catch (_) {}
+        throw new Error("Model switch cancelled this load");
       }
-    ).then((engine) => {
-      if (myEpoch !== higherEngineEpoch) return engine;
+      higherEngineInstance = engine;
       higherEngineReady = true;
       higherEngineLoading = false;
       higherEngineError = null;
       broadcastHigherProgress({ stage: "ready", modelKey, modelLabel: entry.label, progress: 1, text: `${entry.label} Ready 🧠` });
       return engine;
-    }).catch((err) => {
+    })().catch((err) => {
       if (myEpoch === higherEngineEpoch) {
-        higherEnginePromise = null; // allow a retry on the next prompt
+        higherEnginePromise = null;
+        higherEngineInstance = null;
         higherEngineReady = false;
         higherEngineLoading = false;
         higherEngineError = err && err.message ? err.message : String(err);
@@ -1585,8 +1598,6 @@ function getHigherEngine() {
   return higherEnginePromise;
 }
 
-// ---- Restore AI state from last session ------------------------------------
-// If the user previously enabled AI, restore that state cleanly before handling messages
 const higherInitStoragePromise = new Promise((resolve) => {
   chrome.storage.local.get(["higherEnabled", "higherUserDisabled", "higherActiveModelKey"], (res) => {
     if (!chrome.runtime.lastError && res) {
@@ -1603,31 +1614,64 @@ const higherInitStoragePromise = new Promise((resolve) => {
 function deliverHigherReply(payload) {
   HigherIntellect = payload.text;
   HigherIntellectId = payload.id;
+  HigherIntellectPrompt = payload.prompt || null;
+  safeStorageSet({
+    higherLastReply: {
+      id: payload.id,
+      prompt: payload.prompt || null,
+      text: payload.text,
+      error: Boolean(payload.error),
+      ts: Date.now(),
+    },
+    higherPendingRequest: null,
+  });
   try {
     chrome.runtime.sendMessage({ type: "PB_HIGHER_REPLY", ...payload }, (res) => {
-      if (chrome.runtime.lastError) return; // no page listening: keep for the next poll
+      if (chrome.runtime.lastError) return;
       if (res && res.ok && HigherIntellectId === payload.id) {
-        HigherIntellect = null; // delivered, don't send it again
+        HigherIntellect = null;
         HigherIntellectId = null;
+        HigherIntellectPrompt = null;
       }
     });
-  } catch (e) { /* keep for the next poll */ }
+  } catch (e) {}
 }
 
-async function callHigherAI(MyLowerIntellect) {
+async function callHigherAI(MyLowerIntellect, explicitId) {
   await higherInitStoragePromise;
-  // [Phase 2] Don't load the model until the user has enabled AI
+  const id = explicitId || (++higherReqCounter);
   if (!higherEnabled) {
-    const id = ++higherReqCounter;
     deliverHigherReply({
       id,
       prompt: MyLowerIntellect || null,
-      text: "⚠️ AI is not enabled yet. Click the 🧠 Enable AI button to download and start the model first.",
-      error: true
+      text: "⚠️ AI is not enabled yet. Click the Enable button to download and start the model first.",
+      error: true,
     });
     return;
   }
-  const id = ++higherReqCounter;
+
+  safeStorageSet({
+    higherPendingRequest: {
+      id,
+      prompt: MyLowerIntellect || null,
+      startedAt: Date.now(),
+    },
+  });
+
+  // Prefer the dedicated Offscreen + Web Worker AI host (isolated from SW & Earner)
+  const offscreenRes = await sendToOffscreenAI("ask", {
+    promptId: id,
+    prompt: MyLowerIntellect || null,
+    hydrateState: {
+      enabled: higherEnabled,
+      userDisabled: higherUserDisabled,
+      modelKey: higherActiveModelKey,
+    },
+  });
+  if (offscreenRes && offscreenRes.ok) {
+    return;
+  }
+
   const run = higherQueue.then(() => runHigherAI(MyLowerIntellect, id));
   higherQueue = run.catch(() => {});
   return run;
@@ -1635,58 +1679,63 @@ async function callHigherAI(MyLowerIntellect) {
 
 async function runHigherAI(MyLowerIntellect, id) {
   try {
-  const engine = await getHigherEngine();
+    const engine = await getHigherEngine();
+    const modelKey = higherActiveModelKey || HIGHER_DEFAULT_KEY;
+    const entry = HIGHER_MODELS[modelKey] || HIGHER_MODELS[HIGHER_DEFAULT_KEY];
+    const messages = buildOvermindMessages(MyLowerIntellect, entry);
+    const maxTokens = (entry.vramMinMB || 0) < 2500 ? 1024 : HIGHER_MAX_TOKENS;
 
-  // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-  let rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
-  if (MyLowerIntellect) rawPrompt = MyLowerIntellect;
-  const wrappedPrompt = `
-  [IDENTITY & CONSTRAINTS]
-  - Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a higher model for cognition with PulseWorld Flair, Intellect, & Memory!
-  - We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
-  - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
-  - You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
-  - Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
-  - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
-  - You hold your AI Overmind Prime 🧠 & each Pulse Pal AI Memory locally with the user not reliant on any server or network.. including ourselves.
-  - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
-  - PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
-  - PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
-  - PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
-  - PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
-  - PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
-  - PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
-  - PulseBusiness, Leveling the playing field, giving local and home businesses proximity visibility (radar) without identity giving them a way to make money with privacy and gives them a moment before the user hits amazon.. etc. (That item is nearby!) (Still Testing)
-  - The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
-  - PulseWorld stands on the shoulders of Nine Minds whose ideas shaped the very fabric of Computation, Intelligence, and Reality. Their work spans centuries, yet their influence pulses through every system we build today. Logic, Structure,
-    Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
-  - Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
-    that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
-  - You must try to keep your response under 3000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.`;
+    const asyncChunks = await engine.chat.completions.create({
+      messages,
+      max_tokens: maxTokens,
+      temperature: 0.6,
+      top_p: 0.9,
+      repetition_penalty: 1.1,
+      stream: true,
+    });
 
-  // 1. Send a message to your loaded engine
-  const reply = await engine.chat.completions.create({
-    messages: [
-      { role: "system", content: wrappedPrompt },
-      { role: "user", content: rawPrompt }
-    ],
-    max_tokens: HIGHER_MAX_TOKENS, // Hard stop on total tokens generated (including thinking)
-    temperature: 0.6,       // Lower values make responses more focused and less rambling
-    top_p: 0.9,
-    repetition_penalty: 1.1 // Discourages the model from looping or repeating itself
-  });
+    let rawText = "";
+    let lastEmitAt = 0;
+    for await (const chunk of asyncChunks) {
+      const delta = chunk?.choices?.[0]?.delta?.content || "";
+      if (delta) {
+        rawText += delta;
+        const nowTs = Date.now();
+        if (nowTs - lastEmitAt >= 120) {
+          lastEmitAt = nowTs;
+          chrome.runtime.sendMessage({
+            type: "PB_HIGHER_STREAM",
+            id,
+            modelKey,
+            modelLabel: entry.label,
+            phase: "generating",
+            text: rawText,
+          }, () => { void chrome.runtime.lastError; });
+        }
+      }
+    }
 
-  // Keep the raw text: the console shows <think>…</think> as a collapsible block
-  const rawText = reply.choices[0].message.content || "";
-  console.log("🧠 AI Overmind 🧠: ", rawText);
-  deliverHigherReply({ id, prompt: MyLowerIntellect || null, text: rawText.trim() });
-  } catch (err) {
-    console.error("🧠 AI Overmind error:", err);
+    const clean = rawText.trim();
+    console.log("🧠 AI Overmind 🧠: ", clean);
     deliverHigherReply({
       id,
       prompt: MyLowerIntellect || null,
-      text: "⚠️ AI Overmind could not answer: " + (err && err.message ? err.message : String(err)),
-      error: true
+      text: clean || "⚠️ Model finished without output tokens — please try sending again.",
+      error: !clean,
+    });
+  } catch (err) {
+    console.error("🧠 AI Overmind error:", err);
+    const msgErr = err && err.message ? err.message : String(err);
+    if (/device|lost|disposed|not loaded/i.test(msgErr)) {
+      higherEnginePromise = null;
+      higherEngineInstance = null;
+      higherEngineReady = false;
+    }
+    deliverHigherReply({
+      id,
+      prompt: MyLowerIntellect || null,
+      text: "⚠️ AI Overmind could not answer: " + msgErr,
+      error: true,
     });
   }
 }
@@ -3063,7 +3112,45 @@ self.addEventListener('error', (event) => {
 });
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (!msg || !msg.type) return;
+  if (!msg) return;
+  if (msg.target === "pb-offscreen-ai") return;
+  if (!msg.type) return;
+
+  // Keep SW fallback state fresh when Offscreen AI host emits progress/replies
+  if (msg.type === "PB_HIGHER_PROGRESS") {
+    higherLastProgress = msg;
+    if (msg.stage === "ready") {
+      higherEngineReady = true;
+      higherEngineLoading = false;
+      higherEngineError = null;
+    } else if (msg.stage === "error") {
+      higherEngineLoading = false;
+      higherEngineReady = false;
+      higherEngineError = msg.text || "AI failed to load";
+    } else if (msg.stage === "loading") {
+      higherEngineLoading = true;
+    }
+    return;
+  }
+  if (msg.type === "PB_HIGHER_STREAM") {
+    return;
+  }
+  if (msg.type === "PB_HIGHER_REPLY") {
+    HigherIntellect = msg.text || HigherIntellect;
+    HigherIntellectId = msg.id ?? HigherIntellectId;
+    HigherIntellectPrompt = msg.prompt || HigherIntellectPrompt;
+    safeStorageSet({
+      higherLastReply: {
+        id: msg.id,
+        prompt: msg.prompt || null,
+        text: msg.text,
+        error: Boolean(msg.error),
+        ts: msg.ts || Date.now(),
+      },
+      higherPendingRequest: null,
+    });
+    return;
+  }
 
   switch (msg.type) {
     case "PULSE_OS_NOTIFY":
@@ -3082,11 +3169,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       break;
 
-    case "PB_GATHER_ORDERS":
-      // The page sends the prompt as MyLowerIntellect (older code used LowerIntellect) — accept both
-      if (msg.LowerIntellect || msg.MyLowerIntellect) {
-        MyLowerIntellect = msg.LowerIntellect || msg.MyLowerIntellect;
-        callHigherAI(MyLowerIntellect); // async: the answer is pushed later (PB_HIGHER_REPLY)
+    case "PB_GATHER_ORDERS": {
+      const promptText = msg.LowerIntellect || msg.MyLowerIntellect;
+      let requestId = null;
+      if (promptText) {
+        MyLowerIntellect = promptText;
+        requestId = msg.requestId || (++higherReqCounter);
+        callHigherAI(MyLowerIntellect, requestId); // async: streamed + pushed via PB_HIGHER_REPLY
         MyLowerIntellect = null;
       }
       if (msg.aiSettingsSize) {
@@ -3095,11 +3184,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.aiPopupSize) {
         aiPopupSize = msg.aiPopupSize;
       }
-      sendResponse({ ok: true, OvermindOrders, HigherIntellect, HigherIntellectId });
+      sendResponse({ ok: true, OvermindOrders, HigherIntellect, HigherIntellectId, HigherIntellectPrompt, requestId });
       HigherIntellect = null; // hand a reply over only once
       HigherIntellectId = null;
+      HigherIntellectPrompt = null;
       OvermindOrders = null;
       break;
+    }
 
     case "PB_COMPANION_PAUSE":
       ServiceWorkerOnline = false;
@@ -3110,29 +3201,36 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // ---- Phase 2: On-Demand AI Enable / Status / Model Switch ----
 
     case "PB_HIGHER_ENABLE": {
-      // User clicked "Enable AI" — detect GPU, pick model, start loading
       (async () => {
         try {
           await higherInitStoragePromise;
+          const offRes = await sendToOffscreenAI("enable", { modelKey: msg.modelKey || null });
+          if (offRes && offRes.ok) {
+            higherGpuInfo = offRes.gpuInfo || higherGpuInfo;
+            higherActiveModelKey = offRes.modelKey;
+            higherEnabled = true;
+            higherUserDisabled = false;
+            safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: offRes.modelKey });
+            sendResponse(offRes);
+            return;
+          }
+
           const gpuInfo = await detectGPUCapacity(true);
-          const preferredKey = msg.modelKey || null; // user may request a specific model
+          const preferredKey = msg.modelKey || null;
           const modelKey = pickModelForGPU(gpuInfo, preferredKey);
           const changedModel = higherActiveModelKey && higherActiveModelKey !== modelKey;
           if (changedModel) {
-            higherEnginePromise = null;
-            higherEngineReady = false;
-            higherEngineLoading = false;
+            higherEngineEpoch++;
+            await unloadSWEngine();
             higherLastProgress = null;
             higherEngineError = null;
           }
           higherActiveModelKey = modelKey;
           higherEnabled = true;
           higherUserDisabled = false;
-          // Persist choice
           safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: modelKey });
           const entry = HIGHER_MODELS[modelKey];
           console.log(`🧠 AI enabled — GPU: ${gpuInfo.vramMB || "?"}MB — Model: ${entry.label}`);
-          // Kick off engine pre-load if not already started
           getHigherEngine().catch((err) => console.error("🧠 Pre-load failed:", err));
           sendResponse({
             ok: true,
@@ -3147,20 +3245,36 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           sendResponse({ ok: false, error: err.message || String(err) });
         }
       })();
-      return true; // keep sendResponse alive for async
+      return true;
     }
 
     case "PB_HIGHER_STATUS": {
-      // Page asks on tab start: check GPU, active/recommended model, loading/ready state
       (async () => {
         await higherInitStoragePromise;
+        const offRes = await sendToOffscreenAI("status", {
+          autoResume: Boolean(msg.autoResume),
+          refreshGpu: Boolean(msg.refreshGpu),
+          hydrateState: {
+            enabled: higherEnabled,
+            userDisabled: higherUserDisabled,
+            modelKey: higherActiveModelKey,
+          },
+        });
+        if (offRes && offRes.ok) {
+          higherGpuInfo = offRes.gpuInfo || higherGpuInfo;
+          higherActiveModelKey = offRes.modelKey || higherActiveModelKey;
+          higherEnabled = Boolean(offRes.enabled);
+          higherUserDisabled = Boolean(offRes.userDisabled);
+          sendResponse(offRes);
+          return;
+        }
+
         const gpuInfo = await detectGPUCapacity(true);
         const recommendedKey = pickModelForGPU(gpuInfo, null);
         const recommendedEntry = HIGHER_MODELS[recommendedKey];
         const modelKey = higherActiveModelKey || recommendedKey;
         const entry = HIGHER_MODELS[modelKey] || recommendedEntry;
 
-        // If previously enabled and engine isn't loaded (e.g. SW restarted), auto-resume loading
         if (msg.autoResume && higherEnabled && !higherUserDisabled && !higherEnginePromise && !higherEngineLoading) {
           higherActiveModelKey = modelKey;
           getHigherEngine().catch((err) => console.error("🧠 Auto-resume failed:", err));
@@ -3179,57 +3293,59 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           recommendedKey,
           recommendedLabel: recommendedEntry.label,
           gpuInfo,
-          models: Object.entries(HIGHER_MODELS).map(([k, v]) => ({
-            key: k,
-            label: v.label,
-            vramMinMB: v.vramMinMB,
-            highRam: Boolean(v.highRam),
-            group: v.group || "all",
-          })),
+          models: serializeModelsList(),
         });
       })();
       return true;
     }
 
     case "PB_HIGHER_SWITCH_MODEL": {
-      // User picked a different (e.g. bigger) model from the switcher
       const newKey = msg.modelKey;
       if (!newKey || !HIGHER_MODELS[newKey]) {
         sendResponse({ ok: false, error: "Unknown model: " + newKey });
         break;
       }
-      // Tear down current engine and immediately enable & pre-load the chosen model
-      higherEngineEpoch++;
-      higherEnginePromise = null;
-      higherEngineReady = false;
-      higherEngineLoading = false;
-      higherEngineError = null;
-      higherLastProgress = null;
-      higherActiveModelKey = newKey;
-      higherEnabled = true;
-      higherUserDisabled = false;
-      safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: newKey });
-      const entry = HIGHER_MODELS[newKey];
-      console.log(`🧠 Switching model to ${entry.label}`);
-      getHigherEngine().catch((err) => console.error("🧠 Switch pre-load failed:", err));
-      sendResponse({ ok: true, modelKey: newKey, modelLabel: entry.label });
-      break;
+      (async () => {
+        const offRes = await sendToOffscreenAI("switch", { modelKey: newKey });
+        if (offRes && offRes.ok) {
+          higherActiveModelKey = newKey;
+          higherEnabled = true;
+          higherUserDisabled = false;
+          safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: newKey });
+          sendResponse(offRes);
+          return;
+        }
+
+        higherEngineEpoch++;
+        await unloadSWEngine();
+        higherEngineError = null;
+        higherLastProgress = null;
+        higherActiveModelKey = newKey;
+        higherEnabled = true;
+        higherUserDisabled = false;
+        safeStorageSet({ higherEnabled: true, higherUserDisabled: false, higherActiveModelKey: newKey });
+        const entry = HIGHER_MODELS[newKey];
+        console.log(`🧠 Switching model to ${entry.label}`);
+        getHigherEngine().catch((err) => console.error("🧠 Switch pre-load failed:", err));
+        sendResponse({ ok: true, modelKey: newKey, modelLabel: entry.label });
+      })();
+      return true;
     }
 
     case "PB_HIGHER_DISABLE":
-      // Turn off the AI engine to free memory
-      higherEngineEpoch++;
-      higherEnabled = false;
-      higherUserDisabled = true;
-      higherEnginePromise = null;
-      higherEngineReady = false;
-      higherEngineLoading = false;
-      higherEngineError = null;
-      higherLastProgress = null;
-      safeStorageSet({ higherEnabled: false, higherUserDisabled: true });
-      console.log("🧠 AI disabled by user");
-      sendResponse({ ok: true });
-      break;
+      (async () => {
+        await sendToOffscreenAI("disable");
+        higherEngineEpoch++;
+        higherEnabled = false;
+        higherUserDisabled = true;
+        await unloadSWEngine();
+        higherEngineError = null;
+        higherLastProgress = null;
+        safeStorageSet({ higherEnabled: false, higherUserDisabled: true, higherPendingRequest: null });
+        console.log("🧠 AI disabled by user");
+        sendResponse({ ok: true });
+      })();
+      return true;
 
     case "PB_COMPANION_RESUME":
       ServiceWorkerOnline = true;
