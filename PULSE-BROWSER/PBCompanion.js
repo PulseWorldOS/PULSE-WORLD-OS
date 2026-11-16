@@ -2179,16 +2179,11 @@ function startWarmBootLoop() {
   setTimeout(loop, 600);
 }
 
-function TestingSequence(OvermindOrders) {
-  PB_LOG2.info("[Companion_Shout_Out] Still Here! Trying not to Sleep! Syncing Overmind Orders!", OvermindOrders);
-  OvermindCrossTabSync(OvermindOrders);
-}
-
 setInterval(async () => {
   chrome.runtime.getPlatformInfo();
-  console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+  // console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
   // await pulseSupabaseSync();
-  TestingSequence(OvermindOrders);
+  OvermindCrossTabSync(OvermindOrders);
 }, 15000);
 
 setTimeout(async () => {
@@ -2197,7 +2192,6 @@ setTimeout(async () => {
 }, 13000);
 
 startWarmBootLoop();
-
 
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
