@@ -84,10 +84,10 @@ function updateKernel(realm, SessionStart) {
     <div class="pb-hud-title">Network Kernel (Internet)</div>
     Session Start: <font color="gold">${SessionStart}</font><br/>
     Last Page: <font color="#0FF">${lastPageshort || "-"}</font><br/>
-    Last Title: <font color="#0FF">${lastTitleshort || "-"}</font><br/>
+    Last Title: <font color="#0FF"><strong>${lastTitleshort || "-"}</strong></font><br/>
     Last URL: <font color="#0FF">${lastURLshort || "-"}</font><br/>
     Domain Class: <font color="#0FF">${realm.lastDomainClass || "PulseWorld"}</font><br/>
-    Data Band: <font color="#0FF">${realm.bands || "-"}</font><br/>
+    Data Band: <font color="#0FF"><strong>${realm.bands || "-"}</strong></font><br/>
     Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
   `;
 
