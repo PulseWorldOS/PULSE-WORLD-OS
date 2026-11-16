@@ -189,7 +189,7 @@ export async function handler(event) {
 
     // ⭐ FIRE-AND-FORGET IDENTITY SYNC
     if (body.action === "sync") {
-      const { identity, photos, host, online, inactive, proximity, lastPage, lastProximity, tetherCode } = body;
+      const { identity, photos, host, online, inactive, proximity, lastPage, lastProximity } = body;
 
       if (!identity?.id) {
         return {
