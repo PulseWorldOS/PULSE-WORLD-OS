@@ -3794,7 +3794,7 @@ async function pulseSupabaseSync() {
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: locationproximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, tetherCode: tetherCode, online: true, inactive: false })
+      body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: locationproximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, online: true, inactive: false })
     }).then((response) => {
       if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }).catch(() => {
