@@ -2004,7 +2004,11 @@ function documentTitle() {
   if (document.title.includes("newtab")) {
     document.title = "impulse://newtab"
   }
-  return document.title;
+  let RealTitle = document.title;
+  if (extractWorldBands(pbDomainClass(location.href)) === "EarnBand") {
+    RealTitle = "PulseBrowser OS - EarnBand ¢";
+  }
+  return RealTitle;
 }
 
 setTimeout(emitFullPageContext, 400);
