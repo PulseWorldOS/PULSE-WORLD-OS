@@ -2793,7 +2793,8 @@ async function pbRenderStorageStats2(history) {
   // [Phase 3] Measure real AI model cache size instead of hardcoded 4.54 GB
   // Uses navigator.storage.estimate() which already includes cached model data in localUsed
   // We just need to show the AI-specific portion properly
-  let higherAIDisplay = 0;
+  let higherAIBytes = 0;
+  let higherAIDisplay = null;
   try {
     // Check each model in the registry to see if it's cached
     // The model weights are stored in Cache Storage by WebLLM
@@ -2808,7 +2809,7 @@ async function pbRenderStorageStats2(history) {
             const resp = await cache.match(req);
             if (resp) {
               const blob = await resp.clone().blob();
-              higherAIDisplay += blob.size;
+              higherAIBytes += blob.size;
             }
           } catch (_) { /* skip unreadable entries */ }
         }
@@ -2825,10 +2826,19 @@ async function pbRenderStorageStats2(history) {
   const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
-  const higherAIGB = (higherAIDisplay / (1024 * 1024 * 1024)).toFixed(2);
+  const higherAIMB = (higherAIBytes / (1024 * 1024)).toFixed(2);
+  const higherAIGB = (higherAIBytes / (1024 * 1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
   const syncKB = (aiSize / 1024).toFixed(2);
+
+  // ⭐ Sync display formatting
+  higherAIDisplay = higherAIMB + " MB";
+  if (higherAIBytes < (1024 * 1024 * 1024)) {
+    higherAIDisplay = higherAIMB + " MB";
+  } else {
+    higherAIDisplay = higherAIGB + " GB";
+  }
 
   // ⭐ Dynamic color zones
   let percentColor = "lightgreen";
@@ -2937,7 +2947,7 @@ async function pbRenderStorageStats2(history) {
 
         <div style="flex:1;">
           <strong>Higher AI Brain:</strong><br>
-          • <span style="color:lightgreen">${higherAIGB} GB</span><br>
+          • <span style="color:lightgreen">${higherAIDisplay}</span><br>
 
           <strong>AISync Memory:</strong><br>
           • <span style="color:lightgreen">${aisyncDisplay}</span><br>
