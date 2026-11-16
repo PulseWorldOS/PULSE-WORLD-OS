@@ -1169,9 +1169,7 @@ ${rawPrompt}
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
     if (CompanionDetailsMessage) {
-      const now = Date.now();
-      const ItsTime = new Date(now).toLocaleString();
-      const showTime = `[${ItsTime}]`;
+      const showTime = `[${new Date().toLocaleString()}]`;
       CompanionTitle.style.marginBottom = "6px";
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
@@ -1183,15 +1181,10 @@ ${rawPrompt}
     let CognitionTitle = document.getElementById("CognitionTitle");
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (consoleOvermindCognition) {
-      const futureDate = new Date();
-      futureDate.setFullYear(futureDate.getFullYear() + 86);
-
-      const ItsTime = futureDate.toLocaleString();
-      const showTime = `[${ItsTime}]`;
-
+      const showUS = `[Choose Your Me]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showUS;
       consoleOvermindCognition.style.fontSize = "0.6rem";
       consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     }
@@ -1351,9 +1344,7 @@ function appendHigherMessage(area, role, text) {
   bubble.style.overflowWrap = "break-word";
   bubble.style.margin = "3px 0";
   bubble.style.color = "#f9f9f9";
-  const now = Date.now();
-  const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`;
+  const showTime = `[${new Date().toLocaleString()}]`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text) + `<br>`;
   PulseCogMemoryAIBuffer.push(bubble.outerHTML);
   target.appendChild(bubble);
@@ -1901,9 +1892,7 @@ async function appendCompanionMessage(area, role, text) {
   const bubblebr = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  const now = Date.now();
-  const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`;
+  const showTime = `[${new Date().toLocaleString()}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
@@ -2227,7 +2216,7 @@ function getReadableName(url) {
         HigherAuthority.textContent = "🌐";
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
-        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
+        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
         CompanionDetailsMessage.style.display = "block";
       }
     }
@@ -2346,7 +2335,7 @@ function getReadableName(url) {
           HigherAuthority.textContent = "🌐";
           consoleOvermindCognition.style.display = "none";
           CognitionTitle.style.display = "none";
-          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Present)";
+          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
           CompanionDetailsMessage.style.display = "block";
         }
         PulsesafeStorageSet({ HigherAuthorityShown });

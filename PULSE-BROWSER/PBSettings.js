@@ -1005,9 +1005,7 @@ async function appendSettingsCompanionMessage(area, role, text) {
   const bubblebr = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
-  const now = Date.now();
-  const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`;
+  const showTime = `[${new Date().toLocaleString()}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
@@ -1022,9 +1020,7 @@ async function appendOvermindPrimeMessage(area, text) {
   const bubblebr = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
   bubble.style.color = "#f9f9f9";
-  const now = Date.now();
-  const ItsTime = new Date(now).toLocaleString();
-  const showTime = `[${ItsTime}]`;
+  const showTime = `[${new Date().toLocaleString()}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = `<font color="red">🧠 AI Overmind Prime: </font> ` + text + `<br><br>`;
   PulseSettingsAIPalMemoryBuffer.push(bubble.innerHTML);
