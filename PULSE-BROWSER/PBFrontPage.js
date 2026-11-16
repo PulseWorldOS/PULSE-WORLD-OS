@@ -1079,7 +1079,7 @@ async function runLocalAI() {
       const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showUS;
+      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
     }
     consoleOvermindCognition.style.fontSize = "0.62rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
@@ -1184,7 +1184,7 @@ ${rawPrompt}
       const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showUS;
+      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
       consoleOvermindCognition.style.fontSize = "0.6rem";
       consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     }
@@ -1894,7 +1894,7 @@ async function appendCompanionMessage(area, role, text) {
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   const showTime = `[${new Date().toLocaleString()}]`;
   bubblebr.innerHTML = `<br>`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Overmind: ${showTime}</font> `) + text + `<br><br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Prime: ${showTime}</font> `) + text + `<br><br>`;
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
@@ -2207,7 +2207,7 @@ function getReadableName(url) {
         HigherAuthority.textContent = "🧠";
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
-        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
+        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind (Future)";
         CompanionDetailsMessage.style.display = "none";
         // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
         initHigherAIConsoleOnTabStart(true);
@@ -2325,7 +2325,7 @@ function getReadableName(url) {
           HigherAuthority.textContent = "🧠";
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
-          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime (Future)";
+          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind (Future)";
           CompanionDetailsMessage.style.display = "none";
           // Check GPU, enable/resume right model, and display switcher
           initHigherAIConsoleOnTabStart(true);
