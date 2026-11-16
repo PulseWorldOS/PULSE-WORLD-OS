@@ -589,7 +589,7 @@ if (typeof PB_LOG3 !== 'undefined') {
   PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 }
 
-export async function detectGPUCapacity(adapter) {
+async function detectGPUCapacity(adapter) {
   try {
     if (typeof navigator === "undefined" || !navigator.gpu) {
       return { supported: false, reason: "WebGPU not available" };
@@ -619,7 +619,7 @@ async function initWebGPUCompute() {
   if (!navigator.gpu) return null;
   const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
   if (!adapter) return null;
-  const GPUCapacity = detectGPUCapacity(adapter);
+  const GPUCapacity = await detectGPUCapacity(adapter);
   const device = await adapter.requestDevice();
   if (device) pulseGPUInspector(adapter, device);
   // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
