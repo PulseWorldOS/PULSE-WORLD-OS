@@ -91,11 +91,11 @@ let runOnceDay = null;
 const CACHE_NAME = "PulseBrowser-Companion";
 const titlediv = document.getElementById("title");
 if (!online) {
-  titlediv.textContent = "PulseBrowser OS (Drifting..)";
-  document.title = "PulseBrowser OS [Offline]";
+  titlediv.textContent = "PulseBrowser OS (~Drifting~)";
+  document.title = "PulseBrowser OS [~Drift~]";
 } else {
   titlediv.textContent = "PulseBrowser OS";
-  document.title = "PulseBrowser OS";
+  document.title = "PulseBrowser OS [Console]";
 }
 // Internet Origin (ARPANET first packet)
 const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
@@ -6274,11 +6274,11 @@ setInterval(async () => {
   if (!online) onlineFlag = "Offline";
   console.log("PulseBrowser OS: [Status] " + onlineFlag);
   if (!online) {
-    titlediv.textContent = "PulseBrowser OS (Drifting..)";
-    document.title = "PulseBrowser OS [Offline]";
+    titlediv.textContent = "PulseBrowser OS (~Drifting~)";
+    document.title = "PulseBrowser OS [~Drift~]";
   } else {
     titlediv.textContent = "PulseBrowser OS";
-    document.title = "PulseBrowser OS";
+    document.title = "PulseBrowser OS [Console]";
   }
   CheckBackTab();
 }, sync);
