@@ -539,52 +539,8 @@ checkPersistentStorage(true);
         </span>
       </div>
   </div>
-<script>  
-(function() {
-  // 1. Map your domains to their respective Mellowtel invite_ids
-  const domainInviteMap = {
-    'pulseworld.net': '6iyeqjc693s',
-    'pulseworld.me': 'pfzcy82lbn',
-    'pulseworld.biz': 'j0z0h5rh54',
-    'pulseworld.money': 'c85xhamrg8',
-    'binaryos.net': 'ctqgfzdnl7e',
-    'booleanlogic.net': 'uanebzpxdyl',
-    'serviceworker.net': 'zswq3fmt7xj',
-    'orbitalmap.net': 'ecz755xevxw',
-    'gpuprocessing.net': 'qt97rsez1hj'
-  };
 
-  // 2. Get the current hostname and strip 'www.' for cleaner matching
-  const currentHost = window.location.hostname.replace(/^www\./, '').toLowerCase();
-
-  // 3. Look up the matching invite_id
-  const inviteId = domainInviteMap[currentHost];
-
-  // 4. Only inject the script if a matching ID exists for this site
-  if (inviteId) {
-    const script = document.createElement('script');
-    script.src = `https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=` + inviteId;
-    script.async = true;
-    // 2. Remove everything from the dash onward and trim extra spaces
-    let baseTitle = document.title.split("-")[0].trim();
-    document.head.appendChild(script);
-    // 3. Add your new text after the dash and update the page title
-    setTimeout(() => {
-      if (document.title.includes("Activated!")) {
-        document.title = baseTitle + " - EarnBand Reactivated!";
-      } else {
-        document.title = baseTitle + " - EarnBand Activated!";
-      }
-    }, 5000);
-    setTimeout(() => {
-      document.title = baseTitle + " - EarnBand ¢ Running";
-      setInterval(() => {
-        document.title = document.title.replace("...","");
-        document.title = document.title + ".";
-      }, 1500);
-    }, 8000);
-  }
-})();
+<script>
 // (function() {
 //   // Detect hash-based realm entry
 //   const hashRealm = location.hash.startsWith("#Pulse");
@@ -9765,6 +9721,53 @@ document.addEventListener("PulseDocumentChanged", () => {
     PulseRealm.TropicPulseScanner.close();
   }
 });
+</script>
+<script>  
+(function() {
+  // 1. Map your domains to their respective Mellowtel invite_ids
+  const domainInviteMap = {
+    'pulseworld.net': '6iyeqjc693s',
+    'pulseworld.me': 'pfzcy82lbn',
+    'pulseworld.biz': 'j0z0h5rh54',
+    'pulseworld.money': 'c85xhamrg8',
+    'binaryos.net': 'ctqgfzdnl7e',
+    'booleanlogic.net': 'uanebzpxdyl',
+    'serviceworker.net': 'zswq3fmt7xj',
+    'orbitalmap.net': 'ecz755xevxw',
+    'gpuprocessing.net': 'qt97rsez1hj'
+  };
+
+  // 2. Get the current hostname and strip 'www.' for cleaner matching
+  const currentHost = window.location.hostname.replace(/^www\./, '').toLowerCase();
+
+  // 3. Look up the matching invite_id
+  const inviteId = domainInviteMap[currentHost];
+
+  // 4. Only inject the script if a matching ID exists for this site
+  if (inviteId) {
+    const script = document.createElement('script');
+    script.src = `https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=` + inviteId;
+    script.async = true;
+    // 2. Remove everything from the dash onward and trim extra spaces
+    let baseTitle = document.title.split("-")[0].trim();
+    document.head.appendChild(script);
+    // 3. Add your new text after the dash and update the page title
+    setTimeout(() => {
+      if (document.title.includes("Activated!")) {
+        document.title = baseTitle + " - EarnBand Reactivated!";
+      } else {
+        document.title = baseTitle + " - EarnBand Activated!";
+      }
+    }, 5000);
+    setTimeout(() => {
+      document.title = baseTitle + " - EarnBand ¢ Running";
+      setInterval(() => {
+        document.title = document.title.replace("...","");
+        document.title = document.title + ".";
+      }, 1500);
+    }, 8000);
+  }
+})();
 </script>
 
 <!-- <script
