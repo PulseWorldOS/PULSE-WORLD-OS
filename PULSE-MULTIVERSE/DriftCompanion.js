@@ -408,7 +408,7 @@ self.addEventListener('fetch', event => {
 
   if (req.method !== 'GET') return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
-  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes('cdn.mellow.tel')) {
+  if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes('cdn.mellow.tel') || req.url.includes('olostep.com')) {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
