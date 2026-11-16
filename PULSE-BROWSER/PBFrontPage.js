@@ -1076,12 +1076,10 @@ async function runLocalAI() {
     }
     let CognitionTitle = document.getElementById("CognitionTitle");
     if (CognitionTitle && !CognitionTitle.innerHTML) {
-      const futureDate = new Date();
-      futureDate.setFullYear(futureDate.getFullYear() + 86);
-      const showTime = `[${futureDate.toLocaleString()}]`;
+      const showUS = `[Choose Your Me]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+      CognitionTitle.innerHTML = "🧠 AI Overmind Prime " + showUS;
     }
     consoleOvermindCognition.style.fontSize = "0.62rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
