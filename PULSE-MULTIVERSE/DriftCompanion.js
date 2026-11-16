@@ -406,7 +406,7 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
-  if (req.method !== 'GET') return;
+  if (req.method !== 'GET' || url.pathname.startsWith('/.netlify/functions/')) return;
    // 🚀 FIX: Skip WebAssembly files completely so they never get turned into HTML fallbacks
   if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes("speed.cloudflare.com") || req.url.includes('cdn.mellow.tel') || req.url.includes('olostep.com')) {
      return; // Bypasses service worker caching entirely
