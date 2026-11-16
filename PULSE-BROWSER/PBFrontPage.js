@@ -588,6 +588,30 @@ const pulseWasmCompute = new PulseWasmEngine();
 if (typeof PB_LOG3 !== 'undefined') {
   PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 }
+
+export async function detectGPUCapacity(adapter) {
+  try {
+    if (typeof navigator === "undefined" || !navigator.gpu) {
+      return { supported: false, reason: "WebGPU not available" };
+    }
+    const maxBuf = adapter.limits.maxBufferSize || 0;
+    const vramMB = Math.round(maxBuf / (1024 * 1024));
+    const hasF16 = Boolean(adapter.features && typeof adapter.features.has === "function" && adapter.features.has("shader-f16"));
+    let description = "";
+    let vendor = "";
+    try {
+      const info = adapter.info || (typeof adapter.requestAdapterInfo === "function" ? await adapter.requestAdapterInfo() : null);
+      if (info) {
+        description = info.description || info.architecture || info.device || "";
+        vendor = info.vendor || "";
+      }
+    } catch (_) {}
+    return { supported: true, vramMB, hasF16, vendor, description };
+  } catch (err) {
+    return { supported: false, reason: String(err && err.message ? err.message : err) };
+  }
+}
+
 let gpuContext = null;
 
 // 1. Initialize once at startup (replaces your warm-up snippet)
@@ -595,6 +619,7 @@ async function initWebGPUCompute() {
   if (!navigator.gpu) return null;
   const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
   if (!adapter) return null;
+  const GPUCapacity = detectGPUCapacity(adapter);
   const device = await adapter.requestDevice();
   if (device) pulseGPUInspector(adapter, device);
   // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
@@ -622,7 +647,7 @@ async function initWebGPUCompute() {
     layout: "auto",
     compute: { module, entryPoint: "main" },
   });
-
+  PB_LOG3.info("Pulse GPU Capacity: ", GPUCapacity);
   gpuContext = { device, pipeline };
   return gpuContext;
 }
