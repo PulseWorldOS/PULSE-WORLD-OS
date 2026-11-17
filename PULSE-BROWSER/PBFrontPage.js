@@ -1208,16 +1208,16 @@ ${rawPrompt}
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
 
-    let CognitionTitle = document.getElementById("CognitionTitle");
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
-    if (consoleOvermindCognition) {
+    let CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && !CognitionTitle.innerHTML) {
       const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
       CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
-      consoleOvermindCognition.style.fontSize = "0.6rem";
-      consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     }
+    consoleOvermindCognition.style.fontSize = "0.62rem";
+    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
     
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
