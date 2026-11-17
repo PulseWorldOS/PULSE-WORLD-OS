@@ -2228,12 +2228,23 @@ function getReadableName(url) {
 
 
   async function CheckEarnDetailsState() {
+    const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
+    EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
+    console.log("Earn Details State:", EarnDetailsHidden);
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     HigherPanelSwitch = document.getElementById("SwitchPanel");
     HigherStatusPanel = document.getElementById("higherStatusPanel");
+    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
+    HigherPanelShown = Panel.HigherPanelShown ?? true;
+    const status = await checkHigherAIStatus(false);
+    CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && status) {
+      const showUS = `[${status.modelLabel}]`;
+      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
+    }
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
         pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
@@ -2263,9 +2274,7 @@ function getReadableName(url) {
         HigherStatusPanel.style.display = "none"
       }
     }
-    const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
-    EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
-    console.log("Earn Details State:", EarnDetailsHidden);
+    
     if (EarnDetailsHidden) {
       // ——— Turn ON (transparent / earning mode) ———
       pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
@@ -2359,14 +2368,6 @@ function getReadableName(url) {
       console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
-
-    const status = await checkHigherAIStatus(false);
-
-    CognitionTitle = document.getElementById("CognitionTitle");
-    if (CognitionTitle && status) {
-      const showUS = `[${status.modelLabel}]`;
-      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
-    }
     
     if (HigherAuthority) {
       HigherAuthority.onclick = async () => {
@@ -2393,9 +2394,6 @@ function getReadableName(url) {
         loadOrders();
       };
     }
-        
-    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
-    HigherPanelShown = Panel.HigherPanelShown ?? true;
 
     if (HigherPanelSwitch) {
       HigherPanelSwitch.onclick = async () => {
