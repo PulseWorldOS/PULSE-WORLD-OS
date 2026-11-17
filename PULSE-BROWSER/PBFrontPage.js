@@ -2348,10 +2348,13 @@ function getReadableName(url) {
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
 
-    HigherPanelSwitch = document.getElementById("SwitchPanel");
-    HigherStatusPanel = document.getElementById("higherStatusPanel");
-    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
-    HigherPanelShown = Panel.HigherPanelShown ?? false;
+    const status = await checkHigherAIStatus(false);
+
+    CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle) {
+      const showUS = `[${status.modelLabel}]`;
+      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
+    }
     
     if (HigherAuthority) {
       HigherAuthority.onclick = async () => {
@@ -2378,6 +2381,11 @@ function getReadableName(url) {
         loadOrders();
       };
     }
+        
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
+    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
+    HigherPanelShown = Panel.HigherPanelShown ?? true;
 
     if (HigherPanelSwitch) {
       HigherPanelSwitch.onclick = async () => {
