@@ -123,8 +123,8 @@ const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
 const ReCogWipe = document.getElementById("MemoryWipe");
-const HigherPanelSwitch = document.getElementById("SwitchPanel");
-const HigherStatusPanel = document.getElementById("higherStatusPanel");
+let HigherPanelSwitch = document.getElementById("SwitchPanel");
+let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 
@@ -2349,6 +2349,9 @@ function getReadableName(url) {
       console.log("Earn Details State:", EarnDetailsHidden);
       PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
     };
+
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
     
     if (HigherAuthority) {
       HigherAuthority.onclick = async () => {
@@ -3375,9 +3378,9 @@ setInterval(async () => {
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
-      disablesw.innerText = "Resume Companion";
+      disablesw.innerText = "Resume System";
     } else {
-      disablesw.innerText = "Pause Companion";
+      disablesw.innerText = "Pause System";
     }
     if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
@@ -4767,9 +4770,9 @@ async function updateModuleIcons(settings, browser) {
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
-      disablesw.innerText = "Resume Companion";
+      disablesw.innerText = "Resume System";
     } else {
-      disablesw.innerText = "Pause Companion";
+      disablesw.innerText = "Pause System";
     }
     if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
@@ -6228,7 +6231,7 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
   if (ServiceWorkerOnline) {
     chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
     ServiceWorkerOnline = false;
-    disablesw.innerText = "Resume Companion";
+    disablesw.innerText = "Resume System";
     await pbRenderCacheList2();
     console.log("Service Worker PAUSED");
     return;
@@ -6239,7 +6242,7 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
     console.log("Turning Service Worker back Online!");
     chrome.runtime.sendMessage({ type: "PB_COMPANION_RESUME" });
     ServiceWorkerOnline = true;
-    disablesw.innerText = "Pause Companion";
+    disablesw.innerText = "Pause System";
     await pbRenderCacheList2();
     console.log("Service Worker RESUMED");
   } catch (e) {
@@ -6470,9 +6473,9 @@ function CheckBackTab() {
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
-          disablesw.innerText = "Resume Companion";
+          disablesw.innerText = "Resume System";
         } else {
-          disablesw.innerText = "Pause Companion";
+          disablesw.innerText = "Pause System";
         }
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
@@ -6706,9 +6709,9 @@ function CheckBackTab() {
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
-          disablesw.innerText = "Resume Companion";
+          disablesw.innerText = "Resume System";
         } else {
-          disablesw.innerText = "Pause Companion";
+          disablesw.innerText = "Pause System";
         }
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
