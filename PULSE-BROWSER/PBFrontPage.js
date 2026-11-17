@@ -2547,14 +2547,6 @@ async function pbRenderCacheList2() {
       PulseBrowser OS - System Details
     </div>
   `;
-  // ⭐ Memory FIRST
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );  
-  let statsHTML = await pbRenderStorageStats2(history);
-  predictionText = predictionText + ".";
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
   
   const caches = result.caches;
   // const pulsecaches = result.pulsecaches;  
@@ -2569,6 +2561,15 @@ async function pbRenderCacheList2() {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
+
+  // ⭐ Memory FIRST
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );  
+  let statsHTML = await pbRenderStorageStats2(history);
+  predictionText = predictionText + ".";
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Sort: current cache first, then by entry count
   caches.sort((a, b) => {
