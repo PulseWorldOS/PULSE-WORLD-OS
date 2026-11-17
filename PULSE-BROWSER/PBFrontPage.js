@@ -2625,6 +2625,7 @@ async function pbRenderCacheList2() {
     } else {
       pausedoffline = `(CPU)`;
     }
+
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
@@ -2660,7 +2661,10 @@ async function pbRenderCacheList2() {
     let errorcolor = "lightgreen";
     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
 
-    li.innerHTML = li.innerHTML + 
+    listEl.appendChild(li);
+    best = true;
+    
+    listEl.innerHTML = listEl.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
       `<br><br>
@@ -2669,9 +2673,6 @@ async function pbRenderCacheList2() {
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
       Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
-
-    listEl.appendChild(li);
-    best = true;
   });
 
 
@@ -3369,7 +3370,6 @@ async function pulseGPUInspector(adapter, device) {
 const intervalA = getCharacterInterval();
 // Optional: Real-time heartbeat
 setInterval(async () => {
-  pbRenderCacheList2().catch(() => {});
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -6452,7 +6452,6 @@ function CheckBackTab() {
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
-      pbRenderCacheList2().catch(() => {});
       pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
       chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
         if (chrome.runtime.lastError) return;
