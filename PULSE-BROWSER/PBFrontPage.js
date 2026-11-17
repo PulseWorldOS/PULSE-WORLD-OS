@@ -2533,6 +2533,12 @@ async function pbRenderCacheList2() {
   if (!listEl) return;
   const store = await chrome.storage.local.get(["pb_fail_cache"]);
   // ⭐ Fetch cache list
+  // ⭐ Memory FIRST
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );  
+  const statsHTML = await pbRenderStorageStats2(history);
   const result = await pbRequestCacheList2();
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
@@ -2559,13 +2565,6 @@ async function pbRenderCacheList2() {
     </div>
   `;
 
-  // ⭐ Memory FIRST
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );
-  
-  const statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
