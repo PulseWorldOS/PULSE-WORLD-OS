@@ -2351,7 +2351,7 @@ function getReadableName(url) {
     const status = await checkHigherAIStatus(false);
 
     CognitionTitle = document.getElementById("CognitionTitle");
-    if (CognitionTitle) {
+    if (CognitionTitle && status) {
       const showUS = `[${status.modelLabel}]`;
       CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
     }
