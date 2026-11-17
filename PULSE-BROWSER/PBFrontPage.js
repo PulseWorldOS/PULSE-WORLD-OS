@@ -13,7 +13,7 @@
 //     await PulseMellowEarner.start();
 //   } catch {}
 // })();
-
+let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
 let engineType = "text";
@@ -1586,6 +1586,7 @@ function renderHigherStatusPanel(status, checkingText) {
 
   const gpu = status.gpuInfo || {};
   gpuCapabilitySize = gpuCapabilitySize ?? gpu.vramMB;
+  
   const gpuText = gpu.supported
     ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
@@ -2530,11 +2531,12 @@ setTimeout(CheckEarnDetailsState, 50);
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
+  if (StorageRunning) return; // already running
   if (!listEl) return;
   // ⭐ Fetch cache list
   
   const result = await pbRequestCacheList2();
-  
+  StorageRunning = true;
 
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
@@ -2677,75 +2679,7 @@ async function pbRenderCacheList2() {
     best = true;
   });
 
-
-  // if (pulsecaches) pulsecaches.forEach(cache => {
-  //   let li = document.getElementById("li");
-  //   if (!li) li = document.createElement("li");
-  //   li.className = "PulseCache";
-  //   li.style.cssText = `
-  //     margin: 14px 20px;
-  //     padding: 3px 6px;
-  //     max-width: clamp(245px, 12vw, 315px);
-  //     width: clamp(245px, 12vw, 315px);
-  //     word-wrap: break-word;
-  //     overflow-wrap: anywhere;
-  //     word-break: break-all;
-  //   `;
-
-  //   // ⭐ Cache size color logic
-  //   const sizeMB = parseFloat(cache.sizePulseMB || "0");
-  //   totalBytes = totalBytes + (sizeMB * 1024 * 1024).toFixed(0);
-  //   let sizeColor = "lightgreen";
-
-  //   if (sizeMB >= 150) sizeColor = "gold";     // warming
-  //   if (sizeMB >= 300) sizeColor = "orange";   // heavy
-  //   if (sizeMB >= 600) sizeColor = "red";      // critical
-
-  //   // ⭐ Safe fallback values
-  //   const weightClass = cache.weightPulseClass || "unknown";
-  //   const personality = cache.pulsepersonality || "Wanderer";
-  //   const pulseRank = cache.realpulseRank;
-  //   const density = cache.densitypulse ?? 0;
-  //   const KBperEntry = (1024 / cache.densitypulse).toFixed(0);
-  //   if (!ServiceWorkerOnline) {
-  //     pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
-  //   } else {
-  //     pausedoffline = `(System)`;
-  //   }
-
-
-  //   li.innerHTML = `
-  //     <font color="${pulsebest ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
-
-  //     Realm Artifacts: <font color="${sizeColor}">${cache.entries}</font><br>
-  //     Multiverse Size: <font color="${sizeColor}">${cache.sizePulseMB} MB</font><br>
-
-  //     Weight: <font color="#0FF">${weightClass}</font><br>
-  //     Personality: <font color="#0FF">${personality}</font><br>
-  //     Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
-
-  //     PulseRank: <font color="gold">${pulseRank}</font><br>
-  //     First: <font color="lightgreen">${cache.firstEntry?.slice(0, 38) || "none"}</font><br>
-  //     Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 65) || "none"}</font>
-  //   `;
-
-  //   if (cache.lastEntry) {
-  //     let entry = cache.lastEntry;
-
-  //     li.style.cursor = "pointer";
-  //     const u = new URL(entry);
-  //     li.onclick = async () => {
-  //       pbPreconnect([entry]);
-  //       openNamedTab(u.hostname, entry);
-  //       await PBUniversalBoost.warmOrigin(entry);
-  //     };
-  //   }
-
-  //   listEl.appendChild(li);
-  //   pulsebest = true;
-  // });
-
-  // PB_LOG3.info("PulseCache list rendered", pulsecaches);
+  StorageRunning = false;
 }
 // function writeBigBlob() {
 //   return new Promise((resolve, reject) => {
