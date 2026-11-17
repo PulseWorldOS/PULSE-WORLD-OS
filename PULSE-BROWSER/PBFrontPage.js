@@ -3369,6 +3369,7 @@ async function pulseGPUInspector(adapter, device) {
 const intervalA = getCharacterInterval();
 // Optional: Real-time heartbeat
 setInterval(async () => {
+  pbRenderCacheList2().catch(() => {});
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
