@@ -2531,7 +2531,6 @@ setTimeout(CheckEarnDetailsState, 50);
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
-  const store = await chrome.storage.local.get(["pb_fail_cache"]);
   // ⭐ Fetch cache list
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
@@ -2540,6 +2539,14 @@ async function pbRenderCacheList2() {
   );  
   const statsHTML = await pbRenderStorageStats2(history);
   const result = await pbRequestCacheList2();
+  
+  // ⭐ Wipe panel completely
+  listEl.innerHTML = `
+    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+      PulseBrowser OS - System Details
+    </div>
+  `;
+  
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
@@ -2553,17 +2560,12 @@ async function pbRenderCacheList2() {
   const pulseoffline = result.pulseofflinecount;
   // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
 
+  
   if (caches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
 
-  // ⭐ Wipe panel completely
-  listEl.innerHTML = `
-    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-      PulseBrowser OS - System Details
-    </div>
-  `;
 
   predictionText = predictionText + ".";
   listEl.insertAdjacentHTML("beforeend", statsHTML);
@@ -2585,7 +2587,7 @@ async function pbRenderCacheList2() {
   let best = false;
   let pulsebest = false;
   let li = document.getElementById("li");
-  
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
   const fails = store.pb_fail_cache || {};
 
   caches.forEach(cache => {
