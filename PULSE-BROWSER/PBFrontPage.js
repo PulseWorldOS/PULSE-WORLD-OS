@@ -28,6 +28,7 @@ let realmSummary = null;
 let assumedValue = 0;
 let OurassumedValue = 0;
 let HigherAuthorityShown = false;
+let HigherPanelShown = false;
 let MyHigherIntellect = null;
 let MyLowerIntellect = null;
 let CompanionDeprivation = false;
@@ -122,6 +123,8 @@ const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
 const ReCogWipe = document.getElementById("MemoryWipe");
+const HigherPanelSwitch = document.getElementById("SwitchPanel");
+const HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 
@@ -2227,8 +2230,9 @@ function getReadableName(url) {
   async function CheckEarnDetailsState() {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
-    // Default to true so the Higher AI console opens on tab start and stays open across refreshes
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
+    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
+    HigherPanelShown = Panel.HigherPanelShown ?? true;
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
@@ -2369,6 +2373,19 @@ function getReadableName(url) {
         }
         PulsesafeStorageSet({ HigherAuthorityShown });
         loadOrders();
+      };
+    }
+
+    if (HigherPanelSwitch) {
+      HigherPanelSwitch.onclick = async () => {
+        if (!HigherPanelShown) {
+          HigherPanelShown = true;
+          HigherStatusPanel.style.display = "block"
+        } else {
+          HigherPanelShown = false;
+          HigherStatusPanel.style.display = "none"
+        }
+        PulsesafeStorageSet({ HigherPanelShown });
       };
     }
   }
