@@ -5,20 +5,6 @@
 // ============================================================================
 
 import { createClient } from "@supabase/supabase-js";
-import './MellowEarner.js';
-
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
-
-(async () => {
-  try {
-    await PulseMellowEarner.initBackground();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch {}
-})();
 
 // ⭐ Lazy Supabase client — only created when handler runs, not at module load
 // This prevents crashes during cold starts if env vars are momentarily unavailable
