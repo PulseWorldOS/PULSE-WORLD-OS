@@ -2533,10 +2533,10 @@ async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (StorageRunning) return; // already running
   if (!listEl) return;
-  // ⭐ Fetch cache list
+  // ⭐ Fetch cache list  
+  StorageRunning = true;
   
   const result = await pbRequestCacheList2();
-  StorageRunning = true;
 
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
@@ -2549,7 +2549,7 @@ async function pbRenderCacheList2() {
       PulseBrowser OS - System Details
     </div>
   `;
-  
+
   const caches = result.caches;
   // const pulsecaches = result.pulsecaches;  
   const cachecount = result.cachecount;
