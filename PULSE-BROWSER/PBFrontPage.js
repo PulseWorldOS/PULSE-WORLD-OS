@@ -2538,6 +2538,8 @@ async function pbRenderCacheList2() {
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );  
   const statsHTML = await pbRenderStorageStats2(history);
+  predictionText = predictionText + ".";
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
   const result = await pbRequestCacheList2();
   
   // ⭐ Wipe panel completely
@@ -2546,7 +2548,7 @@ async function pbRenderCacheList2() {
       PulseBrowser OS - System Details
     </div>
   `;
-  
+
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
@@ -2565,10 +2567,6 @@ async function pbRenderCacheList2() {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
     return;
   }
-
-
-  predictionText = predictionText + ".";
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Sort: current cache first, then by entry count
   caches.sort((a, b) => {
