@@ -1234,10 +1234,12 @@ ${rawPrompt}
       }
     });
     RunningAI = false;
+    await pbRenderCacheList2();
 
   } catch (error) {
     console.error("Failed to initialize 🧠 AI Overmind (Gemini Nano) session:", error);
     RunningAI = false;
+    await pbRenderCacheList2();
   }
 }
 
