@@ -2383,9 +2383,11 @@ function getReadableName(url) {
       HigherPanelSwitch.onclick = async () => {
         if (!HigherPanelShown) {
           HigherPanelShown = true;
+          HigherPanelSwitch.style.opacity = "0.3";
           HigherStatusPanel.style.display = "block"
         } else {
           HigherPanelShown = false;
+          HigherPanelSwitch.style.opacity = "1";
           HigherStatusPanel.style.display = "none"
         }
         PulsesafeStorageSet({ HigherPanelShown });
