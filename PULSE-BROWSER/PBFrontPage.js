@@ -1109,7 +1109,7 @@ async function runLocalAI() {
       const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
+      CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
     }
     consoleOvermindCognition.style.fontSize = "0.62rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
@@ -1214,7 +1214,7 @@ ${rawPrompt}
       const showUS = `[Choose Your Partner]`;
       CognitionTitle.style.marginBottom = "6px";
       CognitionTitle.style.textAlign = "center";
-      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
+      CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
     }
     consoleOvermindCognition.style.fontSize = "0.62rem";
     consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
@@ -1759,7 +1759,7 @@ function showHigherProgress(info) {
     setTimeout(() => {
       const b = document.getElementById("higherProgressBar");
       if (b) b.remove();
-      appendHigherMessage(area, "🧠 Overmind", `✅ ${info.modelLabel || "AI"} Loaded and Ready! Ask me Anything!`);
+      appendHigherMessage(area, "🌐 Overmind", `✅ ${info.modelLabel || "AI"} Loaded and Ready! Ask me Anything!`);
     }, 600);
   }
 
@@ -1772,7 +1772,7 @@ function showHigherProgress(info) {
       higherLastStatus.error = info.text || "AI failed to load";
       renderHigherStatusPanel(higherLastStatus);
     }
-    appendHigherMessage(area, "🧠 Overmind", `❌ ${info.text || "AI failed to load"}`);
+    appendHigherMessage(area, "🌐 Overmind", `❌ ${info.text || "AI failed to load"}`);
   }
 }
 
@@ -1781,12 +1781,12 @@ async function enableHigherAI(modelKey) {
   const area = document.getElementById("consoleOvermindCognition");
   renderHigherStatusPanel(null, "Checking your GPU and enabling right model…");
   if (area) {
-    appendHigherMessage(area, "🧠 Overmind", "🔍 Checking your GPU and preparing AI…");
+    appendHigherMessage(area, "🌐 Overmind", "🔍 Checking your GPU and preparing AI…");
   }
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "PB_HIGHER_ENABLE", modelKey: modelKey || null }, async (res) => {
       if (chrome.runtime.lastError) {
-        if (area) appendHigherMessage(area, "🧠 Overmind", "❌ Could not start AI: " + chrome.runtime.lastError.message);
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ Could not start AI: " + chrome.runtime.lastError.message);
         resolve(false);
         return;
       }
@@ -1797,7 +1797,7 @@ async function enableHigherAI(modelKey) {
           const gpuMsg = gpu.supported
             ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpu.vramMB}MB)`
             : `No WebGPU detected — using lightweight model`;
-          appendHigherMessage(area, "🧠 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
+          appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
         }
         const status = await checkHigherAIStatus(false);
         if (status) {
@@ -1806,7 +1806,7 @@ async function enableHigherAI(modelKey) {
         }
         resolve(true);
       } else {
-        if (area) appendHigherMessage(area, "🧠 Overmind", "❌ " + (res?.error || "Could not start AI"));
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not start AI"));
         resolve(false);
       }
     });
@@ -1820,7 +1820,7 @@ function disableHigherAI() {
   const bar = document.getElementById("higherProgressBar");
   if (bar) bar.remove();
   const area = document.getElementById("consoleOvermindCognition");
-  if (area) appendHigherMessage(area, "🧠 Overmind", "AI disabled. Model unloaded to free memory.");
+  if (area) appendHigherMessage(area, "🌐 Overmind", "AI disabled. Model unloaded to free memory.");
 }
 
 // Check AI status from background
@@ -1893,7 +1893,7 @@ async function switchHigherModel(modelKey) {
       const area = document.getElementById("consoleOvermindCognition");
       if (res && res.ok) {
         higherAIEnabled = true;
-        if (area) appendHigherMessage(area, "🧠 Overmind", `⬆️ Switching to ${res.modelLabel}… Downloading/Loading Now!`);
+        if (area) appendHigherMessage(area, "🌐 Overmind", `⬆️ Switching to ${res.modelLabel}… Downloading/Loading Now!`);
         const status = await checkHigherAIStatus(false);
         if (status) {
           renderHigherStatusPanel(status);
@@ -1901,7 +1901,7 @@ async function switchHigherModel(modelKey) {
         }
         resolve(true);
       } else {
-        if (area) appendHigherMessage(area, "🧠 Overmind", "❌ " + (res?.error || "Could not switch model"));
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not switch model"));
         resolve(false);
       }
     });
@@ -2045,7 +2045,7 @@ CompanionConsoleSend.onclick = async () => {
     if (!higherAIEnabled) {
       const selectedKey = document.getElementById("higherModelSelect")?.value || null;
       appendHigherMessage(consoleOvermindCognition, "user", originalText);
-      appendHigherMessage(consoleOvermindCognition, "🧠 Overmind", "Starting AI for the first time — checking GPU and preparing model…");
+      appendHigherMessage(consoleOvermindCognition, "🌐 Overmind", "Starting AI for the first time — checking GPU and preparing model…");
       const started = await enableHigherAI(selectedKey);
       if (!started) return;
     } else {
@@ -2243,7 +2243,7 @@ function getReadableName(url) {
         HigherAuthority.textContent = "🧠";
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
-        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind (Future)";
+        aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
         CompanionDetailsMessage.style.display = "none";
         // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
         initHigherAIConsoleOnTabStart(true);
@@ -2266,7 +2266,7 @@ function getReadableName(url) {
     CognitionTitle = document.getElementById("CognitionTitle");
     if (CognitionTitle && status) {
       const showUS = `[${status.modelLabel}]`;
-      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
+      CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
     }
 
     if (HigherStatusPanel) {
@@ -2381,7 +2381,7 @@ function getReadableName(url) {
           HigherAuthority.textContent = "🧠";
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
-          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind (Future)";
+          aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
           CompanionDetailsMessage.style.display = "none";
           // Check GPU, enable/resume right model, and display switcher
           initHigherAIConsoleOnTabStart(true);
