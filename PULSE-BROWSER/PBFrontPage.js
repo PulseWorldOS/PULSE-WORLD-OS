@@ -2232,6 +2232,8 @@ function getReadableName(url) {
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
         pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
@@ -2249,6 +2251,16 @@ function getReadableName(url) {
         CognitionTitle.style.display = "none";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
         CompanionDetailsMessage.style.display = "block";
+      }
+    }
+
+    if (HigherStatusPanel) {
+      if (HigherPanelShown) {
+        HigherPanelSwitch.style.opacity = "0.3";
+        HigherStatusPanel.style.display = "block"
+      } else {
+        HigherPanelSwitch.style.opacity = "1";
+        HigherStatusPanel.style.display = "none"
       }
     }
     const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
@@ -2382,8 +2394,6 @@ function getReadableName(url) {
       };
     }
         
-    HigherPanelSwitch = document.getElementById("SwitchPanel");
-    HigherStatusPanel = document.getElementById("higherStatusPanel");
     const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
     HigherPanelShown = Panel.HigherPanelShown ?? true;
 
