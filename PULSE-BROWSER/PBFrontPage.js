@@ -2532,14 +2532,7 @@ async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
   // ⭐ Fetch cache list
-  // ⭐ Memory FIRST
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );  
-  const statsHTML = await pbRenderStorageStats2(history);
-  predictionText = predictionText + ".";
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
+  
   const result = await pbRequestCacheList2();
   
   // ⭐ Wipe panel completely
@@ -2554,6 +2547,15 @@ async function pbRenderCacheList2() {
     return;
   }
 
+  // ⭐ Memory FIRST
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );  
+  const statsHTML = await pbRenderStorageStats2(history);
+  predictionText = predictionText + ".";
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
+  
   const caches = result.caches;
   // const pulsecaches = result.pulsecaches;  
   const cachecount = result.cachecount;
