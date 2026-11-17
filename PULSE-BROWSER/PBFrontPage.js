@@ -2570,7 +2570,7 @@ async function pbRenderCacheList2() {
   listEl.insertAdjacentHTML("beforeend", statsHTML);
 
   // ⭐ Sort: current cache first, then by entry count
-  if (caches) caches.sort((a, b) => {
+  caches.sort((a, b) => {
     if (a.name === a.currentCache) return -1;
     if (b.name === a.currentCache) return 1;
     return (b.entries || 0) - (a.entries || 0);
@@ -2661,7 +2661,7 @@ async function pbRenderCacheList2() {
     let errorcolor = "lightgreen";
     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
 
-    listEl.innerHTML = listEl.innerHTML + 
+    li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
       `<br><br>
