@@ -1759,7 +1759,7 @@ function showHigherProgress(info) {
     setTimeout(() => {
       const b = document.getElementById("higherProgressBar");
       if (b) b.remove();
-      appendHigherMessage(area, "🧠 System", `✅ ${info.modelLabel || "AI"} loaded and ready! Ask me anything.`);
+      appendHigherMessage(area, "🧠 Prime", `✅ ${info.modelLabel || "AI"} loaded and ready! Ask me anything.`);
     }, 600);
   }
 
@@ -1772,7 +1772,7 @@ function showHigherProgress(info) {
       higherLastStatus.error = info.text || "AI failed to load";
       renderHigherStatusPanel(higherLastStatus);
     }
-    appendHigherMessage(area, "🧠 System", `❌ ${info.text || "AI failed to load"}`);
+    appendHigherMessage(area, "🧠 Prime", `❌ ${info.text || "AI failed to load"}`);
   }
 }
 
@@ -1781,12 +1781,12 @@ async function enableHigherAI(modelKey) {
   const area = document.getElementById("consoleOvermindCognition");
   renderHigherStatusPanel(null, "Checking your GPU and enabling right model…");
   if (area) {
-    appendHigherMessage(area, "🧠 System", "🔍 Checking your GPU and preparing AI…");
+    appendHigherMessage(area, "🧠 Prime", "🔍 Checking your GPU and preparing AI…");
   }
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "PB_HIGHER_ENABLE", modelKey: modelKey || null }, async (res) => {
       if (chrome.runtime.lastError) {
-        if (area) appendHigherMessage(area, "🧠 System", "❌ Could not start AI: " + chrome.runtime.lastError.message);
+        if (area) appendHigherMessage(area, "🧠 Prime", "❌ Could not start AI: " + chrome.runtime.lastError.message);
         resolve(false);
         return;
       }
@@ -1797,7 +1797,7 @@ async function enableHigherAI(modelKey) {
           const gpuMsg = gpu.supported
             ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpu.vramMB}MB)`
             : `No WebGPU detected — using lightweight model`;
-          appendHigherMessage(area, "🧠 System", `${gpuMsg}. Enabling ${res.modelLabel}…`);
+          appendHigherMessage(area, "🧠 Prime", `${gpuMsg}. Enabling ${res.modelLabel}…`);
         }
         const status = await checkHigherAIStatus(false);
         if (status) {
@@ -1806,7 +1806,7 @@ async function enableHigherAI(modelKey) {
         }
         resolve(true);
       } else {
-        if (area) appendHigherMessage(area, "🧠 System", "❌ " + (res?.error || "Could not start AI"));
+        if (area) appendHigherMessage(area, "🧠 Prime", "❌ " + (res?.error || "Could not start AI"));
         resolve(false);
       }
     });
@@ -1820,7 +1820,7 @@ function disableHigherAI() {
   const bar = document.getElementById("higherProgressBar");
   if (bar) bar.remove();
   const area = document.getElementById("consoleOvermindCognition");
-  if (area) appendHigherMessage(area, "🧠 System", "AI disabled. Model unloaded to free memory.");
+  if (area) appendHigherMessage(area, "🧠 Prime", "AI disabled. Model unloaded to free memory.");
 }
 
 // Check AI status from background
@@ -1893,7 +1893,7 @@ async function switchHigherModel(modelKey) {
       const area = document.getElementById("consoleOvermindCognition");
       if (res && res.ok) {
         higherAIEnabled = true;
-        if (area) appendHigherMessage(area, "🧠 System", `⬆️ Switching to ${res.modelLabel}… Downloading/loading now.`);
+        if (area) appendHigherMessage(area, "🧠 Prime", `⬆️ Switching to ${res.modelLabel}… Downloading/loading now.`);
         const status = await checkHigherAIStatus(false);
         if (status) {
           renderHigherStatusPanel(status);
@@ -1901,7 +1901,7 @@ async function switchHigherModel(modelKey) {
         }
         resolve(true);
       } else {
-        if (area) appendHigherMessage(area, "🧠 System", "❌ " + (res?.error || "Could not switch model"));
+        if (area) appendHigherMessage(area, "🧠 Prime", "❌ " + (res?.error || "Could not switch model"));
         resolve(false);
       }
     });
@@ -2045,7 +2045,7 @@ CompanionConsoleSend.onclick = async () => {
     if (!higherAIEnabled) {
       const selectedKey = document.getElementById("higherModelSelect")?.value || null;
       appendHigherMessage(consoleOvermindCognition, "user", originalText);
-      appendHigherMessage(consoleOvermindCognition, "🧠 System", "Starting AI for the first time — checking GPU and preparing model…");
+      appendHigherMessage(consoleOvermindCognition, "🧠 Prime", "Starting AI for the first time — checking GPU and preparing model…");
       const started = await enableHigherAI(selectedKey);
       if (!started) return;
     } else {

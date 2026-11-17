@@ -70,12 +70,12 @@ function updateKernel(realm, SessionStart) {
   const lastTitle = realm.lastTitle;
   const lastURL = realm.lastURL;
   let lastURLshort = lastURL;
-  if (lastURL) lastURLshort = lastURL.slice(0, 75);
+  if (lastURL) lastURLshort = lastURL.slice(0, 72);
   let lastPageshort = lastPage;
-  
-  if (lastPage) lastPageshort = lastPage.slice(0, 40);
+  if (lastPage) lastPageshort = lastPage.slice(0, 38);
   let lastTitleshort = lastTitle;
-  if (lastTitle) lastTitleshort = lastTitle.slice(0, 40);
+  if (lastTitle) lastTitleshort = lastTitle.slice(0, 38);
+
   if (lastTitleshort && lastTitleshort.includes("EarnBand ¢")) {
     lastTitleshort = lastTitleshort.replace("EarnBand ¢", "<font color=lightgreen>EarnBand</font> <font color=gold><strong>¢</strong></font>");
   }
