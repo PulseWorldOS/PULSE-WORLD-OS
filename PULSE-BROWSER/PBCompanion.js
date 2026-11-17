@@ -428,6 +428,8 @@ self.addEventListener("install", event => {
     "PBHigherModels.js",
     "PBHigherAIWorker.js",
     "PBHigherAI.js",
+    "ReCog.webp",
+    "AIPanel.webp",
     "PBHigherAI.html",
     "PBInterceptor.js",
     "PBAccelerator.js",

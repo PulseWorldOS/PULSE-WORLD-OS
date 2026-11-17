@@ -121,6 +121,7 @@ const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
+const ReCogWipe = document.getElementById("MemoryWipe");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 
