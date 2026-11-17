@@ -4064,6 +4064,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       HelperHudBoolean = false;
       break;
     
+    case "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER":
+      clearPulseCachesHigher().then(() => sendResponse({ ok: true }));
+      return true;
+
     case "PULSE_OS_CLEAR_PULSE_CACHES":
       clearPulseCaches().then(() => sendResponse({ ok: true }));
       return true;
@@ -4532,6 +4536,65 @@ async function clearPulseCaches() {
   };
 }
 
+// ============================================================================
+//  SECTION 7 — CACHE CONTROL
+// ============================================================================
+async function clearPulseCachesHigher() {
+  const ts = Date.now();  // ⭐ Timestamp for diagnostics
+  const keys = await caches.keys();
+
+  let deleted = [];
+  let skipped = [];
+
+  for (const key of keys) {
+    // ⭐ PulseBrowser OS cache naming convention
+    const isHigherCache =
+      key.includes("webllm") ||
+      key.includes("mlc") ||
+      key.includes("huggingface");
+
+    if (isHigherCache) {
+      try {
+        await caches.delete(key);
+
+        deleted.push(key);
+
+        console.log(
+          "%c[PULSEBROWSER OS KERNEL] Deleted Cache: " + key,
+          "color:#FF5555; font-weight:bold;"
+        );
+      } catch (err) {
+        console.log(
+          "%c[PULSEBROWSER OS KERNEL] Failed to Delete Cache: " + key +
+          " → " + err.toString(),
+          "color:#FF0000; font-weight:bold;"
+        );
+      }
+    } else {
+      skipped.push(key);
+    }
+  }
+
+  // ⭐ Summary log (PulseBrowser OS style)
+  console.log("%c[PULSEBROWSER OS KERNEL] Cache Purge Summary",
+    "color:#00FFFF; font-weight:bold;");
+
+  console.log({
+    ts,
+    totalCaches: keys.length,
+    deletedCount: deleted.length,
+    skippedCount: skipped.length,
+    deleted,
+    skipped
+  });
+
+  return {
+    ok: true,
+    ts,
+    deleted,
+    skipped
+  };
+}
 
 // ============================================================================
 //  SECTION 8 — DEVTOOLS

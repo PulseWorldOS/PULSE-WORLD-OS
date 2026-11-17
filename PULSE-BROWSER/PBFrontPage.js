@@ -6246,6 +6246,30 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
   }, 500);
 });
 
+
+document.getElementById("MemoryWipe").addEventListener("click", async () => {
+  // Ask user if they want to clear caches
+  const confirmClear = confirm(
+    "PulseBrowser OS: Clear your Higher Intellect Files from your Browser?"
+  );
+
+  if (confirmClear) {
+    // Tell background to clear caches
+    chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER" });
+  }
+
+  // Re-render after everything
+  setTimeout(async () => {
+    MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+    });
+    await pbRenderCacheList2();
+  }, 500);
+});
+
 const disablesw = document.getElementById("disable-sw");
 
 document.getElementById("disable-sw").addEventListener("click", async () => {
