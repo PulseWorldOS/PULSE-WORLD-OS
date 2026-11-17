@@ -2532,7 +2532,7 @@ async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
   // ⭐ Fetch cache list
-  let statsHTML = await pbRenderStorageStats2();
+  
   const result = await pbRequestCacheList2();
   
 
@@ -2547,13 +2547,12 @@ async function pbRenderCacheList2() {
       PulseBrowser OS - System Details
     </div>
   `;
-  
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
   const history = await new Promise(resolve =>
     chrome.storage.local.get("pulseStorageHistory", resolve)
   );  
-  statsHTML = await pbRenderStorageStats2(history);
+  let statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
   listEl.insertAdjacentHTML("beforeend", statsHTML);
   
