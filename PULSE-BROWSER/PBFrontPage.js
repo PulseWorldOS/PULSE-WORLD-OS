@@ -2532,8 +2532,12 @@ async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
   if (!listEl) return;
   // ⭐ Fetch cache list
-  
-  const result = await pbRequestCacheList2();
+  // ⭐ Memory FIRST
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );  
+  const statsHTML = await pbRenderStorageStats2(history);
   
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
@@ -2542,19 +2546,15 @@ async function pbRenderCacheList2() {
     </div>
   `;
 
+  predictionText = predictionText + ".";
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
+
+  const result = await pbRequestCacheList2();
+  
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     return;
   }
-
-  // ⭐ Memory FIRST
-  // ⭐ Load previous storage history
-  const history = await new Promise(resolve =>
-    chrome.storage.local.get("pulseStorageHistory", resolve)
-  );  
-  const statsHTML = await pbRenderStorageStats2(history);
-  predictionText = predictionText + ".";
-  listEl.insertAdjacentHTML("beforeend", statsHTML);
   
   const caches = result.caches;
   // const pulsecaches = result.pulsecaches;  
