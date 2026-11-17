@@ -2589,7 +2589,7 @@ async function pbRenderCacheList2() {
   
   const fails = store.pb_fail_cache || {};
 
-  if (caches) caches.forEach(cache => {
+  caches.forEach(cache => {
     if (!li) li = document.createElement("li");
     li.className = "PulseCache";
     li.style.cssText = `
@@ -2661,9 +2661,6 @@ async function pbRenderCacheList2() {
     let errorcolor = "lightgreen";
     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
 
-    listEl.appendChild(li);
-    best = true;
-    
     listEl.innerHTML = listEl.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
       // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
@@ -2673,6 +2670,9 @@ async function pbRenderCacheList2() {
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
       Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
+
+    listEl.appendChild(li);
+    best = true;
   });
 
 
