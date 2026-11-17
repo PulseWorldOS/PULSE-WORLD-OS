@@ -1616,7 +1616,7 @@ function renderHigherStatusPanel(status, checkingText) {
     const selected = m.key === status.modelKey ? "selected" : "";
     const tag = m.key === status.recommendedKey ? " ★" : "";
     const warn = (m.highRam || (m.vramMinMB || 0) >= 4000) ? " ⚠️" : "";
-    gpuCapabilitySize = m.vramMinMB;
+    if (gpuCapabilitySize <= m.vramMinMB) gpuCapabilitySize = m.vramMinMB;
     return `<option value="${escapeHTML(m.key)}" ${selected}>${escapeHTML(m.label)} (${m.vramMinMB}MB)${warn}${tag}</option>`;
   };
   const featuredModels = models.filter((m) => m.group !== "all");
