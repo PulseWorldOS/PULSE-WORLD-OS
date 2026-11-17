@@ -2231,8 +2231,6 @@ function getReadableName(url) {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
-    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
-    HigherPanelShown = Panel.HigherPanelShown ?? true;
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
@@ -2352,6 +2350,8 @@ function getReadableName(url) {
 
     HigherPanelSwitch = document.getElementById("SwitchPanel");
     HigherStatusPanel = document.getElementById("higherStatusPanel");
+    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
+    HigherPanelShown = Panel.HigherPanelShown ?? false;
     
     if (HigherAuthority) {
       HigherAuthority.onclick = async () => {
