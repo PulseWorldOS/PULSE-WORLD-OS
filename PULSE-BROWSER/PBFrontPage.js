@@ -6254,10 +6254,10 @@ document.getElementById("MemoryWipe").addEventListener("click", async () => {
   );
 
   if (confirmClear) {
-    // Tell background to clear caches
     chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER" });
   }
 
+  initHigherAIConsoleOnTabStart(true);
   // Re-render after everything
   setTimeout(async () => {
     MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
