@@ -14,7 +14,7 @@
 //   } catch {}
 // })();
 
-
+let gpuCapabilitySize = 0;
 let userInteracted = false;
 let engineType = "text";
 let predictionText = "Running Stable";
@@ -1584,8 +1584,9 @@ function renderHigherStatusPanel(status, checkingText) {
   higherLastStatus = status;
 
   const gpu = status.gpuInfo || {};
+  gpuCapabilitySize = gpu.vramMB ?? 0;
   const gpuText = gpu.supported
-    ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpu.vramMB || "?"} MB)`
+    ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
 
   let stateText = "";
@@ -1615,6 +1616,7 @@ function renderHigherStatusPanel(status, checkingText) {
     const selected = m.key === status.modelKey ? "selected" : "";
     const tag = m.key === status.recommendedKey ? " ★" : "";
     const warn = (m.highRam || (m.vramMinMB || 0) >= 4000) ? " ⚠️" : "";
+    gpuCapabilitySize = m.vramMinMB;
     return `<option value="${escapeHTML(m.key)}" ${selected}>${escapeHTML(m.label)} (${m.vramMinMB}MB)${warn}${tag}</option>`;
   };
   const featuredModels = models.filter((m) => m.group !== "all");
