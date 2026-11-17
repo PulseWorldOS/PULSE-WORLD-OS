@@ -14,7 +14,7 @@
 //   } catch {}
 // })();
 
-let gpuCapabilitySize = 0;
+let gpuCapabilitySize = 2048;
 let userInteracted = false;
 let engineType = "text";
 let predictionText = "Running Stable";
@@ -1562,6 +1562,7 @@ function getNextBiggerModelKey(currentKey) {
 
 function getHighRamWarningText(modelEntry, gpu) {
   if (!modelEntry || (!modelEntry.highRam && (modelEntry.vramMinMB || 0) < 4000)) return "";
+  if (gpuCapabilitySize <= modelEntry.vramMinMB) gpuCapabilitySize = modelEntry.vramMinMB;
   const gb = (modelEntry.vramMinMB / 1024).toFixed(1);
   const vramNote = (gpu && gpu.supported && gpu.vramMB && modelEntry.vramMinMB > gpu.vramMB)
     ? ` (exceeds detected ${gpu.vramMB}MB buffer)`
@@ -1584,7 +1585,7 @@ function renderHigherStatusPanel(status, checkingText) {
   higherLastStatus = status;
 
   const gpu = status.gpuInfo || {};
-  gpuCapabilitySize = gpu.vramMB ?? 0;
+  gpuCapabilitySize = gpuCapabilitySize ?? gpu.vramMB;
   const gpuText = gpu.supported
     ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
@@ -1616,7 +1617,6 @@ function renderHigherStatusPanel(status, checkingText) {
     const selected = m.key === status.modelKey ? "selected" : "";
     const tag = m.key === status.recommendedKey ? " ★" : "";
     const warn = (m.highRam || (m.vramMinMB || 0) >= 4000) ? " ⚠️" : "";
-    if (gpuCapabilitySize <= m.vramMinMB) gpuCapabilitySize = m.vramMinMB;
     return `<option value="${escapeHTML(m.key)}" ${selected}>${escapeHTML(m.label)} (${m.vramMinMB}MB)${warn}${tag}</option>`;
   };
   const featuredModels = models.filter((m) => m.group !== "all");
@@ -1628,7 +1628,7 @@ function renderHigherStatusPanel(status, checkingText) {
 
   const activeEntry = models.find((m) => m.key === status.modelKey);
   const initialWarn = getHighRamWarningText(activeEntry, gpu);
-
+  
   const nextBiggerKey = getNextBiggerModelKey(status.modelKey);
   const nextBiggerEntry = nextBiggerKey ? models.find((m) => m.key === nextBiggerKey) : null;
   const biggerBtnHtml = nextBiggerEntry
@@ -2236,17 +2236,7 @@ function getReadableName(url) {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
-    consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
-    HigherPanelSwitch = document.getElementById("SwitchPanel");
-    HigherStatusPanel = document.getElementById("higherStatusPanel");
-    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
-    HigherPanelShown = Panel.HigherPanelShown ?? true;
-    const status = await checkHigherAIStatus(false);
-    CognitionTitle = document.getElementById("CognitionTitle");
-    if (CognitionTitle && status) {
-      const showUS = `[${status.modelLabel}]`;
-      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
-    }
+    
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
         pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
@@ -2265,6 +2255,18 @@ function getReadableName(url) {
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
         CompanionDetailsMessage.style.display = "block";
       }
+    }
+
+    consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
+    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
+    HigherPanelShown = Panel.HigherPanelShown ?? true;
+    const status = await checkHigherAIStatus(false);
+    CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && status) {
+      const showUS = `[${status.modelLabel}]`;
+      CognitionTitle.innerHTML = "🧠 AI Overmind " + showUS;
     }
 
     if (HigherStatusPanel) {
