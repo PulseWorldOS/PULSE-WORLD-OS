@@ -110,6 +110,7 @@ const DEFAULT_BIZ = "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizLogo.webp.pex";
 const DEFAULT_BIZ_ALIAS = "./_EXPRESSIONS/_PEX/BUILD/FrustratedBizAlias.webp.pex";
 let RunningAI = false;
 let aiSession = null;
+let assumedValue = 0;
 let identity = PulseRealm.PulseIdentity;
 let aiLogBox = document.getElementById("pw-console-ai");
 let meshVideo = document.getElementById("meshVideo");
@@ -1079,12 +1080,37 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
   let totalJobs = 0;
   let totalErrors = 0;
+  let totalJobsString = Number(totalJobs);
 
   console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
+  
+  let tickInterval = 0;
+  let totalUnit = null;
+  let totalUnits = 0;
 
   const tick = async () => {
     if (Date.now() >= endTime) {
       stopSoakTest();
+      if (totalJobs >= 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
+      } else if (totalJobs >= 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs >= 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      }
+      if (totalErrors === 0) {
+        totalUnit = "Val: ";
+        totalUnits = currency(assumedValue);
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
+      console.log("WASM Daily Total Value: " + currency(assumedValue));
+      timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      // appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
+      // setTimeout(() => {
+      //   appendEarnerMessage(CompanionMessages, "🧠", "Waiting for PulseEarner Job Submissions...");
+      // }, 4000); 
       console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
       return;
     }
@@ -1099,8 +1125,56 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
+      tickInterval++;
+      // Models realistic DePIN compute payouts (e.g., Golem tasks / Fluence compute units)
+      // 80% lightweight micro-tasks ($0.0005 - $0.0020)
+      // 15% standard compute jobs ($0.0020 - $0.0060)
+      // 5% heavy AI/rendering workloads ($0.0060 - $0.0150)
+
+      const roll = Math.random();
+      let jobReward;
+
+      if (roll < 0.80) {
+        jobReward = 0.0005 + Math.random() * 0.0015;
+      } else if (roll < 0.95) {
+        jobReward = 0.0020 + Math.random() * 0.0040;
+      } else {
+        jobReward = 0.0060 + Math.random() * 0.0090;
+      }
+
+      assumedValue += jobReward;
+
+      console.log("WASM Daily Assumed Value: " + currency(assumedValue));
+      if (totalJobs >= 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
+      } else if (totalJobs >= 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs >= 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      }
+      if (totalErrors === 0) {
+        totalUnit = "Val: ";
+        totalUnits = currency(jobReward);
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
       const avgJobMs = (batchMs / batchSize).toFixed(4);
-      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | Errors: ${totalErrors}`);
+      let avgJobColor = "lightgreen";
+      if (avgJobMs >= 0.01) {
+        avgJobColor = "red";
+      } else if (avgJobMs >= 0.005) {
+        avgJobColor = "orange";
+      } 
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      // appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
+      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | ${totalUnit}${totalUnits}`);
     }
 
     soakTestTimer = setTimeout(tick, intervalMs);
