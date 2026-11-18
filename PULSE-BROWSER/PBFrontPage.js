@@ -2639,7 +2639,7 @@ async function pbRenderCacheList2() {
     li.innerHTML = `
       <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
 
-      Realm Artifacts: <font color="${sizeColor}">${totalcount}</font><br>
+      Realm Artifacts: <font color="${sizeColor}">${cachecount}</font><br>
       Multiverse Size: <font color="${sizeColor}">${sizeMB} MB</font><br>
 
       Weight: <font color="#0FF">${weightClass}</font><br>
