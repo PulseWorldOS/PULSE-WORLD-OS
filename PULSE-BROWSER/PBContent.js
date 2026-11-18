@@ -1803,6 +1803,8 @@ function injectPulseFlag() {
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
   //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   // ];
+  if (window.innerHeight < 200 || window.innerWidth < 200) return;
+
   const flag = document.createElement("div");
   flag.id = "pulseworld-flag";
   flag.style.cssText = `
@@ -1833,14 +1835,14 @@ function injectPulseFlag() {
   if (!realStory) { 
     flag.textContent = "PulseBrowser OS (PIP Hidden)";
     flag.style.background = "rosybrown";
-    setTimeout(() => {
+    setTimeout(async () => {
       flag.textContent = "PulseBrowser OS";
       flag.style.background = "rosybrown";
     }, 4000);
   } else if (realStory.disablePictureInPicture) {
     flag.textContent = "PulseBrowser OS (PIP Disabled)";
     flag.style.background = "rosybrown";
-    setTimeout(() => {
+    setTimeout(async () => {
       flag.textContent = "PulseBrowser OS";
       flag.style.background = "rosybrown";
     }, 4000);
@@ -1856,7 +1858,7 @@ function injectPulseFlag() {
     flag.textContent = "PulseBrowser OS";
     flag.style.background = "#00FF9C";
 
-    setTimeout(() => {
+    setTimeout(async () => {
       fadeHUD();
     }, 6000);
 
