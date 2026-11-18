@@ -1058,10 +1058,22 @@ async function runEngineTest(silent = false) {
   }
 }
 
-function currency(amount, displayCurrency = "$") {
+function currencyLittle(amount, displayCurrency = "$") {
   let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
   const num = Number(raw);
   const safe = isNaN(num) ? "0.00" : num.toFixed(3);
+
+  let cur = String(displayCurrency || "$").trim().toUpperCase();
+  cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
+
+  return `${cur}${safe}`;
+}
+
+
+function currency(amount, displayCurrency = "$") {
+  let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
+  const num = Number(raw);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(2);
 
   let cur = String(displayCurrency || "$").trim().toUpperCase();
   cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
@@ -1100,12 +1112,12 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       if (totalErrors === 0) {
         totalUnit = "Val: ";
-        totalUnits = currency(assumedValue);
+        totalUnits = currencyLittle(assumedValue);
       } else {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
       }
-      console.log("WASM Daily Total Value: " + currency(assumedValue));
+      console.log("WASM Daily Total Value: " + currencyLittle(assumedValue));
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       // appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
       // setTimeout(() => {
@@ -1144,7 +1156,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
       assumedValue += jobReward;
 
-      console.log("WASM Daily Assumed Value: " + currency(assumedValue));
+      console.log("WASM Daily Assumed Value: " + currencyLittle(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
@@ -1154,7 +1166,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
       if (totalErrors === 0) {
         totalUnit = "Val: ";
-        totalUnits = currency(jobReward);
+        totalUnits = currencyLittle(jobReward);
       } else {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
