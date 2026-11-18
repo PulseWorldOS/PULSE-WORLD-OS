@@ -2271,14 +2271,18 @@ function getReadableName(url) {
       CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
     }
 
-    if (HigherStatusPanel) {
-      if (HigherPanelShown) {
-        HigherPanelSwitch.style.opacity = "0.3";
-        HigherStatusPanel.style.display = "block"
-      } else {
-        HigherPanelSwitch.style.opacity = "1";
-        HigherStatusPanel.style.display = "none"
+    if (HigherAuthorityShown) {
+      if (HigherStatusPanel) {
+        if (HigherPanelShown) {
+          HigherPanelSwitch.style.opacity = "0.3";
+          HigherStatusPanel.style.display = "block"
+        } else {
+          HigherPanelSwitch.style.opacity = "1";
+          HigherStatusPanel.style.display = "none"
+        }
       }
+    } else {
+      HigherStatusPanel.style.display = "none"
     }
     
     if (EarnDetailsHidden) {
@@ -2379,6 +2383,7 @@ function getReadableName(url) {
       HigherAuthority.onclick = async () => {
         if (!HigherAuthorityShown) {
           HigherAuthorityShown = true;
+          HigherPanelSwitch.style.display = "block"
           pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
           consoleOvermindCognition.style.display = "block";
@@ -2389,6 +2394,7 @@ function getReadableName(url) {
           initHigherAIConsoleOnTabStart(true);
         } else {
           HigherAuthorityShown = false;
+          HigherPanelSwitch.style.display = "none"
           pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
           HigherAuthority.textContent = "🌐";
           consoleOvermindCognition.style.display = "none";
