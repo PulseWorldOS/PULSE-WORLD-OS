@@ -2815,7 +2815,7 @@ async function pbRenderStorageStats2(history) {
     const cacheNames = await caches.keys();
     for (const name of cacheNames) {
       // WebLLM stores model data in caches named with the model ID
-      if (name.includes("webllm") || name.includes("mlc") || name.includes("model") || name.includes("huggingface")) {
+      if (name.includes("webllm") || name.includes("mlc-ai") || name.includes("model") || name.includes("huggingface") || name.includes("params_shard")) {
         const cache = await caches.open(name);
         const keys = await cache.keys();
         for (const req of keys) {
