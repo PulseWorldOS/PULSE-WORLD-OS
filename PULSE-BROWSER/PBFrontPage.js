@@ -2272,6 +2272,7 @@ function getReadableName(url) {
     }
 
     if (HigherAuthorityShown) {
+      HigherStatusPanel = document.getElementById("higherStatusPanel");
       if (HigherStatusPanel) {
         if (HigherPanelShown) {
           HigherPanelSwitch.style.opacity = "0.3";
