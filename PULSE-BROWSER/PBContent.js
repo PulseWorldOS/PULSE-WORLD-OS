@@ -433,6 +433,9 @@ const PBQuantumPrefetch = {
 
 // Safe startup wrapper
 (async function safeWarmPathStart() {
+  const settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
+  OurLocalMemoryLayer = getLocalMemoryLayer();
   // Start immediately if DOM is already interactive or complete
   if (document.readyState !== "loading") {
     startWarmPath();
@@ -449,10 +452,6 @@ const PBQuantumPrefetch = {
     startWarmPath();
     createPulseScreen();
   });
-
-  const settings = await pbLoadExtensionSettings();
-  PulseRealmSettings = settings;
-  OurLocalMemoryLayer = getLocalMemoryLayer();
 })();
 
 function cacheit(link) {
@@ -635,7 +634,7 @@ function warmAllImages() {
 // ============================================================================
 let gpuEnabled = "GPU Driver Error";
 
-function createPulseScreen() {
+async function createPulseScreen() {
   const vid = document.createElement("video");
   if (window.innerHeight < 200 || window.innerWidth < 200) return;
   loadLastSavedVideo(entry => {
@@ -682,7 +681,7 @@ function createPulseScreen() {
     z-index: 999999999;
   `;
 
-  setTimeout(() => {
+  setTimeout(async () => {
     fadeHUD(vid);
   }, 4000);
 }
