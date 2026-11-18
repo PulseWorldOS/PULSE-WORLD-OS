@@ -402,7 +402,7 @@ const PBQuantumPrefetch = {
     ) {
       return;
     }
-  console.log("IT COULD HAVE OCCURED!" + Date.now().toLocaleTimeString());
+  console.log("IT COULD HAVE OCCURED!" + new Date().toLocaleTimeString());
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", async () => {
       injectHUD();
