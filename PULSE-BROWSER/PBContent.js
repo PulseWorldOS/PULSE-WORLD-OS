@@ -1870,7 +1870,7 @@ function injectPulseFlag() {
           if (!realStory) { 
             flag.textContent = "PulseBrowser OS (PIP Hidden)";
             flag.style.background = "rosybrown";
-            setTimeout(() => {
+            setTimeout(async () => {
               flag.textContent = "PulseBrowser OS";
               flag.style.background = "rosybrown";
             }, 4000);
@@ -1880,7 +1880,7 @@ function injectPulseFlag() {
           if (realStory.disablePictureInPicture) {
             flag.textContent = "PulseBrowser OS (PIP Disabled)";
             flag.style.background = "rosybrown";
-            setTimeout(() => {
+            setTimeout(async () => {
               flag.textContent = "PulseBrowser OS";
               flag.style.background = "rosybrown";
             }, 4000);
