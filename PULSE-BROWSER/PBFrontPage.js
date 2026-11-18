@@ -2281,8 +2281,6 @@ function getReadableName(url) {
           HigherStatusPanel.style.display = "none"
         }
       }
-    } else {
-      HigherStatusPanel.style.display = "none"
     }
     
     if (EarnDetailsHidden) {
