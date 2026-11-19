@@ -9888,9 +9888,11 @@ document.addEventListener("PulseDocumentChanged", () => {
       }
     }, 5000);
     setTimeout(() => {
+      valueDiv = document.getElementById("assumedValue");
       if (valueDiv) {
         document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
         setInterval(() => {
+          valueDiv = document.getElementById("assumedValue");
           document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
         }, 1500);
       } else {
