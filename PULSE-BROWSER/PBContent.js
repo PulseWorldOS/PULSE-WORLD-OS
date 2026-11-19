@@ -1987,7 +1987,7 @@ function collectAndWarmAssetsContent() {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
   
-  let tabValue = "$0.000";
+  let tabValue = 0;
   if (valueDiv) tabValue = valueDiv.textContent;
 
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
@@ -2335,7 +2335,7 @@ async function PulseBrowserDomScan() {
 
   // Tiny image preview (first 10 images)
   
-  let tabValue = "$0.000";
+  let tabValue = 0;
   if (valueDiv) tabValue = valueDiv.textContent;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   

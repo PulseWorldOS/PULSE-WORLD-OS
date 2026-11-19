@@ -25,7 +25,7 @@ let TetherCode = null;
 let aiPopupSize = 0;
 let assumedValue = 0;
 let WeassumedValue = 0;
-let HisassumedValue = "$0.000";
+let HisassumedValue = 0;
 let runWasmTest = false;
 let WasmSuccess = false;
 let timeProof = null;
@@ -3453,10 +3453,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         realmSummary = msg.realmSummary;
       }
       if (msg.assumedValue) {
-        if (msg.assumedValue !== "$0.000") {
-          HisassumedValue = msg.assumedValue;
-          console.log("Content Tab Value: ", HisassumedValue);
-        }
+        HisassumedValue = msg.assumedValue;
+        console.log("Content Tab Value: ", HisassumedValue);
       }
       sendResponse({ ok: true });
       break;
@@ -4224,7 +4222,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue });
       return true;
 
     case "PBCONSOLE_GET":

@@ -1019,7 +1019,8 @@ async function runLocalAI() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+        if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+        earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1104,7 +1105,8 @@ ${rawPrompt}
         return;
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-      if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+      if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+      earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1945,7 +1947,8 @@ async function appendCompanionMessage(area, role, text) {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+    if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+    earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2035,7 +2038,8 @@ CompanionConsoleSend.onclick = async () => {
         return;
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-      if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+      if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+      earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2067,7 +2071,8 @@ CompanionConsoleSend.onclick = async () => {
         return;
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-      if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+      if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+      earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -3382,7 +3387,8 @@ setInterval(async () => {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+    if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+    earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -3430,7 +3436,8 @@ setInterval(async () => {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+    if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+    earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -3885,7 +3892,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       // const regfavicon = await getFavicon(realm);
       const favicon = snapshot.regfavicon ?? snapshot.favicon;
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
-      const ValueFromTab = snapshot.assumedValue ?? "$0.00";
+      const ValueFromTab = snapshot.assumedValue ?? 0;
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
         saveCache();
@@ -3897,7 +3904,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${favicon}"
-               alt="${MemoryLayer} MB || ${ValueFromTab}" />
+               alt="${MemoryLayer} MB || ${currencyLittle(ValueFromTab)}" />
         </div>
       `;
 
@@ -4778,7 +4785,8 @@ async function updateModuleIcons(settings, browser) {
       return;
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-    if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+    if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+    earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -6466,7 +6474,8 @@ function CheckBackTab() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+        if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+        earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -6506,7 +6515,8 @@ function CheckBackTab() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+        if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+        earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -6742,7 +6752,8 @@ function CheckBackTab() {
           return;
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-        if (response.WeassumedValue) earnerminipanel.textContent = currency(OurassumedValue);
+        if (response.HisassumedValue) OurassumedValue = OurassumedValue + response.HisassumedValue;
+        earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
