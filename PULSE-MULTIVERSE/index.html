@@ -9888,11 +9888,18 @@ document.addEventListener("PulseDocumentChanged", () => {
       }
     }, 5000);
     setTimeout(() => {
-      document.title = baseTitle + " - EarnBand ¢";
-      setInterval(() => {
-        document.title = document.title.replace("...","");
-        document.title = document.title + ".";
-      }, 1500);
+      if (valueDiv) {
+        document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
+        setInterval(() => {
+          document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
+        }, 1500);
+      } else {
+        document.title = baseTitle + " - EarnBand ¢";
+        setInterval(() => {
+          document.title = document.title.replace("...","");
+          document.title = document.title + ".";
+        }, 1500);
+      }
     }, 8000);
   }
 })();
