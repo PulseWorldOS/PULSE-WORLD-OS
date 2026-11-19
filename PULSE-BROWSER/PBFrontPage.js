@@ -3034,7 +3034,7 @@ async function pbRenderStorageStats2(history) {
     higherAIDisplay = higherAIGB + " GB";
   }
   if (higherAIGpuMB > 0) {
-    higherGPUAIDisplay = `<span style="color:#7fdfff">(~${(higherAIGpuMB / 1000).toFixed(1)} GB GPU)</span>`;
+    higherGPUAIDisplay = `<span style="color:#7fdfff">(~${higherAIGpuMB.toFixed(0)} MB GPU)</span>`;
   }
 
   // ⭐ Dynamic color zones
