@@ -9828,18 +9828,11 @@ document.addEventListener("visibilitychange", () => {
       cachePercent.textContent = PulseRealm.PulseCacheUsed;
       capability.textContent = PulseRealm.PulseCapability;
       valueDiv = document.getElementById("assumedValue");
+      let baseTitle = document.title.split("-")[0].trim();
       if (valueDiv) {
         document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
-        setInterval(() => {
-          valueDiv = document.getElementById("assumedValue");
-          document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
-        }, 1500);
       } else {
         document.title = baseTitle + " - EarnBand ¢";
-        setInterval(() => {
-          document.title = document.title.replace("...","");
-          document.title = document.title + ".";
-        }, 1500);
       }
       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
       pulseStreamGhost();
