@@ -1283,7 +1283,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
       assumedValue += jobReward;
 
-      console.log("WASM Daily Assumed Value: " + currencyLittle(assumedValue));
+      console.log("PulseEarners: Total WASM Daily Assumed Value: " + currencyLittle(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
