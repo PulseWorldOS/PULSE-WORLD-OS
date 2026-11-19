@@ -1022,6 +1022,7 @@ async function runLocalAI() {
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         OurassumedValue += ALLassumedValue;
+        console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -1109,6 +1110,7 @@ ${rawPrompt}
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
       OurassumedValue += ALLassumedValue;
+      console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -1952,6 +1954,7 @@ async function appendCompanionMessage(area, role, text) {
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     OurassumedValue += ALLassumedValue;
+    console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -2044,6 +2047,7 @@ CompanionConsoleSend.onclick = async () => {
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
       OurassumedValue += ALLassumedValue;
+      console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -2078,6 +2082,7 @@ CompanionConsoleSend.onclick = async () => {
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
       OurassumedValue += ALLassumedValue;
+      console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -3399,6 +3404,7 @@ setInterval(async () => {
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     OurassumedValue += ALLassumedValue;
+    console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -3449,6 +3455,7 @@ setInterval(async () => {
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     OurassumedValue += ALLassumedValue;
+    console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -4799,6 +4806,7 @@ async function updateModuleIcons(settings, browser) {
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     OurassumedValue += ALLassumedValue;
+    console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -6489,6 +6497,7 @@ function CheckBackTab() {
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         OurassumedValue += ALLassumedValue;
+        console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -6531,6 +6540,7 @@ function CheckBackTab() {
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         OurassumedValue += ALLassumedValue;
+        console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -6769,6 +6779,7 @@ function CheckBackTab() {
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         OurassumedValue += ALLassumedValue;
+        console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
