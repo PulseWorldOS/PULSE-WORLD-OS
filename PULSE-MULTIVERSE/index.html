@@ -1098,6 +1098,8 @@ function sendToSW(msg, options) {
 navigator.serviceWorker.addEventListener('message', event => {
   if (event.data?.type === 'PULSE_VALUE_UPDATED') {
     assumedValue = event.data.newValue;
+    const valueDiv = document.getElementById("assumedValue");
+    valueDiv.textContent = currencyLittle(assumedValue);
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
 });
