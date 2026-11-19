@@ -173,127 +173,48 @@ const PB_LOG3 = {
   }
 };
 
-// class PulseWasmEngine {
-//   constructor() {
-//     this.wasmInstance = null;
-//     this.isLoaded = false;
-//   }
+async function BootMeNowPlease() {
+  const Boot = await chrome.storage.local.get(["bootVideoRunOnce"]);
+  if (Boot) bootVideoRunOnce = Boot.bootVideoRunOnce ?? false;
+  if (!bootVideoRunOnce) {
+    bootVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Boot Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
 
-//   async EarnerLockedandLoaded() {
-//     this.isLoaded = true;
-//     if (typeof chrome !== 'undefined' && chrome.power) {
-//       chrome.power.requestKeepAwake("system");
-//     }
-//     console.log("[CONSOLE WASM ENGINE] Locked and Loaded!");
-//   }
+      try {
+        // Stop playback immediately
+        bootVideo.pause();
+        bootVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("BootVideo pause error:", err);
+      }
 
-//   // Load the pure binary math module into memory
-//   async initEngine(wasmBinaryUrl) {
-//     if (!wasmBinaryUrl && typeof chrome !== 'undefined' && chrome.runtime) {
-//       wasmBinaryUrl = chrome.runtime.getURL("PulseEarnWarmer.wasm");
-//     }
-//     if (this.isLoaded) return;
-    
-//     try {
-//       // Fetch the highly dense compiled binary module
-//       const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
-//       if (!response.ok) {
-//         throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
-//       }
-//       const buffer = await response.arrayBuffer();
-      
-//       // Compile natively right on that 1ms service worker line
-//       const module = await WebAssembly.compile(buffer);
-      
-//       // Match the exact namespace strings the binary expects
-//       this.wasmInstance = await WebAssembly.instantiate(module, {
-//         my_namespace: {
-//           imported_func: (arg) => { 
-//             console.log("[CONSOLE WASM CALLBACK] Function invoked from WASM:", arg); 
-//           }
-//         },
-//         env: {
-//           memory: new WebAssembly.Memory({ initial: 256, maximum: 512 }),
-//           abort: () => { console.error("[CONSOLE WASM ABORT] Critical execution crash"); }
-//         }
-//       });
-
-//       // Debug aid: Safely lists all real exported names from whatever binary loaded
-//       console.log("[CONSOLE WASM EXPORTS] Available keys:", Object.keys(this.wasmInstance.exports));
-
-//       await this.EarnerLockedandLoaded();
-//       console.log("[CONSOLE WASM ENGINE] Pure mathematical module stable and hot.");
-//     } catch (err) {
-//       console.error("[CONSOLE WASM ENGINE] Initialization failed:", err);
-//     }
-//   }
-
-//   // The pure compute pipeline: Input bytes -> Output proofs
-//   async executeProofJob(rawPayloadData) {
-//     if (!this.isLoaded) throw new Error("CONSOLE WASM engine not ready");
-    
-//     // Resolve the target function dynamically to ensure runtime stability
-//     const targetFunc = this.wasmInstance.exports.computeMathProofs 
-//                     || this.wasmInstance.exports._computeMathProofs 
-//                     || this.wasmInstance.exports.exported_func;
-
-//     if (typeof targetFunc !== 'function') {
-//       throw new Error(`Execution failed: Target function signature missing from CONSOLE WASM exports.`);
-//     }
-
-//     // --- FALLBACK GUARD FOR TEST BINARY (simple.wasm) ---
-//     // If testing using the MDN file, it ignores memory logic and returns 42 immediately
-//     if (targetFunc === this.wasmInstance.exports.exported_func) {
-//       const testValue = targetFunc(); // Triggers the internal my_namespace.imported_func callback
-//       // if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) chrome.power.releaseKeepAwake();
-      
-//       // Return a simulated mock proof containing the numeric test result
-//       return new Uint8Array([testValue]); 
-//     }
-
-//     // --- PRODUCTION PIPELINE (PulseEarnWarmer.wasm) ---
-//     const inputArray = new Uint8Array(rawPayloadData);
-//     const length = inputArray.length;
-
-//     // Safely look up or handle memory positioning addresses
-//     let inputAddress = 0;
-//     if (typeof this.wasmInstance.exports.malloc === 'function') {
-//       inputAddress = this.wasmInstance.exports.malloc(length);
-//     } else if (this.wasmInstance.exports.input_buffer_pointer) {
-//       inputAddress = this.wasmInstance.exports.input_buffer_pointer.value || this.wasmInstance.exports.input_buffer_pointer;
-//     }
-
-//     // Write your payload to the shared linear memory block
-//     const wasmMemoryBuffer = new Uint8Array(this.wasmInstance.exports.memory.buffer);
-//     wasmMemoryBuffer.set(inputArray, inputAddress);
-    
-//     // Execute computational processing loops
-//     const resultAddress = targetFunc(inputAddress, length);
-    
-//     // Read the processed byte data out of memory space
-//     const resultLength = 32; 
-//     const proofResult = new Uint8Array(this.wasmInstance.exports.memory.buffer, resultAddress, resultLength);
-
-//     // Free memory allocations to keep the service worker clean
-//     if (typeof this.wasmInstance.exports.free === 'function') {
-//       this.wasmInstance.exports.free(inputAddress);
-//     }
-
-//     // if (typeof chrome !== 'undefined' && chrome.power && !CompanionDeprivation) {
-//     //   chrome.power.releaseKeepAwake();
-//     // }
-    
-//     // Decouple array allocation structure from WASM memory references
-//     return proofResult.slice();
-//   }
-// }
-
-// // Instantiate the isolated engine
-// const pulseWasmCompute = new PulseWasmEngine();
-// if (typeof PB_LOG3 !== 'undefined') {
-//   PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
-// }
-
+      // Hide the video membrane
+      bootVideo.style.opacity = "0";
+      bootVideo.style.display = "none";
+    };
+  
+    setTimeout(async () => {
+      // Hide the video membrane
+      bootVideo.style.opacity = "0";
+      bootVideo.style.display = "none";
+      bootVideoRunOnce = true;
+      await PulsesafeStorageSet({ bootVideoRunOnce });
+    }, 5000);
+  } else {
+    // Hide the video membrane
+    bootVideo.style.opacity = "0";
+    bootVideo.style.display = "none";
+  }
+}
+// ======================================================
+// 4) CLICK-TO-SKIP BOOT VIDEO (PulseWorld Physics)
+// ======================================================
+if (bootVideo) {
+  BootMeNowPlease();
+}
 
 // Utility: load settings
 async function loadOrders() {
@@ -401,50 +322,6 @@ if (channel) {
       logger.error("[AI_Overmind_Sync] Error processing incoming message:", err);
     }
   };
-}
-
-
-async function BootMeNowPlease() {
-  const Boot = await chrome.storage.local.get(["bootVideoRunOnce"]);
-  if (Boot) bootVideoRunOnce = Boot.bootVideoRunOnce ?? false;
-  if (!bootVideoRunOnce) {
-    bootVideo.onclick = async () => {
-      console.log(
-        "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Boot Video SKIPPED by user.",
-        "color:#H02FHA; font-weight:bold; font-family:monospace;"
-      );
-
-      try {
-        // Stop playback immediately
-        bootVideo.pause();
-        bootVideo.currentTime = 0;
-      } catch (err) {
-        console.warn("BootVideo pause error:", err);
-      }
-
-      // Hide the video membrane
-      bootVideo.style.opacity = "0";
-      bootVideo.style.display = "none";
-    };
-  
-    setTimeout(async () => {
-      // Hide the video membrane
-      bootVideo.style.opacity = "0";
-      bootVideo.style.display = "none";
-      bootVideoRunOnce = true;
-      await PulsesafeStorageSet({ bootVideoRunOnce });
-    }, 5000);
-  } else {
-    // Hide the video membrane
-    bootVideo.style.opacity = "0";
-    bootVideo.style.display = "none";
-  }
-}
-// ======================================================
-// 4) CLICK-TO-SKIP BOOT VIDEO (PulseWorld Physics)
-// ======================================================
-if (bootVideo) {
-  BootMeNowPlease();
 }
 
 class PulseWasmEngine {
@@ -3034,7 +2911,7 @@ async function pbRenderStorageStats2(history) {
     higherAIDisplay = higherAIGB + " GB";
   }
   if (higherAIGpuMB > 0) {
-    higherGPUAIDisplay = `<span style="color:#7fdfff">(~${higherAIGpuMB.toFixed(0)} MB GPU)</span>`;
+    higherGPUAIDisplay = `<span style="color:#7fdfff">~${higherAIGpuMB.toFixed(0)} MB GPU</span>`;
   }
 
   // ⭐ Dynamic color zones
