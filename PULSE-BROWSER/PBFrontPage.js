@@ -121,6 +121,7 @@ let HigherPanelSwitch = document.getElementById("SwitchPanel");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
+const pulsepaltalk = document.getElementById("pulsepal-talk");
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
@@ -2350,6 +2351,12 @@ function getReadableName(url) {
         pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
         pbPulseDetailsEarn.style.opacity = "1";
         pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+        setTimeout(() => {
+          pulsepaltalk.style.opacity = "1";
+        }, 1500);
+        setTimeout(() => {
+          pulsepaltalk.style.opacity = "0";
+        }, 3000);
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
       }, 1200);
@@ -2397,6 +2404,12 @@ function getReadableName(url) {
           pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
           pbPulseDetailsEarn.style.opacity = "1";
           pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+          setTimeout(() => {
+          pulsepaltalk.style.opacity = "1";
+          }, 1500);
+          setTimeout(() => {
+            pulsepaltalk.style.opacity = "0";
+          }, 3000);
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
         }, 1200);
