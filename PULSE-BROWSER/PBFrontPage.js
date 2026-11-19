@@ -2938,6 +2938,8 @@ async function pbRenderStorageStats2(history) {
   let higherAIBytes = 0;
   let higherAIGpuMB = 0;
   let higherAIDisplay = null;
+  let higherGPUAIDisplay = null;
+
   try {
     const modelVramMap = {
       "Qwen2.5-0.5B-Instruct-q4f16_1-MLC": 512,
@@ -3032,7 +3034,7 @@ async function pbRenderStorageStats2(history) {
     higherAIDisplay = higherAIGB + " GB";
   }
   if (higherAIGpuMB > 0) {
-    higherAIDisplay += ` disk <span style="color:#7fdfff">(~${(higherAIGpuMB / 1000).toFixed(1)} GB GPU)</span>`;
+    higherGPUAIDisplay = `<span style="color:#7fdfff">(~${(higherAIGpuMB / 1000).toFixed(1)} GB GPU)</span>`;
   }
 
   // ⭐ Dynamic color zones
@@ -3152,6 +3154,9 @@ async function pbRenderStorageStats2(history) {
         </div>
 
         <div style="flex:1;">
+          <strong>AI Thought:</strong><br>
+          • <span style="color:lightgreen">${higherGPUAIDisplay}</span><br>
+
           <strong>System Quota:</strong><br>
           • <span style="color:lightgreen">${quotaGB} GB</span><br>
 
