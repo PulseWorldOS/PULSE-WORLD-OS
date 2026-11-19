@@ -828,7 +828,7 @@ self.addEventListener('message', event => {
   }
 
   if (msg === 'PULSE_ASSUMED_VALUE') {
-    assumedValue = assumedValue + msg.assumedValue;
+    WeassumedValue = WeassumedValue + msg.assumedValue;
   }
 
   if (msg === 'PULSE_DEVICE_OFF') {
