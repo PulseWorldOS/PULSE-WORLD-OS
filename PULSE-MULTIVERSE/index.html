@@ -9806,39 +9806,53 @@ document.addEventListener("DOMContentLoaded", async () => {
   }, 2000);
 });
 
-// document.addEventListener("visibilitychange", () => {
-//   if (document.hidden || document.visibilityState === "hidden") {
-//     if (PulseRealm.TropicPulseScanner) {
-//       PulseRealm.TropicPulseScanner.close();
-//     }
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden || document.visibilityState === "hidden") {
+    if (PulseRealm.TropicPulseScanner) {
+      PulseRealm.TropicPulseScanner.close();
+    }
     
-//     pbPanel.style.display = "none";
-//     clearInterval(balanceBankTimer);
-//     clearInterval(motionTickTimer);
-//     clearInterval(PBIntervalFast);
-//     clearInterval(StarlinkGhostProtocol);
-//     clearInterval(SupabaseProtocol);
-//   } else {
-//     StarlinkGhostProtocol = setInterval(() => {
-//       timeClock.textContent = pulseClock();
-//       timeClock.style.color = "#0FF";
-//       speedPulse.textContent = PulseRealm.PulseSpeed;
-//       speedPulseX.textContent = PulseRealm.PulseSpeedX;
-//       cacheStore.textContent = PulseRealm.PulseCacheStore;
-//       cachePercent.textContent = PulseRealm.PulseCacheUsed;
-//       capability.textContent = PulseRealm.PulseCapability;
-//       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
-//       pulseStreamGhost();
-//       loadPulseIdentityContinual();
-//       pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
-//       updateBackButtonVisibility();
-//     }, 7000);
-//     SupabaseProtocol = setInterval(() => {
-//       console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-//       pulseSupabaseSync();
-//     }, 30000);
-//   }
-// });
+    pbPanel.style.display = "none";
+    clearInterval(balanceBankTimer);
+    clearInterval(motionTickTimer);
+    clearInterval(PBIntervalFast);
+    clearInterval(StarlinkGhostProtocol);
+    clearInterval(SupabaseProtocol);
+  } else {
+    StarlinkGhostProtocol = setInterval(() => {
+      timeClock.textContent = pulseClock();
+      timeClock.style.color = "#0FF";
+      speedPulse.textContent = PulseRealm.PulseSpeed;
+      speedPulseX.textContent = PulseRealm.PulseSpeedX;
+      cacheStore.textContent = PulseRealm.PulseCacheStore;
+      cachePercent.textContent = PulseRealm.PulseCacheUsed;
+      capability.textContent = PulseRealm.PulseCapability;
+      valueDiv = document.getElementById("assumedValue");
+      if (valueDiv) {
+        document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
+        setInterval(() => {
+          valueDiv = document.getElementById("assumedValue");
+          document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
+        }, 1500);
+      } else {
+        document.title = baseTitle + " - EarnBand ¢";
+        setInterval(() => {
+          document.title = document.title.replace("...","");
+          document.title = document.title + ".";
+        }, 1500);
+      }
+      if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
+      pulseStreamGhost();
+      loadPulseIdentityContinual();
+      pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
+      updateBackButtonVisibility();
+    }, 7000);
+    SupabaseProtocol = setInterval(() => {
+      console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+      pulseSupabaseSync();
+    }, 30000);
+  }
+});
 
 // Close scanner when an internal document loads
 document.addEventListener("PulseDocumentChanged", () => {
