@@ -1082,6 +1082,12 @@ function currency(amount, displayCurrency = "$") {
   return `${cur}${safe}`;
 }
 
+function sendToSW(msg, options) {
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage(msg, options);
+  }
+}
+
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   if (soakTestTimer) {
@@ -1160,7 +1166,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       assumedValue += jobReward;
       const valueDiv = document.getElementById("assumedValue");
       valueDiv.textContent = currencyLittle(assumedValue);
-
+      sendToSW('PULSE_ASSUMED_VALUE', assumedValue);
       console.log("WASM Daily Assumed Value: " + currencyLittle(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";

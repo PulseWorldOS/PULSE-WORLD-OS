@@ -827,6 +827,10 @@ self.addEventListener('message', event => {
     sendPulseHeartbeat();
   }
 
+  if (msg === 'PULSE_ASSUMED_VALUE') {
+    assumedValue = assumedValue + msg.assumedValue;
+  }
+
   if (msg === 'PULSE_DEVICE_OFF') {
     self.pulseDeviceActive = false;
     sendPulseHeartbeat();
