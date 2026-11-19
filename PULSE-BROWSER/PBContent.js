@@ -2368,7 +2368,7 @@ async function PulseBrowserDomScan() {
   cacheit(realm);
   chrome.runtime.sendMessage({ type: "PBCONTENT_REALM_CLAIM", realm });
   const authorityRealm = clone.innerHTML.slice(0, 5000);
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm, realmSummary });
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", realm: authorityRealm, realmSummary, assumedValue });
   
   safeStorageSet({ [snapshotKey]: snapshot });
 }

@@ -25,6 +25,7 @@ let TetherCode = null;
 let aiPopupSize = 0;
 let assumedValue = 0;
 let WeassumedValue = 0;
+let HisassumedValue = 0;
 let runWasmTest = false;
 let WasmSuccess = false;
 let timeProof = null;
@@ -3451,6 +3452,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.realmSummary) {
         realmSummary = msg.realmSummary;
       }
+      if (msg.assumedValue) {
+        HisassumedValue = msg.assumedValue;
+      }
       sendResponse({ ok: true });
       break;
 
@@ -4217,6 +4221,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
+      if (HisassumedValue) WeassumedValue = WeassumedValue + HisassumedValue;
       sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue });
       return true;
 
