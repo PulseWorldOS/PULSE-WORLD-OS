@@ -1097,12 +1097,12 @@ function sendToSW(msg, options) {
 // Listen for the Service Worker's reply
 navigator.serviceWorker.addEventListener('message', event => {
   if (event.data?.type === 'PULSE_VALUE_UPDATED') {
-    assumedValue = event.data.newValue;
-    const valueDiv = document.getElementById("assumedValue");
-    // Ensure styles apply before fading in
-    requestAnimationFrame(() => {
-      valueDiv.textContent = currencyLittle(assumedValue);
-    });
+    // totalassumedValue = event.data.newValue;
+    // const valueDiv = document.getElementById("assumedValue");
+    // // Ensure styles apply before fading in
+    // requestAnimationFrame(() => {
+    //   valueDiv.textContent = currencyLittle(totalassumedValue);
+    // });
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
 });
