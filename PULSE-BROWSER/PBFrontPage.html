@@ -1639,12 +1639,57 @@
       border-radius: 40px;
       animation: pwDigitalExplosion 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    .pulsepal-talk {
+      position: absolute;
+      bottom: 190px;
+      left: 10px;
+      max-width: 280px;
+      width: 280px;
+      /* ⭐ FULLY OPAQUE SOLID GRADIENT */
+      background: linear-gradient(135deg, #00e6c3 0%, #cfa300 100%);
+
+      color: #000000;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+
+      padding: 8px 10px;
+      border-radius: 16px;
+      z-index: 999999;
+      /* ⭐ REMOVE ALL FADING / GLOW / TRANSPARENCY */
+      box-shadow: none;
+
+      opacity: 1;
+      transform: scale(0.9);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    /* ⭐ SOLID TAIL — NO TRANSPARENCY */
+    .pulsepal-talk::after {
+      content: "";
+      position: absolute;
+      bottom: -14px;
+      left: 35px;
+      width: 0;
+      height: 0;
+
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+
+      /* FULLY OPAQUE */
+      border-top: 14px solid #00e6c3;
+    }
   </style>
 </head>
 <body>
   <!-- PulseWorld Boot Fade -->
   <div id="pw-loading">
     <img src="PulseWorldSplash512.png" id="pw-loading-logo">
+  </div>
+  <div class="pulsepal-talk" id="pulsepal-talk">
+    Welcome to PulseBrowser OS!
   </div>
   <video id="pbBootEntrance" class="pbBootEntrance" src="PulseBrowserEntrance.mp4" autoplay muted playsinline aria-label="pbBootEntrance"></video>
   <button id="timerBtn" aria-label="Timer" role="button">10</button>
