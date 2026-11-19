@@ -804,6 +804,32 @@ async function gpuWarmExtra() {
   });
 }
 
+function getCharacterInterval() {
+  const base = 61150;
+  // ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.22;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+function getAnotherInterval() {
+  const base = 3650;
+  // ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.12;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+const interval3 = getCharacterInterval();
+const interval2 = getAnotherInterval();
+
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
@@ -827,11 +853,11 @@ setInterval(async () => {
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
   });
-}, 3500);
+}, interval2);
 
 setInterval(async () => {
   PulseBrowserDomScan();
-}, 60000);
+}, interval3);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
