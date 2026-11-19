@@ -2302,6 +2302,10 @@ async function PulseBrowserDomScan() {
   let regfavicon = await fetchAndStoreIcon(location.origin, favicon);
   // }
 
+  // Tiny image preview (first 10 images)
+  const valueDiv = document.getElementById("assumedValue");
+  let tabValue = 0;
+  if (valueDiv) tabValue = valueDiv.textContent;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
   const htmlSummary = clone.innerHTML.slice(0, 2500);
@@ -2322,6 +2326,7 @@ async function PulseBrowserDomScan() {
     svg: firstSvg,
     regfavicon,
     favicon,
+    assumedValue: tabValue,
     tabMemory: OurLocalMemoryLayerMB
   };
 
