@@ -32,6 +32,59 @@ let activeEngine = null;
 let enginePromise = null;
 let queue = Promise.resolve();
 
+// Finds the REAL closing </think> tag (case-insensitive), scanning from the END so any
+// quoted or inline "</think>" inside reasoning (e.g. `</think>`, "</think>", `</think> block`)
+// is never mistaken for the real end of thinking.
+function pwFindThinkClose(text, from) {
+  const lower = text.toLowerCase();
+  let fallback = -1;
+  let i = lower.length;
+  while ((i = lower.lastIndexOf("</think>", i - 1)) !== -1 && i >= from) {
+    const afterStr = text.slice(i + 8, i + 24);
+    const afterChar = afterStr.charAt(0);
+    const lineStart = text.lastIndexOf("\n", i - 1) + 1;
+    const beforeSameLine = text.slice(Math.max(from, lineStart, i - 24), i);
+    const quoted =
+      afterChar === "`" || afterChar === "'" || afterChar === "\"" ||
+      /[`'"]$/.test(beforeSameLine) ||
+      /<think>/i.test(beforeSameLine) ||
+      /\.\.\.$/.test(beforeSameLine) ||
+      /^[ \t]*(?:block|tag|token|section|before|after|marker)/i.test(afterStr);
+    if (quoted) continue;
+    // Prefer a real block-closing </think> followed by newline or end-of-string
+    if (afterChar === "" || afterChar === "\n" || afterChar === "\r") return i;
+    if (fallback === -1) fallback = i;
+  }
+  return fallback;
+}
+
+// Splits model output into { hasThink, closed, think, answer }.
+// Handles both "<think>…</think>answer" and template-prefixed thinking ("…</think>answer").
+function pwSplitThink(raw) {
+  const text = String(raw ?? "");
+  const startMatch = text.match(/^\s*<think>/i);
+  const bodyStart = startMatch ? startMatch[0].length : 0;
+  const closeIdx = pwFindThinkClose(text, bodyStart);
+  if (!startMatch && closeIdx === -1) {
+    return { hasThink: false, closed: false, think: "", answer: text };
+  }
+  if (closeIdx === -1) {
+    return { hasThink: true, closed: false, think: text.slice(bodyStart), answer: "" };
+  }
+  let answer = text.slice(closeIdx + 8);
+  answer = answer.replace(/^\s*<think>\s*<\/think>\s*/i, "");
+  return { hasThink: true, closed: true, think: text.slice(bodyStart, closeIdx), answer };
+}
+
+// Canonical form sent to the UI: quoted tags inside thoughts are neutralised so the
+// renderer can never close the thinking block early.
+function pwNormalizeThinkText(raw) {
+  const s = pwSplitThink(raw);
+  if (!s.hasThink) return String(raw ?? "");
+  const safeThink = s.think.replace(/<\/?think>/gi, (t) => t.replace("<", "‹").replace(">", "›"));
+  return "<think>\n" + safeThink.trim() + (s.closed ? "\n</think>\n\n" + s.answer.trimStart() : "");
+}
+
 function post(msg) {
   try {
     self.postMessage(msg);
@@ -295,36 +348,32 @@ async function runAsk(id, promptText) {
             modelKey: chosenKey,
             modelLabel: entry.label,
             phase: "generating",
-            text: fullText,
+            text: pwNormalizeThinkText(fullText),
           });
         }
       }
     }
 
     // Safety net for <think> reasoning models: if the model filled the token/context
-    // budget inside <think>...</think> without outputting a spoken reply after </think>,
+    // budget inside its thinking without outputting a spoken reply after the real </think>,
     // close </think> and run an immediate direct-answer pass (enable_thinking: false)
     // so the user always sees BOTH the full thought block AND the full spoken answer.
-    const hasThinkTag = /<think>/i.test(fullText);
-    const spokenPart = hasThinkTag
-      ? fullText.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, "").trim()
-      : fullText.trim();
+    // NOTE: uses pwSplitThink() so "<think>"/"</think>" words QUOTED inside the reasoning
+    // (e.g. `<think>...</think>`) are never mistaken for the real end of thinking.
+    const split = pwSplitThink(fullText);
+    const hasThinkTag = split.hasThink;
+    const spokenPart = hasThinkTag ? split.answer.trim() : fullText.trim();
 
     if (hasThinkTag && !spokenPart) {
-      const rawThink = fullText.replace(/<\/?think>/gi, "").trim();
-      const thinkTail = rawThink.slice(-1600);
-      if (!/<\/think>/i.test(fullText)) {
-        fullText = fullText.trimEnd() + "\n</think>\n\n";
-      } else {
-        fullText = fullText.trimEnd() + "\n\n";
-      }
+      const thinkTail = split.think.trim().slice(-1600);
+      fullText = "<think>\n" + split.think.trim() + "\n</think>\n\n";
       post({
         kind: "stream",
         id,
         modelKey: chosenKey,
         modelLabel: entry.label,
         phase: "generating",
-        text: fullText,
+        text: pwNormalizeThinkText(fullText),
       });
 
       try {
@@ -335,7 +384,7 @@ async function runAsk(id, promptText) {
           messages[0],
           {
             role: "user",
-            content: `${messages[1].content}\n\n[Your completed internal reasoning notes: ${thinkTail}]\nNow write your complete, direct spoken response to the user (do not open another <think> block):`,
+            content: `${messages[1].content}\n\n[Your completed internal reasoning notes: ${thinkTail}]\nNow write your complete, direct spoken response to the user (no more reasoning, just the final answer):`,
           },
         ];
         const followUpChunks = await engine.chat.completions.create({
@@ -362,7 +411,7 @@ async function runAsk(id, promptText) {
                 modelKey: chosenKey,
                 modelLabel: entry.label,
                 phase: "generating",
-                text: fullText + cleanedFollowUp,
+                text: pwNormalizeThinkText(fullText + cleanedFollowUp),
               });
             }
           }
@@ -379,7 +428,7 @@ async function runAsk(id, promptText) {
     generating = false;
     phase = "ready";
 
-    const clean = fullText.trim();
+    const clean = pwNormalizeThinkText(fullText).trim();
     const finalText = clean || "⚠️ Model finished without output tokens — please try sending again.";
     post({
       kind: "reply",

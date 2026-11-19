@@ -1270,23 +1270,60 @@ function escapeHTML(s) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
+// Finds the REAL closing </think> (case-insensitive), scanning from the END so any
+// quoted or inline "</think>" inside reasoning is never mistaken for the real end of thinking.
+function pwFindThinkClose(text, from) {
+  const lower = text.toLowerCase();
+  let fallback = -1;
+  let i = lower.length;
+  while ((i = lower.lastIndexOf("</think>", i - 1)) !== -1 && i >= from) {
+    const afterStr = text.slice(i + 8, i + 24);
+    const afterChar = afterStr.charAt(0);
+    const lineStart = text.lastIndexOf("\n", i - 1) + 1;
+    const beforeSameLine = text.slice(Math.max(from, lineStart, i - 24), i);
+    const quoted =
+      afterChar === "`" || afterChar === "'" || afterChar === "\"" ||
+      /[`'"]$/.test(beforeSameLine) ||
+      /<think>/i.test(beforeSameLine) ||
+      /\.\.\.$/.test(beforeSameLine) ||
+      /^[ \t]*(?:block|tag|token|section|before|after|marker)/i.test(afterStr);
+    if (quoted) continue;
+    if (afterChar === "" || afterChar === "\n" || afterChar === "\r") return i;
+    if (fallback === -1) fallback = i;
+  }
+  return fallback;
+}
+
+// { hasThink, closed, think, answer } — handles "<think>…</think>answer" and template-prefixed "…</think>answer"
+function pwSplitThink(raw) {
+  const text = String(raw ?? "");
+  const startMatch = text.match(/^\s*<think>/i);
+  const bodyStart = startMatch ? startMatch[0].length : 0;
+  const closeIdx = pwFindThinkClose(text, bodyStart);
+  if (!startMatch && closeIdx === -1) return { hasThink: false, closed: false, think: "", answer: text };
+  if (closeIdx === -1) return { hasThink: true, closed: false, think: text.slice(bodyStart), answer: "" };
+  const answer = text.slice(closeIdx + 8).replace(/^\s*<think>\s*<\/think>\s*/i, "");
+  return { hasThink: true, closed: true, think: text.slice(bodyStart, closeIdx), answer };
+}
+
 function renderAIMarkdown(raw, opts = {}) {
   let text = String(raw ?? "");
   const stash = [];
   const keep = (html) => "\u0000" + (stash.push(html) - 1) + "\u0000";
   const openAttr = (opts && opts.thinkOpen) ? " open" : "";
 
-  // 1. <think>…</think> (also an unfinished one) -> collapsible block
-  text = text.replace(/<think>([\s\S]*?)(?:<\/think>|$)/gi, (fullMatch, inner) => {
-    const isClosed = /<\/think>\s*$/i.test(fullMatch);
-    const summaryLabel = isClosed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
-    return keep(
+  // 1. thinking (also an unfinished one) -> ONE collapsible block, the spoken answer always renders below it
+  const thinkParts = pwSplitThink(text);
+  if (thinkParts.hasThink) {
+    const summaryLabel = thinkParts.closed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
+    const thinkHtml = keep(
       `<details class="pw-think-details"${openAttr} style="margin:3px 0 6px;opacity:.92">` +
       `<summary class="pw-think-summary" style="cursor:pointer;user-select:none;color:#7fdfff;font-weight:bold">${summaryLabel}</summary>` +
-      `<div class="pw-think-body" style="margin-top:4px;padding:4px 6px;border-left:2px solid rgba(0,255,255,0.35);background:rgba(5,14,28,0.55);border-radius:4px;color:#d8f3ff;white-space:pre-wrap;word-break:normal;overflow-wrap:break-word">${escapeHTML(inner.trim()).replace(/\n/g, "<br>")}</div>` +
+      `<div class="pw-think-body" style="margin-top:4px;padding:4px 6px;border-left:2px solid rgba(0,255,255,0.35);background:rgba(5,14,28,0.55);border-radius:4px;color:#d8f3ff;white-space:pre-wrap;word-break:normal;overflow-wrap:break-word">${escapeHTML(thinkParts.think.trim()).replace(/\n/g, "<br>")}</div>` +
       `</details>`
     );
-  });
+    text = thinkHtml + "\n" + thinkParts.answer.trimStart();
+  }
 
   // 2. fenced code blocks -> <pre> with a copy button
   text = text.replace(/```([a-zA-Z0-9_+-]*)[ \t]*\n?([\s\S]*?)(?:```|$)/g, (_, lang, code) =>
@@ -1428,13 +1465,12 @@ function applyStreamContentToBox(boxEl, label, rawText, scrollEl) {
     higherThinkingDetailsOpen = prevDetails.open;
   }
 
-  const thinkMatch = String(rawText ?? "").match(/<think>([\s\S]*?)(?:<\/think>|$)/i);
-  if (thinkMatch) {
-    const thinkFull = thinkMatch[0];
-    const thinkInner = thinkMatch[1] || "";
-    const isClosed = /<\/think>\s*$/i.test(thinkFull);
+  const thinkParts = pwSplitThink(rawText);
+  if (thinkParts.hasThink) {
+    const thinkInner = thinkParts.think || "";
+    const isClosed = thinkParts.closed;
     const summaryLabel = isClosed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
-    const afterThinkText = String(rawText ?? "").replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, "").trim();
+    const afterThinkText = thinkParts.answer.trim();
 
     let headerEl = boxEl.querySelector(".pw-stream-header");
     let detailsEl = boxEl.querySelector(".pw-think-details");
@@ -2900,6 +2936,7 @@ async function pbRenderStorageStats2(history) {
   // [Phase 3] Measure real AI model cache size and align with model dropdown VRAM/size (e.g. 4.5 GB for 4500MB, 6.4 GB for 6433MB)
   let rawHigherAIBytes = 0;
   let higherAIBytes = 0;
+  let higherAIGpuMB = 0;
   let higherAIDisplay = null;
   try {
     const modelVramMap = {
@@ -2930,8 +2967,6 @@ async function pbRenderStorageStats2(history) {
     }
 
     const rawBytesByModel = new Map();
-    const expectedBytesByModel = new Map();
-    let unmatchedBytes = 0;
 
     const extractModelId = (urlStr) => {
       if (!urlStr) return null;
@@ -2953,73 +2988,51 @@ async function pbRenderStorageStats2(history) {
             const resp = await cache.match(req);
             if (!resp) continue;
             const modelId = extractModelId(req.url);
-            if (modelId && /(?:ndarray-cache|tensor-cache)\.json$/i.test(req.url)) {
-              try {
-                const manifest = await resp.clone().json();
-                if (manifest && Array.isArray(manifest.records)) {
-                  const expBytes = manifest.records.reduce((sum, r) => sum + (Number(r && r.nbytes) || 0), 0);
-                  if (expBytes > 0) expectedBytesByModel.set(modelId, expBytes);
-                }
-              } catch (_) {}
-            }
             const headerLen = Number(resp.headers?.get?.("content-length") || 0);
             const entryBytes = headerLen > 0 ? headerLen : (await resp.clone().blob()).size;
             rawHigherAIBytes += entryBytes;
             if (modelId) {
               rawBytesByModel.set(modelId, (rawBytesByModel.get(modelId) || 0) + entryBytes);
-            } else {
-              unmatchedBytes += entryBytes;
             }
           } catch (_) { /* skip unreadable entries */ }
         }
       }
     }
 
-    if (rawBytesByModel.size > 0) {
-      let alignedTotal = unmatchedBytes;
-      for (const [modelId, rawBytes] of rawBytesByModel.entries()) {
-        const vramMB = modelVramMap[modelId];
-        if (vramMB && rawBytes > 0) {
-          const targetBytes = vramMB * 1024 * 1024;
-          const expectedRaw = expectedBytesByModel.get(modelId) || (targetBytes * 0.76);
-          const completion = expectedRaw > 0 ? Math.min(1, rawBytes / expectedRaw) : 1;
-          // Align displayed cache size with the model's dropdown MB/GB (e.g. 4.0 GiB raw -> 4.50 GB for 4500MB, 4.9 GiB raw -> 6.43 GB for 6433MB)
-          alignedTotal += Math.max(rawBytes, Math.round(targetBytes * completion));
-        } else {
-          alignedTotal += rawBytes;
-        }
-      }
-      higherAIBytes = alignedTotal;
-    } else {
-      higherAIBytes = rawHigherAIBytes;
+    // Disk size = real downloaded bytes. GPU size = the dropdown's VRAM figure (weights + runtime KV buffers),
+    // shown separately so storage numbers always match real storage.
+    higherAIBytes = rawHigherAIBytes;
+    for (const [modelId, rawBytes] of rawBytesByModel.entries()) {
+      const vramMB = modelVramMap[modelId];
+      if (vramMB && rawBytes > 0) higherAIGpuMB = Math.max(higherAIGpuMB, vramMB);
     }
   } catch (_) { /* if cache inspection fails, show 0 */ }
 
-  if (higherAIBytes > rawHigherAIBytes) {
-    totalUsed += (higherAIBytes - rawHigherAIBytes);
-  }
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
 
   // [Phase 3] Don't subtract — the model cache is already part of localUsed
   // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
-  // ⭐ Conversions (1000 MB = 1.00 GB so 4500MB displays as 4.50 GB and 6433MB displays as 6.43 GB)
+  // ⭐ Conversions (real storage, 1024-based like Chrome's storage quota)
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
   const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
-  const totalGB = (totalUsed / (1024 * 1024 * 1000)).toFixed(2);
+  const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
   const higherAIMB = (higherAIBytes / (1024 * 1024)).toFixed(2);
-  const higherAIGB = (higherAIBytes / (1024 * 1024 * 1000)).toFixed(2);
+  const higherAIGB = (higherAIBytes / (1024 * 1024 * 1024)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
   const syncKB = (aiSize / 1024).toFixed(2);
 
   // ⭐ Sync display formatting
   higherAIDisplay = higherAIMB + " MB";
-  if (higherAIBytes < (1024 * 1024 * 1000)) {
+  if (higherAIBytes < (1024 * 1024 * 1024)) {
     higherAIDisplay = higherAIMB + " MB";
   } else {
     higherAIDisplay = higherAIGB + " GB";
+  }
+  if (higherAIGpuMB > 0) {
+    higherAIDisplay += ` disk <span style="color:#7fdfff">(~${(higherAIGpuMB / 1000).toFixed(1)} GB GPU)</span>`;
   }
 
   // ⭐ Dynamic color zones
