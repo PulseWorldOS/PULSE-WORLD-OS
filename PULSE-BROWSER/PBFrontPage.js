@@ -2552,8 +2552,8 @@ setTimeout(CheckEarnDetailsState, 50);
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
-  if (StorageRunning) return; // already running
   if (!listEl) return;
+  if (StorageRunning) return; // already running
   // ⭐ Fetch cache list  
   StorageRunning = true;
   
@@ -2564,13 +2564,6 @@ async function pbRenderCacheList2() {
     StorageRunning = false;
     return;
   }
-
-  // ⭐ Wipe panel completely
-  listEl.innerHTML = `
-    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
-      PulseBrowser OS - System Details
-    </div>
-  `;
 
   const caches = result.caches;
   // const pulsecaches = result.pulsecaches;  
@@ -2586,6 +2579,13 @@ async function pbRenderCacheList2() {
     StorageRunning = false;
     return;
   }
+  
+  // ⭐ Wipe panel completely
+  listEl.innerHTML = `
+    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+      PulseBrowser OS - System Details
+    </div>
+  `;
 
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
