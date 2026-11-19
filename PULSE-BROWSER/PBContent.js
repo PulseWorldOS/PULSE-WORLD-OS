@@ -824,11 +824,14 @@ setInterval(async () => {
       }
     }
   });
-  
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", OurLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
   });
 }, 3500);
+
+setInterval(async () => {
+  PulseBrowserDomScan();
+}, 60000);
 
 async function injectHUD() {
   // const STREAMING_SITES = [
