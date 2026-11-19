@@ -4222,6 +4222,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
+      if (HisassumedValue) {
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof HisassumedValue === 'string' 
+          ? parseFloat(HisassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(HisassumedValue);
+
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        WeassumedValue = (Number(WeassumedValue) || 0) + (cleanValue || 0);
+      }
       sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue });
       return true;
 
