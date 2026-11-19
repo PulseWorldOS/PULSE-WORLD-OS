@@ -1028,7 +1028,6 @@ async function runLocalAI() {
 
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-        OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -1123,7 +1122,6 @@ ${rawPrompt}
 
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-      OurassumedValue += ALLassumedValue;
       console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -1974,7 +1972,6 @@ async function appendCompanionMessage(area, role, text) {
 
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-    OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -2074,7 +2071,6 @@ CompanionConsoleSend.onclick = async () => {
 
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-      OurassumedValue += ALLassumedValue;
       console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -2116,7 +2112,6 @@ CompanionConsoleSend.onclick = async () => {
 
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-      OurassumedValue += ALLassumedValue;
       console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -3445,7 +3440,6 @@ setInterval(async () => {
 
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-    OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -3503,7 +3497,6 @@ setInterval(async () => {
 
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-    OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -4861,7 +4854,6 @@ async function updateModuleIcons(settings, browser) {
 
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-    OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -6559,7 +6551,6 @@ function CheckBackTab() {
 
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-        OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -6609,7 +6600,6 @@ function CheckBackTab() {
 
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-        OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
@@ -6855,7 +6845,6 @@ function CheckBackTab() {
 
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-        OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
