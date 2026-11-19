@@ -13,6 +13,7 @@ let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
 let OurLocalMemoryLayerMB = 0;
 let OvermindTheirOrders = null;
+let tabValue = 0;
 let valueDiv = document.getElementById("assumedValue");
 const CACHE_NAME = "PulseBrowser-Companion";
 // Load saved PulseTabs from extension storage at startup
@@ -2334,7 +2335,6 @@ async function PulseBrowserDomScan() {
 
   // Tiny image preview (first 10 images)
   
-  let tabValue = 0;
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
