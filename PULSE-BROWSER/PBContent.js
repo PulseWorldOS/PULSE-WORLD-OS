@@ -805,7 +805,7 @@ async function gpuWarmExtra() {
 }
 
 function getCharacterInterval() {
-  const base = 61150;
+  const base = 45150;
   // ⭐ Add human-like jitter (±20%)
   const jitterRange = base * 0.22;
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
@@ -827,7 +827,7 @@ function getAnotherInterval() {
 
   return Math.floor(interval);
 }
-const interval3 = getCharacterInterval();
+
 const interval2 = getAnotherInterval();
 
 setInterval(async () => {
@@ -855,6 +855,7 @@ setInterval(async () => {
   });
 }, interval2);
 
+const interval3 = getCharacterInterval();
 setInterval(async () => {
   PulseBrowserDomScan();
 }, interval3);
