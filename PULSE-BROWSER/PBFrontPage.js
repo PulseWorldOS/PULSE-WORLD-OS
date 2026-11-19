@@ -2421,6 +2421,9 @@ function getReadableName(url) {
       };
     }
 
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
+
     if (HigherPanelSwitch) {
       HigherPanelSwitch.onclick = async () => {
         if (!HigherPanelShown) {
