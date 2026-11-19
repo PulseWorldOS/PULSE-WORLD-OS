@@ -762,3 +762,479 @@ function pulseBootFromManifest(targetPage) {
       });
     });
 }
+
+
+class PulseWasmEngine {
+  constructor() {
+    this.wasmInstance = null;
+    this.memory = null;
+    this.isLoaded = false;
+    this.lastCallbackValue = 0; // Captures values sent to imported_func
+  }
+
+  async EarnerLockedandLoaded() {
+    this.isLoaded = true;
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.requestKeepAwake("system");
+    }
+    console.log("[CONSOLE WASM ENGINE] Locked and Loaded!");
+  }
+
+  // Load the pure binary math module into memory
+  async initEngine(wasmBinaryUrl = "./PulseEarnWarmer.wasm") {
+    if (this.isLoaded) return;
+
+    try {
+      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
+      }
+      const buffer = await response.arrayBuffer();
+      const module = await WebAssembly.compile(buffer);
+
+      // Keep a reference to imported memory in case the module doesn't export its own
+      const importedMemory = new WebAssembly.Memory({ initial: 256, maximum: 512 });
+
+      this.wasmInstance = await WebAssembly.instantiate(module, {
+        my_namespace: {
+          imported_func: (arg) => {
+            this.lastCallbackValue = arg;
+            // Commented out during high-speed loops to prevent console memory bloat
+            // console.log("[CONSOLE WASM CALLBACK] Function invoked from WASM:", arg);
+          }
+        },
+        env: {
+          memory: importedMemory,
+          abort: () => {
+            console.error("[CONSOLE WASM ABORT] Critical execution crash");
+          }
+        }
+      });
+
+      // Prefer exported memory, fallback to imported memory
+      this.memory = this.wasmInstance.exports.memory || importedMemory;
+
+      console.log("[CONSOLE WASM EXPORTS] Available keys:", Object.keys(this.wasmInstance.exports));
+
+      await this.EarnerLockedandLoaded();
+      console.log("[CONSOLE WASM ENGINE] Pure mathematical module stable and hot.");
+    } catch (err) {
+      this.isLoaded = false;
+      console.error("[CONSOLE WASM ENGINE] Initialization failed:", err);
+      throw err; // Re-throw so callers know initialization failed
+    }
+  }
+
+  // The pure compute pipeline: Input bytes -> Output proofs
+  async executeProofJob(rawPayloadData) {
+    if (!this.isLoaded || !this.wasmInstance) {
+      throw new Error("CONSOLE WASM engine not ready");
+    }
+
+    const exports = this.wasmInstance.exports;
+    const targetFunc = exports.computeMathProofs 
+                    || exports._computeMathProofs 
+                    || exports.exported_func;
+
+    if (typeof targetFunc !== 'function') {
+      throw new Error("Execution failed: Target function signature missing from CONSOLE WASM exports.");
+    }
+
+    // --- FALLBACK GUARD FOR TEST BINARY (simple.wasm) ---
+    if (targetFunc === exports.exported_func) {
+      this.lastCallbackValue = 0;
+      const returnVal = targetFunc(); // simple.wasm returns void and passes 42 to imported_func
+      const finalVal = returnVal !== undefined ? returnVal : this.lastCallbackValue;
+      return new Uint8Array([finalVal]);
+    }
+
+    // --- PRODUCTION PIPELINE (PulseEarnWarmer.wasm) ---
+    const inputArray = rawPayloadData instanceof Uint8Array 
+      ? rawPayloadData 
+      : new Uint8Array(rawPayloadData);
+    const length = inputArray.length;
+
+    // Safely resolve input buffer pointer (avoid offset 0 unless explicitly provided)
+    let inputAddress = 1024; 
+    let usedMalloc = false;
+
+    if (typeof exports.malloc === 'function') {
+      inputAddress = exports.malloc(length);
+      usedMalloc = true;
+    } else if (exports.input_buffer_pointer !== undefined) {
+      inputAddress = typeof exports.input_buffer_pointer === 'object'
+        ? exports.input_buffer_pointer.value
+        : exports.input_buffer_pointer;
+    }
+
+    // Always re-acquire the buffer view right before use (Wasm memory can grow & detach old views)
+    const memView = new Uint8Array(this.memory.buffer);
+    if (inputAddress + length > memView.length) {
+      throw new Error(`WASM Memory Out of Bounds: Tried to write ${length} bytes at offset ${inputAddress}`);
+    }
+
+    memView.set(inputArray, inputAddress);
+
+    // Execute computational processing loops
+    const resultAddress = targetFunc(inputAddress, length);
+
+    // Re-acquire view again in case targetFunc triggered memory.grow()
+    const updatedMemView = new Uint8Array(this.memory.buffer);
+    const resultLength = 32;
+    const proofResult = updatedMemView.slice(resultAddress, resultAddress + resultLength);
+
+    // Free allocations to prevent 24-hour OOM crashes
+    if (typeof exports.free === 'function') {
+      if (usedMalloc) exports.free(inputAddress);
+      // Only free resultAddress if your Wasm module dynamically allocates the output buffer
+      if (resultAddress !== inputAddress && resultAddress > 0) {
+        exports.free(resultAddress);
+      }
+    }
+
+    return proofResult;
+  }
+
+  shutdown() {
+    this.isLoaded = false;
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.releaseKeepAwake();
+    }
+    console.log("[Console WASM ENGINE] Shut down and released power lock.");
+  }
+}
+
+// Instantiate the isolated engine
+const pulseWasmCompute = new PulseWasmEngine();
+console.log("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+
+// 2. Call this instead of your Wasm function for large batches
+async function run256BitJobOnGPU(typedArrayPayload) {
+  // [Phase 4] Guard: if GPU was never initialized or failed, return null so caller can fallback
+  if (!gpuContext || !gpuContext.device || !gpuContext.pipeline) {
+    return null;
+  }
+  try {
+  const { device, pipeline } = gpuContext;
+  const byteSize = typedArrayPayload.byteLength;
+
+  // Create GPU storage buffer & staging buffer for reading results back
+  const gpuBuffer = device.createBuffer({
+    size: byteSize,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
+  });
+  const readBuffer = device.createBuffer({
+    size: byteSize,
+    usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+  });
+
+  // Upload payload from CPU to GPU
+  device.queue.writeBuffer(gpuBuffer, 0, typedArrayPayload);
+
+  const bindGroup = device.createBindGroup({
+    layout: pipeline.getBindGroupLayout(0),
+    entries: [{ binding: 0, resource: { buffer: gpuBuffer } }],
+  });
+
+  // Dispatch 1 thread per 256-bit element (32 bytes each)
+  const itemCount = byteSize / 32;
+  const workgroups = Math.ceil(itemCount / 64);
+
+  const encoder = device.createCommandEncoder();
+  const pass = encoder.beginComputePass();
+  pass.setPipeline(pipeline);
+  pass.setBindGroup(0, bindGroup);
+  pass.dispatchWorkgroups(workgroups);
+  pass.end();
+
+  // Copy result to CPU-readable buffer
+  encoder.copyBufferToBuffer(gpuBuffer, 0, readBuffer, 0, byteSize);
+  device.queue.submit([encoder.finish()]);
+
+  // Read back to JS
+  await readBuffer.mapAsync(GPUMapMode.READ);
+  const result = new Uint8Array(readBuffer.getMappedRange()).slice();
+  readBuffer.unmap();
+
+  // Clean up VRAM
+  gpuBuffer.destroy();
+  readBuffer.destroy();
+
+  return result;
+  } catch (gpuErr) {
+    console.warn("[GPU] run256BitJobOnGPU failed, returning null for WASM fallback:", gpuErr);
+    return null;
+  }
+}
+
+// Track state cleanly without global leaks
+let timeProof = "";
+let WasmSuccess = false;
+let soakTestTimer = null;
+
+// Single test execution
+async function runEngineTest(silent = false) {
+  // 1. Ensure Wasm engine is initialized
+  if (!pulseWasmCompute.isLoaded) {
+    if (!silent) console.log("[TEST] Initializing WASM engine testing rig...");
+    try {
+      await pulseWasmCompute.initEngine();
+    } catch (initError) {
+      console.error("[FAILED] WASM Engine failed to initialize:", initError);
+      WasmSuccess = false;
+      timeProof = `*[<font color="red">INIT ERR</font>]`;
+      return -1;
+    }
+  }
+
+  // 2. Construct fresh 256-byte test payload & snapshot input for mutation/determinism checks
+  const mock256Payload = new Uint8Array([
+    0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81,
+    0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09,
+    0x10, 0x21, 0x32, 0x43, 0x54, 0x65, 0x76, 0x87,
+    0x98, 0xA9, 0xBA, 0xCB, 0xDC, 0xED, 0xFE, 0x0F,
+    0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
+    0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00,
+    0x12, 0x23, 0x34, 0x45, 0x56, 0x67, 0x78, 0x89,
+    0x9A, 0xAB, 0xBC, 0xCD, 0xDE, 0xEF, 0xF0, 0x01,
+    0x13, 0x24, 0x35, 0x46, 0x57, 0x68, 0x79, 0x8A,
+    0x9B, 0xAC, 0xBD, 0xCE, 0xDF, 0xE0, 0xF1, 0x02,
+    0x14, 0x25, 0x36, 0x47, 0x58, 0x69, 0x7A, 0x8B,
+    0x9C, 0xAD, 0xBE, 0xCF, 0xD0, 0xE1, 0xF2, 0x03,
+    0x15, 0x26, 0x37, 0x48, 0x59, 0x6A, 0x7B, 0x8C,
+    0x9D, 0xAE, 0xBF, 0xC0, 0xD1, 0xE2, 0xF3, 0x04,
+    0x16, 0x27, 0x38, 0x49, 0x5A, 0x6B, 0x7C, 0x8D,
+    0x9E, 0xAF, 0xB0, 0xC1, 0xD2, 0xE3, 0xF4, 0x05,
+    0x17, 0x28, 0x39, 0x4A, 0x5B, 0x6C, 0x7D, 0x8E,
+    0x9F, 0xA0, 0xB1, 0xC2, 0xD3, 0xE4, 0xF5, 0x06,
+    0x18, 0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F,
+    0x90, 0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07,
+    0x19, 0x2A, 0x3B, 0x4C, 0x5D, 0x6E, 0x7F, 0x80,
+    0x91, 0xA2, 0xB3, 0xC4, 0xD5, 0xE6, 0xF7, 0x08,
+    0x1B, 0x2C, 0x3D, 0x4E, 0x5F, 0x60, 0x71, 0x82,
+    0x93, 0xA4, 0xB5, 0xC6, 0xD7, 0xE8, 0xF9, 0x0A,
+    0x1C, 0x2D, 0x3E, 0x4F, 0x50, 0x61, 0x72, 0x83,
+    0x94, 0xA5, 0xB6, 0xC7, 0xD8, 0xE9, 0xFA, 0x0B,
+    0x1D, 0x2E, 0x3F, 0x40, 0x51, 0x62, 0x73, 0x84,
+    0x95, 0xA6, 0xB7, 0xC8, 0xD9, 0xEA, 0xFB, 0x0C,
+    0x1E, 0x2F, 0x30, 0x41, 0x52, 0x63, 0x74, 0x85,
+    0x96, 0xA7, 0xB8, 0xC9, 0xDA, 0xEB, 0xFC, 0x0D,
+    0x1F, 0x20, 0x31, 0x42, 0x53, 0x64, 0x75, 0x86,
+    0x97, 0xA8, 0xB9, 0xCA, 0xDB, 0xEC, 0xFD, 0x0E
+  ]);
+  const inputSnapshot = new Uint8Array(mock256Payload);
+
+  // 3. Measure isolated proof job execution
+  const start = performance.now();
+  try {
+    // [Phase 4] GPU only for large payloads (1KB+). Small jobs stay on WASM — GPU overhead is too high for tiny batches.
+    const GPU_MIN_BYTES = 1024;
+    let outputProof = null;
+    let usedGPU = false;
+    if (gpuContext && mock256Payload.byteLength >= GPU_MIN_BYTES) {
+      outputProof = await run256BitJobOnGPU(mock256Payload);
+      if (outputProof) usedGPU = true;
+    }
+    // WASM handles small payloads and GPU fallback
+    if (!outputProof) {
+      outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
+    }
+    const elapsedMs = performance.now() - start;
+
+    // 4. Validate output structure & Fluence shared-nothing guarantees
+    if (!outputProof) {
+      throw new Error("executeProofJob returned null or undefined.");
+    }
+
+    // Handle both raw Uint8Array returns and Fluence-style { outputPayload / proof } objects
+    const proofBytes =
+      outputProof instanceof Uint8Array
+        ? outputProof
+        : outputProof.outputPayload || outputProof.proof || outputProof.result?.outputPayload;
+
+    if (!(proofBytes instanceof Uint8Array) || proofBytes.length === 0) {
+      throw new Error("Invalid proof format: expected non-empty Uint8Array.");
+    }
+
+    // Verify Wasm didn't just echo back unchanged input bytes or all-zeros
+    const isAllZeros = proofBytes.every((b) => b === 0);
+    const isUnchangedEcho =
+      proofBytes.length === inputSnapshot.length &&
+      proofBytes.every((b, idx) => b === inputSnapshot[idx]);
+
+    if (isAllZeros || isUnchangedEcho) {
+      throw new Error(
+        isAllZeros
+          ? "Proof buffer is all zeros (uninitialized Wasm memory)."
+          : "Proof buffer is identical to input (no-op passthrough)."
+      );
+    }
+
+    // Verify host input buffer remained isolated (not mutated in-place)
+    const inputWasMutated = mock256Payload.some((b, idx) => b !== inputSnapshot[idx]);
+    if (inputWasMutated) {
+      throw new Error("Host input buffer was mutated in-place across Wasm boundary.");
+    }
+
+    // 5. Assign latency badge & update global flags
+    let timecolor = "lightgreen";
+    if (elapsedMs > 50) {
+      timecolor = "red";
+    } else if (elapsedMs > 25) {
+      timecolor = "orange";
+    } else if (elapsedMs > 10) {
+      timecolor = "gold";
+    }
+
+    timeProof = `*[<font color="${timecolor}">${elapsedMs.toFixed(4)} ms</font>]`;
+    WasmSuccess = true;
+
+    if (!silent) {
+      const engine = usedGPU ? "WebGPU" : "WASM";
+      console.log(
+        `[Success][${engine}] ${elapsedMs.toFixed(4)} ms | Proof (${proofBytes.length}B):`,
+        outputProof
+      );
+    }
+
+    return elapsedMs;
+  } catch (testError) {
+    console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
+    WasmSuccess = false;
+    timeProof = `*[<font color="red">FAILED</font>]`;
+    return -1;
+  }
+}
+
+function currencyLittle(amount, displayCurrency = "$") {
+  let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
+  const num = Number(raw);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(3);
+
+  let cur = String(displayCurrency || "$").trim().toUpperCase();
+  cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
+
+  return `${cur}${safe}`;
+}
+
+// Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
+async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
+  if (soakTestTimer) {
+    console.warn("[TEST] Soak test is already running.");
+    return;
+  }
+
+  await pulseWasmCompute.initEngine();
+  const endTime = Date.now() + (24 * 60 * 60 * 1000);
+  let totalJobs = 0;
+  let totalErrors = 0;
+  let totalJobsString = Number(totalJobs);
+
+  console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
+  
+  let tickInterval = 0;
+  let totalUnit = null;
+  let totalUnits = 0;
+
+  const tick = async () => {
+    if (Date.now() >= endTime) {
+      stopSoakTest();
+      if (totalJobs >= 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
+      } else if (totalJobs >= 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs >= 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      }
+      if (totalErrors === 0) {
+        totalUnit = "Val: ";
+        totalUnits = currencyLittle(assumedValue);
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
+      console.log("WASM Daily Total Value: " + currencyLittle(assumedValue));
+      timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      // appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
+      // setTimeout(() => {
+      //   appendEarnerMessage(CompanionMessages, "🧠", "Waiting for PulseEarner Job Submissions...");
+      // }, 4000); 
+      console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, Errors: ${totalErrors}`);
+      return;
+    }
+
+    const batchStart = performance.now();
+    for (let i = 0; i < batchSize; i++) {
+      const res = await runEngineTest(true);
+      if (res < 0) totalErrors++;
+      else totalJobs++;
+    }
+    const batchMs = performance.now() - batchStart;
+
+    // Log status every 25,000 jobs so DevTools doesn't crash from log spam
+    if (totalJobs % 25000 === 0) {
+      tickInterval++;
+      // Models realistic DePIN compute payouts (e.g., Golem tasks / Fluence compute units)
+      // 80% lightweight micro-tasks ($0.0005 - $0.0020)
+      // 15% standard compute jobs ($0.0020 - $0.0060)
+      // 5% heavy AI/rendering workloads ($0.0060 - $0.0150)
+
+      const roll = Math.random();
+      let jobReward;
+
+      if (roll < 0.80) {
+        jobReward = 0.0005 + Math.random() * 0.0015;
+      } else if (roll < 0.95) {
+        jobReward = 0.0020 + Math.random() * 0.0040;
+      } else {
+        jobReward = 0.0060 + Math.random() * 0.0090;
+      }
+
+      assumedValue += jobReward;
+
+      console.log("WASM Daily Assumed Value: " + currencyLittle(assumedValue));
+      if (totalJobs >= 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
+      } else if (totalJobs >= 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs >= 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      }
+      if (totalErrors === 0) {
+        totalUnit = "Val: ";
+        totalUnits = currencyLittle(jobReward);
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
+      const avgJobMs = (batchMs / batchSize).toFixed(4);
+      let avgJobColor = "lightgreen";
+      if (avgJobMs >= 0.01) {
+        avgJobColor = "red";
+      } else if (avgJobMs >= 0.005) {
+        avgJobColor = "orange";
+      } 
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      // appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
+      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | ${totalUnit}${totalUnits}`);
+    }
+
+    soakTestTimer = setTimeout(tick, intervalMs);
+  };
+
+  tick();
+}
+
+function stopSoakTest() {
+  if (soakTestTimer) {
+    clearTimeout(soakTestTimer);
+    soakTestTimer = null;
+    pulseWasmCompute.shutdown();
+  }
+}
