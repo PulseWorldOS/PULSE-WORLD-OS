@@ -2216,7 +2216,7 @@ async function PulseBrowserDomScan() {
       // 1. Get the visible text content of the body
       realmSummary = document.body.innerText;
       // 2. Slice the text to the first 7000 characters
-      realmSummary = realmSummary.slice(0, 7000);
+      realmSummary = realmSummary.slice(0, 5000);
       //   await navigator.clipboard.writeText(trimmedText);
       //   console.log('Text successfully copied to clipboard');
     } catch (err) {
