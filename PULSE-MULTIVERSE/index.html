@@ -1143,8 +1143,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalUnits = totalErrors;
       }
       valueDiv = document.getElementById("assumedValue");
-      valueDiv.textContent = currencyLittle(assumedValue);
-      console.log("WASM Daily Total Value: " + currencyLittle(assumedValue));
+      // valueDiv.textContent = currencyLittle(assumedValue);
+      console.log("WASM Daily Total Value: " + currencyLittle(totalassumedValue));
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       // appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
       // setTimeout(() => {
@@ -1183,10 +1183,10 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
       assumedValue += jobReward;
       valueDiv = document.getElementById("assumedValue");
-      valueDiv.textContent = currencyLittle(assumedValue);
+      // valueDiv.textContent = currencyLittle(assumedValue);
       
-      sendToSW('PULSE_ASSUMED_VALUE', assumedValue);
-      console.log("WASM Daily Assumed Value: " + currencyLittle(assumedValue));
+      await sendToSW('PULSE_ASSUMED_VALUE', assumedValue);
+      console.log("WASM Daily Assumed Value: " + currencyLittle(totalassumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
