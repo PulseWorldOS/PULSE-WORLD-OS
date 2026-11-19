@@ -2335,7 +2335,7 @@ async function PulseBrowserDomScan() {
 
   // Tiny image preview (first 10 images)
   
-  let tabValue = "$0.00";
+  let tabValue = "$0.000";
   if (valueDiv) tabValue = valueDiv.textContent;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
