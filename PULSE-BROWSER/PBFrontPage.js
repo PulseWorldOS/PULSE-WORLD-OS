@@ -2293,6 +2293,7 @@ function getReadableName(url) {
       if (HigherAuthorityShown) {
         pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
         HigherAuthority.textContent = "🧠";
+        pulsepaltalk.textContent = "Welcome to 🌐 PulseBrowser OS!  We can help in Many Ways and Many Forms!";
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
@@ -2302,6 +2303,7 @@ function getReadableName(url) {
       } else {
         pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
         HigherAuthority.textContent = "🌐";
+        pulsepaltalk.textContent = "Welcome to 🌐 PulseBrowser OS!  If you decide you want a Partner in the Multiverse, Check me out!";
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
@@ -2356,7 +2358,7 @@ function getReadableName(url) {
         }, 1500);
         setTimeout(() => {
           pulsepaltalk.style.opacity = "0";
-        }, 3000);
+        }, 5000);
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
       }, 1200);
@@ -2405,11 +2407,11 @@ function getReadableName(url) {
           pbPulseDetailsEarn.style.opacity = "1";
           pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
           setTimeout(() => {
-          pulsepaltalk.style.opacity = "1";
+            pulsepaltalk.style.opacity = "1";
           }, 1500);
           setTimeout(() => {
             pulsepaltalk.style.opacity = "0";
-          }, 3000);
+          }, 5000);
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
         }, 1200);
