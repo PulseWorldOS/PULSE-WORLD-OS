@@ -1936,7 +1936,7 @@ function injectPulseFlag() {
 
 function collectAndWarmAssetsContent() {
   const assets = [];
-
+  valueDiv = document.getElementById("assumedValue");
   // -------------------------------------------------------
   // 1. Scripts
   // -------------------------------------------------------
@@ -1986,7 +1986,11 @@ function collectAndWarmAssetsContent() {
   allImgs.forEach(img => {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
+  
+  let tabValue = "$0.000";
+  if (valueDiv) tabValue = valueDiv.textContent;
 
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
   // -------------------------------------------------------
   // 6. Send unified front‑page report
   // -------------------------------------------------------
