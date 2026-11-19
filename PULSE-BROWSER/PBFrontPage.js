@@ -99,6 +99,7 @@ if (!online) {
   titlediv.textContent = "PulseBrowser OS";
   document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
+    earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [${earnerminipanel.textContent}]`;
   }, 3000);
 }
@@ -116,7 +117,7 @@ const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
-const earnerminipanel = document.getElementById("earner-mini-panel");
+let earnerminipanel = document.getElementById("earner-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
