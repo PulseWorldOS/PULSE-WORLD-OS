@@ -13,6 +13,7 @@ let lastnowCT = Date.now(); // numeric timestamp
 let OurLocalMemoryLayer = {};
 let OurLocalMemoryLayerMB = 0;
 let OvermindTheirOrders = null;
+let valueDiv = document.getElementById("assumedValue");
 const CACHE_NAME = "PulseBrowser-Companion";
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
@@ -2227,7 +2228,7 @@ async function PulseBrowserDomScan() {
   
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
-  const valueDiv = document.getElementById("assumedValue");
+  valueDiv = document.getElementById("assumedValue");
   // Strip heavy elements
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())

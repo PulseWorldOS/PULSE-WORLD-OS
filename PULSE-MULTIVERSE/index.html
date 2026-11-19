@@ -127,7 +127,7 @@ let bankVideo = document.getElementById("bankVideo");
 let historyVideo = document.getElementById("historyVideo");
 let ghostProtocol = document.getElementById("pps-ghostprotocol");
 let videos = [...document.querySelectorAll("video")];
-
+let valueDiv = document.getElementById("assumedValue");
 const log = PulseRealm.PulseLog || console.log;
 const warn = PulseRealm.PulseWarn || console.warn;
 function nowMs() {
@@ -1099,7 +1099,7 @@ function sendToSW(msg, options) {
 navigator.serviceWorker.addEventListener('message', event => {
   if (event.data?.type === 'PULSE_VALUE_UPDATED') {
     totalassumedValue = event.data.newValue;
-    const valueDiv = document.getElementById("assumedValue");
+    valueDiv = document.getElementById("assumedValue");
     // Ensure styles apply before fading in
     requestAnimationFrame(() => {
       valueDiv.textContent = currencyLittle(totalassumedValue);
@@ -1145,7 +1145,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
       }
-      const valueDiv = document.getElementById("assumedValue");
+      valueDiv = document.getElementById("assumedValue");
       requestAnimationFrame(() => {
         valueDiv.textContent = currencyLittle(assumedValue);
       });
@@ -1187,7 +1187,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
 
       assumedValue += jobReward;
-      const valueDiv = document.getElementById("assumedValue");
+      valueDiv = document.getElementById("assumedValue");
       requestAnimationFrame(() => {
         valueDiv.textContent = currencyLittle(assumedValue);
       });
