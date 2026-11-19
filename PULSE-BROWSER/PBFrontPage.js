@@ -2426,6 +2426,7 @@ function getReadableName(url) {
 
     if (HigherPanelSwitch) {
       HigherPanelSwitch.onclick = async () => {
+        HigherStatusPanel = document.getElementById("higherStatusPanel");
         if (!HigherPanelShown) {
           HigherPanelShown = true;
           HigherPanelSwitch.style.opacity = "0.3";
