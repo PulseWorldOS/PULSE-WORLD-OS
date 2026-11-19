@@ -104,19 +104,34 @@ function startEngineLoad(modelKey) {
       });
     };
 
+    const isExtendedCtxCandidate = !/\-1k/i.test(targetModelId) && (
+      /Qwen3|DeepSeek-R1/i.test(targetModelId) || (entry.vramMinMB || 0) >= 4000
+    );
+    const loadWithOptionalExtendedCtx = async (modelIdToLoad, suffix) => {
+      const cfg = { initProgressCallback: makeProgressCb(suffix) };
+      if (isExtendedCtxCandidate) {
+        try {
+          return await CreateMLCEngine(modelIdToLoad, cfg, { context_window_size: 8192 });
+        } catch (ctxErr) {
+          const ctxMsg = String(ctxErr?.message || ctxErr);
+          if (/sliding_window|context_window|memory|buffer|allocation/i.test(ctxMsg)) {
+            return await CreateMLCEngine(modelIdToLoad, cfg);
+          }
+          throw ctxErr;
+        }
+      }
+      return await CreateMLCEngine(modelIdToLoad, cfg);
+    };
+
     let engine;
     try {
-      engine = await CreateMLCEngine(targetModelId, {
-        initProgressCallback: makeProgressCb(targetModelId !== entry.id ? " [f32]" : ""),
-      });
+      engine = await loadWithOptionalExtendedCtx(targetModelId, targetModelId !== entry.id ? " [f32]" : "");
     } catch (firstErr) {
       const msgErr = String(firstErr?.message || firstErr);
       const f32Fallback = getF32FallbackModelId(targetModelId);
       if (f32Fallback && f32Fallback !== targetModelId && /ShaderModule|shader-f16|compute stage|index_kernel/i.test(msgErr)) {
         targetModelId = f32Fallback;
-        engine = await CreateMLCEngine(targetModelId, {
-          initProgressCallback: makeProgressCb(" [f32]"),
-        });
+        engine = await loadWithOptionalExtendedCtx(targetModelId, " [f32]");
       } else {
         throw firstErr;
       }
@@ -242,8 +257,17 @@ async function runAsk(id, promptText) {
       text: "",
     });
 
+    try {
+      if (typeof engine.resetChat === "function") {
+        await engine.resetChat();
+      }
+    } catch (_) {}
+
     const messages = buildOvermindMessages(promptText, entry);
-    const maxTokens = (entry.vramMinMB || 0) < 2500 ? 1024 : HIGHER_MAX_TOKENS;
+    const isReasoningModel = /Qwen3|DeepSeek-R1/i.test(entry.id || "");
+    const maxTokens = isReasoningModel
+      ? 6144
+      : ((entry.vramMinMB || 0) < 2500 ? 2048 : HIGHER_MAX_TOKENS);
 
     const asyncChunks = await engine.chat.completions.create({
       messages,
@@ -274,6 +298,81 @@ async function runAsk(id, promptText) {
             text: fullText,
           });
         }
+      }
+    }
+
+    // Safety net for <think> reasoning models: if the model filled the token/context
+    // budget inside <think>...</think> without outputting a spoken reply after </think>,
+    // close </think> and run an immediate direct-answer pass (enable_thinking: false)
+    // so the user always sees BOTH the full thought block AND the full spoken answer.
+    const hasThinkTag = /<think>/i.test(fullText);
+    const spokenPart = hasThinkTag
+      ? fullText.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, "").trim()
+      : fullText.trim();
+
+    if (hasThinkTag && !spokenPart) {
+      const rawThink = fullText.replace(/<\/?think>/gi, "").trim();
+      const thinkTail = rawThink.slice(-1600);
+      if (!/<\/think>/i.test(fullText)) {
+        fullText = fullText.trimEnd() + "\n</think>\n\n";
+      } else {
+        fullText = fullText.trimEnd() + "\n\n";
+      }
+      post({
+        kind: "stream",
+        id,
+        modelKey: chosenKey,
+        modelLabel: entry.label,
+        phase: "generating",
+        text: fullText,
+      });
+
+      try {
+        if (typeof engine.resetChat === "function") {
+          await engine.resetChat();
+        }
+        const followUpMessages = [
+          messages[0],
+          {
+            role: "user",
+            content: `${messages[1].content}\n\n[Your completed internal reasoning notes: ${thinkTail}]\nNow write your complete, direct spoken response to the user (do not open another <think> block):`,
+          },
+        ];
+        const followUpChunks = await engine.chat.completions.create({
+          messages: followUpMessages,
+          max_tokens: 2048,
+          temperature: 0.6,
+          top_p: 0.9,
+          repetition_penalty: 1.1,
+          extra_body: { enable_thinking: false },
+          stream: true,
+        });
+        let followUpText = "";
+        for await (const chunk of followUpChunks) {
+          const delta = chunk?.choices?.[0]?.delta?.content || "";
+          if (delta) {
+            followUpText += delta;
+            const cleanedFollowUp = followUpText.replace(/^<think>\s*<\/think>\s*/i, "");
+            const now = Date.now();
+            if (now - lastEmitAt >= 120) {
+              lastEmitAt = now;
+              post({
+                kind: "stream",
+                id,
+                modelKey: chosenKey,
+                modelLabel: entry.label,
+                phase: "generating",
+                text: fullText + cleanedFollowUp,
+              });
+            }
+          }
+        }
+        const finalFollowUp = followUpText.replace(/^<think>\s*<\/think>\s*/i, "").trim();
+        if (finalFollowUp) {
+          fullText += finalFollowUp;
+        }
+      } catch (followErr) {
+        console.warn("[PBHigherAIWorker] Follow-up spoken pass failed:", followErr);
       }
     }
 

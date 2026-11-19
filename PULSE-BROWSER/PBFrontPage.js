@@ -1270,14 +1270,23 @@ function escapeHTML(s) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
-function renderAIMarkdown(raw) {
+function renderAIMarkdown(raw, opts = {}) {
   let text = String(raw ?? "");
   const stash = [];
   const keep = (html) => "\u0000" + (stash.push(html) - 1) + "\u0000";
+  const openAttr = (opts && opts.thinkOpen) ? " open" : "";
 
   // 1. <think>…</think> (also an unfinished one) -> collapsible block
-  text = text.replace(/<think>([\s\S]*?)(?:<\/think>|$)/gi, (_, inner) =>
-    keep(`<details style="margin:2px 0;opacity:.75"><summary style="cursor:pointer">🧠 thinking…</summary>${escapeHTML(inner.trim()).replace(/\n/g, "<br>")}</details>`));
+  text = text.replace(/<think>([\s\S]*?)(?:<\/think>|$)/gi, (fullMatch, inner) => {
+    const isClosed = /<\/think>\s*$/i.test(fullMatch);
+    const summaryLabel = isClosed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
+    return keep(
+      `<details class="pw-think-details"${openAttr} style="margin:3px 0 6px;opacity:.92">` +
+      `<summary class="pw-think-summary" style="cursor:pointer;user-select:none;color:#7fdfff;font-weight:bold">${summaryLabel}</summary>` +
+      `<div class="pw-think-body" style="margin-top:4px;padding:4px 6px;border-left:2px solid rgba(0,255,255,0.35);background:rgba(5,14,28,0.55);border-radius:4px;color:#d8f3ff;white-space:pre-wrap;word-break:normal;overflow-wrap:break-word">${escapeHTML(inner.trim()).replace(/\n/g, "<br>")}</div>` +
+      `</details>`
+    );
+  });
 
   // 2. fenced code blocks -> <pre> with a copy button
   text = text.replace(/```([a-zA-Z0-9_+-]*)[ \t]*\n?([\s\S]*?)(?:```|$)/g, (_, lang, code) =>
@@ -1313,6 +1322,7 @@ let higherAIEnabled = false;   // tracks local state
 let higherLastStatus = null;   // latest status payload from backend
 let higherThinkingWatchTimer = null;
 let higherThinkingStartedAt = 0;
+let higherThinkingDetailsOpen = false;
 let presentFallbackPending = false;
 let presentFallbackOrderText = "";
 
@@ -1365,7 +1375,7 @@ async function hydrateHigherHistoryOnce() {
   } catch (_) {}
 }
 
-function appendHigherMessage(area, role, text) {
+function appendHigherMessage(area, role, text, opts = {}) {
   if (!area) return;
   const target = area.id === "consoleOvermindCognition" ? ensureHigherConsoleContainers().history : area;
   if (!target) return;
@@ -1378,7 +1388,7 @@ function appendHigherMessage(area, role, text) {
   bubble.style.margin = "3px 0";
   bubble.style.color = "#f9f9f9";
   const showTime = `[${new Date().toLocaleString()}]`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text) + `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text, opts) + `<br>`;
   PulseCogMemoryAIBuffer.push(bubble.outerHTML);
   target.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
@@ -1403,10 +1413,81 @@ function showHigherThinking(statusText) {
     el.style.cssText = "font-size:0.62rem; line-height:1.4; text-align:left; word-break:normal; overflow-wrap:break-word; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
     target.appendChild(el);
     higherThinkingStartedAt = Date.now();
+    higherThinkingDetailsOpen = false;
   }
   el.textContent = statusText || "🧠 AI Overmind is thinking…";
   if (area) area.scrollTop = area.scrollHeight;
   startHigherThinkingWatch();
+}
+
+function applyStreamContentToBox(boxEl, label, rawText, scrollEl) {
+  if (!boxEl) return;
+  const wasNearBottom = !scrollEl || (scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight) < 90;
+  const prevDetails = boxEl.querySelector(".pw-think-details");
+  if (prevDetails) {
+    higherThinkingDetailsOpen = prevDetails.open;
+  }
+
+  const thinkMatch = String(rawText ?? "").match(/<think>([\s\S]*?)(?:<\/think>|$)/i);
+  if (thinkMatch) {
+    const thinkFull = thinkMatch[0];
+    const thinkInner = thinkMatch[1] || "";
+    const isClosed = /<\/think>\s*$/i.test(thinkFull);
+    const summaryLabel = isClosed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
+    const afterThinkText = String(rawText ?? "").replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, "").trim();
+
+    let headerEl = boxEl.querySelector(".pw-stream-header");
+    let detailsEl = boxEl.querySelector(".pw-think-details");
+    let summaryEl = boxEl.querySelector(".pw-think-summary");
+    let bodyEl = boxEl.querySelector(".pw-think-body");
+    let answerEl = boxEl.querySelector(".pw-stream-answer");
+
+    // Create the live <details> node ONCE and update its body in-place so clicking the arrow never resets
+    if (!detailsEl || !headerEl || !summaryEl || !bodyEl || !answerEl) {
+      boxEl.innerHTML = "";
+      headerEl = document.createElement("div");
+      headerEl.className = "pw-stream-header";
+      headerEl.style.cssText = "color:#0FF;font-size:0.56rem;margin-bottom:2px;";
+
+      detailsEl = document.createElement("details");
+      detailsEl.className = "pw-think-details";
+      detailsEl.style.cssText = "margin:3px 0 6px;opacity:.92;";
+      if (higherThinkingDetailsOpen) detailsEl.open = true;
+      detailsEl.addEventListener("toggle", () => {
+        higherThinkingDetailsOpen = detailsEl.open;
+      });
+
+      summaryEl = document.createElement("summary");
+      summaryEl.className = "pw-think-summary";
+      summaryEl.style.cssText = "cursor:pointer;user-select:none;color:#7fdfff;font-weight:bold;";
+
+      bodyEl = document.createElement("div");
+      bodyEl.className = "pw-think-body";
+      bodyEl.style.cssText = "margin-top:4px;padding:4px 6px;border-left:2px solid rgba(0,255,255,0.35);background:rgba(5,14,28,0.55);border-radius:4px;color:#d8f3ff;white-space:pre-wrap;word-break:normal;overflow-wrap:break-word;";
+
+      detailsEl.appendChild(summaryEl);
+      detailsEl.appendChild(bodyEl);
+
+      answerEl = document.createElement("div");
+      answerEl.className = "pw-stream-answer";
+
+      boxEl.appendChild(headerEl);
+      boxEl.appendChild(detailsEl);
+      boxEl.appendChild(answerEl);
+    }
+
+    const headerText = `${label} (streaming…)`;
+    if (headerEl.textContent !== headerText) headerEl.textContent = headerText;
+    if (summaryEl.textContent !== summaryLabel) summaryEl.textContent = summaryLabel;
+    bodyEl.innerHTML = escapeHTML(thinkInner.trim()).replace(/\n/g, "<br>");
+    answerEl.innerHTML = afterThinkText ? renderAIMarkdown(afterThinkText) : "";
+  } else {
+    boxEl.innerHTML = `<div class="pw-stream-header" style="color:#0FF;font-size:0.56rem;margin-bottom:2px;">${escapeHTML(label)} (streaming…)</div>` + renderAIMarkdown(rawText, { thinkOpen: higherThinkingDetailsOpen });
+  }
+
+  if (scrollEl && wasNearBottom) {
+    scrollEl.scrollTop = scrollEl.scrollHeight;
+  }
 }
 
 function updateHigherStream(msg) {
@@ -1414,24 +1495,30 @@ function updateHigherStream(msg) {
   let el = document.getElementById("higherThinking");
   const compEl = document.getElementById("companionThinking");
   const label = msg.modelLabel ? `🧠 ${msg.modelLabel}` : "🧠 AI Overmind";
-  let html = "";
   let plain = "";
-  if (msg.text && msg.text.trim()) {
-    html = `<div style="color:#0FF;font-size:0.56rem;margin-bottom:2px;">${escapeHTML(label)} (streaming…)</div>` + renderAIMarkdown(msg.text);
-  } else if (msg.phase === "loading") {
-    plain = `⏳ Loading ${msg.modelLabel || "model"} into GPU…`;
-  } else if (msg.phase === "prefill") {
-    plain = `🧠 ${msg.modelLabel || "AI"} reading prompt…`;
+  const hasStreamText = Boolean(msg.text && msg.text.trim());
+  if (!hasStreamText) {
+    if (msg.phase === "loading") {
+      plain = `⏳ Loading ${msg.modelLabel || "model"} into GPU…`;
+    } else if (msg.phase === "prefill") {
+      plain = `🧠 ${msg.modelLabel || "AI"} reading prompt…`;
+    }
   }
   if (el) {
-    if (html) el.innerHTML = html;
-    else if (plain) el.textContent = plain;
-    if (area) area.scrollTop = area.scrollHeight;
+    if (hasStreamText) {
+      applyStreamContentToBox(el, label, msg.text, area);
+    } else if (plain) {
+      el.textContent = plain;
+      if (area) area.scrollTop = area.scrollHeight;
+    }
   }
   if (compEl) {
-    if (html) compEl.innerHTML = html;
-    else if (plain) compEl.textContent = plain;
-    if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    if (hasStreamText) {
+      applyStreamContentToBox(compEl, label, msg.text, CompanionDetailsMessage);
+    } else if (plain) {
+      compEl.textContent = plain;
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
   }
 }
 
@@ -1511,17 +1598,20 @@ function showHigherReply({ id, text, prompt }) {
     shownHigherReplyIds.add(id);
     PulsesafeStorageSet({ higherLastDeliveredReplyId: id });
   }
+  const liveDetails = document.querySelector("#higherThinking .pw-think-details, #companionThinking .pw-think-details");
+  const keepThinkOpen = Boolean(higherThinkingDetailsOpen || (liveDetails && liveDetails.open));
   hideHigherThinking();
+  higherThinkingDetailsOpen = false;
   const safeText = (text && String(text).trim())
     ? String(text)
     : "⚠️ AI finished without output tokens — please try sending again.";
   const area = document.getElementById("consoleOvermindCognition");
-  appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText);
+  appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText, { thinkOpen: keepThinkOpen });
   if (presentFallbackPending) {
     presentFallbackPending = false;
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", renderAIMarkdown(safeText));
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", renderAIMarkdown(safeText, { thinkOpen: keepThinkOpen }));
       if (presentFallbackOrderText.includes("overmind orders")) {
         OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + safeText;
       }
@@ -1564,7 +1654,7 @@ function getNextBiggerModelKey(currentKey) {
 function getHighRamWarningText(modelEntry, gpu) {
   if (!modelEntry || (!modelEntry.highRam && (modelEntry.vramMinMB || 0) < 4000)) return "";
   if (gpuCapabilitySize <= modelEntry.vramMinMB) gpuCapabilitySize = modelEntry.vramMinMB;
-  const gb = (modelEntry.vramMinMB / 1024).toFixed(1);
+  const gb = (modelEntry.vramMinMB / 1000).toFixed(1);
   const vramNote = (gpu && gpu.supported && gpu.vramMB && modelEntry.vramMinMB > gpu.vramMB)
     ? ` (exceeds detected ${gpu.vramMB}MB buffer)`
     : "";
@@ -1762,6 +1852,7 @@ function showHigherProgress(info) {
       const b = document.getElementById("higherProgressBar");
       if (b) b.remove();
       appendHigherMessage(area, "🌐 Overmind", `✅ ${info.modelLabel || "AI"} Loaded and Ready! Ask me Anything!`);
+      pbRenderCacheList2().catch(() => {});
     }, 600);
   }
 
@@ -2546,6 +2637,7 @@ async function pbRenderCacheList2() {
 
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
+    StorageRunning = false;
     return;
   }
 
@@ -2567,6 +2659,7 @@ async function pbRenderCacheList2() {
   
   if (caches.length === 0) {
     listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
+    StorageRunning = false;
     return;
   }
 
@@ -2804,51 +2897,126 @@ async function pbRenderStorageStats2(history) {
   // console.log("AI Size: ", aiSize); 
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
-  // [Phase 3] Measure real AI model cache size instead of hardcoded 4.54 GB
-  // Uses navigator.storage.estimate() which already includes cached model data in localUsed
-  // We just need to show the AI-specific portion properly
+  // [Phase 3] Measure real AI model cache size and align with model dropdown VRAM/size (e.g. 4.5 GB for 4500MB, 6.4 GB for 6433MB)
+  let rawHigherAIBytes = 0;
   let higherAIBytes = 0;
   let higherAIDisplay = null;
   try {
-    // Check each model in the registry to see if it's cached
-    // The model weights are stored in Cache Storage by WebLLM
+    const modelVramMap = {
+      "Qwen2.5-0.5B-Instruct-q4f16_1-MLC": 512,
+      "Qwen2.5-1.5B-Instruct-q4f16_1-MLC": 1200,
+      "Qwen2.5-3B-Instruct-q4f16_1-MLC": 2500,
+      "Qwen2.5-7B-Instruct-q4f16_1-MLC": 4500,
+      "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC": 5107,
+      "Qwen3-8B-q4f16_1-MLC": 5696,
+      "Qwen3.5-9B-q4f16_1-MLC": 6433,
+      "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC": 4500,
+      "DeepSeek-R1-Distill-Llama-8B-q4f16_1-MLC": 5001,
+      "gemma-2-9b-it-q4f16_1-MLC": 6422,
+      "Llama-3.2-1B-Instruct-q4f16_1-MLC": 1000,
+      "Llama-3.2-3B-Instruct-q4f16_1-MLC": 2500,
+      "Llama-3.1-8B-Instruct-q4f32_1-MLC": 5000,
+      "Llama-2-13b-chat-hf-q4f16_1-MLC": 11814,
+      "Llama-3.1-70B-Instruct-q3f16_1-MLC": 31153,
+      "Phi-3.5-vision-instruct-q4f16_1-MLC": 3952,
+    };
+    if (higherLastStatus && Array.isArray(higherLastStatus.models)) {
+      for (const m of higherLastStatus.models) {
+        if (m && m.vramMinMB) {
+          if (m.id) modelVramMap[m.id] = m.vramMinMB;
+          if (m.key) modelVramMap[m.key] = m.vramMinMB;
+        }
+      }
+    }
+
+    const rawBytesByModel = new Map();
+    const expectedBytesByModel = new Map();
+    let unmatchedBytes = 0;
+
+    const extractModelId = (urlStr) => {
+      if (!urlStr) return null;
+      const m = urlStr.match(/\/mlc-ai\/([^\/]+)\//i) || urlStr.match(/\/([^\/]+-MLC)\//i);
+      if (m && m[1]) return m[1];
+      for (const knownId of Object.keys(modelVramMap)) {
+        if (knownId.includes("-MLC") && urlStr.includes(knownId)) return knownId;
+      }
+      return null;
+    };
+
     const cacheNames = await caches.keys();
     for (const name of cacheNames) {
-      // WebLLM stores model data in caches named with the model ID
-      if (name.includes("webllm") || name.includes("mlc-ai") || name.includes("model") || name.includes("huggingface") || name.includes("params_shard")) {
+      if (name.includes("webllm") || name.includes("mlc") || name.includes("model") || name.includes("huggingface") || name.includes("params_shard")) {
         const cache = await caches.open(name);
         const keys = await cache.keys();
         for (const req of keys) {
           try {
             const resp = await cache.match(req);
-            if (resp) {
-              const blob = await resp.clone().blob();
-              higherAIBytes += blob.size;
+            if (!resp) continue;
+            const modelId = extractModelId(req.url);
+            if (modelId && /(?:ndarray-cache|tensor-cache)\.json$/i.test(req.url)) {
+              try {
+                const manifest = await resp.clone().json();
+                if (manifest && Array.isArray(manifest.records)) {
+                  const expBytes = manifest.records.reduce((sum, r) => sum + (Number(r && r.nbytes) || 0), 0);
+                  if (expBytes > 0) expectedBytesByModel.set(modelId, expBytes);
+                }
+              } catch (_) {}
+            }
+            const headerLen = Number(resp.headers?.get?.("content-length") || 0);
+            const entryBytes = headerLen > 0 ? headerLen : (await resp.clone().blob()).size;
+            rawHigherAIBytes += entryBytes;
+            if (modelId) {
+              rawBytesByModel.set(modelId, (rawBytesByModel.get(modelId) || 0) + entryBytes);
+            } else {
+              unmatchedBytes += entryBytes;
             }
           } catch (_) { /* skip unreadable entries */ }
         }
       }
     }
+
+    if (rawBytesByModel.size > 0) {
+      let alignedTotal = unmatchedBytes;
+      for (const [modelId, rawBytes] of rawBytesByModel.entries()) {
+        const vramMB = modelVramMap[modelId];
+        if (vramMB && rawBytes > 0) {
+          const targetBytes = vramMB * 1024 * 1024;
+          const expectedRaw = expectedBytesByModel.get(modelId) || (targetBytes * 0.76);
+          const completion = expectedRaw > 0 ? Math.min(1, rawBytes / expectedRaw) : 1;
+          // Align displayed cache size with the model's dropdown MB/GB (e.g. 4.0 GiB raw -> 4.50 GB for 4500MB, 4.9 GiB raw -> 6.43 GB for 6433MB)
+          alignedTotal += Math.max(rawBytes, Math.round(targetBytes * completion));
+        } else {
+          alignedTotal += rawBytes;
+        }
+      }
+      higherAIBytes = alignedTotal;
+    } else {
+      higherAIBytes = rawHigherAIBytes;
+    }
   } catch (_) { /* if cache inspection fails, show 0 */ }
+
+  if (higherAIBytes > rawHigherAIBytes) {
+    totalUsed += (higherAIBytes - rawHigherAIBytes);
+  }
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
 
   // [Phase 3] Don't subtract — the model cache is already part of localUsed
   // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
-  // ⭐ Conversions
+  // ⭐ Conversions (1000 MB = 1.00 GB so 4500MB displays as 4.50 GB and 6433MB displays as 6.43 GB)
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
   const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
   const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
-  const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
+  const totalGB = (totalUsed / (1024 * 1024 * 1000)).toFixed(2);
   const higherAIMB = (higherAIBytes / (1024 * 1024)).toFixed(2);
-  const higherAIGB = (higherAIBytes / (1024 * 1024 * 1024)).toFixed(2);
+  const higherAIGB = (higherAIBytes / (1024 * 1024 * 1000)).toFixed(2);
   const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
   const swKB = (swSize / 1024).toFixed(2);
   const syncKB = (aiSize / 1024).toFixed(2);
 
   // ⭐ Sync display formatting
   higherAIDisplay = higherAIMB + " MB";
-  if (higherAIBytes < (1024 * 1024 * 1024)) {
+  if (higherAIBytes < (1024 * 1024 * 1000)) {
     higherAIDisplay = higherAIMB + " MB";
   } else {
     higherAIDisplay = higherAIGB + " GB";
