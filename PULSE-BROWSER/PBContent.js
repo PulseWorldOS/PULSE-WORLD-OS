@@ -806,7 +806,7 @@ async function gpuWarmExtra() {
 }
 
 function getCharacterInterval() {
-  const base = 45150;
+  const base = 25950;
   // ⭐ Add human-like jitter (±20%)
   const jitterRange = base * 0.22;
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
