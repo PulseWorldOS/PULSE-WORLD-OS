@@ -9890,10 +9890,10 @@ document.addEventListener("PulseDocumentChanged", () => {
     setTimeout(() => {
       valueDiv = document.getElementById("assumedValue");
       if (valueDiv) {
-        document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
+        document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
         setInterval(() => {
           valueDiv = document.getElementById("assumedValue");
-          document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
+          document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
         }, 1500);
       } else {
         document.title = baseTitle + " - EarnBand ¢";
