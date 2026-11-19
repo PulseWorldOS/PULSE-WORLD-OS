@@ -834,7 +834,6 @@ const interval2 = getAnotherInterval();
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
-  let tabValue = 0;
   if (valueDiv) tabValue = valueDiv.textContent;
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
   // ---------------------------------------------------------------------------
@@ -1989,6 +1988,7 @@ function collectAndWarmAssetsContent() {
   allImgs.forEach(img => {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
+  
   
   // -------------------------------------------------------
   // 6. Send unified front‑page report
