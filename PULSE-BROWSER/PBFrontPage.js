@@ -6459,7 +6459,12 @@ setInterval(async () => {
     document.title = "PulseBrowser OS [~Drift~]";
   } else {
     titlediv.textContent = "PulseBrowser OS";
-    document.title = "PulseBrowser OS [Console]";
+    earnerminipanel = document.getElementById("earner-mini-panel");
+    if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
+    setInterval(() => {
+      earnerminipanel = document.getElementById("earner-mini-panel");
+      if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [${earnerminipanel.textContent}]`;
+    }, 3000);
   }
   CheckBackTab();
 }, sync);
