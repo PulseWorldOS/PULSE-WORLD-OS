@@ -3454,6 +3454,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.assumedValue) {
         if (HisassumedValue !== "$0.00") HisassumedValue = msg.assumedValue;
+        console.log("Content Tab Value: ", HisassumedValue);
       }
       sendResponse({ ok: true });
       break;
