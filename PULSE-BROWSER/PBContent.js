@@ -835,6 +835,7 @@ const interval2 = getAnotherInterval();
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
+  valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
   // ---------------------------------------------------------------------------
