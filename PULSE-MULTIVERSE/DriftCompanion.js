@@ -1281,6 +1281,6 @@ function stopSoakTest() {
 }
 
 setTimeout(async () => {
-  await initWebGPUCompute();
+  initWebGPUCompute();
   await start24HourSoakTest();
 }, 1000); 
