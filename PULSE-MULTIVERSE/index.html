@@ -9827,13 +9827,6 @@ document.addEventListener("visibilitychange", () => {
       cacheStore.textContent = PulseRealm.PulseCacheStore;
       cachePercent.textContent = PulseRealm.PulseCacheUsed;
       capability.textContent = PulseRealm.PulseCapability;
-      valueDiv = document.getElementById("assumedValue");
-      let baseTitle = document.title.split("-")[0].trim();
-      if (valueDiv) {
-        document.title = baseTitle + ` - EarnBand ¢ [${valueDiv.textContent}]`;
-      } else {
-        document.title = baseTitle + " - EarnBand ¢";
-      }
       if (pulseBootPanel) pulseBootPanel.classList.add("fade-out");
       pulseStreamGhost();
       loadPulseIdentityContinual();
