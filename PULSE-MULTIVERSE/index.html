@@ -1094,6 +1094,14 @@ function sendToSW(msg, options) {
   }
 }
 
+// Listen for the Service Worker's reply
+navigator.serviceWorker.addEventListener('message', event => {
+  if (event.data?.type === 'PULSE_VALUE_UPDATED') {
+    assumedValue = event.data.newValue;
+    console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
+  }
+});
+
 
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {

@@ -366,11 +366,26 @@ self.addEventListener('message', event => {
   if (msg === 'PULSE_DEVICE_ON') {
     self.pulseDeviceActive = true;
     sendPulseHeartbeat();
+
+    // Send response back to the specific tab/client
+    if (event.source) {
+      event.source.postMessage({
+        type: 'PULSE_DEVICE_ACK',
+        status: 'ACTIVE'
+      });
+    }
   }
 
   if (msg === 'PULSE_ASSUMED_VALUE') {
     assumedValue = assumedValue + options;
     console.log("Receiving Message from Realm Tab: " + msg, options);
+
+    if (event.source) {
+      event.source.postMessage({
+        type: 'PULSE_VALUE_UPDATED',
+        newValue: assumedValue
+      });
+    }
   }
 
   if (msg === 'PULSE_DEVICE_OFF') {
