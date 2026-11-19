@@ -1084,10 +1084,16 @@ function currency(amount, displayCurrency = "$") {
 
 function sendToSW(msg, options) {
   if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage(msg, options);
-    console.log("Attempting to Send Message to Service Worker: " + msg, options);
+    // Combine msg and options into a single payload object
+    navigator.serviceWorker.controller.postMessage({
+      type: msg,
+      options: options
+    });
+
+    console.log("Attempting to Send Message to Service Worker:", { msg, options });
   }
 }
+
 
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {

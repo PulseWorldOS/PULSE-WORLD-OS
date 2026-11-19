@@ -360,7 +360,8 @@ self.addEventListener('activate', event => {
 // ============================================================
 
 self.addEventListener('message', event => {
-  const msg = event.data;
+  const { type, options } = event.data || {};
+  const msg = type;
 
   if (msg === 'PULSE_DEVICE_ON') {
     self.pulseDeviceActive = true;
@@ -368,7 +369,7 @@ self.addEventListener('message', event => {
   }
 
   if (msg === 'PULSE_ASSUMED_VALUE') {
-    assumedValue = assumedValue + msg.assumedValue;
+    assumedValue = assumedValue + options;
     console.log("Receiving Message from Realm Tab: " + msg, msg.assumedValue);
   }
 
