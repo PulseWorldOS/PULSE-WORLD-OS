@@ -909,6 +909,46 @@ class PulseWasmEngine {
 const pulseWasmCompute = new PulseWasmEngine();
 console.log("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
 
+
+let gpuContext = null;
+
+// 1. Initialize once at startup (replaces your warm-up snippet)
+async function initWebGPUCompute() {
+  if (!navigator.gpu) return null;
+  const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
+  if (!adapter) return null;
+  const device = await adapter.requestDevice();
+  if (device) pulseGPUInspector(adapter, device);
+  // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
+  const shaderCode = `
+    struct Item256 {
+      low: vec4<u32>,
+      high: vec4<u32>,
+    };
+
+    @group(0) @binding(0) var<storage, read_write> data: array<Item256>;
+
+    @compute @workgroup_size(64)
+    fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+      let i = id.x;
+      if (i >= arrayLength(&data)) { return; }
+
+      // REPLACE THIS WITH YOUR ACTUAL 256-BIT MATH (e.g., XOR, bit-shifts, hashing)
+      data[i].low = data[i].low ^ vec4<u32>(0xDEADBEEFu);
+      data[i].high = data[i].high + vec4<u32>(1u);
+    }
+  `;
+
+  const module = device.createShaderModule({ code: shaderCode });
+  const pipeline = device.createComputePipeline({
+    layout: "auto",
+    compute: { module, entryPoint: "main" },
+  });
+
+  gpuContext = { device, pipeline };
+  return gpuContext;
+}
+
 // 2. Call this instead of your Wasm function for large batches
 async function run256BitJobOnGPU(typedArrayPayload) {
   // [Phase 4] Guard: if GPU was never initialized or failed, return null so caller can fallback
@@ -1241,5 +1281,6 @@ function stopSoakTest() {
 }
 
 setTimeout(async () => {
-   await start24HourSoakTest();
+  await initWebGPUCompute();
+  await start24HourSoakTest();
 }, 1000); 
