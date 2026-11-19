@@ -3154,7 +3154,7 @@ async function pbRenderStorageStats2(history) {
         </div>
 
         <div style="flex:1;">
-          <strong>AI Thought:</strong><br>
+          <strong>Higher AI Mind:</strong><br>
           • <span style="color:lightgreen">${higherGPUAIDisplay}</span><br>
 
           <strong>System Quota:</strong><br>
