@@ -3821,7 +3821,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
       // const regfavicon = await getFavicon(realm);
       const favicon = snapshot.regfavicon ?? snapshot.favicon;
-      const MemoryLayer = WeLocalMemoryLayerMB;
+      const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
+      const ValueFromTab = snapshot.assumedValue ?? 0;
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
         saveCache();
@@ -3833,7 +3834,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${favicon}"
-               alt="${MemoryLayer} MB" />
+               alt="${MemoryLayer} MB || ${currencyLittle(ValueFromTab)}" />
         </div>
       `;
 
