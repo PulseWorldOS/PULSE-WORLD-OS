@@ -2227,7 +2227,7 @@ async function PulseBrowserDomScan() {
   
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
-  const valueDiv = clone.getElementById("assumedValue");
+  const valueDiv = document.getElementById("assumedValue");
   // Strip heavy elements
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
