@@ -370,7 +370,7 @@ self.addEventListener('message', event => {
 
   if (msg === 'PULSE_ASSUMED_VALUE') {
     assumedValue = assumedValue + options;
-    console.log("Receiving Message from Realm Tab: " + msg, msg.assumedValue);
+    console.log("Receiving Message from Realm Tab: " + msg, options);
   }
 
   if (msg === 'PULSE_DEVICE_OFF') {
