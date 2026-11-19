@@ -8057,8 +8057,6 @@ async function domScanPromise() {
 // ⭐ Reset throttle every few seconds
 setInterval(() => {
   PULSEWORLD_LOG_THROTTLE = 0;
-  valueDiv = document.getElementById("assumedValue");
-  valueDiv.textContent = currencyLittle(assumedValue);
 }, 3000);
 
 
@@ -9649,8 +9647,6 @@ if (navigator.gpu) {
     // ⭐ PulseStream Ghost Layer (Fake Streaming Telemetry)
     pulseStreamGhost();
     loadPulseIdentityContinual();
-    valueDiv = document.getElementById("assumedValue");
-    valueDiv.textContent = currencyLittle(assumedValue);
     // pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
     
     // // Supabase is a background backup only. One backend failure suspends sync
@@ -9683,8 +9679,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     capability.textContent = PulseRealm.PulseCapability;
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
     savePageToCookie();
-    valueDiv = document.getElementById("assumedValue");
-    valueDiv.textContent = currencyLittle(assumedValue);
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 7000);
 
