@@ -2226,7 +2226,7 @@ async function PulseBrowserDomScan() {
   
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
-  
+  const valueDiv = clone.getElementById("assumedValue");
   // Strip heavy elements
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
@@ -2332,7 +2332,7 @@ async function PulseBrowserDomScan() {
   // }
 
   // Tiny image preview (first 10 images)
-  const valueDiv = document.getElementById("assumedValue");
+  
   let tabValue = 0;
   if (valueDiv) tabValue = valueDiv.textContent;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
