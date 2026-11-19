@@ -92,18 +92,6 @@ let runOnceTime = false;
 let runOnceDay = null;
 const CACHE_NAME = "PulseBrowser-Companion";
 const titlediv = document.getElementById("title");
-if (!online) {
-  titlediv.textContent = "PulseBrowser OS (~Drifting~)";
-  document.title = "PulseBrowser OS [~Drift~]";
-} else {
-  titlediv.textContent = "PulseBrowser OS";
-  earnerminipanel = document.getElementById("earner-mini-panel");
-  if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
-  setInterval(() => {
-    earnerminipanel = document.getElementById("earner-mini-panel");
-    if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [${earnerminipanel.textContent}]`;
-  }, 3000);
-}
 // Internet Origin (ARPANET first packet)
 const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
 // Your PulseWorld Origin Consensus
@@ -118,7 +106,7 @@ const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
-let earnerminipanel = document.getElementById("earner-mini-panel");
+const earnerminipanel = document.getElementById("earner-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
@@ -133,7 +121,18 @@ let HigherPanelSwitch = document.getElementById("SwitchPanel");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
-
+if (!online) {
+  titlediv.textContent = "PulseBrowser OS (~Drifting~)";
+  document.title = "PulseBrowser OS [~Drift~]";
+} else {
+  titlediv.textContent = "PulseBrowser OS";
+  earnerminipanel = document.getElementById("earner-mini-panel");
+  if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
+  setInterval(() => {
+    earnerminipanel = document.getElementById("earner-mini-panel");
+    if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [${earnerminipanel.textContent}]`;
+  }, 3000);
+}
 
 const PB_LOG3 = {
   info(label, data) {
