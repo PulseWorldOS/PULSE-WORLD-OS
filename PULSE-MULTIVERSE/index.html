@@ -1085,7 +1085,7 @@ function currency(amount, displayCurrency = "$") {
 function sendToSW(msg, options) {
   if (navigator.serviceWorker && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage(msg, options);
-    console.log("Attempting to Send Message to Service Worker", msg);
+    console.log("Attempting to Send Message to Service Worker: " + msg, options);
   }
 }
 
