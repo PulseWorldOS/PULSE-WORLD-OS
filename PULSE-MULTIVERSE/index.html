@@ -233,6 +233,7 @@ checkPersistentStorage(true);
     <img id="chrome-bg-mobile"/>
 </div>
 <div id="timeClock">10:10 AM</div>
+<div id="assumedValue"></div>
 <video id="pulseStatus" src="./_EXPRESSIONS/_VIDEOS/PulseStatus" autoplay muted loop playsinline style="display:block;" aria-label="Pulse Status"></video>
 <video id="globalSpin" src="./_EXPRESSIONS/_VIDEOS/PulseGlobalSpin" autoplay muted loop playsinline style="display:block;" aria-label="Globe Spin"></video>
 <video id="bootVideo" muted playsinline style="display:none;" aria-label="Boot Video"></video>
@@ -1117,6 +1118,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
         totalUnit = "Err: ";
         totalUnits = totalErrors;
       }
+      const valueDiv = document.getElementById("assumedValue");
+      valueDiv.textContent = currencyLittle(assumedValue);
       console.log("WASM Daily Total Value: " + currencyLittle(assumedValue));
       timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       // appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
@@ -1155,6 +1158,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       }
 
       assumedValue += jobReward;
+      const valueDiv = document.getElementById("assumedValue");
+      valueDiv.textContent = currencyLittle(assumedValue);
 
       console.log("WASM Daily Assumed Value: " + currencyLittle(assumedValue));
       if (totalJobs >= 1000000000) {

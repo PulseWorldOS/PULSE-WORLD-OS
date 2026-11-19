@@ -3,7 +3,6 @@
 //  Full DOM physics engine: warm-path, GPU, decode, mutation, performance,
 //  realm sync, HUD, world-band extraction, kernel bridge.
 // ============================================================================
-let assumedValue = 0;
 let PulseRealm = {};
 let PulseRealmSettings = {};
 let PulseDomScan = false;
