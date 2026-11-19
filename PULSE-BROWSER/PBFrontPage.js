@@ -1021,6 +1021,13 @@ async function runLocalAI() {
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -1109,6 +1116,13 @@ ${rawPrompt}
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+      // Clean the incoming value (handles both formatted strings and existing numbers)
+      const cleanValue = typeof ALLassumedValue === 'string' 
+        ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+        : Number(ALLassumedValue);
+
+      // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+      OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       OurassumedValue += ALLassumedValue;
       console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -1953,6 +1967,13 @@ async function appendCompanionMessage(area, role, text) {
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -2046,6 +2067,13 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+      // Clean the incoming value (handles both formatted strings and existing numbers)
+      const cleanValue = typeof ALLassumedValue === 'string' 
+        ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+        : Number(ALLassumedValue);
+
+      // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+      OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       OurassumedValue += ALLassumedValue;
       console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -2081,6 +2109,13 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+      // Clean the incoming value (handles both formatted strings and existing numbers)
+      const cleanValue = typeof ALLassumedValue === 'string' 
+        ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+        : Number(ALLassumedValue);
+
+      // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+      OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       OurassumedValue += ALLassumedValue;
       console.log("All Assumed Value:", ALLassumedValue);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -3403,6 +3438,13 @@ setInterval(async () => {
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -3454,6 +3496,13 @@ setInterval(async () => {
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -4805,6 +4854,13 @@ async function updateModuleIcons(settings, browser) {
     }
     if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     OurassumedValue += ALLassumedValue;
     console.log("All Assumed Value:", ALLassumedValue);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -6496,6 +6552,13 @@ function CheckBackTab() {
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -6539,6 +6602,13 @@ function CheckBackTab() {
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -6778,6 +6848,13 @@ function CheckBackTab() {
         }
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         OurassumedValue += ALLassumedValue;
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);

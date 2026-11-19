@@ -3453,7 +3453,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         realmSummary = msg.realmSummary;
       }
       if (msg.assumedValue) {
-        HisassumedValue = msg.assumedValue;
+        HisassumedValue = msg.assumedValue.trim();
         console.log("Content Tab Value: ", HisassumedValue);
       }
       sendResponse({ ok: true });
