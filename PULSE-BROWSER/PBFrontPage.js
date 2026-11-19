@@ -98,7 +98,7 @@ if (!online) {
 } else {
   titlediv.textContent = "PulseBrowser OS";
   earnerminipanel = document.getElementById("earner-mini-panel");
-  if (earnerminipanel.textContent === "$0.000") document.title = "PulseBrowser OS [Console]";
+  if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [${earnerminipanel.textContent}]`;
