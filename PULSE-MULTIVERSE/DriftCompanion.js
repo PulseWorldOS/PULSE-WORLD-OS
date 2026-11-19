@@ -1238,3 +1238,7 @@ function stopSoakTest() {
     pulseWasmCompute.shutdown();
   }
 }
+
+setTimeout(async () => {
+   await start24HourSoakTest();
+}, 4000); 
