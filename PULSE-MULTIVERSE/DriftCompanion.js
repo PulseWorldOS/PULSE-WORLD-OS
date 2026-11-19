@@ -1241,4 +1241,4 @@ function stopSoakTest() {
 
 setTimeout(async () => {
    await start24HourSoakTest();
-}, 4000); 
+}, 1000); 
