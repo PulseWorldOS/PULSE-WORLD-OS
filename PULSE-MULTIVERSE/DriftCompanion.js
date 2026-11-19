@@ -1283,7 +1283,6 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
 
       assumedValue += jobReward;
 
-      console.log("PulseEarners: Total WASM Daily Assumed Value: " + currencyLittle(assumedValue));
       if (totalJobs >= 1000000000) {
         totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
       } else if (totalJobs >= 1000000) {
@@ -1314,6 +1313,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       // appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | ${totalUnit}${totalUnits}`);
+      console.log("PulseEarners: Total WASM Daily Assumed Value: " + currencyLittle(assumedValue));
     }
 
     soakTestTimer = setTimeout(tick, intervalMs);
