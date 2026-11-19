@@ -829,7 +829,7 @@ self.addEventListener('message', event => {
 
   if (msg === 'PULSE_ASSUMED_VALUE') {
     WeassumedValue = WeassumedValue + msg.assumedValue;
-    console.log("Receiving Message from Service Worker: " + msg, msg.assumedValue);
+    console.log("Receiving Message from Realm Tab: " + msg, msg.assumedValue);
   }
 
   if (msg === 'PULSE_DEVICE_OFF') {
