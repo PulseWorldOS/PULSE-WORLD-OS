@@ -98,6 +98,7 @@ if (!online) {
 } else {
   titlediv.textContent = "PulseBrowser OS";
   document.title = "PulseBrowser OS [Console]";
+  if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [${earnerminipanel.textContent}]`;
 }
 // Internet Origin (ARPANET first packet)
 const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
