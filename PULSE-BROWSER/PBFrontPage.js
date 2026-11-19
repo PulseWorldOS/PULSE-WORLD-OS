@@ -3912,7 +3912,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${favicon}"
-               alt="${MemoryLayer} MB || ${currencyLittle(ValueFromTab)}" />
+               alt="${MemoryLayer} MB || ${currency(ValueFromTab)}" />
         </div>
       `;
 
