@@ -834,6 +834,9 @@ const interval2 = getAnotherInterval();
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
+  let tabValue = 0;
+  if (valueDiv) tabValue = valueDiv.textContent;
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------
@@ -1987,10 +1990,6 @@ function collectAndWarmAssetsContent() {
     try { img.decode?.().catch(() => {}); } catch (_) {}
   });
   
-  let tabValue = 0;
-  if (valueDiv) tabValue = valueDiv.textContent;
-
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
   // -------------------------------------------------------
   // 6. Send unified front‑page report
   // -------------------------------------------------------
