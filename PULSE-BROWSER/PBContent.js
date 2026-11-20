@@ -2070,7 +2070,7 @@ function PulseBrowserPreview(text) {
 
   if (text) setTimeout(() => {
     PreviewListener(preview);
-  }, 7000)
+  }, 3500)
 }
 
 function PreviewListener(preview) {
