@@ -1103,6 +1103,7 @@ navigator.serviceWorker.addEventListener('message', event => {
   if (event.data?.type === 'PULSE_VALUE_UPDATED') {
     totalassumedValue = event.data.newValue;
     lastEarnBatch = event.data.earnBatch;
+    console.log("Last Earn Batch:", lastEarnBatch);
     earnBatch.innerHTML = lastEarnBatch;
     valueDiv = document.getElementById("assumedValue");
     valueDiv.textContent = currencyLittle(totalassumedValue);
