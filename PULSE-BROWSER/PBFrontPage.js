@@ -1050,7 +1050,7 @@ async function runLocalAI() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (!ALLassumedValue && !itrunonce) {
+        if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
         }
@@ -1146,7 +1146,7 @@ ${rawPrompt}
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-      if (!ALLassumedValue && !itrunonce) {
+      if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
       }
@@ -1998,7 +1998,7 @@ async function appendCompanionMessage(area, role, text) {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (!ALLassumedValue && !itrunonce) {
+    if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
     }
@@ -2099,7 +2099,7 @@ CompanionConsoleSend.onclick = async () => {
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-      if (!ALLassumedValue && !itrunonce) {
+      if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
       }
@@ -2142,7 +2142,7 @@ CompanionConsoleSend.onclick = async () => {
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-      if (!ALLassumedValue && !itrunonce) {
+      if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
       }
@@ -3487,7 +3487,7 @@ setInterval(async () => {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (!ALLassumedValue && !itrunonce) {
+    if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
     }
@@ -3546,7 +3546,7 @@ setInterval(async () => {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (!ALLassumedValue && !itrunonce) {
+    if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
     }
@@ -4905,7 +4905,7 @@ async function updateModuleIcons(settings, browser) {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (!ALLassumedValue && !itrunonce) {
+    if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
     }
@@ -6610,7 +6610,7 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (!ALLassumedValue && !itrunonce) {
+        if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
         }
@@ -6662,7 +6662,7 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (!ALLassumedValue && !itrunonce) {
+        if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
         }
@@ -6910,7 +6910,7 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (!ALLassumedValue && !itrunonce) {
+        if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
         }
