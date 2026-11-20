@@ -134,7 +134,10 @@ if (!online) {
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
   }, 3000);
 }
-
+function pulsepalSpeak(message) {
+  console.log(message);
+  pulsepaltalk.textContent = message;
+}
 const PB_LOG3 = {
   info(label, data) {
     console.log(
@@ -1086,7 +1089,7 @@ ${rawPrompt}
     const response = await aiSession.prompt(wrappedPrompt);
     
     console.log("🧠 AI Overmind:", response);
-    
+    pulsepalSpeak(response);
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
@@ -2449,7 +2452,7 @@ function getReadableName(url) {
           HigherPanelSwitch.style.display = "block"
           pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
-          pulsepaltalk.textContent = "Welcome to 🌐 PulseBrowser OS!  We, Overminds, can help in Many Ways and Many Forms!";
+          pulsepaltalk.textContent = "Welcome to 🌐 PulseBrowser OS!  We, your AI Overminds, can help in Many Ways and Many Forms!";
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
