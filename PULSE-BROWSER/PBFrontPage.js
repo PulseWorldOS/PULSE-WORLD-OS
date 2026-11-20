@@ -1097,7 +1097,7 @@ ${rawPrompt}
     const response = await aiSession.prompt(wrappedPrompt);
     
     console.log("🧠 AI Overmind:", response);
-    pulsepalSpeak(response);
+    if (EarnDetailsHidden) safeSpeak(response);
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
@@ -2822,7 +2822,7 @@ function safeSpeak(msg) {
   if (errorLock) return;
   errorLock = true;
   try {
-    document.getElementById("searchengineTextbox").textContent = msg;
+    pulsepalSpeak(msg);
     console.error(msg);
   } catch (e) {
     console.warn("pulsepalSpeak failed:", e);
