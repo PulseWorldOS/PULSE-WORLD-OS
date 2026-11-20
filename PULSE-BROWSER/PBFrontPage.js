@@ -134,15 +134,11 @@ function pulsepalSpeak(message) {
   }, 10000);
 }
 function safeSpeak(msg) {
-  if (errorLock) return;
-  errorLock = true;
   try {
     pulsepalSpeak(msg);
-    console.error(msg);
   } catch (e) {
     console.warn("pulsepalSpeak failed:", e);
   }
-  errorLock = false;
 }
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
