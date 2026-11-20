@@ -1101,7 +1101,7 @@ navigator.serviceWorker.addEventListener('message', event => {
     totalassumedValue = event.data.newValue;
     valueDiv = document.getElementById("assumedValue");
     valueDiv.textContent = currencyLittle(totalassumedValue);
-    document.title = event.data.earnTitle;
+    document.title = event.data.earnTitle ?? `PulseWorld.Net - [Earn: ${totalassumedValue}]`;
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
 });
