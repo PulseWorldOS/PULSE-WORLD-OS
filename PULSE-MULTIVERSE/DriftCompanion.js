@@ -376,21 +376,18 @@ self.addEventListener('message', event => {
       });
     }
   }
-
+  
   if (msg === 'PULSE_ASSUMED_VALUE') {
     WeassumedValue = assumedValue + options;
     console.log("Receiving Message from Realm Tab: " + msg, options);
+    let NewTitle = `*PulseWorld.Net - [Earn: ${WeassumedValue}]`;
 
     if (event.source) {
       event.source.postMessage({
         type: 'PULSE_VALUE_UPDATED',
-        newValue: WeassumedValue
+        newValue: WeassumedValue,
+        earnTitle: NewTitle
       });
-
-      document.title = `*PulseWorld.Net - [Earn: ${WeassumedValue}]`;
-      setInterval(() => {
-        document.title = `*PulseWorld.Net - [Earn: ${WeassumedValue}]`;
-      }, 1500);
     }
   }
 

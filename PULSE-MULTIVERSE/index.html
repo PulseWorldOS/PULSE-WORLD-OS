@@ -1101,6 +1101,7 @@ navigator.serviceWorker.addEventListener('message', event => {
     totalassumedValue = event.data.newValue;
     valueDiv = document.getElementById("assumedValue");
     valueDiv.textContent = currencyLittle(totalassumedValue);
+    document.title = event.data.earnTitle;
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
 });
