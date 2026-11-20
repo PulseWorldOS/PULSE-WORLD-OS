@@ -17,6 +17,7 @@
 // })();
 
 let assumedValue = 0;
+let WeassumedValue = 0;
 let runWasmTest = false;
 // ============================================================
 // ⭐ REALM + BUILD TIME
@@ -377,13 +378,13 @@ self.addEventListener('message', event => {
   }
 
   if (msg === 'PULSE_ASSUMED_VALUE') {
-    assumedValue = assumedValue + options;
+    WeassumedValue = assumedValue + options;
     console.log("Receiving Message from Realm Tab: " + msg, options);
 
     if (event.source) {
       event.source.postMessage({
         type: 'PULSE_VALUE_UPDATED',
-        newValue: assumedValue
+        newValue: WeassumedValue
       });
     }
   }
