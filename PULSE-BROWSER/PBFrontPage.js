@@ -2469,6 +2469,7 @@ function getReadableName(url) {
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
           CompanionDetailsMessage.style.display = "none";
+          pbPulseDetailsEarn.style.pointerEvents = "auto";
           // // Check GPU, enable/resume right model, and display switcher
           // initHigherAIConsoleOnTabStart(true);
         } else {
