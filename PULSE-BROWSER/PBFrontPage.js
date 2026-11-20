@@ -13,6 +13,7 @@
 //     await PulseMellowEarner.start();
 //   } catch {}
 // })();
+let lastEarnBatch = null;
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
@@ -1053,6 +1054,15 @@ async function runLocalAI() {
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1149,6 +1159,16 @@ ${rawPrompt}
       if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+        appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2001,6 +2021,16 @@ async function appendCompanionMessage(area, role, text) {
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2102,6 +2132,16 @@ CompanionConsoleSend.onclick = async () => {
       if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+        appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2145,6 +2185,16 @@ CompanionConsoleSend.onclick = async () => {
       if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+        appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3490,6 +3540,16 @@ setInterval(async () => {
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3549,6 +3609,16 @@ setInterval(async () => {
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -4908,6 +4978,16 @@ async function updateModuleIcons(settings, browser) {
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6613,6 +6693,16 @@ function CheckBackTab() {
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+          appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6665,6 +6755,16 @@ function CheckBackTab() {
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+          appendEarnerMessage(CompanionMessages, "🌐", lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6914,6 +7014,15 @@ function CheckBackTab() {
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);

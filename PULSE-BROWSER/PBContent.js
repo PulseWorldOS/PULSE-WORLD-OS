@@ -14,7 +14,9 @@ let OurLocalMemoryLayer = {};
 let OurLocalMemoryLayerMB = 0;
 let OvermindTheirOrders = null;
 let tabValue = 0;
+let lastEarnBatch = null;
 let valueDiv = document.getElementById("assumedValue");
+let earnBatch = document.getElementById("lastEarnBatch");
 const CACHE_NAME = "PulseBrowser-Companion";
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
@@ -835,9 +837,11 @@ const interval2 = getAnotherInterval();
 setInterval(async () => {
   OurLocalMemoryLayer = getLocalMemoryLayer();
   loadOrders();
+  earnBatch = document.getElementById("lastEarnBatch");
+  if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue });
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch });
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------
@@ -2333,11 +2337,12 @@ async function PulseBrowserDomScan() {
   // if (isPulseWorld(location.origin)) {
   let regfavicon = await fetchAndStoreIcon(location.origin, favicon);
   // }
-
+  earnBatch = document.getElementById("lastEarnBatch");
   // Tiny image preview (first 10 images)
   
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
+  if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
   const htmlSummary = clone.innerHTML.slice(0, 2500);
@@ -2359,6 +2364,7 @@ async function PulseBrowserDomScan() {
     regfavicon,
     favicon,
     assumedValue: tabValue,
+    earnBatch: lastEarnBatch,
     tabMemory: OurLocalMemoryLayerMB
   };
 

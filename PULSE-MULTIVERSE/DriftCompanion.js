@@ -19,6 +19,12 @@
 let assumedValue = 0;
 let WeassumedValue = 0;
 let runWasmTest = false;
+
+// Track state cleanly without global leaks
+let timeProof = "";
+let WasmSuccess = false;
+let soakTestTimer = null;
+
 // ============================================================
 // ⭐ REALM + BUILD TIME
 // ============================================================
@@ -386,7 +392,8 @@ self.addEventListener('message', event => {
       event.source.postMessage({
         type: 'PULSE_VALUE_UPDATED',
         newValue: WeassumedValue,
-        earnTitle: NewTitle
+        earnTitle: NewTitle,
+        earnBatch: timeProof 
       });
     }
   }
@@ -1075,11 +1082,6 @@ async function run256BitJobOnGPU(typedArrayPayload) {
     return null;
   }
 }
-
-// Track state cleanly without global leaks
-let timeProof = "";
-let WasmSuccess = false;
-let soakTestTimer = null;
 
 // Single test execution
 async function runEngineTest(silent = false) {

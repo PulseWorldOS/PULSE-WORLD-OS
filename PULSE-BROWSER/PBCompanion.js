@@ -16,7 +16,7 @@ import {
   buildOvermindMessages,
 } from "./PBHigherModels.js";
 import './MellowEarner.js';
-
+let lastEarnBatch = null;
 let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
 let aiSettingsSize = 0;
@@ -3458,10 +3458,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const cleanValue = typeof HisassumedValue === 'string' 
           ? parseFloat(HisassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(HisassumedValue);
-
         HisassumedValue = cleanValue;
-
         console.log("Content Tab Value: ", HisassumedValue);
+      }
+      if (msg.lastEarnBatch) {
+        lastEarnBatch = msg.lastEarnBatch;
       }
       sendResponse({ ok: true });
       break;
@@ -4229,7 +4230,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch });
       return true;
 
     case "PBCONSOLE_GET":
