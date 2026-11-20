@@ -9881,14 +9881,16 @@ document.addEventListener("PulseDocumentChanged", () => {
     document.head.appendChild(script);
     // 3. Add your new text after the dash and update the page title
     setTimeout(() => {
+      baseTitle = document.title.split("-")[0].trim();
       if (document.title.includes("Activated!")) {
         document.title = baseTitle + " - EarnBand ¢ [Reactivated]";
       } else {
         document.title = baseTitle + " - EarnBand ¢ [Activated]";
       }
-    }, 5000);
+    }, 1000);
     setTimeout(() => {
       valueDiv = document.getElementById("assumedValue");
+      baseTitle = document.title.split("-")[0].trim();
       if (valueDiv) {
         document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
         setInterval(() => {
@@ -9902,7 +9904,7 @@ document.addEventListener("PulseDocumentChanged", () => {
           document.title = document.title + ".";
         }, 1500);
       }
-    }, 8000);
+    }, 2000);
   }
 })();
 </script>
