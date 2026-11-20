@@ -125,6 +125,7 @@ let pulsepaltalk = document.getElementById("pulsepal-talk");
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
+  pulsepalSpeak("We are Currently Drifting the Multiverse! (Offline)");
 } else {
   titlediv.textContent = "PulseBrowser OS";
   earnerminipanel = document.getElementById("earner-mini-panel");
@@ -135,14 +136,17 @@ if (!online) {
   }, 3000);
 }
 function pulsepalSpeak(message) {
-  pulsepaltalk.style.opacity = "1";
   console.log(message);
   pulsepaltalk = document.getElementById("pulsepal-talk");
   pulsepaltalk.textContent = message;
   setTimeout(() => {
+    pulsepaltalk.style.opacity = "1";
+  }, 800);
+  setTimeout(() => {
     pulsepaltalk.style.opacity = "0";
   }, 10000);
 }
+
 const PB_LOG3 = {
   info(label, data) {
     console.log(
