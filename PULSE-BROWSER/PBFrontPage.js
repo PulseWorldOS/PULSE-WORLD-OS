@@ -2309,8 +2309,8 @@ function getReadableName(url) {
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
         CompanionDetailsMessage.style.display = "none";
-        // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
-        initHigherAIConsoleOnTabStart(true);
+        // // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
+        // initHigherAIConsoleOnTabStart(true);
       } else {
         pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
         HigherAuthority.textContent = "🌐";
@@ -2320,6 +2320,8 @@ function getReadableName(url) {
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
         CompanionDetailsMessage.style.display = "block";
       }
+      // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
+      initHigherAIConsoleOnTabStart(true);
     }
 
     consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
@@ -2467,8 +2469,8 @@ function getReadableName(url) {
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
           CompanionDetailsMessage.style.display = "none";
-          // Check GPU, enable/resume right model, and display switcher
-          initHigherAIConsoleOnTabStart(true);
+          // // Check GPU, enable/resume right model, and display switcher
+          // initHigherAIConsoleOnTabStart(true);
         } else {
           HigherAuthorityShown = false;
           HigherPanelSwitch.style.display = "none"
