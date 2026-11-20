@@ -2338,9 +2338,11 @@ function getReadableName(url) {
       HigherStatusPanel = document.getElementById("higherStatusPanel");
       if (HigherStatusPanel) {
         if (HigherPanelShown) {
+          pbPulseDetailsEarn.style.pointerEvents = "none";
           HigherPanelSwitch.style.opacity = "0.3";
           HigherStatusPanel.style.display = "block"
         } else {
+          pbPulseDetailsEarn.style.pointerEvents = "auto";
           HigherPanelSwitch.style.opacity = "1";
           HigherStatusPanel.style.display = "none"
         }
@@ -2491,10 +2493,12 @@ function getReadableName(url) {
         HigherStatusPanel = document.getElementById("higherStatusPanel");
         if (!HigherPanelShown) {
           HigherPanelShown = true;
+          pbPulseDetailsEarn.style.pointerEvents = "none";
           HigherPanelSwitch.style.opacity = "0.3";
           HigherStatusPanel.style.display = "block"
         } else {
           HigherPanelShown = false;
+          pbPulseDetailsEarn.style.pointerEvents = "auto";
           HigherPanelSwitch.style.opacity = "1";
           HigherStatusPanel.style.display = "none"
         }
