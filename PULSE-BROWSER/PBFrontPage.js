@@ -133,10 +133,21 @@ function pulsepalSpeak(message) {
     pulsepaltalk.style.opacity = "0";
   }, 10000);
 }
+function safeSpeak(msg) {
+  if (errorLock) return;
+  errorLock = true;
+  try {
+    pulsepalSpeak(msg);
+    console.error(msg);
+  } catch (e) {
+    console.warn("pulsepalSpeak failed:", e);
+  }
+  errorLock = false;
+}
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
-  pulsepalSpeak("We are Currently Drifting the Multiverse! (Offline)");
+  safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
 } else {
   titlediv.textContent = "PulseBrowser OS";
   earnerminipanel = document.getElementById("earner-mini-panel");
@@ -2817,17 +2828,6 @@ function makeBuffered(fn) {
       ErrorCount++;
       fn(...args);
   };
-}
-function safeSpeak(msg) {
-  if (errorLock) return;
-  errorLock = true;
-  try {
-    pulsepalSpeak(msg);
-    console.error(msg);
-  } catch (e) {
-    console.warn("pulsepalSpeak failed:", e);
-  }
-  errorLock = false;
 }
 
 window.onerror = function(message, source, lineno, colno, error) {
@@ -6484,7 +6484,7 @@ setInterval(async () => {
   if (!online) {
     titlediv.textContent = "PulseBrowser OS (~Drifting~)";
     document.title = "PulseBrowser OS [~Drift~]";
-    pulsepalSpeak("We are Currently Drifting the Multiverse! (Offline)");
+    safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
   } else {
     titlediv.textContent = "PulseBrowser OS";
     earnerminipanel = document.getElementById("earner-mini-panel");
