@@ -1497,80 +1497,92 @@ async function getFavicon(url, flags = {}) {
     host = "www." + host;
   }
 
-  // ⭐ Default favicon URL
-  let iconURL = `https://${host}/favicon.ico`;
+  // Helper: generate both www and non-www candidates
+  function getHostVariants(h) {
+    const variants = new Set();
+    variants.add(h);
 
-  // ⭐ Strip subdomains unless it's "www"
-  const parts = host.split(".");
-  if (parts.length > 2 && parts[0] !== "www") {
-    const root = parts.slice(parts.length - 2).join(".");
-    iconURL = `https://${root}/favicon.ico`;
+    if (h.startsWith("www.")) {
+      variants.add(h.slice(4));           // without www
+    } else {
+      variants.add("www." + h);           // with www
+    }
+
+    // Also strip extra subdomains → root domain (keeping the www/non-www pair)
+    const parts = h.split(".");
+    if (parts.length > 2) {
+      const root = parts.slice(parts.length - 2).join(".");
+      variants.add(root);
+      variants.add("www." + root);
+    }
+
+    return [...variants];
   }
 
-  let icon = iconURL;
+  const hostVariants = getHostVariants(host);
 
-  // ⭐ Special external cases
+  // Default candidates: /favicon.ico on every variant
+  let candidates = hostVariants.map(h => `https://${h}/favicon.ico`);
+
+  // ⭐ Special external cases (still take priority)
   try {
     if (host.includes("google.com")) {
-      iconURL = "https://www.google.com/favicon.ico";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://www.google.com/favicon.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("mail.google.com") || host.includes("gmail.com")) {
-      iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("chase.com")) {
-      iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("office.com")) {
-      iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("github.com")) {
-      iconURL = "https://github.githubassets.com/favicons/favicon.svg";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://github.githubassets.com/favicons/favicon.svg";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("youtube.com")) {
-      iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
     if (host.includes("discord.com")) {
-      iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
-      icon = await fetchAndStoreIcon(host, iconURL);
+      const iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
-
   } catch {
-    PBROWSERFAVICON_CACHE[host] = iconURL;
-    saveCache();
-    return iconURL;
+    // fall through – we’ll try the normal candidates
   }
 
   // ⭐ Cached → return instantly
@@ -1599,24 +1611,39 @@ async function getFavicon(url, flags = {}) {
 
   try {
     if (realmKey) {
-      iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
-      icon = await fetchAndStoreIcon(host, iconURL);
-
+      const iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
+      const icon = await fetchAndStoreIcon(host, iconURL);
       PBROWSERFAVICON_CACHE[host] = icon;
       saveCache();
       return icon;
     }
 
-    // ⭐ Normal external favicon fetch
-    icon = await fetchAndStoreIcon(host, iconURL);
-    PBROWSERFAVICON_CACHE[host] = icon;
+    // ⭐ Try all candidates (www + non-www + root) in parallel
+    // First successful one wins
+    const results = await Promise.allSettled(
+      candidates.map(url => fetchAndStoreIcon(host, url))
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled" && result.value) {
+        const icon = result.value;
+        PBROWSERFAVICON_CACHE[host] = icon;
+        saveCache();
+        return icon;
+      }
+    }
+
+    // Absolute last resort – just return the first candidate URL
+    const fallback = candidates[0];
+    PBROWSERFAVICON_CACHE[host] = fallback;
     saveCache();
-    return icon;
+    return fallback;
 
   } catch {
-    PBROWSERFAVICON_CACHE[host] = iconURL;
+    const fallback = candidates[0] || `https://${host}/favicon.ico`;
+    PBROWSERFAVICON_CACHE[host] = fallback;
     saveCache();
-    return iconURL;
+    return fallback;
   }
 }
 
