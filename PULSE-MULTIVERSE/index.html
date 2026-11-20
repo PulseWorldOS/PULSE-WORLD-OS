@@ -9862,7 +9862,6 @@ document.addEventListener("PulseDocumentChanged", () => {
     // 2. Remove everything from the dash onward and trim extra spaces
     let baseTitle = document.title.split("-")[0].trim();
     
-    document.head.appendChild(script);
     // 3. Add your new text after the dash and update the page title
     setTimeout(() => {
       baseTitle = document.title.split("-")[0].trim();
