@@ -2304,7 +2304,7 @@ function getReadableName(url) {
       if (HigherAuthorityShown) {
         pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
         HigherAuthority.textContent = "🧠";
-        pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  We, Overminds, can/will/did help you in Many Ways and Many Forms!";
+        pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!";
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
@@ -2464,7 +2464,7 @@ function getReadableName(url) {
           HigherPanelSwitch.style.display = "block"
           pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
-          pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can help in Many Ways and Many Forms!";
+          pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!";
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
