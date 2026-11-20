@@ -2314,7 +2314,7 @@ function getReadableName(url) {
       } else {
         pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
         HigherAuthority.textContent = "🌐";
-        pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in the Multiverse, Check me out!";
+        pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol";
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
@@ -2477,7 +2477,7 @@ function getReadableName(url) {
           HigherPanelSwitch.style.display = "none"
           pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
           HigherAuthority.textContent = "🌐";
-          pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in the Multiverse, Check me out!";
+          pulsepaltalk.innerHTML = "Welcome to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol";
           consoleOvermindCognition.style.display = "none";
           CognitionTitle.style.display = "none";
           aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
