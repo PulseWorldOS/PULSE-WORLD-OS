@@ -993,7 +993,8 @@ async function runLocalAI() {
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
     PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-    if (CompanionDetailsMessage && CompanionDetailsMessage.children.length <= 1 && PulsePalMemoryAIBuffer.length > 0) {
+    // if (CompanionDetailsMessage && CompanionDetailsMessage.children.length <= 1 && PulsePalMemoryAIBuffer.length > 0) {
+    if (CompanionDetailsMessage && PulsePalMemoryAIBuffer.length > 0) {
       PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
       CompanionDetailsMessage.style.fontSize = "0.62rem";
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
