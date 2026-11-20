@@ -1104,6 +1104,7 @@ navigator.serviceWorker.addEventListener('message', event => {
     totalassumedValue = event.data.newValue;
     lastEarnBatch = event.data.earnBatch;
     console.log("Last Earn Batch:", lastEarnBatch);
+    earnBatch = document.getElementById("lastEarnBatch");
     earnBatch.innerHTML = lastEarnBatch;
     valueDiv = document.getElementById("assumedValue");
     valueDiv.textContent = currencyLittle(totalassumedValue);
