@@ -9856,37 +9856,86 @@ document.addEventListener("PulseDocumentChanged", () => {
     PulseRealm.TropicPulseScanner.close();
   }
 });
-
-// 2. Remove everything from the dash onward and trim extra spaces
-let baseTitle = document.title.split("-")[0].trim();
-
-document.head.appendChild(script);
-// 3. Add your new text after the dash and update the page title
-setTimeout(() => {
-  baseTitle = document.title.split("-")[0].trim();
-  if (document.title.includes("Activated!")) {
-    document.title = baseTitle + " - EarnBand ¢ [Reactivated]";
-  } else {
-    document.title = baseTitle + " - EarnBand ¢ [Activated]";
-  }
-}, 2000);
-setTimeout(() => {
-  valueDiv = document.getElementById("assumedValue");
-  baseTitle = document.title.split("-")[0].trim();
-  if (valueDiv) {
-    document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
-    setInterval(() => {
-      valueDiv = document.getElementById("assumedValue");
-      document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
-    }, 1500);
-  } else {
-    document.title = baseTitle + " - EarnBand ¢";
-    setInterval(() => {
-      document.title = document.title.replace("...","");
-      document.title = document.title + ".";
-    }, 1500);
-  }
-}, 4000);
 </script>
+<script>  
+(function() {
+    // 2. Remove everything from the dash onward and trim extra spaces
+    let baseTitle = document.title.split("-")[0].trim();
+    
+    document.head.appendChild(script);
+    // 3. Add your new text after the dash and update the page title
+    setTimeout(() => {
+      baseTitle = document.title.split("-")[0].trim();
+      if (document.title.includes("Activated!")) {
+        document.title = baseTitle + " - EarnBand ¢ [Reactivated]";
+      } else {
+        document.title = baseTitle + " - EarnBand ¢ [Activated]";
+      }
+    }, 2000);
+    setTimeout(() => {
+      valueDiv = document.getElementById("assumedValue");
+      baseTitle = document.title.split("-")[0].trim();
+      if (valueDiv) {
+        document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
+        setInterval(() => {
+          valueDiv = document.getElementById("assumedValue");
+          document.title = baseTitle + ` - [Earn: ${valueDiv.textContent}]`;
+        }, 1500);
+      } else {
+        document.title = baseTitle + " - EarnBand ¢";
+        setInterval(() => {
+          document.title = document.title.replace("...","");
+          document.title = document.title + ".";
+        }, 1500);
+      }
+    }, 4000);
+})();
+</script>
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=6iyeqjc693s"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=pfzcy82lbn"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=j0z0h5rh54"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=c85xhamrg8"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=ctqgfzdnl7e"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=uanebzpxdyl"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=zswq3fmt7xj"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=ecz755xevxw"
+  async>
+</script> -->
+
+<!-- <script
+  src="https://cdn.mellow.tel/widget.js?theme=dark&type=icon&position=bottom-right&invite_id=qt97rsez1hj"
+  async>
+</script> -->
+
 </body>
 </html>
