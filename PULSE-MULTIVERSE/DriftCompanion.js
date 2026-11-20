@@ -1,20 +1,5 @@
 // THIS IS DRIFT COMPANION SERVICE WORKER THAT WORKS WITH SHARED STORAGE
 // AND SHARED ATOMIC STATE (MIRROR SW KERNEL)
-// import './MellowEarner.js';
-
-
-// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-//   integrationId: "intgr-CxPYRSJjKe",
-//   disableLogs: false
-// });
-
-// (async () => {
-//   try {
-//     await PulseMellowEarner.initBackground();
-//     await PulseMellowEarner.optIn();
-//     await PulseMellowEarner.start();
-//   } catch {}
-// })();
 
 let assumedValue = 0;
 let WeassumedValue = 0;

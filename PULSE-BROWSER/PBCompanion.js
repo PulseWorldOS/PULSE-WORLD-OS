@@ -75,19 +75,6 @@ let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
 let totalUsed = 0;
 
-// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-//   integrationId: "intgr-CxPYRSJjKe",
-//   disableLogs: false
-// });
-
-// (async () => {
-//   try {
-//     await PulseMellowEarner.initBackground();
-//     await PulseMellowEarner.optIn();
-//     await PulseMellowEarner.start();
-//   } catch {}
-// })();
-
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
