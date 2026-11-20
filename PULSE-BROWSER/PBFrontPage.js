@@ -21,6 +21,11 @@ let HigherPanelShown = false;
 let MyHigherIntellect = null;
 let MyLowerIntellect = null;
 let CompanionDeprivation = false;
+let rawHigherAIBytes = 0;
+let higherAIBytes = 0;
+let higherAIGpuMB = 0;
+let higherAIDisplay = null;
+let higherGPUAIDisplay = null;
 let ErrorCount = 0;
 const MAX_ERRORS = 1000;
 let ErrorOverflow = false;
@@ -1642,9 +1647,9 @@ function renderHigherStatusPanel(status, checkingText) {
   }
   if (!status) return;
   higherLastStatus = status;
-
+  const higherAIRAM = (higherAIBytes / (1024 * 1024)).toFixed(2);
   const gpu = status.gpuInfo || {};
-  gpuCapabilitySize = gpuCapabilitySize ?? gpu.vramMB;
+  gpuCapabilitySize = gpuCapabilitySize ?? higherAIRAM ?? gpu.vramMB;
   
   const gpuText = gpu.supported
     ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB)`
@@ -2948,11 +2953,7 @@ async function pbRenderStorageStats2(history) {
   // ⭐ Combined totals
   totalUsed = localUsed + swSize + aiSize;
   // [Phase 3] Measure real AI model cache size and align with model dropdown VRAM/size (e.g. 4.5 GB for 4500MB, 6.4 GB for 6433MB)
-  let rawHigherAIBytes = 0;
-  let higherAIBytes = 0;
-  let higherAIGpuMB = 0;
-  let higherAIDisplay = null;
-  let higherGPUAIDisplay = null;
+
 
   try {
     const modelVramMap = {
