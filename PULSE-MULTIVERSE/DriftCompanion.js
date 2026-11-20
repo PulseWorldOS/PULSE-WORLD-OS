@@ -18,7 +18,7 @@ const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 // --- CONFIG ----------------------------------------------------
 
 const META_DB = "PulseWorld-Drift";
-const META_STORE = "PW-Companion";
+const META_STORE = "PulseWorld-Companion";
 const META_KEY = "PulseWorld";
 
 const CACHE_NAME_PREFIX = "pulseworld-";
@@ -28,7 +28,7 @@ const CACHE_NAME_PREFIX = "pulseworld-";
 // ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
 // ============================================================
 
-const SHARED_CACHE_NAME = `PulseWorld-Companion #${(Math.random()*100).toFixed(0)}`;
+const SHARED_CACHE_NAME = `PulseWorld-Companion`;
 
 async function getSharedResponse(req) {
   const cache = await caches.open(SHARED_CACHE_NAME);
