@@ -23,7 +23,7 @@ console.log("🌐 Import Source:", import.meta.url);
 // ============================================================================
 // ⭐ SERVICE WORKER BOOT — UPGRADED WITH TIMING + SIGNATURE
 // ============================================================================
-if (typeof navigator !== "undefined" && navigator.serviceWorker && PulseRealm.ServiceWorkerOffline === false) {
+if (typeof navigator !== "undefined" && navigator.serviceWorker) {
   const swStart = performance.now();
 
   navigator.serviceWorker
