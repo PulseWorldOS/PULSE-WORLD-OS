@@ -6478,6 +6478,7 @@ setInterval(async () => {
   if (!online) {
     titlediv.textContent = "PulseBrowser OS (~Drifting~)";
     document.title = "PulseBrowser OS [~Drift~]";
+    pulsepalSpeak("We are Currently Drifting the Multiverse! (Offline)");
   } else {
     titlediv.textContent = "PulseBrowser OS";
     earnerminipanel = document.getElementById("earner-mini-panel");
