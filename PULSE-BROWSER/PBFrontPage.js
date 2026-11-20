@@ -1051,10 +1051,10 @@ async function runLocalAI() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (ALLassumedValue > 0 && !itrunonce) {
+        if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
           const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -1157,10 +1157,10 @@ ${rawPrompt}
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-      if (ALLassumedValue > 0 && !itrunonce) {
+      if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-      } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
         const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -2019,10 +2019,10 @@ async function appendCompanionMessage(area, role, text) {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (ALLassumedValue > 0 && !itrunonce) {
+    if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
       const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -2130,10 +2130,10 @@ CompanionConsoleSend.onclick = async () => {
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-      if (ALLassumedValue > 0 && !itrunonce) {
+      if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-      } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
         const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -2183,10 +2183,10 @@ CompanionConsoleSend.onclick = async () => {
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-      if (ALLassumedValue > 0 && !itrunonce) {
+      if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-      } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
         const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -3538,10 +3538,10 @@ setInterval(async () => {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (ALLassumedValue > 0 && !itrunonce) {
+    if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
       const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -3607,10 +3607,10 @@ setInterval(async () => {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (ALLassumedValue > 0 && !itrunonce) {
+    if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
       const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -4976,10 +4976,10 @@ async function updateModuleIcons(settings, browser) {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-    if (ALLassumedValue > 0 && !itrunonce) {
+    if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-    } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
       const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -6691,10 +6691,10 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (ALLassumedValue > 0 && !itrunonce) {
+        if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
           const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -6753,10 +6753,10 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-        if (ALLassumedValue > 0 && !itrunonce) {
+        if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
           const nowAllTime = new Date().toLocaleTimeString("en-US", {
@@ -7012,10 +7012,10 @@ function CheckBackTab() {
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
 
-        if (ALLassumedValue > 0 && !itrunonce) {
+        if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
-        } else if (ALLassumedValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
           const nowAllTime = new Date().toLocaleTimeString("en-US", {
