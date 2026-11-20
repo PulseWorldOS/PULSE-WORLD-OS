@@ -122,6 +122,17 @@ let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
+function pulsepalSpeak(message) {
+  console.log(message);
+  pulsepaltalk = document.getElementById("pulsepal-talk");
+  pulsepaltalk.textContent = message;
+  setTimeout(() => {
+    pulsepaltalk.style.opacity = "1";
+  }, 800);
+  setTimeout(() => {
+    pulsepaltalk.style.opacity = "0";
+  }, 10000);
+}
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
@@ -135,18 +146,6 @@ if (!online) {
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
   }, 3000);
 }
-function pulsepalSpeak(message) {
-  console.log(message);
-  pulsepaltalk = document.getElementById("pulsepal-talk");
-  pulsepaltalk.textContent = message;
-  setTimeout(() => {
-    pulsepaltalk.style.opacity = "1";
-  }, 800);
-  setTimeout(() => {
-    pulsepaltalk.style.opacity = "0";
-  }, 10000);
-}
-
 const PB_LOG3 = {
   info(label, data) {
     console.log(
