@@ -1063,7 +1063,7 @@ async function runLocalAI() {
             second: "2-digit",
             hour12: true
           });
-          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1169,7 +1169,7 @@ ${rawPrompt}
           second: "2-digit",
           hour12: true
         });
-        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2031,7 +2031,7 @@ async function appendCompanionMessage(area, role, text) {
         second: "2-digit",
         hour12: true
       });
-      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2142,7 +2142,7 @@ CompanionConsoleSend.onclick = async () => {
           second: "2-digit",
           hour12: true
         });
-        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2195,7 +2195,7 @@ CompanionConsoleSend.onclick = async () => {
           second: "2-digit",
           hour12: true
         });
-        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3550,7 +3550,7 @@ setInterval(async () => {
         second: "2-digit",
         hour12: true
       });
-      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3619,7 +3619,7 @@ setInterval(async () => {
         second: "2-digit",
         hour12: true
       });
-      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -4988,7 +4988,7 @@ async function updateModuleIcons(settings, browser) {
         second: "2-digit",
         hour12: true
       });
-      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6703,7 +6703,7 @@ function CheckBackTab() {
             second: "2-digit",
             hour12: true
           });
-          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6765,7 +6765,7 @@ function CheckBackTab() {
             second: "2-digit",
             hour12: true
           });
-          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -7024,7 +7024,7 @@ function CheckBackTab() {
             second: "2-digit",
             hour12: true
           });
-          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch ${nowAllTime}.. ` + lastEarnBatch);
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${Math.random()*100} ${nowAllTime}.. ` + lastEarnBatch);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
