@@ -6910,6 +6910,7 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
+
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
