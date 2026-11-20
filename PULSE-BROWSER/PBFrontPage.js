@@ -16,6 +16,7 @@
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
+let itrunonce = false;
 let engineType = "text";
 let predictionText = "Running Stable";
 let WasmSuccess = false;
@@ -1049,7 +1050,10 @@ async function runLocalAI() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-
+        if (!ALLassumedValue && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -1142,7 +1146,10 @@ ${rawPrompt}
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-
+      if (!ALLassumedValue && !itrunonce) {
+        itrunonce = true;
+        appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -1991,7 +1998,10 @@ async function appendCompanionMessage(area, role, text) {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-
+    if (!ALLassumedValue && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -2089,7 +2099,10 @@ CompanionConsoleSend.onclick = async () => {
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-
+      if (!ALLassumedValue && !itrunonce) {
+        itrunonce = true;
+        appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -2129,7 +2142,10 @@ CompanionConsoleSend.onclick = async () => {
       const cleanValue = typeof ALLassumedValue === 'string' 
         ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
         : Number(ALLassumedValue);
-
+      if (!ALLassumedValue && !itrunonce) {
+        itrunonce = true;
+        appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -3471,7 +3487,10 @@ setInterval(async () => {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-
+    if (!ALLassumedValue && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -3527,7 +3546,10 @@ setInterval(async () => {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-
+    if (!ALLassumedValue && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -4883,7 +4905,10 @@ async function updateModuleIcons(settings, browser) {
     const cleanValue = typeof ALLassumedValue === 'string' 
       ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
       : Number(ALLassumedValue);
-
+    if (!ALLassumedValue && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -6585,7 +6610,10 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-
+        if (!ALLassumedValue && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
@@ -6634,7 +6662,10 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-
+        if (!ALLassumedValue && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
@@ -6879,7 +6910,10 @@ function CheckBackTab() {
         const cleanValue = typeof ALLassumedValue === 'string' 
           ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(ALLassumedValue);
-
+        if (!ALLassumedValue && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
