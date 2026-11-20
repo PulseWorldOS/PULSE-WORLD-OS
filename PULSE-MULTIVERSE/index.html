@@ -1108,7 +1108,7 @@ navigator.serviceWorker.addEventListener('message', event => {
     lastEarnBatch = event.data.earnBatch;
     console.log("Last Earn Batch:", lastEarnBatch);
     earnBatch = document.getElementById("lastEarnBatch");
-    earnBatch.innerHTML = lastEarnBatch;
+    if (earnBatch) earnBatch.innerHTML = lastEarnBatch;
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
 });
