@@ -1,6 +1,6 @@
 // ============================================================================
 //  PBHigherAIWorker.js — Dedicated Web Worker for WebLLM (OvermindPrimes)
-//  Runs completely isolated from PBCompanion Service Worker (MellowEarner,
+//  Runs completely isolated from PBCompanion Service Worker (
 //  WASM Earner SoakTest, WarmBoot) and UI threads.
 // ============================================================================
 import { CreateMLCEngine } from "./OvermindPrimes.js";

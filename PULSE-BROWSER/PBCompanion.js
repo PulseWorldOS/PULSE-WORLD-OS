@@ -15,7 +15,8 @@ import {
   serializeModelsList,
   buildOvermindMessages,
 } from "./PBHigherModels.js";
-// import './MellowEarner.js';
+
+
 let lastEarnBatch = null;
 let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
@@ -2214,11 +2215,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '🏦 PulseEarner - Run Compute Test',
     contexts: ['all']
   });
-  // chrome.contextMenus.create({
-  //   id: 'runMellowEarner',
-  //   title: '🏦 PulseEarner - Sell Bandwidth',
-  //   contexts: ['all']
-  // });
+  
   chrome.contextMenus.create({
     id: 'flipAdblocker',
     title: '📄 PulseNavigator - Flip AdBlocker Switch',
@@ -2238,15 +2235,6 @@ chrome.runtime.onInstalled.addListener(async () => {
       // call a function to handle an update
   }
   **/
-  // const MellowSettings = await PulseMellowEarner.generateSettingsLink();
-  // console.log(MellowSettings);
-  // await PulseMellowEarner.generateAndOpenOptInLink();
-  // await PulseMellowEarner.optIn();
-  // await PulseMellowEarner.start();
-  // const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
-  // const hasOptedIn = await PulseMellowEarner.getOptInStatus();
-  // console.log(hasOptedIn);
-  // chrome.runtime.setUninstallURL(uninstallURl);
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -2276,16 +2264,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } else {
       AdBlockerOff();
     }
-  // } else if (info.menuItemId === 'runMellowEarner') {
-  //   const MellowSettings = await PulseMellowEarner.generateSettingsLink();
-  //   console.log(MellowSettings);
-  //   await PulseMellowEarner.generateAndOpenOptInLink();
-  //   await PulseMellowEarner.optIn();
-  //   await PulseMellowEarner.start();
-  //   const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
-  //   const hasOptedIn = await PulseMellowEarner.getOptInStatus();
-  //   console.log(hasOptedIn);
-  //   PB_LOG2.event("Pulse Mellow Earner: Starting Bandwidth Market..", PulseMellowEarner);
   } else if (info.menuItemId === 'resetBootVideo') {
     const bootVideoRunOnce = false;
     await safeStorageSet({ bootVideoRunOnce });
