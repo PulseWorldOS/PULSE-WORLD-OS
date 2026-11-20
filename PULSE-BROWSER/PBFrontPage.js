@@ -4662,7 +4662,145 @@ async function fetchAndStoreIcon(host, iconUrl) {
     return iconUrl;
   }
 }
+// old favicon from frontpage/etc
+// async function getFavicon(url, flags = {}) {
+//   let u;
 
+//   try {
+//     u = new URL(url);
+//   } catch {
+//     return null;
+//   }
+
+//   let host = u.hostname;
+
+//   // ⭐ Preserve www if explicitly present
+//   if (url.includes("www.") && !host.startsWith("www.")) {
+//     host = "www." + host;
+//   }
+
+//   // ⭐ Default favicon URL
+//   let iconURL = `https://${host}/favicon.ico`;
+
+//   // ⭐ Strip subdomains unless it's "www"
+//   const parts = host.split(".");
+//   if (parts.length > 2 && parts[0] !== "www") {
+//     const root = parts.slice(parts.length - 2).join(".");
+//     iconURL = `https://${root}/favicon.ico`;
+//   }
+
+//   let icon = iconURL;
+
+//   // ⭐ Special external cases
+//   try {
+//     if (host.includes("google.com")) {
+//       iconURL = "https://www.google.com/favicon.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("mail.google.com") || host.includes("gmail.com")) {
+//       iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("chase.com")) {
+//       iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("office.com")) {
+//       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("github.com")) {
+//       iconURL = "https://github.githubassets.com/favicons/favicon.svg";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("youtube.com")) {
+//       iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("discord.com")) {
+//       iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//   } catch {
+//     PBROWSERFAVICON_CACHE[host] = iconURL;
+//     saveCache();
+//     return iconURL;
+//   }
+
+//   // ⭐ Cached → return instantly
+//   if (PBROWSERFAVICON_CACHE[host]) {
+//     console.log(
+//       "%c[PULSEBROWSER OS KERNEL] SAVED FAVICON LOCATED: " + host,
+//       "color:#00FF9C; font-weight:bold; font-family:monospace;"
+//     );
+//     return PBROWSERFAVICON_CACHE[host];
+//   }
+
+//   // ⭐ PulseWorld realm detection (automatic)
+//   const PW_REALMS = {
+//     "pulseworld.net": "PWFavIcon.ico",
+//     "pulseworld.biz": "PWBFavIcon.ico",
+//     "pulseworld.me": "PWIFavIcon.ico",
+//     "pulseworld.money": "PWMFavIcon.ico",
+//     "binaryos.net": "BOFavIcon.ico",
+//     "booleanlogic.net": "BLFavIcon.ico",
+//     "gpuprocessing.net": "GPFavIcon.ico",
+//     "serviceworker.net": "SWFavIcon.ico",
+//     "orbitalmap.net": "OMFavIcon.ico"
+//   };
+
+//   const realmKey = Object.keys(PW_REALMS).find(domain => host.endsWith(domain));
+
+//   try {
+//     if (realmKey) {
+//       iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
+//       icon = await fetchAndStoreIcon(host, iconURL);
+
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     // ⭐ Normal external favicon fetch
+//     icon = await fetchAndStoreIcon(host, iconURL);
+//     PBROWSERFAVICON_CACHE[host] = icon;
+//     saveCache();
+//     return icon;
+
+//   } catch {
+//     PBROWSERFAVICON_CACHE[host] = iconURL;
+//     saveCache();
+//     return iconURL;
+//   }
+// }
 async function getFavicon(url, flags = {}) {
   let u;
 
