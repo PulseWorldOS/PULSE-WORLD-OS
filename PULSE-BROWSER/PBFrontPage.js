@@ -1052,7 +1052,7 @@ async function runLocalAI() {
           : Number(ALLassumedValue);
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1148,7 +1148,7 @@ ${rawPrompt}
         : Number(ALLassumedValue);
       if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
-        appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2000,7 +2000,7 @@ async function appendCompanionMessage(area, role, text) {
       : Number(ALLassumedValue);
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2101,7 +2101,7 @@ CompanionConsoleSend.onclick = async () => {
         : Number(ALLassumedValue);
       if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
-        appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2144,7 +2144,7 @@ CompanionConsoleSend.onclick = async () => {
         : Number(ALLassumedValue);
       if (ALLassumedValue > 0 && !itrunonce) {
         itrunonce = true;
-        appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+        appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3489,7 +3489,7 @@ setInterval(async () => {
       : Number(ALLassumedValue);
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3548,7 +3548,7 @@ setInterval(async () => {
       : Number(ALLassumedValue);
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -4907,7 +4907,7 @@ async function updateModuleIcons(settings, browser) {
       : Number(ALLassumedValue);
     if (ALLassumedValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+      appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6612,7 +6612,7 @@ function CheckBackTab() {
           : Number(ALLassumedValue);
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6664,7 +6664,7 @@ function CheckBackTab() {
           : Number(ALLassumedValue);
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6912,7 +6912,7 @@ function CheckBackTab() {
           : Number(ALLassumedValue);
         if (ALLassumedValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- More PulseEarners have Joined -->");
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
