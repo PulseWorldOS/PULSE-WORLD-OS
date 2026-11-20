@@ -138,6 +138,12 @@ function pulsepalSpeak(message) {
   console.log(message);
   pulsepaltalk = document.getElementById("pulsepal-talk");
   pulsepaltalk.textContent = message;
+  setTimeout(() => {
+    pulsepaltalk.style.opacity = "1";
+  }, 1500);
+  setTimeout(() => {
+    pulsepaltalk.style.opacity = "0";
+  }, 5000);
 }
 const PB_LOG3 = {
   info(label, data) {
