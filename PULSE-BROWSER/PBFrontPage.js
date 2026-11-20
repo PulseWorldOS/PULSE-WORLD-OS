@@ -135,15 +135,13 @@ if (!online) {
   }, 3000);
 }
 function pulsepalSpeak(message) {
+  pulsepaltalk.style.opacity = "1";
   console.log(message);
   pulsepaltalk = document.getElementById("pulsepal-talk");
   pulsepaltalk.textContent = message;
   setTimeout(() => {
-    pulsepaltalk.style.opacity = "1";
-  }, 1500);
-  setTimeout(() => {
     pulsepaltalk.style.opacity = "0";
-  }, 5000);
+  }, 10000);
 }
 const PB_LOG3 = {
   info(label, data) {
