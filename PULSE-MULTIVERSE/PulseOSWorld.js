@@ -13,13 +13,90 @@ import "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-BAND/PULSE
 import "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-AI/PULSE-AI-ORGANISM.js";
 import "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-OS/PulseOS-v30.js";
 
-
 console.groupCollapsed(
   "%c[PULSEWORLD::OS] Importing PulseOSWorld.js...",
   "color:#00FFCC; font-weight:bold; font-family:monospace;"
 );
 
 console.log("🌐 Import Source:", import.meta.url);
+
+// ============================================================================
+// ⭐ SERVICE WORKER BOOT — UPGRADED WITH TIMING + SIGNATURE
+// ============================================================================
+if (typeof navigator !== "undefined" && navigator.serviceWorker && PulseRealm.ServiceWorkerOffline === false) {
+  const swStart = performance.now();
+
+  navigator.serviceWorker
+    .register("./DriftCompanion.js", { updateViaCache: "none" })
+    .then(reg => {
+      console.log(
+        "%c🗄️ PULSE CACHE/DB SYSTEM v60 - [PULSEWORLD] Service Worker Registered",
+        "color:#00FF9C; font-weight:bold; font-family:monospace;"
+      );
+
+      console.log(
+        "%c[PULSEWORLD::Speed] SW Registration Time:",
+        "color:#00FFCC; font-family:monospace;",
+        (performance.now() - swStart).toFixed(2) + "ms"
+      );
+
+      if (reg.waiting) {
+        reg.waiting.postMessage({ type: "SKIP_WAITING" });
+      }
+
+      reg.addEventListener("updatefound", () => {
+        const newSW = reg.installing;
+
+        newSW.addEventListener("statechange", () => {
+          if (newSW.state === "activated") {
+            console.log(
+              "%c🗄️ PULSE CACHE/DB SYSTEM v60 - [PULSEWORLD] SW → Activated Instantly!",
+              "color:#00FF9C; font-weight:bold; font-family:monospace;"
+            );
+
+            navigator.serviceWorker.controller?.postMessage({
+              type: "PULSE_WARM_BOOT",
+              ts: Date.now()
+            });
+
+            navigator.serviceWorker.controller?.postMessage({
+              type: "PULSE_PREFETCH",
+              urls: [
+                "/PulseWorldReality.txt",
+                "/PULSE-ENGINE-BLOCK.txt",
+                "/PulseWorldScanner.txt",
+                "/PulseWorldInventory.txt",
+                "/PulseWorldChallenge.txt",
+                "/PulseWorldHistory.txt",
+                "/PulseWorldMeshLink.txt",
+                "/PulseWorldEmail.txt",
+                "/PulsePalSettings.txt",
+                "/PulseWorldAssets.txt",
+                "/PulseWorldRewards.txt",
+                "/PulseWorldVault.txt",
+                "/PulseWorldFounders.txt",
+                "/PulseWorldTeam.txt",
+                
+              ]
+            });
+          }
+        });
+      });
+
+      if (reg.active) {
+        console.log(
+          "%c🗄️ PULSE CACHE/DB SYSTEM v60 - [PULSEWORLD] SW → Already Active (Warm Now)",
+          "color:#00FF9C; font-weight:bold; font-family:monospace;"
+        );
+
+        navigator.serviceWorker.controller?.postMessage({
+          type: "PULSE_WARM_BOOT",
+          ts: Date.now()
+        });
+      }
+    })
+    .catch(() => {});
+}
 
 // ---------------------------------------------------------------------------
 // REALM INITIALIZATION (SAFE / IDEMPOTENT)
