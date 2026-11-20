@@ -387,21 +387,10 @@ self.addEventListener('message', event => {
         newValue: WeassumedValue
       });
 
-      let valueDiv = document.getElementById("assumedValue");
-      let baseTitle = document.title.split("-")[0].trim();
-      if (valueDiv) {
-        document.title = baseTitle + ` - [Earn: ${WeassumedValue}]`;
-        setInterval(() => {
-          valueDiv = document.getElementById("assumedValue");
-          document.title = baseTitle + ` - [Earn: ${WeassumedValue}]`;
-        }, 1500);
-      } else {
-        document.title = baseTitle + " - EarnBand ¢";
-        setInterval(() => {
-          document.title = document.title.replace("...","");
-          document.title = document.title + ".";
-        }, 1500);
-      }
+      document.title = `*PulseWorld.Net - [Earn: ${WeassumedValue}]`;
+      setInterval(() => {
+        document.title = `*PulseWorld.Net - [Earn: ${WeassumedValue}]`;
+      }, 1500);
     }
   }
 
