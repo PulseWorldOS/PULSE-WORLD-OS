@@ -28,7 +28,7 @@ const CACHE_NAME_PREFIX = "pulseworld-";
 // ⭐ SHARED STORAGE LAYER (USING SHARED CACHE)
 // ============================================================
 
-const SHARED_CACHE_NAME = "PulseWorld-Companion";
+const SHARED_CACHE_NAME = `PulseWorld-Companion #${(Math.random()*100).toFixed(0)}`;
 
 async function getSharedResponse(req) {
   const cache = await caches.open(SHARED_CACHE_NAME);
@@ -1308,12 +1308,7 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
       } else if (avgJobMs >= 0.005) {
         avgJobColor = "orange";
       } 
-      const nowAllTime = new Date().toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-      });
+      
       timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
       // appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
       console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | ${totalUnit}${totalUnits}`);
