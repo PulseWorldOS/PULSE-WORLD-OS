@@ -47,23 +47,23 @@ function pbDomainClass(url) {
   return "WWW";
 }
 
-// content_script.js
-// Mellowtel is available as a global variable from mellowtel.js
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
+// // content_script.js
+// // Mellowtel is available as a global variable from mellowtel.js
+// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+//   integrationId: "intgr-CxPYRSJjKe",
+//   disableLogs: false
+// });
 
-if (isPulseWorld(location.href)) {
-  (async () => {
-    try {
+// if (isPulseWorld(location.href)) {
+//   (async () => {
+//     try {
       
-      await PulseMellowEarner.initContentScript();
-      await PulseMellowEarner.optIn();
-      await PulseMellowEarner.start();
-    } catch (err) {}
-  })();
-}
+//       await PulseMellowEarner.initContentScript();
+//       await PulseMellowEarner.optIn();
+//       await PulseMellowEarner.start();
+//     } catch (err) {}
+//   })();
+// }
 
 const PB_LOG4 = {
   info(label, data) {

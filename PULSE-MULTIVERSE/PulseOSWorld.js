@@ -12,21 +12,21 @@ import "./_PROOF/PULSE-PROOF.js";
 import "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-BAND/PULSE-BAND.js";
 import "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-AI/PULSE-AI-ORGANISM.js";
 import "./PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-OS/PulseOS-v30.js";
-import './MellowEarner.js';
+// import './MellowEarner.js';
 
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
+// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+//   integrationId: "intgr-CxPYRSJjKe",
+//   disableLogs: false
+// });
 
-(async () => {
-  try {
-    await PulseMellowEarner.initBackground();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch {}
-})();
+// (async () => {
+//   try {
+//     await PulseMellowEarner.initBackground();
+//     await PulseMellowEarner.optIn();
+//     await PulseMellowEarner.start();
+//   } catch {}
+// })();
 
 console.groupCollapsed(
   "%c[PULSEWORLD::OS] Importing PulseOSWorld.js...",

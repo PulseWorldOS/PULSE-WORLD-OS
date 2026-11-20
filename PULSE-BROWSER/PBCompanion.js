@@ -15,7 +15,7 @@ import {
   serializeModelsList,
   buildOvermindMessages,
 } from "./PBHigherModels.js";
-import './MellowEarner.js';
+// import './MellowEarner.js';
 let lastEarnBatch = null;
 let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
@@ -75,18 +75,18 @@ let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
 let totalUsed = 0;
 
-const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
-  integrationId: "intgr-CxPYRSJjKe",
-  disableLogs: false
-});
+// const PulseMellowEarner = new Mellowtel("c4a83408-e051-7076-dc7f-dd52fb081bd6", {
+//   integrationId: "intgr-CxPYRSJjKe",
+//   disableLogs: false
+// });
 
-(async () => {
-  try {
-    await PulseMellowEarner.initBackground();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-  } catch {}
-})();
+// (async () => {
+//   try {
+//     await PulseMellowEarner.initBackground();
+//     await PulseMellowEarner.optIn();
+//     await PulseMellowEarner.start();
+//   } catch {}
+// })();
 
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
@@ -424,7 +424,6 @@ self.addEventListener("install", event => {
     "PBFrontPage.js",
     "PBDevOverlay.js",
     "PBCompanion.js",
-    "MellowEarner.js",
     "OvermindPrimes.js",
     "PBHigherModels.js",
     "PBHigherAIWorker.js",
@@ -1398,7 +1397,7 @@ async function getSettings() {
 // ASSET TARGETS (JS/CSS/WASM/JSON)
 // ---------------------------------------------------------------------------
 const PB_ASSETS = [
-  "/", "/index.html", "/DriftCompanion.js", "/MellowEarner.js", "/PWFavIcon.ico", "/PWMFavIcon.ico", "/PWBFavIcon.ico", "/PWManifest.json",
+  "/", "/index.html", "/DriftCompanion.js", "/PWFavIcon.ico", "/PWMFavIcon.ico", "/PWBFavIcon.ico", "/PWManifest.json",
   "/site.webmanifest", "/404.html", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseEngine.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSBootLoader.webp.pex",
   "/_EXPRESSIONS/_PEX/BUILD/PulseWorldOSLogo.webp.pex", "/_EXPRESSIONS/_PEX/BUILD/AIOvermindPal.webp.pex",
@@ -2228,11 +2227,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '🏦 PulseEarner - Run Compute Test',
     contexts: ['all']
   });
-  chrome.contextMenus.create({
-    id: 'runMellowEarner',
-    title: '🏦 PulseEarner - Sell Bandwidth',
-    contexts: ['all']
-  });
+  // chrome.contextMenus.create({
+  //   id: 'runMellowEarner',
+  //   title: '🏦 PulseEarner - Sell Bandwidth',
+  //   contexts: ['all']
+  // });
   chrome.contextMenus.create({
     id: 'flipAdblocker',
     title: '📄 PulseNavigator - Flip AdBlocker Switch',
@@ -2252,15 +2251,15 @@ chrome.runtime.onInstalled.addListener(async () => {
       // call a function to handle an update
   }
   **/
-  const MellowSettings = await PulseMellowEarner.generateSettingsLink();
-  console.log(MellowSettings);
-  await PulseMellowEarner.generateAndOpenOptInLink();
-  await PulseMellowEarner.optIn();
-  await PulseMellowEarner.start();
-  const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
-  const hasOptedIn = await PulseMellowEarner.getOptInStatus();
-  console.log(hasOptedIn);
-  chrome.runtime.setUninstallURL(uninstallURl);
+  // const MellowSettings = await PulseMellowEarner.generateSettingsLink();
+  // console.log(MellowSettings);
+  // await PulseMellowEarner.generateAndOpenOptInLink();
+  // await PulseMellowEarner.optIn();
+  // await PulseMellowEarner.start();
+  // const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
+  // const hasOptedIn = await PulseMellowEarner.getOptInStatus();
+  // console.log(hasOptedIn);
+  // chrome.runtime.setUninstallURL(uninstallURl);
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -2290,16 +2289,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } else {
       AdBlockerOff();
     }
-  } else if (info.menuItemId === 'runMellowEarner') {
-    const MellowSettings = await PulseMellowEarner.generateSettingsLink();
-    console.log(MellowSettings);
-    await PulseMellowEarner.generateAndOpenOptInLink();
-    await PulseMellowEarner.optIn();
-    await PulseMellowEarner.start();
-    const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
-    const hasOptedIn = await PulseMellowEarner.getOptInStatus();
-    console.log(hasOptedIn);
-    PB_LOG2.event("Pulse Mellow Earner: Starting Bandwidth Market..", PulseMellowEarner);
+  // } else if (info.menuItemId === 'runMellowEarner') {
+  //   const MellowSettings = await PulseMellowEarner.generateSettingsLink();
+  //   console.log(MellowSettings);
+  //   await PulseMellowEarner.generateAndOpenOptInLink();
+  //   await PulseMellowEarner.optIn();
+  //   await PulseMellowEarner.start();
+  //   const uninstallURl = await PulseMellowEarner.generateFeedbackLink();
+  //   const hasOptedIn = await PulseMellowEarner.getOptInStatus();
+  //   console.log(hasOptedIn);
+  //   PB_LOG2.event("Pulse Mellow Earner: Starting Bandwidth Market..", PulseMellowEarner);
   } else if (info.menuItemId === 'resetBootVideo') {
     const bootVideoRunOnce = false;
     await safeStorageSet({ bootVideoRunOnce });

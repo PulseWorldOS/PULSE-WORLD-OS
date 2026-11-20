@@ -39,7 +39,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["MellowEarner.js", "PBContent.js"],
+      "js": ["PBContent.js"],
       "run_at": "document_start",
       "all_frames": true
     }
@@ -109,7 +109,6 @@
         "PBRouter.js",
         "PBPopup.js",
         "PBCompanion.js",
-        "MellowEarner.js",
         "ReCog.webp",
         "AIPanel.webp",
         "OvermindPrimes.js",

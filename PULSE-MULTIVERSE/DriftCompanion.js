@@ -307,7 +307,6 @@ self.addEventListener('install', event => {
         '/PULSE-MULTIVERSAL-TOUCH.js',
         '/PULSE-UNIVERSAL-TOUCH/PULSE-UNIVERSAL-TOUCH-GATE.js',
         '/_PROOF/PULSE-PROOF.js',
-        '/MellowEarner.js',
         '/_CREATION_BARRIER/PULSE-BOOT-BARRIER.js',
         '/_CREATION_BARRIER/PULSE-BOOT-WORLD.js',
         '/_CREATION_BARRIER/PULSE-BOOT-PORTAL.js',
