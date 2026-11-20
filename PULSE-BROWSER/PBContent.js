@@ -480,7 +480,7 @@ function HelperHud() {
   if (wrap) wrap.style.display = "block";
   if (body) body.style.display = "block";
 
-  setTimeout(() => {
+  setTimeout(async () => {
     fadeHUD();
   }, 6000);
 }
@@ -1120,7 +1120,7 @@ function fadeHUD(vid) {
   if (vid) vid.muted = true;
   if (vid) vid.style.display = "block";
 
-  setTimeout(() => {
+  setTimeout(async () => {
     if (vid) vid.style.display = "none";
   }, 5000);
 }
