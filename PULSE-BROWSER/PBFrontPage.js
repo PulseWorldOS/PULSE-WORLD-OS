@@ -2346,17 +2346,20 @@ function getReadableName(url) {
 
     if (HigherAuthorityShown) {
       HigherStatusPanel = document.getElementById("higherStatusPanel");
+      HigherPanelSwitch.style.display = "block";
       if (HigherStatusPanel) {
         if (HigherPanelShown) {
           pbPulseDetailsEarn.style.pointerEvents = "none";
           HigherPanelSwitch.style.opacity = "0.3";
-          HigherStatusPanel.style.display = "block"
+          HigherStatusPanel.style.display = "block";
         } else {
           pbPulseDetailsEarn.style.pointerEvents = "auto";
           HigherPanelSwitch.style.opacity = "1";
-          HigherStatusPanel.style.display = "none"
+          HigherStatusPanel.style.display = "none";
         }
       }
+    } else {
+       HigherPanelSwitch.style.display = "none";
     }
     
     if (EarnDetailsHidden) {
@@ -2506,12 +2509,12 @@ function getReadableName(url) {
           HigherPanelShown = true;
           pbPulseDetailsEarn.style.pointerEvents = "none";
           HigherPanelSwitch.style.opacity = "0.3";
-          HigherStatusPanel.style.display = "block"
+          HigherStatusPanel.style.display = "block";
         } else {
           HigherPanelShown = false;
           pbPulseDetailsEarn.style.pointerEvents = "auto";
           HigherPanelSwitch.style.opacity = "1";
-          HigherStatusPanel.style.display = "none"
+          HigherStatusPanel.style.display = "none";
         }
         PulsesafeStorageSet({ HigherPanelShown });
       };
