@@ -1079,7 +1079,7 @@ async function runLocalAI() {
   Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
 - Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
   that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
-- You must try to keep your response under 2000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.
+- You must try to keep your response under 3000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.
 
 [USER QUERY]
 ${rawPrompt}
@@ -1089,9 +1089,7 @@ ${rawPrompt}
     const response = await aiSession.prompt(wrappedPrompt);
     
     console.log("🧠 AI Overmind:", response);
-    setTimeout(() => {
-      pulsepalSpeak(response);
-    }, 2000);
+    pulsepalSpeak(response);
     // 4. Update the DOM elements smoothly
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     let CompanionTitle = document.getElementById("CompanionTitle");
