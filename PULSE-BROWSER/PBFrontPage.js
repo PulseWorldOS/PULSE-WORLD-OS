@@ -121,7 +121,7 @@ let HigherPanelSwitch = document.getElementById("SwitchPanel");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
-const pulsepaltalk = document.getElementById("pulsepal-talk");
+let pulsepaltalk = document.getElementById("pulsepal-talk");
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
@@ -136,6 +136,7 @@ if (!online) {
 }
 function pulsepalSpeak(message) {
   console.log(message);
+  pulsepaltalk = document.getElementById("pulsepal-talk");
   pulsepaltalk.textContent = message;
 }
 const PB_LOG3 = {
