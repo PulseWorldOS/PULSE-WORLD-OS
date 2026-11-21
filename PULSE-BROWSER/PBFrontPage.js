@@ -2477,7 +2477,7 @@ function getReadableName(url) {
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
           pbPulseMessenger.style.transform = "translate(0px, -550px)";
-          safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
+          if (EarnDetailsHidden) safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
         }, 750);
