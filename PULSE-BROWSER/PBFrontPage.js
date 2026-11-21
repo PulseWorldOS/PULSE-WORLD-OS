@@ -2418,7 +2418,7 @@ function getReadableName(url) {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
     const MessengerVideo = await chrome.storage.local.get(["messengerVideoRunOnce"]);
-    if (MessengerVideo) messengerVideoRunOnce = Boot.messengerVideoRunOnce ?? false;
+    if (MessengerVideo) messengerVideoRunOnce = MessengerVideo.messengerVideoRunOnce ?? false;
     messengerpanel.style.opacity = "1";
 
     if (!messengerVideoRunOnce) {
@@ -2433,7 +2433,7 @@ function getReadableName(url) {
           messengerBootVideo.pause();
           messengerBootVideo.currentTime = 0;
         } catch (err) {
-          console.warn("BootVideo pause error:", err);
+          console.warn("MessengerVideo pause error:", err);
         }
 
         // Hide the video membrane
