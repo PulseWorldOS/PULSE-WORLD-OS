@@ -101,6 +101,8 @@ let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion"
 let MessengerMessages = document.getElementById("MessengerMessage");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+let PulseMessengerMessages = document.getElementById("PulseMessengerMessages");
+let HomeMessenger = document.getElementById("HomeMessenger");
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
@@ -2686,6 +2688,7 @@ async function GetThisMessengerDone() {
       } else {
         MessengerHidden = false;
         messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+        
         // setTimeout(() => {
         //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
         // }, 400);
@@ -2724,6 +2727,14 @@ async function GetThisMessengerDone() {
       }
       console.log("Messenger State:", MessengerHidden);
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
+    };
+
+    PulseMessengerMessages.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+    };
+
+    HomeMessenger.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
     };
   }
 
