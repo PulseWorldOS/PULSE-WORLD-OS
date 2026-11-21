@@ -1076,6 +1076,84 @@ async function fetchAndStoreIcon(host, iconUrl) {
   }
 }
 
+/**
+ * 1. Sets up Google Auth with minimal 'openid' scope (anonymous ID only).
+ * @param {string} clientId - Your Google Cloud OAuth 2.0 Client ID.
+ * @param {string} buttonElementId - The HTML ID of the container for the button.
+ * @param {function(string): void} onIdentityReady - Callback receiving the opaque user ID.
+ */
+function setupGoogleIdentity(clientId, buttonElementId, onIdentityReady) {
+  window.onload = () => {
+    google.accounts.id.initialize({
+      client_id: clientId,
+      // Requesting no extra scopes defaults to basic openid, keeping email/name private
+      callback: (response) => {
+        const anonymousId = extractOpaqueSubId(response.credential);
+        if (anonymousId) {
+          onIdentityReady(anonymousId);
+        }
+      }
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById(buttonElementId),
+      { theme: "outline", size: "large" }
+    );
+  };
+}
+
+/**
+ * Helper: Decodes the JWT payload to extract ONLY the opaque 'sub' ID.
+ */
+function extractOpaqueSubId(jwtToken) {
+  try {
+    const base64Url = jwtToken.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(window.atob(base64));
+    
+    // 'sub' is a permanent, unique Google Account ID string (e.g., "110248495921238986420")
+    return payload.sub || null;
+  } catch (error) {
+    console.error("Failed to parse identity token:", error);
+    return null;
+  }
+}
+
+/**
+ * 2. Checks if two opaque Google identities are the exact same user.
+ * @param {string} idA - First opaque 'sub' ID (e.g., from Desktop).
+ * @param {string} idB - Second opaque 'sub' ID (e.g., from Phone).
+ * @returns {boolean} True if both belong to the exact same Google account.
+ */
+function areIdentitiesEqual(idA, idB) {
+  if (typeof idA !== 'string' || typeof idB !== 'string') return false;
+  if (idA.trim() === '' || idB.trim() === '') return false;
+  
+  return idA === idB;
+}
+
+
+async function getUserConformity() {
+  chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, (userInfo) => {
+    if (!userInfo.id) {
+      console.log("Not signed into Chrome.");
+      return;
+    }
+
+    // userInfo.id is an opaque string (e.g., "108294719283746519283")
+    // userInfo.email is "" because "identity.email" was omitted
+    const currentId = userInfo.id;
+
+    chrome.storage.local.get(['savedUserId'], (result) => {
+      if (result.savedUserId === currentId) {
+        console.log("Match: Same Google account.");
+      } else {
+        console.log("Mismatch: Different Google account (or first run).");
+        chrome.storage.local.set({ savedUserId: currentId });
+      }
+    });
+  });
+}
 
 async function getFavicon(url, flags = {}) {
   let u;

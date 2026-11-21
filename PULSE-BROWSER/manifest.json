@@ -49,6 +49,7 @@
     "tabs",
     "downloads",
     "geolocation",
+    "identity",
     "storage",
     "unlimitedStorage",
     "contextMenus",
