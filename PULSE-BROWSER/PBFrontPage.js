@@ -2523,18 +2523,19 @@ function getReadableName(url) {
     console.log("Earn Details State:", EarnDetailsHidden);
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
+    const identityName = document.getElementById("identityName");
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
       console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
-      const identityName = document.getElementById("identityName");
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-      identityName.onclick = async () => {
-        openNamedTab("PulseIdentity", identityLink);
-        await PBUniversalBoost.warmOrigin(identityLink);
-      };
     }
+
+    identityName.onclick = async () => {
+      openNamedTab("PulseIdentity", identityLink);
+      await PBUniversalBoost.warmOrigin(identityLink);
+    };
     
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
