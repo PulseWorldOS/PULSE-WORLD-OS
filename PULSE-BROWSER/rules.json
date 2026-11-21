@@ -5,6 +5,7 @@
     "action": {
       "type": "modifyHeaders",
       "requestHeaders": [
+        { "header": "origin", "operation": "remove" },
         { "header": "referer", "operation": "remove" },
         { "header": "sec-fetch-dest", "operation": "set", "value": "document" },
         { "header": "sec-fetch-mode", "operation": "set", "value": "navigate" },
