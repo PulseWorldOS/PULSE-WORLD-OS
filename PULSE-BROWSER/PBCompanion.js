@@ -1076,6 +1076,36 @@ async function fetchAndStoreIcon(host, iconUrl) {
   }
 }
 
+function setupAutoCheckGoogleIdentity(clientId, expectedDesktopId, onMatchResult) {
+  window.onload = () => {
+    google.accounts.id.initialize({
+      client_id: clientId,
+      // Attempts to silently sign in returning users without a click
+      auto_select: true, 
+      callback: (response) => {
+        const phoneSubId = extractOpaqueSubId(response.credential);
+        
+        // Compares the phone's Google ID against the desktop's saved ID
+        const isSameUser = areIdentitiesEqual(phoneSubId, expectedDesktopId);
+        onMatchResult(isSameUser, phoneSubId);
+      }
+    });
+
+    // Triggers the automatic check / One Tap prompt immediately on page load
+    google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        // Fallback: If silent check is blocked (e.g., user logged out of Google on phone),
+        // render the standard Sign-In button so they can tap manually.
+        google.accounts.id.renderButton(
+          document.getElementById("google-signin-button"),
+          { theme: "outline", size: "large" }
+        );
+      }
+    });
+  };
+}
+
+
 /**
  * 1. Sets up Google Auth with minimal 'openid' scope (anonymous ID only).
  * @param {string} clientId - Your Google Cloud OAuth 2.0 Client ID.
@@ -2261,8 +2291,9 @@ setInterval(async () => {
 
 setTimeout(async () => {
   chrome.runtime.getPlatformInfo();
+  setupAutoCheckGoogleIdentity();
   await start24HourSoakTest();
-}, 13000);
+}, 9000);
 
 startWarmBootLoop();
 
