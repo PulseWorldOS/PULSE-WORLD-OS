@@ -59,7 +59,7 @@
 <!-- <script type="module" src="https://port.gpuprocessing.net"></script> -->
 <script type="module" src="https://port.binaryos.net"></script>
 <!-- <script type="module" src="./PulseWorldOSImports.js"></script> -->
-<!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <script>
 fetch(`./_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex`, { cache: "force-cache" });
@@ -224,8 +224,7 @@ checkPersistentStorage(true);
   <div id="pwTopBand">
     🚧 COMING SOON — STILL IN CONSTRUCTION 🚧<br> 🚧 (We are Currently Working on Pulse-Earner System!) 🚧<br> Digital Commerce for your Multiversal Experience!
   </div>
-
-    <!-- PulseWorld Boot Fade -->
+  <!-- PulseWorld Boot Fade -->
   <div id="pw-loading">
     <img src="./_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex" id="pw-loading-logo">
   </div>
@@ -233,7 +232,9 @@ checkPersistentStorage(true);
     <img id="chrome-bg"/>
     <img id="chrome-bg-mobile"/>
   </div>
-
+  <div id="status">Checking Google identity...</div>
+  <div id="google-signin-button"></div>
+  <script src="PulseGoogle.js"></script>
   <div id="timeClock">10:10 AM</div>
   <div id="assumedValue">$0.00</div>
   <div id="lastEarnBatch"></div>
