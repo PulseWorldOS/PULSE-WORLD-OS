@@ -2425,7 +2425,7 @@ function getReadableName(url) {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -555px)";
+        pbPulseMessenger.style.transform = "translate(0px, -550px)";
         setTimeout(() => {
           pulsepaltalk.style.opacity = "1";
         }, 1500);
@@ -2482,7 +2482,7 @@ function getReadableName(url) {
           pbPulseMessenger.id = "pbPulseMessenger";
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
-          pbPulseMessenger.style.transform = "translate(0px, -548px)";
+          pbPulseMessenger.style.transform = "translate(0px, -550px)";
           setTimeout(() => {
             pulsepaltalk.style.opacity = "1";
           }, 1500);
