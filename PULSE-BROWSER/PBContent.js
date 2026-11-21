@@ -562,30 +562,6 @@ function warmCSSImages() {
   });
 }
 
-
-async function getUserConformity() {
-  chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, (userInfo) => {
-    if (!userInfo.id) {
-      console.log("Not signed into Chrome.");
-      return;
-    }
-
-    // userInfo.id is an opaque string (e.g., "108294719283746519283")
-    // userInfo.email is "" because "identity.email" was omitted
-    const currentId = userInfo.id;
-
-    chrome.storage.local.get(['savedUserId'], (result) => {
-      if (result.savedUserId === currentId) {
-        console.log("Match: Same Google account.");
-      } else {
-        console.log("Mismatch: Different Google account (or first run).");
-        chrome.storage.local.set({ savedUserId: currentId });
-      }
-    });
-  });
-}
-
-
 function getLocalMemoryLayer() {
   if (!performance || !performance.memory) {
     return { status: "Standard Engine Active" };
@@ -692,7 +668,6 @@ async function createPulseScreen() {
 
   setTimeout(async () => {
     fadeHUD(vid);
-    getUserConformity();
   }, 4000);
 }
 
