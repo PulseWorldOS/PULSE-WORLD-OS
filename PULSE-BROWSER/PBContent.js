@@ -715,6 +715,17 @@ async function runEngineTest(silent = false) {
   }
 }
 
+function currency(amount, displayCurrency = "$") {
+  let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
+  const num = Number(raw);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(3);
+
+  let cur = String(displayCurrency || "$").trim().toUpperCase();
+  cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
+
+  return `${cur}${safe}`;
+}
+
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   if (soakTestTimer) {
