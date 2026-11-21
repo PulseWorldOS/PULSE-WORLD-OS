@@ -111,6 +111,7 @@ let earnerwalletpanel = document.getElementById("earner-mini-wallet-panel");
 const messengerpanel = document.getElementById("messenger-panel");
 let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
+const exitinnerpanel = document.getElementById("exit-inner-panel");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
@@ -2567,6 +2568,30 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.play();
       }, 0);
     }
+
+    exitinnerpanel.onclick = async () => {
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "70px";
+      pbPulseMessenger.style.height = "70px";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "none";
+      messengerinnerpanel.style.pointerEvents = "none";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "none";
+      messengerpanel.style.background = "transparent";
+      messengerpanel.style.backdropFilter = "none";
+      messengerpanel.style.boxShadow = "none";
+      messengerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";
+        pbPulseMessenger.style.opacity = "1";
+        pbPulseMessenger.style.transform = "translate(0px, -540px)";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 0);
+    };
     
     pbPulseMessenger.onclick = async () => {
       if (!MessengerHidden) {
@@ -2598,11 +2623,14 @@ async function GetThisMessengerDone() {
         MessengerHidden = false;
         messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
         setTimeout(() => {
-          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
         }, 400);
         setTimeout(() => {
+          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+        }, 1200);
+        setTimeout(() => {
           messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        }, 1000);
+        }, 2500);
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
