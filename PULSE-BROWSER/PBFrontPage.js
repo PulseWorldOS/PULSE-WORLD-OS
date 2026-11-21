@@ -127,7 +127,6 @@ let pulsepaltalk = document.getElementById("pulsepal-talk");
 function pulsepalSpeak(message) {
   console.log(message);
   pulsepaltalk = document.getElementById("pulsepal-talk");
-  message = message.replace("Fellow Multiversal Drifter", MyPulseIdentity.name);
   pulsepaltalk.innerHTML = message;
   setTimeout(() => {
     pulsepaltalk.style.opacity = "1";
@@ -149,7 +148,6 @@ if (!online) {
   safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
 } else {
   titlediv.textContent = "PulseBrowser OS";
-  if (MyPulseIdentity) welcomemessage.textContent = `Welcome, ${MyPulseIdentity.name}!`;
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
@@ -6930,7 +6928,6 @@ setInterval(async () => {
     safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
   } else {
     titlediv.textContent = "PulseBrowser OS";
-    if (MyPulseIdentity) welcomemessage.textContent = `Welcome, ${MyPulseIdentity.name}!`;
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
     setInterval(() => {
