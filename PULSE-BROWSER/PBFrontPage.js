@@ -2415,7 +2415,11 @@ function getReadableName(url) {
         pbPulseMessenger.style.width = "70px";
         pbPulseMessenger.style.height = "70px";
         pbPulseMessenger.style.border = "2px solid #000";
-        messengerpanel.style.display = "none";
+        // messengerpanel.style.display = "none";
+        messengerpanel.style.background = "transparent";
+        messengerpanel.style.backdropFilter = "none";
+        messengerpanel.style.boxShadow = "none";
+        messengerpanel.style.border = "none";
         messengerinnerpanel.style.background = "transparent";
         messengerinnerpanel.style.backdropFilter = "none";
         messengerinnerpanel.style.boxShadow = "none";
@@ -2424,7 +2428,7 @@ function getReadableName(url) {
           pbPulseMessenger.id = "pbPulseMessenger";
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
-          pbPulseMessenger.style.transform = "translate(220px, 31px)";
+          pbPulseMessenger.style.transform = "translate(0px, -561px)";
           setTimeout(() => {
             pulsepaltalk.style.opacity = "1";
           }, 1500);
@@ -2444,7 +2448,11 @@ function getReadableName(url) {
         pbPulseMessenger.style.transform = "";
         pbPulseMessenger.style.opacity = "0.25";
         pbPulseMessenger.style.border = "2px solid #000";
-        messengerpanel.style.display = "flex";
+        // messengerpanel.style.display = "flex";
+        messengerpanel.style.background = "";
+        messengerpanel.style.backdropFilter = "";
+        messengerpanel.style.boxShadow = "";
+        messengerpanel.style.border = "";
         messengerinnerpanel.style.background = "";
         messengerinnerpanel.style.backdropFilter = "";
         messengerinnerpanel.style.boxShadow = "";
