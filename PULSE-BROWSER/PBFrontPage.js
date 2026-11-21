@@ -16,6 +16,7 @@ let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
+let messengerVideoRunOnce = false;
 let CompanionMessage = null;
 let realmSummary = null;
 let higherAIDisplay = null;
@@ -207,6 +208,7 @@ const PB_LOG3 = {
 async function BootMeNowPlease() {
   const Boot = await chrome.storage.local.get(["bootVideoRunOnce"]);
   if (Boot) bootVideoRunOnce = Boot.bootVideoRunOnce ?? false;
+
   if (!bootVideoRunOnce) {
     bootVideo.onclick = async () => {
       console.log(
@@ -2414,7 +2416,42 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
+    const MessengerVideo = await chrome.storage.local.get(["messengerVideoRunOnce"]);
+    if (MessengerVideo) messengerVideoRunOnce = Boot.messengerVideoRunOnce ?? false;
     messengerpanel.style.opacity = "1";
+
+    if (!messengerVideoRunOnce) {
+      MessengerVideo.onclick = async () => {
+        console.log(
+          "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
+          "color:#H02FHA; font-weight:bold; font-family:monospace;"
+        );
+
+        try {
+          // Stop playback immediately
+          MessengerVideo.pause();
+          MessengerVideo.currentTime = 0;
+        } catch (err) {
+          console.warn("BootVideo pause error:", err);
+        }
+
+        // Hide the video membrane
+        MessengerVideo.style.opacity = "0";
+        MessengerVideo.style.display = "none";
+      };
+    
+      setTimeout(async () => {
+        // Hide the video membrane
+        MessengerVideo.style.opacity = "0";
+        MessengerVideo.style.display = "none";
+        messengerVideoRunOnce = true;
+        await PulsesafeStorageSet({ messengerVideoRunOnce });
+      }, 5000);
+    } else {
+      // Hide the video membrane
+      MessengerVideo.style.opacity = "0";
+      MessengerVideo.style.display = "none";
+    }
 
     if (MessengerHidden) {
       pbPulseMessenger.id = "pbPulseMessenger";
