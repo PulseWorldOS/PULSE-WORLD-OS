@@ -1070,7 +1070,7 @@ async function runLocalAI() {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
           const identityName = document.getElementById("identityName");
-          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -1184,7 +1184,7 @@ ${rawPrompt}
         MyPulseIdentity = response.MyPulseIdentity;
         PulsesafeStorageSet({ MyPulseIdentity }); 
         const identityName = document.getElementById("identityName");
-        identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+        identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2054,7 +2054,7 @@ async function appendCompanionMessage(area, role, text) {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
       const identityName = document.getElementById("identityName");
-      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -2173,7 +2173,7 @@ CompanionConsoleSend.onclick = async () => {
         MyPulseIdentity = response.MyPulseIdentity;
         PulsesafeStorageSet({ MyPulseIdentity }); 
         const identityName = document.getElementById("identityName");
-        identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+        identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2234,7 +2234,7 @@ CompanionConsoleSend.onclick = async () => {
         MyPulseIdentity = response.MyPulseIdentity;
         PulsesafeStorageSet({ MyPulseIdentity }); 
         const identityName = document.getElementById("identityName");
-        identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+        identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2528,14 +2528,14 @@ function getReadableName(url) {
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
       console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
       const identityName = document.getElementById("identityName");
-      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
     }
     
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
         pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
         HigherAuthority.textContent = "🧠";
-        pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
+        pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
         consoleOvermindCognition.style.display = "block";
         CognitionTitle.style.display = "block";
         aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
@@ -2545,7 +2545,7 @@ function getReadableName(url) {
       } else {
         pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
         HigherAuthority.textContent = "🌐";
-        pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
+        pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
         consoleOvermindCognition.style.display = "none";
         CognitionTitle.style.display = "none";
         aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
@@ -2698,7 +2698,7 @@ function getReadableName(url) {
           HigherPanelSwitch.style.display = "block"
           pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
-          pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
+          pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
           consoleOvermindCognition.style.display = "block";
           CognitionTitle.style.display = "block";
           aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
@@ -2711,7 +2711,7 @@ function getReadableName(url) {
           HigherPanelSwitch.style.display = "none"
           pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
           HigherAuthority.textContent = "🌐";
-          pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
+          pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
           consoleOvermindCognition.style.display = "none";
           CognitionTitle.style.display = "none";
           aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
@@ -3009,12 +3009,12 @@ async function pbRenderCacheList2() {
       Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
 
-    const identityName = document.getElementById("identityName");
-    identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
-
     listEl.appendChild(li);
     best = true;
   });
+  
+  const identityName = document.getElementById("identityName");
+  identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
 
   StorageRunning = false;
 }
@@ -3715,7 +3715,7 @@ setInterval(async () => {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
       const identityName = document.getElementById("identityName");
-      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -3792,7 +3792,7 @@ setInterval(async () => {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
       const identityName = document.getElementById("identityName");
-      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -5336,7 +5336,7 @@ async function updateModuleIcons(settings, browser) {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
       const identityName = document.getElementById("identityName");
-      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -7059,7 +7059,7 @@ function CheckBackTab() {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
           const identityName = document.getElementById("identityName");
-          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -7080,7 +7080,7 @@ function CheckBackTab() {
       await CheckTime();
       PulsesafeStorageSet({ MyPulseIdentity }); 
       const identityName = document.getElementById("identityName");
-      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
@@ -7132,7 +7132,7 @@ function CheckBackTab() {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
           const identityName = document.getElementById("identityName");
-          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -7399,7 +7399,7 @@ function CheckBackTab() {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
           const identityName = document.getElementById("identityName");
-          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
