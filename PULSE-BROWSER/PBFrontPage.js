@@ -10,6 +10,7 @@ let engineType = "text";
 let predictionText = "Running Stable";
 let pulseIdentityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
 let pulseBankLink = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
+let pulseVaultLink = "https://www.pulseworld.net?Impulse=PulseWorldVault";
 let WasmSuccess = false;
 let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
@@ -106,6 +107,7 @@ const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
 let earnerbankpanel = document.getElementById("earner-mini-bank-panel");
+let earnerwalletpanel = document.getElementById("earner-mini-wallet-panel");
 const messengerpanel = document.getElementById("messenger-panel");
 let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
@@ -2804,6 +2806,11 @@ async function CheckEarnState() {
   earnerbankpanel.onclick = async () => {
     openNamedTab("PulseBank", pulseBankLink);
     await PBUniversalBoost.warmOrigin(pulseBankLink);
+  };
+
+  earnerwalletpanel.onclick = async () => {
+    openNamedTab("PulseVault", pulseVaultLink);
+    await PBUniversalBoost.warmOrigin(pulseVaultLink);
   };
 
   pbPulseEarn.onclick = async () => {
