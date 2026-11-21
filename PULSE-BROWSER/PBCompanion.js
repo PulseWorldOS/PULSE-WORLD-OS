@@ -2201,12 +2201,12 @@ setInterval(async () => {
   console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
   await pulseSupabaseSync();
   OvermindCrossTabSync(OvermindOrders);
-}, 15000);
+}, 10000);
 
 setTimeout(async () => {
   chrome.runtime.getPlatformInfo();
   await start24HourSoakTest();
-}, 11000);
+}, 10000);
 
 startWarmBootLoop();
 
