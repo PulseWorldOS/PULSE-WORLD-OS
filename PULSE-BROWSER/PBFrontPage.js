@@ -2685,21 +2685,20 @@ async function GetThisMessengerDone() {
         }, 0);
       } else {
         MessengerHidden = false;
-        messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
-        setTimeout(() => {
-          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        }, 400);
-        setTimeout(() => {
-          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
-        }, 800);
-        setTimeout(() => {
-          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
-        }, 1200);
-        setTimeout(() => {
-          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        }, 2000);
-        identityLogin = document.getElementById("identityLogin");
-        if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
+        messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+        // setTimeout(() => {
+        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+        // }, 400);
+        // setTimeout(() => {
+        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
+        // }, 800);
+        // setTimeout(() => {
+        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+        // }, 1200);
+        // setTimeout(() => {
+        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+        // }, 2000);
+        
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
@@ -2741,6 +2740,8 @@ async function GetThisMessengerDone() {
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
       console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      identityLogin = document.getElementById("identityLogin");
+      if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
     }
     
     if (HigherAuthority) {
