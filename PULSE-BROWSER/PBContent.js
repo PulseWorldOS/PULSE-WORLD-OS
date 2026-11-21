@@ -826,7 +826,7 @@ setInterval(async () => {
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
   identitySQL = document.getElementById("identitySQL");
-  if (identitySQL) MyPulseIdentity = identitySQL.textContent
+  if (identitySQL) MyPulseIdentity = JSON.parse(identitySQL.textContent);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
@@ -2331,7 +2331,7 @@ async function PulseBrowserDomScan() {
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
   identitySQL = document.getElementById("identitySQL");
-  if (identitySQL) MyPulseIdentity = identitySQL.textContent
+  if (identitySQL) MyPulseIdentity = JSON.parse(identitySQL.textContent);
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   

@@ -4066,7 +4066,9 @@ async function pulseSupabaseSync() {
 
     if (!storedIdentity.id) return;
     
-    identitySQL.innerHTML = previewObject(storedIdentity);
+    // Assuming storedIdentity is an object (e.g., { sub: "12345", email: "user@example.com" })
+    identitySQL.innerHTML = JSON.stringify(storedIdentity);
+
     if (PulseRealm.CurrentHost.includes("netlify")) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
