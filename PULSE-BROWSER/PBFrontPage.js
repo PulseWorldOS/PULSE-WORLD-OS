@@ -108,7 +108,6 @@ let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
-
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
 const messengerhelperpanel = document.getElementById("messenger-helper-panel");
 const messengerinnerhelperpanel = document.getElementById("messenger-inner-helper-panel");
@@ -125,6 +124,7 @@ let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
+pbPulseMessenger.style.opacity = "0";
 function pulsepalSpeak(message) {
   console.log(message);
   pulsepaltalk = document.getElementById("pulsepal-talk");
