@@ -2428,7 +2428,7 @@ function getReadableName(url) {
         pbPulseMessenger.style.transform = "translate(0px, -550px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
-      }, 750);
+      }, 0);
       
     } else {
       // ——— Turn OFF (restore original) ———
