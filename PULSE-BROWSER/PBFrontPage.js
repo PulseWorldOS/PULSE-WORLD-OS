@@ -16,7 +16,7 @@ let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
-let MessengerVideoRunOnce = false;
+let PulseMessengerVideoRunOnce = false;
 let CompanionMessage = null;
 let realmSummary = null;
 let higherAIDisplay = null;
@@ -2417,8 +2417,8 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
-    const MessengerVideo = await chrome.storage.local.get(["MessengerVideoRunOnce"]);
-    if (MessengerVideo) MessengerVideoRunOnce = MessengerVideo.MessengerVideoRunOnce ?? false;
+    const MessengerVideo = await chrome.storage.local.get(["PulseMessengerVideoRunOnce"]);
+    if (MessengerVideo) PulseMessengerVideoRunOnce = MessengerVideo.PulseMessengerVideoRunOnce ?? false;
     messengerpanel.style.opacity = "1";
 
     if (MessengerHidden) {
@@ -2526,7 +2526,7 @@ function getReadableName(url) {
       messengerBootVideo.play();
     };
 
-    if (!MessengerVideoRunOnce) {
+    if (!PulseMessengerVideoRunOnce) {
       messengerBootVideo.onclick = async () => {
         console.log(
           "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
@@ -2550,8 +2550,8 @@ function getReadableName(url) {
         // Hide the video membrane
         messengerBootVideo.style.opacity = "0";
         messengerBootVideo.style.display = "none";
-        MessengerVideoRunOnce = true;
-        await PulsesafeStorageSet({ MessengerVideoRunOnce });
+        PulseMessengerVideoRunOnce = true;
+        await PulsesafeStorageSet({ PulseMessengerVideoRunOnce });
       }, 5000);
     } else {
       // Hide the video membrane
