@@ -16,7 +16,6 @@ let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
-let PulseMessgrVideoRunOnce = false;
 let CompanionMessage = null;
 let realmSummary = null;
 let higherAIDisplay = null;
@@ -2417,8 +2416,6 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
-    const MessengerVideo = await chrome.storage.local.get(["PulseMessgrVideoRunOnce"]);
-    if (MessengerVideo) PulseMessgrVideoRunOnce = MessengerVideo.PulseMessgrVideoRunOnce ?? false;
     messengerpanel.style.opacity = "1";
 
     if (MessengerHidden) {
@@ -2470,12 +2467,6 @@ function getReadableName(url) {
     }
     
     pbPulseMessenger.onclick = async () => {
-      messengerBootVideo.currentTime = 0;
-      messengerBootVideo.play();
-      messengerBootVideo.style.display = "block";
-      setTimeout(() => {
-        messengerBootVideo.style.display = "none";
-      }, 5000);
       if (!MessengerHidden) {
         MessengerHidden = true;
         // ——— Turn ON (transparent / earning mode) ———
@@ -2529,39 +2520,6 @@ function getReadableName(url) {
       console.log("Messenger State:", MessengerHidden);
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
     };
-
-    if (!PulseMessgrVideoRunOnce) {
-      messengerBootVideo.onclick = async () => {
-        console.log(
-          "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
-          "color:#H02FHA; font-weight:bold; font-family:monospace;"
-        );
-
-        try {
-          // Stop playback immediately
-          messengerBootVideo.pause();
-          messengerBootVideo.currentTime = 0;
-        } catch (err) {
-          console.warn("MessengerVideo pause error:", err);
-        }
-
-        // Hide the video membrane
-        messengerBootVideo.style.opacity = "0";
-        messengerBootVideo.style.display = "none";
-      };
-    
-      setTimeout(async () => {
-        // Hide the video membrane
-        messengerBootVideo.style.opacity = "0";
-        messengerBootVideo.style.display = "none";
-        PulseMessgrVideoRunOnce = true;
-        await PulsesafeStorageSet({ PulseMessgrVideoRunOnce });
-      }, 5000);
-    } else {
-      // Hide the video membrane
-      messengerBootVideo.style.opacity = "0";
-      messengerBootVideo.style.display = "none";
-    }
   }
 
   async function CheckEarnDetailsState() {
