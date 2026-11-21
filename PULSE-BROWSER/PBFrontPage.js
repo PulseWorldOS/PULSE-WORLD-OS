@@ -2405,6 +2405,61 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? false;
+
+    if (MessengerHidden) {
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulseMessenger.id = "pbPulseMessengered";
+      pbPulseMessenger.className = "pbPulseMessengered";
+      pbPulseMessenger.style.width = "70px";
+      pbPulseMessenger.style.height = "70px";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "none";
+      messengerinnerpanel.style.pointerEvents = "none";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "none";
+      messengerpanel.style.background = "transparent";
+      messengerpanel.style.backdropFilter = "none";
+      messengerpanel.style.boxShadow = "none";
+      messengerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";
+        pbPulseMessenger.style.opacity = "1";
+        pbPulseMessenger.style.transform = "translate(0px, -561px)";
+        setTimeout(() => {
+          pulsepaltalk.style.opacity = "1";
+        }, 1500);
+        setTimeout(() => {
+          pulsepaltalk.style.opacity = "0";
+        }, 5000);
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 1200);
+      
+    } else {
+      // ——— Turn OFF (restore original) ———
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "";        // let CSS take over again
+      pbPulseMessenger.style.height = "";
+      pbPulseMessenger.style.transform = "";
+      pbPulseMessenger.style.opacity = "0.25";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "flex";
+      messengerinnerpanel.style.pointerEvents = "auto";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "auto";
+      messengerpanel.style.background = "";
+      messengerpanel.style.backdropFilter = "";
+      messengerpanel.style.boxShadow = "";
+      messengerpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseMessenger.style.border = "";
+        pbPulseMessenger.style.transform = "";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 1200);
+    }
     
     pbPulseMessenger.onclick = async () => {
       if (!MessengerHidden) {
