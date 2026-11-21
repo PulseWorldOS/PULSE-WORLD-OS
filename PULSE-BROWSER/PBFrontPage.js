@@ -2497,7 +2497,6 @@ function getReadableName(url) {
         }, 0);
       } else {
         MessengerHidden = false;
-        messengerBootVideo.style.display = "block";
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
