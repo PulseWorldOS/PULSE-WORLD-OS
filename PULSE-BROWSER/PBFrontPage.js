@@ -121,6 +121,7 @@ const HigherAuthority = document.getElementById("HigherAuthority");
 const ReCogWipe = document.getElementById("MemoryWipe");
 let HigherPanelSwitch = document.getElementById("SwitchPanel");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
+let welcomemessage = document.getElementById("welcome");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
@@ -148,7 +149,7 @@ if (!online) {
   safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
 } else {
   titlediv.textContent = "PulseBrowser OS";
-  if (MyPulseIdentity) titlediv.textContent = `PulseBrowser OS [${MyPulseIdentity.name}]`;
+  if (MyPulseIdentity) welcomemessage.textContent = `Welcome, ${MyPulseIdentity.name}!`;
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
@@ -6929,7 +6930,7 @@ setInterval(async () => {
     safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
   } else {
     titlediv.textContent = "PulseBrowser OS";
-    if (MyPulseIdentity) titlediv.textContent = `PulseBrowser OS [${MyPulseIdentity.name}]`;
+    if (MyPulseIdentity) welcomemessage.textContent = `Welcome, ${MyPulseIdentity.name}!`;
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
     setInterval(() => {
