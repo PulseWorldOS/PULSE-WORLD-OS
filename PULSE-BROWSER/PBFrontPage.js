@@ -2433,7 +2433,7 @@ function getReadableName(url) {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -550px)";
+        pbPulseMessenger.style.transform = "translate(0px, -540px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -2484,7 +2484,7 @@ function getReadableName(url) {
           pbPulseMessenger.id = "pbPulseMessenger";
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
-          pbPulseMessenger.style.transform = "translate(0px, -550px)";
+          pbPulseMessenger.style.transform = "translate(0px, -540px)";
           if (EarnDetailsHidden) safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();

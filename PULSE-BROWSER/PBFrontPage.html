@@ -205,21 +205,17 @@
     .messenger-panel {
       position: fixed;
       margin: 14px 14px;
-      top: 41.3vh;
+      top: 39vh;
       inset-inline: 0;
       margin-inline: auto;
-      height: 520px;
-      width: clamp(830px, 12vw, 880px);
+      height: 535px;
+      width: clamp(900px, 12vw, 950px);
       display: flex;
       opacity: 0;
       justify-content: center;
       align-items: center;
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(24px);
       font-size: 0.8rem;
-      border: 2px dashed rgba(255, 255, 255, 0.15);
       border-radius: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
       z-index: 5;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
@@ -228,10 +224,8 @@
     .messenger-inner-panel {
       background-image: url("PulseMessengerDisplay.webp");
       background-size: cover;
-      background-position: center;    
-      border: 2px dashed rgba(255, 255, 255, 0.15);
+      background-position: center;
       border-radius: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
       width: 100%;
       height: 100%;
       font-size: 0.8rem;
@@ -760,7 +754,7 @@
       48%  { transform: translate(0px, -431px); }
       64%  { transform: translate(0px, -471px); }
       80%  { transform: translate(0px, -511px); }
-      100% { transform: translate(0px, -550px); }
+      100% { transform: translate(0px, -540px); }
     }
 
     @keyframes bubbleElectrify {
@@ -1716,7 +1710,7 @@
       flex: 1;
       min-width: 0;
       width: auto;
-      margin-bottom: 0;
+      margin-bottom: 0px;
       padding: 8px 12px;
     }
 
