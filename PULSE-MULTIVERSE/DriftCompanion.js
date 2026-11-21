@@ -446,7 +446,7 @@ self.addEventListener('fetch', event => {
   }
   
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (req.url.protocol === 'http:') {
+  if (req.url.protocol === 'http:' || req.url.includes("google.com")) {
     return; 
   }
 
@@ -589,7 +589,7 @@ async function handlePulseRequest(req) {
 
   pulseInc(PULSE_SHARED_INDEX.REQUEST_COUNT);
 
-  if (!req.url.startsWith('http') && !req.url.includes('-TEST') && !req.url.includes("google.com")) {
+  if (!req.url.startsWith('http') && !req.url.includes('-TEST')) {
     return fetch(req);
   }
 
