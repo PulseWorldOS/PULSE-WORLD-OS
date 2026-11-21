@@ -446,7 +446,7 @@ self.addEventListener('fetch', event => {
   }
   
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (req.url.protocol === 'http:' || req.url.includes("google.com")) {
+  if (req.url.protocol === 'http:') {
     return; 
   }
 
