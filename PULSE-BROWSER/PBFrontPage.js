@@ -1060,7 +1060,6 @@ async function runLocalAI() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
-          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -1077,6 +1076,7 @@ async function runLocalAI() {
         }
       });
       
+      PulsesafeStorageSet(MyPulseIdentity);
       // 1. Initialize the session using the modern nested outputs architecture
       await initializeExoskeleton();
     }
@@ -1172,7 +1172,6 @@ ${rawPrompt}
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
-        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -1188,6 +1187,7 @@ ${rawPrompt}
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
+    PulsesafeStorageSet(MyPulseIdentity);
     RunningAI = false;
     await pbRenderCacheList2();
 
@@ -2040,7 +2040,6 @@ async function appendCompanionMessage(area, role, text) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -2056,6 +2055,7 @@ async function appendCompanionMessage(area, role, text) {
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
+  PulsesafeStorageSet(MyPulseIdentity);
 }
 
 document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
@@ -2157,7 +2157,6 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
-        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2173,6 +2172,7 @@ CompanionConsoleSend.onclick = async () => {
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
+    PulsesafeStorageSet(MyPulseIdentity);
   } else {
     // Higher Intellect: show what the user typed, then ask the model
     // [Phase 2] Auto-enable AI if the user tries to chat before enabling (respect dropdown choice)
@@ -2216,7 +2216,6 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
-        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2232,6 +2231,7 @@ CompanionConsoleSend.onclick = async () => {
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
+    PulsesafeStorageSet(MyPulseIdentity);
   }
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
@@ -3573,7 +3573,6 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -3589,6 +3588,7 @@ setInterval(async () => {
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
+  PulsesafeStorageSet(MyPulseIdentity);
   setInterval(flickerOrigins, 1500); // every 1.5s
 
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
@@ -3648,7 +3648,6 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -3664,6 +3663,7 @@ setInterval(async () => {
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
+  PulsesafeStorageSet(MyPulseIdentity);
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -5189,7 +5189,6 @@ async function updateModuleIcons(settings, browser) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -5233,6 +5232,7 @@ async function updateModuleIcons(settings, browser) {
       }
     }
   });
+  PulsesafeStorageSet(MyPulseIdentity);
   if (!settings) settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
   if (!browser) browser = await getSettings();
@@ -6912,7 +6912,6 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
-          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -6931,6 +6930,7 @@ function CheckBackTab() {
       });
       await pbRenderCacheList2();
       await CheckTime();
+      PulsesafeStorageSet(MyPulseIdentity);
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
