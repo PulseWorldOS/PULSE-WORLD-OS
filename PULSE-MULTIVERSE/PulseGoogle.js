@@ -1,4 +1,4 @@
-const WEB_CLIENT_ID = "YOUR_WEB_OAUTH_CLIENT_://googleusercontent.com";
+const WEB_CLIENT_ID = "642785071979-o85ogc850l02o5ka8i20cu2at4vfibar.apps.googleusercontent.com";
 
 window.onload = () => {
   // 1. Grab the desktop ID passed from the Chrome Extension via the URL
