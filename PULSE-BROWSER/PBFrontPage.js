@@ -2428,7 +2428,7 @@ function getReadableName(url) {
         pbPulseMessenger.style.transform = "translate(0px, -550px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
-      }, 1200);
+      }, 750);
       
     } else {
       // ——— Turn OFF (restore original) ———
@@ -2452,7 +2452,7 @@ function getReadableName(url) {
         pbPulseMessenger.style.transform = "";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
-      }, 1200);
+      }, 750);
     }
     
     pbPulseMessenger.onclick = async () => {
