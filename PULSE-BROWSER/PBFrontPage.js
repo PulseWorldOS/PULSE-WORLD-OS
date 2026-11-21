@@ -2480,7 +2480,7 @@ function getReadableName(url) {
           safeSpeak("Coming Soon! PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
-        }, 1200);
+        }, 750);
       } else {
         MessengerHidden = false;
         // ——— Turn OFF (restore original) ———
@@ -2504,7 +2504,7 @@ function getReadableName(url) {
           pbPulseMessenger.style.transform = "";
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
-        }, 1200);
+        }, 750);
       }
       console.log("Messenger State:", MessengerHidden);
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
