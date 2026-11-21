@@ -487,7 +487,6 @@ async function pulseGPUInspector(adapter, device) {
 // 1. Initialize once at startup (replaces your warm-up snippet)
 async function initWebGPUCompute() {
   if (!navigator.gpu) return null;
-  getUserConformity();
   const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
   if (!adapter) return null;
   const device = await adapter.requestDevice();
