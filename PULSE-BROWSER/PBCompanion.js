@@ -2299,6 +2299,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     TakeOfflineSnapshot = true;
   } else if (info.menuItemId === 'flipAdblocker') {
     PulseRealmSettings = await pbLoadExtensionSettings();
+    console.log("AdBlocker: ", PulseRealmSettings.adBlocker);
     if (PulseRealmSettings.adBlocker === "internal") {
       AdBlockerOn();
     } else {
