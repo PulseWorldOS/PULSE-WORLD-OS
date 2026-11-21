@@ -2470,6 +2470,12 @@ function getReadableName(url) {
     }
     
     pbPulseMessenger.onclick = async () => {
+      messengerBootVideo.currentTime = 0;
+      messengerBootVideo.play();
+      messengerBootVideo.style.display = "block";
+      setTimeout(() => {
+        messengerBootVideo.style.display = "none";
+      }, 5000);
       if (!MessengerHidden) {
         MessengerHidden = true;
         // ——— Turn ON (transparent / earning mode) ———
