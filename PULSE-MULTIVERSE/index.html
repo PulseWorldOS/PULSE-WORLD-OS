@@ -237,6 +237,7 @@ checkPersistentStorage(true);
   <div id="timeClock">10:10 AM</div>
   <div id="assumedValue">$0.00</div>
   <div id="lastEarnBatch"></div>
+  <div id="identitySQL"></div>
   <video id="pulseStatus" src="./_EXPRESSIONS/_VIDEOS/PulseStatus" autoplay muted loop playsinline style="display:block;" aria-label="Pulse Status"></video>
   <video id="globalSpin" src="./_EXPRESSIONS/_VIDEOS/PulseGlobalSpin" autoplay muted loop playsinline style="display:block;" aria-label="Globe Spin"></video>
   <video id="bootVideo" muted playsinline style="display:none;" aria-label="Boot Video"></video>
@@ -3903,10 +3904,11 @@ async function pulseSupabaseSync() {
     const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
     const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
     const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
-
+    const identitySQL = document.getElementById("identitySQL");
     const locationproximity = storedProximity ?? locationResult;
 
     if (!storedIdentity.id) return;
+    identitySQL.innerHTML = storedIdentity.id;
     if (PulseRealm.CurrentHost.includes("netlify")) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
