@@ -114,6 +114,7 @@ const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const exitinnerpanel = document.getElementById("exit-inner-panel");
 const maximizeBtn = document.getElementById("maximizeBtn");
 const minimizeBtn = document.getElementById("minimizeBtn");
+let identityLogin = document.getElementById("identityLogin");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
@@ -2598,6 +2599,7 @@ async function GetThisMessengerDone() {
 
     maximizeBtn.onclick = async () => {
       PulseBrowserPreview("Please Press ESCAPE to close the Full Screen View!");
+      
       // 1. Save the original inline styles so you can revert to them accurately
       const originalStyles = {
         height: messengerpanel.style.height,
@@ -2615,6 +2617,8 @@ async function GetThisMessengerDone() {
       // 3. Define the Escape handler and remove it once triggered
       const handleEscape = (e) => {
         if (e.key === "Escape") {
+          let preview = document.getElementById("PulseBrowser-Preview");
+          preview.remove();
           messengerpanel.style.height = originalStyles.height;
           messengerpanel.style.width = originalStyles.width;
           messengerpanel.style.inset = originalStyles.inset;
@@ -2686,11 +2690,16 @@ async function GetThisMessengerDone() {
           messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
         }, 400);
         setTimeout(() => {
+          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
+        }, 800);
+        setTimeout(() => {
           messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
         }, 1200);
         setTimeout(() => {
           messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        }, 2500);
+        }, 2000);
+        identityLogin = document.getElementById("identityLogin");
+        if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
@@ -3077,7 +3086,6 @@ setTimeout(CheckforMessagesState, 50);
 
 function PulseBrowserPreview(text) {
   let preview = document.createElement("div");
-  if (text) preview = document.getElementById("PulseBrowser-Preview");
   preview.className = "PulseBrowser-Preview";
   preview.id = "PulseBrowser-Preview";
   preview.style.position = "fixed";
@@ -3090,13 +3098,9 @@ function PulseBrowserPreview(text) {
   preview.style.zIndex = "999999999";
   preview.style.fontFamily = "Arial";
   preview.innerText = `PulseBrowser OS Preview: ${document.title}`;
-  if (text) preview.innerText = text;
+  if (text) preview.innerText = `PulseBrowser OS Preview: ` + text;
   // Add it to the page
   document.body.appendChild(preview);
-
-  if (text) setTimeout(() => {
-    preview.remove();
-  }, 3500)
 }
 
 async function pbRenderCacheList2() {
