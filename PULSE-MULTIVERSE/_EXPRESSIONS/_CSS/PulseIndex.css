@@ -2720,7 +2720,7 @@ input[type="file"] {
   /* TRUE CENTERING WITH NO LEFT/RIGHT */
   inset-inline: 0;
   margin-inline: auto;
-  top: 1dvh;
+  top: 20dvh;
   border-radius: 6px;
   border: none;
   font-weight: 600;
