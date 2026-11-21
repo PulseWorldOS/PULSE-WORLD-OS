@@ -5457,7 +5457,7 @@ async function updateModuleIcons(settings, browser) {
       moduleFav6Icon.style.backgroundRepeat = "no-repeat";
     }
   }
-
+  
   if (settings.adBlocker === "internal") {
     AdBlockerOn();
   } else {
