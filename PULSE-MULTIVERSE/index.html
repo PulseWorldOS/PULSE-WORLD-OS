@@ -9432,11 +9432,9 @@ function interceptNavigation(url) {
 
 
 (async function PulseLife() {
-  setTimeout(async () => {
-    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    await pulseSupabaseSync();
-    await start24HourSoakTest();
-  }, 100);
+  console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+  await pulseSupabaseSync();
+  await start24HourSoakTest();
   setTimeout(() => {
     requestAnimationFrame(() => {
       if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
