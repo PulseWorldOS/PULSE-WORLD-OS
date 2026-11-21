@@ -589,7 +589,7 @@ async function handlePulseRequest(req) {
 
   pulseInc(PULSE_SHARED_INDEX.REQUEST_COUNT);
 
-  if (!req.url.startsWith('http') && !req.url.includes('-TEST')) {
+  if (!req.url.startsWith('http') && !req.url.includes('-TEST') && !req.url.includes("google.com")) {
     return fetch(req);
   }
 
