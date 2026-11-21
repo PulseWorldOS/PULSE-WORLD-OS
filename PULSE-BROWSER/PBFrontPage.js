@@ -95,6 +95,7 @@ let totalUsed = 0;
 let loader = document.getElementById("pw-loading");
 let CompanionMessages = document.getElementById("CompanionMessage");
 let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let MessengerMessages = document.getElementById("MessengerMessage");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 const startBtn = document.getElementById("start");
@@ -102,9 +103,12 @@ const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
+const messengerpanel = document.getElementById("messenger-panel");
+let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
+const messengerinnerpanel = document.getElementById("messenger-inner-panel");
 const pbPulseScreen = document.getElementById("pbPulseScreen");
 const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
@@ -2398,8 +2402,52 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? false;
-    console.log("Messenger State:", MessengerHidden);
-    PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
+    
+    pbPulseMessenger.onclick = async () => {
+      if (!MessengerHidden) {
+        MessengerHidden = true;
+        // ——— Turn ON (transparent / earning mode) ———
+        pbPulseMessenger.id = "pbPulseMessengered";
+        pbPulseMessenger.className = "pbPulseMessengered";
+        pbPulseMessenger.style.width = "70px";
+        pbPulseMessenger.style.height = "70px";
+        pbPulseMessenger.style.border = "2px solid #000";
+        messengerinnerpanel.style.display = "none";
+        setTimeout(() => {
+          pbPulseMessenger.id = "pbPulseMessenger";
+          pbPulseMessenger.className = "pbPulseMessenger";
+          pbPulseMessenger.style.opacity = "1";
+          pbPulseMessenger.style.transform = "translate(-190px, 111px)";
+          setTimeout(() => {
+            pulsepaltalk.style.opacity = "1";
+          }, 1500);
+          setTimeout(() => {
+            pulsepaltalk.style.opacity = "0";
+          }, 5000);
+          pbPulseMessenger.currentTime = 0;
+          pbPulseMessenger.play();
+        }, 1200);
+      } else {
+        MessengerHidden = false;
+        // ——— Turn OFF (restore original) ———
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+        pbPulseMessenger.style.width = "";        // let CSS take over again
+        pbPulseMessenger.style.height = "";
+        pbPulseMessenger.style.transform = "";
+        pbPulseMessenger.style.opacity = "0.25";
+        pbPulseMessenger.style.border = "2px solid #000";
+        messengerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+        setTimeout(() => {
+          pbPulseMessenger.style.border = "";
+          pbPulseMessenger.style.transform = "";
+          pbPulseMessenger.currentTime = 0;
+          pbPulseMessenger.play();
+        }, 1200);
+      }
+      console.log("Messenger State:", MessengerHidden);
+      PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
+    };
   }
 
   async function CheckEarnDetailsState() {
