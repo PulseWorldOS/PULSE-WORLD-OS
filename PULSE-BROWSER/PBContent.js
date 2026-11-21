@@ -1382,7 +1382,7 @@ setInterval(async () => {
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
-  if (assumedValue) tabValue = tabValue + assumedValue;
+  if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
   if (identitySQL && identitySQL.textContent.length > 0) MyPulseIdentity = JSON.parse(identitySQL.textContent);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
@@ -2781,7 +2781,7 @@ async function PulseBrowserDomScan() {
   
   valueDiv = document.getElementById("assumedValue");
   if (valueDiv) tabValue = valueDiv.textContent;
-  if (assumedValue) tabValue = tabValue + assumedValue;
+  if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
   if (identitySQL && identitySQL.textContent.length > 0) MyPulseIdentity = JSON.parse(identitySQL.textContent);
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
