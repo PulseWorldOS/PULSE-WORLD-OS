@@ -123,6 +123,7 @@ const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
 const pbPulseMessenger = document.getElementById("pbPulseMessenger");
 const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
+const messengerBootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
 const ReCogWipe = document.getElementById("MemoryWipe");
 let HigherPanelSwitch = document.getElementById("SwitchPanel");
@@ -2421,7 +2422,7 @@ function getReadableName(url) {
     messengerpanel.style.opacity = "1";
 
     if (!messengerVideoRunOnce) {
-      MessengerVideo.onclick = async () => {
+      messengerBootVideo.onclick = async () => {
         console.log(
           "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
           "color:#H02FHA; font-weight:bold; font-family:monospace;"
@@ -2429,28 +2430,28 @@ function getReadableName(url) {
 
         try {
           // Stop playback immediately
-          MessengerVideo.pause();
-          MessengerVideo.currentTime = 0;
+          messengerBootVideo.pause();
+          messengerBootVideo.currentTime = 0;
         } catch (err) {
           console.warn("BootVideo pause error:", err);
         }
 
         // Hide the video membrane
-        MessengerVideo.style.opacity = "0";
-        MessengerVideo.style.display = "none";
+        messengerBootVideo.style.opacity = "0";
+        messengerBootVideo.style.display = "none";
       };
     
       setTimeout(async () => {
         // Hide the video membrane
-        MessengerVideo.style.opacity = "0";
-        MessengerVideo.style.display = "none";
+        messengerBootVideo.style.opacity = "0";
+        messengerBootVideo.style.display = "none";
         messengerVideoRunOnce = true;
         await PulsesafeStorageSet({ messengerVideoRunOnce });
       }, 5000);
     } else {
       // Hide the video membrane
-      MessengerVideo.style.opacity = "0";
-      MessengerVideo.style.display = "none";
+      messengerBootVideo.style.opacity = "0";
+      messengerBootVideo.style.display = "none";
     }
 
     if (MessengerHidden) {
