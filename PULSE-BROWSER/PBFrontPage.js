@@ -3009,6 +3009,9 @@ async function pbRenderCacheList2() {
       Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
     `;
 
+    const identityName = document.getElementById("identityName");
+    identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
+
     listEl.appendChild(li);
     best = true;
   });
