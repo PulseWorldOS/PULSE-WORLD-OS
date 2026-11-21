@@ -9676,7 +9676,7 @@ if (navigator.gpu) {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     await pulseSupabaseSync();
     await start24HourSoakTest();
-  }, 1000);
+  }, 100);
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
