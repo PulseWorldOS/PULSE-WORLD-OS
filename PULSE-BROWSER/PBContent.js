@@ -922,10 +922,10 @@ async function injectHUD() {
     body = document.getElementById("pb-hud-body");
     updateHUD(body);
     PulseBrowserDomScan();
-  }, 4500);
+  }, 5800);
   setTimeout(() => {
     DomScanPreview();
-  }, 4000);
+  }, 5500);
 }
 
 function DomScanPreview() {
