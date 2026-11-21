@@ -4038,7 +4038,11 @@ async function ensureLocationAccess(options = {}) {
   });
 }
 
-
+function previewObject(obj) {
+    const keys = Object.keys(obj);
+    if (keys.length === 0) return "{}";
+    return `{ ${keys} }`;
+  }
 
 async function pulseSupabaseSync() {
   if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
@@ -4062,7 +4066,8 @@ async function pulseSupabaseSync() {
     const locationproximity = storedProximity ?? locationResult;
 
     if (!storedIdentity.id) return;
-    identitySQL.innerHTML = storedIdentity;
+    
+    identitySQL.innerHTML = previewObject(storedIdentity);
     if (PulseRealm.CurrentHost.includes("netlify")) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
