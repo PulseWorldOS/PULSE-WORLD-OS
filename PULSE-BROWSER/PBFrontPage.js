@@ -2597,6 +2597,7 @@ async function GetThisMessengerDone() {
     };
 
     maximizeBtn.onclick = async () => {
+      PulseBrowserPreview("Please Press ESCAPE to close the Full Screen View!");
       // 1. Save the original inline styles so you can revert to them accurately
       const originalStyles = {
         height: messengerpanel.style.height,
@@ -3072,6 +3073,31 @@ async function CheckEarnState() {
 setTimeout(CheckEarnState, 50);
 setTimeout(CheckEarnDetailsState, 50);
 setTimeout(CheckforMessagesState, 50);
+
+
+function PulseBrowserPreview(text) {
+  let preview = document.createElement("div");
+  if (text) preview = document.getElementById("PulseBrowser-Preview");
+  preview.className = "PulseBrowser-Preview";
+  preview.id = "PulseBrowser-Preview";
+  preview.style.position = "fixed";
+  preview.style.top = "0";
+  preview.style.left = "0";
+  preview.style.width = "100%";
+  preview.style.background = "rgba(0,0,0,0.8)";
+  preview.style.color = "white";
+  preview.style.padding = "4px";
+  preview.style.zIndex = "999999999";
+  preview.style.fontFamily = "Arial";
+  preview.innerText = `PulseBrowser OS Preview: ${document.title}`;
+  if (text) preview.innerText = text;
+  // Add it to the page
+  document.body.appendChild(preview);
+
+  if (text) setTimeout(() => {
+    preview.remove();
+  }, 3500)
+}
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");
