@@ -12,6 +12,7 @@
   <link rel="preload" fetchpriority="high" as="video" href="PulseWorldOS.mp4" type="video/mp4">
   <link rel="preload" fetchpriority="high" as="video" href="PulseEarn.mp4" type="video/mp4">
   <link rel="preload" fetchpriority="high" as="video" href="PulsePalDetails.mp4" type="video/mp4">
+  <link rel="preload" fetchpriority="high" as="video" href="PulseMessenger.mp4" type="video/mp4">
   <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
   <link rel="preload" as="image" href="PulseWorldSplash512.png" />
   <link rel="preload" as="image" href="PulseOSBubbles.png" />
@@ -637,6 +638,44 @@
       64%  { transform: translate(-153px, 111px); }
       80%  { transform: translate(-177px, 111px); }
       100% { transform: translate(-190px, 111px); }
+    }
+
+    #pbPulseMessenger {
+      z-index: 10;
+      cursor: pointer;
+      position: absolute;
+      width: 25%;
+      opacity: 0.25;
+      margin-bottom: 20px;
+      height: auto;
+      border-radius: 99px;
+      object-fit: inherit;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
+
+    #pbPulseMessengered {
+      z-index: 10;
+      cursor: pointer;
+      position: absolute;
+      width: 25%;
+      margin-bottom: 20px;
+      height: auto;
+      border-radius: 99px;
+      object-fit: inherit;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+      animation: pbPulseMessengerFrame 1.2s ease-in-out,
+                pulseGlow 3.5s ease-in-out infinite;
+    }
+    @keyframes pbPulseMessengerFrame {
+      0%   { transform: translate(70px, 72px); }
+      8%   { transform: translate(82px, 83px); }
+      20%  { transform: translate(128px, 104px); }
+      24%  { transform: translate(157px, 111px); }
+      48%  { transform: translate(174px, 111px); }
+      64%  { transform: translate(193px, 111px); }
+      80%  { transform: translate(217px, 111px); }
+      100% { transform: translate(220px, 111px); }
     }
 
     @keyframes bubbleElectrify {
@@ -1700,6 +1739,19 @@
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div class="earner-overlay" id="earner-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Earner <span class="overlayengine" id="overlayengine"><span style="color: gold;" class="overlayeng" id="overlayeng"><strong>$</strong></span> - 🌐 Engine Overlay</span>
+      </div>
+      <div id="CompanionMessage" class="CompanionMessage">
+
+      </div>
+      <!-- Earner panel content -->
+    </div>
+  </div>
+  <div class="messenger-panel" id="messenger-panel">
+    <div class="messenger-mini-panel" id="messenger-mini-panel">$0.00</div>
+    <video id="pbPulseMessenger" class="pbPulseMessenger" src="PulseMessenger.mp4" autoplay muted playsinline aria-label="pbPulseMessenger"></video>
+    <div class="messenger-inner-panel" id="messenger-inner-panel">
+      <div class="messenger-overlay" id="messenger-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
+        Pulse Messenger <span class="overlayengine" id="overlayengine"><span style="color: gold;" class="overlayeng" id="overlayeng"><strong>$</strong></span> - 🌐 Engine Overlay</span>
       </div>
       <div id="CompanionMessage" class="CompanionMessage">
 

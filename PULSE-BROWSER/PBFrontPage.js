@@ -41,6 +41,7 @@ let OvermindMyOrders = null;
 let EarnHidden = false;
 let RunningAI = false;
 let EarnDetailsHidden = false;
+let MessengerHidden = false;
 let socialMediaActiveLink = null;
 let keyIsDown = false;
 let keyHoldTimer = null;
@@ -107,6 +108,7 @@ const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-pane
 const pbPulseScreen = document.getElementById("pbPulseScreen");
 const pbPulseEarn = document.getElementById("pbPulseEarn");
 const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
+const pbPulseMessenger = document.getElementById("pbPulseMessenger");
 const pbWrapper = document.getElementById("pbWrapper");
 const bootVideo = document.getElementById("pbBootEntrance");
 const HigherAuthority = document.getElementById("HigherAuthority");
@@ -2393,7 +2395,12 @@ function getReadableName(url) {
     return url;
   }
 }
-
+  async function CheckforMessagesState() {
+    const We = await chrome.storage.local.get(["MessengerInvisible"]);
+    MessengerHidden = We.MessengerInvisible ?? false;
+    console.log("Messenger State:", MessengerHidden);
+    PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
+  }
 
   async function CheckEarnDetailsState() {
     const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
@@ -2728,6 +2735,7 @@ async function CheckEarnState() {
 
 setTimeout(CheckEarnState, 50);
 setTimeout(CheckEarnDetailsState, 50);
+setTimeout(CheckforMessagesState, 50);
 
 async function pbRenderCacheList2() {
   const listEl = document.getElementById("cache-panel");

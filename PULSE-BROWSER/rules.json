@@ -19,10 +19,10 @@
         { "header": "cross-origin-embedder-policy", "operation": "remove" },
         { "header": "cross-origin-opener-policy", "operation": "remove" },
         { "header": "cross-origin-resource-policy", "operation": "remove" },
-        { "header": "access-control-allow-origin", "operation": "set", "value": "*" },
+        { "header": "access-control-allow-origin", "operation": "set", "value": "https://www.pulseworld.net" },
         { "header": "access-control-allow-methods", "operation": "set", "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD" },
-        { "header": "access-control-allow-headers", "operation": "set", "value": "*" },
-        { "header": "access-control-expose-headers", "operation": "set", "value": "*" }
+        { "header": "access-control-allow-headers", "operation": "set", "value": "https://www.pulseworld.net" },
+        { "header": "access-control-expose-headers", "operation": "set", "value": "https://www.pulseworld.net" }
       ]
     },
     "condition": {
