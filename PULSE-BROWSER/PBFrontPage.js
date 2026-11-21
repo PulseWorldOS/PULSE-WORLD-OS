@@ -2416,6 +2416,8 @@ function getReadableName(url) {
         pbPulseMessenger.style.height = "70px";
         pbPulseMessenger.style.border = "2px solid #000";
         messengerinnerpanel.style.display = "none";
+        messengerinnerpanel.style.pointerEvents = "none";
+        messengerpanel.style.pointerEvents = "none";
         messengerpanel.style.background = "transparent";
         messengerpanel.style.backdropFilter = "none";
         messengerpanel.style.boxShadow = "none";
@@ -2445,6 +2447,8 @@ function getReadableName(url) {
         pbPulseMessenger.style.opacity = "0.25";
         pbPulseMessenger.style.border = "2px solid #000";
         messengerinnerpanel.style.display = "flex";
+        messengerinnerpanel.style.pointerEvents = "auto";
+        messengerpanel.style.pointerEvents = "auto";
         messengerpanel.style.background = "";
         messengerpanel.style.backdropFilter = "";
         messengerpanel.style.boxShadow = "";
