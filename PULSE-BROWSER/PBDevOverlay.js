@@ -86,7 +86,7 @@ function updateKernel(realm, SessionStart) {
     Last Page: <font color="#0FF">${lastPageshort || "-"}</font><br/>
     Last Title: <font color="#0FF"><strong>${lastTitleshort || "-"}</strong></font><br/>
     Last URL: <font color="#0FF">${lastURLshort || "-"}</font><br/>
-    Domain Class: <font color="#0FF">${realm.lastDomainClass || "PulseWorld"}</font><br/>
+    Domain Class: <font color="#0FF"><strong>${realm.lastDomainClass || "PulseWorld"}</strong></font><br/>
     Data Band: <font color="#0FF"><strong>${realm.bands || "-"}</strong></font><br/>
     Last Ping: <font color="yellow">${realm.lastPing || "-"}</font><br/>
   `;
@@ -110,7 +110,6 @@ function updateRouter(settings) {
   el.innerHTML = `
     <div class="pb-hud-title">Pulse Router</div>
     Enabled: <font color="${enabledColor(settings.enableRouter)}">${settings.enableRouter}</font><br/>
-    Prioritize CDN: <font color="${tfColor(settings.routerPrioritizeCDN)}">${settings.routerPrioritizeCDN}</font><br/>
     Prioritize Assets: <font color="${tfColor(settings.routerPrioritizeAssets)}">${settings.routerPrioritizeAssets}</font><br/>
     Latency Scan: <font color="${tfColor(settings.routerLatencyScan)}">${settings.routerLatencyScan}</font><br/>
     Realm Scan: <font color="${tfColor(settings.routerRealmScan)}">${settings.routerRealmScan}</font><br/>

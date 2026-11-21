@@ -66,7 +66,6 @@ function pbLogRouterStatus() {
 
     logKV("Router Enabled", s.enableRouter);
     logKV("Prioritize Home Universe", s.routerPrioritizeHomeUniverse);
-    logKV("Prioritize CDN", s.routerPrioritizeCDN);
     logKV("Prioritize Assets", s.routerPrioritizeAssets);
 
     logKV("Rewrite Rules", s.routerRewriteRules);
