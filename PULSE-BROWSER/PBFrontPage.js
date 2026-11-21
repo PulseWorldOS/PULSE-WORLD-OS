@@ -2421,7 +2421,7 @@ async function GetThisMessengerDone() {
     position: 'relative',
     width: '100vw',
     height: '100vh',
-    backgroundImage: 'url("your-pulsemessenger-bg.png")',
+    backgroundImage: 'url("PulseMessengerDisplay.webp")',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     perspective: '1200px', // Essential: creates the 3D depth effect
@@ -2544,7 +2544,6 @@ async function GetThisMessengerDone() {
       }, 0);
       
     } else {
-      await GetThisMessengerDone();
       // ——— Turn OFF (restore original) ———
       pbPulseMessenger.id = "pbPulseMessenger";
       pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
@@ -2597,7 +2596,13 @@ async function GetThisMessengerDone() {
         }, 0);
       } else {
         MessengerHidden = false;
-        await GetThisMessengerDone();
+        messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
+        setTimeout(() => {
+          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+        }, 400);
+        setTimeout(() => {
+          messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+        }, 1000);
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
