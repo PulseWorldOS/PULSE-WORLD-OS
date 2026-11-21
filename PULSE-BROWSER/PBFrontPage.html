@@ -16,6 +16,7 @@
   <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
   <link rel="preload" as="image" href="PulseWorldSplash512.png" />
   <link rel="preload" as="image" href="PulseOSBubbles.png" />
+  <link rel="preload" as="image" href="PulseMessengerConsole.webp" />
   <link rel="preload" as="image" href="PulseResume.webp" />
   <link rel="preload" as="image" href="PulseStop.webp" />
   <link rel="preload" as="image" href="PulseReset.webp" />
@@ -39,6 +40,11 @@
       cursor: pointer;
     }
 
+    .pw-messenger {
+      position: absolute;
+      width: 100%;
+      height: 100%;     
+    }
     .nebula {
       position: absolute;
       width: 100%;
@@ -188,6 +194,7 @@
       height: 380px;
       width: clamp(600px, 12vw, 650px);
       display: flex;
+      opacity: 0;
       justify-content: center;
       align-items: center;
       background: rgba(0, 0, 0, 0.35);
@@ -1832,6 +1839,7 @@
   </div>
   <div class="messenger-panel" id="messenger-panel">
     <video id="pbPulseMessenger" class="pbPulseMessenger" src="PulseMessenger.mp4" autoplay muted playsinline aria-label="pbPulseMessenger"></video>
+    <img src="PulseMessengerConsole.webp" id="pw-messenger">
     <div class="messenger-inner-panel" id="messenger-inner-panel">
       <div class="messenger-overlay" id="messenger-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Messenger <span class="overlayengine" id="overlayengine"> - 🧑‍🎨 Console Overlay</span>
