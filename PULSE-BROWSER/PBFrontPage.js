@@ -1060,6 +1060,7 @@ async function runLocalAI() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -1171,6 +1172,7 @@ ${rawPrompt}
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2038,6 +2040,7 @@ async function appendCompanionMessage(area, role, text) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -2154,6 +2157,7 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2212,6 +2216,7 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -3568,6 +3573,7 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -3642,6 +3648,7 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -5182,6 +5189,7 @@ async function updateModuleIcons(settings, browser) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -6904,6 +6912,7 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -6971,6 +6980,7 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
