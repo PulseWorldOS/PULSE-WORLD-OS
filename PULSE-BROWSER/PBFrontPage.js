@@ -4094,7 +4094,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       // const regfavicon = await getFavicon(realm);
       const favicon = snapshot.regfavicon ?? snapshot.favicon;
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
-      const ValueFromTab = snapshot.assumedValue ?? 0;
+      const ValueFromTab = snapshot.assumedValue ?? OurassumedValue;
       const PulseIdentity = snapshot.MyPulseIdentity ?? MyPulseIdentity;
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
