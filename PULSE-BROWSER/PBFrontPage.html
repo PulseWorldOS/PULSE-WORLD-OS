@@ -1224,20 +1224,6 @@
       font-size: 15px;
     }
 
-    .MemoryWipe {
-      width: 30px;      /* adjust size here */
-      height: 30px;
-      bottom: 6px;
-      position: fixed;
-      left: 120px;
-      display: inline-flex;
-      flex-shrink: 0;
-      font-weight: bold;
-      cursor: pointer;
-      margin-left: 2px;
-      font-size: 0.7rem;
-    }
-
     .SwitchPanel {
       width: 20px;      /* adjust size here */
       height: 20px;
@@ -1389,10 +1375,17 @@
       text-shadow: 0 0 10px #00aaff;
     }
 
+    .clear-caches:hover {
+      background: #003344;
+      box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
+      transform: scale(2);
+    }
+
     .clear-caches {
       width: 30px;      /* adjust size here */
       height: 30px;
       bottom: 6px;
+      border-radius: 40px;
       position: fixed;
       right: 0;
       display: inline-flex;
@@ -1402,11 +1395,39 @@
       margin-left: 2px;
       font-size: 0.7rem;
     }
-    
+
+    .MemoryWipe:hover {
+      background: #003344;
+      box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
+      transform: scale(2);
+    }
+
+    .MemoryWipe {
+      width: 30px;      /* adjust size here */
+      height: 30px;
+      border-radius: 40px;
+      bottom: 6px;
+      position: fixed;
+      left: 120px;
+      display: inline-flex;
+      flex-shrink: 0;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 2px;
+      font-size: 0.7rem;
+    }
+
+    .disable-sw:hover {
+      background: #003344;
+      box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
+      transform: scale(2);
+    }
+
     .disable-sw {
       width: 30px;      /* adjust size here */
       height: 30px;
       bottom: 6px;
+      border-radius: 40px;
       position: fixed;
       left: 0;
       display: inline-flex;
