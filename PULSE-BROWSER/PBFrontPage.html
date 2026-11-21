@@ -667,7 +667,7 @@
       border-radius: 99px;
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
-      animation: bubbleFloatMinionette 1.2s ease-in-out,
+      animation: bubbleFloatMinionette 1s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
     }
     #pbPulseDetailsEarn {
@@ -694,7 +694,7 @@
       border-radius: 99px;
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
-      animation: bubbleFloatMinionette2 1.2s ease-in-out,
+      animation: bubbleFloatMinionette2 1s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
     }
     @keyframes bubbleFloatMinionette {
@@ -730,7 +730,8 @@
       border-radius: 99px;
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
-      animation: pulseGlow 3.5s ease-in-out infinite;
+      animation: pbPulseMessengerFrame2 20s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
     }
 
     #pbPulseMessengered {
@@ -746,6 +747,7 @@
       animation: pbPulseMessengerFrame 0.75s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
     }
+
     @keyframes pbPulseMessengerFrame {
       0%   { transform: translate(0px, -267px); }
       8%   { transform: translate(0px, -333px); }
@@ -754,6 +756,18 @@
       48%  { transform: translate(0px, -431px); }
       64%  { transform: translate(0px, -471px); }
       80%  { transform: translate(0px, -511px); }
+      100% { transform: translate(0px, -540px); }
+    }
+
+    @keyframes pbPulseMessengerFrame2 {
+      0%   { transform: translate(0px, -540px); }
+      8%   { transform: translate(0px, -530px); }
+      20%  { transform: translate(0px, -540px); }
+      30%  { transform: translate(0px, -543px); }
+      48%  { transform: translate(0px, -540px); }
+      64%  { transform: translate(0px, -527px); }
+      80%  { transform: translate(0px, -539px); }
+      90% { transform: translate(0px, -538px); }
       100% { transform: translate(0px, -540px); }
     }
 

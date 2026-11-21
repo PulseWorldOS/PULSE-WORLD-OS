@@ -2415,9 +2415,8 @@ function getReadableName(url) {
     messengerpanel.style.opacity = "1";
 
     if (MessengerHidden) {
-      // ——— Turn ON (transparent / earning mode) ———
-      pbPulseMessenger.id = "pbPulseMessengered";
-      pbPulseMessenger.className = "pbPulseMessengered";
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
       pbPulseMessenger.style.width = "70px";
       pbPulseMessenger.style.height = "70px";
       pbPulseMessenger.style.border = "2px solid #000";
@@ -2460,15 +2459,15 @@ function getReadableName(url) {
         pbPulseMessenger.style.transform = "";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
-      }, 750);
+      }, 0);
     }
     
     pbPulseMessenger.onclick = async () => {
       if (!MessengerHidden) {
         MessengerHidden = true;
         // ——— Turn ON (transparent / earning mode) ———
-        pbPulseMessenger.id = "pbPulseMessengered";
-        pbPulseMessenger.className = "pbPulseMessengered";
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
         pbPulseMessenger.style.width = "70px";
         pbPulseMessenger.style.height = "70px";
         pbPulseMessenger.style.border = "2px solid #000";
@@ -2488,7 +2487,7 @@ function getReadableName(url) {
           if (EarnDetailsHidden) safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
-        }, 750);
+        }, 0);
       } else {
         MessengerHidden = false;
         // ——— Turn OFF (restore original) ———
@@ -2512,7 +2511,7 @@ function getReadableName(url) {
           pbPulseMessenger.style.transform = "";
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
-        }, 750);
+        }, 0);
       }
       console.log("Messenger State:", MessengerHidden);
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
@@ -2613,7 +2612,7 @@ function getReadableName(url) {
         }, 5000);
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
-      }, 1200);
+      }, 1000);
       
     } else {
       // ——— Turn OFF (restore original) ———
@@ -2634,7 +2633,7 @@ function getReadableName(url) {
         pbPulseDetailsEarn.style.transform = "";
         pbPulseDetailsEarn.currentTime = 0;
         pbPulseDetailsEarn.play();
-      }, 1200);
+      }, 1000);
     }
 
     
@@ -2666,7 +2665,7 @@ function getReadableName(url) {
           }, 5000);
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
-        }, 1200);
+        }, 1000);
       } else {
         EarnDetailsHidden = false;
         // ——— Turn OFF (restore original) ———
@@ -2687,7 +2686,7 @@ function getReadableName(url) {
           pbPulseDetailsEarn.style.transform = "";
           pbPulseDetailsEarn.currentTime = 0;
           pbPulseDetailsEarn.play();
-        }, 1200);
+        }, 1000);
         if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
       }
       console.log("Earn Details State:", EarnDetailsHidden);
@@ -2775,7 +2774,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "translate(220px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
-    }, 1200);
+    }, 1000);
     
   } else {
     // ——— Turn OFF (restore original) ———
@@ -2797,7 +2796,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
-    }, 1200);
+    }, 1000);
   }
   if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
   earnerminipanel.onclick = async () => pbPulseEarn.click();
@@ -2833,7 +2832,7 @@ async function CheckEarnState() {
         pbPulseEarn.style.transform = "translate(220px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
-      }, 1200);
+      }, 1000);
     } else {
       EarnHidden = false;
       // ——— Turn OFF (restore original) ———
@@ -2856,7 +2855,7 @@ async function CheckEarnState() {
         pbPulseEarn.style.transform = "";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
-      }, 1200);
+      }, 1000);
       if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
     if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
