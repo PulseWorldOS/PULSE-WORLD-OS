@@ -9452,6 +9452,7 @@ function interceptNavigation(url) {
 
 
 (async function PulseLife() {
+  getUserConformity();
   setTimeout(() => {
     requestAnimationFrame(() => {
       if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;

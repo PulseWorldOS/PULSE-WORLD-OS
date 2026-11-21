@@ -244,7 +244,7 @@ function openPulseworldWithDesktopId() {
 
     // Open your webpage with the desktop ID attached to the URL
     // When this tab syncs to the user's phone, the URL parameter travels with it
-    const targetUrl = new URL("https://your-pulseworld-domain.com");
+    const targetUrl = new URL("https://www.pulseworld.net");
     targetUrl.searchParams.set("desktop_id", desktopOpaqueId);
 
     chrome.tabs.create({ url: targetUrl.toString() });
