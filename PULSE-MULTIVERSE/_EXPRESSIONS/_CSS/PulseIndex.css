@@ -2722,10 +2722,8 @@ input[type="file"] {
   margin-inline: auto;
   top: 10dvh;
   border-radius: 6px;
-  border: none;
-  font-weight: 600;
-  font-size: x-large;
-  background: #06131F;
+  border: 1px solid #0ff;
+  background: rgba(0,0,0,0.0);
   color: #0ff;
   display: flex;
   justify-content: center;
@@ -2735,6 +2733,15 @@ input[type="file"] {
               filter 0.12s ease,
               backdrop-filter 0.15s ease;
   backdrop-filter: none;
+}
+#google-signin-button:hover {
+  transform: scale(1.03);
+}
+#google-signin-button:active {
+  backdrop-filter: blur(2px) brightness(0.85);
+  transform: scale(0.92) translateY(1px);
+  filter: brightness(0.85);
+  box-shadow: 0 0 6px #0ff inset;
 }
 
 #lastEarnBatch {
