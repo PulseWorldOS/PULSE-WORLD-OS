@@ -5,6 +5,7 @@ let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
 let itrunonce = false;
+let identityrunonce = false;
 let engineType = "text";
 let predictionText = "Running Stable";
 let WasmSuccess = false;
@@ -1057,9 +1058,10 @@ async function runLocalAI() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
-          
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1167,9 +1169,10 @@ ${rawPrompt}
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
-      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
-        
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2033,9 +2036,10 @@ async function appendCompanionMessage(area, role, text) {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2148,9 +2152,10 @@ CompanionConsoleSend.onclick = async () => {
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
-      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
-        
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2205,9 +2210,10 @@ CompanionConsoleSend.onclick = async () => {
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
-      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
-        
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3560,9 +3566,10 @@ setInterval(async () => {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3633,9 +3640,10 @@ setInterval(async () => {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5172,9 +5180,10 @@ async function updateModuleIcons(settings, browser) {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
-      
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6891,9 +6900,10 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6957,9 +6967,10 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -7220,9 +7231,10 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
-          
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
