@@ -232,25 +232,6 @@ if (bootVideo) {
   BootMeNowPlease();
 }
 
-// Requires "identity" permission in manifest.json (omit "identity.email" for privacy)
-function openPulseworldWithDesktopId() {
-  chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, (userInfo) => {
-    if (!userInfo.id) {
-      console.warn("User is not signed into a Chrome profile.");
-      return;
-    }
-
-    const desktopOpaqueId = userInfo.id;
-
-    // Open your webpage with the desktop ID attached to the URL
-    // When this tab syncs to the user's phone, the URL parameter travels with it
-    const targetUrl = new URL("https://www.pulseworld.net");
-    targetUrl.searchParams.set("desktop_id", desktopOpaqueId);
-
-    chrome.tabs.create({ url: targetUrl.toString() });
-  });
-}
-
 
 // Utility: load settings
 async function loadOrders() {
@@ -4085,6 +4066,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const favicon = snapshot.regfavicon ?? snapshot.favicon;
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
       const ValueFromTab = snapshot.assumedValue ?? 0;
+      const MyPulseIdentity = snapshot.MyPulseIdentity;
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
         saveCache();
@@ -4096,7 +4078,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${favicon}"
-               alt="${MemoryLayer} MB || ${currency(ValueFromTab)}" />
+               alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${MyPulseIdentity}" />
         </div>
       `;
 
@@ -5444,7 +5426,7 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
-  openPulseworldWithDesktopId();
+  
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
