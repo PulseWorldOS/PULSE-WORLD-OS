@@ -16,7 +16,7 @@ let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
-let messengerVideoRunOnce = false;
+let MessengerVideoRunOnce = false;
 let CompanionMessage = null;
 let realmSummary = null;
 let higherAIDisplay = null;
@@ -2417,42 +2417,9 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
-    const MessengerVideo = await chrome.storage.local.get(["messengerVideoRunOnce"]);
-    if (MessengerVideo) messengerVideoRunOnce = MessengerVideo.messengerVideoRunOnce ?? false;
+    const MessengerVideo = await chrome.storage.local.get(["MessengerVideoRunOnce"]);
+    if (MessengerVideo) MessengerVideoRunOnce = MessengerVideo.MessengerVideoRunOnce ?? false;
     messengerpanel.style.opacity = "1";
-
-    if (!messengerVideoRunOnce) {
-      messengerBootVideo.onclick = async () => {
-        console.log(
-          "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
-          "color:#H02FHA; font-weight:bold; font-family:monospace;"
-        );
-
-        try {
-          // Stop playback immediately
-          messengerBootVideo.pause();
-          messengerBootVideo.currentTime = 0;
-        } catch (err) {
-          console.warn("MessengerVideo pause error:", err);
-        }
-
-        // Hide the video membrane
-        messengerBootVideo.style.opacity = "0";
-        messengerBootVideo.style.display = "none";
-      };
-    
-      setTimeout(async () => {
-        // Hide the video membrane
-        messengerBootVideo.style.opacity = "0";
-        messengerBootVideo.style.display = "none";
-        messengerVideoRunOnce = true;
-        await PulsesafeStorageSet({ messengerVideoRunOnce });
-      }, 5000);
-    } else {
-      // Hide the video membrane
-      messengerBootVideo.style.opacity = "0";
-      messengerBootVideo.style.display = "none";
-    }
 
     if (MessengerHidden) {
       pbPulseMessenger.id = "pbPulseMessenger";
@@ -2555,7 +2522,42 @@ function getReadableName(url) {
       }
       console.log("Messenger State:", MessengerHidden);
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
+      messengerBootVideo.style.display = "block";
+      messengerBootVideo.play();
     };
+
+    if (!MessengerVideoRunOnce) {
+      messengerBootVideo.onclick = async () => {
+        console.log(
+          "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
+          "color:#H02FHA; font-weight:bold; font-family:monospace;"
+        );
+
+        try {
+          // Stop playback immediately
+          messengerBootVideo.pause();
+          messengerBootVideo.currentTime = 0;
+        } catch (err) {
+          console.warn("MessengerVideo pause error:", err);
+        }
+
+        // Hide the video membrane
+        messengerBootVideo.style.opacity = "0";
+        messengerBootVideo.style.display = "none";
+      };
+    
+      setTimeout(async () => {
+        // Hide the video membrane
+        messengerBootVideo.style.opacity = "0";
+        messengerBootVideo.style.display = "none";
+        MessengerVideoRunOnce = true;
+        await PulsesafeStorageSet({ MessengerVideoRunOnce });
+      }, 5000);
+    } else {
+      // Hide the video membrane
+      messengerBootVideo.style.opacity = "0";
+      messengerBootVideo.style.display = "none";
+    }
   }
 
   async function CheckEarnDetailsState() {
