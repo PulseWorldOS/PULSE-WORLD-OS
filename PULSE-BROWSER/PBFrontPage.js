@@ -1069,7 +1069,8 @@ async function runLocalAI() {
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -1182,7 +1183,8 @@ ${rawPrompt}
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
         PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+        const identityName = document.getElementById("identityName");
+        identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2051,7 +2053,8 @@ async function appendCompanionMessage(area, role, text) {
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -2169,7 +2172,8 @@ CompanionConsoleSend.onclick = async () => {
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
         PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+        const identityName = document.getElementById("identityName");
+        identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2229,7 +2233,8 @@ CompanionConsoleSend.onclick = async () => {
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
         PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+        const identityName = document.getElementById("identityName");
+        identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
       }
@@ -2522,6 +2527,8 @@ function getReadableName(url) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
       console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
     }
     
     if (HigherAuthority) {
@@ -3703,7 +3710,8 @@ setInterval(async () => {
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -3779,7 +3787,8 @@ setInterval(async () => {
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -4241,7 +4250,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const favicon = snapshot.regfavicon ?? snapshot.favicon;
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
       const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
-      const PulseIdentity = MyPulseIdentity ?? snapshot.MyPulseIdentity;
+      const identityName = document.getElementById("identityName");
+      const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity;
 
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
@@ -4254,7 +4264,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon"
                src="${favicon}"
-               alt="${MemoryLayer} MB || ${currency(ValueFromTab)}" />
+               alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
         </div>
       `;
 
@@ -5321,7 +5331,8 @@ async function updateModuleIcons(settings, browser) {
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
       PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
     }
@@ -7043,7 +7054,8 @@ function CheckBackTab() {
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -7063,7 +7075,8 @@ function CheckBackTab() {
       await pbRenderCacheList2();
       await CheckTime();
       PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
@@ -7114,7 +7127,8 @@ function CheckBackTab() {
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -7380,7 +7394,8 @@ function CheckBackTab() {
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
           PulsesafeStorageSet({ MyPulseIdentity }); 
-          // Equivalent to: PulsesafeStorageSet({ MyPulseIdentity: MyPulseIdentity });
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = MyPulseIdentity.name ?? "Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
