@@ -4062,7 +4062,7 @@ async function pulseSupabaseSync() {
     const locationproximity = storedProximity ?? locationResult;
 
     if (!storedIdentity.id) return;
-    identitySQL.innerHTML = storedIdentity.id;
+    identitySQL.innerHTML = storedIdentity;
     if (PulseRealm.CurrentHost.includes("netlify")) return;
     fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
