@@ -9671,6 +9671,12 @@ if (navigator.gpu) {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     await pulseSupabaseSync();
   }, 20000);
+
+  setTimeout(async () => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+    await pulseSupabaseSync();
+    await start24HourSoakTest();
+  }, 1000);
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -9803,12 +9809,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     passport
   });
-  
-  setTimeout(async () => {
-    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    await pulseSupabaseSync();
-    await start24HourSoakTest();
-  }, 7000);
 });
 
 // document.addEventListener("visibilitychange", () => {
