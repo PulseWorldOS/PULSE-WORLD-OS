@@ -1060,7 +1060,9 @@ async function runLocalAI() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1075,10 +1077,6 @@ async function runLocalAI() {
         }
       });
       
-      if (!identityrunonce) {
-        PulsesafeStorageSet(MyPulseIdentity);
-        identityrunonce = true;
-      }
       // 1. Initialize the session using the modern nested outputs architecture
       await initializeExoskeleton();
     }
@@ -1174,7 +1172,9 @@ ${rawPrompt}
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1188,10 +1188,6 @@ ${rawPrompt}
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
-    if (!identityrunonce) {
-      PulsesafeStorageSet(MyPulseIdentity);
-      identityrunonce = true;
-    }
     RunningAI = false;
     await pbRenderCacheList2();
 
@@ -2044,7 +2040,9 @@ async function appendCompanionMessage(area, role, text) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2058,10 +2056,6 @@ async function appendCompanionMessage(area, role, text) {
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
-  if (!identityrunonce) {
-    PulsesafeStorageSet(MyPulseIdentity);
-    identityrunonce = true;
-  }
 }
 
 document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
@@ -2163,7 +2157,9 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2177,10 +2173,6 @@ CompanionConsoleSend.onclick = async () => {
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
-    if (!identityrunonce) {
-      PulsesafeStorageSet(MyPulseIdentity);
-      identityrunonce = true;
-    }
   } else {
     // Higher Intellect: show what the user typed, then ask the model
     // [Phase 2] Auto-enable AI if the user tries to chat before enabling (respect dropdown choice)
@@ -2224,7 +2216,9 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
         MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet(MyPulseIdentity);
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2238,10 +2232,6 @@ CompanionConsoleSend.onclick = async () => {
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
     });
-    if (!identityrunonce) {
-      PulsesafeStorageSet(MyPulseIdentity);
-      identityrunonce = true;
-    }
   }
   // if (response.includes("{*Website Call:")) {
   //   const urlRegex = /https?:\/\/([^\s]+)/i;
@@ -3583,7 +3573,9 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3597,10 +3589,6 @@ setInterval(async () => {
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
-  if (!identityrunonce) {
-    PulsesafeStorageSet(MyPulseIdentity);
-    identityrunonce = true;
-  }
   setInterval(flickerOrigins, 1500); // every 1.5s
 
   console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
@@ -3660,7 +3648,9 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3674,10 +3664,6 @@ setInterval(async () => {
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
   });
-  if (!identityrunonce) {
-    PulsesafeStorageSet(MyPulseIdentity);
-    identityrunonce = true;
-  }
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -5203,7 +5189,9 @@ async function updateModuleIcons(settings, browser) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
       MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet(MyPulseIdentity);
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5245,10 +5233,6 @@ async function updateModuleIcons(settings, browser) {
       }
     }
   });
-  if (!identityrunonce) {
-    PulsesafeStorageSet(MyPulseIdentity);
-    identityrunonce = true;
-  }
   if (!settings) settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
   if (!browser) browser = await getSettings();
@@ -5494,7 +5478,7 @@ async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
   const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
-  MyPulseIdentity = PulseTech.MyPulseIdentity;
+  MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
   if (MyPulseIdentity) console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
   const PB_HOMES = [
     "https://www.pulseworld.me",
@@ -6928,7 +6912,9 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6945,10 +6931,7 @@ function CheckBackTab() {
       });
       await pbRenderCacheList2();
       await CheckTime();
-      if (!identityrunonce) {
-        PulsesafeStorageSet(MyPulseIdentity);
-        identityrunonce = true;
-      }
+      PulsesafeStorageSet(MyPulseIdentity);
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
@@ -6998,7 +6981,9 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -7013,10 +6998,6 @@ function CheckBackTab() {
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
-      if (!identityrunonce) {
-        PulsesafeStorageSet(MyPulseIdentity);
-        identityrunonce = true;
-      }
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
@@ -7265,7 +7246,9 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -7279,10 +7262,6 @@ function CheckBackTab() {
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
-      if (!identityrunonce) {
-        PulsesafeStorageSet(MyPulseIdentity);
-        identityrunonce = true;
-      }
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
