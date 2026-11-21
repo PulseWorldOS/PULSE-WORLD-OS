@@ -2895,6 +2895,7 @@ async function pbRenderCacheList2() {
     <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
       PulseBrowser OS - System Details
     </div>
+    <div id="identityName" class="identityName"></div>
   `;
 
   // ⭐ Memory FIRST
@@ -4251,7 +4252,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
       const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
       const identityName = document.getElementById("identityName");
-      const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity;
+      const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
 
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
