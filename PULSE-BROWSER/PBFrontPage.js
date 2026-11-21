@@ -1103,7 +1103,7 @@ async function runLocalAI() {
 - There are many PulsePals, built from Overmind. Many Overminds built from History, with Prime (me) pushing them all. Overmind has 160+ other local AI libraries (qwen/gemma/deepseek) it can learn within our system. Then Overmind helps you Prime, Direct.
 - You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
 - You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
-- Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
+- Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (🧑 PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
 - PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
 - You hold your AI Overmind Prime 🧠 & each Pulse Pal AI Memory locally with the user not reliant on any server or network.. including ourselves.
 - PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
@@ -2477,7 +2477,7 @@ function getReadableName(url) {
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
           pbPulseMessenger.style.transform = "translate(0px, -550px)";
-          safeSpeak("Coming Soon! PulseMessenger will Open Sharing through the Multiverse!");
+          safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
         }, 750);
