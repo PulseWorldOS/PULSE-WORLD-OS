@@ -1059,7 +1059,7 @@ async function runLocalAI() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
           MyPulseIdentity = response.MyPulseIdentity;
-          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1169,7 +1169,7 @@ ${rawPrompt}
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
         MyPulseIdentity = response.MyPulseIdentity;
-        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2035,7 +2035,7 @@ async function appendCompanionMessage(area, role, text) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
-      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2150,7 +2150,7 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
         MyPulseIdentity = response.MyPulseIdentity;
-        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2207,7 +2207,7 @@ CompanionConsoleSend.onclick = async () => {
       }
       if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
         MyPulseIdentity = response.MyPulseIdentity;
-        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3562,7 +3562,7 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
-      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3635,7 +3635,7 @@ setInterval(async () => {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
-      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5174,7 +5174,7 @@ async function updateModuleIcons(settings, browser) {
     }
     if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
-      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -7222,7 +7222,7 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
           MyPulseIdentity = response.MyPulseIdentity;
-          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
