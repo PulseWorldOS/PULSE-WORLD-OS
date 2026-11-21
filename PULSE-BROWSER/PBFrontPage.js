@@ -5479,7 +5479,6 @@ async function AdBlockerOn() {
   }).then(() => {
     console.log("AdBlockerOn Ruleset enabled successfully.");
   });
-
 }
 
 async function setTheStage() {
