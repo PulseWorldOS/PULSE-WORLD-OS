@@ -2570,6 +2570,7 @@ async function GetThisMessengerDone() {
     }
 
     exitinnerpanel.onclick = async () => {
+      MessengerHidden = true;
       pbPulseMessenger.id = "pbPulseMessenger";
       pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
       pbPulseMessenger.style.width = "70px";
