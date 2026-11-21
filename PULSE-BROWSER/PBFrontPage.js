@@ -2426,12 +2426,6 @@ function getReadableName(url) {
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
         pbPulseMessenger.style.transform = "translate(0px, -550px)";
-        setTimeout(() => {
-          pulsepaltalk.style.opacity = "1";
-        }, 1500);
-        setTimeout(() => {
-          pulsepaltalk.style.opacity = "0";
-        }, 5000);
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 1200);
@@ -2483,12 +2477,7 @@ function getReadableName(url) {
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
           pbPulseMessenger.style.transform = "translate(0px, -550px)";
-          setTimeout(() => {
-            pulsepaltalk.style.opacity = "1";
-          }, 1500);
-          setTimeout(() => {
-            pulsepaltalk.style.opacity = "0";
-          }, 5000);
+          safeSpeak("Coming Soon! PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
         }, 1200);
