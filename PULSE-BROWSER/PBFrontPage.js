@@ -6980,7 +6980,6 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
-          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -6997,6 +6996,7 @@ function CheckBackTab() {
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
+      PulsesafeStorageSet(MyPulseIdentity);
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
@@ -7245,7 +7245,6 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
-          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
@@ -7261,6 +7260,7 @@ function CheckBackTab() {
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
       });
+      PulsesafeStorageSet(MyPulseIdentity);
       chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
         if (chrome.runtime.lastError) return;
         if (!response || !response.ok) {
