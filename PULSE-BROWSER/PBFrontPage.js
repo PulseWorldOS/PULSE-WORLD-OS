@@ -3016,7 +3016,10 @@ async function pbRenderCacheList2() {
   
   const identityName = document.getElementById("identityName");
   identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-
+  identityName.onclick = async () => {
+    openNamedTab("PulseIdentity", identityLink);
+    await PBUniversalBoost.warmOrigin(identityLink);
+  };
   StorageRunning = false;
 }
 // function writeBigBlob() {
@@ -6171,11 +6174,6 @@ aboutBtn.addEventListener("click", async () => {
   pbPreconnect([link]);
   openNamedTab("PulseBrowserOS", link);
   await PBUniversalBoost.warmOrigin(link);
-});
-
-identityName.addEventListener("click", async () => {
-  openNamedTab("PulseIdentity", identityLink);
-  await PBUniversalBoost.warmOrigin(identityLink);
 });
 
 // Click logic stays the same
