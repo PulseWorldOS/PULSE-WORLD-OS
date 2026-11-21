@@ -2714,8 +2714,8 @@ input[type="file"] {
 
 #google-signin-button {
   position: fixed;
-  width: 7.5dvw;
-  height: 3.5dvh;
+  width: 7dvw;
+  height: 3dvh;
   padding: 0;
   /* TRUE CENTERING WITH NO LEFT/RIGHT */
   inset-inline: 0;
