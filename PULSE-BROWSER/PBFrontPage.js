@@ -1057,7 +1057,7 @@ async function runLocalAI() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
           MyPulseIdentity = response.MyPulseIdentity;
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         }
@@ -1167,7 +1167,7 @@ ${rawPrompt}
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
-      if (response.MyPulseIdentity) {
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
         MyPulseIdentity = response.MyPulseIdentity;
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       }
@@ -2033,7 +2033,7 @@ async function appendCompanionMessage(area, role, text) {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
     }
@@ -2148,7 +2148,7 @@ CompanionConsoleSend.onclick = async () => {
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
-      if (response.MyPulseIdentity) {
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
         MyPulseIdentity = response.MyPulseIdentity;
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       }
@@ -2205,7 +2205,7 @@ CompanionConsoleSend.onclick = async () => {
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
-      if (response.MyPulseIdentity) {
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
         MyPulseIdentity = response.MyPulseIdentity;
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       }
@@ -3560,7 +3560,7 @@ setInterval(async () => {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
     }
@@ -3633,7 +3633,7 @@ setInterval(async () => {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
     }
@@ -4096,7 +4096,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
       const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
       const PulseIdentity = MyPulseIdentity ?? snapshot.MyPulseIdentity;
-      
+
       if (PBROWSERFAVICON_CACHE[realm]) {
         PBROWSERFAVICON_CACHE[realm] = favicon;
         saveCache();
@@ -5172,7 +5172,7 @@ async function updateModuleIcons(settings, browser) {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
-    if (response.MyPulseIdentity) {
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
       MyPulseIdentity = response.MyPulseIdentity;
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
     }
@@ -6891,7 +6891,7 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
           MyPulseIdentity = response.MyPulseIdentity;
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         }
@@ -6957,7 +6957,7 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
           MyPulseIdentity = response.MyPulseIdentity;
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         }
@@ -7220,7 +7220,7 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
-        if (response.MyPulseIdentity) {
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity) {
           MyPulseIdentity = response.MyPulseIdentity;
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         }
