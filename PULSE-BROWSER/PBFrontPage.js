@@ -112,6 +112,8 @@ const messengerpanel = document.getElementById("messenger-panel");
 let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const exitinnerpanel = document.getElementById("exit-inner-panel");
+const maximizeBtn = document.getElementById("maximizeBtn");
+const minimizeBtn = document.getElementById("minimizeBtn");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
@@ -2568,6 +2570,62 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.play();
       }, 0);
     }
+
+    minimizeBtn.onclick = async () => {
+      MessengerHidden = true;
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "70px";
+      pbPulseMessenger.style.height = "70px";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "none";
+      messengerinnerpanel.style.pointerEvents = "none";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "none";
+      messengerpanel.style.background = "transparent";
+      messengerpanel.style.backdropFilter = "none";
+      messengerpanel.style.boxShadow = "none";
+      messengerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";
+        pbPulseMessenger.style.opacity = "1";
+        pbPulseMessenger.style.transform = "translate(0px, -540px)";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 0);
+    };
+
+    maximizeBtn.onclick = async () => {
+      // 1. Save the original inline styles so you can revert to them accurately
+      const originalStyles = {
+        height: messengerpanel.style.height,
+        width: messengerpanel.style.width,
+        inset: messengerpanel.style.inset,
+        objectFit: messengerpanel.style.objectFit,
+      };
+
+      // 2. Apply maximized styles
+      messengerpanel.style.height = "100vh";
+      messengerpanel.style.width = "100vw";
+      messengerpanel.style.inset = "0";
+      messengerpanel.style.objectFit = "contain";
+
+      // 3. Define the Escape handler and remove it once triggered
+      const handleEscape = (e) => {
+        if (e.key === "Escape") {
+          messengerpanel.style.height = originalStyles.height;
+          messengerpanel.style.width = originalStyles.width;
+          messengerpanel.style.inset = originalStyles.inset;
+          messengerpanel.style.objectFit = originalStyles.objectFit;
+
+          document.removeEventListener("keydown", handleEscape);
+        }
+      };
+
+      document.addEventListener("keydown", handleEscape);
+    };
+
 
     exitinnerpanel.onclick = async () => {
       MessengerHidden = true;
