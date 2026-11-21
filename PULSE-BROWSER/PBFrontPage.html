@@ -40,14 +40,6 @@
       cursor: pointer;
     }
 
-    .pw-messenger {
-      position: absolute;
-      width: 100%;
-      height: 100%; 
-      background-image: url("PulseMessengerConsole.webp");
-      background-size: cover;
-      background-position: center;    
-    }
     .nebula {
       position: absolute;
       width: 100%;
@@ -194,8 +186,8 @@
       top: 42vh;
       inset-inline: 0;
       margin-inline: auto;
-      height: 380px;
-      width: clamp(600px, 12vw, 650px);
+      height: 510px;
+      width: clamp(830px, 12vw, 880px);
       display: flex;
       opacity: 0;
       justify-content: center;
@@ -212,6 +204,12 @@
     }
 
     .messenger-inner-panel {
+      background-image: url("PulseMessengerConsole.webp");
+      background-size: cover;
+      background-position: center;    
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
       width: 100%;
       height: 100%;
       font-size: 0.8rem;
@@ -709,9 +707,9 @@
       z-index: 10;
       cursor: pointer;
       position: absolute;
-      width: 25%;
+      width: 15%;
       opacity: 0.25;
-      margin-bottom: 20px;
+      margin-bottom: 140px;
       height: auto;
       border-radius: 99px;
       object-fit: inherit;
@@ -723,8 +721,8 @@
       z-index: 10;
       cursor: pointer;
       position: absolute;
-      width: 25%;
-      margin-bottom: 20px;
+      width: 15%;
+      margin-bottom: 140px;
       height: auto;
       border-radius: 99px;
       object-fit: inherit;
@@ -1842,16 +1840,15 @@
   </div>
   <div class="messenger-panel" id="messenger-panel">
     <video id="pbPulseMessenger" class="pbPulseMessenger" src="PulseMessenger.mp4" autoplay muted playsinline aria-label="pbPulseMessenger"></video>
-    <img class="pw-messenger" id="pw-messenger">
-    <!-- <div class="messenger-inner-panel" id="messenger-inner-panel">
-      <div class="messenger-overlay" id="messenger-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
+    <div class="messenger-inner-panel" id="messenger-inner-panel">
+      <!-- <div class="messenger-overlay" id="messenger-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Messenger <span class="overlayengine" id="overlayengine"> - 🧑‍🎨 Console Overlay</span>
       </div>
-      <div id="MessengerMessage" class="MessengerMessage">
+      <div id="MessengerMessage" class="MessengerMessage"> -->
 
-      </div>
+      <!-- </div> -->
 
-    </div> -->
+    </div>
   </div>
   <div class="earner-helper-panel" id="earner-helper-panel">
     <video id="pbPulseDetailsEarn" class="pbPulseDetailsEarn" src="PulsePalDetails.mp4" autoplay muted playsinline aria-label="pbPulseDetailsEarn"></video>
