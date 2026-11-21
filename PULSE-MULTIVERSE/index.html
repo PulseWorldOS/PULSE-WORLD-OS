@@ -4039,7 +4039,7 @@ async function ensureLocationAccess(options = {}) {
 }
 
 function previewObject(obj) {
-    const keys = Object.keys(obj);
+    const keys = obj;
     if (keys.length === 0) return "{}";
     return `{ ${keys} }`;
   }
