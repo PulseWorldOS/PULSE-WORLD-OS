@@ -444,10 +444,12 @@ self.addEventListener('fetch', event => {
   if (req.url.endsWith('.wasm') || req.url.includes('.wasm') || req.url.includes("speed.cloudflare.com") || req.url.includes('cdn.mellow.tel') || req.url.includes('olostep.com')) {
      return; // Bypasses service worker caching entirely
   }
+  
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
   if (req.url.protocol === 'http:' || req.url.includes("google.com")) {
     return; 
   }
+
   // Fetch current application code on return visits, retaining an offline fallback.
   if (url.origin === self.location.origin &&
       (req.mode === 'navigate' || /\.(?:html|js|txt|css)$/.test(url.pathname))) {
