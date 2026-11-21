@@ -445,7 +445,7 @@ self.addEventListener('fetch', event => {
      return; // Bypasses service worker caching entirely
   }
   // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (req.url.protocol === 'http:') {
+  if (req.url.protocol === 'http:' || req.url === "https://google.com") {
     return; 
   }
   // Fetch current application code on return visits, retaining an offline fallback.
