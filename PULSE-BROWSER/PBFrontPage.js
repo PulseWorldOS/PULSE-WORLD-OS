@@ -3728,9 +3728,9 @@ setInterval(async () => {
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
-      disablesw.innerText = "Resume System";
+      disablesw.src = "PulseResume.webp";
     } else {
-      disablesw.innerText = "Pause System";
+      disablesw.src = "PulseStop.webp";
     }
     if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
@@ -5343,9 +5343,9 @@ async function updateModuleIcons(settings, browser) {
     // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
     if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
     if (!ServiceWorkerOnline) {
-      disablesw.innerText = "Resume System";
+      disablesw.src = "PulseResume.webp";
     } else {
-      disablesw.innerText = "Pause System";
+      disablesw.src = "PulseStop.webp";
     }
     if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
       try {
@@ -6833,7 +6833,7 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
   if (ServiceWorkerOnline) {
     chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
     ServiceWorkerOnline = false;
-    disablesw.innerText = "Resume System";
+    disablesw.src = "PulseResume.webp";
     await pbRenderCacheList2();
     console.log("Service Worker PAUSED");
     return;
@@ -6844,7 +6844,7 @@ document.getElementById("disable-sw").addEventListener("click", async () => {
     console.log("Turning Service Worker back Online!");
     chrome.runtime.sendMessage({ type: "PB_COMPANION_RESUME" });
     ServiceWorkerOnline = true;
-    disablesw.innerText = "Pause System";
+    disablesw.src = "PulseStop.webp";
     await pbRenderCacheList2();
     console.log("Service Worker RESUMED");
   } catch (e) {
@@ -7141,9 +7141,9 @@ function CheckBackTab() {
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
-          disablesw.innerText = "Resume System";
+          disablesw.src = "PulseResume.webp";
         } else {
-          disablesw.innerText = "Pause System";
+          disablesw.src = "PulseStop.webp";
         }
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
@@ -7406,9 +7406,9 @@ function CheckBackTab() {
         // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
         if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
         if (!ServiceWorkerOnline) {
-          disablesw.innerText = "Resume System";
+          disablesw.src = "PulseResume.webp";
         } else {
-          disablesw.innerText = "Pause System";
+          disablesw.src = "PulseStop.webp";
         }
         if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
           try {
