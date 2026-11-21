@@ -2425,7 +2425,7 @@ function getReadableName(url) {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -561px)";
+        pbPulseMessenger.style.transform = "translate(0px, -545px)";
         setTimeout(() => {
           pulsepaltalk.style.opacity = "1";
         }, 1500);
