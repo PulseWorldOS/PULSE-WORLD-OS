@@ -2712,38 +2712,6 @@ input[type="file"] {
   backdrop-filter: none;
 }
 
-#google-signin-button {
-  position: fixed;
-  width: 7dvw;
-  height: 3dvh;
-  padding: 0;
-  /* TRUE CENTERING WITH NO LEFT/RIGHT */
-  inset-inline: 0;
-  margin-inline: auto;
-  bottom: 0.4dvh;
-  border-radius: 6px;
-  border: 1px solid #0ff;
-  background: rgba(0,0,0,0.0);
-  color: #0ff;
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.12s ease, 
-              box-shadow 0.12s ease, 
-              filter 0.12s ease,
-              backdrop-filter 0.15s ease;
-  backdrop-filter: none;
-  z-index: 999999;
-}
-#google-signin-button:hover {
-  transform: scale(1.03);
-}
-#google-signin-button:active {
-  backdrop-filter: blur(2px) brightness(0.85);
-  transform: scale(0.92) translateY(1px);
-  filter: brightness(0.85);
-  box-shadow: 0 0 6px #0ff inset;
-}
 
 #lastEarnBatch {
   position: fixed;
