@@ -8,7 +8,8 @@ let itrunonce = false;
 let identityrunonce = false;
 let engineType = "text";
 let predictionText = "Running Stable";
-let identityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
+let pulseIdentityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
+let pulseBankLink = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
 let WasmSuccess = false;
 let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
@@ -104,6 +105,7 @@ const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
+let earnerbankpanel = document.getElementById("earner-mini-bank-panel");
 const messengerpanel = document.getElementById("messenger-panel");
 let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
@@ -2749,6 +2751,7 @@ async function CheckEarnState() {
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
+
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";
@@ -2798,6 +2801,11 @@ async function CheckEarnState() {
   }
   if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
   earnerminipanel.onclick = async () => pbPulseEarn.click();
+
+  earnerbankpanel.onclick = async () => {
+    openNamedTab("PulseBank", pulseBankLink);
+    await PBUniversalBoost.warmOrigin(pulseBankLink);
+  };
 
   pbPulseEarn.onclick = async () => {
     if (!EarnHidden) {
@@ -3017,8 +3025,8 @@ async function pbRenderCacheList2() {
   const identityName = document.getElementById("identityName");
   identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
   identityName.onclick = async () => {
-    openNamedTab("PulseIdentity", identityLink);
-    await PBUniversalBoost.warmOrigin(identityLink);
+    openNamedTab("PulseIdentity", pulseIdentityLink);
+    await PBUniversalBoost.warmOrigin(pulseIdentityLink);
   };
   StorageRunning = false;
 }

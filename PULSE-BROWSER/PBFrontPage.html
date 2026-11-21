@@ -167,6 +167,28 @@
       z-index: 5;
     }
 
+    .earner-mini-bank-panel {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 20px;
+      width: clamp(30px, 12vw, 35px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
+      font-size: 0.8rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
     .earner-inner-panel {
       width: 100%;
       height: 100%;
@@ -1843,6 +1865,7 @@
     <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
     <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
+      <div class="earner-mini-bank-panel" id="earner-mini-bank-panel">🏦</div>
       <div class="earner-overlay" id="earner-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Earner <span class="overlayengine" id="overlayengine"><span style="color: gold;" class="overlayeng" id="overlayeng"><strong>$</strong></span> - 🌐 Engine Overlay</span>
       </div>
