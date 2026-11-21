@@ -18,7 +18,7 @@ const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 // --- CONFIG ----------------------------------------------------
 
 const META_DB = "PulseWorld-Drift";
-const META_STORE = "PulseWorld-Companion";
+const META_STORE = "PW-Companion";
 const META_KEY = "PulseWorld";
 
 const CACHE_NAME_PREFIX = "pulseworld-";
