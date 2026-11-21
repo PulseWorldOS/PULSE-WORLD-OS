@@ -16,7 +16,7 @@ let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
 let bootVideoRunOnce = false;
-let PulseMessengerVideoRunOnce = false;
+let PulseMessgrVideoRunOnce = false;
 let CompanionMessage = null;
 let realmSummary = null;
 let higherAIDisplay = null;
@@ -2417,8 +2417,8 @@ function getReadableName(url) {
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
-    const MessengerVideo = await chrome.storage.local.get(["PulseMessengerVideoRunOnce"]);
-    if (MessengerVideo) PulseMessengerVideoRunOnce = MessengerVideo.PulseMessengerVideoRunOnce ?? false;
+    const MessengerVideo = await chrome.storage.local.get(["PulseMessgrVideoRunOnce"]);
+    if (MessengerVideo) PulseMessgrVideoRunOnce = MessengerVideo.PulseMessgrVideoRunOnce ?? false;
     messengerpanel.style.opacity = "1";
 
     if (MessengerHidden) {
@@ -2497,6 +2497,7 @@ function getReadableName(url) {
         }, 0);
       } else {
         MessengerHidden = false;
+        messengerBootVideo.style.display = "block";
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
@@ -2522,11 +2523,9 @@ function getReadableName(url) {
       }
       console.log("Messenger State:", MessengerHidden);
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
-      messengerBootVideo.style.display = "block";
-      messengerBootVideo.play();
     };
 
-    if (!PulseMessengerVideoRunOnce) {
+    if (!PulseMessgrVideoRunOnce) {
       messengerBootVideo.onclick = async () => {
         console.log(
           "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Messenger Video SKIPPED by user.",
@@ -2550,8 +2549,8 @@ function getReadableName(url) {
         // Hide the video membrane
         messengerBootVideo.style.opacity = "0";
         messengerBootVideo.style.display = "none";
-        PulseMessengerVideoRunOnce = true;
-        await PulsesafeStorageSet({ PulseMessengerVideoRunOnce });
+        PulseMessgrVideoRunOnce = true;
+        await PulsesafeStorageSet({ PulseMessgrVideoRunOnce });
       }, 5000);
     } else {
       // Hide the video membrane
