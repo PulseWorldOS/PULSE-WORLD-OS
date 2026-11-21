@@ -236,7 +236,7 @@ if (bootVideo) {
 function openPulseworldWithDesktopId() {
   chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, (userInfo) => {
     if (!userInfo.id) {
-      console.error("User is not signed into a Chrome profile.");
+      console.warn("User is not signed into a Chrome profile.");
       return;
     }
 
