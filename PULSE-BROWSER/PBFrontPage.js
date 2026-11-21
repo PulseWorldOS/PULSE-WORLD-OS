@@ -2518,7 +2518,11 @@ function getReadableName(url) {
     if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
-    
+    if (!MyPulseIdentity) {
+      const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
+      MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
+      console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
+    }
     
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
@@ -5605,11 +5609,7 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
-  if (!MyPulseIdentity) {
-    const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
-    MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
-    console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
-  }
+  
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
