@@ -2482,7 +2482,7 @@ function getReadableName(url) {
           pbPulseMessenger.id = "pbPulseMessenger";
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
-          pbPulseMessenger.style.transform = "translate(0px, -561px)";
+          pbPulseMessenger.style.transform = "translate(0px, -548px)";
           setTimeout(() => {
             pulsepaltalk.style.opacity = "1";
           }, 1500);
@@ -2807,6 +2807,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.height = "70px";
       pbPulseEarn.style.border = "2px solid #000";
       earnerinnerpanel.style.display = "none";
+      earnerminipanel.style.boxShadow = "0 0 25px rgba(0, 0, 0, 0.45)";
       // earnerminipanel.style.height = "30px";
       // earnerminipanel.style.width = "30px";
       // earnerminipanel.style.top = "225px";
@@ -2833,6 +2834,7 @@ async function CheckEarnState() {
       pbPulseEarn.style.transform = "";
       pbPulseEarn.style.opacity = "0.25";
       earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerminipanel.style.boxShadow = "0 0 25px rgba(0, 0, 0, 0.45)";
       // earnerminipanel.style.top = "";
       // earnerminipanel.style.left = "";
       earnerpanel.style.background = "";
