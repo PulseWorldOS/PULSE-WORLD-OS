@@ -8,6 +8,7 @@ let itrunonce = false;
 let identityrunonce = false;
 let engineType = "text";
 let predictionText = "Running Stable";
+let identityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
 let WasmSuccess = false;
 let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
@@ -2529,6 +2530,10 @@ function getReadableName(url) {
       console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
       const identityName = document.getElementById("identityName");
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      identityName.onclick = async () => {
+        openNamedTab("PulseIdentity", identityLink);
+        await PBUniversalBoost.warmOrigin(identityLink);
+      };
     }
     
     if (HigherAuthority) {
@@ -2892,7 +2897,7 @@ async function pbRenderCacheList2() {
   
   // ⭐ Wipe panel completely
   listEl.innerHTML = `
-    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 6px; margin-bottom:6px;">
+    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:-2px;">
       PulseBrowser OS - System Details
     </div>
     <div id="identityName" class="identityName"></div>
@@ -7078,9 +7083,6 @@ function CheckBackTab() {
       });
       await pbRenderCacheList2();
       await CheckTime();
-      PulsesafeStorageSet({ MyPulseIdentity }); 
-      const identityName = document.getElementById("identityName");
-      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
     }, interval);
 
     setTimeout(pulseRehydrateTabs, 2000);
