@@ -5726,6 +5726,8 @@ async function setTheStage() {
 
   // [Fix] Start earner faster on tab refresh — was 6000ms, now 1000ms so it's nearly instant
   appendEarnerMessage(CompanionMessages, "⚡", "<-- PulseEarners/EarnBand Restarting -->");
+  appendEarnerMessage(CompanionMessages, "🔍", `"Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it." — Attributed to Albert Einstein`);
+  
   setTimeout(async () => {
     await start24HourSoakTest();
     updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
