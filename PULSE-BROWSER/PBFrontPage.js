@@ -5469,7 +5469,8 @@ async function AdBlockerOn() {
 async function setTheStage() {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseBrowserSettings = await getSettings();
-  
+  const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
+  MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
   const PB_HOMES = [
     "https://www.pulseworld.me",
     "https://www.pulseworld.money",
@@ -7233,6 +7234,7 @@ function CheckBackTab() {
         }
         if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
           MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet(MyPulseIdentity);
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
         }
