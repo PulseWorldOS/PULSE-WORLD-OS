@@ -113,5 +113,23 @@
     "priority": 3,
     "action": { "type": "block" },
     "condition": { "urlFilter": "*mouseflow.com*" }
+  },
+  {
+    "id": 18,
+    "priority": 3,
+    "action": { "type": "block" },
+    "condition": { "urlFilter": "*doubleclick.net*" }
+  },
+  {
+    "id": 19,
+    "priority": 3,
+    "action": { "type": "block" },
+    "condition": { "urlFilter": "*googlesyndication.com*" }
+  },
+  {
+    "id": 20,
+    "priority": 3,
+    "action": { "type": "block" },
+    "condition": { "urlFilter": "*google-analytics.com*" }
   }
 ]
