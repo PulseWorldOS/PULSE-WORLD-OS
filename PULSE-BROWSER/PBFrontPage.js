@@ -2531,11 +2531,6 @@ function getReadableName(url) {
       console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
     }
-
-    identityName.onclick = async () => {
-      openNamedTab("PulseIdentity", identityLink);
-      await PBUniversalBoost.warmOrigin(identityLink);
-    };
     
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
@@ -6176,6 +6171,11 @@ aboutBtn.addEventListener("click", async () => {
   pbPreconnect([link]);
   openNamedTab("PulseBrowserOS", link);
   await PBUniversalBoost.warmOrigin(link);
+});
+
+identityName.addEventListener("click", async () => {
+  openNamedTab("PulseIdentity", identityLink);
+  await PBUniversalBoost.warmOrigin(identityLink);
 });
 
 // Click logic stays the same
