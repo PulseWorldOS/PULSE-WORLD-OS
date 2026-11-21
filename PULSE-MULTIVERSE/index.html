@@ -9670,7 +9670,7 @@ if (navigator.gpu) {
   SupabaseProtocol = setInterval(async () => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     await pulseSupabaseSync();
-  }, 30000);
+  }, 20000);
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -9808,7 +9808,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
     await pulseSupabaseSync();
     await start24HourSoakTest();
-  }, 4000);
+  }, 7000);
 });
 
 // document.addEventListener("visibilitychange", () => {
