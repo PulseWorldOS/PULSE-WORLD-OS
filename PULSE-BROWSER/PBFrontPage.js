@@ -2404,7 +2404,7 @@ function getReadableName(url) {
 }
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
-    MessengerHidden = We.MessengerInvisible ?? false;
+    MessengerHidden = We.MessengerInvisible ?? true;
 
     if (MessengerHidden) {
       // ——— Turn ON (transparent / earning mode) ———
