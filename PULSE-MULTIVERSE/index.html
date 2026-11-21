@@ -1112,29 +1112,6 @@ navigator.serviceWorker.addEventListener('message', event => {
   }
 });
 
-
-async function getUserConformity() {
-  chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, (userInfo) => {
-    if (!userInfo.id) {
-      console.log("Not signed into Chrome.");
-      return;
-    }
-
-    // userInfo.id is an opaque string (e.g., "108294719283746519283")
-    // userInfo.email is "" because "identity.email" was omitted
-    const currentId = userInfo.id;
-
-    chrome.storage.local.get(['savedUserId'], (result) => {
-      if (result.savedUserId === currentId) {
-        console.log("Match: Same Google account.");
-      } else {
-        console.log("Mismatch: Different Google account (or first run).");
-        chrome.storage.local.set({ savedUserId: currentId });
-      }
-    });
-  });
-}
-
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   if (soakTestTimer) {
@@ -9452,7 +9429,7 @@ function interceptNavigation(url) {
 
 
 (async function PulseLife() {
-  getUserConformity();
+  
   setTimeout(() => {
     requestAnimationFrame(() => {
       if (evoLogBox) evoLogBox.scrollTop = evoLogBox.scrollHeight;
