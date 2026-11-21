@@ -805,7 +805,7 @@ function getCharacterInterval() {
 }
 
 function getAnotherInterval() {
-  const base = 3650;
+  const base = 3150;
   // ⭐ Add human-like jitter (±20%)
   const jitterRange = base * 0.12;
   const jitter = (Math.random() * jitterRange * 2) - jitterRange;
@@ -827,7 +827,7 @@ setInterval(async () => {
   if (valueDiv) tabValue = valueDiv.textContent;
   identitySQL = document.getElementById("identitySQL");
   if (identitySQL) MyPulseIdentity = identitySQL.textContent
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch });
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------
@@ -922,10 +922,10 @@ async function injectHUD() {
     body = document.getElementById("pb-hud-body");
     updateHUD(body);
     PulseBrowserDomScan();
-  }, 8500);
+  }, 4500);
   setTimeout(() => {
     DomScanPreview();
-  }, 8000);
+  }, 4000);
 }
 
 function DomScanPreview() {
@@ -1931,6 +1931,7 @@ function injectPulseFlag() {
 function collectAndWarmAssetsContent() {
   const assets = [];
   valueDiv = document.getElementById("assumedValue");
+  identitySQL = document.getElementById("identitySQL");
   // -------------------------------------------------------
   // 1. Scripts
   // -------------------------------------------------------
@@ -2220,6 +2221,7 @@ async function PulseBrowserDomScan() {
   // Clone DOM safely
   const clone = document.documentElement.cloneNode(true);
   valueDiv = document.getElementById("assumedValue");
+  identitySQL = document.getElementById("identitySQL");
   // Strip heavy elements
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())

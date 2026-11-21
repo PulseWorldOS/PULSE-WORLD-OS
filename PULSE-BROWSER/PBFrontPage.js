@@ -1,5 +1,6 @@
 
 let lastEarnBatch = null;
+let MyPulseIdentity = null;
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
@@ -1056,6 +1057,10 @@ async function runLocalAI() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
+        if (response.MyPulseIdentity) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -1161,6 +1166,10 @@ ${rawPrompt}
           hour12: true
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+      }
+      if (response.MyPulseIdentity) {
+        MyPulseIdentity = response.MyPulseIdentity;
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2024,6 +2033,10 @@ async function appendCompanionMessage(area, role, text) {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
+    if (response.MyPulseIdentity) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -2135,6 +2148,10 @@ CompanionConsoleSend.onclick = async () => {
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
       }
+      if (response.MyPulseIdentity) {
+        MyPulseIdentity = response.MyPulseIdentity;
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
@@ -2187,6 +2204,10 @@ CompanionConsoleSend.onclick = async () => {
           hour12: true
         });
         appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+      }
+      if (response.MyPulseIdentity) {
+        MyPulseIdentity = response.MyPulseIdentity;
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3539,6 +3560,10 @@ setInterval(async () => {
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
     }
+    if (response.MyPulseIdentity) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -3607,6 +3632,10 @@ setInterval(async () => {
         hour12: true
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+    }
+    if (response.MyPulseIdentity) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5141,6 +5170,10 @@ async function updateModuleIcons(settings, browser) {
         hour12: true
       });
       appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+    }
+    if (response.MyPulseIdentity) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6857,6 +6890,10 @@ function CheckBackTab() {
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
         }
+        if (response.MyPulseIdentity) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
@@ -6918,6 +6955,10 @@ function CheckBackTab() {
             hour12: true
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -7177,6 +7218,10 @@ function CheckBackTab() {
             hour12: true
           });
           appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);

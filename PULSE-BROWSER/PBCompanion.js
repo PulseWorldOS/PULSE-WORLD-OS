@@ -75,7 +75,7 @@ let PulseRealmSettings = null;
 let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
 let totalUsed = 0;
-
+let MyPulseIdentity = null;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
@@ -3451,6 +3451,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.lastEarnBatch) {
         lastEarnBatch = msg.lastEarnBatch;
       }
+      if (msg.MyPulseIdentity) {
+        MyPulseIdentity = msg.MyPulseIdentity;
+      }
       sendResponse({ ok: true });
       break;
 
@@ -4217,7 +4220,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
       if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch });
+      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity });
       return true;
 
     case "PBCONSOLE_GET":
