@@ -2712,6 +2712,30 @@ input[type="file"] {
   backdrop-filter: none;
 }
 
+#google-signin-button {
+  position: fixed;
+  width: 7.5dvw;
+  height: 3.5dvh;
+  padding: 0;
+  /* TRUE CENTERING WITH NO LEFT/RIGHT */
+  inset-inline: 0;
+  margin-inline: auto;
+  top: 1dvh;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  font-size: x-large;
+  background: #06131F;
+  color: #0ff;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s ease, 
+              box-shadow 0.12s ease, 
+              filter 0.12s ease,
+              backdrop-filter 0.15s ease;
+  backdrop-filter: none;
+}
 
 #lastEarnBatch {
   position: fixed;
