@@ -2945,13 +2945,14 @@ let __PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
 
 async function pulseSupabaseSync() {
   if (__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
+  if (!MyPulseIdentity) return;
   
   try {
     
     fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", tetherCode: TetherCode, online, inactive: false })
+      body: JSON.stringify({ action: "sync", host: "PulseBrowser OS", identity: MyPulseIdentity, lastPage: "PulseBrowser OS", online, inactive: false })
     }).then((response) => {
       if (!response.ok) __PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
     }).catch(() => {
