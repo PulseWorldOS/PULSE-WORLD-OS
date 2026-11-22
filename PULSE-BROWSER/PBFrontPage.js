@@ -4751,10 +4751,18 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     } else {
       div = document.getElementById(bubbleId);
     }
+    const realms = PulseRealmSettings.externalStreamingLink;
+    realms = realms.replace("https://","");
+    realms = realms.replace("www.","");
 
     div.id = bubbleId;
     div.className = bubbleId;
 
+    if (PulseStreamingLive  && link.includes(realms)) {
+      div.style.opacity = "0.35";
+    } else {
+      div.style.opacity = "1";
+    }
     // const regfavicon = await getFavicon(realm);
     let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
