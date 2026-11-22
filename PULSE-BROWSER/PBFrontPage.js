@@ -5,6 +5,7 @@ let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
 let itrunonce = false;
+let MessengerMode = "Console";
 let identityrunonce = false;
 let engineType = "text";
 let predictionText = "Running Stable";
@@ -2689,21 +2690,7 @@ async function GetThisMessengerDone() {
         }, 0);
       } else {
         MessengerHidden = false;
-        messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        
-        // setTimeout(() => {
-        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        // }, 400);
-        // setTimeout(() => {
-        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDisplay.webp")`;
-        // }, 800);
-        // setTimeout(() => {
-        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
-        // }, 1200);
-        // setTimeout(() => {
-        //   messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
-        // }, 2000);
-        
+        if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
@@ -2731,20 +2718,26 @@ async function GetThisMessengerDone() {
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
     };
 
+    if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
+
     PulseMessengerMessages.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+      MessengerMode = "Talk";
     };
 
     HomeMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+      MessengerMode = "Console";
     };
 
     NotifyMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerNotify.webp")`;
+      MessengerMode = "Notify";
     };
 
     DiscoverMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDiscover.webp")`;
+      MessengerMode = "Discover";
     };
   }
 
