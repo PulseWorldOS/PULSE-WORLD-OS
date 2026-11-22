@@ -1103,7 +1103,7 @@ async function runLocalAI() {
         earnerminipanel.textContent = currency(OurassumedValue);
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
-        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
         earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -1223,7 +1223,7 @@ ${rawPrompt}
       earnerminipanel.textContent = currency(OurassumedValue);
       // Calculate elapsed time in days (86,400,000 ms in one day)
       const msPerDay = 1000 * 60 * 60 * 24;
-      const elapsedDays = (Date.now() - nowFP) / msPerDay;
+      const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
       earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -1268,7 +1268,7 @@ function appendEarnerMessage(area, role, text) {
   earnerminipanel.textContent = currency(OurassumedValue);
   // Calculate elapsed time in days (86,400,000 ms in one day)
   const msPerDay = 1000 * 60 * 60 * 24;
-  const elapsedDays = (Date.now() - nowFP) / msPerDay;
+  const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
   // Prevent division by zero or negative values if just started
   const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
   earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -2120,7 +2120,7 @@ async function appendCompanionMessage(area, role, text) {
     earnerminipanel.textContent = currency(OurassumedValue);
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
-    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
     earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -2245,7 +2245,7 @@ CompanionConsoleSend.onclick = async () => {
       earnerminipanel.textContent = currency(OurassumedValue);
       // Calculate elapsed time in days (86,400,000 ms in one day)
       const msPerDay = 1000 * 60 * 60 * 24;
-      const elapsedDays = (Date.now() - nowFP) / msPerDay;
+      const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
       earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -2312,7 +2312,7 @@ CompanionConsoleSend.onclick = async () => {
       earnerminipanel.textContent = currency(OurassumedValue);
       // Calculate elapsed time in days (86,400,000 ms in one day)
       const msPerDay = 1000 * 60 * 60 * 24;
-      const elapsedDays = (Date.now() - nowFP) / msPerDay;
+      const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
       earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -4083,7 +4083,7 @@ setInterval(async () => {
     earnerminipanel.textContent = currency(OurassumedValue);
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
-    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
     earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -4166,7 +4166,7 @@ setInterval(async () => {
     earnerminipanel.textContent = currency(OurassumedValue);
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
-    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
     earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -4200,7 +4200,7 @@ setInterval(async () => {
         earnerminipanel.textContent = currency(OurassumedValue);
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
-        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
         earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -5776,7 +5776,7 @@ async function updateModuleIcons(settings, browser) {
     earnerminipanel.textContent = currency(OurassumedValue);
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
-    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
     earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -7508,7 +7508,7 @@ function CheckBackTab() {
         earnerminipanel.textContent = currency(OurassumedValue);
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
-        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
         earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -7584,7 +7584,7 @@ function CheckBackTab() {
         earnerminipanel.textContent = currency(OurassumedValue);
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
-        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
         earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
@@ -7856,7 +7856,7 @@ function CheckBackTab() {
         earnerminipanel.textContent = currency(OurassumedValue);
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
-        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
         earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
