@@ -2030,6 +2030,8 @@ async function switchHigherModel(modelKey) {
 
 // Copy button inside code blocks (works for saved history too)
 document.addEventListener("click", (e) => {
+  PulseFrame2 = document.getElementById("PulseFrame2");
+  PulseFrame2.style.display = "none";
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
   if (!btn) return;
   const code = btn.closest(".pw-code")?.querySelector("pre");
@@ -2039,8 +2041,6 @@ document.addEventListener("click", (e) => {
       setTimeout(() => { btn.textContent = "copy"; }, 1200);
     }).catch(() => {});
   }
-  PulseFrame2 = document.getElementById("PulseFrame2");
-  PulseFrame2.style.display = "none";
 });
 
 async function appendCompanionMessage(area, role, text) {
@@ -4358,6 +4358,8 @@ function escapeMe() {
   };
 }
 
+let displayStyle = false;
+
 async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseFrame2 = document.getElementById("PulseFrame2");
@@ -4365,15 +4367,16 @@ async function openNamedTab(name, url) {
     if (PulseRealmSettings.externalStreamingLink && url.includes(PulseRealmSettings.externalStreamingLink)) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
-      if (PulseFrame2.style.display === "block") {
-        PulseFrame2 = document.getElementById("PulseFrame2");
-        PulseFrame2.src = url;
-        PulseFrame2.style.display = "none";
+      PulseFrame2 = document.getElementById("PulseFrame2");
+      if (!displayStyle) {
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        PulseFrame2.style.display = "block";
+        displayStyle = true;
         return;
       } else {
-        PulseFrame2 = document.getElementById("PulseFrame2");
-        PulseFrame2.src = url;
-        PulseFrame2.style.display = "block";
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        PulseFrame2.style.display = "none";
+        displayStyle = false;
         return;
       }
     }
