@@ -1245,10 +1245,10 @@ function appendEarnerMessage(area, role, text) {
   }
   if (text.includes("Adding to your Total")) {
     PulseFrame = document.getElementById("PulseFrame");
-    PulseFrame.style.display = "block";
+    PulseFrame.style.opacity = "1";
     setTimeout(() => {
-      PulseFrame.style.display = "none";
-    }, 5000);
+      if (EarnHidden) PulseFrame.style.opacity = "0";
+    }, 10000);
   }
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
