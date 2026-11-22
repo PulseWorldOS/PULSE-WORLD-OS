@@ -1110,12 +1110,12 @@ async function runLocalAI() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "lightgreen";
+        let fontcolor = "#0FF";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-        if (dailyRate <= 5) fontcolor = "red";
-        earnerminiratepanel.innerHTML = `<font color="${fontcolor}">~${currency(dailyRate)}</font>/Day`;
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1235,11 +1235,11 @@ ${rawPrompt}
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "lightgreen";
+      let fontcolor = "#0FF";
       if (dailyRate >= 20) fontcolor = "gold";
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-      if (dailyRate <= 5) fontcolor = "red";
+      if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
       earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -1285,11 +1285,11 @@ function appendEarnerMessage(area, role, text) {
   const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
   // Prevent division by zero or negative values if just started
   const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-  let fontcolor = "lightgreen";
+  let fontcolor = "#0FF";
   if (dailyRate >= 20) fontcolor = "gold";
   if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
   if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-  if (dailyRate <= 5) fontcolor = "red";
+  if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
   earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
@@ -2142,11 +2142,11 @@ async function appendCompanionMessage(area, role, text) {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "lightgreen";
+    let fontcolor = "#0FF";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-    if (dailyRate <= 5) fontcolor = "red";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -2272,11 +2272,11 @@ CompanionConsoleSend.onclick = async () => {
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "lightgreen";
+      let fontcolor = "#0FF";
       if (dailyRate >= 20) fontcolor = "gold";
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-      if (dailyRate <= 5) fontcolor = "red";
+      if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
       earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -2344,11 +2344,11 @@ CompanionConsoleSend.onclick = async () => {
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "lightgreen";
+      let fontcolor = "#0FF";
       if (dailyRate >= 20) fontcolor = "gold";
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-      if (dailyRate <= 5) fontcolor = "red";
+      if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
       earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -4120,11 +4120,11 @@ setInterval(async () => {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "lightgreen";
+    let fontcolor = "#0FF";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-    if (dailyRate <= 5) fontcolor = "red";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -4208,11 +4208,11 @@ setInterval(async () => {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "lightgreen";
+    let fontcolor = "#0FF";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-    if (dailyRate <= 5) fontcolor = "red";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -4247,11 +4247,11 @@ setInterval(async () => {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "lightgreen";
+        let fontcolor = "#0FF";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-        if (dailyRate <= 5) fontcolor = "red";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       }
     });
@@ -4476,7 +4476,7 @@ async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseFrame2 = document.getElementById("PulseStreamFrame");
   if (PulseFrame2) {
-    if (PulseRealmSettings.externalStreamingLink && url.includes(PulseRealmSettings.externalStreamingLink)) {
+    if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
       PulseFrame2 = document.getElementById("PulseStreamFrame");
@@ -5828,11 +5828,11 @@ async function updateModuleIcons(settings, browser) {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "lightgreen";
+    let fontcolor = "#0FF";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-    if (dailyRate <= 5) fontcolor = "red";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -7565,11 +7565,11 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "lightgreen";
+        let fontcolor = "#0FF";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-        if (dailyRate <= 5) fontcolor = "red";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -7646,11 +7646,11 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "lightgreen";
+        let fontcolor = "#0FF";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-        if (dailyRate <= 5) fontcolor = "red";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
@@ -7923,11 +7923,11 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "lightgreen";
+        let fontcolor = "#0FF";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-        if (dailyRate <= 5) fontcolor = "red";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
