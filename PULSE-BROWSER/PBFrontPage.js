@@ -3055,10 +3055,13 @@ async function CheckEarnState() {
   };
 
   PulseFrame = document.getElementById("PulseFrame");
+  earnerenginepanel = document.getElementById("earner-mini-engine-panel");
   earnerenginepanel.onclick = async () => {
     if (PulseFrame.style.opacity === "1") {
+      earnerenginepanel.style.opacity = "1";
       PulseFrame.style.opacity = "0";
     } else {
+      earnerenginepanel.style.opacity = "0.35";
       PulseFrame.style.opacity = "1";
     }
   };
