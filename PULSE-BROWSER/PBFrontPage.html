@@ -37,6 +37,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     a {
@@ -71,6 +73,10 @@
       max-width: 95%;
       margin-left: clamp(140px, 12vw, 240px);
       margin-right: clamp(140px, 12vw, 240px);
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     @keyframes fadeIn {
@@ -2296,9 +2302,7 @@
       </div>
     </div>
 
-    <div class="about" id="about">About PulseBrowser OS</div>
     <div class="authority" id="authority">Trust First. Access Second. Authority Always Earned — Never Assumed!</div>
-    <div class="start" id="start">Origin Consensus: 10/29/1969 10:30:00 PM</div>
 
     <!-- Main Navigation Buttons -->
     <div class="main-links">
@@ -2399,6 +2403,8 @@
       </div>
     </div>
   </div>
+  <div class="about" id="about">About PulseBrowser OS</div>
+  <div class="start" id="start">Origin Consensus: 10/29/1969 10:30:00 PM</div>
 
   <script src="PBFrontpage.js"></script>
   <script src="PBSettings.js"></script>
