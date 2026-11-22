@@ -1115,7 +1115,7 @@ async function runLocalAI() {
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5) fontcolor = "red";
-        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+        earnerminiratepanel.innerHTML = `<font color="${fontcolor}">~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1240,7 +1240,7 @@ ${rawPrompt}
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
       if (dailyRate <= 5) fontcolor = "red";
-      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1290,7 +1290,7 @@ function appendEarnerMessage(area, role, text) {
   if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
   if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
   if (dailyRate <= 5) fontcolor = "red";
-  earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+  earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -2147,7 +2147,7 @@ async function appendCompanionMessage(area, role, text) {
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5) fontcolor = "red";
-    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2277,7 +2277,7 @@ CompanionConsoleSend.onclick = async () => {
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
       if (dailyRate <= 5) fontcolor = "red";
-      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2349,7 +2349,7 @@ CompanionConsoleSend.onclick = async () => {
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
       if (dailyRate <= 5) fontcolor = "red";
-      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4125,7 +4125,7 @@ setInterval(async () => {
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5) fontcolor = "red";
-    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4213,7 +4213,7 @@ setInterval(async () => {
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5) fontcolor = "red";
-    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4252,7 +4252,7 @@ setInterval(async () => {
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5) fontcolor = "red";
-        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
       }
     });
     // Render cache list immediately
@@ -5833,7 +5833,7 @@ async function updateModuleIcons(settings, browser) {
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5) fontcolor = "red";
-    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7570,7 +7570,7 @@ function CheckBackTab() {
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5) fontcolor = "red";
-        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7651,7 +7651,7 @@ function CheckBackTab() {
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5) fontcolor = "red";
-        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7928,7 +7928,7 @@ function CheckBackTab() {
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5) fontcolor = "red";
-        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>${currency(dailyRate)}</font>/Day`;
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
