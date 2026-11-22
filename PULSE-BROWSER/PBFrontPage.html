@@ -92,6 +92,8 @@
       word-wrap: break-word;
       overflow-wrap: anywhere;
       word-break: break-all;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .left-panel {
@@ -124,6 +126,8 @@
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
       z-index: 5;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .earner-panel {
@@ -167,7 +171,7 @@
       border: 2px dashed rgba(255, 255, 255, 0.15);
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 5;
+      z-index: 11;
     }
 
     .earner-mini-bank-panel {
@@ -363,23 +367,68 @@
       z-index: 10;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .messenger-inner-panel {
-      background-image: url("PulseMessengerConsole.webp");
-      background-size: cover;
-      background-position: center;
-      border-radius: 30px;
+      position: relative;
       width: 100%;
       height: 100%;
+      border-radius: 30px;
       font-size: 0.8rem;
       z-index: 5;
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
+
+      /* 1. Multi-layered background: lighting overlay + your console image */
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 234, 255, 0.18) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.45) 100%),
+        url("PulseMessengerConsole.webp");
+      background-size: cover;
+      background-position: center;
+
+      /* 2. Physical 3D Bezel & Recessed Screen Depth */
+      border: 1px solid rgba(0, 234, 255, 0.35);
+      box-shadow:
+        /* Outer drop shadow lifting the panel off the page */
+        0 25px 50px -12px rgba(0, 0, 0, 0.85),
+        0 0 25px rgba(0, 234, 255, 0.2),
+        /* Top edge specular highlight (catches overhead light) */
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        /* Bottom edge inner shadow (creates physical thickness) */
+        inset 0 -6px 12px rgba(0, 0, 0, 0.8),
+        /* Deep inner vignette to sink the screen inward */
+        inset 0 0 40px rgba(0, 0, 0, 0.9);
+
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+    }
+
+    /* 4. Glass reflection & scanline sheen layer */
+    .messenger-inner-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      pointer-events: none;
+      
+      z-index: 2;
+    }
+
+    /* 5. Float inner text/elements forward in Z-space */
+    .messenger-inner-panel > * {
+      transform: translateZ(24px);
+      z-index: 3;
     }
 
     /* ⭐ Big favicon */
@@ -494,6 +543,10 @@
 
       top: 10px;
       left: 10px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot2 {
@@ -516,6 +569,10 @@
 
       top: 30px;
       left: 100px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot3 {
@@ -538,6 +595,10 @@
 
       top: 10px;
       left: 190px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot4 {
@@ -560,6 +621,10 @@
 
       top: 100px;
       left: 30px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot5 {
@@ -582,6 +647,10 @@
 
       top: 110px;
       left: 110px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot6 {
@@ -604,6 +673,10 @@
 
       top: 110px;
       left: 190px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot7 {
@@ -626,6 +699,10 @@
 
       top: 180px;
       left: 30px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot8 {
@@ -648,6 +725,10 @@
 
       top: 190px;
       left: 110px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Snapshot9 {
@@ -670,6 +751,10 @@
 
       top: 195px;
       left: 190px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Temporary2 {
@@ -692,6 +777,10 @@
 
       top: 105px;
       right: 740px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .PulseBrowser-OS-Temporary1 {
@@ -714,6 +803,10 @@
 
       top: 105px;
       left: 730px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     /* ⭐ Viewport layer */
@@ -778,6 +871,8 @@
       max-height: 350px;
       border-radius: 30px;
       box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     #pbPulseScreen {
@@ -787,6 +882,13 @@
       max-height: 350px;
       border-radius: inherit;
       animation: pulseGlow 3.5s ease-in-out infinite;
+      /* 2. Physical 3D Bezel & Recessed Screen Depth */
+      border: 1px solid rgba(0, 234, 255, 0.35);
+      
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     #pbPulseEarn {
@@ -801,6 +903,8 @@
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: pulseGlow 3.5s ease-in-out infinite;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     #pbPulseEarning {
@@ -815,6 +919,8 @@
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: bubbleFloatMinionette 1s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
     #pbPulseDetailsEarn {
       z-index: 10;
@@ -828,6 +934,8 @@
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: pulseGlow 3.5s ease-in-out infinite;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     #pbPulseDetailsEarning {
@@ -842,6 +950,8 @@
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: bubbleFloatMinionette2 1s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
     @keyframes bubbleFloatMinionette {
       0%   { transform: translate(70px, 72px); }
@@ -878,6 +988,8 @@
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: pbPulseMessengerFrame2 20s ease-in-out infinite,
                 pulseGlow 3.5s ease-in-out infinite;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     #pbPulseMessengered {
@@ -892,6 +1004,8 @@
       filter: drop-shadow(0 0 10px #00aaffaa);
       animation: pbPulseMessengerFrame 0.75s ease-in-out,
                 pulseGlow 3.5s ease-in-out infinite;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     @keyframes pbPulseMessengerFrame {
@@ -1562,6 +1676,8 @@
 
       margin-left: auto;
       margin-right: auto;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .search-console {
@@ -1690,7 +1806,10 @@
       text-decoration: none;
 
       box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
-      transition: 0.25s ease;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .module-btnF {
       display: flex;
@@ -1705,7 +1824,10 @@
       text-decoration: none;
 
       box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
-      transition: 0.25s ease;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .module-btnF:hover {
