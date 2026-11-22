@@ -1431,6 +1431,22 @@ setInterval(async () => {
   });
 }, interval2);
 
+function isInIframe() {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    // If a strict browser security policy blocks access to window.top,
+    // you are definitely inside a cross-origin iframe.
+    return true;
+  }
+}
+
+if (isInIframe()) {
+  console.log("Running inside an iframe");
+} else {
+  console.log("Running in the top-level window");
+}
+
 
 async function injectHUD() {
   // const STREAMING_SITES = [
@@ -1445,7 +1461,7 @@ async function injectHUD() {
     }, 50);
     return;
   }
-  
+  if (isInIframe()) return;
   if (window.innerHeight < 200 || window.innerWidth < 200) return;
   // if (STREAMING_SITES.some(d => location.hostname.includes(d))) {
 
@@ -1511,6 +1527,7 @@ async function injectHUD() {
     DomScanPreview();
   }, 5800);
 }
+
 
 function DomScanPreview() {
   PulseDomScan = true;
@@ -2275,6 +2292,7 @@ function injectPulseFlag() {
   //   "amazon.com","hbomax.com","max.com","paramountplus.com",
   //   "peacocktv.com","crunchyroll.com","youtube.com","twitch.tv"
   // ];
+  if (isInIframe()) return;
   if (window.innerHeight < 200 || window.innerWidth < 200) return;
 
   const flag = document.createElement("div");
