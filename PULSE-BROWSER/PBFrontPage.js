@@ -170,49 +170,6 @@ if (!online) {
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
   }, 3000);
 }
-const PB_LOG3 = {
-  info(label, data) {
-    console.log(
-      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#55BBFF; font-weight:bold;",
-      data || ""
-    );
-  },
-
-  change(label, before, after) {
-    console.groupCollapsed(
-      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00FFAA; font-weight:bold;"
-    );
-    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
-    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
-    console.groupEnd();
-  },
-
-  save(label, data) {
-    console.log(
-      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#00DDFF; font-weight:bold;",
-      data
-    );
-  },
-
-  load(label, data) {
-    console.log(
-      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FFD700; font-weight:bold;",
-      data
-    );
-  },
-
-  event(label, data) {
-    console.log(
-      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
-      "color:#FF55AA; font-weight:bold;",
-      data
-    );
-  }
-};
 
 async function BootMeNowPlease() {
   const Boot = await chrome.storage.local.get(["bootVideoRunOnce"]);
@@ -257,7 +214,49 @@ async function BootMeNowPlease() {
 if (bootVideo) {
   BootMeNowPlease();
 }
+const PB_LOG3 = {
+  info(label, data) {
+    console.log(
+      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
 
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
 
 // Utility: load settings
 async function loadOrders() {
