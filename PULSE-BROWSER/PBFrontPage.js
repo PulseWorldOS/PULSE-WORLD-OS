@@ -4366,13 +4366,11 @@ async function openNamedTab(name, url) {
       PulseFrame2 = document.getElementById("PulseFrame2");
       PulseFrame2.src = url;
       PulseFrame2.style.display = "block";
-      PulseFrame2.play();
-      escapeMe();
       return;
     } else {
       PulseFrame2 = document.getElementById("PulseFrame2");
+      PulseFrame2.src = url;
       PulseFrame2.style.display = "none";
-      PulseFrame2.pause();
     }
   }
   showPWLoader();
