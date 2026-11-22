@@ -3282,11 +3282,11 @@ async function pbRenderCacheList2() {
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
       <br>
-      <font size="0.9rem"><i>"🔍: Every System that Learns must also <br>
+      <font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
       Remember, Architecture is Memory made  <br>
       Manifest."</i> — <font color="#0FF">Words by John von Neumann</font></font><br><br>
 
-      <font size="0.9rem"><i>"🔍: True comfort is choosing what stays, and what fades. Forget what you don't want remembered. It's about <br> *our* data, *our* choices, *our* freedom."</i><br> — <font color="#0FF">Words by Aldwyn Fox</font></font><br><br>
+      <font size="0.9rem"><i>🔍: "True comfort is choosing what stays, and what <br> fades. Forget what you don't want remembered. <br> It's about *our* data, *our* choices, *our* freedom."</i><br> — <font color="#0FF">Words by Aldwyn Fox</font></font><br><br>
     `;
 
     listEl.appendChild(li);

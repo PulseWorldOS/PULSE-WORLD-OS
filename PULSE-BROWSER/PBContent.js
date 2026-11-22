@@ -116,6 +116,7 @@ if (isPulseWorld(location.href)) {
       setTimeout(() => AttemptPulseSteam(vid), 1500);
     }
   });
+}
 
   class PulseWasmEngine {
     constructor() {
@@ -263,7 +264,7 @@ if (isPulseWorld(location.href)) {
     PB_LOG4.event("SYSTEM Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
   }
   // setTimeout(initWebGPUCompute, 50);
-}
+
 
 let PULSE_OVERMIND_BROADCAST_CHANNEL3 = `PulseBrowser-OS::${new Date(nowCT).toLocaleTimeString()}`;
 // ============================================================

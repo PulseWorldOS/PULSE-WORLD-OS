@@ -199,10 +199,10 @@ html {
 }
 #pwTopBand {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
-  padding: 12px 0;
+  padding: 2px 0;
   background: linear-gradient(90deg, #ffb300, #ffdd55);
   color: #222;
   font-weight: 600;
