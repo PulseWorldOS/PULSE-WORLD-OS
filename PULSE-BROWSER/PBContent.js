@@ -907,7 +907,7 @@ async function pbLoadExtensionSettings() {
 const PBQuantumPrefetch = {
   lastHoverLink: null,
   hoverTimeout: null,
-  prefetchDelayMs: 1500,
+  prefetchDelayMs: 1000,
 
   cooldownMs: 3000,          // 3 seconds per link
   linkCooldowns: new Map(),  // href → timestamp

@@ -3089,9 +3089,9 @@ async function CheckEarnState() {
   }
 
   if (earnerenginepanel.style.opacity === "1") {
-    PulseFrame.style.opacity = "1";
-  } else {
     PulseFrame.style.opacity = "0";
+  } else {
+    PulseFrame.style.opacity = "1";
   }
 
   if (EarnHidden) {
