@@ -2999,6 +2999,12 @@ async function CheckEarnState() {
   PulseFrame = document.getElementById("PulseFrame");
   earnerenginepanel = document.getElementById("earner-mini-engine-panel");
 
+  if (earnerenginepanel.style.opacity === "0.35") {
+    PulseFrame.style.opacity = "1";
+  } else {
+    PulseFrame.style.opacity = "0";
+  }
+  
   if (PulseFrame.style.opacity === "1") {
     earnerenginepanel.style.opacity = "0.35";
   } else {
