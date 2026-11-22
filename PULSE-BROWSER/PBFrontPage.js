@@ -143,6 +143,8 @@ let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
+let PulseFrame = document.getElementById("PulseFrame");
+
 function pulsepalSpeak(message) {
   console.log(message);
   pulsepaltalk = document.getElementById("pulsepal-talk");
@@ -2994,6 +2996,7 @@ async function CheckEarnState() {
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
+  PulseFrame = document.getElementById("PulseFrame");
 
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
@@ -3051,7 +3054,6 @@ async function CheckEarnState() {
   };
 
   earnerenginepanel.onclick = async () => {
-    const PulseFrame = document.getElementById("PulseFrame");
     if (PulseFrame.style.opacity === "0") {
       PulseFrame.style.opacity = "1";
     } else {
