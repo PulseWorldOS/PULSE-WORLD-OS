@@ -144,6 +144,7 @@ let consoleOvermindCognition = document.getElementById("consoleOvermindCognition
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
 let PulseFrame = document.getElementById("PulseFrame");
+let PulseFrame2 = document.getElementById("PulseFrame2");
 
 function pulsepalSpeak(message) {
   console.log(message);
@@ -2997,13 +2998,8 @@ async function CheckEarnState() {
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
   PulseFrame = document.getElementById("PulseFrame");
+  PulseFrame2 = document.getElementById("PulseFrame2");
   earnerenginepanel = document.getElementById("earner-mini-engine-panel");
-
-  if (earnerenginepanel.style.opacity === "0.35") {
-    PulseFrame.style.opacity = "1";
-  } else {
-    PulseFrame.style.opacity = "0";
-  }
   
   if (PulseFrame.style.opacity === "1") {
     earnerenginepanel.style.opacity = "0.35";
@@ -3087,6 +3083,7 @@ async function CheckEarnState() {
   pbPulseEarn.onclick = async () => {
     if (!EarnHidden) {
       EarnHidden = true;
+      PulseFrame.style.opacity = "0";
       // ——— Turn ON (transparent / earning mode) ———
       pbPulseEarn.id = "pbPulseEarning";
       pbPulseEarn.className = "pbPulseEarning";
