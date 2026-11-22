@@ -155,6 +155,8 @@
       z-index: 10;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .earner-mini-panel {
@@ -353,6 +355,10 @@
       align-items: center;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     
@@ -484,6 +490,8 @@
       z-index: 5;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .earner-inner-helper-panel {
@@ -510,6 +518,10 @@
       border: 1px solid rgba(0, 255, 200, 0.25);
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .ai-overlay {
@@ -1950,6 +1962,24 @@
       letter-spacing: 0.12em;
       color: #0FF;
     }
+       
+    .aiHigherStartup {
+      margin-bottom: 2px;
+      text-align: center;
+      font-size: 8px;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      color: white;
+    }
+
+    .aiStartup {
+      margin-bottom: 2px;
+      text-align: center;
+      font-size: 8px;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      color: white;
+    }
 
     .consoleOvermindCompanion {
       flex: 1;
@@ -2182,9 +2212,9 @@
     <!-- Left panel content -->
   </div>
   <div class="earner-panel" id="earner-panel">
-    <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
     <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
+      <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
       <div class="earner-mini-bank-panel" id="earner-mini-bank-panel">🏦</div>
       <div class="earner-mini-wallet-panel" id="earner-mini-wallet-panel">💰</div>
       <div class="earner-overlay" id="earner-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
@@ -2224,10 +2254,12 @@
         Pulse Pal - 🧠 AI Overmind Prime 
       </div>
       <div id="consoleOvermindCompanion" class="consoleOvermindCompanion">
-        <div id="CompanionTitle" class="CompanionTitle" style="text-align: center;"></div>
+         <div id="CompanionTitle" class="CompanionTitle" style="text-align: center;"></div>
+         <div id="aiStartup" class="aiStartup" style="text-align: center;">"Control & Communication are the Twin Hearts of all Intelligent Systems." <br> — <font color="#0FF">From the Mouth of Norbert Weiner</font><br><br></div>
       </div>
       <div id="consoleOvermindCognition" class="consoleOvermindCognition">
         <div id="CognitionTitle" class="CognitionTitle" style="text-align: center;"></div>
+        <div id="aiHigherStartup" class="aiHigherStartup" style="text-align: center;">"Machines think only as Deeply as we Dare to Imagine they Can." <br> — <font color="#0FF">The Mind of Alan Turing</font><br><br></div>
       </div>
       <div class="CompanionConsoleInputRow">
         <img src="AIPanel.webp" class="SwitchPanel" id="SwitchPanel">

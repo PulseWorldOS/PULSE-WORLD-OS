@@ -1230,7 +1230,12 @@ function appendEarnerMessage(area, role, text) {
   const bubble = document.createElement("div");
   if (text.includes("...")) text = `<font color="gold">${text}</font>`;
   if (text.includes("-->") && text.includes("<--")) text = `<font color="orange">${text}</font>`;
-  bubble.style.fontSize = "0.6rem";
+  if (text.includes("albert einstein") && text.includes("compound interest")) {
+    bubble.style.fontSize = "9px";
+    bubble.style.fontWeight = "bold";
+  } else {
+    bubble.style.fontSize = "0.6rem";
+  }
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
   earnerminipanel.textContent = currency(OurassumedValue);
@@ -3264,7 +3269,10 @@ async function pbRenderCacheList2() {
       Last Realm Drift: <font color="${errorcolor}"><strong>${RealmURL || "-"}</strong></font><br>
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
-      Multiverse Offline Artifacts: <font color="#0FF"><strong>${pulseoffline || "0"}</strong></font>
+      <br>
+      "Every System that Learns must also <br>
+      Remember, Architecture is Memory made  <br>
+      Manifest." — <font color="#0FF">Words by John von Neumann</font><br>
     `;
 
     listEl.appendChild(li);
