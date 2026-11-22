@@ -1106,7 +1106,7 @@ async function runLocalAI() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1226,7 +1226,7 @@ ${rawPrompt}
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+      earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1271,7 +1271,7 @@ function appendEarnerMessage(area, role, text) {
   const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
   // Prevent division by zero or negative values if just started
   const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-  earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+  earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -2123,7 +2123,7 @@ async function appendCompanionMessage(area, role, text) {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2248,7 +2248,7 @@ CompanionConsoleSend.onclick = async () => {
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+      earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2315,7 +2315,7 @@ CompanionConsoleSend.onclick = async () => {
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+      earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4086,7 +4086,7 @@ setInterval(async () => {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4169,7 +4169,7 @@ setInterval(async () => {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4203,7 +4203,7 @@ setInterval(async () => {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
       }
     });
     // Render cache list immediately
@@ -5779,7 +5779,7 @@ async function updateModuleIcons(settings, browser) {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7511,7 +7511,7 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7587,7 +7587,7 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7859,7 +7859,7 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/Day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;

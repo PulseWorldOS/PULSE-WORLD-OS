@@ -2879,6 +2879,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     console.warn("[TEST] Soak test is already running.");
     return;
   }
+  // Only cache GET requests
+  if (!ServiceWorkerOnline) return;
 
   await pulseWasmCompute.initEngine();
   const endTime = Date.now() + (24 * 60 * 60 * 1000);
@@ -2929,6 +2931,8 @@ async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
     // Log status every 25,000 jobs so DevTools doesn't crash from log spam
     if (totalJobs % 25000 === 0) {
       tickInterval++;
+      // Only cache GET requests
+      if (!ServiceWorkerOnline) stopSoakTest();
       // Models realistic DePIN compute payouts (e.g., Golem tasks / Fluence compute units)
       // 80% lightweight micro-tasks ($0.0005 - $0.0020)
       // 15% standard compute jobs ($0.0020 - $0.0060)
