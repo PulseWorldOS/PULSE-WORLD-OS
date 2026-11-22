@@ -1513,15 +1513,15 @@ async function injectHUD() {
     body = document.getElementById("pb-hud-body");
     updateHUD(body);    
     initWebGPUCompute();
-    if (isPulseWorld(location.href)) {
-      start24HourSoakTest();
-    }
   }, sync);
   
   setTimeout(() => {
     body = document.getElementById("pb-hud-body");
     updateHUD(body);
     PulseBrowserDomScan();
+    if (isPulseWorld(location.href)) {
+      start24HourSoakTest();
+    }
   }, 6200);
   setTimeout(() => {
     DomScanPreview();
