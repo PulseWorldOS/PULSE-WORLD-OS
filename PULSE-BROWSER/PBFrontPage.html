@@ -372,6 +372,7 @@
       width: 930px;
       display: flex;
       opacity: 0;
+      pointer-events: auto;
       justify-content: center;
       align-items: center;
       font-size: 0.8rem;
@@ -421,20 +422,9 @@
       transform-style: preserve-3d;
       transform: rotateX(2deg);
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-
+      pointer-events: auto;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
-    }
-
-    /* 4. Glass reflection & scanline sheen layer */
-    .messenger-inner-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 30px;
-      pointer-events: none;
-      
-      z-index: 2;
     }
 
     /* 5. Float inner text/elements forward in Z-space */
