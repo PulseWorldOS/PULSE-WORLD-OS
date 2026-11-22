@@ -1443,9 +1443,10 @@ function isInIframe() {
 
 if (isInIframe()) {
   console.log("Running inside an iframe");
-} else {
-  console.log("Running in the top-level window");
+  const pwTopBand = document.getElementById("pwTopBand");
+  pwTopBand.style.display = "none";
 }
+
 
 
 async function injectHUD() {
@@ -1527,7 +1528,6 @@ async function injectHUD() {
     DomScanPreview();
   }, 5800);
 }
-
 
 function DomScanPreview() {
   PulseDomScan = true;
