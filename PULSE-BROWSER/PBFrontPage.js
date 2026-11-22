@@ -4489,7 +4489,7 @@ async function openNamedTab(name, url) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
       PulseFrame2 = document.getElementById("PulseStreamFrame");
-      renderSnapshot(true, PulseSnapIndex, url);
+      latestSnapshot(url, url, PulseSnapIndex, 0);
       if (!displayStyle) {
         if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
@@ -4720,10 +4720,11 @@ function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
   // });
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
+    if (!WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = 0;
     if (snap) {
       renderSnapshot(snap, snapIndex, realm, link, WeLocalMemoryLayerMB);
     } else {
-      renderSnapshot(true, PulseSnapIndex, link);
+      renderSnapshot(true, PulseSnapIndex, link, WeLocalMemoryLayerMB);
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
