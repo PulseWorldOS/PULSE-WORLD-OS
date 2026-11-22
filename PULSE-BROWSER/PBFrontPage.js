@@ -4325,12 +4325,43 @@ function getNextInstanceIndex() {
   return 1; // fallback
 }
 
+function escapeMe(PulseFrame) {
+  // 1. Save the original inline styles so you can revert to them accurately
+  const originalStyles = {
+    height: PulseFrame.style.height,
+    width: PulseFrame.style.width,
+    inset: PulseFrame.style.inset,
+    objectFit: PulseFrame.style.objectFit,
+  };
+
+  // 2. Apply maximized styles
+  PulseFrame.style.height = "100vh";
+  PulseFrame.style.width = "100vw";
+  PulseFrame.style.inset = "0";
+  PulseFrame.style.objectFit = "contain";
+
+  // 3. Define the Escape handler and remove it once triggered
+  const handleEscape = (e) => {
+    if (e.key === "Escape") {
+      PulseFrame.style.height = originalStyles.height;
+      PulseFrame.style.width = originalStyles.width;
+      PulseFrame.style.inset = originalStyles.inset;
+      PulseFrame.style.objectFit = originalStyles.objectFit;
+
+      document.removeEventListener("keydown", handleEscape);
+    }
+  };
+
+  document.addEventListener("keydown", handleEscape);
+}
+
 async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
+  const PulseFrame2 = document.getElementById("PulseFrame2");
   if (PulseRealmSettings.externalStreamingLink.includes(url)) {
-    const PulseFrame2 = document.getElementById("PulseFrame2");
     PulseFrame2.src = url;
     PulseFrame2.style.display = "block";
+    escapeMe(PulseFrame2);
     return;
   }
   showPWLoader();
