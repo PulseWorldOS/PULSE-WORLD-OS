@@ -1349,11 +1349,14 @@
       box-shadow:
         0 0 20px #00aaff88,
         inset 0 0 12px rgba(255,255,255,0.08);
-      transition: 0.25s ease;
       animation: buttonReveal 1.8s ease forwards;
       opacity: 0;
       position: relative;
       overflow: hidden;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     /* Fade-in */
@@ -1405,11 +1408,14 @@
       cursor: pointer;
       border: none;
       box-shadow: 0 0 20px #00aaff88;
-      transition: 0.25s ease;
       animation: buttonReveal 3s ease forwards;
       opacity: 0;
       text-decoration: none;
       display: inline-block;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     @keyframes buttonReveal {
@@ -1434,11 +1440,14 @@
       cursor: pointer;
       border: none;
       box-shadow: 0 0 20px #00aaff88;
-      transition: 0.25s ease;
       animation: buttonReveal 3s ease forwards;
       opacity: 0;
       text-decoration: none;
       display: inline-block;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     @keyframes buttonReveal {
@@ -1465,11 +1474,14 @@
       cursor: pointer;
       border: none;
       box-shadow: 0 0 20px #00aaff88;
-      transition: 0.25s ease;
       animation: buttonReveal 3s ease forwards;
       opacity: 0;
       text-decoration: none;
       display: inline-block;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     @keyframes buttonReveal {
@@ -1712,6 +1724,8 @@
 
       margin-left: auto;
       margin-right: auto;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .module-setting {
