@@ -594,6 +594,12 @@ if (isInIframe()) {
   const topBar = document.getElementById("topBar");
   if (topBar) topBar.style.display = "none";
 
+  const topmenu = document.getElementById("topmenu");
+  if (topmenu) topmenu.style.display = "none";
+
+  const globalSpin = document.getElementById("globalSpin");
+  if (globalSpin) globalSpin.style.display = "none";
+
   // Hide all buttons
   document.querySelectorAll('button, input[type="button"], input[type="submit"]').forEach(btn => {
     btn.style.display = "none";
