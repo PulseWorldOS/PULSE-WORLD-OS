@@ -5,6 +5,7 @@ let MyPulseIdentity = null;
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
 let userInteracted = false;
+let PulseStreamingLive = false;
 let itrunonce = false;
 let MessengerMode = "Console";
 let identityrunonce = false;
@@ -3790,6 +3791,7 @@ function pulseRestoreTabs() {
 async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
   if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
+  PulseRealmSettings = await pbLoadExtensionSettings();
   let skipcount = 0;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   document.querySelectorAll('[class^="PulseBrowser-OS-Temporary"]').forEach(el => el.remove());
@@ -3835,6 +3837,10 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
         // Skip invalid URLs
       }
     }
+    let realm = PulseRealmSettings.externalStreamingLink;
+    realm = realm.replace("https://","");
+    realm = realm.replace("www.","");
+    if (PulseStreamingLive) latestSnapshot(realm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
 
     pulseTabs = rebuilt;
     PulsesafeStorageSet({ pulseTabs: rebuilt });
@@ -4486,10 +4492,12 @@ async function openNamedTab(name, url) {
   PulseFrame2 = document.getElementById("PulseStreamFrame");
   if (PulseFrame2) {
     if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
-      PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
-      PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
+      PulseStreamingLive = true;
+      let realm = PulseRealmSettings.externalStreamingLink;
+      realm = realm.replace("https://","");
+      realm = realm.replace("www.","");
       PulseFrame2 = document.getElementById("PulseStreamFrame");
-      latestSnapshot(url, url, PulseSnapIndex, 0);
+      latestSnapshot(realm, url, PulseSnapIndex, 0);
       if (!displayStyle) {
         if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
