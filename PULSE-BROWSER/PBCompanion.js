@@ -2302,9 +2302,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     PulseRealmSettings = await pbLoadExtensionSettings();
     console.log("AdBlocker: ", PulseRealmSettings.adBlocker);
     if (PulseRealmSettings.adBlocker === "internal") {
-      AdBlockerOn();
-    } else {
       AdBlockerOff();
+    } else {
+      AdBlockerOn();
     }
   } else if (info.menuItemId === 'resetBootVideo') {
     const bootVideoRunOnce = false;
