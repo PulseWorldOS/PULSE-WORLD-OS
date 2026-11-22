@@ -5088,6 +5088,7 @@ function toggleOffPanel () {
   }
 }
 function togglePulseBandPanel() {
+  narMusic.muted = true;
   PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   if (!PBPanelOpen) {
     PBPanelOpen = true;
