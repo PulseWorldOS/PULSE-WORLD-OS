@@ -4326,31 +4326,33 @@ function getNextInstanceIndex() {
 }
 
 function escapeMe(Frame) {
-  // 1. Save the original inline styles so you can revert to them accurately
-  const originalStyles2 = {
-    height: Frame.style.height,
-    width: Frame.style.width,
-    inset: Frame.style.inset,
-    objectFit: Frame.style.objectFit,
+  Frame.onclick = async () => {
+    // 1. Save the original inline styles so you can revert to them accurately
+    const originalStyles2 = {
+      height: Frame.style.height,
+      width: Frame.style.width,
+      inset: Frame.style.inset,
+      objectFit: Frame.style.objectFit,
+    };
+
+    // 2. Apply maximized styles
+    Frame.style.height = "650px";
+    Frame.style.width = "1250px";
+
+    // 3. Define the Escape handler and remove it once triggered
+    const handleEscape2 = (e) => {
+      if (e.key === "Escape") {
+        Frame.style.height = originalStyles2.height;
+        Frame.style.width = originalStyles2.width;
+        Frame.style.inset = originalStyles2.inset;
+        Frame.style.objectFit = originalStyles2.objectFit;
+
+        document.removeEventListener("keydown", handleEscape2);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape2);
   };
-
-  // 2. Apply maximized styles
-  Frame.style.height = "650px";
-  Frame.style.width = "1250px";
-
-  // 3. Define the Escape handler and remove it once triggered
-  const handleEscape2 = (e) => {
-    if (e.key === "Escape") {
-      Frame.style.height = originalStyles2.height;
-      Frame.style.width = originalStyles2.width;
-      Frame.style.inset = originalStyles2.inset;
-      Frame.style.objectFit = originalStyles2.objectFit;
-
-      document.removeEventListener("keydown", handleEscape2);
-    }
-  };
-
-  document.addEventListener("keydown", handleEscape2);
 }
 
 async function openNamedTab(name, url) {
