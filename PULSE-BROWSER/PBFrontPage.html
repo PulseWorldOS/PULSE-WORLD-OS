@@ -976,18 +976,6 @@
         inset 0 0 6px rgba(0, 180, 255, 0.8);
     }
 
-    .FramingTheWorld {
-      margin-top: 50px;
-      display: inline-block;
-      width: 240px;
-      height: auto;
-      max-height: 350px;
-      border-radius: 30px;
-      box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-      perspective: 1200px;
-      transform-style: preserve-3d;
-    }
-
     .pbWrapper {
       margin-top: 50px;
       display: inline-block;
@@ -2348,6 +2336,20 @@
       border-top: 14px solid #00e6c3;
     }
 
+    .worldnet {
+      border-radius: 40px;
+      background: #000000aa;
+      backdrop-filter: blur(16px);
+      border: 1px dashed #0FF;
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      opacity: 0;
+      animation: bubbleFloatExplorer 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+    }
+
   </style>
 </head>
 <body>
@@ -2591,15 +2593,13 @@
   </div>
   <div class="about" id="about">About PulseBrowser OS</div>
   <div class="start" id="start">Origin Consensus: 10/29/1969 10:30:00 PM</div>
-  <div class="FramingTheWorld" id="FramingTheWorld">
-    <iframe
-      id="PulseFrame" class="PulseFrame"
-      src="https://www.pulseworld.net?Impulse=PULSE-ENGINE-BLOCK"
-      allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
-    ></iframe>
-    PulseWorld.Net
-  </div>
+  <iframe
+    id="PulseFrame" class="PulseFrame"
+    src="https://www.pulseworld.net?Impulse=PULSE-ENGINE-BLOCK"
+    allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
+  ></iframe>
+ 
 
   <script src="PBFrontpage.js"></script>
   <script src="PBSettings.js"></script>
