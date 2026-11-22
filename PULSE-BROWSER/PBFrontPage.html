@@ -206,6 +206,28 @@
       z-index: 5;
     }
 
+    .earner-mini-engine-panel {
+      position: absolute;
+      top: 0px;
+      left: 42px;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 20px;
+      width: clamp(30px, 12vw, 35px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
+      font-size: 0.8rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
     .exit-inner-panel {
       position: absolute;
       top: 16px;
@@ -2333,6 +2355,7 @@
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
       <div class="earner-mini-bank-panel" id="earner-mini-bank-panel">🏦</div>
+      <div class="earner-mini-engine-panel" id="earner-mini-engine-panel">🌐</div>
       <div class="earner-mini-wallet-panel" id="earner-mini-wallet-panel">💰</div>
       <div class="earner-overlay" id="earner-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Earner <span class="overlayengine" id="overlayengine"><span style="color: gold;" class="overlayeng" id="overlayeng"><strong>$</strong></span> - 🌐 Engine Overlay</span>
@@ -2558,7 +2581,7 @@
   <div class="start" id="start">Origin Consensus: 10/29/1969 10:30:00 PM</div>
   <iframe
     id="PulseFrame" class="PulseFrame"
-    src="https://www.pulseworld.net?Impulse=PULSE-ENGINE-BLOCK"
+    src=""
     allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
   ></iframe>
