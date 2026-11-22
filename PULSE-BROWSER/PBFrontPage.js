@@ -114,6 +114,7 @@ const toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
+let earnerminiratepanel = document.getElementById("earner-mini-rate-panel");
 let earnerbankpanel = document.getElementById("earner-mini-bank-panel");
 let earnerenginepanel = document.getElementById("earner-mini-engine-panel");
 let earnerwalletpanel = document.getElementById("earner-mini-wallet-panel");
@@ -143,8 +144,8 @@ let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
-let PulseFrame = document.getElementById("PulseFrame");
-let PulseFrame2 = document.getElementById("PulseFrame2");
+let PulseFrame = document.getElementById("PulseEarnerFrame");
+let PulseFrame2 = document.getElementById("PulseStreamFrame");
 
 function pulsepalSpeak(message) {
   console.log(message);
@@ -1100,6 +1101,12 @@ async function runLocalAI() {
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1214,6 +1221,12 @@ ${rawPrompt}
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
+      // Calculate elapsed time in days (86,400,000 ms in one day)
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const elapsedDays = (Date.now() - nowFP) / msPerDay;
+      // Prevent division by zero or negative values if just started
+      const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+      earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -1244,7 +1257,7 @@ function appendEarnerMessage(area, role, text) {
     bubble.style.fontSize = "0.6rem";
   }
   if (text.includes("Adding to your Total")) {
-    PulseFrame = document.getElementById("PulseFrame");
+    PulseFrame = document.getElementById("PulseEarnerFrame");
     PulseFrame.style.opacity = "1";
     setTimeout(() => {
       if (EarnHidden) PulseFrame.style.opacity = "0";
@@ -1253,6 +1266,12 @@ function appendEarnerMessage(area, role, text) {
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
   earnerminipanel.textContent = currency(OurassumedValue);
+  // Calculate elapsed time in days (86,400,000 ms in one day)
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const elapsedDays = (Date.now() - nowFP) / msPerDay;
+  // Prevent division by zero or negative values if just started
+  const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+  earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -2037,7 +2056,7 @@ async function switchHigherModel(modelKey) {
 
 // Copy button inside code blocks (works for saved history too)
 document.addEventListener("click", (e) => {
-  PulseFrame2 = document.getElementById("PulseFrame2");
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
   PulseFrame2.style.display = "none";
   displayStyle = false;
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
@@ -2099,6 +2118,12 @@ async function appendCompanionMessage(area, role, text) {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2218,6 +2243,12 @@ CompanionConsoleSend.onclick = async () => {
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
+      // Calculate elapsed time in days (86,400,000 ms in one day)
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const elapsedDays = (Date.now() - nowFP) / msPerDay;
+      // Prevent division by zero or negative values if just started
+      const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+      earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -2279,6 +2310,12 @@ CompanionConsoleSend.onclick = async () => {
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
+      // Calculate elapsed time in days (86,400,000 ms in one day)
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const elapsedDays = (Date.now() - nowFP) / msPerDay;
+      // Prevent division by zero or negative values if just started
+      const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+      earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
       if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -3007,8 +3044,8 @@ async function CheckEarnState() {
   const Vis = await chrome.storage.local.get(["EarningInVisible"]);
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
-  PulseFrame = document.getElementById("PulseFrame");
-  PulseFrame2 = document.getElementById("PulseFrame2");
+  PulseFrame = document.getElementById("PulseEarnerFrame");
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
   earnerenginepanel = document.getElementById("earner-mini-engine-panel");
   
   if (PulseFrame.style.opacity === "1") {
@@ -3073,7 +3110,7 @@ async function CheckEarnState() {
     await PBUniversalBoost.warmOrigin(pulseBankLink);
   };
 
-  PulseFrame = document.getElementById("PulseFrame");
+  PulseFrame = document.getElementById("PulseEarnerFrame");
   earnerenginepanel = document.getElementById("earner-mini-engine-panel");
   earnerenginepanel.onclick = async () => {
     if (PulseFrame.style.opacity === "1") {
@@ -4044,6 +4081,12 @@ setInterval(async () => {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4121,6 +4164,12 @@ setInterval(async () => {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -4149,6 +4198,12 @@ setInterval(async () => {
       if (response && response.ok && response.WeassumedValue) {
         OurassumedValue = response.WeassumedValue;
         earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
       }
     });
     // Render cache list immediately
@@ -4336,7 +4391,7 @@ function getNextInstanceIndex() {
 }
 
 function escapeMe() {
-  PulseFrame2 = document.getElementById("PulseFrame2");
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
   PulseFrame2.onclick = async () => {
     // 1. Save the original inline styles so you can revert to them accurately
     const originalStyles2 = {
@@ -4370,12 +4425,12 @@ let displayStyle = false;
 
 async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
-  PulseFrame2 = document.getElementById("PulseFrame2");
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
   if (PulseFrame2) {
     if (PulseRealmSettings.externalStreamingLink && url.includes(PulseRealmSettings.externalStreamingLink)) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
-      PulseFrame2 = document.getElementById("PulseFrame2");
+      PulseFrame2 = document.getElementById("PulseStreamFrame");
       if (!displayStyle) {
         if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
@@ -5719,6 +5774,12 @@ async function updateModuleIcons(settings, browser) {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - nowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
     if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7445,6 +7506,12 @@ function CheckBackTab() {
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7515,6 +7582,12 @@ function CheckBackTab() {
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
@@ -7781,6 +7854,12 @@ function CheckBackTab() {
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - nowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        earnerminiratepanel.textContent = `${currency(dailyRate)}/day`;
         if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
