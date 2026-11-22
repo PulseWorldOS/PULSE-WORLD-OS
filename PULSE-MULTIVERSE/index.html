@@ -581,15 +581,24 @@ function isInIframe() {
 
 if (isInIframe()) {
   console.log("Running inside an iframe");
+  
   const pwTopBand = document.getElementById("pwTopBand");
-  pwTopBand.style.display = "none";
+  if (pwTopBand) pwTopBand.style.display = "none";
+  
   const pulseStatus = document.getElementById("pulseStatus");
-  pulseStatus.style.width = "100%";
-  pulseStatus.style.height = "100%";
-  const topBar= document.getElementById("topBar");
-  topBar.style.display = "none";
-}
+  if (pulseStatus) {
+    pulseStatus.style.width = "100%";
+    pulseStatus.style.height = "100%";
+  }
+  
+  const topBar = document.getElementById("topBar");
+  if (topBar) topBar.style.display = "none";
 
+  // Hide all buttons
+  document.querySelectorAll('button, input[type="button"], input[type="submit"]').forEach(btn => {
+    btn.style.display = "none";
+  });
+}
 
 
 function getReadableName(url) {
