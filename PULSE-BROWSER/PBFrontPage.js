@@ -4360,10 +4360,10 @@ async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseFrame2 = document.getElementById("PulseFrame2");
   if (PulseFrame2) {
-    if (PulseRealmSettings.externalStreamingLink) {
+    if (PulseRealmSettings.externalStreamingLink && url.includes(PulseRealmSettings.externalStreamingLink)) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
-      if (url.includes(PulseRealmSettings.externalStreamingLink) && PulseFrame2.style.display === "none") {
+      if (PulseFrame2.style.display === "none") {
         PulseFrame2 = document.getElementById("PulseFrame2");
         PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
@@ -4372,6 +4372,7 @@ async function openNamedTab(name, url) {
         PulseFrame2 = document.getElementById("PulseFrame2");
         PulseFrame2.src = url;
         PulseFrame2.style.display = "none";
+        return;
       }
     }
   }
