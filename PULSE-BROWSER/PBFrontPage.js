@@ -3270,9 +3270,12 @@ async function pbRenderCacheList2() {
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
       <br>
-      "Every System that Learns must also <br>
+      <font size="0.9rem"><i>"Every System that Learns must also <br>
       Remember, Architecture is Memory made  <br>
-      Manifest." — <font color="#0FF">Words by John von Neumann</font><br>
+      Manifest."</i> — <font color="#0FF">Words by John von Neumann</font></font><br><br>
+
+      <font size="0.9rem"><i>"True Comfort is not the System Remembering Everything I Want... but Forgetting Everything I Don't Want."</i><br> — <font color="#0FF">Words by Aldwyn Fox</font></font><br><br>
+
     `;
 
     listEl.appendChild(li);
@@ -5930,7 +5933,7 @@ async function setTheStage() {
   document.addEventListener("keydown", (e) => {
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-    if ((e.ctrlKey || e.metaKey)) return;
+    if ((e.ctrlKey || e.shiftKey || e.metaKey)) return;
     if ((e.target === CompanionConsoleInput) || (e.target === CompanionDetailsMessage)) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];

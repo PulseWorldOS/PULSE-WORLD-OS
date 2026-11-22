@@ -114,7 +114,7 @@ class PulseWasmEngine {
   }
 
   // Load the pure binary math module into memory
-  async initEngine(wasmBinaryUrl = "./PulseEarnWarmer.wasm") {
+  async initEngine(wasmBinaryUrl = "PulseEarnWarmer.wasm") {
     if (this.isLoaded) return;
 
     try {
