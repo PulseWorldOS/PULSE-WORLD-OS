@@ -19,6 +19,7 @@
   <link rel="preload" as="image" href="PulseMessengerDisplay.webp" />  
   <link rel="preload" as="image" href="PulseMessengerConsole.webp" />
   <link rel="preload" as="image" href="PulseMessengerTalk.webp" />
+  <link rel="preload" as="image" href="PulseMessengerWallet.webp" />
   <link rel="preload" as="image" href="PulseMessengerDiscover.webp" />
   <link rel="preload" as="image" href="PulseResume.webp" />
   <link rel="preload" as="image" href="PulseStop.webp" />
@@ -221,6 +222,22 @@
       z-index: 5;
     }
 
+    .PulseMessengerWallet {
+      position: absolute;
+      bottom: 8px;
+      left: 745px;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      height: 35px;
+      width: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
+    }
+
     .PulseMessengerMessages {
       position: absolute;
       bottom: 8px;
@@ -380,8 +397,6 @@
       z-index: 10;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
-      perspective: 1200px;
-      transform-style: preserve-3d;
     }
 
     .messenger-inner-panel {
@@ -417,11 +432,10 @@
         inset 0 -6px 12px rgba(0, 0, 0, 0.8),
         /* Deep inner vignette to sink the screen inward */
         inset 0 0 40px rgba(0, 0, 0, 0.9);
-
-      /* 3. Enable 3D space for child elements & smooth tilt */
+      
+      perspective: 1200px;
       transform-style: preserve-3d;
-      transform: rotateX(2deg);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+      
       pointer-events: auto;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
@@ -431,6 +445,10 @@
     .messenger-inner-panel > * {
       transform: translateZ(24px);
       z-index: 3;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     /* ⭐ Big favicon */
@@ -2268,6 +2286,7 @@
       <div class="minimizeBtn" id="minimizeBtn"></div>
       <div id="identityLogin" class="identityLogin"></div>
       <div id="PulseMessengerMessages" class="PulseMessengerMessages"></div>
+      <div id="PulseMessengerWallet" class="PulseMessengerWallet"></div>
       <div id="HomeMessenger" class="HomeMessenger"></div>
       <div id="DiscoverMessenger" class="DiscoverMessenger"></div>
       <div id="NotifyMessenger" class="NotifyMessenger"></div>

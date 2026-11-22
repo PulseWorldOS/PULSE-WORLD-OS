@@ -103,6 +103,7 @@ let MessengerMessages = document.getElementById("MessengerMessage");
 let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let PulseMessengerMessages = document.getElementById("PulseMessengerMessages");
+let PulseMessengerWallet = document.getElementById("PulseMessengerWallet");
 let HomeMessenger = document.getElementById("HomeMessenger");
 let NotifyMessenger = document.getElementById("NotifyMessenger");
 let DiscoverMessenger = document.getElementById("DiscoverMessenger");
@@ -2728,6 +2729,11 @@ async function GetThisMessengerDone() {
     PulseMessengerMessages.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
       MessengerMode = "Talk";
+    };
+
+    PulseMessengerWallet.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWallet.webp")`;
+      MessengerMode = "Wallet";
     };
 
     HomeMessenger.onclick = async () => {
