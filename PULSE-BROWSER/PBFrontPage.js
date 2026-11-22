@@ -1,5 +1,6 @@
 
 let lastEarnBatch = null;
+let PulseSnapIndex = 1;
 let MyPulseIdentity = null;
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
@@ -2640,7 +2641,7 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -540px)";
+        pbPulseMessenger.style.transform = "translate(0px, -557px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -2689,7 +2690,7 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -540px)";
+        pbPulseMessenger.style.transform = "translate(0px, -557px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -2749,7 +2750,7 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -540px)";
+        pbPulseMessenger.style.transform = "translate(0px, -557px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -2776,7 +2777,7 @@ async function GetThisMessengerDone() {
           pbPulseMessenger.id = "pbPulseMessenger";
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
-          pbPulseMessenger.style.transform = "translate(0px, -540px)";
+          pbPulseMessenger.style.transform = "translate(0px, -557px)";
           if (EarnDetailsHidden) safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
@@ -3795,11 +3796,11 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     
-    let snapIndex = 1; // 1–5
+    PulseSnapIndex = 1; // 1–5
 
     for (const tab of tabs) {
       if (!tab.url) continue;
-      if (snapIndex > 9) break; // only 5 bubbles
+      if (PulseSnapIndex > 9) break; // only 5 bubbles
 
       try {
         const urlObj = new URL(tab.url);
@@ -3815,20 +3816,20 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
           };
           if (identity !== "newtab") skipcount += 1;
           if (identity !== "newtab") renderTemporary(true, skipcount, identity, tab.url);
-          continue; // ⭐ Do NOT increment snapIndex
+          continue; // ⭐ Do NOT increment PulseSnapIndex
         }
 
         // ⭐ Normal tab → assign bubble
-        latestSnapshot(identity, urlObj, snapIndex, WeLocalMemoryLayerMB);
+        latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
 
         rebuilt[identity] = {
           id: tab.id,
           realm: identity,
-          snapshot: snapIndex,
+          snapshot: PulseSnapIndex,
           memory: WeLocalMemoryLayerMB
         };
 
-        snapIndex++;
+        PulseSnapIndex++;
 
       } catch (e) {
         // Skip invalid URLs
@@ -4488,6 +4489,7 @@ async function openNamedTab(name, url) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
       PulseFrame2 = document.getElementById("PulseStreamFrame");
+      renderSnapshot(true, PulseSnapIndex, url);
       if (!displayStyle) {
         if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
@@ -4720,6 +4722,8 @@ function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
     const snap = items[snapshotKey];
     if (snap) {
       renderSnapshot(snap, snapIndex, realm, link, WeLocalMemoryLayerMB);
+    } else {
+      renderSnapshot(true, PulseSnapIndex, link);
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
@@ -4739,9 +4743,10 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.className = bubbleId;
 
       // const regfavicon = await getFavicon(realm);
-      const favicon = snapshot.regfavicon ?? snapshot.favicon;
+      let favicon = snapshot.regfavicon ?? snapshot.favicon;
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
       const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
+      if (!favicon) favicon = await getFavicon(realm);
       const identityName = document.getElementById("identityName");
       const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
 
