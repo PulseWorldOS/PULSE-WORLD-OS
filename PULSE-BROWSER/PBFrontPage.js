@@ -3057,6 +3057,7 @@ async function CheckEarnState() {
       PulseFrame.style.opacity = "1";
     } else {
       PulseFrame.style.opacity = "0";
+      PulseFrame.src = "";
     }
   };
 
