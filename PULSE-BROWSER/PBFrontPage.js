@@ -1078,6 +1078,11 @@ async function runLocalAI() {
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+          PulseFrame = document.getElementById("PulseFrame");
+          PulseFrame.style.display = "block";
+          setTimeout(() => {
+            PulseFrame.style.display = "none";
+          }, 5000);
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -1192,6 +1197,11 @@ ${rawPrompt}
       if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        PulseFrame = document.getElementById("PulseFrame");
+        PulseFrame.style.display = "block";
+        setTimeout(() => {
+          PulseFrame.style.display = "none";
+        }, 5000);
       } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
@@ -2070,6 +2080,11 @@ async function appendCompanionMessage(area, role, text) {
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      PulseFrame = document.getElementById("PulseFrame");
+      PulseFrame.style.display = "block";
+      setTimeout(() => {
+        PulseFrame.style.display = "none";
+      }, 5000);
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -2189,6 +2204,11 @@ CompanionConsoleSend.onclick = async () => {
       if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        PulseFrame = document.getElementById("PulseFrame");
+        PulseFrame.style.display = "block";
+        setTimeout(() => {
+          PulseFrame.style.display = "none";
+        }, 5000);
       } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
@@ -2250,6 +2270,11 @@ CompanionConsoleSend.onclick = async () => {
       if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
         appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+        PulseFrame = document.getElementById("PulseFrame");
+        PulseFrame.style.display = "block";
+        setTimeout(() => {
+          PulseFrame.style.display = "none";
+        }, 5000);
       } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
@@ -4015,6 +4040,11 @@ setInterval(async () => {
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      PulseFrame = document.getElementById("PulseFrame");
+      PulseFrame.style.display = "block";
+      setTimeout(() => {
+        PulseFrame.style.display = "none";
+      }, 5000);
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -4092,6 +4122,11 @@ setInterval(async () => {
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      PulseFrame = document.getElementById("PulseFrame");
+      PulseFrame.style.display = "block";
+      setTimeout(() => {
+        PulseFrame.style.display = "none";
+      }, 5000);
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -5690,6 +5725,11 @@ async function updateModuleIcons(settings, browser) {
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
       appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+      PulseFrame = document.getElementById("PulseFrame");
+      PulseFrame.style.display = "block";
+      setTimeout(() => {
+        PulseFrame.style.display = "none";
+      }, 5000);
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -7415,6 +7455,11 @@ function CheckBackTab() {
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+          PulseFrame = document.getElementById("PulseFrame");
+          PulseFrame.style.display = "block";
+          setTimeout(() => {
+            PulseFrame.style.display = "none";
+          }, 5000);
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -7485,6 +7530,11 @@ function CheckBackTab() {
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+          PulseFrame = document.getElementById("PulseFrame");
+          PulseFrame.style.display = "block";
+          setTimeout(() => {
+            PulseFrame.style.display = "none";
+          }, 5000);
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -7752,6 +7802,11 @@ function CheckBackTab() {
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
           appendEarnerMessage(CompanionMessages, "⚡", "<-- A PulseEarner has Joined Adding to your Total -->");
+          PulseFrame = document.getElementById("PulseFrame");
+          PulseFrame.style.display = "block";
+          setTimeout(() => {
+            PulseFrame.style.display = "none";
+          }, 5000);
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
