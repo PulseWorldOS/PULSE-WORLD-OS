@@ -840,7 +840,9 @@
       animation: bubbleFloatMinion 15s ease-in-out infinite,
                 pulseGlow 3.5s ease-in-out infinite;
 
-      /* 3. Enable 3D space for child elements & smooth tilt */
+      scrollbar-color: #00eaff #0a0a0a;
+      scrollbar-width: thin;
+      perspective: 1200px;
       transform-style: preserve-3d;
       transform: rotateX(2deg);
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
@@ -848,10 +850,11 @@
 
     .PulseFrame2 {
       position: fixed;
-      bottom: 30dvh;
-      right: 20dvw;
-      width: 1200px;
-      height: 600px;
+      bottom: 26dvh;
+      inset-inline: 0;
+      margin-inline: auto;
+      width: 1250px;
+      height: 650px;
       border-radius: 40px;
       overflow: hidden;
       background: #000000aa;
@@ -865,7 +868,9 @@
       animation: bubbleFloatExplorer 15s ease-in-out infinite,
                 pulseGlow 3.5s ease-in-out infinite;
 
-      /* 3. Enable 3D space for child elements & smooth tilt */
+      scrollbar-color: #00eaff #0a0a0a;
+      scrollbar-width: thin;
+      perspective: 1200px;
       transform-style: preserve-3d;
       transform: rotateX(2deg);
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;

@@ -4325,34 +4325,32 @@ function getNextInstanceIndex() {
   return 1; // fallback
 }
 
-function escapeMe(PulseFrame) {
+function escapeMe(Frame) {
   // 1. Save the original inline styles so you can revert to them accurately
-  const originalStyles = {
-    height: PulseFrame.style.height,
-    width: PulseFrame.style.width,
-    inset: PulseFrame.style.inset,
-    objectFit: PulseFrame.style.objectFit,
+  const originalStyles2 = {
+    height: Frame.style.height,
+    width: Frame.style.width,
+    inset: Frame.style.inset,
+    objectFit: Frame.style.objectFit,
   };
 
   // 2. Apply maximized styles
-  PulseFrame.style.height = "100vh";
-  PulseFrame.style.width = "100vw";
-  PulseFrame.style.inset = "0";
-  PulseFrame.style.objectFit = "contain";
+  Frame.style.height = "650px";
+  Frame.style.width = "1250px";
 
   // 3. Define the Escape handler and remove it once triggered
-  const handleEscape = (e) => {
+  const handleEscape2 = (e) => {
     if (e.key === "Escape") {
-      PulseFrame.style.height = originalStyles.height;
-      PulseFrame.style.width = originalStyles.width;
-      PulseFrame.style.inset = originalStyles.inset;
-      PulseFrame.style.objectFit = originalStyles.objectFit;
+      Frame.style.height = originalStyles2.height;
+      Frame.style.width = originalStyles2.width;
+      Frame.style.inset = originalStyles2.inset;
+      Frame.style.objectFit = originalStyles2.objectFit;
 
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleEscape2);
     }
   };
 
-  document.addEventListener("keydown", handleEscape);
+  document.addEventListener("keydown", handleEscape2);
 }
 
 async function openNamedTab(name, url) {
