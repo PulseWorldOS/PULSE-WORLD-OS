@@ -38,6 +38,7 @@ let ErrorOverflow = false;
 let errorLock = false;
 let CompanionDeprivation = false;
 let TakeOfflineSnapshot = false;
+let SaveandCloseStream = false;
 let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
@@ -2224,6 +2225,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     contexts: ['all']
   });
   chrome.contextMenus.create({
+    id: 'closeStreaming',
+    title: '📺 PulseBrowser OS - Save/Close Stream',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
     id: 'viewHUDOverlay',
     title: '📺 PulseBrowser - HUD Display',
     contexts: ['all']
@@ -2238,7 +2244,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: '🏦 PulseEarner - Run Compute Test',
     contexts: ['all']
   });
-  
   chrome.contextMenus.create({
     id: 'flipAdblocker',
     title: '📄 PulseNavigator - Flip AdBlocker Switch',
@@ -2300,6 +2305,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     HelperHudBoolean = true;
   } else if (info.menuItemId === 'attemptOfflineSnapshot') {
     TakeOfflineSnapshot = true;
+  } else if (info.menuItemId === 'closeStreaming') {
+    SaveandCloseStream = true;
   } else if (info.menuItemId === 'flipAdblocker') {
     PulseRealmSettings = await pbLoadExtensionSettings();
     console.log("AdBlocker: ", PulseRealmSettings.adBlocker);
