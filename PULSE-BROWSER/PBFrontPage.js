@@ -2032,6 +2032,7 @@ async function switchHigherModel(modelKey) {
 document.addEventListener("click", (e) => {
   PulseFrame2 = document.getElementById("PulseFrame2");
   PulseFrame2.style.display = "none";
+  displayStyle = false;
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
   if (!btn) return;
   const code = btn.closest(".pw-code")?.querySelector("pre");
