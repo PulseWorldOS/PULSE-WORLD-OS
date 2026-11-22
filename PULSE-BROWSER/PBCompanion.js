@@ -2266,7 +2266,7 @@ async function AdBlockerOff() {
     disableRulesetIds: ["pulseworld_rules"]
   }).then(() => {
     console.log("AdBlockerOff Ruleset disabled successfully.");
-    PulseRealmSettings.adBlocker = "external";
+    if (PulseRealmSettings) PulseRealmSettings.adBlocker = "external";
   });
 }
 
@@ -2275,7 +2275,7 @@ async function AdBlockerOn() {
     enableRulesetIds: ["pulseworld_rules"]
   }).then(() => {
     console.log("AdBlockerOn Ruleset enabled successfully.");
-    PulseRealmSettings.adBlocker = "internal";
+    if (PulseRealmSettings) PulseRealmSettings.adBlocker = "internal";
   });
 }
 
