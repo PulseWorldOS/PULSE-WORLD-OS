@@ -4356,13 +4356,15 @@ function escapeMe(Frame) {
 async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
   const PulseFrame2 = document.getElementById("PulseFrame2");
-  url = url.replace("https://","");
-  url = url.replace("www.","");
-  if (PulseRealmSettings.externalStreamingLink.includes(url)) {
-    PulseFrame2.src = url;
-    PulseFrame2.style.display = "block";
-    escapeMe(PulseFrame2);
-    return;
+  if (PulseRealmSettings.externalStreamingLink) {
+    PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
+    PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
+    if (url.includes(PulseRealmSettings.externalStreamingLink)) {
+      PulseFrame2.src = url;
+      PulseFrame2.style.display = "block";
+      escapeMe(PulseFrame2);
+      return;
+    }
   }
   showPWLoader();
   const identity = normalizeIdentity(url);
