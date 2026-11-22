@@ -2997,6 +2997,13 @@ async function CheckEarnState() {
   EarnHidden = Vis.EarningInVisible ?? false;
   console.log("Earn State:", EarnHidden);
   PulseFrame = document.getElementById("PulseFrame");
+  earnerenginepanel = document.getElementById("earner-mini-engine-panel");
+
+  if (PulseFrame.style.opacity === "1") {
+    earnerenginepanel.style.opacity = "0.35";
+  } else {
+    earnerenginepanel.style.opacity = "1";
+  }
 
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
@@ -3046,7 +3053,7 @@ async function CheckEarnState() {
     }, 1000);
   }
   if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
-  
+
   earnerminipanel.onclick = async () => pbPulseEarn.click();
 
   earnerbankpanel.onclick = async () => {
