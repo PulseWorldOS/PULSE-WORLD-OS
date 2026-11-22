@@ -2039,6 +2039,8 @@ document.addEventListener("click", (e) => {
       setTimeout(() => { btn.textContent = "copy"; }, 1200);
     }).catch(() => {});
   }
+  PulseFrame2 = document.getElementById("PulseFrame2");
+  PulseFrame2.style.display = "none";
 });
 
 async function appendCompanionMessage(area, role, text) {
@@ -4363,15 +4365,15 @@ async function openNamedTab(name, url) {
     if (PulseRealmSettings.externalStreamingLink && url.includes(PulseRealmSettings.externalStreamingLink)) {
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("https://","");
       PulseRealmSettings.externalStreamingLink = PulseRealmSettings.externalStreamingLink.replace("www.","");
-      if (PulseFrame2.style.display === "none") {
+      if (PulseFrame2.style.display === "block") {
         PulseFrame2 = document.getElementById("PulseFrame2");
         PulseFrame2.src = url;
-        PulseFrame2.style.display = "block";
+        PulseFrame2.style.display = "none";
         return;
       } else {
         PulseFrame2 = document.getElementById("PulseFrame2");
         PulseFrame2.src = url;
-        PulseFrame2.style.display = "none";
+        PulseFrame2.style.display = "block";
         return;
       }
     }
