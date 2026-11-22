@@ -231,8 +231,7 @@ checkPersistentStorage(true);
     <img id="chrome-bg"/>
     <img id="chrome-bg-mobile"/>
   </div>
-  <div id="status">Checking Google identity...</div>
-  <div id="google-signin-button">Sync with Chrome</div>
+
   <div id="timeClock">10:10 AM</div>
   <div id="assumedValue">$0.00</div>
   <div id="lastEarnBatch"></div>
@@ -589,10 +588,14 @@ if (isInIframe()) {
   if (pulseStatus) {
     pulseStatus.style.width = "100%";
     pulseStatus.style.height = "100%";
+    pulseStatus.style.marginBottom = "30px";
   }
   
   const topBar = document.getElementById("topBar");
   if (topBar) topBar.style.display = "none";
+
+  const evotogglebtn = document.getElementById("evotogglebtn");
+  if (evotogglebtn) evotogglebtn.style.display = "none";
 
   const topmenu = document.getElementById("topmenu");
   if (topmenu) topmenu.style.display = "none";
