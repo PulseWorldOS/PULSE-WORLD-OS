@@ -4326,20 +4326,22 @@ function getNextInstanceIndex() {
 }
 
 async function openNamedTab(name, url) {
-  showPWLoader();
-  const identity = normalizeIdentity(url);
-  name = identity;
-  const override = true;
-  const instanceIndex = getNextInstanceIndex(identity);
-  const existingEntry = pulseTabs[identity];
   PulseRealmSettings = await pbLoadExtensionSettings();
-  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   if (PulseRealmSettings.externalStreamingLink.includes(url)) {
     const PulseFrame2 = document.getElementById("PulseFrame2");
     PulseFrame2.src = url;
     PulseFrame2.style.display = "block";
     return;
   }
+  showPWLoader();
+  const identity = normalizeIdentity(url);
+  name = identity;
+  const override = true;
+  const instanceIndex = getNextInstanceIndex(identity);
+  const existingEntry = pulseTabs[identity];
+  
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  
   try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
 
   // ⭐ If tab already exists → PURE SELECT
