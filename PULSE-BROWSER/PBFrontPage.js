@@ -4751,14 +4751,14 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     } else {
       div = document.getElementById(bubbleId);
     }
-    const realms = PulseRealmSettings.externalStreamingLink;
+    let realms = PulseRealmSettings.externalStreamingLink;
     realms = realms.replace("https://","");
     realms = realms.replace("www.","");
 
     div.id = bubbleId;
     div.className = bubbleId;
 
-    if (PulseStreamingLive  && link.includes(realms)) {
+    if (PulseStreamingLive  && link === realms) {
       div.style.opacity = "0.35";
     } else {
       div.style.opacity = "1";
