@@ -4740,44 +4740,47 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
   if (snapshot) {
     if (!div) {
       div = document.createElement("div");
-      div.id = bubbleId;
-      div.className = bubbleId;
-
-      // const regfavicon = await getFavicon(realm);
-      let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
-      const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
-      const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
-      const identityName = document.getElementById("identityName");
-      const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
-
-      if (PBROWSERFAVICON_CACHE[realm]) {
-        PBROWSERFAVICON_CACHE[realm] = favicon;
-        saveCache();
-      }
-      const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
-
-      // ⭐ No inline JS — CSP-safe
-      div.innerHTML = `
-        <div class="Snapshot-Viewport">
-          <img class="Snapshot-Favicon"
-               src="${favicon}"
-               alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
-        </div>
-      `;
-
-      topPanel.appendChild(div);
-
-      // ⭐ Attach fallback in JS (CSP-safe)
-      const img = div.querySelector(".Snapshot-Favicon");
-
-      img.addEventListener("error", () => {
-        if (snapshot.svg) {
-          img.src = snapshot.svg;
-        } else {
-          img.src = osfallback;
-        }
-      });
+    } else {
+      div = document.getElementById(bubbleId);
     }
+
+    div.id = bubbleId;
+    div.className = bubbleId;
+
+    // const regfavicon = await getFavicon(realm);
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
+    const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
+    const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
+    const identityName = document.getElementById("identityName");
+    const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
+
+    if (PBROWSERFAVICON_CACHE[realm]) {
+      PBROWSERFAVICON_CACHE[realm] = favicon;
+      saveCache();
+    }
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
+
+    // ⭐ No inline JS — CSP-safe
+    div.innerHTML = `
+      <div class="Snapshot-Viewport">
+        <img class="Snapshot-Favicon"
+              src="${favicon}"
+              alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
+      </div>
+    `;
+
+    topPanel.appendChild(div);
+
+    // ⭐ Attach fallback in JS (CSP-safe)
+    const img = div.querySelector(".Snapshot-Favicon");
+
+    img.addEventListener("error", () => {
+      if (snapshot.svg) {
+        img.src = snapshot.svg;
+      } else {
+        img.src = osfallback;
+      }
+    });
 
     topPanel.style.backdropFilter = "blur(8px)";
     topPanel.style.backgroundImage = "none";
