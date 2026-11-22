@@ -3052,12 +3052,10 @@ async function CheckEarnState() {
 
   earnerenginepanel.onclick = async () => {
     const PulseFrame = document.getElementById("PulseFrame");
-    PulseFrame.src = pulseEngineLink;
     if (PulseFrame.style.opacity === "0") {
       PulseFrame.style.opacity = "1";
     } else {
       PulseFrame.style.opacity = "0";
-      PulseFrame.src = "";
     }
   };
 
