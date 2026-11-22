@@ -103,6 +103,7 @@ let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend
 let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
 let PulseMessengerMessages = document.getElementById("PulseMessengerMessages");
 let HomeMessenger = document.getElementById("HomeMessenger");
+let NotifyMessenger = document.getElementById("NotifyMessenger");
 let DiscoverMessenger = document.getElementById("DiscoverMessenger");
 const startBtn = document.getElementById("start");
 const toppanel = document.getElementById("top-panel left-panel");
@@ -2736,6 +2737,10 @@ async function GetThisMessengerDone() {
 
     HomeMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+    };
+
+    NotifyMessenger.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerNotify.webp")`;
     };
 
     DiscoverMessenger.onclick = async () => {
