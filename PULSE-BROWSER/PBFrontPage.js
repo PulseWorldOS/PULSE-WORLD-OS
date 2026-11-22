@@ -4744,10 +4744,9 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.className = bubbleId;
 
       // const regfavicon = await getFavicon(realm);
-      let favicon = snapshot.regfavicon ?? snapshot.favicon;
+      let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
       const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
       const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
-      if (!favicon) favicon = await getFavicon(realm);
       const identityName = document.getElementById("identityName");
       const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
 
