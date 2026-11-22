@@ -27,6 +27,16 @@ const CACHE_NAME = "PulseBrowser-Companion";
 let pulseTabs = {};
 let realmSummary = null;
 
+
+function isInIframe() {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    // If a strict browser security policy blocks access to window.top,
+    // you are definitely inside a cross-origin iframe.
+    return true;
+  }
+}
 // ---------------------------------------------------------------------------
 // DOMAIN CLASSIFIER
 // ---------------------------------------------------------------------------
@@ -1431,15 +1441,6 @@ setInterval(async () => {
   });
 }, interval2);
 
-function isInIframe() {
-  try {
-    return window.self !== window.top;
-  } catch (e) {
-    // If a strict browser security policy blocks access to window.top,
-    // you are definitely inside a cross-origin iframe.
-    return true;
-  }
-}
 
 async function injectHUD() {
   // const STREAMING_SITES = [
