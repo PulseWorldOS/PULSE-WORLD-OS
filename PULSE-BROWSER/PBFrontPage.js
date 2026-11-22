@@ -3046,6 +3046,7 @@ async function CheckEarnState() {
     }, 1000);
   }
   if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
+  
   earnerminipanel.onclick = async () => pbPulseEarn.click();
 
   earnerbankpanel.onclick = async () => {
@@ -3053,7 +3054,9 @@ async function CheckEarnState() {
     await PBUniversalBoost.warmOrigin(pulseBankLink);
   };
 
+  PulseFrame = document.getElementById("PulseFrame");
   earnerenginepanel.onclick = async () => {
+    PulseFrame = document.getElementById("PulseFrame");
     if (PulseFrame.style.opacity === "0") {
       PulseFrame.style.opacity = "1";
     } else {
