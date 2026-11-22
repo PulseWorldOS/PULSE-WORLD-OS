@@ -4356,6 +4356,8 @@ function escapeMe(Frame) {
 async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
   const PulseFrame2 = document.getElementById("PulseFrame2");
+  url = url.replace("https://","");
+  url = url.replace("www.","");
   if (PulseRealmSettings.externalStreamingLink.includes(url)) {
     PulseFrame2.src = url;
     PulseFrame2.style.display = "block";
