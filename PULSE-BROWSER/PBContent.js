@@ -1040,12 +1040,11 @@ function HelperHud() {
   const wrap = document.getElementById("pulsebrowser-dev-overlay");
       
   if (body) updateHUD(body);
-  const vid = document.getElementById("video");
   if (wrap) wrap.style.display = "block";
   if (body) body.style.display = "block";
 
   setTimeout(async () => {
-    fadeHUD(vid);
+    fadeHUD();
   }, 4000);
 }
 
