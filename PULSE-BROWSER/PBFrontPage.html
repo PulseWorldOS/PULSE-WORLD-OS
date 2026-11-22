@@ -22,6 +22,7 @@
   <link rel="preload" as="image" href="PulseMessengerTalk.webp" />
   <link rel="preload" as="image" href="PulseMessengerWallet.webp" />
   <link rel="preload" as="image" href="PulseMessengerDiscover.webp" />
+  <link rel="preload" as="image" href="PulseEarnerAttach.webp" />
   <link rel="preload" as="image" href="PulseResume.webp" />
   <link rel="preload" as="image" href="PulseStop.webp" />
   <link rel="preload" as="image" href="PulseReset.webp" />
@@ -860,7 +861,7 @@
 
     .PulseEarnerFrame {
       position: fixed;
-      top: 32.3dvh;
+      top: 40dvh;
       left: 17dvw;
       width: 85px;
       height: 85px;
@@ -2454,7 +2455,16 @@
       opacity: 0;
       animation: bubbleFloatExplorer 15s ease-in-out infinite,
                 pulseGlow 3.5s ease-in-out infinite;
+    }
 
+    .PulseClaw {
+      position: absolute;
+      bottom: -14vh;
+      left: 10px;
+      opacity: 1;
+      width: 80px;
+      height: 140px;
+      border-radius: 40px;
     }
 
   </style>
@@ -2486,8 +2496,10 @@
 
       </div>
       <!-- Earner panel content -->
+      <img src="PulseEarnerAttach.webp" class="PulseClaw" id="PulseClaw">
     </div>
   </div>
+
   <div class="messenger-panel" id="messenger-panel">
     <video id="pbPulseMessenger" class="pbPulseMessenger" src="PulseMessenger.mp4" autoplay muted playsinline aria-label="pbPulseMessenger"></video>
     <div class="messenger-inner-panel" id="messenger-inner-panel">

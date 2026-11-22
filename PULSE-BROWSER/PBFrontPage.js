@@ -3088,6 +3088,12 @@ async function CheckEarnState() {
     earnerenginepanel.style.opacity = "1";
   }
 
+  if (earnerenginepanel.style.opacity === "1") {
+    PulseFrame.style.opacity = "1";
+  } else {
+    PulseFrame.style.opacity = "0";
+  }
+
   if (EarnHidden) {
     // ——— Turn ON (transparent / earning mode) ———
     pbPulseEarn.id = "pbPulseEarning";
@@ -3192,6 +3198,8 @@ async function CheckEarnState() {
       }, 1000);
     } else {
       EarnHidden = false;
+      PulseFrame.style.opacity = "1";
+      earnerenginepanel.style.opacity = "0.35";
       // ——— Turn OFF (restore original) ———
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
