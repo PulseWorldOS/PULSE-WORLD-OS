@@ -3031,7 +3031,7 @@ async function GetThisMessengerDone() {
       gpuCapabilitySize = result.estimatedGB * (1024);
       gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
       const higherGpuLine = document.getElementById("higherGpuLine");
-      higherGpuLine.innerHTML = gpuMsg ?? gpuText ?? `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`;
+      higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`;
     });
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
@@ -4249,7 +4249,7 @@ async function pulseGPUInspector(adapter, device) {
 
   // Acquire device
   if (!device) device = await adapter.requestDevice();
-
+  gpuDescription = adapter.name ?? "PulseEngine 2028";
   // Basic info
   console.log("🎮 WebGPU Inspector");
   console.log("Adapter Name:", adapter.name ?? "PulseEngine 2028");
