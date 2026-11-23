@@ -931,12 +931,6 @@
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
-    }
-
     .PulseEarnerFrame {
       position: fixed;
       top: 40dvh;
@@ -952,8 +946,7 @@
       box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
       z-index: 11;
       opacity: 0;
-      /* Chain fadeIn (2s) alongside pulseGlow */
-      animation: fadeIn 2s ease-out forwards, pulseGlow 3.5s ease-in-out infinite;
+      animation: pulseGlow 3.5s ease-in-out infinite;
       cursor: wait;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
@@ -962,7 +955,6 @@
       transform: rotateX(12deg);
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
-
 
     .PulseEarner2Frame {
       position: fixed;
