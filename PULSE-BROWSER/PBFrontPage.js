@@ -3855,7 +3855,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
   CheckFaviconChanges();
-  toppanel = document.getElementById("top-panel left-panel");
+  topPanel = document.querySelector(".top-panel");
   const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
   if (remaining === 0) {
     topPanel.style.backdropFilter = "blur(24px)";
@@ -7948,7 +7948,7 @@ function CheckBackTab() {
         bubble.classList.remove('electrify');
       }, 3000);
     });
-    let topPanel = document.querySelector(".top-panel");
+    topPanel = document.querySelector(".top-panel");
     topPanel.classList.add('electrify');
     setTimeout(() => {
       topPanel.classList.remove('electrify');
