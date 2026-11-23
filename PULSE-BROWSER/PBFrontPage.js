@@ -4507,6 +4507,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
+  const URLLink = realm ?? link;
 
   if (snapshot) {
     if (!div) {
@@ -4518,20 +4519,20 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     div.id = bubbleId;
     div.className = bubbleId;
 
-    if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
+    if (PulseStreamingLive  && URLLink === PulseRealmSettings.externalStreamingLink) {
       div.style.opacity = "0.35";
     } else {
       div.style.opacity = "1";
     }
     // const regfavicon = await getFavicon(realm);
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(URLLink);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");
     const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
 
-    if (PBROWSERFAVICON_CACHE[realm]) {
-      PBROWSERFAVICON_CACHE[realm] = favicon;
+    if (PBROWSERFAVICON_CACHE[URLLink]) {
+      PBROWSERFAVICON_CACHE[URLLink] = favicon;
       saveCache();
     }
     const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
@@ -4580,7 +4581,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
   if (div) {
     div.onclick = async () => {
-      if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
+      if (PulseStreamingLive  && URLLink === PulseRealmSettings.externalStreamingLink) {
         pbPreconnect([link]);
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         destroyIframe(PulseFrame2);
