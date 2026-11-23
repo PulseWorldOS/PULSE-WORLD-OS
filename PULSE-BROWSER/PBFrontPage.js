@@ -113,6 +113,7 @@ let NotifyMessenger = document.getElementById("NotifyMessenger");
 let DiscoverMessenger = document.getElementById("DiscoverMessenger");
 const startBtn = document.getElementById("start");
 let toppanel = document.getElementById("top-panel left-panel");
+let topPanel = document.querySelector(".top-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
@@ -4864,7 +4865,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         destroyIframe(PulseFrame2);
         PulseStreamingLive = false;
-        toppanel = document.getElementById("top-panel left-panel");
+        topPanel = document.querySelector(".top-panel");
         const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
         if (remaining === 0) {
           topPanel.style.backdropFilter = "blur(24px)";
