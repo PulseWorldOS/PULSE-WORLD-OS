@@ -444,14 +444,26 @@
       font-size: 0.8rem;
       text-align: center;
       display: flex;
+      border-radius: 30px;
       justify-content: center;
       align-items: center;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
-      /* 3. Enable 3D space for child elements & smooth tilt */
+      /* 2. Physical 3D Bezel & Recessed Screen Depth */
+      border: 1px solid rgba(0, 234, 255, 0.35);
+      box-shadow:
+        /* Outer drop shadow lifting the panel off the page */
+        0 25px 50px -12px rgba(0, 0, 0, 0.85),
+        0 0 25px rgba(0, 234, 255, 0.2),
+        /* Top edge specular highlight (catches overhead light) */
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        /* Bottom edge inner shadow (creates physical thickness) */
+        inset 0 -6px 12px rgba(0, 0, 0, 0.8),
+        /* Deep inner vignette to sink the screen inward */
+        inset 0 0 40px rgba(0, 0, 0, 0.9);
+      
+      perspective: 1200px;
       transform-style: preserve-3d;
-      transform: rotateX(2deg);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     
@@ -473,6 +485,8 @@
       z-index: 10;
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .messenger-inner-panel {
@@ -487,7 +501,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-
+      
       /* 1. Multi-layered background: lighting overlay + your console image */
       background-image: 
         radial-gradient(circle at 50% 0%, rgba(0, 234, 255, 0.18) 0%, transparent 60%),
@@ -589,9 +603,6 @@
       align-items: stretch;
       border-radius: 18px;
       background: var(--pw-console-bg);
-      box-shadow:
-        0 0 24px rgba(0, 0, 0, 0.85),
-        0 0 12px rgba(0, 0, 0, 0.7);
       display: flex;
       word-wrap: break-word;
       overflow-wrap: break-word;
@@ -602,10 +613,19 @@
       border: 1px solid rgba(0, 255, 200, 0.25);
       scrollbar-color: #00eaff #0a0a0a;
       scrollbar-width: thin;
-      /* 3. Enable 3D space for child elements & smooth tilt */
+      box-shadow:
+        /* Outer drop shadow lifting the panel off the page */
+        0 25px 50px -12px rgba(0, 0, 0, 0.85),
+        0 0 25px rgba(0, 234, 255, 0.2),
+        /* Top edge specular highlight (catches overhead light) */
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        /* Bottom edge inner shadow (creates physical thickness) */
+        inset 0 -6px 12px rgba(0, 0, 0, 0.8),
+        /* Deep inner vignette to sink the screen inward */
+        inset 0 0 40px rgba(0, 0, 0, 0.9);
+      
+      perspective: 1200px;
       transform-style: preserve-3d;
-      transform: rotateX(2deg);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
     .ai-overlay {
@@ -881,7 +901,7 @@
       scrollbar-width: thin;
       perspective: 1200px;
       transform-style: preserve-3d;
-      transform: rotateX(2deg);
+      transform: rotateX(12deg);
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 

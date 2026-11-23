@@ -97,6 +97,8 @@ function detectPWA() {
 
   if (isStandalone) {
     document.documentElement.classList.add('pwa-mode');
+  } else if (isInIframe()) {
+    document.documentElement.classList.add('extension-mode');
   } else {
     document.documentElement.classList.add('browser-mode');
   }

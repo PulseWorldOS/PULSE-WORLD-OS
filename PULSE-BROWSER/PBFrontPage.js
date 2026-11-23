@@ -4752,11 +4752,14 @@ function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
   // });
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
-    if (!WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = 0;
     if (snap) {
       renderSnapshot(snap, snapIndex, realm, link, WeLocalMemoryLayerMB);
     } else {
-      renderSnapshot(true, PulseSnapIndex, link, WeLocalMemoryLayerMB);
+      if (!WeLocalMemoryLayerMB) {
+        renderSnapshot(true, PulseSnapIndex, link, 0);
+      } else {
+        renderSnapshot(true, PulseSnapIndex, link, WeLocalMemoryLayerMB);
+      }
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
