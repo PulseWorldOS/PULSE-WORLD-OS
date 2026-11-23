@@ -112,7 +112,7 @@ let HomeMessenger = document.getElementById("HomeMessenger");
 let NotifyMessenger = document.getElementById("NotifyMessenger");
 let DiscoverMessenger = document.getElementById("DiscoverMessenger");
 const startBtn = document.getElementById("start");
-const toppanel = document.getElementById("top-panel left-panel");
+let toppanel = document.getElementById("top-panel left-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
@@ -3849,6 +3849,14 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
   CheckFaviconChanges();
+  toppanel = document.getElementById("top-panel left-panel");
+  const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+  if (remaining === 0) {
+    topPanel.style.backdropFilter = "blur(24px)";
+    topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+  } else {
+    console.log(`There are ${remaining} bubbles left.`);
+  }
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
@@ -4831,7 +4839,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
   } else {
     topPanel.classList.add("electrify");
     pulseRehydrateTabs(WeLocalMemoryLayerMB);
-
+    toppanel = document.getElementById("top-panel left-panel");
     const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
     if (remaining === 0) {
       topPanel.style.backdropFilter = "blur(24px)";
@@ -4852,8 +4860,14 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         destroyIframe(PulseFrame2);
         PulseStreamingLive = false;
-        topPanel.style.backdropFilter = "blur(24px)";
-        topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+        toppanel = document.getElementById("top-panel left-panel");
+        const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+        if (remaining === 0) {
+          topPanel.style.backdropFilter = "blur(24px)";
+          topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+        } else {
+          console.log(`There are ${remaining} bubbles left.`);
+        }
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
       } else {
         pbPreconnect([link]);
