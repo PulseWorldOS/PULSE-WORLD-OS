@@ -12,6 +12,8 @@ let identityrunonce = false;
 let engineType = "text";
 let displayStyle = false;
 let gpuText = null;
+let gpuMsg = null;
+let gpuDescription = null;
 let predictionText = "Running Stable";
 let pulseIdentityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
 let pulseBankLink = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
@@ -1755,7 +1757,7 @@ function renderHigherStatusPanel(status, checkingText) {
   const higherAIRAM = (higherAIBytes / (1024 * 1024)).toFixed(2);
   const gpu = status.gpuInfo || {};
   gpuCapabilitySize = gpuCapabilitySize ?? higherAIRAM ?? gpu.vramMB;
-  
+  gpuDescription = gpu.description;
   gpuText = gpu.supported
     ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
@@ -1965,7 +1967,8 @@ async function enableHigherAI(modelKey) {
         higherAIEnabled = true;
         const gpu = res.gpuInfo || {};
         if (area) {
-          const gpuMsg = gpu.supported
+          gpuDescription = gpu.description;
+          gpuMsg = gpu.supported
             ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB - Semi Detected)`
             : `No WebGPU detected — using lightweight model`;
           appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
@@ -3028,7 +3031,7 @@ async function GetThisMessengerDone() {
       gpuCapabilitySize = result.estimatedGB * (1024);
       gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
       const higherGpuLine = document.getElementById("higherGpuLine");
-      higherGpuLine.innerhtml = gpuText;
+      higherGpuLine.innerHTML = gpuMsg ?? gpuText ?? `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`;
     });
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
