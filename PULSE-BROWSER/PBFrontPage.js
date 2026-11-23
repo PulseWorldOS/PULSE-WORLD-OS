@@ -4510,6 +4510,26 @@ async function openNamedTab(name, url) {
         return;
       }
     }
+  } else {
+    PulseFrame2 = document.createElement("PulseStreamFrame");
+    if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
+      PulseStreamingLive = true;
+      let realm = PulseRealmSettings.externalStreamingLink;
+      realm = realm.replace("https://","");
+      realm = realm.replace("www.","");
+      latestSnapshot(realm, url, PulseSnapIndex, 0);
+      if (!displayStyle) {
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        PulseFrame2.style.display = "block";
+        displayStyle = true;
+        return;
+      } else {
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        PulseFrame2.style.display = "none";
+        displayStyle = false;
+        return;
+      }
+    }
   }
   showPWLoader();
   const identity = normalizeIdentity(url);
@@ -4847,6 +4867,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         destroyIframe(PulseFrame2);
         PulseStreamingLive = false;
+        topPanel.style.backdropFilter = "blur(24px)";
+        topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
       } else {
         pbPreconnect([link]);
