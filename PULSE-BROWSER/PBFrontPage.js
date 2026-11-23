@@ -3849,7 +3849,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     let realm = PulseRealmSettings.externalStreamingLink;
     realm = realm.replace("https://","");
     realm = realm.replace("www.","");
-    if (PulseStreamingLive) latestSnapshot(realm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    if (PulseStreamingLive && PulseRealmSettings.externalStreamingLink) latestSnapshot(realm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
 
     pulseTabs = rebuilt;
     PulsesafeStorageSet({ pulseTabs: rebuilt });
