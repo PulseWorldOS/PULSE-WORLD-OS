@@ -4658,7 +4658,7 @@ async function openNamedTab(name, url) {
   if (PulseFrame2) {
     if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
       PulseStreamingLive = true;
-      let realm = PulseRealmSettings.externalStreamingLink;
+      let realm = url;
       realm = realm.replace("https://","");
       realm = realm.replace("www.","");
       PulseFrame2 = document.getElementById("PulseStreamFrame");
