@@ -1965,7 +1965,7 @@ async function enableHigherAI(modelKey) {
         const gpu = res.gpuInfo || {};
         if (area) {
           const gpuMsg = gpu.supported
-            ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpu.vramMB}MB)`
+            ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB)`
             : `No WebGPU detected — using lightweight model`;
           appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
         }
@@ -2521,6 +2521,171 @@ function getReadableName(url) {
   }
 }
 
+/**
+ * Probes usable dedicated VRAM by allocating chunks and timing a compute shader pass
+ * until an Out-Of-Memory error or PCIe system RAM spillover spike occurs.
+ *
+ * @param {Object} options
+ * @param {number} [options.maxProbeGB=16] - Stop probing once this amount is verified.
+ * @param {number} [options.chunkMB=256] - Size of each allocation step in MB.
+ * @param {number} [options.spikeFactor=3.5] - Multiplier over baseline time that signals RAM spillover.
+ * @returns {Promise<{estimatedGB: number, reason: string}>}
+ */
+
+async function probeUsableVRAM({
+  maxProbeGB = 16,
+  chunkMB = 256,
+  spikeFactor = 3.5,
+} = {}) {
+  if (!navigator.gpu) {
+    throw new Error("WebGPU is not supported in this browser.");
+  }
+
+  const adapter = await navigator.gpu.requestAdapter({
+    powerPreference: "high-performance",
+  });
+  if (!adapter) {
+    throw new Error("No WebGPU adapter found.");
+  }
+
+  // Request higher buffer limits if the hardware supports them
+  const maxBufferSize = Math.min(
+    adapter.limits.maxBufferSize,
+    1024 * 1024 * 1024 // Cap single buffer at 1 GB for stability
+  );
+  const maxStorageBufferBindingSize = Math.min(
+    adapter.limits.maxStorageBufferBindingSize,
+    maxBufferSize
+  );
+
+  const device = await adapter.requestDevice({
+    requiredLimits: {
+      maxBufferSize,
+      maxStorageBufferBindingSize,
+    },
+  });
+
+  // Simple compute shader that reads and writes across a buffer to force physical allocation
+  const shaderModule = device.createShaderModule({
+    code: `
+      @group(0) @binding(0) var<storage, read_write> data: array<u32>;
+
+      @compute @workgroup_size(256)
+      fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+        let idx = id.x * 16u; // Stride across cache lines
+        if (idx < arrayLength(&data)) {
+          data[idx] = data[idx] + 1u;
+        }
+      }
+    `,
+  });
+
+  const pipeline = device.createComputePipeline({
+    layout: "auto",
+    compute: { module: shaderModule, entryPoint: "main" },
+  });
+
+  const chunkBytes = chunkMB * 1024 * 1024;
+  if (chunkBytes > maxStorageBufferBindingSize) {
+    throw new Error(`chunkMB (${chunkMB}MB) exceeds device maxStorageBufferBindingSize.`);
+  }
+
+  const numElements = chunkBytes / 4;
+  const workgroups = Math.ceil(numElements / (256 * 16));
+
+  const buffers = [];
+  const bindGroups = [];
+  let baselinePerChunkMs = null;
+  let allocatedMB = 0;
+  let stopReason = "Reached maxProbeGB limit";
+
+  // Helper to run one compute pass across ALL currently allocated buffers
+  async function runTouchPass() {
+    const encoder = device.createCommandEncoder();
+    const pass = encoder.beginComputePass();
+    pass.setPipeline(pipeline);
+
+    for (const bg of bindGroups) {
+      pass.setBindGroup(0, bg);
+      pass.dispatchWorkgroups(workgroups);
+    }
+
+    pass.end();
+    const start = performance.now();
+    device.queue.submit([encoder.finish()]);
+    await device.queue.onSubmittedWorkDone();
+    return performance.now() - start;
+  }
+
+  try {
+    // Warm up the shader pipeline once so JIT compilation doesn't skew timing
+    const warmupBuf = device.createBuffer({
+      size: 1024,
+      usage: GPUBufferUsage.STORAGE,
+    });
+    bindGroups.push(
+      device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [{ binding: 0, resource: { buffer: warmupBuf } }],
+      })
+    );
+    await runTouchPass();
+    bindGroups.pop();
+    warmupBuf.destroy();
+
+    // Main allocation & timing loop
+    while (allocatedMB < maxProbeGB * 1024) {
+      device.pushErrorScope("out-of-memory");
+
+      const buffer = device.createBuffer({
+        size: chunkBytes,
+        usage: GPUBufferUsage.STORAGE,
+      });
+
+      const bindGroup = device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [{ binding: 0, resource: { buffer } }],
+      });
+
+      buffers.push(buffer);
+      bindGroups.push(bindGroup);
+
+      // Force physical memory commit and time the pass
+      const elapsedMs = await runTouchPass();
+
+      const oomError = await device.popErrorScope();
+      if (oomError) {
+        stopReason = "Driver Out-Of-Memory error";
+        break;
+      }
+
+      const perChunkMs = elapsedMs / buffers.length;
+
+      // Establish baseline after the 2nd chunk (avoids cold-start noise)
+      if (buffers.length === 2) {
+        baselinePerChunkMs = perChunkMs;
+      } else if (baselinePerChunkMs !== null && perChunkMs > baselinePerChunkMs * spikeFactor) {
+        stopReason = `PCIe RAM spillover detected (${perChunkMs.toFixed(2)}ms/chunk vs ${baselinePerChunkMs.toFixed(2)}ms baseline)`;
+        break;
+      }
+
+      allocatedMB += chunkMB;
+    }
+  } finally {
+    // Always free all VRAM immediately after probing
+    for (const buf of buffers) {
+      buf.destroy();
+    }
+    device.destroy();
+  }
+
+  return {
+    estimatedGB: Number((allocatedMB / 1024).toFixed(2)),
+    reason: stopReason,
+  };
+}
+
+
 async function GetThisMessengerDone() {
   // 1. Create a 3D stage container over your background image
   const stage = document.createElement('div');
@@ -2619,7 +2784,6 @@ async function GetThisMessengerDone() {
   leftPanelBorder.appendChild(leftPanelInner);
   stage.appendChild(leftPanelBorder);
   document.body.appendChild(stage);
-
 }
 
   async function CheckforMessagesState() {
@@ -2857,6 +3021,12 @@ async function GetThisMessengerDone() {
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     const identityName = document.getElementById("identityName");
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
+    // Example usage:
+    probeUsableVRAM({ maxProbeGB: 12, chunkMB: 256 }).then((result) => {
+      console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
+      gpuCapabilitySize = result.estimatedGB * (1024 * 1024);
+      gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
+    });
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
@@ -4501,7 +4671,6 @@ function escapeMe() {
     document.addEventListener("keydown", handleEscape2);
   };
 }
-
 
 async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLayerMB) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
