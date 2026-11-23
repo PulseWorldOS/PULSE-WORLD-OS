@@ -422,11 +422,15 @@ img {
   top: 12dvh;
   right: 0.7dvw;
 
-  border-radius: 40px;
+  border-radius: 24px;
   object-fit: cover;
   z-index: 99999999;
   opacity: 1;
   filter: brightness(1.25);
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  transform: rotateX(2deg);
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
 }
 #globalSpin {
   position: fixed;

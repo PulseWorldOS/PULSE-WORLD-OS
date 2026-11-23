@@ -4499,32 +4499,12 @@ async function openNamedTab(name, url) {
       PulseFrame2 = document.getElementById("PulseStreamFrame");
       latestSnapshot(realm, url, PulseSnapIndex, 0);
       if (!displayStyle) {
-        if (!PulseFrame2.src === url) PulseFrame2.src = url;
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
         displayStyle = true;
         return;
       } else {
-        if (!PulseFrame2.src === url) PulseFrame2.src = url;
-        PulseFrame2.style.display = "none";
-        displayStyle = false;
-        return;
-      }
-    }
-  } else {
-    PulseFrame2 = document.createElement("PulseStreamFrame");
-    if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
-      PulseStreamingLive = true;
-      let realm = PulseRealmSettings.externalStreamingLink;
-      realm = realm.replace("https://","");
-      realm = realm.replace("www.","");
-      latestSnapshot(realm, url, PulseSnapIndex, 0);
-      if (!displayStyle) {
-        if (!PulseFrame2.src === url) PulseFrame2.src = url;
-        PulseFrame2.style.display = "block";
-        displayStyle = true;
-        return;
-      } else {
-        if (!PulseFrame2.src === url) PulseFrame2.src = url;
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "none";
         displayStyle = false;
         return;
@@ -4757,8 +4737,8 @@ function destroyIframe(iframe) {
     // Cross-origin iframes will throw a SecurityError here, which is safe to ignore
   }
 
-  // 3. Remove the element from the DOM
-  iframe.remove();
+  // // 3. Remove the element from the DOM
+  // iframe.remove();
 
   // // 4. Nullify your variable reference (do this in the calling scope as well)
   // iframe = null;
@@ -4847,7 +4827,6 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     pulseRehydrateTabs(WeLocalMemoryLayerMB);
 
     const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
-
     if (remaining === 0) {
       topPanel.style.backdropFilter = "blur(24px)";
       topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
