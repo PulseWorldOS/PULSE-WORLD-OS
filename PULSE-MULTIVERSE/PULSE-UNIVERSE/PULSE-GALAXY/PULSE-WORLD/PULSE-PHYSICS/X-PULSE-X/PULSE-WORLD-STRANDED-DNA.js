@@ -108,36 +108,40 @@ function resolvePulseWorldTargets_v40() {
   const targets = new Set();
 
   function looksLikeWorld(obj) {
-    if (!obj || typeof obj !== "object") return false;
+    try {
+      if (!obj || typeof obj !== "object") return false;
 
-    if (isWorldCandidate_v40(obj)) return true;
+      if (isWorldCandidate_v40(obj)) return true;
 
-    if (obj.__pulseWorld === true) return true;
-    if (obj.__pulseMultiverse === true) return true;
-    if (obj.__pulseRealm === true) return true;
+      if (obj.__pulseWorld === true) return true;
+      if (obj.__pulseMultiverse === true) return true;
+      if (obj.__pulseRealm === true) return true;
 
-    if ("worldId" in obj) return true;
-    if ("worldContext" in obj) return true;
-    if ("routeContext" in obj) return true;
-    if ("waveContext" in obj) return true;
+      if ("worldId" in obj) return true;
+      if ("worldContext" in obj) return true;
+      if ("routeContext" in obj) return true;
+      if ("waveContext" in obj) return true;
 
-    if (obj.meta && typeof obj.meta === "object") {
-      const m = obj.meta;
-      if (m.type === "pulse-world") return true;
-      if (m.type === "pulse-multiverse") return true;
-      if (m.type === "pulse-realm") return true;
+      if (obj.meta && typeof obj.meta === "object") {
+        const m = obj.meta;
+        if (m.type === "pulse-world") return true;
+        if (m.type === "pulse-multiverse") return true;
+        if (m.type === "pulse-realm") return true;
+      }
+
+      const name = obj.constructor?.name?.toLowerCase() || "";
+      if (name.includes("world")) return true;
+      if (name.includes("multiverse")) return true;
+      if (name.includes("realm")) return true;
+
+      const keys = Object.keys(obj);
+      if (keys.some(k => k.toLowerCase().includes("world"))) return true;
+      if (keys.some(k => k.toLowerCase().includes("multiverse"))) return true;
+      if (keys.some(k => k.toLowerCase().includes("realm"))) return true;
+      
+    } catch (ex) {
+      return false;
     }
-
-    const name = obj.constructor?.name?.toLowerCase() || "";
-    if (name.includes("world")) return true;
-    if (name.includes("multiverse")) return true;
-    if (name.includes("realm")) return true;
-
-    const keys = Object.keys(obj);
-    if (keys.some(k => k.toLowerCase().includes("world"))) return true;
-    if (keys.some(k => k.toLowerCase().includes("multiverse"))) return true;
-    if (keys.some(k => k.toLowerCase().includes("realm"))) return true;
-
     return false;
   }
 
