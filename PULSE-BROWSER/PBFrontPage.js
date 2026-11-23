@@ -10,6 +10,7 @@ let itrunonce = false;
 let MessengerMode = "Console";
 let identityrunonce = false;
 let engineType = "text";
+let displayStyle = false;
 let predictionText = "Running Stable";
 let pulseIdentityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
 let pulseBankLink = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
@@ -4501,7 +4502,155 @@ function escapeMe() {
   };
 }
 
-let displayStyle = false;
+
+async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLayerMB) {
+  const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+  let topPanel = document.querySelector(".top-panel");
+
+  if (snapshot) {
+    if (!div) {
+      div = document.createElement("div");
+    } else {
+      div = document.getElementById(bubbleId);
+    }
+
+    div.id = bubbleId;
+    div.className = bubbleId;
+
+    if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
+      div.style.opacity = "0.35";
+    } else {
+      div.style.opacity = "1";
+    }
+    // const regfavicon = await getFavicon(realm);
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
+    const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
+    const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
+    const identityName = document.getElementById("identityName");
+    const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
+
+    if (PBROWSERFAVICON_CACHE[realm]) {
+      PBROWSERFAVICON_CACHE[realm] = favicon;
+      saveCache();
+    }
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
+
+    // ⭐ No inline JS — CSP-safe
+    div.innerHTML = `
+      <div class="Snapshot-Viewport">
+        <img class="Snapshot-Favicon"
+              src="${favicon}"
+              alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
+      </div>
+    `;
+
+    topPanel.appendChild(div);
+
+    // ⭐ Attach fallback in JS (CSP-safe)
+    const img = div.querySelector(".Snapshot-Favicon");
+
+    img.addEventListener("error", () => {
+      if (snapshot.svg) {
+        img.src = snapshot.svg;
+      } else {
+        img.src = osfallback;
+      }
+    });
+
+    topPanel.style.backdropFilter = "blur(8px)";
+    topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+
+  } else {
+    topPanel.classList.add("electrify");
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
+    toppanel = document.getElementById("top-panel left-panel");
+    const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+    if (remaining === 0) {
+      topPanel.style.backdropFilter = "blur(24px)";
+      topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+    } else {
+      console.log(`There are ${remaining} bubbles left.`);
+    }
+
+    setTimeout(() => {
+      topPanel.classList.remove("electrify");
+    }, 1500);
+  }
+
+  if (div) {
+    div.onclick = async () => {
+      if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
+        pbPreconnect([link]);
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        destroyIframe(PulseFrame2);
+        PulseStreamingLive = false;
+        topPanel = document.querySelector(".top-panel");
+        const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+        if (remaining === 0) {
+          topPanel.style.backdropFilter = "blur(24px)";
+          topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+        } else {
+          console.log(`There are ${remaining} bubbles left.`);
+        }
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      } else {
+        pbPreconnect([link]);
+        openNamedTab(realm, link);
+      }
+    };
+  }
+}
+
+async function renderTemporary(snapshot, snapIndex, realm, link) {
+  const bubbleId = `PulseBrowser-OS-Temporary${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+
+  if (snapshot) {
+    if (!div) {
+      div = document.createElement("div");
+      div.id = bubbleId;
+      div.className = bubbleId;
+
+      const regfavicon = await getFavicon(realm);
+      const favicon = regfavicon;
+      let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
+      if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
+      if (link.startsWith("chrome://") && !link.includes("extension")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
+      const os2fallback = chrome.runtime.getURL("PulseOSBubble.png");
+      let bestfavicon = osfallback;
+
+      // ⭐ No inline JS — CSP-safe
+      div.innerHTML = `
+        <div class="Snapshot-Viewport">
+          <img class="Snapshot-Favicon2"
+               src="${bestfavicon}"
+               alt="favicon">
+        </div>
+      `;
+
+      document.body.appendChild(div);
+
+      // ⭐ Attach fallback in JS (CSP-safe)
+      const img = div.querySelector(".Snapshot-Favicon2");
+
+      img.addEventListener("error", () => {
+        // First fallback → OS icon
+        img.src = os2fallback;
+      });
+    }
+
+  } else {
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
+  }
+
+  if (div) {
+    div.onclick = async () => {
+      pbPreconnect([link]);
+      openNamedTab(realm, link);
+    };
+  }
+}
 
 async function openNamedTab(name, url) {
   PulseRealmSettings = await pbLoadExtensionSettings();
@@ -4772,164 +4921,15 @@ function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
       renderSnapshot(snap, snapIndex, realm, link, WeLocalMemoryLayerMB);
     } else {
       if (!WeLocalMemoryLayerMB) {
-        renderSnapshot(true, PulseSnapIndex, link, 0);
+        renderSnapshot(true, PulseSnapIndex, realm, link, 0);
       } else {
-        renderSnapshot(true, PulseSnapIndex, link, WeLocalMemoryLayerMB);
+        renderSnapshot(true, PulseSnapIndex, realm, link, WeLocalMemoryLayerMB);
       }
     }
     // else {
     //   renderTemporary(snap, snapIndex, realm, link);
     // }
   });
-}
-
-async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLayerMB) {
-  const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
-  let div = document.getElementById(bubbleId);
-  let topPanel = document.querySelector(".top-panel");
-
-  if (snapshot) {
-    if (!div) {
-      div = document.createElement("div");
-    } else {
-      div = document.getElementById(bubbleId);
-    }
-
-    div.id = bubbleId;
-    div.className = bubbleId;
-
-    if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
-      div.style.opacity = "0.35";
-    } else {
-      div.style.opacity = "1";
-    }
-    // const regfavicon = await getFavicon(realm);
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
-    const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
-    const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
-    const identityName = document.getElementById("identityName");
-    const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
-
-    if (PBROWSERFAVICON_CACHE[realm]) {
-      PBROWSERFAVICON_CACHE[realm] = favicon;
-      saveCache();
-    }
-    const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
-
-    // ⭐ No inline JS — CSP-safe
-    div.innerHTML = `
-      <div class="Snapshot-Viewport">
-        <img class="Snapshot-Favicon"
-              src="${favicon}"
-              alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
-      </div>
-    `;
-
-    topPanel.appendChild(div);
-
-    // ⭐ Attach fallback in JS (CSP-safe)
-    const img = div.querySelector(".Snapshot-Favicon");
-
-    img.addEventListener("error", () => {
-      if (snapshot.svg) {
-        img.src = snapshot.svg;
-      } else {
-        img.src = osfallback;
-      }
-    });
-
-    topPanel.style.backdropFilter = "blur(8px)";
-    topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
-
-  } else {
-    topPanel.classList.add("electrify");
-    pulseRehydrateTabs(WeLocalMemoryLayerMB);
-    toppanel = document.getElementById("top-panel left-panel");
-    const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
-    if (remaining === 0) {
-      topPanel.style.backdropFilter = "blur(24px)";
-      topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
-    } else {
-      console.log(`There are ${remaining} bubbles left.`);
-    }
-
-    setTimeout(() => {
-      topPanel.classList.remove("electrify");
-    }, 1500);
-  }
-
-  if (div) {
-    div.onclick = async () => {
-      if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
-        pbPreconnect([link]);
-        PulseFrame2 = document.getElementById("PulseStreamFrame");
-        destroyIframe(PulseFrame2);
-        PulseStreamingLive = false;
-        topPanel = document.querySelector(".top-panel");
-        const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
-        if (remaining === 0) {
-          topPanel.style.backdropFilter = "blur(24px)";
-          topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
-        } else {
-          console.log(`There are ${remaining} bubbles left.`);
-        }
-        pulseRehydrateTabs(WeLocalMemoryLayerMB);
-      } else {
-        pbPreconnect([link]);
-        openNamedTab(realm, link);
-      }
-    };
-  }
-}
-
-async function renderTemporary(snapshot, snapIndex, realm, link) {
-  const bubbleId = `PulseBrowser-OS-Temporary${snapIndex}`;
-  let div = document.getElementById(bubbleId);
-
-  if (snapshot) {
-    if (!div) {
-      div = document.createElement("div");
-      div.id = bubbleId;
-      div.className = bubbleId;
-
-      const regfavicon = await getFavicon(realm);
-      const favicon = regfavicon;
-      let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
-      if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
-      if (link.startsWith("chrome://") && !link.includes("extension")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
-      const os2fallback = chrome.runtime.getURL("PulseOSBubble.png");
-      let bestfavicon = osfallback;
-
-      // ⭐ No inline JS — CSP-safe
-      div.innerHTML = `
-        <div class="Snapshot-Viewport">
-          <img class="Snapshot-Favicon2"
-               src="${bestfavicon}"
-               alt="favicon">
-        </div>
-      `;
-
-      document.body.appendChild(div);
-
-      // ⭐ Attach fallback in JS (CSP-safe)
-      const img = div.querySelector(".Snapshot-Favicon2");
-
-      img.addEventListener("error", () => {
-        // First fallback → OS icon
-        img.src = os2fallback;
-      });
-    }
-
-  } else {
-    pulseRehydrateTabs(WeLocalMemoryLayerMB);
-  }
-
-  if (div) {
-    div.onclick = async () => {
-      pbPreconnect([link]);
-      openNamedTab(realm, link);
-    };
-  }
 }
 
 const intervalB = getMainInterval();
@@ -4966,7 +4966,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
         PulseURL = null;
       }
 
-      renderSnapshot(null, removedSnapshotIndex, realm);
+      renderSnapshot(null, removedSnapshotIndex, realm, realm, 0);
 
       delete pulseTabs[identity];
       break;
