@@ -27,21 +27,25 @@ import {
 // ============================================================
 
 (async function IMMORTAL_AUTORUN_V40() {
-  console.log(
-    "🧬 PULSE STRANDED DNA v34.0 — %c[PulseWorld::StrandedDNA] New Hydra Mesh Packet Streaming Process Initiated!",
-    "color:#00FFCC; font-weight:bold; font-family:monospace;"
-  );
+  try {
+    console.log(
+      "🧬 PULSE STRANDED DNA v34.0 — %c[PulseWorld::StrandedDNA] New Hydra Mesh Packet Streaming Process Initiated!",
+      "color:#00FFCC; font-weight:bold; font-family:monospace;"
+    );
+      
+    const targets = resolvePulseWorldTargets_v40();
 
-  const targets = resolvePulseWorldTargets_v40();
-
-  for (const world of targets) {
-    try {
-      // let WiFi worker feed a hint into this world’s DNA before scheduling
-      strandedDNAWifiJob_v40(world, { type: "WIFI_STREAM" });
-      await autoAttachWorldBinaryThroughput_v40(world);
-    } catch (err) {
-      console.warn("[PulseWorld::StrandedDNA] AutoAttach Failed:", err);
+    for (const world of targets) {
+      try {
+        // let WiFi worker feed a hint into this world’s DNA before scheduling
+        strandedDNAWifiJob_v40(world, { type: "WIFI_STREAM" });
+        await autoAttachWorldBinaryThroughput_v40(world);
+      } catch (err) {
+        console.warn("[PulseWorld::StrandedDNA] AutoAttach Failed:", err);
+      }
     }
+  } catch (ex) {
+
   }
 })();
 
