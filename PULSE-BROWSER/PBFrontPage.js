@@ -4843,6 +4843,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
   if (div) {
     div.onclick = async () => {
       if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
+        pbPreconnect([link]);
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         destroyIframe(PulseFrame2);
         PulseStreamingLive = false;
