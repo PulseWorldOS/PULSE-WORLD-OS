@@ -3121,7 +3121,7 @@ async function CheckEarnState() {
       pbPulseEarn.id = "pbPulseEarn";
       pbPulseEarn.className = "pbPulseEarn";
       pbPulseEarn.style.opacity = "1";
-      pbPulseEarn.style.transform = "translate(220px, 111px)";
+      pbPulseEarn.style.transform = "translate(190px, 111px)";
       pbPulseEarn.currentTime = 0;
       pbPulseEarn.play();
     }, 1000);
@@ -3200,7 +3200,7 @@ async function CheckEarnState() {
         pbPulseEarn.id = "pbPulseEarn";
         pbPulseEarn.className = "pbPulseEarn";
         pbPulseEarn.style.opacity = "1";
-        pbPulseEarn.style.transform = "translate(220px, 111px)";
+        pbPulseEarn.style.transform = "translate(190px, 111px)";
         pbPulseEarn.currentTime = 0;
         pbPulseEarn.play();
       }, 1000);
