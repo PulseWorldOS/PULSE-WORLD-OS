@@ -3313,7 +3313,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           } else if (CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->") {
             CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
           } else if (CompanionMessage.includes("Received WASM TEST Proof")) {
-            CompanionMessage = `<-- 2 PulseEarners have Risen to the Test of Starting Up -->`;
+            CompanionMessage = `<-- 2 PulseEarners have Risen to the Test -->`;
           } else if (CompanionMessage.includes("2 PulseEarners have Risen")) {
             CompanionMessage = "Waiting for PulseEarners to Send Test Batches...";
           } else if (CompanionMessage.includes(timeProof) && !CompanionMessage.includes("Received WASM TEST Proof")) {
