@@ -1112,7 +1112,7 @@ async function runLocalAI() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "#0FF";
+        let fontcolor = "grey";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -1237,7 +1237,7 @@ ${rawPrompt}
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "#0FF";
+      let fontcolor = "grey";
       if (dailyRate >= 20) fontcolor = "gold";
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -1287,7 +1287,7 @@ function appendEarnerMessage(area, role, text) {
   const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
   // Prevent division by zero or negative values if just started
   const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-  let fontcolor = "#0FF";
+  let fontcolor = "grey";
   if (dailyRate >= 20) fontcolor = "gold";
   if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
   if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -2144,7 +2144,7 @@ async function appendCompanionMessage(area, role, text) {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "#0FF";
+    let fontcolor = "grey";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -2274,7 +2274,7 @@ CompanionConsoleSend.onclick = async () => {
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "#0FF";
+      let fontcolor = "grey";
       if (dailyRate >= 20) fontcolor = "gold";
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -2346,7 +2346,7 @@ CompanionConsoleSend.onclick = async () => {
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
       // Prevent division by zero or negative values if just started
       const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "#0FF";
+      let fontcolor = "grey";
       if (dailyRate >= 20) fontcolor = "gold";
       if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -4138,7 +4138,7 @@ setInterval(async () => {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "#0FF";
+    let fontcolor = "grey";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -4226,7 +4226,7 @@ setInterval(async () => {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "#0FF";
+    let fontcolor = "grey";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -4265,7 +4265,7 @@ setInterval(async () => {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "#0FF";
+        let fontcolor = "grey";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -5896,7 +5896,7 @@ async function updateModuleIcons(settings, browser) {
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
     // Prevent division by zero or negative values if just started
     const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-    let fontcolor = "#0FF";
+    let fontcolor = "grey";
     if (dailyRate >= 20) fontcolor = "gold";
     if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -7633,7 +7633,7 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "#0FF";
+        let fontcolor = "grey";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -7714,7 +7714,7 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "#0FF";
+        let fontcolor = "grey";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
@@ -7991,7 +7991,7 @@ function CheckBackTab() {
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
         // Prevent division by zero or negative values if just started
         const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-        let fontcolor = "#0FF";
+        let fontcolor = "grey";
         if (dailyRate >= 20) fontcolor = "gold";
         if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";

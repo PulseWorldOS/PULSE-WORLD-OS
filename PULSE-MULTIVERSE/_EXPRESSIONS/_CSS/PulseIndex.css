@@ -421,7 +421,7 @@ img {
   padding: 0;
   top: 12dvh;
   right: 0.7dvw;
-
+  cursor:context-menu;
   border-radius: 20px;
   object-fit: cover;
   z-index: 99999999;
