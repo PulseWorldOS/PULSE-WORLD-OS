@@ -2078,7 +2078,7 @@ async function switchHigherModel(modelKey) {
 // Copy button inside code blocks (works for saved history too)
 document.addEventListener("click", (e) => {
   PulseFrame2 = document.getElementById("PulseStreamFrame");
-  PulseFrame2.style.display = "none";
+  if (PulseFrame2) PulseFrame2.style.display = "none";
   displayStyle = false;
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
   if (!btn) return;
@@ -4740,8 +4740,8 @@ function destroyIframe(iframe) {
   // 3. Remove the element from the DOM
   iframe.remove();
 
-  // 4. Nullify your variable reference (do this in the calling scope as well)
-  iframe = null;
+  // // 4. Nullify your variable reference (do this in the calling scope as well)
+  // iframe = null;
 }
 
 function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
@@ -4847,6 +4847,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         destroyIframe(PulseFrame2);
         PulseStreamingLive = false;
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
       } else {
         pbPreconnect([link]);
         openNamedTab(realm, link);
