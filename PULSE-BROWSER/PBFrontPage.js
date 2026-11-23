@@ -11,6 +11,7 @@ let MessengerMode = "Console";
 let identityrunonce = false;
 let engineType = "text";
 let displayStyle = false;
+let gpuText = null;
 let predictionText = "Running Stable";
 let pulseIdentityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
 let pulseBankLink = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
@@ -1755,8 +1756,8 @@ function renderHigherStatusPanel(status, checkingText) {
   const gpu = status.gpuInfo || {};
   gpuCapabilitySize = gpuCapabilitySize ?? higherAIRAM ?? gpu.vramMB;
   
-  const gpuText = gpu.supported
-    ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB)`
+  gpuText = gpu.supported
+    ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
 
   let stateText = "";
@@ -1965,7 +1966,7 @@ async function enableHigherAI(modelKey) {
         const gpu = res.gpuInfo || {};
         if (area) {
           const gpuMsg = gpu.supported
-            ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB)`
+            ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB - Semi Detected)`
             : `No WebGPU detected — using lightweight model`;
           appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
         }
@@ -3024,8 +3025,10 @@ async function GetThisMessengerDone() {
     // Example usage:
     probeUsableVRAM({ maxProbeGB: 12, chunkMB: 256 }).then((result) => {
       console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
-      gpuCapabilitySize = result.estimatedGB * (1024 * 1024);
+      gpuCapabilitySize = result.estimatedGB * (1024);
       gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
+      const higherGpuLine = document.getElementById("higherGpuLine");
+      higherGpuLine.innerhtml = gpuText;
     });
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
