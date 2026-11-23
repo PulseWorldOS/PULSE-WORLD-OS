@@ -422,7 +422,7 @@ img {
   top: 12dvh;
   right: 0.7dvw;
 
-  border-radius: 24px;
+  border-radius: 20px;
   object-fit: cover;
   z-index: 99999999;
   opacity: 1;
