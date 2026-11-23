@@ -1275,6 +1275,7 @@ function appendEarnerMessage(area, role, text) {
   if (text.includes("Adding to your Total")) {
     PulseFrame = document.getElementById("PulseEarnerFrame");
     PulseFrame.style.opacity = "1";
+    PulseFrame.style.zIndex = "11";
     setTimeout(() => {
       if (EarnHidden) PulseFrame.style.opacity = "0";
     }, 10000);
@@ -3097,6 +3098,7 @@ async function CheckEarnState() {
     PulseFrame.style.opacity = "0";
   } else {
     PulseFrame.style.opacity = "1";
+    PulseFrame.style.zIndex = "11";
   }
 
   if (EarnHidden) {
@@ -3164,6 +3166,7 @@ async function CheckEarnState() {
     } else {
       earnerenginepanel.style.opacity = "0.35";
       PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
     }
   };
 
@@ -3204,6 +3207,7 @@ async function CheckEarnState() {
     } else {
       EarnHidden = false;
       PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
       earnerenginepanel.style.opacity = "0.35";
       // ——— Turn OFF (restore original) ———
       pbPulseEarn.id = "pbPulseEarn";
@@ -4834,7 +4838,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     });
 
     topPanel.style.backdropFilter = "blur(8px)";
-    topPanel.style.backgroundImage = "none";
+    topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
 
   } else {
     topPanel.classList.add("electrify");
