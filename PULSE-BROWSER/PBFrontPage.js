@@ -1,6 +1,6 @@
 
 let lastEarnBatch = null;
-let PulseSnapIndex = 1;
+let PulseSnapIndex = 0;
 let MyPulseIdentity = null;
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
