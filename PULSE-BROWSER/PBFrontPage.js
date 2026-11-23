@@ -4720,6 +4720,30 @@ async function openNamedTab(name, url) {
   }, 2000);
 }
 
+function destroyIframe(iframe) {
+  if (!iframe) return;
+
+  // 1. Navigate to about:blank to unload the current document and stop scripts/timers
+  iframe.src = 'about:blank';
+
+  // 2. If same-origin, explicitly clear the document body and remove listeners
+  try {
+    if (iframe.contentWindow) {
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write('');
+      iframe.contentWindow.document.close();
+    }
+  } catch (e) {
+    // Cross-origin iframes will throw a SecurityError here, which is safe to ignore
+  }
+
+  // 3. Remove the element from the DOM
+  iframe.remove();
+
+  // 4. Nullify your variable reference (do this in the calling scope as well)
+  iframe = null;
+}
+
 function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
   const snapshotKey = `pulse_snapshot_${realm}`;
   // let TempLink = false;
@@ -4818,8 +4842,14 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
   if (div) {
     div.onclick = async () => {
-      pbPreconnect([link]);
-      openNamedTab(realm, link);
+      if (PulseStreamingLive  && realm === PulseRealmSettings.externalStreamingLink) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        destroyIframe(PulseFrame2);
+        PulseStreamingLive = false;
+      } else {
+        pbPreconnect([link]);
+        openNamedTab(realm, link);
+      }
     };
   }
 }
