@@ -4499,12 +4499,12 @@ async function openNamedTab(name, url) {
       PulseFrame2 = document.getElementById("PulseStreamFrame");
       latestSnapshot(realm, url, PulseSnapIndex, 0);
       if (!displayStyle) {
-        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        if (!PulseFrame2.src === url) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
         displayStyle = true;
         return;
       } else {
-        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        if (!PulseFrame2.src === url) PulseFrame2.src = url;
         PulseFrame2.style.display = "none";
         displayStyle = false;
         return;
@@ -4519,12 +4519,12 @@ async function openNamedTab(name, url) {
       realm = realm.replace("www.","");
       latestSnapshot(realm, url, PulseSnapIndex, 0);
       if (!displayStyle) {
-        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        if (!PulseFrame2.src === url) PulseFrame2.src = url;
         PulseFrame2.style.display = "block";
         displayStyle = true;
         return;
       } else {
-        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        if (!PulseFrame2.src === url) PulseFrame2.src = url;
         PulseFrame2.style.display = "none";
         displayStyle = false;
         return;
