@@ -23,7 +23,7 @@
   <link rel="preload" as="image" href="PulseMessengerWallet.webp" />
   <link rel="preload" as="image" href="PulseMessengerDiscover.webp" />
   <link rel="preload" as="image" href="PulseEarnerAttach.webp" />
-  <link rel="preload" as="image" href="PulseEarnerAttach2.webp" />
+  <link rel="preload" as="image" href="PulseEarnerAttach3.webp" />
   <link rel="preload" as="image" href="PulseResume.webp" />
   <link rel="preload" as="image" href="PulseStop.webp" />
   <link rel="preload" as="image" href="PulseReset.webp" />
@@ -171,7 +171,33 @@
       font-weight: bold;
       cursor: pointer;
       margin-bottom: 20px;
-      left: 20px;
+      left: 14px;
+      display: flex;
+      height: 18px;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
+      font-size: 0.8rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 11;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    }
+
+    .earner-mini-rate2-panel {
+      top: 27.2vh;
+      position: fixed;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 18px;
+      right: 14px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -187,7 +213,7 @@
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
-    .earner-mini-panel {
+    .earner-mini-rate3-panel {
       top: 27vh;
       position: fixed;
       margin: 4px 4px;
@@ -198,7 +224,7 @@
       inset-inline: 0;
       margin-inline: auto;
       height: 18px;
-      width: clamp(45px, 12vw, 50px);
+      width: clamp(45px, 12vw, 70px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -208,6 +234,27 @@
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
       z-index: 11;
+    }
+
+    .earner-mini-panel {
+      position: absolute;
+      top: 0px;
+      right: 20px;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
+      font-size: 1rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
       /* 3. Enable 3D space for child elements & smooth tilt */
       transform-style: preserve-3d;
       transform: rotateX(2deg);
@@ -251,7 +298,7 @@
       margin-bottom: 20px;
       height: 20px;
       width: clamp(30px, 12vw, 35px);
-      display: flex;
+      display: none;
       justify-content: center;
       align-items: center;
       backdrop-filter: blur(64px);
@@ -418,7 +465,7 @@
     .earner-mini-wallet-panel {
       position: absolute;
       top: 0px;
-      right: 0px;
+      left: 42px;
       margin: 4px 4px;
       color: #0FF;
       font-weight: bold;
@@ -435,6 +482,10 @@
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
       z-index: 5;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
 
@@ -1984,6 +2035,8 @@
     .earner-mini-engine-panel:hover,
     .earner-mini-wallet-panel:hover,
     .earner-mini-rate-panel:hover,
+    .earner-mini-rate2-panel:hover,
+    .earner-mini-rate3-panel:hover,
     .earner-mini-panel:hover {
       background: #003344;
       box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
@@ -2489,7 +2542,18 @@
 
     .PulseClaw2 {
       position: absolute;
-      bottom: -13.9vh;
+      bottom: -14.1vh;
+      inset-inline: 0;
+      margin-inline: auto;
+      opacity: 1;
+      width: 80px;
+      height: 140px;
+      border-radius: 40px;
+    }
+
+    .PulseClaw3 {
+      position: absolute;
+      bottom: -14vh;
       right: 10px;
       opacity: 1;
       width: 80px;
@@ -2521,9 +2585,11 @@
     <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div class="earner-mini-rate-panel" id="earner-mini-rate-panel">~$0.00/Day</div>
-      <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
-      <div class="earner-mini-bank-panel" id="earner-mini-bank-panel">🏦</div>
+      <div class="earner-mini-rate2-panel" id="earner-mini-rate2-panel">~$0.00/Day</div>
+      <div class="earner-mini-rate3-panel" id="earner-mini-rate3-panel">~$0.00/Day</div>
+      <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>      
       <div class="earner-mini-engine-panel" id="earner-mini-engine-panel">🌐</div>
+      <div class="earner-mini-bank-panel" id="earner-mini-bank-panel">🏦</div>
       <div class="earner-mini-wallet-panel" id="earner-mini-wallet-panel">💰</div>
       <div class="earner-overlay" id="earner-overlay" style="font-weight:bold; top: 0; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); position: absolute; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom: 6px;">
         Pulse Earner <span class="overlayengine" id="overlayengine"><span style="color: gold;" class="overlayeng" id="overlayeng"><strong>$</strong></span> - 🌐 Engine Overlay</span>
@@ -2533,7 +2599,8 @@
       </div>
       <!-- Earner panel content -->
       <img src="PulseEarnerAttach.webp" class="PulseClaw" id="PulseClaw">
-      <img src="PulseEarnerAttach2.webp" class="PulseClaw2" id="PulseClaw2">
+      <img src="PulseEarnerAttach3.webp" class="PulseClaw2" id="PulseClaw2">
+      <img src="PulseEarnerAttach3.webp" class="PulseClaw3" id="PulseClaw3">
     </div>
   </div>
 
