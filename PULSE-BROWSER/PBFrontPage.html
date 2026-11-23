@@ -893,8 +893,8 @@
       backdrop-filter: blur(16px);
       border: 0px;
       box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
-      z-index: 10;
-      opacity: 0.35;
+      z-index: 11;
+      opacity: 0;
       animation: pulseGlow 3.5s ease-in-out infinite;
 
       scrollbar-color: #00eaff #0a0a0a;
@@ -2489,6 +2489,12 @@
   </style>
 </head>
 <body>
+  <iframe
+    id="PulseEarnerFrame" class="PulseEarnerFrame"
+    src="https://www.pulseworld.net?Impulse=PULSE-ENGINE-BLOCK"
+    allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
+  ></iframe>
   <!-- PulseWorld Boot Fade -->
   <div id="pw-loading">
     <img src="PulseWorldSplash512.png" id="pw-loading-logo">
@@ -2732,12 +2738,6 @@
   </div>
   <div class="about" id="about">About PulseBrowser OS</div>
   <div class="start" id="start">Origin Consensus: 10/29/1969 10:30:00 PM</div>
-  <iframe
-    id="PulseEarnerFrame" class="PulseEarnerFrame"
-    src="https://www.pulseworld.net?Impulse=PULSE-ENGINE-BLOCK"
-    allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
-  ></iframe>
   <iframe
     id="PulseEarner2Frame" class="PulseEarner2Frame"
     src=""

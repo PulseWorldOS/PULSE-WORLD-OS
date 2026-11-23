@@ -3091,7 +3091,7 @@ async function CheckEarnState() {
   }
 
   if (earnerenginepanel.style.opacity === "1") {
-    PulseFrame.style.opacity = "0.35";
+    PulseFrame.style.opacity = "0";
   } else {
     PulseFrame.style.opacity = "1";
   }
@@ -3157,7 +3157,7 @@ async function CheckEarnState() {
   earnerenginepanel.onclick = async () => {
     if (PulseFrame.style.opacity === "1") {
       earnerenginepanel.style.opacity = "1";
-      PulseFrame.style.opacity = "0.35";
+      PulseFrame.style.opacity = "0";
     } else {
       earnerenginepanel.style.opacity = "0.35";
       PulseFrame.style.opacity = "1";
