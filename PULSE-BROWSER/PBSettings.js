@@ -328,7 +328,7 @@ async function loadExtensionSettingsUI() {
   const fields = {    
     emailMode: "emailMode",
     adBlocker: "adBlocker",
-    tetherCode: "tetherCode",
+    // tetherCode: "tetherCode",
     externalEmailLink: "externalEmailLink",
     acceleratedModule1Link: "acceleratedModule1Link",
     acceleratedModule2Link: "acceleratedModule2Link",
@@ -390,7 +390,6 @@ async function saveExtensionSettingsUI() {
     acceleratedModule4Link: document.getElementById("acceleratedModule4Link").value.trim(),
     acceleratedModule5Link: document.getElementById("acceleratedModule5Link").value.trim(),
     acceleratedModule6Link: document.getElementById("acceleratedModule6Link").value.trim(),
-    tetherCode: document.getElementById("tetherCode").value.trim(),
 
     bankMode: document.getElementById("bankMode").value,
     externalBankLink: document.getElementById("externalBankLink").value.trim(),
@@ -1062,7 +1061,7 @@ if (location.href.includes("PBSettings.html")) {
     const idsToWatch = [
       "emailMode",
       "adBlocker",
-      "tetherCode",
+      // "tetherCode",
       "externalEmailLink",
       "acceleratedModule1Link",
       "acceleratedModule2Link",
@@ -1249,31 +1248,31 @@ if (location.href.includes("PBSettings.html")) {
   }
 
 
-  if (document.getElementById("tetherBtn")) {
-    document.getElementById("tetherBtn").onclick = () => {
-      if (document.getElementById("tetherCode").value && document.getElementById("tetherCode").value.length === 4) {
-        try {
-          fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-            body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowser OS", online: online2, inactive: false })
-          }).then((response) => {
-            if (!response.ok) document.getElementById("tetherCode").value = "";
-          }).catch(() => {
-            document.getElementById("tetherCode").style.backgroundColor = "red";
-          });
-        } catch (err) {
-          document.getElementById("tetherCode").style.backgroundColor = "red";
-          setTimeout(() => {
-            document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
-          }, 2000);
-        }
-      } else {
-        document.getElementById("tetherCode").style.backgroundColor = "red";
-        setTimeout(() => {
-          document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
-        }, 2000);
-      };
-    };
-  };
+  // if (document.getElementById("tetherBtn")) {
+  //   document.getElementById("tetherBtn").onclick = () => {
+  //     if (document.getElementById("tetherCode").value && document.getElementById("tetherCode").value.length === 4) {
+  //       try {
+  //         fetch("https://www.pulseworld.net/.netlify/functions/PULSE-SERVER-SQL", {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
+  //           body: JSON.stringify({ action: "extsync", tetherCode: document.getElementById("tetherCode").value.trim(), host: "PulseBrowser OS", online: online2, inactive: false })
+  //         }).then((response) => {
+  //           if (!response.ok) document.getElementById("tetherCode").value = "";
+  //         }).catch(() => {
+  //           document.getElementById("tetherCode").style.backgroundColor = "red";
+  //         });
+  //       } catch (err) {
+  //         document.getElementById("tetherCode").style.backgroundColor = "red";
+  //         setTimeout(() => {
+  //           document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
+  //         }, 2000);
+  //       }
+  //     } else {
+  //       document.getElementById("tetherCode").style.backgroundColor = "red";
+  //       setTimeout(() => {
+  //         document.getElementById("tetherCode").style.backgroundColor = "#1a1a1d";
+  //       }, 2000);
+  //     };
+  //   };
+  // };
 }
