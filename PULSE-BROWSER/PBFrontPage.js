@@ -179,6 +179,12 @@ function safeSpeak(msg) {
   }
 }
 
+async function DragANDDrop() {
+  MoveEarnerLive();
+  MoveAILive();
+  MoveMessengerLive();
+}
+
 async function MoveEarnerLive() {
   const myPanel = document.getElementById("earner-panel");
   const headerBar = document.getElementById("earner-panel");
@@ -8552,10 +8558,4 @@ function documentTitle() {
     document.title = "impulse://newtab"
   }
   return document.title;
-}
-
-async function DragANDDrop() {
-  setTimeout(MoveEarnerLive, 400);
-  setTimeout(MoveAILive, 400);
-  setTimeout(MoveMessengerLive, 400);
 }
