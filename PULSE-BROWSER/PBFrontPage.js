@@ -178,6 +178,112 @@ function safeSpeak(msg) {
     console.warn("pulsepalSpeak failed:", e);
   }
 }
+
+async function MoveEarnerLive() {
+  const myPanel = document.getElementById("earner-panel");
+  const headerBar = document.getElementById("earner-panel");
+  
+  if (!myPanel || EarnHidden) return;
+
+  // 1. Load saved position
+  const POS = await chrome.storage.local.get(["panelEarnerPos"]);
+  const savedPos = POS?.panelEarnerPos;
+
+  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
+  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+    panelEarnerPos = savedPos;
+
+    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+    myPanel.style.right = "auto";
+    myPanel.style.bottom = "auto";
+  }
+
+  // 3. Initialize dragging and save on drop
+  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    keepInBounds: true,
+    onDragEnd: ({ x, y }) => {
+      panelEarnerPos = { x, y };
+      PulsesafeStorageSet({ panelEarnerPos: { x, y } });
+    },
+  });
+
+  return destroyDrag;
+}
+
+async function MoveAILive() {
+  const myPanel = document.getElementById("earner-helper-panel");
+  const headerBar = document.getElementById("earner-helper-panel");
+  
+  if (!myPanel || OvermindHidden) return;
+
+  // 1. Load saved position
+  const POS = await chrome.storage.local.get(["panelAIPos"]);
+  const savedPos = POS?.panelAIPos;
+
+  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
+  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+    panelAIPos = savedPos;
+
+    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+    myPanel.style.right = "auto";
+    myPanel.style.bottom = "auto";
+  }
+
+  // 3. Initialize dragging and save on drop
+  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    keepInBounds: true,
+    onDragEnd: ({ x, y }) => {
+      panelAIPos = { x, y };
+      PulsesafeStorageSet({ panelAIPos: { x, y } });
+    },
+  });
+
+  return destroyDrag;
+}
+
+async function MoveMessengerLive() {
+  const myPanel = document.getElementById("messenger-panel");
+  const headerBar = document.getElementById("messenger-panel");
+  
+  if (!myPanel || MessengerHidden) return;
+
+  // 1. Load saved position
+  const POS = await chrome.storage.local.get(["panelMessengerPos"]);
+  const savedPos = POS?.panelMessengerPos;
+
+  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
+  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+    panelMessengerPos = savedPos;
+
+    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+    myPanel.style.right = "auto";
+    myPanel.style.bottom = "auto";
+  }
+
+  // 3. Initialize dragging and save on drop
+  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    keepInBounds: true,
+    onDragEnd: ({ x, y }) => {
+      panelMessengerPos = { x, y };
+      PulsesafeStorageSet({ panelMessengerPos: { x, y } });
+    },
+  });
+
+  return destroyDrag;
+}
+
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
@@ -188,9 +294,7 @@ if (!online) {
   if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
     if (CustomizePanelsDragNDrop) {
-      setTimeout(MoveEarnerLive, 400);
-      setTimeout(MoveAILive, 400);
-      setTimeout(MoveMessengerLive, 400);
+      DragANDDrop();
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
@@ -8450,111 +8554,8 @@ function documentTitle() {
   return document.title;
 }
 
-async function MoveEarnerLive() {
-  const myPanel = document.getElementById("earner-panel");
-  const headerBar = document.getElementById("earner-panel");
-  
-  if (!myPanel || EarnHidden) return;
-
-  // 1. Load saved position
-  const POS = await chrome.storage.local.get(["panelEarnerPos"]);
-  const savedPos = POS?.panelEarnerPos;
-
-  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
-  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-    panelEarnerPos = savedPos;
-
-    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
-    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
-
-    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
-    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
-    myPanel.style.right = "auto";
-    myPanel.style.bottom = "auto";
-  }
-
-  // 3. Initialize dragging and save on drop
-  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
-    keepInBounds: true,
-    onDragEnd: ({ x, y }) => {
-      panelEarnerPos = { x, y };
-      PulsesafeStorageSet({ panelEarnerPos: { x, y } });
-    },
-  });
-
-  return destroyDrag;
+async function DragANDDrop() {
+  setTimeout(MoveEarnerLive, 400);
+  setTimeout(MoveAILive, 400);
+  setTimeout(MoveMessengerLive, 400);
 }
-
-async function MoveAILive() {
-  const myPanel = document.getElementById("earner-helper-panel");
-  const headerBar = document.getElementById("earner-helper-panel");
-  
-  if (!myPanel || OvermindHidden) return;
-
-  // 1. Load saved position
-  const POS = await chrome.storage.local.get(["panelAIPos"]);
-  const savedPos = POS?.panelAIPos;
-
-  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
-  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-    panelAIPos = savedPos;
-
-    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
-    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
-
-    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
-    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
-    myPanel.style.right = "auto";
-    myPanel.style.bottom = "auto";
-  }
-
-  // 3. Initialize dragging and save on drop
-  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
-    keepInBounds: true,
-    onDragEnd: ({ x, y }) => {
-      panelAIPos = { x, y };
-      PulsesafeStorageSet({ panelAIPos: { x, y } });
-    },
-  });
-
-  return destroyDrag;
-}
-
-async function MoveMessengerLive() {
-  const myPanel = document.getElementById("messenger-panel");
-  const headerBar = document.getElementById("messenger-panel");
-  
-  if (!myPanel || MessengerHidden) return;
-
-  // 1. Load saved position
-  const POS = await chrome.storage.local.get(["panelMessengerPos"]);
-  const savedPos = POS?.panelMessengerPos;
-
-  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
-  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-    panelMessengerPos = savedPos;
-
-    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
-    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
-
-    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
-    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
-    myPanel.style.right = "auto";
-    myPanel.style.bottom = "auto";
-  }
-
-  // 3. Initialize dragging and save on drop
-  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
-    keepInBounds: true,
-    onDragEnd: ({ x, y }) => {
-      panelMessengerPos = { x, y };
-      PulsesafeStorageSet({ panelMessengerPos: { x, y } });
-    },
-  });
-
-  return destroyDrag;
-}
-
-setTimeout(MoveEarnerLive, 400);
-setTimeout(MoveAILive, 400);
-setTimeout(MoveMessengerLive, 400);
