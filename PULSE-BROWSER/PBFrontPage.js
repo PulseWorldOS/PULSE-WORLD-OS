@@ -5991,13 +5991,13 @@ async function getFavicon(url, flags = {}) {
   try {
     u = new URL(url);
   } catch {
-    return null;
+    return url;
   }
 
   let host = u.hostname;
 
   // ⭐ Preserve www if explicitly present
-  if (u.includes("www.") && !host.startsWith("www.")) {
+  if (url.includes("www.") && !host.startsWith("www.")) {
     host = "www." + host;
   }
 
