@@ -3937,7 +3937,8 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 async function getSWSize() {
   try {
-    const res = await fetch(chrome.runtime.getURL("PBCompanion.js"));
+    const url = chrome.runtime.getURL("PBCompanion.js");
+    const res = await fetch(url);
     const text = await res.text();
     return new Blob([text]).size; // returns size in bytes
   } catch (e) {
