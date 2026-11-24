@@ -343,6 +343,7 @@ if (!online) {
     } else {
       ResetAllPanelsLive(false);
       DragANDDrop(true);
+      location.reload();
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
