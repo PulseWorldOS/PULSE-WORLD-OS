@@ -171,6 +171,7 @@ function pulsepalSpeak(message) {
     pulsepaltalk.style.opacity = "0";
   }, 10000);
 }
+
 function safeSpeak(msg) {
   try {
     pulsepalSpeak(msg);
@@ -179,131 +180,142 @@ function safeSpeak(msg) {
   }
 }
 
+function createPanelLiveController({
+  elementId,
+  storageKey,
+  isHidden,
+  setPosVar,
+}) {
+  let destroyDrag = null;
+
+  async function move(POS, skip) {
+    const myPanel = document.getElementById(elementId);
+    if (!myPanel || isHidden()) return;
+
+    // Clean up any existing drag listeners before re-initializing
+    if (typeof destroyDrag === "function") {
+      destroyDrag();
+      destroyDrag = null;
+    }
+
+    const savedPos = POS?.[storageKey];
+
+    // Apply saved position if valid (clamped so it stays on-screen)
+    if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+      setPosVar(savedPos);
+
+      const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+      const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+      myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+      myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+      myPanel.style.right = "auto";
+      myPanel.style.bottom = "auto";
+    }
+
+    if (!skip) {
+      destroyDrag = makePanelDraggable(myPanel, myPanel, {
+        keepInBounds: true,
+        onDragEnd: ({ x, y }) => {
+          const newPos = { x, y };
+          setPosVar(newPos);
+          PulsesafeStorageSet({ [storageKey]: newPos });
+        },
+      });
+    }
+
+    return destroyDrag;
+  }
+
+  async function reset(clearSavedStorage = true) {
+    const myPanel = document.getElementById(elementId);
+
+    // 1. Remove drag event listeners and cursor styles
+    if (typeof destroyDrag === "function") {
+      destroyDrag();
+      destroyDrag = null;
+    }
+
+    // 2. Restore original CSS layout
+    if (myPanel) {
+      myPanel.style.left = "";
+      myPanel.style.top = "";
+      myPanel.style.right = "";
+      myPanel.style.bottom = "";
+      myPanel.style.transform = "";
+    }
+
+    // 3. Optionally clear saved position
+    if (clearSavedStorage) {
+      setPosVar(null);
+      await PulsesafeStorageSet({ [storageKey]: null });
+    }
+  }
+
+  return { move, reset };
+}
+
+// --- Panel Configurations ---
+
+const earnerController = createPanelLiveController({
+  elementId: "earner-panel",
+  storageKey: "panelEarnerPos",
+  isHidden: () => EarnHidden,
+  setPosVar: (val) => { panelEarnerPos = val; },
+});
+
+const aiController = createPanelLiveController({
+  elementId: "earner-helper-panel",
+  storageKey: "panelAIPos",
+  isHidden: () => EarnDetailsHidden,
+  setPosVar: (val) => { panelAIPos = val; },
+});
+
+const messengerController = createPanelLiveController({
+  elementId: "messenger-panel",
+  storageKey: "panelMessengerPos",
+  isHidden: () => MessengerHidden,
+  setPosVar: (val) => { panelMessengerPos = val; },
+});
+
+// --- Move & Reset Functions ---
+
+const MoveEarnerLive = (POS, skip) => earnerController.move(POS, skip);
+const ResetEarnerLive = (clearSaved = true) => earnerController.reset(clearSaved);
+
+const MoveAILive = (POS, skip) => aiController.move(POS, skip);
+const ResetAILive = (clearSaved = true) => aiController.reset(clearSaved);
+
+const MoveMessengerLive = (POS, skip) => messengerController.move(POS, skip);
+const ResetMessengerLive = (clearSaved = true) => messengerController.reset(clearSaved);
+
+async function ResetAllPanelsLive(clearSavedStorage = true) {
+  await Promise.all([
+    ResetEarnerLive(clearSavedStorage),
+    ResetAILive(clearSavedStorage),
+    ResetMessengerLive(clearSavedStorage),
+  ]);
+}
+
+// --- Initialization ---
+
 async function DragANDDrop(skip) {
-  const POSA = await chrome.storage.local.get(["panelEarnerPos"]);
-  // 1. Load saved position
-  const POSB = await chrome.storage.local.get(["panelAIPos"]);
-  // 1. Load saved position
-  const POSC = await chrome.storage.local.get(["panelMessengerPos"]);
-  MoveEarnerLive(POSA, skip);
-  MoveAILive(POSB, skip);
-  MoveMessengerLive(POSC, skip);
+  const savedPositions = await chrome.storage.local.get([
+    "panelEarnerPos",
+    "panelAIPos",
+    "panelMessengerPos",
+  ]);
+
+  await Promise.all([
+    MoveEarnerLive(savedPositions, skip),
+    MoveAILive(savedPositions, skip),
+    MoveMessengerLive(savedPositions, skip),
+  ]);
 }
 
 setTimeout(() => {
   DragANDDrop(true);
 }, 50);
-
-async function MoveEarnerLive(POS, skip) {
-  const myPanel = document.getElementById("earner-panel");
-  const headerBar = document.getElementById("earner-panel");
-  
-  if (!myPanel || EarnHidden) return;
-
-  const savedPos = POS?.panelEarnerPos;
-
-  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
-  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-    panelEarnerPos = savedPos;
-
-    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
-    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
-
-    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
-    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
-    myPanel.style.right = "auto";
-    myPanel.style.bottom = "auto";
-  }
-
-  let destroyDrag = null;
-
-  if (!skip) {
-    // 3. Initialize dragging and save on drop
-    destroyDrag = makePanelDraggable(myPanel, headerBar, {
-      keepInBounds: true,
-      onDragEnd: ({ x, y }) => {
-        panelEarnerPos = { x, y };
-        PulsesafeStorageSet({ panelEarnerPos: { x, y } });
-      },
-    });
-  }
-
-  return destroyDrag;
-}
-
-async function MoveAILive(POS, skip) {
-  const myPanel = document.getElementById("earner-helper-panel");
-  const headerBar = document.getElementById("earner-helper-panel");
-  
-  if (!myPanel || EarnDetailsHidden) return;
-
-  const savedPos = POS?.panelAIPos;
-
-  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
-  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-    panelAIPos = savedPos;
-
-    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
-    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
-
-    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
-    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
-    myPanel.style.right = "auto";
-    myPanel.style.bottom = "auto";
-  }
-
-  let destroyDrag = null;
-
-  if (!skip) {
-    // 3. Initialize dragging and save on drop
-    destroyDrag = makePanelDraggable(myPanel, headerBar, {
-      keepInBounds: true,
-      onDragEnd: ({ x, y }) => {
-        panelEarnerPos = { x, y };
-        PulsesafeStorageSet({ panelEarnerPos: { x, y } });
-      },
-    });
-  }
-
-  return destroyDrag;
-}
-
-async function MoveMessengerLive(POS, skip) {
-  const myPanel = document.getElementById("messenger-panel");
-  const headerBar = document.getElementById("messenger-panel");
-  
-  if (!myPanel || MessengerHidden) return;
-
-  const savedPos = POS?.panelMessengerPos;
-
-  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
-  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-    panelMessengerPos = savedPos;
-
-    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
-    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
-
-    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
-    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
-    myPanel.style.right = "auto";
-    myPanel.style.bottom = "auto";
-  }
-
-  let destroyDrag = null;
-
-  if (!skip) {
-    // 3. Initialize dragging and save on drop
-    destroyDrag = makePanelDraggable(myPanel, headerBar, {
-      keepInBounds: true,
-      onDragEnd: ({ x, y }) => {
-        panelEarnerPos = { x, y };
-        PulsesafeStorageSet({ panelEarnerPos: { x, y } });
-      },
-    });
-  }
-
-  return destroyDrag;
-}
 
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";

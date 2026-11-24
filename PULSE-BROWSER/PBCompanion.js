@@ -2216,7 +2216,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   chrome.contextMenus.create({
     id: 'customizePanels',
-    title: '🖼️ PulseBrowser OS - Customize',
+    title: '🖼️ PulseBrowser OS - Toggle DragNDrop',
     contexts: ['all']
   });
   chrome.contextMenus.create({
@@ -2299,10 +2299,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     });
     chrome.sidePanel.open({ windowId: tab.windowId });
   } else if (info.menuItemId === 'customizePanels') {
-    if (!CustomizePanelsDragNDrop) {
-      CustomizePanelsDragNDrop = true;
-    } else {
+    if (CustomizePanelsDragNDrop) {
       CustomizePanelsDragNDrop = false;
+    } else {
+      CustomizePanelsDragNDrop = true;
     }
   } else if (info.menuItemId === 'openSettings') {
     // This will open the panel in all the pages on the current window.
