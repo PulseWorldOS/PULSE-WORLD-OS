@@ -111,11 +111,43 @@ function resolvePulseWorldTargets_v40() {
 
   const targets = new Set();
 
-  function looksLikeWorld(obj) {
-    try {
-      if (!obj || typeof obj !== "object") return false;
+  function isSafeLocalObject(obj) {
+    if (!obj || typeof obj !== "object") return false;
 
-      if (isWorldCandidate_v40(obj)) return true;
+    try {
+      // 1. Check if the object is a Window/frame proxy (cross-origin or same-origin)
+      // Cross-origin Window proxies allow accessing `.window` and `.closed`, 
+      // whereas accessing `.document` or custom keys throws a SecurityError.
+      if (obj.window === obj || typeof obj.postMessage === "function") {
+        // If it's a Window, verify we actually own its document
+        void obj.document;
+      }
+
+      // 2. Check if it's a cross-origin Location object
+      // Object.prototype.toString.call(crossOriginLocation) works safely without throwing,
+      // or reading .href will immediately fail if it's cross-origin.
+      if (Object.prototype.toString.call(obj) === "[object Location]") {
+        void obj.href;
+      }
+
+      // 3. Verify prototype/constructor access is safe (catches other cross-origin wrappers)
+      void Object.getPrototypeOf(obj);
+      
+      return true;
+    } catch (e) {
+      // SecurityError caught: this is a cross-origin object and definitely not ours
+      return false;
+    }
+  }
+
+  function looksLikeWorld(obj) {
+    // Bail out immediately if null, primitive, or a restricted cross-origin proxy
+    if (!isSafeLocalObject(obj)) return false;
+
+    try {
+      if (typeof isWorldCandidate_v40 === "function" && isWorldCandidate_v40(obj)) {
+        return true;
+      }
 
       if (obj.__pulseWorld === true) return true;
       if (obj.__pulseMultiverse === true) return true;
@@ -126,7 +158,7 @@ function resolvePulseWorldTargets_v40() {
       if ("routeContext" in obj) return true;
       if ("waveContext" in obj) return true;
 
-      if (obj.meta && typeof obj.meta === "object") {
+      if (obj.meta && typeof obj.meta === "object" && isSafeLocalObject(obj.meta)) {
         const m = obj.meta;
         if (m.type === "pulse-world") return true;
         if (m.type === "pulse-multiverse") return true;
@@ -142,7 +174,7 @@ function resolvePulseWorldTargets_v40() {
       if (keys.some(k => k.toLowerCase().includes("world"))) return true;
       if (keys.some(k => k.toLowerCase().includes("multiverse"))) return true;
       if (keys.some(k => k.toLowerCase().includes("realm"))) return true;
-      
+
     } catch (ex) {
       return false;
     }
