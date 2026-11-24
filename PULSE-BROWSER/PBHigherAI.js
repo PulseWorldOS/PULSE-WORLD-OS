@@ -9,6 +9,8 @@
 const WORKER_RPC_TIMEOUT_MS = 20000;
 let worker = null;
 let rpcSeq = 0;
+let lastProgressStage = null;
+let lastProgressModelKey = null;
 const pendingRpcs = new Map();
 
 function broadcastRuntime(payload) {
@@ -17,6 +19,21 @@ function broadcastRuntime(payload) {
       void chrome.runtime.lastError;
     });
   } catch (_) {}
+}
+
+function resetWorker(reason = "Resetting AI worker") {
+  const prev = worker;
+  worker = null;
+  lastProgressStage = null;
+  lastProgressModelKey = null;
+  if (prev) {
+    try { prev.terminate(); } catch (_) {}
+  }
+  for (const [id, entry] of pendingRpcs.entries()) {
+    clearTimeout(entry.timer);
+    pendingRpcs.delete(id);
+    entry.resolve({ ok: false, error: reason });
+  }
 }
 
 function createWorker() {
@@ -37,6 +54,8 @@ function createWorker() {
     }
 
     if (msg.kind === "progress" && msg.progress) {
+      lastProgressStage = msg.progress.stage || null;
+      lastProgressModelKey = msg.progress.modelKey || lastProgressModelKey;
       broadcastRuntime({ type: "PB_HIGHER_PROGRESS", ...msg.progress });
       return;
     }
@@ -137,16 +156,49 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return;
       }
       if (msg.op === "enable") {
-        const res = await callWorkerRpc("enable", { modelKey: msg.modelKey || null });
+        if (lastProgressStage === "error") {
+          resetWorker("Respawning worker after previous load error");
+          if (msg.hydrateState && typeof msg.hydrateState === "object") {
+            await callWorkerRpc("hydrate", msg.hydrateState);
+          }
+        }
+        let res = await callWorkerRpc("enable", { modelKey: msg.modelKey || null });
+        if (!res || !res.ok) {
+          resetWorker("Respawning worker after enable failure");
+          if (msg.hydrateState && typeof msg.hydrateState === "object") {
+            await callWorkerRpc("hydrate", msg.hydrateState);
+          }
+          res = await callWorkerRpc("enable", { modelKey: msg.modelKey || null });
+        }
         sendResponse(res);
         return;
       }
       if (msg.op === "switch") {
-        const res = await callWorkerRpc("switch", { modelKey: msg.modelKey });
+        // If a previous model download is in-flight/stalled (e.g. network drop mid-fetch),
+        // terminate & respawn the Worker so stuck fetches/locks are aborted immediately.
+        if (lastProgressStage === "loading" || lastProgressStage === "error") {
+          resetWorker("Aborted stalled download to switch model");
+          if (msg.hydrateState && typeof msg.hydrateState === "object") {
+            await callWorkerRpc("hydrate", msg.hydrateState);
+          }
+        }
+        let res = await callWorkerRpc("switch", { modelKey: msg.modelKey });
+        if (!res || !res.ok) {
+          resetWorker("Respawning worker after switch failure");
+          if (msg.hydrateState && typeof msg.hydrateState === "object") {
+            await callWorkerRpc("hydrate", msg.hydrateState);
+          }
+          res = await callWorkerRpc("switch", { modelKey: msg.modelKey });
+        }
         sendResponse(res);
         return;
       }
       if (msg.op === "disable") {
+        if (lastProgressStage === "loading") {
+          resetWorker("Download cancelled by user");
+          sendResponse({ ok: true });
+          return;
+        }
         const res = await callWorkerRpc("disable");
         sendResponse(res);
         return;

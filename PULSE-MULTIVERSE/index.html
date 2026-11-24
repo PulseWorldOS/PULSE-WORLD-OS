@@ -873,51 +873,77 @@ let gpuContext = null;
 
 // 1. Initialize once at startup (replaces your warm-up snippet)
 async function initWebGPUCompute() {
-  if (!navigator.gpu) return null;
-  const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
-  if (!adapter) return null;
-  const device = await adapter.requestDevice();
-  if (device) pulseGPUInspector(adapter, device);
-  // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
-  const shaderCode = `
-    struct Item256 {
-      low: vec4<u32>,
-      high: vec4<u32>,
-    };
-
-    @group(0) @binding(0) var<storage, read_write> data: array<Item256>;
-
-    @compute @workgroup_size(64)
-    fn main(@builtin(global_invocation_id) id: vec3<u32>) {
-      let i = id.x;
-      if (i >= arrayLength(&data)) { return; }
-
-      // REPLACE THIS WITH YOUR ACTUAL 256-BIT MATH (e.g., XOR, bit-shifts, hashing)
-      data[i].low = data[i].low ^ vec4<u32>(0xDEADBEEFu);
-      data[i].high = data[i].high + vec4<u32>(1u);
+  try {
+    if (!navigator.gpu) {
+      gpuEnabled = "WebGL";
+      PulseRealm.PulseWebGPU = false;
+      return null;
     }
-  `;
+    const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
+    if (!adapter) {
+      gpuEnabled = "WebGL";
+      PulseRealm.PulseWebGPU = false;
+      return null;
+    }
+    const device = await adapter.requestDevice();
+    if (!device) {
+      gpuEnabled = "WebGL";
+      PulseRealm.PulseWebGPU = false;
+      return null;
+    }
+    gpuEnabled = "WebGPU";
+    PulseRealm.PulseWebGPU = true;
+    try { pulseGPUInspector(adapter, device); } catch (_) {}
+    // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
+    const shaderCode = `
+      struct Item256 {
+        low: vec4<u32>,
+        high: vec4<u32>,
+      };
 
-  const module = device.createShaderModule({ code: shaderCode });
-  const pipeline = device.createComputePipeline({
-    layout: "auto",
-    compute: { module, entryPoint: "main" },
-  });
+      @group(0) @binding(0) var<storage, read_write> data: array<Item256>;
 
-  gpuContext = { device, pipeline };
-  return gpuContext;
+      @compute @workgroup_size(64)
+      fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+        let i = id.x;
+        if (i >= arrayLength(&data)) { return; }
+
+        // REPLACE THIS WITH YOUR ACTUAL 256-BIT MATH (e.g., XOR, bit-shifts, hashing)
+        data[i].low = data[i].low ^ vec4<u32>(0xDEADBEEFu);
+        data[i].high = data[i].high + vec4<u32>(1u);
+      }
+    `;
+
+    const module = device.createShaderModule({ code: shaderCode });
+    const pipeline = device.createComputePipeline({
+      layout: "auto",
+      compute: { module, entryPoint: "main" },
+    });
+
+    gpuContext = { device, pipeline };
+    return gpuContext;
+  } catch (err) {
+    console.warn("[WebGPU] initWebGPUCompute fallback:", err);
+    if (gpuEnabled !== "WebGPU") {
+      gpuEnabled = "WebGL";
+      PulseRealm.PulseWebGPU = false;
+    }
+    return null;
+  }
 }
 
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  gpuEnabled = "GPU Driver Error";
+  if (gpuEnabled !== "WebGPU") {
+    gpuEnabled = "GPU Driver Error";
+  }
   
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try {
       const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
-      if (gl) gpuEnabled = "WebGL";
+      if (gl && gpuEnabled !== "WebGPU") gpuEnabled = "WebGL";
     } catch (_) {}
 
     try { el.getContext?.("2d"); } catch (_) {}
@@ -932,6 +958,7 @@ async function gpuWarmExtra() {
         const device = await adapter.requestDevice();
         if (device) {
           gpuEnabled = "WebGPU";
+          PulseRealm.PulseWebGPU = true;
           const queue = device.queue;
           const buffer = device.createBuffer({
             size: 4,
@@ -5710,20 +5737,28 @@ async function scanPulseWorld(device) {
   latency = await measureLatency();
   PulseRealm.PulseLatency = latency;
 
+  const setStatusVideo = (targetPath) => {
+    if (!pulseStatus) return;
+    const currentAttr = pulseStatus.getAttribute("src") || "";
+    if (currentAttr !== targetPath) {
+      pulseStatus.src = targetPath;
+    }
+  };
+
   if (PulseRealm.PulseLatency > 400) {
-    pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
+    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
   // } else if (PulseRealm.PulseStability === 0) {
-  //   pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
+  //   setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
   //   pulsepalSpeak("Attempting Optimization Efforts! Either you Walked Away or you Left Camera Open! Initiating Optimization.");
   //   optimizationCountdown++;
   //   // if (optimizationCountdown === 5) {
   //   //   location.reload();
   //   // }
   } else if (PulseRealm.PulseWebGPU === false) {
-    pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus2"
+    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
     pulsepalSpeak("PulseEngine has Detected WebGPU Adapter is Offline.  This is just a Warning!");
   } else {
-    pulseStatus.src = "./_EXPRESSIONS/_VIDEOS/PulseStatus"
+    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus");
   }
   const rtt = device.connection.rtt;
 
@@ -5780,11 +5815,16 @@ async function scanPulseWorld(device) {
 
   gpu = await measureGpu();
   PulseRealm.PulseGpu = gpu;
-  gpuWarmExtra();
-  if (gpuEnabled === "WebGPU") {
+  if (gpuEnabled === "WebGPU" || (gpuContext && gpuContext.device) || (gpu && gpu.webgpuAvailable)) {
+    gpuEnabled = "WebGPU";
     PulseRealm.PulseWebGPU = true;
   } else {
-    PulseRealm.PulseWebGPU = false;
+    await gpuWarmExtra();
+    if (gpuEnabled === "WebGPU") {
+      PulseRealm.PulseWebGPU = true;
+    } else {
+      PulseRealm.PulseWebGPU = false;
+    }
   }
 
   // ------------------------------------------------------------

@@ -4124,29 +4124,37 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case "PBAI_SESSION":
-      if (msg.PulsePalMemoryAIBuffer) {
-        PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer;
-        safeStorageSet({ PulsePalMemoryAIBuffer });      
-      } else {
-        (async () => {
-          const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
-          PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
-          console.log(PulsePalMemoryAIBuffer);
-        })();
-      }
-      if (msg.PulseCogMemoryAIBuffer) {
-        PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer;
-        safeStorageSet({ PulseCogMemoryAIBuffer });
-      } else {
-        (async () => {
-          const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
-          PulseCogMemoryAIBuffer = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
-          console.log(PulseCogMemoryAIBuffer);
-        })();
-      }
-      if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
-      if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-      sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity });
+      (async () => {
+        try {
+          if (msg.forceClearPal) {
+            PulsePalMemoryAIBuffer = [];
+            safeStorageSet({ PulsePalMemoryAIBuffer });
+          } else if (Array.isArray(msg.PulsePalMemoryAIBuffer) && msg.PulsePalMemoryAIBuffer.length > 0) {
+            PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer.slice(-100);
+            safeStorageSet({ PulsePalMemoryAIBuffer });
+          } else if (!Array.isArray(PulsePalMemoryAIBuffer) || PulsePalMemoryAIBuffer.length === 0) {
+            const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
+            PulsePalMemoryAIBuffer = Array.isArray(SessionAI.PulsePalMemoryAIBuffer) ? SessionAI.PulsePalMemoryAIBuffer : [];
+          }
+
+          if (msg.forceClearCog) {
+            PulseCogMemoryAIBuffer = [];
+            safeStorageSet({ PulseCogMemoryAIBuffer });
+          } else if (Array.isArray(msg.PulseCogMemoryAIBuffer) && msg.PulseCogMemoryAIBuffer.length > 0) {
+            PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer.slice(-100);
+            safeStorageSet({ PulseCogMemoryAIBuffer });
+          } else if (!Array.isArray(PulseCogMemoryAIBuffer) || PulseCogMemoryAIBuffer.length === 0) {
+            const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
+            PulseCogMemoryAIBuffer = Array.isArray(HigherSessionAI.PulseCogMemoryAIBuffer) ? HigherSessionAI.PulseCogMemoryAIBuffer : [];
+          }
+
+          if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
+          if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
+          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity });
+        } catch (err) {
+          sendResponse({ ok: false, error: err && err.message ? err.message : String(err) });
+        }
+      })();
       return true;
 
     case "PBCONSOLE_GET":

@@ -1675,6 +1675,10 @@ function appendHigherMessage(area, role, text, opts = {}) {
   const showTime = `[${new Date().toLocaleString()}]`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text, opts) + `<br>`;
   PulseCogMemoryAIBuffer.push(bubble.outerHTML);
+  if (PulseCogMemoryAIBuffer.length > 100) {
+    PulseCogMemoryAIBuffer = PulseCogMemoryAIBuffer.slice(-100);
+  }
+  PulsesafeStorageSet({ PulseCogMemoryAIBuffer });
   target.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -2309,6 +2313,10 @@ async function appendCompanionMessage(area, role, text) {
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Prime: ${showTime}</font> `) + text + `<br><br>`;
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
+  if (PulsePalMemoryAIBuffer.length > 100) {
+    PulsePalMemoryAIBuffer = PulsePalMemoryAIBuffer.slice(-100);
+  }
+  PulsesafeStorageSet({ PulsePalMemoryAIBuffer });
   area.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
@@ -2600,6 +2608,8 @@ async function wipeMemory() {
   }
   // 2. Clear your local memory buffers completely
   PulsePalMemoryAIBuffer = [];
+  PulsesafeStorageSet({ PulsePalMemoryAIBuffer: [] });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearPal: true }, () => { void chrome.runtime.lastError; });
   
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
   
@@ -2618,6 +2628,7 @@ async function wipeHigherMemory() {
     higherLastReply: null,
     higherPendingRequest: null,
   });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearCog: true }, () => { void chrome.runtime.lastError; });
   console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
 }
 // Compress text to a tiny binary array for local storage
