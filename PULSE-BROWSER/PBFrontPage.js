@@ -3474,10 +3474,9 @@ async function CheckEarnState() {
   console.log("Earn State:", EarnHidden);
   PulseFrame = document.getElementById("PulseEarnerFrame");
   PulseFrame2 = document.getElementById("PulseStreamFrame");
+  PulseFrameA = document.getElementById("PulseEarner2Frame");
+  PulseFrameB = document.getElementById("PulseEarner3Frame");
   earnerenginepanel = document.getElementById("earner-mini-engine-panel");
-  setTimeout(() => {
-    PulseFrame.style.opacity = "1";
-  }, 5000);
   
   if (PulseFrame.style.opacity === "1") {
     earnerenginepanel.style.opacity = "0.35";
@@ -3518,6 +3517,12 @@ async function CheckEarnState() {
     }, 1000);
     
   } else {
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+      PulseFrameA.style.opacity = "1";
+      PulseFrameB.style.opacity = "1";
+      earnerenginepanel.style.opacity = "0.35";
+    }, 2000);
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
     pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
