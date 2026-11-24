@@ -2299,10 +2299,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     });
     chrome.sidePanel.open({ windowId: tab.windowId });
   } else if (info.menuItemId === 'customizePanels') {
-    if (CustomizePanelsDragNDrop) {
-      CustomizePanelsDragNDrop = false;
-    } else {
+    if (!CustomizePanelsDragNDrop) {
       CustomizePanelsDragNDrop = true;
+    } else {
+      CustomizePanelsDragNDrop = false;
     }
   } else if (info.menuItemId === 'openSettings') {
     // This will open the panel in all the pages on the current window.

@@ -314,6 +314,15 @@ if (!online) {
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.time && isValid(response.time)) {
+          nowFP = response.time;
+      }
+      if (response.CustomizePanelsDragNDrop) {
+        CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+      }
+    });
     if (CustomizePanelsDragNDrop) {
       DragANDDrop(false);
     }
