@@ -3049,14 +3049,6 @@ async function GetThisMessengerDone() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
     messengerpanel.style.opacity = "1";
-    if (!MyPulseIdentity) {
-      const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
-      MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
-      console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
-      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-      identityLogin = document.getElementById("identityLogin");
-      if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
-    }
 
     if (MessengerHidden) {
       pbPulseMessenger.id = "pbPulseMessenger";
@@ -3303,6 +3295,14 @@ async function GetThisMessengerDone() {
       const higherGpuLine = document.getElementById("higherGpuLine");
       higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
     });
+    if (!MyPulseIdentity) {
+      const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
+      MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
+      console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      identityLogin = document.getElementById("identityLogin");
+      if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
+    }
     
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
