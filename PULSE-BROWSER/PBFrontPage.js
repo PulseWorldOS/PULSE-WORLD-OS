@@ -153,6 +153,8 @@ const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
 let PulseFrame = document.getElementById("PulseEarnerFrame");
 let PulseFrame2 = document.getElementById("PulseStreamFrame");
+let PulseFrameA = document.getElementById("PulseEarner2Frame");
+let PulseFrameB = document.getElementById("PulseEarner3Frame");
 
 function pulsepalSpeak(message) {
   console.log(message);
@@ -1967,7 +1969,7 @@ async function enableHigherAI(modelKey) {
         const gpu = res.gpuInfo || {};
         if (area) {
           gpuMsg = gpu.supported
-            ? `GPU detected: ${gpuDescription || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB - Semi Detected)`
+            ? `GPU detected: ${gpuDescription || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB or More - Semi Detected)`
             : `No WebGPU detected — using lightweight model`;
           appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
         }
@@ -3029,7 +3031,7 @@ async function GetThisMessengerDone() {
       gpuCapabilitySize = result.estimatedGB * (1024);
       gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
       const higherGpuLine = document.getElementById("higherGpuLine");
-      higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`;
+      higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
     });
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
@@ -3339,10 +3341,16 @@ async function CheckEarnState() {
     if (PulseFrame.style.opacity === "1") {
       earnerenginepanel.style.opacity = "1";
       PulseFrame.style.opacity = "0";
+      PulseFrameA.style.opacity = "0";
+      PulseFrameB.style.opacity = "0";
     } else {
       earnerenginepanel.style.opacity = "0.35";
       PulseFrame.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
+      PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
+      PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
     }
   };
 
@@ -3587,9 +3595,9 @@ async function pbRenderCacheList2() {
       <br>
       <font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
       Remember, Architecture is Memory made  <br>
-      Manifest."</i> — <font color="#0FF">Words by John von Neumann</font></font><br><br>
+      Manifest."</i> — <font color="#0FF">Words by John von Neumann (1945)</font></font><br><br>
 
-      <font size="0.9rem"><i>🔍: "True comfort is choosing what stays, and what <br> fades. Forget what you don't want remembered. <br> It's about *our* data, *our* choices, *our* freedom."</i><br> — <font color="#0FF">Words by Aldwyn Fox</font></font><br><br>
+      <font size="0.9rem"><i>🔍: "True comfort is choosing what stays, and what <br> fades. Forget what you don't want remembered. <br> It's about *our* data, *our* choices, *our* freedom."</i><br> — <font color="#0FF">Words by Aldwyn Fox (2026)</font></font><br><br>
     `;
 
     listEl.appendChild(li);
@@ -6464,7 +6472,7 @@ async function setTheStage() {
   });
 
   updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
-  appendEarnerMessage(CompanionMessages, "<br>🔍", `"Compound interest is the eighth wonder of the world. <br> He who understands it, earns it; he who doesn't, pays it." <br>— <font color="#0FF">Attributed to Albert Einstein</font><br>`);
+  appendEarnerMessage(CompanionMessages, "<br>🔍", `"Compound interest is the eighth wonder of the world. <br> He who understands it, earns it; he who doesn't, pays it." <br>— <font color="#0FF">Attributed to Albert Einstein (1925)</font><br>`);
   
   // [Fix] Start earner faster on tab refresh — was 6000ms, now 1000ms so it's nearly instant
   appendEarnerMessage(CompanionMessages, "⚡", "<-- PulseEarners/EarnBand Restarting -->");
