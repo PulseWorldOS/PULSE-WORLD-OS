@@ -806,15 +806,40 @@ class PulseWasmEngine {
   }
 
   // Load the pure binary math module into memory
-  async initEngine(wasmBinaryUrl = "./PulseEarnWarmer.wasm") {
+  async initEngine(wasmBinaryUrl = "/PulseEarnWarmer.wasm") {
     if (this.isLoaded) return;
 
     try {
-      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
+      const candidates = [
+        wasmBinaryUrl,
+        "/PulseEarnWarmer.wasm",
+        "https://www.pulseworld.net/PulseEarnWarmer.wasm"
+      ].filter((u, idx, arr) => u && arr.indexOf(u) === idx);
+
+      let buffer = null;
+      let lastErr = null;
+      for (const candidateUrl of candidates) {
+        try {
+          const response = await fetch(candidateUrl, { cache: "no-store" });
+          if (!response.ok) {
+            lastErr = new Error(`Failed to fetch CONSOLE WASM (${candidateUrl}): ${response.status} ${response.statusText}`);
+            continue;
+          }
+          const ab = await response.arrayBuffer();
+          const magic = new Uint8Array(ab, 0, 4);
+          if (ab.byteLength < 8 || magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6d) {
+            lastErr = new Error(`Invalid WASM response from ${candidateUrl} (received ${response.headers.get("content-type") || "non-wasm"})`);
+            continue;
+          }
+          buffer = ab;
+          break;
+        } catch (fetchErr) {
+          lastErr = fetchErr;
+        }
       }
-      const buffer = await response.arrayBuffer();
+      if (!buffer) {
+        throw lastErr || new Error("Failed to fetch valid PulseEarnWarmer.wasm binary");
+      }
       const module = await WebAssembly.compile(buffer);
 
       // Keep a reference to imported memory in case the module doesn't export its own

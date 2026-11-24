@@ -559,15 +559,24 @@ class PulseWasmEngine {
   }
 
   // Load the pure binary math module into memory
-  async initEngine(wasmBinaryUrl = "./PulseEarnWarmer.wasm") {
+  async initEngine(wasmBinaryUrl = "PulseEarnWarmer.wasm") {
     if (this.isLoaded) return;
 
     try {
-      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+      const resolvedUrl =
+        typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getURL === "function" && !/^https?:|^chrome-extension:/i.test(wasmBinaryUrl)
+          ? chrome.runtime.getURL(wasmBinaryUrl.replace(/^\.?\//, ""))
+          : wasmBinaryUrl;
+
+      const response = await fetch(resolvedUrl, { cache: "no-store" });
       if (!response.ok) {
         throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
       }
       const buffer = await response.arrayBuffer();
+      const magic = new Uint8Array(buffer, 0, 4);
+      if (buffer.byteLength < 8 || magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6d) {
+        throw new Error(`Invalid WASM binary from ${resolvedUrl} (${response.headers.get("content-type") || "unknown"})`);
+      }
       const module = await WebAssembly.compile(buffer);
 
       // Keep a reference to imported memory in case the module doesn't export its own
@@ -1234,9 +1243,14 @@ async function runLocalAI() {
   try {
     await hydrateHigherHistoryOnce();
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
-    PulsePalMemoryAIBuffer = SessionAI.PulsePalMemoryAIBuffer ?? [];
+    const rawPalSaved = Array.isArray(SessionAI.PulsePalMemoryAIBuffer) ? SessionAI.PulsePalMemoryAIBuffer : [];
+    // Only restore if the user actually started a conversation (never restore greeting-only buffers)
+    const palHasUserChat = rawPalSaved.some((entry) => typeof entry === "string" && entry.includes("You:"));
+    PulsePalMemoryAIBuffer = palHasUserChat ? rawPalSaved : [];
+    if (!palHasUserChat && rawPalSaved.length > 0) {
+      PulsesafeStorageSet({ PulsePalMemoryAIBuffer: [] });
+    }
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-    // if (CompanionDetailsMessage && CompanionDetailsMessage.children.length <= 1 && PulsePalMemoryAIBuffer.length > 0) {
     if (CompanionDetailsMessage && PulsePalMemoryAIBuffer.length > 0) {
       PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
       CompanionDetailsMessage.style.fontSize = "0.62rem";
@@ -1390,7 +1404,8 @@ ${rawPrompt}
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+      // Auto-greeting on fresh session: show on screen, but do NOT save until user actually chats!
+      if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response, { persist: false });
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
 
@@ -1647,7 +1662,13 @@ async function hydrateHigherHistoryOnce() {
   if (!history) return;
   try {
     const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
-    const saved = HigherSessionAI.PulseCogMemoryAIBuffer ?? [];
+    const rawSaved = Array.isArray(HigherSessionAI.PulseCogMemoryAIBuffer) ? HigherSessionAI.PulseCogMemoryAIBuffer : [];
+    // Only restore if the user has actually started chatting (ignore old greeting/status-only buffers)
+    const hasUserChat = rawSaved.some((entry) => typeof entry === "string" && entry.includes("You:"));
+    const saved = hasUserChat ? rawSaved : [];
+    if (!hasUserChat && rawSaved.length > 0) {
+      PulsesafeStorageSet({ PulseCogMemoryAIBuffer: [] });
+    }
     if (saved.length > 0 && PulseCogMemoryAIBuffer.length === 0) {
       PulseCogMemoryAIBuffer = saved;
     }
@@ -1675,11 +1696,14 @@ function appendHigherMessage(area, role, text, opts = {}) {
   bubble.style.color = "#f9f9f9";
   const showTime = `[${new Date().toLocaleString()}]`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text, opts) + `<br>`;
-  PulseCogMemoryAIBuffer.push(bubble.outerHTML);
-  if (PulseCogMemoryAIBuffer.length > 100) {
-    PulseCogMemoryAIBuffer = PulseCogMemoryAIBuffer.slice(-100);
+  // Only persist real conversation turns — never save boot greetings or status banners
+  if (opts.persist !== false) {
+    PulseCogMemoryAIBuffer.push(bubble.outerHTML);
+    if (PulseCogMemoryAIBuffer.length > 100) {
+      PulseCogMemoryAIBuffer = PulseCogMemoryAIBuffer.slice(-100);
+    }
+    PulsesafeStorageSet({ PulseCogMemoryAIBuffer });
   }
-  PulsesafeStorageSet({ PulseCogMemoryAIBuffer });
   target.appendChild(bubble);
   area.scrollTop = area.scrollHeight;
 }
@@ -1829,7 +1853,7 @@ function startHigherThinkingWatch() {
           showHigherReply({
             id: last.id,
             text: last.text,
-            prompt: last.prompt || "__recovered__",
+            prompt: last.prompt || null,
           });
           return;
         }
@@ -1880,12 +1904,15 @@ function showHigherReply({ id, text, prompt }) {
     if (shownHigherReplyIds.has(id)) return;
   }
   const hasThinking = Boolean(document.getElementById("higherThinking") || document.getElementById("companionThinking"));
+  const isStartupGreeting = !prompt;
   // The automatic start-up greeting (no prompt) only shows on an empty history
-  if (!prompt && !hasThinking && PulseCogMemoryAIBuffer.length > 0) return;
+  if (isStartupGreeting && !hasThinking && PulseCogMemoryAIBuffer.length > 0) return;
 
   if (id != null) {
     shownHigherReplyIds.add(id);
-    PulsesafeStorageSet({ higherLastDeliveredReplyId: id });
+    if (!isStartupGreeting) {
+      PulsesafeStorageSet({ higherLastDeliveredReplyId: id });
+    }
   }
   const liveDetails = document.querySelector("#higherThinking .pw-think-details, #companionThinking .pw-think-details");
   const keepThinkOpen = Boolean(higherThinkingDetailsOpen || (liveDetails && liveDetails.open));
@@ -1895,20 +1922,23 @@ function showHigherReply({ id, text, prompt }) {
     ? String(text)
     : "⚠️ AI finished without output tokens — please try sending again.";
   const area = document.getElementById("consoleOvermindCognition");
-  appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText, { thinkOpen: keepThinkOpen });
+  // Never save the auto first greeting — only persist once user actually starts chatting!
+  appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText, { thinkOpen: keepThinkOpen, persist: !isStartupGreeting });
   if (presentFallbackPending) {
     presentFallbackPending = false;
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage) {
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", renderAIMarkdown(safeText, { thinkOpen: keepThinkOpen }));
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", renderAIMarkdown(safeText, { thinkOpen: keepThinkOpen }), { persist: !isStartupGreeting });
       if (presentFallbackOrderText.includes("overmind orders")) {
         OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + safeText;
       }
     }
     presentFallbackOrderText = "";
   }
-  // save the conversation like the other consoles do
-  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, () => { void chrome.runtime.lastError; });
+  // Only sync to PBAI_SESSION for real conversation turns (not boot greetings)
+  if (!isStartupGreeting) {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, () => { void chrome.runtime.lastError; });
+  }
 }
 
 // The background/offscreen AI pushes streamed chunks, replies, and load progress here
@@ -2139,7 +2169,7 @@ function showHigherProgress(info) {
     setTimeout(() => {
       const b = document.getElementById("higherProgressBar");
       if (b) b.remove();
-      appendHigherMessage(area, "🌐 Overmind", `✅ ${info.modelLabel || "AI"} Loaded and Ready! Ask me Anything!`);
+      appendHigherMessage(area, "🌐 Overmind", `✅ ${info.modelLabel || "AI"} Loaded and Ready! Ask me Anything!`, { persist: false });
       pbRenderCacheList2().catch(() => {});
     }, 600);
   }
@@ -2153,7 +2183,7 @@ function showHigherProgress(info) {
       higherLastStatus.error = info.text || "AI failed to load";
       renderHigherStatusPanel(higherLastStatus);
     }
-    appendHigherMessage(area, "🌐 Overmind", `❌ ${info.text || "AI failed to load"}`);
+    appendHigherMessage(area, "🌐 Overmind", `❌ ${info.text || "AI failed to load"}`, { persist: false });
   }
 }
 
@@ -2162,12 +2192,12 @@ async function enableHigherAI(modelKey) {
   const area = document.getElementById("consoleOvermindCognition");
   renderHigherStatusPanel(null, "Checking your GPU and enabling right model…");
   if (area) {
-    appendHigherMessage(area, "🌐 Overmind", "🔍 Checking your GPU and preparing AI…");
+    appendHigherMessage(area, "🌐 Overmind", "🔍 Checking your GPU and preparing AI…", { persist: false });
   }
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "PB_HIGHER_ENABLE", modelKey: modelKey || null }, async (res) => {
       if (chrome.runtime.lastError) {
-        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ Could not start AI: " + chrome.runtime.lastError.message);
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ Could not start AI: " + chrome.runtime.lastError.message, { persist: false });
         resolve(false);
         return;
       }
@@ -2178,7 +2208,7 @@ async function enableHigherAI(modelKey) {
           gpuMsg = gpu.supported
             ? `GPU detected: ${gpuDescription || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB or More - Semi Detected)`
             : `No WebGPU detected — using lightweight model`;
-          appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
+          appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`, { persist: false });
         }
         const status = await checkHigherAIStatus(false);
         if (status) {
@@ -2187,7 +2217,7 @@ async function enableHigherAI(modelKey) {
         }
         resolve(true);
       } else {
-        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not start AI"));
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not start AI"), { persist: false });
         resolve(false);
       }
     });
@@ -2201,7 +2231,7 @@ function disableHigherAI() {
   const bar = document.getElementById("higherProgressBar");
   if (bar) bar.remove();
   const area = document.getElementById("consoleOvermindCognition");
-  if (area) appendHigherMessage(area, "🌐 Overmind", "AI disabled. Model unloaded to free memory.");
+  if (area) appendHigherMessage(area, "🌐 Overmind", "AI disabled. Model unloaded to free memory.", { persist: false });
 }
 
 // Check AI status from background
@@ -2228,11 +2258,11 @@ async function initHigherAIConsoleOnTabStart(autoEnableIfSupported = false) {
   try {
     const store = await chrome.storage.local.get(["higherLastReply", "higherLastDeliveredReplyId", "higherPendingRequest"]);
     const last = store.higherLastReply;
-    if (last && last.id != null && last.id !== store.higherLastDeliveredReplyId && !shownHigherReplyIds.has(last.id)) {
+    if (last && last.id != null && last.prompt && last.id !== store.higherLastDeliveredReplyId && !shownHigherReplyIds.has(last.id)) {
       showHigherReply({
         id: last.id,
         text: last.text,
-        prompt: last.prompt || "__recovered__",
+        prompt: last.prompt,
       });
     } else if (store.higherPendingRequest && store.higherPendingRequest.startedAt && (Date.now() - store.higherPendingRequest.startedAt) < 10 * 60 * 1000) {
       higherThinkingStartedAt = store.higherPendingRequest.startedAt;
@@ -2274,7 +2304,7 @@ async function switchHigherModel(modelKey) {
       const area = document.getElementById("consoleOvermindCognition");
       if (res && res.ok) {
         higherAIEnabled = true;
-        if (area) appendHigherMessage(area, "🌐 Overmind", `⬆️ Switching to ${res.modelLabel}… Downloading/Loading Now!`);
+        if (area) appendHigherMessage(area, "🌐 Overmind", `⬆️ Switching to ${res.modelLabel}… Downloading/Loading Now!`, { persist: false });
         const status = await checkHigherAIStatus(false);
         if (status) {
           renderHigherStatusPanel(status);
@@ -2282,7 +2312,7 @@ async function switchHigherModel(modelKey) {
         }
         resolve(true);
       } else {
-        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not switch model"));
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not switch model"), { persist: false });
         resolve(false);
       }
     });
@@ -2305,7 +2335,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
-async function appendCompanionMessage(area, role, text) {
+async function appendCompanionMessage(area, role, text, opts = {}) {
   const bubble = document.createElement("div");
   const bubblebr = document.createElement("div");
   bubble.style.fontSize = "0.6rem";
@@ -2313,13 +2343,15 @@ async function appendCompanionMessage(area, role, text) {
   const showTime = `[${new Date().toLocaleString()}]`;
   bubblebr.innerHTML = `<br>`;
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Prime: ${showTime}</font> `) + text + `<br><br>`;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+  // Do NOT save auto-greetings — only persist once user actually chats!
+  if (opts.persist === false) return;
   PulsePalMemoryAIBuffer.push(bubble.innerHTML);
   if (PulsePalMemoryAIBuffer.length > 100) {
     PulsePalMemoryAIBuffer = PulsePalMemoryAIBuffer.slice(-100);
   }
   PulsesafeStorageSet({ PulsePalMemoryAIBuffer });
-  area.appendChild(bubble);
-  area.scrollTop = area.scrollHeight;
   chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -2513,7 +2545,7 @@ CompanionConsoleSend.onclick = async () => {
     if (!higherAIEnabled) {
       const selectedKey = document.getElementById("higherModelSelect")?.value || null;
       appendHigherMessage(consoleOvermindCognition, "user", originalText);
-      appendHigherMessage(consoleOvermindCognition, "🌐 Overmind", "Starting AI for the first time — checking GPU and preparing model…");
+      appendHigherMessage(consoleOvermindCognition, "🌐 Overmind", "Starting AI for the first time — checking GPU and preparing model…", { persist: false });
       const started = await enableHigherAI(selectedKey);
       if (!started) return;
     } else {

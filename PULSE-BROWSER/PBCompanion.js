@@ -2400,15 +2400,24 @@ class PulseWasmEngine {
   }
 
   // Load the pure binary math module into memory
-  async initEngine(wasmBinaryUrl = "./PulseEarnWarmer.wasm") {
+  async initEngine(wasmBinaryUrl = "PulseEarnWarmer.wasm") {
     if (this.isLoaded) return;
 
     try {
-      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+      const resolvedUrl =
+        typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getURL === "function" && !/^https?:|^chrome-extension:/i.test(wasmBinaryUrl)
+          ? chrome.runtime.getURL(wasmBinaryUrl.replace(/^\.?\//, ""))
+          : wasmBinaryUrl;
+
+      const response = await fetch(resolvedUrl, { cache: "no-store" });
       if (!response.ok) {
         throw new Error(`Failed to fetch SYSTEM WASM: ${response.status} ${response.statusText}`);
       }
       const buffer = await response.arrayBuffer();
+      const magic = new Uint8Array(buffer, 0, 4);
+      if (buffer.byteLength < 8 || magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6d) {
+        throw new Error(`Invalid WASM binary from ${resolvedUrl} (${response.headers.get("content-type") || "unknown"})`);
+      }
       const module = await WebAssembly.compile(buffer);
 
       // Keep a reference to imported memory in case the module doesn't export its own

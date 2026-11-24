@@ -149,11 +149,22 @@ if (isPulseWorld(location.href)) {
       if (this.isLoaded) return;
 
       try {
-        const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
+        // Content scripts run inside arbitrary web pages — ALWAYS resolve via chrome.runtime.getURL
+        // so fetch never hits the webpage's 404 text/html page!
+        const resolvedUrl =
+          typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getURL === "function" && !/^https?:|^chrome-extension:/i.test(wasmBinaryUrl)
+            ? chrome.runtime.getURL(wasmBinaryUrl.replace(/^\.?\//, ""))
+            : wasmBinaryUrl;
+
+        const response = await fetch(resolvedUrl, { cache: "no-store" });
         if (!response.ok) {
           throw new Error(`Failed to fetch SYSTEM WASM: ${response.status} ${response.statusText}`);
         }
         const buffer = await response.arrayBuffer();
+        const magic = new Uint8Array(buffer, 0, 4);
+        if (buffer.byteLength < 8 || magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6d) {
+          throw new Error(`Invalid WASM binary from ${resolvedUrl} (${response.headers.get("content-type") || "unknown"})`);
+        }
         const module = await WebAssembly.compile(buffer);
 
         // Keep a reference to imported memory in case the module doesn't export its own
@@ -1336,13 +1347,15 @@ function loadLastSavedVideo(callback) {
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
-  gpuEnabled = "GPU Driver Error";
+  if (gpuEnabled !== "WebGPU") {
+    gpuEnabled = "GPU Driver Error";
+  }
   OurLocalMemoryLayer = getLocalMemoryLayer();
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try {
       const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
-      if (gl) gpuEnabled = "WebGL";
+      if (gl && gpuEnabled !== "WebGPU") gpuEnabled = "WebGL";
     } catch (_) {}
 
     try { el.getContext?.("2d"); } catch (_) {}
@@ -1372,8 +1385,8 @@ async function gpuWarmExtra() {
 
   console.log("GPU Warmed!");
   const vid = document.getElementById("video");
-  if (gpuEnabled === "GPU Driver Error") {
-    vid.src = "PulseWorldOS-Older.mp4";
+  if (vid && gpuEnabled === "GPU Driver Error") {
+    vid.src = chrome.runtime?.getURL ? chrome.runtime.getURL("PulseWorldOS-Older.mp4") : "PulseWorldOS-Older.mp4";
   }
   chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
   

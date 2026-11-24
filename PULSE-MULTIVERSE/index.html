@@ -696,15 +696,41 @@ class PulseWasmEngine {
   }
 
   // Load the pure binary math module into memory
-  async initEngine(wasmBinaryUrl = "./PulseEarnWarmer.wasm") {
+  async initEngine(wasmBinaryUrl = "/PulseEarnWarmer.wasm") {
     if (this.isLoaded) return;
 
     try {
-      const response = await fetch(wasmBinaryUrl, { cache: 'no-store' });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
+      const candidates = [
+        wasmBinaryUrl,
+        "/PulseEarnWarmer.wasm",
+        "https://www.pulseworld.net/PulseEarnWarmer.wasm"
+      ].filter((u, idx, arr) => u && arr.indexOf(u) === idx);
+
+      let buffer = null;
+      let lastErr = null;
+      for (const candidateUrl of candidates) {
+        try {
+          const response = await fetch(candidateUrl, { cache: "no-store" });
+          if (!response.ok) {
+            lastErr = new Error(`Failed to fetch CONSOLE WASM (${candidateUrl}): ${response.status} ${response.statusText}`);
+            continue;
+          }
+          const ab = await response.arrayBuffer();
+          const magic = new Uint8Array(ab, 0, 4);
+          // Verify binary WASM header (\0asm = 0x00 0x61 0x73 0x6d) — rejects 404 HTML pages cleanly
+          if (ab.byteLength < 8 || magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6d) {
+            lastErr = new Error(`Invalid WASM response from ${candidateUrl} (received ${response.headers.get("content-type") || "non-wasm"})`);
+            continue;
+          }
+          buffer = ab;
+          break;
+        } catch (fetchErr) {
+          lastErr = fetchErr;
+        }
       }
-      const buffer = await response.arrayBuffer();
+      if (!buffer) {
+        throw lastErr || new Error("Failed to fetch valid PulseEarnWarmer.wasm binary");
+      }
       const module = await WebAssembly.compile(buffer);
 
       // Keep a reference to imported memory in case the module doesn't export its own
@@ -5875,29 +5901,6 @@ async function scanPulseWorld(device) {
   latency = await measureLatency();
   PulseRealm.PulseLatency = latency;
 
-  const setStatusVideo = (targetPath) => {
-    if (!pulseStatus) return;
-    const currentAttr = pulseStatus.getAttribute("src") || "";
-    if (currentAttr !== targetPath) {
-      pulseStatus.src = targetPath;
-    }
-  };
-
-  if (PulseRealm.PulseLatency > 400) {
-    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
-  // } else if (PulseRealm.PulseStability === 0) {
-  //   setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
-  //   pulsepalSpeak("Attempting Optimization Efforts! Either you Walked Away or you Left Camera Open! Initiating Optimization.");
-  //   optimizationCountdown++;
-  //   // if (optimizationCountdown === 5) {
-  //   //   location.reload();
-  //   // }
-  } else if (PulseRealm.PulseWebGPU === false) {
-    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
-    pulsepalSpeak("PulseEngine has Detected WebGPU Adapter is Offline.  This is just a Warning!");
-  } else {
-    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus");
-  }
   const rtt = device.connection.rtt;
 
   // -----------------------------
@@ -5940,6 +5943,7 @@ async function scanPulseWorld(device) {
 
   // -----------------------------
   // REAL GPU TEST (PulseRealm Callable)
+  // Run BEFORE evaluating pulseStatus video so PulseWebGPU is always detected first!
   // -----------------------------
   async function measureGpu() {
     if (!PBPanelOpen && PulseRealm.PULSE_DEVICE_PROFILE?.gpuScore) {
@@ -5960,9 +5964,39 @@ async function scanPulseWorld(device) {
     await gpuWarmExtra();
     if (gpuEnabled === "WebGPU") {
       PulseRealm.PulseWebGPU = true;
+    } else if (typeof navigator !== "undefined" && navigator.gpu) {
+      // Adapter check succeeded or pending — probe directly before flagging offline
+      try {
+        const probeAdapter = await navigator.gpu.requestAdapter();
+        if (probeAdapter) {
+          gpuEnabled = "WebGPU";
+          PulseRealm.PulseWebGPU = true;
+        } else {
+          PulseRealm.PulseWebGPU = false;
+        }
+      } catch {
+        PulseRealm.PulseWebGPU = false;
+      }
     } else {
       PulseRealm.PulseWebGPU = false;
     }
+  }
+
+  const setStatusVideo = (targetPath) => {
+    if (!pulseStatus) return;
+    const currentAttr = pulseStatus.getAttribute("src") || "";
+    if (currentAttr !== targetPath) {
+      pulseStatus.src = targetPath;
+    }
+  };
+
+  if (PulseRealm.PulseLatency > 400) {
+    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
+  } else if (PulseRealm.PulseWebGPU === false) {
+    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
+    pulsepalSpeak("PulseEngine has Detected WebGPU Adapter is Offline.  This is just a Warning!");
+  } else {
+    setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus");
   }
 
   // ------------------------------------------------------------
