@@ -193,7 +193,7 @@ function createPanelLiveController({
     if (!myPanel || isHidden()) return;
 
     // Clean up any existing drag listeners before re-initializing
-    if (typeof destroyDrag === "function") {
+    if (destroyDrag && typeof destroyDrag === "function") {
       destroyDrag();
       destroyDrag = null;
     }
@@ -229,9 +229,9 @@ function createPanelLiveController({
 
   async function reset(clearSavedStorage = true) {
     const myPanel = document.getElementById(elementId);
-
+    
     // 1. Remove drag event listeners and cursor styles
-    if (typeof destroyDrag === "function") {
+    if (destroyDrag && typeof destroyDrag === "function") {
       destroyDrag();
       destroyDrag = null;
     }
