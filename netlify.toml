@@ -12,7 +12,8 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Cross-Origin-Opener-Policy   = "unsafe-none"
+    Cross-Origin-Opener-Policy   = "unsafe-none"    
+    Cross-Origin-Embedder-Policy = "credentialless"
     Cross-Origin-Resource-Policy = "cross-origin"
     Timing-Allow-Origin          = "*"
     Access-Control-Allow-Origin  = "*"
