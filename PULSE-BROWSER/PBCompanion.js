@@ -16,7 +16,7 @@ import {
   buildOvermindMessages,
 } from "./PBHigherModels.js";
 
-
+let CustomizePanelsDragNDrop = false;
 let lastEarnBatch = null;
 let online = navigator.onLine;
 let nowSW = Date.now(); // numeric timestamp
@@ -2215,6 +2215,11 @@ startWarmBootLoop();
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   chrome.contextMenus.create({
+    id: 'customizePanels',
+    title: '🖼️ PulseBrowser OS - Customize',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
     id: 'openSidePanel',
     title: '🧠 PulseBrowser OS - Panel',
     contexts: ['all']
@@ -2293,6 +2298,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       enabled: true
     });
     chrome.sidePanel.open({ windowId: tab.windowId });
+  } else if (info.menuItemId === 'customizePanels') {
+    CustomizePanelsDragNDrop = true;
   } else if (info.menuItemId === 'openSettings') {
     // This will open the panel in all the pages on the current window.
     chrome.sidePanel.setOptions({
@@ -3982,7 +3989,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
         }
       }
-      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean, TakeOfflineSnapshot, pulseTabs });      
+      sendResponse({ ok: true, ts: PulseRealmState.lastPing, time: PulseRealmState.sessionStart, HelperHudBoolean, TakeOfflineSnapshot, pulseTabs, CustomizePanelsDragNDrop });      
       TakeOfflineSnapshot = false;
       HelperHudBoolean = false;
       break;

@@ -4,6 +4,7 @@ let PulseSnapIndex = 0;
 let MyPulseIdentity = null;
 let StorageRunning = false;
 let gpuCapabilitySize = 2048;
+let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
 let itrunonce = false;
@@ -186,6 +187,11 @@ if (!online) {
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
+    if (CustomizePanelsDragNDrop) {
+      setTimeout(MoveEarnerLive, 400);
+      setTimeout(MoveAILive, 400);
+      setTimeout(MoveMessengerLive, 400);
+    }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
   }, 3000);
@@ -4064,6 +4070,9 @@ chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) =>
   if (response.time && isValid(response.time)) {
       nowFP = response.time;
   }
+  if (response.CustomizePanelsDragNDrop) {
+    CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+  }
 });
 
 function getPrimaryVideo() {
@@ -5014,6 +5023,9 @@ async function openNamedTab(name, url) {
         if (response.time && isValid(response.time)) {
             nowFP = response.time;
         }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+        }
       });
       
       setTimeout(() => {
@@ -5055,6 +5067,9 @@ async function openNamedTab(name, url) {
               if (response.time && isValid(response.time)) {
                   nowFP = response.time;
               }
+              if (response.CustomizePanelsDragNDrop) {
+                CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+              }
             });
             
             setTimeout(() => {
@@ -5090,6 +5105,9 @@ async function openNamedTab(name, url) {
           if (chrome.runtime.lastError) return;
           if (response.time && isValid(response.time)) {
               nowFP = response.time;
+          }
+          if (response.CustomizePanelsDragNDrop) {
+            CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
           }
         });
         
@@ -5132,6 +5150,9 @@ async function openNamedTab(name, url) {
       if (response.time && isValid(response.time)) {
           nowFP = response.time;
       }
+      if (response.CustomizePanelsDragNDrop) {
+        CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+      }
     });
     
     setTimeout(() => {
@@ -5169,6 +5190,9 @@ async function openNamedTab(name, url) {
     if (chrome.runtime.lastError) return;
     if (response.time && isValid(response.time)) {
         nowFP = response.time;
+    }
+    if (response.CustomizePanelsDragNDrop) {
+      CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
     }
   });
   
@@ -7896,6 +7920,9 @@ function CheckBackTab() {
         if (response.time && isValid(response.time)) {
             nowFP = response.time;
         }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+        }
       });
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
@@ -7980,6 +8007,9 @@ function CheckBackTab() {
         if (chrome.runtime.lastError) return;
         if (response.time && isValid(response.time)) {
             nowFP = response.time;
+        }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
         }
       });
       chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
@@ -8143,6 +8173,9 @@ function CheckBackTab() {
       if (response.time && isValid(response.time)) {
           nowFP = response.time;
       }
+      if (response.CustomizePanelsDragNDrop) {
+        CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+      }
     });
     await CheckTime();
     const now = new Date().toLocaleString();
@@ -8257,6 +8290,9 @@ function CheckBackTab() {
         if (chrome.runtime.lastError) return;
         if (response.time && isValid(response.time)) {
             nowFP = response.time;
+        }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
         }
       });
       chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
