@@ -224,7 +224,7 @@ async function MoveAILive() {
   const myPanel = document.getElementById("earner-helper-panel");
   const headerBar = document.getElementById("earner-helper-panel");
   
-  if (!myPanel || OvermindHidden) return;
+  if (!myPanel || OvermindHidden || EarnDetailsHidden) return;
 
   // 1. Load saved position
   const POS = await chrome.storage.local.get(["panelAIPos"]);
@@ -1879,7 +1879,7 @@ function renderHigherStatusPanel(status, checkingText) {
   const gpu = status.gpuInfo || {};
   gpuCapabilitySize = gpuCapabilitySize ?? higherAIRAM ?? gpu.vramMB;
   gpuText = gpu.supported
-    ? `🎮 GPU: ${escapeHTML(gpuDescription || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`
+    ? `🎮 GPU: ${escapeHTML(gpuDescription || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
 
   let stateText = "";
