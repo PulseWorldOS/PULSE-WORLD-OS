@@ -3522,7 +3522,9 @@ async function CheckEarnState() {
   
   if (PulseFrame.style.opacity === "1") {
     earnerenginepanel.style.opacity = "0.35";
-    PulseFrame.style.opacity = "1";
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+    }, 1000);
     PulseFrame.style.zIndex = "11";
     if (earnerminirate2panel.textContent !== "~$0.00/Day") PulseFrameA.style.opacity = "1";
     PulseFrameA.style.zIndex = "11";
@@ -3535,7 +3537,9 @@ async function CheckEarnState() {
   if (earnerenginepanel.style.opacity === "1") {
     PulseFrame.style.opacity = "0";
   } else {
-    PulseFrame.style.opacity = "1";
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+    }, 1000);
     PulseFrame.style.zIndex = "11";
   }
 
@@ -3565,7 +3569,9 @@ async function CheckEarnState() {
     }, 1000);
     
   } else {
-    PulseFrame.style.opacity = "1";
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+    }, 1000);
     PulseFrame.style.zIndex = "11";
     if (earnerminirate2panel.textContent !== "~$0.00/Day") PulseFrameA.style.opacity = "1";
     PulseFrameA.style.zIndex = "11";
