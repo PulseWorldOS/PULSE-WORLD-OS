@@ -424,7 +424,7 @@ img {
   cursor: wait;
   border-radius: 20px;
   object-fit: cover;
-  z-index: 99999999;
+  z-index: 9999999999;
   opacity: 1;
   filter: brightness(1.25);
   perspective: 1200px;
