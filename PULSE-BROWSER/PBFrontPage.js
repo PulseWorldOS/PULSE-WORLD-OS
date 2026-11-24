@@ -8,6 +8,7 @@ let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
 let itrunonce = false;
+let thisrunonce = false;
 let MessengerMode = "Console";
 let identityrunonce = false;
 let engineType = "text";
@@ -341,9 +342,7 @@ if (!online) {
     if (CustomizePanelsDragNDrop) {
       DragANDDrop(false);
     } else {
-      ResetAllPanelsLive(false);
       DragANDDrop(true);
-      location.reload();
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
