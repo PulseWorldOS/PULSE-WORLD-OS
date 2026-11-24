@@ -19,7 +19,7 @@
 //  ██      ╚██████╔╝███████╗███████║███████╗╚███╔███╔╝╚██████╔╝██║  ██║███████╗██████╔╝
 //  ╚╝       ╚═════╝ ╚══════╝╚═════╝ ╚══════╝ ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝
 // ============================================================================
-
+import { evolvePulseV3 } from "../PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/PULSE-SHIFTER/PulseShifterEvolutionaryPulse-v31.js";
 const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 
 
@@ -143,7 +143,7 @@ export function createPulseDB({
     });
   }
 
-  const Shifter = PulseRealm.ShifterEvoluationaryPulse.evolvePulseV3({
+  const Shifter = evolvePulseV3({
     lane: "db",
     instanceId: "PulseDB-v31",
 
