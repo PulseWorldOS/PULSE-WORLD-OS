@@ -5995,7 +5995,9 @@ async function getFavicon(url, flags = {}) {
   }
 
   let host = u.hostname;
-
+  console.log(url);
+  console.log(u);
+  console.log(host);
   // ⭐ Preserve www if explicitly present
   if (url.includes("www.") && !host.startsWith("www.")) {
     host = "www." + host;
