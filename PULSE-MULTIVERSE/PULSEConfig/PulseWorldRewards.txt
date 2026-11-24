@@ -453,15 +453,35 @@ function updateCurrencyDisplay() {
   logHistory(`Currency switched to ${currencyMode}`);
 }
 
-bankConsoleSend.onclick = () => {
-  const modes = ["USD", "EUR", "GBP", "JPY", "PW"];
-  currencyMode = modes[(modes.indexOf(currencyMode) + 1) % modes.length];
-  updateCurrencyDisplay();
-};
+const currencySwitchBtn = document.getElementById("currencySwitchBtn");
+if (currencySwitchBtn) {
+  currencySwitchBtn.onclick = () => {
+    const modes = ["USD", "EUR", "GBP", "JPY", "PB"];
+    currencyMode = modes[(modes.indexOf(currencyMode) + 1) % modes.length];
+    updateCurrencyDisplay();
+  };
+}
 
 /* ============================================================
    DEPOSIT ENGINE
 ============================================================ */
+var depositMode = "Daily";
+var dailyDeposit = 0;
+var customDeposit = 0;
+var manualDeposit = 0;
+
+const depositAmountInputEl = document.getElementById("depositAmountInput");
+if (depositAmountInputEl) {
+  depositAmountInputEl.addEventListener("input", () => {
+    const val = Math.max(0, Number(depositAmountInputEl.value) || 0);
+    if (depositMode === "Daily") dailyDeposit = val;
+    else if (depositMode === "Custom") customDeposit = val;
+    else manualDeposit = val;
+    const sel = document.getElementById("depositSelectedAmount");
+    if (sel) sel.textContent = `$${val.toFixed(2)}`;
+    updateDepositLabels();
+  });
+}
 
 
 function updateDepositLabels() {
@@ -548,13 +568,25 @@ function updateBankPanels(balance) {
 }
 
 async function loadPulseWorldBankBalance() {
-  const stripeAccountID = PulseRealm.PulseBankID;
+  const isAcct = (v) => typeof v === "string" && /^acct_[A-Za-z0-9]+$/.test(v.trim());
+  const storedIdentity = PulseRealm.PulseIdentity || (PulseRealm.PulseIdentityStore?.readJSON("PulseIdentity") || {});
+  const stripeAccountID = [
+    PulseRealm.PulseBankID,
+    storedIdentity.tokenID,
+    storedIdentity.stripeID,
+    storedIdentity.bank
+  ].find(isAcct) || null;
+
   if (!stripeAccountID) {
-    // console.warn("[PulseWorldBank] No Stripe Account ID found.");
+    const autoEl = document.getElementById("coreAutomation");
+    if (autoEl) autoEl.textContent = "-UnTethered-";
     return;
   }
+
+  PulseRealm.PulseBankID = stripeAccountID;
+
   try {
-    const res = await fetch(`/.netlify/functions/PULSE-SERVER-BANK?account=${stripeAccountID}`, {
+    const res = await fetch(`/.netlify/functions/PULSE-SERVER-BANK?account=${encodeURIComponent(stripeAccountID)}&includeIdentity=1`, {
       method: "GET",
       mode: "cors",
       credentials: "same-origin",
@@ -572,8 +604,31 @@ async function loadPulseWorldBankBalance() {
     }
     PulseRealm.PulseBankData = bankData;
     PulseRealm.PulseBankBalance = bankData.balance;
+
+    // Actually paint the live Stripe Connect balances & status onto the UI!
+    updateBankPanels(bankData.balance);
+
+    const autoEl = document.getElementById("coreAutomation");
+    if (autoEl) {
+      autoEl.textContent = bankData.payoutsEnabled
+        ? "Stripe Live ✔"
+        : bankData.detailsSubmitted
+          ? "Verifying…"
+          : "Onboarding Pending";
+    }
+    const schedEl = document.getElementById("flowScheduled");
+    if (schedEl && bankData.payoutSchedule?.interval) {
+      schedEl.textContent = String(bankData.payoutSchedule.interval).toUpperCase();
+    }
+    const rewardBalEl = document.getElementById("rewardBalance");
+    if (rewardBalEl) {
+      const pts = bankData.identity?.PulsePoints ?? storedIdentity.PulsePoints ?? PulseRealm.PulsePoints ?? 0;
+      rewardBalEl.textContent = `${pts} PulsePoints`;
+    }
+
     console.log(
       "%c[PULSEWORLD::BANK] Balance Updated\n" +
+      `   Stripe ID: ${stripeAccountID}\n` +
       `   Available: ${bankData.balance.availableBalance}\n` +
       `   Pending: ${bankData.balance.pendingBalance}`,
       "color:#00FFAA; font-weight:bold;"

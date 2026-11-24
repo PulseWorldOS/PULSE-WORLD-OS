@@ -1470,19 +1470,78 @@ const PulseIdentityStore = (() => {
   }
 
 
+  const PULSE_EMAIL_DOMAINS = Object.freeze([
+    "pulseworld.net",
+    "pulseworld.me",
+    "pulseworld.biz",
+    "pulseworld.money",
+    "binaryos.net",
+    "booleanlogic.net",
+    "gpuprocessing.net",
+    "orbitalmap.net",
+    "serviceworker.net"
+  ]);
+  PulseRealm.PULSE_EMAIL_DOMAINS = PULSE_EMAIL_DOMAINS;
+
+  const sanitizeAliasHandle = (rawName) => {
+    const base = stripTimestamp(String(rawName || ""))
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-zA-Z0-9._-]/g, "")
+      .replace(/[-_.]{2,}/g, "-")
+      .replace(/^[-_.]+|[-_.]+$/g, "")
+      .slice(0, 64);
+    return base || "pulse-user";
+  };
+
+  const resolveEmailDomain = (rawDomain) => {
+    const cleaned = String(rawDomain || "")
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, "")
+      .replace(/^www\./, "")
+      .replace(/\/.*$/, "")
+      .replace(/^@/, "");
+    if (cleaned && PULSE_EMAIL_DOMAINS.includes(cleaned)) return cleaned;
+    const hostClean = String(PulseRealm.CurrentHost || location.hostname || "")
+      .toLowerCase()
+      .replace(/^www\./, "");
+    if (hostClean && PULSE_EMAIL_DOMAINS.includes(hostClean)) return hostClean;
+    return "pulseworld.net";
+  };
+
+  const isStripeAcctId = (val) => typeof val === "string" && /^acct_[A-Za-z0-9]+$/.test(val.trim());
+
+  PulseRealm.sanitizeAliasHandle = sanitizeAliasHandle;
+  PulseRealm.resolveEmailDomain = resolveEmailDomain;
+  PulseRealm.buildAliasEmail = (name, domain) => `${sanitizeAliasHandle(name)}@${resolveEmailDomain(domain)}`;
+
   function apply(data, photos = loadPhotos(data)) {
     if (!data || !data.id) return null;
     PulseRealm.PulseIdentity = data;
     identity = data;
     PulseRealm.PulseUser = data.name || PulseRealm.PulseUser;
-    PulseRealm.PulseEmail = data.email || PulseRealm.PulseEmail;
+    PulseRealm.PulseEmailDomain = resolveEmailDomain(data.emailDomain || (data.email?.includes("@") ? data.email.split("@")[1] : null));
+    PulseRealm.PulseEmail = data.email || PulseRealm.buildAliasEmail(data.name, PulseRealm.PulseEmailDomain);
     PulseRealm.PulseUserEmail = data.userEmail || PulseRealm.PulseUserEmail;
     PulseRealm.PulseUserName = data.userName || PulseRealm.PulseUserName;
     PulseRealm.PulsePhone = data.phone || PulseRealm.PulsePhone;
     PulseRealm.PulseCountry = data.country || PulseRealm.PulseCountry;
     PulseRealm.PulseRole = data.role || PulseRealm.PulseRole;
     PulseRealm.PulseWorldRole = data.pulseRole || PulseRealm.PulseWorldRole;
-    PulseRealm.PulseBank = data.bank || PulseRealm.PulseBank;
+    const resolvedStripeId = isStripeAcctId(data.tokenID)
+      ? data.tokenID.trim()
+      : isStripeAcctId(data.stripeID)
+        ? data.stripeID.trim()
+        : isStripeAcctId(data.bank)
+          ? data.bank.trim()
+          : null;
+    if (resolvedStripeId) {
+      PulseRealm.PulseBankID = resolvedStripeId;
+      PulseRealm.PulseBank = resolvedStripeId;
+    } else {
+      PulseRealm.PulseBank = data.bank || PulseRealm.PulseBank;
+    }
     PulseRealm.PulseBankMonitor = data.bankURL || PulseRealm.PulseBankMonitor;
     PulseRealm.PulseTrustedDevice = data.device ?? PulseRealm.PulseTrustedDevice;
     PulseRealm.PulsePoints = data.PulsePoints ?? PulseRealm.PulsePoints;
@@ -1512,22 +1571,40 @@ const PulseIdentityStore = (() => {
     const photos = loadPhotos(existing);
     const candidates = [overrides.name, PulseRealm.PulseUser, existing.name, localStorage.getItem("PulseUser")];
     const pulseName = stripTimestamp(candidates.find(validName) || generateDefaultPulseUser());
+    const emailDomain = resolveEmailDomain(
+      overrides.emailDomain ||
+      PulseRealm.PulseEmailDomain ||
+      existing.emailDomain ||
+      (existing.email?.includes("@") ? existing.email.split("@")[1] : null)
+    );
+    const aliasHandle = sanitizeAliasHandle(pulseName);
+    const aliasEmail = `${aliasHandle}@${emailDomain}`;
+    const resolvedStripeId =
+      [overrides.tokenID, overrides.stripeID, overrides.bank, PulseRealm.PulseBankID, existing.tokenID, existing.stripeID, existing.bank]
+        .find(isStripeAcctId) || null;
     const data = {
       id: existing.id || `world-${Math.random().toString(36).slice(2)}`,
       createdAt: existing.createdAt || PulseRealm.PulseNOW || Date.now(),
       tier: existing.tier || "temporal-os",
       name: pulseName,
-      email: `${pulseName}@PulseWorld.Net`,
+      aliasHandle,
+      emailDomain,
+      aliasEmail,
+      email: aliasEmail,
       userEmail: PulseRealm.PulseUserEmail || existing.userEmail || "YourEmail@Domain.com",
       userName: PulseRealm.PulseUserName || existing.userName || "Aldwyn",
       phone: PulseRealm.PulsePhone || existing.phone || "(555) 555-5555",
       country: PulseRealm.PulseCountry || existing.country || "US",
       role: PulseRealm.PulseRole || existing.role || "User",
       pulseRole: PulseRealm.PulseWorldRole || existing.pulseRole || "Entrepreneur",
-      bank: PulseRealm.PulseBank || existing.bank || "Unknown Stripe ID",
+      smsOpt: existing.smsOpt ?? false,
+      emailOpt: existing.emailOpt ?? true,
+      bank: resolvedStripeId || PulseRealm.PulseBank || existing.bank || "Not Tethered",
+      stripeID: resolvedStripeId,
+      stripeStatus: existing.stripeStatus || null,
       bankURL: PulseRealm.PulseBankMonitor || existing.bankURL || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
       stripeLogin: PulseRealm.PulseBankURL || existing.stripeLogin || "https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00",
-      tokenID: PulseRealm.PulseBankID || existing.tokenID || null,
+      tokenID: resolvedStripeId,
       assetsWallet: PulseRealm.PulseAssets || existing.assetsWallet || null,
       drift: PulseRealm.DriftSignature || existing.drift || PulseRealm.GenerateDriftSignature,
       device: PulseRealm.PulseTrustedDevice ?? existing.device ?? true,
@@ -1539,7 +1616,13 @@ const PulseIdentityStore = (() => {
       PulseLoyalty: PulseRealm.PulseTierPhoto || existing.PulseLoyalty || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
       ...overrides,
       name: pulseName,
-      email: `${pulseName}@PulseWorld.Net`
+      aliasHandle,
+      emailDomain,
+      aliasEmail,
+      email: aliasEmail,
+      tokenID: resolvedStripeId || (isStripeAcctId(overrides.tokenID) ? overrides.tokenID : null),
+      stripeID: resolvedStripeId || (isStripeAcctId(overrides.stripeID) ? overrides.stripeID : null),
+      bank: resolvedStripeId || overrides.bank || PulseRealm.PulseBank || existing.bank || "Not Tethered"
     };
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(data));
     localStorage.setItem("PulseUser", data.name);
@@ -4154,46 +4237,101 @@ function previewObject(obj) {
     return `{ ${keys} }`;
   }
 
-async function pulseSupabaseSync() {
-  if (PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return;
-  
-  try {
-    const locationResult = await ensureLocationAccess({
-      desiredAccuracy: 30, // Require 30-meter precision
-      maxWaitTime: 12000   // Wait up to 12 seconds
-    });
+// ============================================================
+// GLOBAL IDENTITY, STRIPE & TWILIO SMS BRIDGE HELPERS
+// ============================================================
+PulseRealm.checkIdentityName = async function(name, opts = {}) {
+  const res = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-pulse-mode": "checkName" },
+    body: JSON.stringify({
+      action: "checkName",
+      name,
+      emailDomain: opts.emailDomain || PulseRealm.PulseEmailDomain || "pulseworld.net",
+      localId: opts.localId || PulseRealm.PulseIdentity?.id || null,
+      stripeID: opts.stripeID || PulseRealm.PulseBankID || PulseRealm.PulseIdentity?.tokenID || null
+    })
+  });
+  return res.json();
+};
 
-    if (locationResult.ok) {
-      console.log(`Real location (${locationResult.source}):`, locationResult.coords);
-    } else {
-      console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
+PulseRealm.pullIdentityByStripeId = async function(stripeID) {
+  const res = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-pulse-mode": "stripeLookup" },
+    body: JSON.stringify({ action: "getByStripeId", stripeID })
+  });
+  return res.json();
+};
+
+PulseRealm.sendPulseSMS = async function(payload = {}) {
+  const res = await fetch("/.netlify/functions/PULSE-SERVER-SMS", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-pulse-mode": "sms" },
+    body: JSON.stringify({
+      to: payload.to || payload.phone || PulseRealm.PulseIdentity?.phone || "",
+      body: payload.body || payload.message || "",
+      kind: payload.kind || "pulse_alert",
+      stripeID: payload.stripeID || PulseRealm.PulseBankID || null,
+      localId: payload.localId || PulseRealm.PulseIdentity?.id || null
+    })
+  });
+  return res.json();
+};
+
+async function pulseSupabaseSync(options = {}) {
+  const force = Boolean(options?.force);
+  if (!force && PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return null;
+
+  try {
+    let locationResult = { ok: false };
+    if (!options?.skipGeo) {
+      locationResult = await ensureLocationAccess({
+        desiredAccuracy: 30,
+        maxWaitTime: 12000
+      });
     }
 
-    const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || "{}";
-    const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || "{}";
+    const storedIdentity = PulseIdentityStore.readJSON("PulseIdentity") || {};
+    const storedPhotos = PulseIdentityStore.readJSON("PulsePhotos") || {};
     const storedProximity = JSON.parse(localStorage.getItem("PulseProximityCoords") || "{}");
     const identitySQL = document.getElementById("identitySQL");
     const locationproximity = storedProximity ?? locationResult;
 
-    if (!storedIdentity.id) return;
-    
-    // Assuming storedIdentity is an object (e.g., { sub: "12345", email: "user@example.com" })
-    identitySQL.innerHTML = JSON.stringify(storedIdentity);
+    if (!storedIdentity.id) return null;
 
-    if (PulseRealm.CurrentHost.includes("netlify")) return;
-    fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+    if (identitySQL) identitySQL.innerHTML = JSON.stringify(storedIdentity);
+
+    if (!force && String(PulseRealm.CurrentHost || "").includes("netlify")) return null;
+    const response = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-pulse-mode": "sync" },
-      body: JSON.stringify({ action: "sync", identity: storedIdentity, proximity: locationproximity, lastProximity: pastProximity, photos: storedPhotos, host: PulseRealm.CurrentHost, lastPage: PulseRealm.__PULSE_CURRENT_PAGE__, online: true, inactive: false })
-    }).then((response) => {
-      if (!response.ok) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
-    }).catch(() => {
-      PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+      body: JSON.stringify({
+        action: "sync",
+        enforceUnique: Boolean(options?.enforceUnique),
+        identity: storedIdentity,
+        proximity: locationproximity,
+        lastProximity: pastProximity,
+        photos: storedPhotos,
+        host: PulseRealm.CurrentHost || location.hostname,
+        lastPage: PulseRealm.__PULSE_CURRENT_PAGE__,
+        online: true,
+        inactive: false
+      })
     });
-  } catch {
-    PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    const data = await response.json().catch(() => ({ ok: response.ok }));
+    if (!response.ok && response.status !== 409 && !force) {
+      PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    } else if (response.ok) {
+      PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
+    }
+    return { status: response.status, ...data };
+  } catch (err) {
+    if (!force) PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = true;
+    return { ok: false, error: err?.message || "Sync failed" };
   }
 }
+PulseRealm.pulseSupabaseSync = pulseSupabaseSync;
 
 
 function runBootVideo() {

@@ -1,330 +1,169 @@
-// File: netlify/functions/pulseworld-bank.js
+// PULSE-SERVER/NETLIFY/PULSE-SERVER-BANK.js
+// Live Stripe Connect Account & Balance Snapshot retrieval strictly by Stripe ID.
+// Note: Signed Stripe webhooks are handled by PULSE-SERVER-STRIPE-WEBHOOK.js.
 
-import Stripe from "stripe";
+import {
+  getStripeClient,
+  getSupabaseAdmin,
+  isValidStripeAccountId,
+  jsonResponse,
+  maskEmail,
+  parseBody
+} from "./_shared/pulse-domains.js";
 
-const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
-
-// ⭐ PulseWorld Logging Wrapper
-function log(label, data) {
-  console.log(`[PULSEWORLD::BANK] ${label}`, data || "");
+function toCurrency(cents) {
+  const n = Number(cents);
+  return Number.isNaN(n) ? "0.00" : (n / 100).toFixed(2);
 }
 
-// ⭐ Convert Stripe amounts → BZD (or USD if you prefer)
-function toCurrency(v) {
-  const n = Number(v);
-  return isNaN(n) ? "0.00" : (n / 100).toFixed(2);
-}
-
-// ⭐ Full Stripe Snapshot (Bank + Capabilities + Requirements)
-async function getFullBankSnapshot(stripeAccountID, stripeSecret) {
-  log("🔵 getFullBankSnapshot() START", { stripeAccountID });
-
-  const stripe = new Stripe(stripeSecret);
+async function getFullBankSnapshot(stripeAccountID) {
+  const stripe = getStripeClient();
 
   try {
-    // -------------------------------------------------------
-    // 1️⃣ Core Account
-    // -------------------------------------------------------
     const account = await stripe.accounts.retrieve(stripeAccountID);
 
-    // -------------------------------------------------------
-    // 2️⃣ Balances
-    // -------------------------------------------------------
-    const balance = await stripe.balance.retrieve({
-      stripeAccount: stripeAccountID
-    });
+    let available = 0;
+    let pending = 0;
+    let currency = "USD";
+    try {
+      const balance = await stripe.balance.retrieve({ stripeAccount: stripeAccountID });
+      available = (balance.available || []).reduce((s, b) => s + b.amount, 0);
+      pending = (balance.pending || []).reduce((s, b) => s + b.amount, 0);
+      currency = (balance.available?.[0]?.currency || balance.pending?.[0]?.currency || "usd").toUpperCase();
+    } catch (balErr) {
+      console.warn("[PULSEWORLD::BANK] Connected balance warning:", balErr.message);
+    }
 
-    const available = balance.available?.reduce((s, b) => s + b.amount, 0) || 0;
-    const pending = balance.pending?.reduce((s, b) => s + b.amount, 0) || 0;
+    let externalAccounts = [];
+    try {
+      const external = await stripe.accounts.listExternalAccounts(stripeAccountID, { limit: 10 });
+      externalAccounts = external.data || [];
+    } catch (extErr) {
+      console.warn("[PULSEWORLD::BANK] External accounts warning:", extErr.message);
+    }
 
-    // -------------------------------------------------------
-    // 3️⃣ External Bank Accounts
-    // -------------------------------------------------------
-    const external = await stripe.accounts.listExternalAccounts(
-      stripeAccountID,
-      { limit: 10 }
-    );
-
-    // -------------------------------------------------------
-    // 4️⃣ Requirements (Verification)
-    // -------------------------------------------------------
     const req = account.requirements || {};
 
-    // -------------------------------------------------------
-    // ⭐ Build Final Snapshot
-    // -------------------------------------------------------
-    const snapshot = {
+    return {
+      ok: true,
       accountID: stripeAccountID,
-      email: account.email,
-      country: account.country,
-      created: account.created,
-
-      // Capabilities
-      capabilities: account.capabilities,
-      chargesEnabled: account.charges_enabled,
-      payoutsEnabled: account.payouts_enabled,
-      transfersEnabled: account.transfers_enabled,
-
-      // Payout Schedule
+      stripeID: stripeAccountID,
+      email: account.email || null,
+      maskedEmail: maskEmail(account.email),
+      country: account.country || "US",
+      created: account.created || null,
+      detailsSubmitted: Boolean(account.details_submitted),
+      capabilities: account.capabilities || {},
+      chargesEnabled: Boolean(account.charges_enabled),
+      payoutsEnabled: Boolean(account.payouts_enabled),
+      transfersEnabled:
+        account.capabilities?.transfers === "active" || Boolean(account.payouts_enabled),
       payoutSchedule: account.settings?.payouts?.schedule || {},
-
-      // Requirements
       requirements: {
-        currentDeadline: req.current_deadline,
-        pastDue: req.past_due,
-        currentlyDue: req.currently_due,
-        eventuallyDue: req.eventually_due,
-        disabledReason: req.disabled_reason,
-        errors: req.errors
+        currentDeadline: req.current_deadline || null,
+        pastDue: req.past_due || [],
+        currentlyDue: req.currently_due || [],
+        eventuallyDue: req.eventually_due || [],
+        disabledReason: req.disabled_reason || null,
+        errors: req.errors || []
       },
-
-      // External Accounts
-      externalAccounts: external.data || [],
-
-      // Balances
+      externalAccounts,
       balance: {
+        currency,
         availableBalance: toCurrency(available),
         pendingBalance: toCurrency(pending),
         totalBalance: toCurrency(available + pending)
       }
     };
-
-    log("🟢 getFullBankSnapshot() RESULT", snapshot);
-    return snapshot;
-
   } catch (err) {
-    console.error("❌ getFullBankSnapshot() ERROR:", {
-      message: err.message,
-      type: err.type,
-      code: err.code
-    });
-
+    console.error("❌ [PULSEWORLD::BANK] getFullBankSnapshot error:", err.message);
     return {
+      ok: false,
       error: "Snapshot failure",
       detail: err.message
     };
   }
 }
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, x-pulse-mode",
-  "Content-Type": "application/json; charset=utf-8"
-};
-
-// ⭐ Netlify Function Handler
-export async function handler(event, context) {
-  log("⚡ PulseWorld Bank API Called");
-
-  // Preflight OPTIONS handling
+export async function handler(event) {
   if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ ok: true })
-    };
+    return jsonResponse(200, { ok: true });
   }
 
-  let stripeAccountID = null;
+  const params =
+    event.httpMethod === "GET"
+      ? event.queryStringParameters || {}
+      : parseBody(event);
 
-  try {
-    if (event.httpMethod === "GET") {
-      stripeAccountID = event.queryStringParameters?.account;
-    } else {
-      const body = JSON.parse(event.body || "{}");
-      stripeAccountID = body.account;
+  // Optional platform balance summary (reads main Stripe platform balance)
+  if (params.action === "platformBalance") {
+    try {
+      const stripe = getStripeClient();
+      const bal = await stripe.balance.retrieve();
+      const available = (bal.available || []).reduce((s, b) => s + b.amount, 0);
+      const pending = (bal.pending || []).reduce((s, b) => s + b.amount, 0);
+      return jsonResponse(200, {
+        ok: true,
+        mode: "platform",
+        balance: {
+          availableBalance: toCurrency(available),
+          pendingBalance: toCurrency(pending),
+          totalBalance: toCurrency(available + pending)
+        }
+      });
+    } catch (err) {
+      return jsonResponse(500, { ok: false, error: err.message });
     }
-  } catch (e) {
-    stripeAccountID = null;
   }
 
-  if (!stripeAccountID) {
-    return {
-      statusCode: 400,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        error: "Missing Stripe Connected Account ID"
-      })
-    };
-  }
+  const stripeAccountID = String(
+    params.account || params.stripeID || params.stripeId || params.tokenID || ""
+  ).trim();
 
-  const stripeSecret = process.env.STRIPE_SECRET_KEY;
-
-  if (!stripeSecret) {
-    console.error("[PULSEWORLD::BANK] STRIPE_SECRET_KEY missing in environment variables.");
-    return {
-      statusCode: 500,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        error: "Banking service temporarily unavailable"
-      })
-    };
-  }
-
-  // ⭐ FULL SNAPSHOT (EVERYTHING WE WILL EVER NEED)
-  const snapshot = await getFullBankSnapshot(stripeAccountID, stripeSecret);
-
-  return {
-    statusCode: 200,
-    headers: CORS_HEADERS,
-    body: JSON.stringify(snapshot)
-  };
-}
-
-export async function stripeWebhook(req, res) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-  const sig = req.headers["stripe-signature"];
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.rawBody,
-      sig,
-      webhookSecret
-    );
-  } catch (err) {
-    console.error("❌ Webhook signature verification failed:", err.message);
-    return res.status(400).json({ success: false });
-  }
-
-  // ---------------------------------------------------------
-  // ⭐ PULSEWORLD IDENTITY ANCHOR
-  // ---------------------------------------------------------
-  if (event.type === "account.created" || event.type === "account.updated") {
-    const account = event.data.object;
-
-    const stripeAccountID = account.id;
-    const email = account.email || null;
-    const country = account.country || null;
-
-    const detailsSubmitted = account.details_submitted;
-    const chargesEnabled = account.charges_enabled;
-    const payoutsEnabled = account.payouts_enabled;
-
-    // ---------------------------------------------------------
-    // ⭐ Store identity in your own backend (NOT Firebase)
-    // ---------------------------------------------------------
-    // Example: write to your own DB or Netlify storage
-    // Replace this with your own storage layer
-    await savePulseWorldIdentity({
-      email,
-      stripeAccountID,
-      country,
-      detailsSubmitted,
-      chargesEnabled,
-      payoutsEnabled,
-      tethered: true,
-      updatedAt: Date.now()
+  if (!isValidStripeAccountId(stripeAccountID)) {
+    return jsonResponse(400, {
+      ok: false,
+      error: "Missing or invalid Stripe Connected Account ID (expected acct_...)"
     });
-
-    console.log(
-      `🌐 PulseWorld Identity Anchored → ${stripeAccountID} (${email})`
-    );
   }
 
-  return res.json({ success: true, received: true });
-}
-
-function stripTimestamp(alias) {
-  if (!alias || typeof alias !== "string") return "";
-  return alias.replace(/-M#.*$/, "");
-}
-export async function savePulseWorldIdentity(payload) {
-  try {
-    console.log("🌐 [PulseIdentity] Incoming Payload:", payload);
-
-    // ------------------------------------------------------------
-    // ⭐ APPLY WEBHOOK DATA TO PULSE REALM
-    // ------------------------------------------------------------
-    PulseRealm.PulseUserEmail        = payload.email || null;
-    PulseRealm.PulseEmail            = payload.email || null;
-    PulseRealm.PulseCountry          = payload.country || "US";
-
-    PulseRealm.PulseBankID           = payload.stripeAccountID || null;
-    PulseRealm.PulseBank             = payload.stripeAccountID || "Unknown Stripe ID";
-    PulseRealm.PulseBankMonitor = `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`;
-    PulseRealm.PulseBankURL = `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`;
-
-    PulseRealm.PulseDetailsSubmitted = payload.detailsSubmitted || false;
-    PulseRealm.PulseChargesEnabled   = payload.chargesEnabled || false;
-    PulseRealm.PulsePayoutsEnabled   = payload.payoutsEnabled || false;
-
-    PulseRealm.PulseIdentityStatus   = payload.tethered ? "tethered" : "untethered";
-    PulseRealm.PulseIdentityUpdated  = payload.updatedAt || Date.now();
-
-    // ------------------------------------------------------------
-    // ⭐ BUILD FULL IDENTITY SNAPSHOT (SELF-CONTAINED)
-    // ------------------------------------------------------------
-    const identity = {
-      id: `world-${Math.random().toString(36).slice(2)}`,
-      createdAt: Date.now(),
-      tier: "temporal-os",
-
-      name: PulseRealm.PulseUser || "Unknown Pulse User",
-      email: PulseRealm.PulseEmail || `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`,
-      userEmail: PulseRealm.PulseUserEmail || "unknown@domain.com",
-      userName: PulseRealm.PulseUserName || "Unknown",
-      phone: PulseRealm.PulsePhone || "(555) 555-5555",
-      country: PulseRealm.PulseCountry || "US",
-
-      role: PulseRealm.PulseRole || "User",
-      pulseRole: PulseRealm.PulseWorldRole || "Entrepreneur",
-
-      bank: PulseRealm.PulseBank || "Unknown Stripe ID",
-      bankURL: PulseRealm.PulseBankMonitor || `https://${PulseRealm.CurrentHost}/?Impulse=PulseWorldBank`,
-      stripeLogin: PulseRealm.PulseBankURL || `https://billing.stripe.com/p/login/4gM14mdIx8kK1w13KcfIs00`,
-      tokenID: PulseRealm.PulseBankID || null,
-      assetsWallet: PulseRealm.PulseAssets || null,
-
-      drift: PulseRealm.DriftSignature || PulseRealm.GenerateDriftSignature || "unknown-drift",
-      device: PulseRealm.PulseTrustedDevice ?? true,
-
-      photoURL: PulseRealm.PulsePhoto || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-      aliasPhotoURL: PulseRealm.PulseAliasPhoto || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-      bizphotoURL: PulseRealm.PulseBizPhoto || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-      bizaliasPhotoURL: PulseRealm.PulseBizAliasPhoto || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex",
-
-      PulsePoints: PulseRealm.PulsePoints || 0,
-      PulseLoyalty: PulseRealm.PulseTierPhoto || "./_EXPRESSIONS/_PEX/BUILD/PulseSeed.webp.pex"
-    };
-
-    // ------------------------------------------------------------
-    // ⭐ SAVE IDENTITY TO LOCAL STORAGE (IF AVAILABLE)
-    // ------------------------------------------------------------
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("PulseIdentity", JSON.stringify(identity));
-    }
-
-    // ------------------------------------------------------------
-    // ⭐ SAVE PHOTOS (SELF-CONTAINED)
-    // ------------------------------------------------------------
-    const photos = {
-      photoURL: identity.photoURL,
-      aliasPhotoURL: identity.aliasPhotoURL,
-      bizphotoURL: identity.bizphotoURL,
-      bizaliasPhotoURL: identity.bizaliasPhotoURL
-    };
-
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("PulsePhotos", JSON.stringify(photos));
-    }
-
-    // ------------------------------------------------------------
-    // ⭐ APPLY IDENTITY TO PULSE REALM
-    // ------------------------------------------------------------
-    PulseRealm.PulseIdentity = identity;
-
-    console.log("🌐 [PulseIdentity] Final Identity Snapshot:", identity);
-    console.log("🌐 [PulseIdentity] Save Complete.");
-
-    return { success: true, identity };
-
-  } catch (err) {
-    console.error("❌ [PulseIdentity] Failed:", err);
-    return { success: false, error: err.message };
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return jsonResponse(500, {
+      ok: false,
+      error: "Banking service temporarily unavailable (STRIPE_SECRET_KEY missing)"
+    });
   }
+
+  const snapshot = await getFullBankSnapshot(stripeAccountID);
+  if (!snapshot.ok) {
+    return jsonResponse(502, snapshot);
+  }
+
+  // Optionally include linked PulseIdentity profile metadata from Supabase
+  if (params.includeIdentity === "1" || params.includeIdentity === true) {
+    try {
+      const supabase = getSupabaseAdmin();
+      const { data: row } = await supabase
+        .from("PulseIdentity")
+        .select("userID, name, email, stripeID, attrs, lastUpdated")
+        .eq("stripeID", stripeAccountID)
+        .maybeSingle();
+
+      if (row) {
+        snapshot.identity = {
+          userID: row.userID,
+          name: row.name,
+          aliasEmail: row.attrs?.aliasEmail || row.email,
+          emailDomain: row.attrs?.emailDomain || "pulseworld.net",
+          PulsePoints: row.attrs?.PulsePoints ?? 0,
+          role: row.attrs?.role || "User",
+          lastUpdated: row.lastUpdated || null
+        };
+      }
+    } catch (dbErr) {
+      console.warn("[PULSEWORLD::BANK] Supabase identity join warning:", dbErr.message);
+    }
+  }
+
+  return jsonResponse(200, snapshot);
 }

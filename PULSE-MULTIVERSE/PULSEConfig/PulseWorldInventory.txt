@@ -220,12 +220,28 @@
             <input id="fullName" class="t-input" type="text" placeholder="Full Name"></input>
 
             <div class="t-row">
-              <input id="displayNameInput" class="t-input" type="text" placeholder="Display Name"></input>
+              <input id="displayNameInput" class="t-input" type="text" placeholder="Display Name (Unique Identity Alias)"></input>
             </div>
 
-            <p id="displayNameStatus" class="msg" style="display:none;"></p>
+            <p id="displayNameStatus" class="msg" style="display:none; margin:4px 0 8px 0; font-size:13px;"></p>
 
-            <input id="email" class="t-input" type="text" placeholder="Email"></input>
+            <div class="t-row" style="margin-bottom:8px;">
+              <label for="aliasDomainSelect" style="display:block; font-size:12px; opacity:0.85; margin-bottom:4px;">PulseWorld Alias Email Domain</label>
+              <select id="aliasDomainSelect" class="t-input">
+                <option value="pulseworld.net">@pulseworld.net</option>
+                <option value="pulseworld.me">@pulseworld.me</option>
+                <option value="pulseworld.biz">@pulseworld.biz</option>
+                <option value="pulseworld.money">@pulseworld.money</option>
+                <option value="binaryos.net">@binaryos.net</option>
+                <option value="booleanlogic.net">@booleanlogic.net</option>
+                <option value="gpuprocessing.net">@gpuprocessing.net</option>
+                <option value="orbitalmap.net">@orbitalmap.net</option>
+                <option value="serviceworker.net">@serviceworker.net</option>
+              </select>
+              <div id="aliasPreview" style="font-size:12px; color:#00e5ff; margin-top:4px; word-break:break-all;"></div>
+            </div>
+
+            <input id="email" class="t-input" type="text" placeholder="Private Email (Held by Stripe / Alias Routing)"></input>
 
             <button id="verifyEmailBtn" class="t-btn-secondary" style="display:none; margin-top:8px;">
               Verify New Email
@@ -236,7 +252,11 @@
               <button id="submitEmailPinBtn" class="t-btn-primary">Submit PIN</button>
             </div>
 
-            <input id="phone" class="t-input" type="text" placeholder="Phone" />
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input id="phone" class="t-input" type="text" placeholder="Phone (e.g. +15551234567)" style="flex:1;" />
+              <button id="testSmsBtn" type="button" class="t-btn-secondary" style="white-space:nowrap; padding:8px 10px;">📱 Test SMS</button>
+            </div>
+            <div id="smsStatusMsg" class="msg" style="display:none; font-size:12px; margin:4px 0;"></div>
 
             <!-- PULSE POINTS -->
             <div class="pulse-row">
@@ -477,8 +497,18 @@
               <div id="msg" class="msg"></div>
 
               <div class="stripe-section">
-                <h2 class="stripe-title">Stripe Account</h2>
+                <h2 class="stripe-title">Stripe Connect Identity</h2>
                 <div id="stripeStatus" class="stripe-status">Checking Status…</div>
+                <div id="stripeActionRow" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; justify-content:center;">
+                  <button type="button" id="connectStripeBtn" class="t-btn-secondary" style="padding:8px 12px; cursor:pointer;">
+                    🏦 Connect / Setup Stripe Express
+                  </button>
+                </div>
+                <div id="stripeLookupRow" style="display:flex; gap:6px; margin-top:10px; align-items:center;">
+                  <input id="stripeIdLookupInput" class="t-input" type="text" placeholder="Restore by Stripe ID (acct_...)" style="flex:1; margin:0;" />
+                  <button type="button" id="stripeIdLookupBtn" class="t-btn-secondary" style="padding:8px 10px; white-space:nowrap; cursor:pointer;">🔑 Pull</button>
+                </div>
+                <div id="stripeLookupMsg" class="msg" style="display:none; font-size:12px; margin-top:6px;"></div>
               </div>
 
               <button class="t-btn-primaryS" id="saveBtn">Save Dashboard</button>
@@ -769,17 +799,23 @@ async function renderDashboard(identity) {
   // INFO PANEL
   // ============================================================
 
+  const isStripeAcct = (v) => typeof v === "string" && /^acct_[A-Za-z0-9]+$/.test(v.trim());
+  const activeStripeId = [identity.tokenID, identity.stripeID, identity.bank, PulseRealm.PulseBankID].find(isStripeAcct) || null;
+  const activeDomain = (PulseRealm.resolveEmailDomain ? PulseRealm.resolveEmailDomain(identity.emailDomain) : (identity.emailDomain || "pulseworld.net"));
+  const activeAliasEmail = identity.aliasEmail || identity.email || (PulseRealm.buildAliasEmail ? PulseRealm.buildAliasEmail(identity.name, activeDomain) : `${identity.name}@${activeDomain}`);
+
   info.innerHTML = `
     <div class="info-row"><span class="label">Name:</span> <span class="textA">${identity.name ?? "Unknown Pulse User"}</span></div>
-    <div class="info-row"><span class="label">Email:</span> <span class="textA">${identity.userEmail ?? "YourEmail@Domain.com"}</span></div>
+    <div class="info-row"><span class="label">Alias Email:</span> <span class="textA">${activeAliasEmail}</span></div>
+    <div class="info-row"><span class="label">Private Email:</span> <span class="textA">${identity.userEmail ?? "YourEmail@Domain.com"}</span></div>
     <div class="info-row"><span class="label">Identity Role:</span> <span class="textA">${identity.role ?? "User"}</span></div>
     <div class="info-row"><span class="label">Pulse World Role:</span> <span class="textA">${identity.pulseRole ?? "Entrepreneur"}</span></div>
-    <div class="info-row"><span class="label">Stripe Account:</span> <span class="textA">${identity.bank ?? "Not Tethered"}</span></div>
+    <div class="info-row"><span class="label">Stripe Connect ID:</span> <span class="textA">${activeStripeId || "Not Tethered"}</span></div>
     <div class="info-row"><span class="label">Trusted Device:</span> <span class="textA">${identity.device ? "Yes" : "No"}</span></div>
   `;
 
   tetherName.textContent = identity.name;
-  digitalEmail.textContent = identity.email;
+  digitalEmail.textContent = activeAliasEmail;
 
   stayToggle.checked = identity.device;
   driftToggle.checked = PulseRealm.SoundDisabled;
@@ -791,6 +827,7 @@ async function renderDashboard(identity) {
   }
 
   const setPersistedInput = (element, value) => {
+    if (!element) return;
     const normalized = value || "";
     element.setAttribute("value", normalized);
     element.defaultValue = normalized;
@@ -800,22 +837,308 @@ async function renderDashboard(identity) {
   setPersistedInput(displayNameInput, identity.name);
   setPersistedInput(email, identity.userEmail);
   setPersistedInput(phone, identity.phone);
-  country.value = identity.country;
+  if (country) country.value = identity.country || "US";
+
+  const roleSelect = document.getElementById("role");
+  if (roleSelect && identity.role) roleSelect.value = identity.role;
+
+  const smsOptEl = document.getElementById("smsOpt");
+  const emailOptEl = document.getElementById("emailOpt");
+  if (smsOptEl) smsOptEl.checked = Boolean(identity.smsOpt);
+  if (emailOptEl) emailOptEl.checked = identity.emailOpt !== false;
+
+  const aliasDomainSelect = document.getElementById("aliasDomainSelect");
+  const aliasPreview = document.getElementById("aliasPreview");
+  const updateAliasPreview = () => {
+    const dom = aliasDomainSelect?.value || activeDomain;
+    const raw = displayNameInput?.value?.trim() || identity.name || "pulse-user";
+    const preview = PulseRealm.buildAliasEmail ? PulseRealm.buildAliasEmail(raw, dom) : `${raw}@${dom}`;
+    if (aliasPreview) aliasPreview.textContent = `Active Alias: ${preview}`;
+    if (digitalEmail) digitalEmail.textContent = preview;
+  };
+  if (aliasDomainSelect) {
+    aliasDomainSelect.value = activeDomain;
+    aliasDomainSelect.onchange = updateAliasPreview;
+  }
+  updateAliasPreview();
+
+  // Live server-side Display Name availability check
+  const displayNameStatus = document.getElementById("displayNameStatus");
+  let nameCheckTimer = null;
+  async function verifyNameAvailability(candidateName) {
+    const trimmed = String(candidateName || "").trim();
+    if (!displayNameStatus) return { ok: true, available: true };
+    if (!trimmed) {
+      displayNameStatus.style.display = "none";
+      return { ok: true, available: false };
+    }
+    displayNameStatus.style.display = "block";
+    displayNameStatus.style.color = "#93c5fd";
+    displayNameStatus.textContent = "⏳ Checking identity name availability…";
+    try {
+      const check = await PulseRealm.checkIdentityName(trimmed, {
+        emailDomain: aliasDomainSelect?.value || activeDomain,
+        localId: identity.id,
+        stripeID: activeStripeId
+      });
+      if (check.available) {
+        displayNameStatus.style.color = "#00ffa8";
+        displayNameStatus.textContent = `✔ "${check.name}" is available (${check.aliasPreview})`;
+      } else {
+        displayNameStatus.style.color = "#ff6b6b";
+        const sugg = Array.isArray(check.suggestions) && check.suggestions.length
+          ? ` Try: ${check.suggestions.join(", ")}`
+          : "";
+        displayNameStatus.textContent = `✖ ${check.error || "Name already taken."}${sugg}`;
+      }
+      return check;
+    } catch (err) {
+      displayNameStatus.style.color = "#facc15";
+      displayNameStatus.textContent = "⚠ Could not reach availability server (will retry on save).";
+      return { ok: false, available: true };
+    }
+  }
+
+  if (displayNameInput) {
+    displayNameInput.oninput = () => {
+      updateAliasPreview();
+      clearTimeout(nameCheckTimer);
+      nameCheckTimer = setTimeout(() => verifyNameAvailability(displayNameInput.value), 500);
+    };
+    displayNameInput.onblur = () => verifyNameAvailability(displayNameInput.value);
+  }
 
   const stripeStatus = document.getElementById("stripeStatus");
-  stripeStatus.textContent = identity.bank === "Connected ✔" ? "Connected ✔" : "Not Tethered";
-
   const bizStatus = document.getElementById("bizStatus");
-  bizStatus.textContent = stripeStatus.textContent;
+  const connectStripeBtn = document.getElementById("connectStripeBtn");
+
+  function refreshStripeStatusLabel(stripeIdVal, stObj) {
+    let label = "Not Tethered";
+    if (isStripeAcct(stripeIdVal)) {
+      if (stObj?.payoutsEnabled || stObj?.detailsSubmitted) {
+        label = `Connected ✔ (${stripeIdVal})`;
+      } else {
+        label = `Onboarding Pending (${stripeIdVal})`;
+      }
+    }
+    if (stripeStatus) stripeStatus.textContent = label;
+    if (bizStatus) bizStatus.textContent = label;
+    if (connectStripeBtn) {
+      connectStripeBtn.textContent = isStripeAcct(stripeIdVal)
+        ? (stObj?.detailsSubmitted ? "🏦 Open Stripe Express Dashboard" : "⚡ Complete Stripe Onboarding")
+        : "🏦 Connect / Setup Stripe Express";
+    }
+  }
+  refreshStripeStatusLabel(activeStripeId, identity.stripeStatus);
 
   BizConsole.onclick = () => {
     window.open("https://www.pulseworld.biz/", "_blank");
+  };
+  const BankConsole = document.getElementById("BankConsole");
+  if (BankConsole) BankConsole.onclick = () => { if (typeof loadInternalPage === "function") loadInternalPage("PulseWorldRewards"); };
+  const EmailConsole = document.getElementById("EmailConsole");
+  if (EmailConsole) EmailConsole.onclick = () => { if (typeof loadInternalPage === "function") loadInternalPage("PulseWorldEmail"); };
+
+  async function launchStripeConnectFlow({ forceOnboarding = false } = {}) {
+    const current = PulseRealm.PulseIdentityStore.readJSON("PulseIdentity");
+    const realEmail = (document.getElementById("email")?.value || current.userEmail || "").trim().toLowerCase();
+    const chosenName = (document.getElementById("displayNameInput")?.value || current.name || "").trim();
+    const chosenCountry = (document.getElementById("country")?.value || current.country || "US").trim();
+    const chosenDomain = document.getElementById("aliasDomainSelect")?.value || current.emailDomain || "pulseworld.net";
+    const existingAcct = [current.tokenID, current.stripeID, current.bank, PulseRealm.PulseBankID].find(isStripeAcct) || null;
+    const msgEl = document.getElementById("stripeLookupMsg");
+
+    if (msgEl) {
+      msgEl.style.display = "block";
+      msgEl.style.color = "#93c5fd";
+      msgEl.textContent = "⏳ Connecting to Stripe Express…";
+    }
+
+    try {
+      const origin = location.origin;
+      const res = await fetch("/.netlify/functions/PULSE-SERVER-BANK-ACCOUNT", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "createOrLink",
+          email: realEmail,
+          name: chosenName,
+          localId: current.id,
+          emailDomain: chosenDomain,
+          phone: document.getElementById("phone")?.value?.trim() || current.phone || "",
+          country: chosenCountry,
+          role: document.getElementById("role")?.value || current.role || "User",
+          host: location.hostname,
+          origin,
+          tokenID: existingAcct,
+          forceOnboarding,
+          returnUrl: `${origin}/?Impulse=PulseWorldInventory&stripe=return`,
+          refreshUrl: `${origin}/?Impulse=PulseWorldInventory&stripe=refresh`
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        if (msgEl) {
+          msgEl.style.color = "#ff6b6b";
+          msgEl.textContent = `✖ ${data.error || "Stripe Connect setup failed."}`;
+        }
+        return data;
+      }
+
+      const newStripeId = data.stripeID || data.tokenID;
+      const stripeStatusObj = {
+        stripeID: newStripeId,
+        detailsSubmitted: Boolean(data.detailsSubmitted),
+        chargesEnabled: Boolean(data.chargesEnabled),
+        payoutsEnabled: Boolean(data.payoutsEnabled),
+        transfersEnabled: Boolean(data.transfersEnabled)
+      };
+
+      PulseRealm.PulseBankID = newStripeId;
+      PulseRealm.PulseBank = newStripeId;
+      const updated = PulseRealm.PulseIdentityStore.save({
+        tokenID: newStripeId,
+        stripeID: newStripeId,
+        bank: newStripeId,
+        stripeStatus: stripeStatusObj
+      });
+      refreshStripeStatusLabel(newStripeId, stripeStatusObj);
+
+      if (data.onboardingUrl) {
+        if (msgEl) {
+          msgEl.style.color = "#00ffa8";
+          msgEl.innerHTML = `✔ Stripe ID linked: <strong>${newStripeId}</strong>. <a href="${data.onboardingUrl}" target="_blank" rel="noopener" style="color:#00e5ff; text-decoration:underline;">Open Stripe Onboarding →</a>${data.countryNote ? `<br/><span style="color:#facc15;">${data.countryNote}</span>` : ""}`;
+        }
+        window.open(data.onboardingUrl, "_blank", "noopener");
+      } else if (data.dashboardUrl) {
+        if (msgEl) {
+          msgEl.style.color = "#00ffa8";
+          msgEl.innerHTML = `✔ Stripe Express Connected: <strong>${newStripeId}</strong>. <a href="${data.dashboardUrl}" target="_blank" rel="noopener" style="color:#00e5ff; text-decoration:underline;">Open Stripe Dashboard →</a>`;
+        }
+        window.open(data.dashboardUrl, "_blank", "noopener");
+      } else if (msgEl) {
+        msgEl.style.color = "#00ffa8";
+        msgEl.textContent = `✔ Linked Stripe ID: ${newStripeId}`;
+      }
+      renderDashboard(updated);
+      return data;
+    } catch (err) {
+      if (msgEl) {
+        msgEl.style.color = "#ff6b6b";
+        msgEl.textContent = `✖ Stripe Connect error: ${err.message}`;
+      }
+      return { ok: false, error: err.message };
+    }
+  }
+
+  if (connectStripeBtn) {
+    connectStripeBtn.onclick = () => launchStripeConnectFlow();
+  }
+
+  // Privacy-First Restore / Lookup strictly by Stripe ID
+  const stripeIdLookupInput = document.getElementById("stripeIdLookupInput");
+  const stripeIdLookupBtn = document.getElementById("stripeIdLookupBtn");
+  const stripeLookupMsg = document.getElementById("stripeLookupMsg");
+  if (stripeIdLookupBtn && stripeIdLookupInput) {
+    stripeIdLookupBtn.onclick = async () => {
+      const targetId = stripeIdLookupInput.value.trim();
+      if (!isStripeAcct(targetId)) {
+        if (stripeLookupMsg) {
+          stripeLookupMsg.style.display = "block";
+          stripeLookupMsg.style.color = "#ff6b6b";
+          stripeLookupMsg.textContent = "Enter a valid Stripe Connected Account ID (starts with acct_).";
+        }
+        return;
+      }
+      if (stripeLookupMsg) {
+        stripeLookupMsg.style.display = "block";
+        stripeLookupMsg.style.color = "#93c5fd";
+        stripeLookupMsg.textContent = `⏳ Pulling live identity for ${targetId}…`;
+      }
+      try {
+        const res = await PulseRealm.pullIdentityByStripeId(targetId);
+        if (!res.ok || !res.found) {
+          if (stripeLookupMsg) {
+            stripeLookupMsg.style.color = "#ff6b6b";
+            stripeLookupMsg.textContent = `✖ ${res.error || "No identity found for that Stripe ID."}`;
+          }
+          return;
+        }
+        const pulled = res.identity || {};
+        const stripeInfo = res.stripe || {};
+        PulseRealm.PulseBankID = targetId;
+        PulseRealm.PulseBank = targetId;
+        const merged = PulseRealm.PulseIdentityStore.save({
+          ...(pulled.name ? { name: pulled.name } : {}),
+          ...(pulled.userName ? { userName: pulled.userName } : {}),
+          ...(pulled.emailDomain ? { emailDomain: pulled.emailDomain } : {}),
+          ...(pulled.role ? { role: pulled.role } : {}),
+          ...(pulled.country || stripeInfo.country ? { country: pulled.country || stripeInfo.country } : {}),
+          ...(pulled.PulsePoints != null ? { PulsePoints: pulled.PulsePoints } : {}),
+          tokenID: targetId,
+          stripeID: targetId,
+          bank: targetId,
+          stripeStatus: stripeInfo
+        });
+        if (stripeLookupMsg) {
+          stripeLookupMsg.style.color = "#00ffa8";
+          stripeLookupMsg.textContent = `✔ Restored ${merged.name} (${merged.email}) • Stripe ${stripeInfo.detailsSubmitted ? "Verified" : "Onboarding Pending"}`;
+        }
+        renderDashboard(merged);
+      } catch (err) {
+        if (stripeLookupMsg) {
+          stripeLookupMsg.style.color = "#ff6b6b";
+          stripeLookupMsg.textContent = `✖ Lookup failed: ${err.message}`;
+        }
+      }
+    };
+  }
+
+  // Test SMS button (Twilio via PULSE-SERVER-SMS)
+  const testSmsBtn = document.getElementById("testSmsBtn");
+  const smsStatusMsg = document.getElementById("smsStatusMsg");
+  if (testSmsBtn) {
+    testSmsBtn.onclick = async () => {
+      const targetPhone = document.getElementById("phone")?.value?.trim() || "";
+      if (smsStatusMsg) {
+        smsStatusMsg.style.display = "block";
+        smsStatusMsg.style.color = "#93c5fd";
+        smsStatusMsg.textContent = "⏳ Sending verification SMS via Twilio…";
+      }
+      try {
+        const res = await PulseRealm.sendPulseSMS({
+          to: targetPhone,
+          body: `PulseWorld OS: Identity "${displayNameInput?.value?.trim() || identity.name}" SMS link verified!`,
+          kind: "identity_test"
+        });
+        if (res.ok) {
+          if (smsStatusMsg) {
+            smsStatusMsg.style.color = "#00ffa8";
+            smsStatusMsg.textContent = `✔ SMS queued to ${res.to} (SID: ${res.sid})`;
+          }
+        } else if (smsStatusMsg) {
+          smsStatusMsg.style.color = "#ff6b6b";
+          smsStatusMsg.textContent = `✖ ${res.error || "SMS failed"}`;
+        }
+      } catch (err) {
+        if (smsStatusMsg) {
+          smsStatusMsg.style.color = "#ff6b6b";
+          smsStatusMsg.textContent = `✖ SMS error: ${err.message}`;
+        }
+      }
+    };
   }
 
   const stripeBtn = document.getElementById("stripeBtn");
   if (stripeBtn) {
-    const stripeUrl = PulseRealm.PulseBankURL || identity.stripeLogin;
-    stripeBtn.onclick = () => (window.location.href = stripeUrl);
+    stripeBtn.onclick = async () => {
+      if (activeStripeId) {
+        await launchStripeConnectFlow();
+      } else {
+        const stripeUrl = PulseRealm.PulseBankURL || identity.stripeLogin;
+        window.open(stripeUrl, "_blank", "noopener");
+      }
+    };
   }
 
   // ============================================================
@@ -935,53 +1258,173 @@ async function renderDashboard(identity) {
   });
 }
 
-function savebutton() {
-
+async function savebutton() {
   console.log("[SaveButton] Starting savebutton()…");
 
-  // Snapshot for undo
+  const saveBtnEl = document.getElementById("saveBtn");
+  const msgEl = document.getElementById("msg");
+  const displayNameStatus = document.getElementById("displayNameStatus");
+
   const previousIdentity = PulseRealm.PulseIdentityStore.readJSON("PulseIdentity");
   const previousPhotos = PulseRealm.PulseIdentityStore.readJSON("PulsePhotos");
   const fullNameValue = document.getElementById("fullName")?.value.trim();
   const displayNameValue = document.getElementById("displayNameInput")?.value.trim();
+  const aliasDomainValue = document.getElementById("aliasDomainSelect")?.value || previousIdentity.emailDomain || "pulseworld.net";
   const emailValue = document.getElementById("email")?.value.trim().toLowerCase();
   const phoneValue = document.getElementById("phone")?.value.trim();
-  const countryValue = document.getElementById("country")?.value;
+  const countryValue = document.getElementById("country")?.value || "US";
+  const roleValue = document.getElementById("role")?.value || previousIdentity.role || "User";
+  const smsOptValue = document.getElementById("smsOpt")?.checked ?? previousIdentity.smsOpt ?? false;
+  const emailOptValue = document.getElementById("emailOpt")?.checked ?? previousIdentity.emailOpt ?? true;
   const trustedDevice = document.getElementById("stayToggle")?.checked;
 
-  PulseRealm.PulseUserName = fullNameValue || PulseRealm.PulseUserName;
-  PulseRealm.PulseUser = displayNameValue || PulseRealm.PulseUser;
-  // Keep the canonical email field in sync with the user-facing email field.
-  // PulseIdentityStore.save() uses PulseEmail for identity.email; updating
-  // only PulseUserEmail caused the form value to disappear on the next render.
-  PulseRealm.PulseEmail = emailValue || PulseRealm.PulseEmail;
-  PulseRealm.PulseUserEmail = emailValue || PulseRealm.PulseUserEmail;
-  PulseRealm.PulsePhone = phoneValue || PulseRealm.PulsePhone;
-  PulseRealm.PulseCountry = countryValue || PulseRealm.PulseCountry;
-  PulseRealm.PulseTrustedDevice = trustedDevice ?? PulseRealm.PulseTrustedDevice;
+  const targetName = displayNameValue || previousIdentity.name;
 
-  PulseRealm.PulseIdentityStore.save({
-    name: displayNameValue || previousIdentity.name,
-    userName: fullNameValue || previousIdentity.userName,
-    email: emailValue || previousIdentity.email,
-    userEmail: emailValue || previousIdentity.userEmail,
-    phone: phoneValue || previousIdentity.phone,
-    country: countryValue || previousIdentity.country,
-    device: trustedDevice ?? previousIdentity.device
-  });
-  console.log("[SaveButton] Identity + Photos saved successfully.");
+  if (saveBtnEl) {
+    saveBtnEl.disabled = true;
+    saveBtnEl.textContent = "Verifying & Saving…";
+  }
 
-  // Popup
-  PulseRealm.PulseWorldPopup("Dashboard Saved", "Undo", () => {
+  try {
+    // 1. Server-side uniqueness check before saving
+    if (targetName && typeof PulseRealm.checkIdentityName === "function") {
+      const check = await PulseRealm.checkIdentityName(targetName, {
+        emailDomain: aliasDomainValue,
+        localId: previousIdentity.id,
+        stripeID: previousIdentity.tokenID || previousIdentity.stripeID || null
+      });
 
-    console.log("[SaveButton] Undo triggered. Restoring previous identity…");
+      if (check.ok && check.available === false) {
+        const sugg = Array.isArray(check.suggestions) && check.suggestions.length
+          ? ` Try: ${check.suggestions.join(", ")}`
+          : "";
+        if (displayNameStatus) {
+          displayNameStatus.style.display = "block";
+          displayNameStatus.style.color = "#ff6b6b";
+          displayNameStatus.textContent = `✖ ${check.error || "Display Name already taken."}${sugg}`;
+        }
+        if (msgEl) {
+          msgEl.style.color = "#ff6b6b";
+          msgEl.textContent = check.error || "Display Name is already taken.";
+        }
+        PulseRealm.PulseWorldPopup("Display Name Already Taken — Please Choose Another", "OK", () => {});
+        return;
+      }
+    }
 
-    // Undo restore
-    const restoredIdentity = PulseRealm.PulseIdentityStore.restore(previousIdentity, previousPhotos);
-    renderDashboard(restoredIdentity);
+    // 2. Persist locally (updating alias email with chosen PulseWorld domain)
+    const computedAliasEmail = PulseRealm.buildAliasEmail
+      ? PulseRealm.buildAliasEmail(targetName, aliasDomainValue)
+      : `${targetName}@${aliasDomainValue}`;
 
-    console.log("[SaveButton] Undo complete.");
-  });
+    PulseRealm.PulseUserName = fullNameValue || PulseRealm.PulseUserName;
+    PulseRealm.PulseUser = targetName || PulseRealm.PulseUser;
+    PulseRealm.PulseEmailDomain = aliasDomainValue;
+    PulseRealm.PulseEmail = computedAliasEmail;
+    PulseRealm.PulseUserEmail = emailValue || PulseRealm.PulseUserEmail;
+    PulseRealm.PulsePhone = phoneValue || PulseRealm.PulsePhone;
+    PulseRealm.PulseCountry = countryValue || PulseRealm.PulseCountry;
+    PulseRealm.PulseRole = roleValue;
+    PulseRealm.PulseTrustedDevice = trustedDevice ?? PulseRealm.PulseTrustedDevice;
+
+    const savedIdentity = PulseRealm.PulseIdentityStore.save({
+      name: targetName,
+      userName: fullNameValue || previousIdentity.userName,
+      emailDomain: aliasDomainValue,
+      email: computedAliasEmail,
+      aliasEmail: computedAliasEmail,
+      userEmail: emailValue || previousIdentity.userEmail,
+      phone: phoneValue || previousIdentity.phone,
+      country: countryValue || previousIdentity.country,
+      role: roleValue,
+      smsOpt: smsOptValue,
+      emailOpt: emailOptValue,
+      device: trustedDevice ?? previousIdentity.device
+    });
+
+    // 3. Immediately sync to Supabase (with server-side unique enforcement)
+    let syncRes = null;
+    if (typeof PulseRealm.pulseSupabaseSync === "function") {
+      syncRes = await PulseRealm.pulseSupabaseSync({ force: true, enforceUnique: true, skipGeo: true });
+      if (syncRes && syncRes.duplicate) {
+        const restored = PulseRealm.PulseIdentityStore.restore(previousIdentity, previousPhotos);
+        renderDashboard(restored);
+        PulseRealm.PulseWorldPopup("Name Already Claimed — Restored Previous Identity", "OK", () => {});
+        return;
+      }
+    }
+
+    // 4. Auto-create/link Stripe Connect Express if user entered a valid real email & has no Stripe ID yet
+    const hasValidRealEmail = emailValue && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue) && !/^(youremail|unknown)@domain\.com$/i.test(emailValue);
+    const hasStripeId = typeof savedIdentity.tokenID === "string" && /^acct_[A-Za-z0-9]+$/.test(savedIdentity.tokenID);
+    let stripeOnboardingUrl = null;
+    let linkedStripeId = savedIdentity.tokenID || null;
+
+    if (hasValidRealEmail && !hasStripeId) {
+      try {
+        const origin = location.origin;
+        const stripeRes = await fetch("/.netlify/functions/PULSE-SERVER-BANK-ACCOUNT", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "createOrLink",
+            email: emailValue,
+            name: savedIdentity.name,
+            localId: savedIdentity.id,
+            emailDomain: aliasDomainValue,
+            phone: phoneValue,
+            country: countryValue,
+            role: roleValue,
+            host: location.hostname,
+            origin,
+            returnUrl: `${origin}/?Impulse=PulseWorldInventory&stripe=return`,
+            refreshUrl: `${origin}/?Impulse=PulseWorldInventory&stripe=refresh`
+          })
+        });
+        const stripeData = await stripeRes.json();
+        if (stripeRes.ok && stripeData.ok && stripeData.stripeID) {
+          linkedStripeId = stripeData.stripeID;
+          stripeOnboardingUrl = stripeData.onboardingUrl || null;
+          PulseRealm.PulseBankID = linkedStripeId;
+          PulseRealm.PulseBank = linkedStripeId;
+          PulseRealm.PulseIdentityStore.save({
+            tokenID: linkedStripeId,
+            stripeID: linkedStripeId,
+            bank: linkedStripeId,
+            stripeStatus: {
+              stripeID: linkedStripeId,
+              detailsSubmitted: Boolean(stripeData.detailsSubmitted),
+              chargesEnabled: Boolean(stripeData.chargesEnabled),
+              payoutsEnabled: Boolean(stripeData.payoutsEnabled)
+            }
+          });
+        }
+      } catch (stripeErr) {
+        console.warn("[SaveButton] Stripe Connect link skipped:", stripeErr.message);
+      }
+    }
+
+    renderDashboard(PulseRealm.PulseIdentityStore.readJSON("PulseIdentity"));
+    console.log("[SaveButton] Identity + Supabase + Stripe sync complete.");
+
+    if (stripeOnboardingUrl) {
+      PulseRealm.PulseWorldPopup(
+        `Dashboard Saved & Stripe ID Created (${linkedStripeId})! Complete Stripe Onboarding now?`,
+        "Open Stripe Onboarding",
+        () => window.open(stripeOnboardingUrl, "_blank", "noopener")
+      );
+    } else {
+      PulseRealm.PulseWorldPopup("Dashboard Saved", "Undo", () => {
+        const restoredIdentity = PulseRealm.PulseIdentityStore.restore(previousIdentity, previousPhotos);
+        renderDashboard(restoredIdentity);
+      });
+    }
+  } finally {
+    if (saveBtnEl) {
+      saveBtnEl.disabled = false;
+      saveBtnEl.textContent = "Save Dashboard";
+    }
+  }
 }
 
 identityVideo = document.getElementById("identityVideo");
@@ -1109,6 +1552,30 @@ identityVideo = document.getElementById("identityVideo");
     await renderDashboard(PulseRealm.PulseIdentity);
     PulseRealm.PulseUserEmail = PulseRealm.PulseIdentity.userEmail;
     PulseRealm.PulseEmail = PulseRealm.PulseIdentity.email;
+
+    // Auto-refresh live Stripe Connect status when returning from Stripe Onboarding
+    try {
+      const qs = new URLSearchParams(location.search);
+      const stripeParam = qs.get("stripe");
+      const currentAcct = PulseRealm.PulseIdentity?.tokenID || PulseRealm.PulseIdentity?.stripeID || PulseRealm.PulseBankID;
+      if ((stripeParam === "return" || stripeParam === "refresh") && currentAcct && /^acct_[A-Za-z0-9]+$/.test(currentAcct)) {
+        const res = await PulseRealm.pullIdentityByStripeId(currentAcct);
+        if (res?.ok && res.stripe) {
+          const updated = PulseRealm.PulseIdentityStore.save({
+            tokenID: currentAcct,
+            stripeID: currentAcct,
+            bank: currentAcct,
+            stripeStatus: res.stripe
+          });
+          await renderDashboard(updated);
+          if (stripeParam === "return" && res.stripe.detailsSubmitted) {
+            PulseRealm.PulseWorldPopup(`Stripe Express Verified (${currentAcct}) ✔`, "Great", () => {});
+          }
+        }
+      }
+    } catch (stripeReturnErr) {
+      console.warn("[PulseInventory] Stripe return refresh skipped:", stripeReturnErr.message);
+    }
 
   PulseRealm.__LOAD_END = performance.now();
   console.log(`✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Pulse World Route DUAL DOM/Network Synchronization Complete → ${(PulseRealm.__LOAD_END - PulseRealm.__DOM_START).toFixed(1)}ms`,"color:#H02FHA; font-weight:bold; font-family:monospace;");

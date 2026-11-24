@@ -23,37 +23,54 @@ export function getTwilioClient() {
   const accountSid = kc?.get("TWILIO_ACCOUNT_SID");
   const authToken = kc?.get("TWILIO_AUTH_TOKEN");
 
-  if (!accountSid || !authToken) {
-    throw new Error(
-      "[PulseWorldSMSAlert-v30] Missing Twilio credentials in PulseIO Keychain"
-    );
+  async function sendViaNetlify({ to, from, body, messagingServiceSid, kind, stripeID, localId }) {
+    const res = await fetch("/.netlify/functions/PULSE-SERVER-SMS", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to, from, body, messagingServiceSid, kind, stripeID, localId })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) {
+      throw new Error(data.error || `[PULSE-SERVER-SMS Error] HTTP ${res.status}`);
+    }
+    return data;
   }
 
+  async function messagesCreate({ to, from, body, messagingServiceSid, kind, stripeID, localId }) {
+    // Prefer secure Netlify server function in browser environments (never requires browser Twilio secrets)
+    if (typeof window !== "undefined" || !accountSid || !authToken) {
+      return sendViaNetlify({ to, from, body, messagingServiceSid, kind, stripeID, localId });
+    }
+
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+    const form = new URLSearchParams();
+    if (messagingServiceSid) form.append("MessagingServiceSid", messagingServiceSid);
+    if (from) form.append("From", from);
+    form.append("To", to);
+    form.append("Body", body);
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": "Basic " + btoa(`${accountSid}:${authToken}`),
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: form
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`[Twilio REST Error] ${err}`);
+    }
+
+    return res.json();
+  }
+
+  // Expose both messagesCreate(...) and Twilio SDK-compatible messages.create(...)
   return {
-    async messagesCreate({ to, from, body, messagingServiceSid }) {
-      const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
-
-      const form = new URLSearchParams();
-      if (messagingServiceSid) form.append("MessagingServiceSid", messagingServiceSid);
-      if (from) form.append("From", from);
-      form.append("To", to);
-      form.append("Body", body);
-
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Authorization": "Basic " + btoa(`${accountSid}:${authToken}`),
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: form
-      });
-
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(`[Twilio REST Error] ${err}`);
-      }
-
-      return res.json();
+    messagesCreate,
+    messages: {
+      create: messagesCreate
     }
   };
 }
@@ -156,8 +173,9 @@ export function buildSMSImmortalEnvelope(input = {}) {
 
   const intellHash = computeHash(JSON.stringify(hashPayload));
   
+  const kc = PulseRealm.PulseCoreGlobal?.signal?.keychain;
   const MESSAGING_SERVICE_SID =
-  kc.get("TWILIO_MESSAGING_SERVICE_SID") || "";
+    kc?.get?.("TWILIO_MESSAGING_SERVICE_SID") || "";
 
   return {
     organ: PulseWorldSMSAlertMeta.organ,
@@ -200,8 +218,9 @@ export function buildSMSImmortalEnvelope(input = {}) {
 // ORGAN CONFIG
 // ---------------------------------------------------------------------------
 export function getSMSOrganConfig() {
-   const MESSAGING_SERVICE_SID =
-  kc.get("TWILIO_MESSAGING_SERVICE_SID") || "";
+   const kc = PulseRealm.PulseCoreGlobal?.signal?.keychain;
+  const MESSAGING_SERVICE_SID =
+    kc?.get?.("TWILIO_MESSAGING_SERVICE_SID") || "";
   return {
     client: getTwilioClient(),
     messagingServiceSid: MESSAGING_SERVICE_SID,

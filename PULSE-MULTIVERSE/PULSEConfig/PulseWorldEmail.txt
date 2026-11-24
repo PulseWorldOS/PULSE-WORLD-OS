@@ -339,8 +339,25 @@
 
       <!-- USER SELECT -->
       <div class="field-block">
-        <label>Select User</label>
+        <label>Sender Alias Identity</label>
         <select id="userSelect"></select>
+      </div>
+
+      <!-- SEND FROM DOMAIN SELECTOR (ALL 9 PULSEWORLD DOMAINS) -->
+      <div class="field-block">
+        <label>Send From Domain</label>
+        <select id="fromDomainSelect">
+          <option value="pulseworld.net">@pulseworld.net</option>
+          <option value="pulseworld.me">@pulseworld.me</option>
+          <option value="pulseworld.biz">@pulseworld.biz</option>
+          <option value="pulseworld.money">@pulseworld.money</option>
+          <option value="binaryos.net">@binaryos.net</option>
+          <option value="booleanlogic.net">@booleanlogic.net</option>
+          <option value="gpuprocessing.net">@gpuprocessing.net</option>
+          <option value="orbitalmap.net">@orbitalmap.net</option>
+          <option value="serviceworker.net">@serviceworker.net</option>
+        </select>
+        <div id="fromAliasPreview" style="margin-top:6px; font-size:0.9rem; color:#00ffa8; word-break:break-all;"></div>
       </div>
 
       <!-- TO FIELD -->
@@ -351,14 +368,14 @@
 
       <!-- CC FIELD -->
       <div class="field-block">
-        <label>CC</label>
+        <label>CC (Optional)</label>
         <input id="ccInput" placeholder="cc@example.com">
       </div>
 
 
       <!-- TEMPLATE SELECT -->
       <div class="field-block">
-        <label>Email Template</label>
+        <label>Email Template (Optional — leave blank for custom email)</label>
         <select id="templateSelect"></select>
       </div>
 
@@ -370,8 +387,8 @@
 
       <!-- PAYLOAD -->
       <div class="field-block">
-        <label>Payload Email Content</label>
-        <textarea id="payloadInput" placeholder=""></textarea>
+        <label>Email Message Content</label>
+        <textarea id="payloadInput" placeholder="Write your message here (or select a template above)..."></textarea>
       </div>
 
       <!-- SEND BUTTON -->
@@ -415,24 +432,30 @@ async function sendAdminAlertEmail(templateId, payload) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        templateId,
+        mode: payload.mode || "user",
+        templateId: templateId || "PulseCustomMessage",
+        fromAlias: payload.fromAlias,
+        fromDomain: payload.fromDomain,
+        fromName: payload.fromName,
+        localId: payload.localId,
+        stripeID: payload.stripeID,
         payload
       })
     });
 
     const result = await res.json();
 
-    if (result.success) {
-      console.log("📨 Admin alert sent (via Netlify function)");
-      return { success: true };
+    if (result.success || result.ok) {
+      console.log("📨 PulseWorld alias email sent:", result.from, "→", result.to);
+      return { success: true, ...result };
     } else {
-      console.error("❌ Netlify function failed:", result.error);
-      return { success: false, error: result.error };
+      console.error("❌ Netlify email function failed:", result.error);
+      return { success: false, error: result.error || `HTTP ${res.status}` };
     }
 
   } catch (err) {
-    console.error("❌ Failed to call pulse-server-email:", err);
-    return { success: false, error: err };
+    console.error("❌ Failed to call PULSE-SERVER-EMAIL:", err);
+    return { success: false, error: err.message || String(err) };
   }
 }
 
@@ -442,14 +465,16 @@ async function sendAdminAlertEmail(templateId, payload) {
 // ============================================================
 
 // --- DOM HOOKS -----------------------------------------------
-const userSelect      = document.getElementById("userSelect");
-const templateSelect  = document.getElementById("templateSelect");
-const subjectInput    = document.getElementById("subjectInput");
-const toInput    = document.getElementById("toInput");
-const ccInput    = document.getElementById("ccInput");
-const payloadInput    = document.getElementById("payloadInput");
-const sendEmailBtn    = document.getElementById("sendEmailBtn");
-const logEl           = document.getElementById("log");
+const userSelect       = document.getElementById("userSelect");
+const fromDomainSelect = document.getElementById("fromDomainSelect");
+const fromAliasPreview = document.getElementById("fromAliasPreview");
+const templateSelect   = document.getElementById("templateSelect");
+const subjectInput     = document.getElementById("subjectInput");
+const toInput          = document.getElementById("toInput");
+const ccInput          = document.getElementById("ccInput");
+const payloadInput     = document.getElementById("payloadInput");
+const sendEmailBtn     = document.getElementById("sendEmailBtn");
+const logEl            = document.getElementById("log");
 
 const badgeTemplates  = document.getElementById("badge-templates");
 const badgeUsers      = document.getElementById("badge-users");
@@ -673,81 +698,107 @@ function populateTemplateSelect() {
 // BUILD EMAIL PAYLOAD
 // ============================================================
 
-function buildEmailPayload() {  
-  const userEmail = PulseRealm.PulseUserEmail ?? "AIOvermindPrime@PulseWorld.Net";
-  const Email = PulseRealm.PulseEmail ?? `${stripTimestamp(PulseRealm.PulseUser || "Unknown")}@PulseWorld.Net`;
-  
-  const toEmail = toInput.value.trim() || null;
-  const ccEmail = ccInput.value.trim() || userEmail;
-  
+function getActiveAliasHandle() {
+  const chosenVal = selectedUser || userSelect?.value || PulseRealm.PulseIdentity?.name || PulseRealm.PulseUser || "PulseUser";
+  const rawHandle = String(chosenVal).includes("@") ? String(chosenVal).split("@")[0] : String(chosenVal);
+  return PulseRealm.sanitizeAliasHandle ? PulseRealm.sanitizeAliasHandle(rawHandle) : rawHandle.replace(/\s+/g, "-");
+}
 
-  // ---------------------------------------------------------
-  // Pull template from templatesCache (alphabetized loader)
-  // ---------------------------------------------------------
+function getSelectedDomain() {
+  return fromDomainSelect?.value || PulseRealm.PulseIdentity?.emailDomain || PulseRealm.PulseEmailDomain || "pulseworld.net";
+}
+
+function updateFromPreview() {
+  const handle = getActiveAliasHandle();
+  const domain = getSelectedDomain();
+  if (fromAliasPreview) {
+    fromAliasPreview.textContent = `Sending From: ${handle}@${domain} (Replies route privately to your identity)`;
+  }
+}
+
+function populateTemplateDefaults() {
   const templateEntry = templatesCache.find(t => t.id === selectedTemplate);
-  if (!templateEntry) throw new Error("Template not found");
-
+  if (!templateEntry) return;
   const tpl = templateEntry.template;
-
-  const userName  = selectedUser ?? PulseRealm.PulseUser ?? "Friend";
-
-  const payload = {
-    to: toEmail,
-    cc: ccEmail,
-
-    email: Email,
-    name: selectedUser,
-    user: selectedUser,
-    rawPayload: null,
+  const dummy = {
+    to: toInput.value.trim(),
+    cc: ccInput.value.trim(),
+    email: `${getActiveAliasHandle()}@${getSelectedDomain()}`,
+    name: PulseRealm.PulseIdentity?.name || PulseRealm.PulseUser || "Friend",
     templateId: selectedTemplate
   };
-
-  // ---------------------------------------------------------
-  // AUTO‑GENERATE SUBJECT FROM TEMPLATE (write to UI)
-  // ---------------------------------------------------------
-  const subject =
-    typeof tpl.subject === "function"
-      ? tpl.subject(payload)
-      : tpl.subject || "";
-
-  subjectInput.value = subject;   // ⭐ WRITE to UI
-
-  // ---------------------------------------------------------
-  // AUTO‑GENERATE PAYLOAD JSON (write to UI)
-  // ---------------------------------------------------------
-  let generatedPayload = "";
-
-  // If template defines an example payload, use it
+  const subj = typeof tpl.subject === "function" ? tpl.subject(dummy) : (tpl.subject || "");
+  if (subj) subjectInput.value = subj;
   if (tpl.examplePayload) {
-    generatedPayload = JSON.stringify(tpl.examplePayload, null, 2);
+    payloadInput.value = JSON.stringify(tpl.examplePayload, null, 2);
+  }
+}
+
+function buildEmailPayload() {
+  const identity = PulseRealm.PulseIdentity || {};
+  const fromAlias = getActiveAliasHandle();
+  const fromDomain = getSelectedDomain();
+  const fromEmail = `${fromAlias}@${fromDomain}`;
+  const fromName = identity.name || PulseRealm.PulseUser || fromAlias;
+
+  const toEmail = toInput.value.trim();
+  if (!toEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(toEmail)) {
+    throw new Error("Please enter a valid recipient email address in the 'To' field.");
   }
 
-  // If template has no example payload, clear the field
-  payloadInput.value = generatedPayload;   // ⭐ WRITE to UI
+  const rawCc = ccInput.value.trim();
+  const ccEmail = rawCc && !/^(youremail|unknown)@domain\.com$/i.test(rawCc) ? rawCc : null;
 
-  // Store raw payload into meta
-  payload.rawPayload = generatedPayload;
+  const userTypedSubject = subjectInput.value.trim();
+  const userTypedBody = payloadInput.value.trim();
 
-  // ---------------------------------------------------------
-  // HTML
-  // ---------------------------------------------------------
-  const html =
-    typeof tpl.html === "function" ? tpl.html(payload) : tpl.html;
+  let subject = userTypedSubject || `Message from ${fromName} (${fromEmail})`;
+  let html = "";
+  let text = userTypedBody;
+  let templateId = selectedTemplate || "PulseCustomMessage";
 
-  // ---------------------------------------------------------
-  // Text fallback
-  // ---------------------------------------------------------
-  const text =
-    typeof tpl.text === "function" ? tpl.text(payload) : tpl.text || "";
+  if (selectedTemplate) {
+    const templateEntry = templatesCache.find(t => t.id === selectedTemplate);
+    if (templateEntry) {
+      const tpl = templateEntry.template;
+      let parsedRaw = userTypedBody;
+      try { if (userTypedBody.startsWith("{")) parsedRaw = JSON.parse(userTypedBody); } catch {}
+      const tplData = {
+        to: toEmail,
+        cc: ccEmail,
+        email: fromEmail,
+        name: fromName,
+        user: fromName,
+        rawPayload: parsedRaw,
+        templateId: selectedTemplate
+      };
+      subject = userTypedSubject || (typeof tpl.subject === "function" ? tpl.subject(tplData) : tpl.subject || subject);
+      html = typeof tpl.html === "function" ? tpl.html(tplData) : (tpl.html || "");
+      text = typeof tpl.text === "function" ? tpl.text(tplData) : (tpl.text || userTypedBody);
+    }
+  }
+
+  if (!html) {
+    if (!userTypedBody) {
+      throw new Error("Please write a message or select an email template.");
+    }
+    html = `<p style="white-space:pre-wrap;">${escapeHtml(userTypedBody)}</p>`;
+  }
 
   return {
+    mode: selectedTemplate ? "admin" : "user",
+    to: toEmail,
     email: toEmail,
     cc: ccEmail,
+    fromAlias,
+    fromDomain,
+    fromName,
+    localId: identity.id || null,
+    stripeID: identity.tokenID || identity.stripeID || PulseRealm.PulseBankID || null,
     subject,
     html,
-    text,
-    meta: payload,
-    templateId: selectedTemplate
+    text: text || userTypedBody || subject,
+    templateId
   };
 }
 
@@ -812,18 +863,26 @@ async function handleSend() {
 
 userSelect.addEventListener("change", () => {
   const val = userSelect.value;
- 
   selectedUser = val;
-  safeLog("Selected user", { id: val });
+  updateFromPreview();
+  safeLog("Selected alias identity", { id: val });
 });
+
+if (fromDomainSelect) {
+  fromDomainSelect.addEventListener("change", () => {
+    updateFromPreview();
+    safeLog("Switched sending domain", { domain: fromDomainSelect.value });
+  });
+}
 
 templateSelect.addEventListener("change", () => {
   selectedTemplate = templateSelect.value || null;
-  safeLog("Selected template", { id: selectedTemplate });
+  if (selectedTemplate) populateTemplateDefaults();
+  safeLog("Selected template", { id: selectedTemplate || "Custom Email" });
 });
 
 sendEmailBtn.addEventListener("click", handleSend);
-templateSelect.addEventListener("click", handlePreview);
+templateSelect.addEventListener("dblclick", handlePreview);
 
 modalClose.addEventListener("click", hideModal);
 modalBg.addEventListener("click", (e) => {
@@ -902,7 +961,11 @@ emailVideo = document.getElementById("emailVideo");
 
     
   await loadEmailIdentity();
+  if (fromDomainSelect && PulseRealm.PulseIdentity?.emailDomain) {
+    fromDomainSelect.value = PulseRealm.PulseIdentity.emailDomain;
+  }
   await initEmail();
+  updateFromPreview();
   PulseRealm.PulseUserEmail = PulseRealm.PulseIdentity.userEmail;
   PulseRealm.PulseEmail = PulseRealm.PulseIdentity.email;
   PulseRealm.__LOAD_END = performance.now();

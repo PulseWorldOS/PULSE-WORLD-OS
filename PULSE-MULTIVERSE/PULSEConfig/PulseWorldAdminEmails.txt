@@ -320,27 +320,49 @@
     <!-- CARD -->
     <section id="admin-card">
 
-      <!-- USER SELECT -->
+      <!-- SENDER ALIAS & DOMAIN -->
       <div class="field-block">
-        <label>Admin Identity</label>
-        <select id="userSelect"></select>
+        <label>Admin Sender Alias</label>
+        <input id="adminAliasInput" value="AIOvermindPrime" placeholder="e.g. AIOvermindPrime or Support">
+      </div>
+
+      <div class="field-block">
+        <label>Send From Domain (All 9 PulseWorld Domains)</label>
+        <select id="fromDomainSelect">
+          <option value="pulseworld.net">@pulseworld.net</option>
+          <option value="pulseworld.me">@pulseworld.me</option>
+          <option value="pulseworld.biz">@pulseworld.biz</option>
+          <option value="pulseworld.money">@pulseworld.money</option>
+          <option value="binaryos.net">@binaryos.net</option>
+          <option value="booleanlogic.net">@booleanlogic.net</option>
+          <option value="gpuprocessing.net">@gpuprocessing.net</option>
+          <option value="orbitalmap.net">@orbitalmap.net</option>
+          <option value="serviceworker.net">@serviceworker.net</option>
+        </select>
+        <div id="adminFromPreview" style="margin-top:6px; font-size:0.9rem; color:#00ffa8;"></div>
       </div>
 
       <!-- TEMPLATE SELECT -->
       <div class="field-block">
-        <label>Email Template</label>
+        <label>Email Template (Optional — leave blank for custom email)</label>
         <select id="templateSelect"></select>
       </div>
 
-      <!-- USER SELECT -->
+      <!-- RECIPIENT USER SELECT -->
       <div class="field-block">
-        <label>To Which User?</label>
+        <label>To Which User? (Synced from Supabase)</label>
         <select id="userSelect"></select>
+      </div>
+
+      <!-- DIRECT TO OVERRIDE -->
+      <div class="field-block">
+        <label>Direct Recipient Email (Auto-filled from user or enter manually)</label>
+        <input id="toInput" placeholder="recipient@example.com">
       </div>
 
       <!-- CC FIELD -->
       <div class="field-block">
-        <label>CC</label>
+        <label>CC (Optional)</label>
         <input id="ccInput" placeholder="cc@example.com">
       </div>
 
@@ -398,10 +420,14 @@ log("✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::WARP] Cinematic: Pu
 
 
 // --- DOM HOOKS -----------------------------------------------
-const userSelect      = document.getElementById("userSelect");
-const templateSelect  = document.getElementById("templateSelect");
-const subjectInput    = document.getElementById("subjectInput");
-const payloadInput    = document.getElementById("payloadInput");
+const adminAliasInput  = document.getElementById("adminAliasInput");
+const fromDomainSelect = document.getElementById("fromDomainSelect");
+const adminFromPreview = document.getElementById("adminFromPreview");
+const userSelect       = document.getElementById("userSelect");
+const toInput          = document.getElementById("toInput");
+const templateSelect   = document.getElementById("templateSelect");
+const subjectInput     = document.getElementById("subjectInput");
+const payloadInput     = document.getElementById("payloadInput");
 
 const ccInput    = document.getElementById("ccInput");
 const sendEmailBtn    = document.getElementById("sendEmailBtn");
@@ -499,54 +525,39 @@ function getCache() {
 // ============================================================
 // LOAD USERS
 // ============================================================
+function updateAdminFromPreview() {
+  const handle = PulseRealm.sanitizeAliasHandle
+    ? PulseRealm.sanitizeAliasHandle(adminAliasInput?.value || "AIOvermindPrime")
+    : (adminAliasInput?.value || "AIOvermindPrime").trim();
+  const domain = fromDomainSelect?.value || "pulseworld.net";
+  if (adminFromPreview) {
+    adminFromPreview.textContent = `Admin Sending As: ${handle}@${domain}`;
+  }
+}
+
 async function loadUsers() {
   try {
-    const identityId = PulseRealm.PulseBank;
-
-    // If no bank ID exists, fallback to single identity
-    if (!identityId) {
-      safeLog("No Pulse Tether — using local identity only");
-      usersCache = [];
+    // Load real synced users directly from Supabase via PULSE-SERVER-SQL
+    const res = await fetch("/.netlify/functions/PULSE-SERVER-SQL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-pulse-mode": "admin" },
+      body: JSON.stringify({ action: "read" })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok && Array.isArray(data.users) && data.users.length) {
+      usersCache = data.users;
       await populateUserSelect();
-      badgeUsers.textContent = "1";
+      badgeUsers.textContent = usersCache.length;
+      safeLog("Loaded PulseIdentity users from Supabase", { count: usersCache.length });
       return;
     }
 
-    // Try PulseDB
-    
-    
-    if (!PulseRealm.PulseFirebaseDB) {
-      safeLog("No PulseDB available — using local identity only");
-      usersCache = [];
-      await populateUserSelect();
-      badgeUsers.textContent = "1";
-      return;
-    }
-
-    // Query identities belonging to this bank ID
-    const identitiesCol = PulseRealm.PulseFirebaseDB.collection("PulseIdentity");
-    const snapshot = await identitiesCol.find({ identityId });
-
-    // Normalize
-    usersCache = Array.isArray(snapshot) ? snapshot : [];
-
-    // If no identities found, fallback to single identity
-    if (!usersCache.length) {
-      safeLog("No Pulse Tether found — using local identity only");
-      safeLog("Please Click Here to Create Tether: <font color=blue><a href=" + PulseRealm.PulseBankURL + ">Pulse Tether</a></font>");
-      usersCache = [];
-      await populateUserSelect();
-      badgeUsers.textContent = "1";
-      return;
-    }
-
-    // Populate dropdown
+    safeLog("No users in Supabase yet — falling back to local identity");
+    usersCache = [];
     await populateUserSelect();
-    badgeUsers.textContent = usersCache.length;
-    safeLog("Loaded identities for PulseIdentity", { count: usersCache.length });
-
+    badgeUsers.textContent = "1";
   } catch (err) {
-    safeLog("Failed to load identities", { error: String(err) });
+    safeLog("Failed to load Supabase identities", { error: String(err) });
     usersCache = [];
     await populateUserSelect();
     badgeUsers.textContent = "1";
@@ -559,25 +570,27 @@ async function populateUserSelect() {
 
   if (!usersCache.length) {
     const opt = document.createElement("option");
-    const localEmail = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail;
+    const localEmail = PulseRealm.PulseIdentity?.userEmail || PulseRealm.PulseIdentity?.email || "";
     opt.value = localEmail;
-    opt.textContent = localEmail;
+    opt.textContent = `${PulseRealm.PulseIdentity?.name || "Local User"} (${localEmail})`;
     userSelect.appendChild(opt);
     return;
   }
 
   const placeholder = document.createElement("option");
-  placeholder.value = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail || "";
-  placeholder.textContent = "Select a User Identity…";
+  placeholder.value = "";
+  placeholder.textContent = "Select a PulseWorld User…";
   userSelect.appendChild(placeholder);
 
   usersCache.forEach((u) => {
     const opt = document.createElement("option");
-    const localEmail = PulseRealm.PulseIdentity.email || PulseRealm.PulseIdentity.userEmail;
-    opt.value = u.id ?? u.uid ?? u.email ?? localEmail;
-    opt.textContent = u.email ?? u.name ?? u.id ?? localEmail ?? "Unknown Pulse User";
-    opt.dataset.email = u.email ?? "";
-    opt.dataset.name = u.name ?? "";
+    const targetEmail = (u.userEmail && !/^(youremail|unknown)@domain\.com$/i.test(u.userEmail))
+      ? u.userEmail
+      : (u.aliasEmail || u.email || "");
+    opt.value = u.userID || u.id || targetEmail;
+    opt.textContent = `${u.name || "Unknown"} — ${u.aliasEmail || u.email || "no-alias"}${u.stripeID ? " [" + u.stripeID + "]" : ""}`;
+    opt.dataset.email = targetEmail;
+    opt.dataset.name = u.name || "";
     userSelect.appendChild(opt);
   });
 }
@@ -631,52 +644,69 @@ function populateTemplateSelect() {
 // ============================================================
 
 function buildEmailPayload() {
-  if (!selectedUser || !selectedTemplate) {
-    throw new Error("User and template must be selected");
+  const fromAlias = PulseRealm.sanitizeAliasHandle
+    ? PulseRealm.sanitizeAliasHandle(adminAliasInput?.value || "AIOvermindPrime")
+    : (adminAliasInput?.value || "AIOvermindPrime").trim();
+  const fromDomain = fromDomainSelect?.value || "pulseworld.net";
+
+  const recipientEmail =
+    toInput?.value?.trim() ||
+    selectedUser?.userEmail ||
+    selectedUser?.aliasEmail ||
+    selectedUser?.email ||
+    "";
+
+  if (!recipientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) {
+    throw new Error("Select a user or enter a valid recipient email in Direct Recipient Email.");
   }
 
-  const templateEntry = templatesCache.find((t) => t.id === selectedTemplate);
-  if (!templateEntry) throw new Error("Template not found");
-
-  const tpl = templateEntry.template;
-
-  const userEmail = selectedUser.email || selectedUser.id || "";
-  const userName  = selectedUser.name || selectedUser.email || "Friend";
-
-  const payload = {
-    email: userEmail,
-    name: userName,
-    user: selectedUser,
-    rawPayload: null,
-    templateId: selectedTemplate
-  };
-
+  const userName = selectedUser?.name || recipientEmail;
   const rawText = payloadInput.value.trim();
-  if (rawText) {
-    try {
-      payload.rawPayload = JSON.parse(rawText);
-    } catch (err) {
-      safeLog("Payload JSON parse error", { error: String(err) });
+  let parsedRaw = rawText || null;
+  if (rawText && rawText.startsWith("{")) {
+    try { parsedRaw = JSON.parse(rawText); } catch (err) {
+      safeLog("Payload treated as plain text (not JSON)");
     }
   }
 
-  const subject =
-    subjectInput.value ||
-    (typeof tpl.subject === "function" ? tpl.subject(payload) : tpl.subject);
+  let subject = subjectInput.value.trim() || `PulseWorld Admin Notice`;
+  let html = "";
+  let text = rawText;
 
-  const html =
-    typeof tpl.html === "function" ? tpl.html(payload) : tpl.html;
+  if (selectedTemplate) {
+    const templateEntry = templatesCache.find((t) => t.id === selectedTemplate);
+    if (templateEntry) {
+      const tpl = templateEntry.template;
+      const tplPayload = {
+        email: recipientEmail,
+        name: userName,
+        user: selectedUser,
+        rawPayload: parsedRaw,
+        templateId: selectedTemplate
+      };
+      subject = subjectInput.value.trim() || (typeof tpl.subject === "function" ? tpl.subject(tplPayload) : tpl.subject || subject);
+      html = typeof tpl.html === "function" ? tpl.html(tplPayload) : (tpl.html || "");
+      text = typeof tpl.text === "function" ? tpl.text(tplPayload) : (tpl.text || rawText);
+    }
+  }
 
-  const text =
-    typeof tpl.text === "function" ? tpl.text(payload) : tpl.text || "";
+  if (!html) {
+    if (!rawText) throw new Error("Please enter message content or select a template.");
+    html = `<p style="white-space:pre-wrap;">${escapeHtml(rawText)}</p>`;
+  }
 
   return {
-    email: userEmail,
+    mode: "admin",
+    to: recipientEmail,
+    email: recipientEmail,
+    cc: ccInput?.value?.trim() || null,
+    fromAlias,
+    fromDomain,
+    fromName: `PulseWorld (${fromAlias})`,
     subject,
     html,
-    text,
-    meta: payload,
-    templateId: selectedTemplate
+    text: text || rawText || subject,
+    templateId: selectedTemplate || "PulseAdminNotice"
   };
 }
 
@@ -722,12 +752,28 @@ async function handleSend() {
     setLoading(true);
     const payload = buildEmailPayload();
 
-    const result = await PulseRealm.PulseWorldSendAlertEmail(payload.templateId, payload);
+    const res = await fetch("/.netlify/functions/PULSE-SERVER-EMAIL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        mode: "admin",
+        templateId: payload.templateId,
+        fromAlias: payload.fromAlias,
+        fromDomain: payload.fromDomain,
+        fromName: payload.fromName,
+        payload
+      })
+    });
+    const result = await res.json();
 
-    safeLog("Email sent", { to: payload.email, template: payload.templateId, result });
+    if (res.ok && (result.ok || result.success)) {
+      safeLog("Admin email sent", { from: result.from, to: result.to, messageId: result.messageId });
+    } else {
+      safeLog("Admin email failed", { error: result.error || `HTTP ${res.status}` });
+    }
 
   } catch (err) {
-    safeLog("Failed to send email", { error: String(err) });
+    safeLog("Failed to send email", { error: err.message || String(err) });
   } finally {
     setLoading(false);
   }
@@ -737,18 +783,27 @@ async function handleSend() {
 // EVENT WIRING
 // ============================================================
 
+if (adminAliasInput) adminAliasInput.addEventListener("input", updateAdminFromPreview);
+if (fromDomainSelect) fromDomainSelect.addEventListener("change", updateAdminFromPreview);
+
 userSelect.addEventListener("change", () => {
   const val = userSelect.value;
   const found = usersCache.find(
-    (u) => u.id === val || u.uid === val || u.email === val
+    (u) => u.userID === val || u.id === val || u.uid === val || u.email === val
   );
   selectedUser = found || null;
-  safeLog("Selected user", { id: val });
+  if (found && toInput) {
+    const dest = (found.userEmail && !/^(youremail|unknown)@domain\.com$/i.test(found.userEmail))
+      ? found.userEmail
+      : (found.aliasEmail || found.email || "");
+    toInput.value = dest;
+  }
+  safeLog("Selected recipient", { id: val, email: toInput?.value || "" });
 });
 
 templateSelect.addEventListener("change", () => {
   selectedTemplate = templateSelect.value || null;
-  safeLog("Selected template", { id: selectedTemplate });
+  safeLog("Selected template", { id: selectedTemplate || "Custom Email" });
 });
 
 sendEmailBtn.addEventListener("click", handleSend);
@@ -766,6 +821,7 @@ modalBg.addEventListener("click", (e) => {
 async function initAdminEmail() {
   try {
     safeLog("Initializing Email Admin…");
+    updateAdminFromPreview();
     loadTemplates();
     await loadUsers();
     safeLog("Email Admin ready");
