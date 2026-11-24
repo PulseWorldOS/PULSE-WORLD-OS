@@ -64,7 +64,6 @@
 fetch(`./_EXPRESSIONS/_PEX/BUILD/PulseWorldBarrier-Alpha.webp.pex`, { cache: "force-cache" });
 fetch(`./_EXPRESSIONS/_VIDEOS/PulseStatus`, { cache: "force-cache" });
 globalThis.PulseRealm=globalThis;
-let gpuEnabled = null;
 const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 const PulseGlobalPastA=Object.assign({},PulseRealm.PulseGlobalPast,PulseRealm.PulseGlobal,PulseRealm.PulseGlobalNow);
 const PulseSelfIdentitya={realm:"pulse-main",timestamp:Date.now(),uid:(PulseRealm.crypto?.randomUUID?.()||("pulse-"+Math.random())),type:"PulseGlobalSelf"};
@@ -578,7 +577,7 @@ checkPersistentStorage(true);
 //   }
 // })();
 
-
+let gpuEnabled = "GPU Driver Error";
 
 if (isInIframe()) {
   console.log("Running inside an iframe");
