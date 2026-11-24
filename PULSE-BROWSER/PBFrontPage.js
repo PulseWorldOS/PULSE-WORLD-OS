@@ -5103,7 +5103,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         pbPreconnect([link]);
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         latestSnapshot(realm, link, PulseSnapIndex, 0);
-        if (PulseFrame2.style.display === "block") {
+        if (displayStyle) {
           PulseFrame2 = document.getElementById("PulseStreamFrame");
           destroyIframe(PulseFrame2);
           openNamedTab(realm, link);
