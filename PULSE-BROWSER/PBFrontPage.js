@@ -180,21 +180,24 @@ function safeSpeak(msg) {
 }
 
 async function DragANDDrop() {
-  MoveEarnerLive();
-  MoveAILive();
-  MoveMessengerLive();
+  const POS = await chrome.storage.local.get(["panelEarnerPos"]);
+  MoveEarnerLive(POS);
+  // 1. Load saved position
+  const POSB = await chrome.storage.local.get(["panelAIPos"]);
+  MoveAILive(POSB);
+  // 1. Load saved position
+  const POSC = await chrome.storage.local.get(["panelMessengerPos"]);
+  MoveMessengerLive(POSC);
 }
 
 setTimeout(DragANDDrop, 50);
 
-async function MoveEarnerLive() {
+async function MoveEarnerLive(POS) {
   const myPanel = document.getElementById("earner-panel");
   const headerBar = document.getElementById("earner-panel");
   
   if (!myPanel || EarnHidden) return;
 
-  // 1. Load saved position
-  const POS = await chrome.storage.local.get(["panelEarnerPos"]);
   const savedPos = POS?.panelEarnerPos;
 
   // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
@@ -222,14 +225,12 @@ async function MoveEarnerLive() {
   return destroyDrag;
 }
 
-async function MoveAILive() {
+async function MoveAILive(POS) {
   const myPanel = document.getElementById("earner-helper-panel");
   const headerBar = document.getElementById("earner-helper-panel");
   
   if (!myPanel || EarnDetailsHidden) return;
 
-  // 1. Load saved position
-  const POS = await chrome.storage.local.get(["panelAIPos"]);
   const savedPos = POS?.panelAIPos;
 
   // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
@@ -257,14 +258,12 @@ async function MoveAILive() {
   return destroyDrag;
 }
 
-async function MoveMessengerLive() {
+async function MoveMessengerLive(POS) {
   const myPanel = document.getElementById("messenger-panel");
   const headerBar = document.getElementById("messenger-panel");
   
   if (!myPanel || MessengerHidden) return;
 
-  // 1. Load saved position
-  const POS = await chrome.storage.local.get(["panelMessengerPos"]);
   const savedPos = POS?.panelMessengerPos;
 
   // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
