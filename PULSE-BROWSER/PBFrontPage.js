@@ -3469,6 +3469,7 @@ async function GetThisMessengerDone() {
         if (!HigherAuthorityShown) {
           HigherAuthorityShown = true;
           HigherPanelSwitch.style.display = "block"
+          HigherPanelSwitch.style.opacity = "0.3";
           pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
           pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
@@ -3538,7 +3539,7 @@ async function CheckEarnState() {
     if (earnerminirate3panel.textContent !== "~$0.00/Day") PulseFrameB.style.opacity = "1";
     PulseFrameB.style.zIndex = "11";
   } else {
-    earnerenginepanel.style.opacity = "0.35";
+    earnerenginepanel.style.opacity = "1";
   }
 
   if (earnerenginepanel.style.opacity === "1") {
