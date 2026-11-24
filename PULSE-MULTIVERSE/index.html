@@ -5890,6 +5890,13 @@ async function scanPulseWorld(device) {
     try {
       // Only ONE await
       await fetch(url, { cache: "no-store" });
+      // Use real server TTFB from Resource Timing when available so browser boot preload queuing
+      // does not falsely inflate latency to 10,000ms+ and flip pulseStatus to PulseStatus2.
+      const entries = performance.getEntriesByName(location.origin + url);
+      const entry = entries && entries.length ? entries[entries.length - 1] : null;
+      if (entry && entry.responseStart > 0 && entry.requestStart > 0) {
+        return Math.max(1, entry.responseStart - entry.requestStart);
+      }
     } catch {
       // Ignore errors, still measure
     }
@@ -5990,7 +5997,7 @@ async function scanPulseWorld(device) {
     }
   };
 
-  if (PulseRealm.PulseLatency > 400) {
+  if (document.readyState === "complete" && PulseRealm.PulseLatency > 800) {
     setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");
   } else if (PulseRealm.PulseWebGPU === false) {
     setStatusVideo("./_EXPRESSIONS/_VIDEOS/PulseStatus2");

@@ -77,6 +77,9 @@ let PBROWSERFAVICON_CACHE = {};
 let aiSession = null;
 let PulsePalMemoryAIBuffer = [];
 let PulseCogMemoryAIBuffer = [];
+function hasRealUserChat(buf) {
+  return Array.isArray(buf) && buf.some((entry) => typeof entry === "string" && entry.includes("You:"));
+}
 let workMode = "Internal";
 let workActiveLink = null;
 let searchMode = "Internal";
@@ -1245,10 +1248,11 @@ async function runLocalAI() {
     const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
     const rawPalSaved = Array.isArray(SessionAI.PulsePalMemoryAIBuffer) ? SessionAI.PulsePalMemoryAIBuffer : [];
     // Only restore if the user actually started a conversation (never restore greeting-only buffers)
-    const palHasUserChat = rawPalSaved.some((entry) => typeof entry === "string" && entry.includes("You:"));
+    const palHasUserChat = hasRealUserChat(rawPalSaved);
     PulsePalMemoryAIBuffer = palHasUserChat ? rawPalSaved : [];
     if (!palHasUserChat && rawPalSaved.length > 0) {
       PulsesafeStorageSet({ PulsePalMemoryAIBuffer: [] });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearPal: true }, () => { void chrome.runtime.lastError; });
     }
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     if (CompanionDetailsMessage && PulsePalMemoryAIBuffer.length > 0) {
@@ -1342,11 +1346,11 @@ async function runLocalAI() {
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
         }
-        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
@@ -1404,8 +1408,10 @@ ${rawPrompt}
       CompanionTitle.style.textAlign = "center";
       CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
       CompanionDetailsMessage.style.fontSize = "0.6rem";
-      // Auto-greeting on fresh session: show on screen, but do NOT save until user actually chats!
-      if (PulsePalMemoryAIBuffer.length === 0) appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response, { persist: false });
+      // Auto-greeting on fresh session: ALWAYS show on screen if no real user chat is saved, and do NOT persist it!
+      if (!hasRealUserChat(PulsePalMemoryAIBuffer)) {
+        appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response, { persist: false });
+      }
       CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
     }
 
@@ -1468,11 +1474,11 @@ ${rawPrompt}
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
       if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
       earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
       }
-      if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
@@ -1664,10 +1670,11 @@ async function hydrateHigherHistoryOnce() {
     const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
     const rawSaved = Array.isArray(HigherSessionAI.PulseCogMemoryAIBuffer) ? HigherSessionAI.PulseCogMemoryAIBuffer : [];
     // Only restore if the user has actually started chatting (ignore old greeting/status-only buffers)
-    const hasUserChat = rawSaved.some((entry) => typeof entry === "string" && entry.includes("You:"));
+    const hasUserChat = hasRealUserChat(rawSaved);
     const saved = hasUserChat ? rawSaved : [];
     if (!hasUserChat && rawSaved.length > 0) {
       PulsesafeStorageSet({ PulseCogMemoryAIBuffer: [] });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearCog: true }, () => { void chrome.runtime.lastError; });
     }
     if (saved.length > 0 && PulseCogMemoryAIBuffer.length === 0) {
       PulseCogMemoryAIBuffer = saved;
@@ -2400,11 +2407,11 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
-    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
@@ -2530,11 +2537,11 @@ CompanionConsoleSend.onclick = async () => {
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
       if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
       earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
       }
-      if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
@@ -2602,11 +2609,11 @@ CompanionConsoleSend.onclick = async () => {
       if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
       if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
       earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-      if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
         PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
       }
-      if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
         PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
         PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
       }
@@ -3858,11 +3865,13 @@ async function pbRenderCacheList2() {
   });
   
   const identityName = document.getElementById("identityName");
-  identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-  identityName.onclick = async () => {
-    openNamedTab("PulseIdentity", pulseIdentityLink);
-    await PBUniversalBoost.warmOrigin(pulseIdentityLink);
-  };
+  if (identityName) {
+    identityName.textContent = "🧑 " + (MyPulseIdentity?.name || "Fellow Multiversal Drifter");
+    identityName.onclick = async () => {
+      openNamedTab("PulseIdentity", pulseIdentityLink);
+      await PBUniversalBoost.warmOrigin(pulseIdentityLink);
+    };
+  }
   StorageRunning = false;
 }
 // function writeBigBlob() {
@@ -4281,10 +4290,11 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
         // Skip invalid URLs
       }
     }
-    let realm = PulseRealmSettings.externalStreamingLink;
-    realm = realm.replace("https://","");
-    realm = realm.replace("www.","");
-    if (PulseStreamingLive && PulseRealmSettings.externalStreamingLink) latestSnapshot(realm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    let realm = PulseRealmSettings?.externalStreamingLink;
+    if (typeof realm === "string" && realm.trim()) {
+      realm = realm.replace("https://", "").replace("www.", "");
+      if (PulseStreamingLive) latestSnapshot(realm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    }
 
     pulseTabs = rebuilt;
     PulsesafeStorageSet({ pulseTabs: rebuilt });
@@ -4596,11 +4606,11 @@ setInterval(async () => {
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
-    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
@@ -4684,11 +4694,11 @@ setInterval(async () => {
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
-    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
@@ -6106,8 +6116,10 @@ async function getFavicon(url, flags = {}) {
 
   let host = u.hostname;
   
+  const urlStr = typeof url === "string" ? url : (url && typeof url.href === "string" ? url.href : String(url || ""));
+
   // ⭐ Preserve www if explicitly present
-  if ((url) && url.includes("www.") && !host.startsWith("www.")) {
+  if (urlStr && urlStr.includes("www.") && !host.startsWith("www.")) {
     host = "www." + host;
   }
 
@@ -6457,11 +6469,11 @@ async function updateModuleIcons(settings, browser) {
     if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
     if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
     earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-    if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
       PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
     }
-    if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
       PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
       PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
     }
@@ -8197,11 +8209,11 @@ function CheckBackTab() {
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
         }
-        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
@@ -8281,11 +8293,11 @@ function CheckBackTab() {
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
         }
-        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }
@@ -8564,11 +8576,11 @@ function CheckBackTab() {
         if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
         if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
         earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-        if (response.PulsePalMemoryAIBuffer && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
           PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
         }
-        if (response.PulseCogMemoryAIBuffer && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
           PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
           PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
         }

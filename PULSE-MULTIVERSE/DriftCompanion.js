@@ -445,9 +445,15 @@ self.addEventListener('fetch', event => {
      return; // Bypasses service worker caching entirely
   }
   
-  // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP bypass the SW
-  if (req.url.protocol === 'http:' || req.url.includes("google.com")) {
-    return; 
+  // 🚀 FIX: Only intercept HTTPS (or localhost) requests; let HTTP and external non-PulseWorld hosts bypass the SW
+  if (url.protocol === 'http:' || req.url.includes("google.com")) {
+    return;
+  }
+  const isPulseHost =
+    url.origin === self.location.origin ||
+    /(?:^|\.)(?:pulseworld\.(?:net|me|biz|money)|binaryos\.net|booleanlogic\.net|gpuprocessing\.net|orbitalmap\.net|serviceworker\.net)$/i.test(url.hostname);
+  if (!isPulseHost) {
+    return;
   }
 
   // Fetch current application code on return visits, retaining an offline fallback.

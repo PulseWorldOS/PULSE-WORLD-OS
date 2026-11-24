@@ -3332,11 +3332,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
           } else if (CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->") {
             CompanionMessage = `[<font color="lightgreen">Success</font>] Received WASM TEST Proof.. ` + timeProof;
-          } else if (CompanionMessage.includes("Received WASM TEST Proof")) {
+          } else if (typeof CompanionMessage === "string" && CompanionMessage.includes("Received WASM TEST Proof")) {
             CompanionMessage = `<-- 2 PulseEarners have Risen to the Test -->`;
-          } else if (CompanionMessage.includes("2 PulseEarners have Risen")) {
+          } else if (typeof CompanionMessage === "string" && CompanionMessage.includes("2 PulseEarners have Risen")) {
             CompanionMessage = "Waiting for PulseEarners to Send Test Batches...";
-          } else if (CompanionMessage.includes(timeProof) && !CompanionMessage.includes("Received WASM TEST Proof")) {
+          } else if (typeof CompanionMessage === "string" && timeProof && CompanionMessage.includes(timeProof) && !CompanionMessage.includes("Received WASM TEST Proof")) {
           }
         }
       }
@@ -4135,26 +4135,37 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case "PBAI_SESSION":
       (async () => {
         try {
+          const hasRealUserChat = (buf) =>
+            Array.isArray(buf) && buf.some((entry) => typeof entry === "string" && entry.includes("You:"));
+
           if (msg.forceClearPal) {
             PulsePalMemoryAIBuffer = [];
             safeStorageSet({ PulsePalMemoryAIBuffer });
-          } else if (Array.isArray(msg.PulsePalMemoryAIBuffer) && msg.PulsePalMemoryAIBuffer.length > 0) {
+          } else if (hasRealUserChat(msg.PulsePalMemoryAIBuffer)) {
             PulsePalMemoryAIBuffer = msg.PulsePalMemoryAIBuffer.slice(-100);
             safeStorageSet({ PulsePalMemoryAIBuffer });
-          } else if (!Array.isArray(PulsePalMemoryAIBuffer) || PulsePalMemoryAIBuffer.length === 0) {
+          } else if (!hasRealUserChat(PulsePalMemoryAIBuffer)) {
             const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
-            PulsePalMemoryAIBuffer = Array.isArray(SessionAI.PulsePalMemoryAIBuffer) ? SessionAI.PulsePalMemoryAIBuffer : [];
+            const storedPal = Array.isArray(SessionAI.PulsePalMemoryAIBuffer) ? SessionAI.PulsePalMemoryAIBuffer : [];
+            PulsePalMemoryAIBuffer = hasRealUserChat(storedPal) ? storedPal : [];
+            if (storedPal.length > 0 && PulsePalMemoryAIBuffer.length === 0) {
+              safeStorageSet({ PulsePalMemoryAIBuffer: [] });
+            }
           }
 
           if (msg.forceClearCog) {
             PulseCogMemoryAIBuffer = [];
             safeStorageSet({ PulseCogMemoryAIBuffer });
-          } else if (Array.isArray(msg.PulseCogMemoryAIBuffer) && msg.PulseCogMemoryAIBuffer.length > 0) {
+          } else if (hasRealUserChat(msg.PulseCogMemoryAIBuffer)) {
             PulseCogMemoryAIBuffer = msg.PulseCogMemoryAIBuffer.slice(-100);
             safeStorageSet({ PulseCogMemoryAIBuffer });
-          } else if (!Array.isArray(PulseCogMemoryAIBuffer) || PulseCogMemoryAIBuffer.length === 0) {
+          } else if (!hasRealUserChat(PulseCogMemoryAIBuffer)) {
             const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
-            PulseCogMemoryAIBuffer = Array.isArray(HigherSessionAI.PulseCogMemoryAIBuffer) ? HigherSessionAI.PulseCogMemoryAIBuffer : [];
+            const storedCog = Array.isArray(HigherSessionAI.PulseCogMemoryAIBuffer) ? HigherSessionAI.PulseCogMemoryAIBuffer : [];
+            PulseCogMemoryAIBuffer = hasRealUserChat(storedCog) ? storedCog : [];
+            if (storedCog.length > 0 && PulseCogMemoryAIBuffer.length === 0) {
+              safeStorageSet({ PulseCogMemoryAIBuffer: [] });
+            }
           }
 
           if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;

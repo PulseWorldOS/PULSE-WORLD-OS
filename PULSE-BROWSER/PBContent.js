@@ -1045,7 +1045,7 @@ const PBQuantumPrefetch = {
 function cacheit(link) {
   if (link && (link.includes("http://") || link.includes("https://"))) {
     pbPreconnect([link]);
-    fetch(link, { mode: "cors" }).catch(() => {});
+    fetch(link, { mode: "no-cors" }).catch(() => {});
   }
 }
 

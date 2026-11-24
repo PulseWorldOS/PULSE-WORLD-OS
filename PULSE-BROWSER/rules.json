@@ -36,29 +36,25 @@
     "action": {
       "type": "modifyHeaders",
       "responseHeaders": [
-        { "header": "access-control-allow-origin", "operation": "set", "value": "https://www.pulseworld.net" },
-        { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
+        { "header": "access-control-allow-origin", "operation": "set", "value": "*" },
+        { "header": "access-control-allow-methods", "operation": "set", "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD" },
+        { "header": "access-control-allow-headers", "operation": "set", "value": "*" },
+        { "header": "access-control-allow-credentials", "operation": "remove" }
       ]
     },
     "condition": {
-      "initiatorDomains": ["pulseworld.net"],
-      "resourceTypes": ["xmlhttprequest", "sub_frame", "other"]
-    }
-  },
-  {
-    "id": 3,
-    "priority": 2,
-    "action": {
-      "type": "modifyHeaders",
-      "responseHeaders": [
-        { "header": "access-control-allow-origin", "operation": "set", "value": "https://pulseworld.net" },
-        { "header": "access-control-allow-credentials", "operation": "set", "value": "true" }
-      ]
-    },
-    "condition": {
-      "initiatorDomains": ["pulseworld.net"],
-      "excludedRequestDomains": ["www.pulseworld.net"],
-      "resourceTypes": ["xmlhttprequest", "sub_frame", "other"]
+      "initiatorDomains": [
+        "pulseworld.net",
+        "pulseworld.me",
+        "pulseworld.biz",
+        "pulseworld.money",
+        "binaryos.net",
+        "booleanlogic.net",
+        "gpuprocessing.net",
+        "orbitalmap.net",
+        "serviceworker.net"
+      ],
+      "resourceTypes": ["xmlhttprequest", "script", "sub_frame", "other"]
     }
   },
   {

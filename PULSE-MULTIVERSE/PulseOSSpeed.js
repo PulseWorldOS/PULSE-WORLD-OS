@@ -206,7 +206,9 @@ if (typeof navigator !== "undefined" && navigator.serviceWorker && PulseRealm.Se
 // ============================================================================
 // ⭐ ATOMIC SPEED COUNTER
 // ============================================================================
-PulseRealm.__atomic.speedminiBuffer = new SharedArrayBuffer(4);
+PulseRealm.__atomic.speedminiBuffer = typeof SharedArrayBuffer !== "undefined"
+  ? new SharedArrayBuffer(4)
+  : new ArrayBuffer(4);
 PulseRealm.__atomic.speedCounter = new Int32Array(PulseRealm.__atomic.speedminiBuffer);
 
 PulseRealm.incrementSpeed = () => {
@@ -219,7 +221,9 @@ PulseRealm.incrementSpeed = () => {
 // ============================================================================
 // ⭐ SHAREDARRAYBUFFER SPEED LANE
 // ============================================================================
-PulseRealm.__sab.speedBuffer = new SharedArrayBuffer(1024);
+PulseRealm.__sab.speedBuffer = typeof SharedArrayBuffer !== "undefined"
+  ? new SharedArrayBuffer(1024)
+  : new ArrayBuffer(1024);
 PulseRealm.__sab.speedView = new Uint8Array(PulseRealm.__sab.speedBuffer);
 
 PulseRealm.sendSpeedMessage = msg => {
