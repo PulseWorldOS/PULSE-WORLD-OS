@@ -215,9 +215,11 @@ async function MoveEarnerLive(POS, skip) {
     myPanel.style.bottom = "auto";
   }
 
+  let destroyDrag = null;
+
   if (!skip) {
     // 3. Initialize dragging and save on drop
-    const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    destroyDrag = makePanelDraggable(myPanel, headerBar, {
       keepInBounds: true,
       onDragEnd: ({ x, y }) => {
         panelEarnerPos = { x, y };
@@ -250,13 +252,15 @@ async function MoveAILive(POS, skip) {
     myPanel.style.bottom = "auto";
   }
 
+  let destroyDrag = null;
+
   if (!skip) {
     // 3. Initialize dragging and save on drop
-    const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    destroyDrag = makePanelDraggable(myPanel, headerBar, {
       keepInBounds: true,
       onDragEnd: ({ x, y }) => {
-        panelAIPos = { x, y };
-        PulsesafeStorageSet({ panelAIPos: { x, y } });
+        panelEarnerPos = { x, y };
+        PulsesafeStorageSet({ panelEarnerPos: { x, y } });
       },
     });
   }
@@ -285,13 +289,15 @@ async function MoveMessengerLive(POS, skip) {
     myPanel.style.bottom = "auto";
   }
 
+  let destroyDrag = null;
+
   if (!skip) {
     // 3. Initialize dragging and save on drop
-    const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    destroyDrag = makePanelDraggable(myPanel, headerBar, {
       keepInBounds: true,
       onDragEnd: ({ x, y }) => {
-        panelMessengerPos = { x, y };
-        PulsesafeStorageSet({ panelMessengerPos: { x, y } });
+        panelEarnerPos = { x, y };
+        PulsesafeStorageSet({ panelEarnerPos: { x, y } });
       },
     });
   }
