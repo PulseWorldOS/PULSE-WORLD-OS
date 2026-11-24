@@ -224,7 +224,7 @@ async function MoveAILive() {
   const myPanel = document.getElementById("earner-helper-panel");
   const headerBar = document.getElementById("earner-helper-panel");
   
-  if (!myPanel || OvermindHidden || EarnDetailsHidden) return;
+  if (!myPanel || EarnDetailsHidden) return;
 
   // 1. Load saved position
   const POS = await chrome.storage.local.get(["panelAIPos"]);
