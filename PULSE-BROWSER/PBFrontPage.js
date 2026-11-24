@@ -342,6 +342,7 @@ if (!online) {
     if (CustomizePanelsDragNDrop) {
       DragANDDrop(false);
     } else {
+      ResetAllPanelsLive(false);
       DragANDDrop(true);
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
