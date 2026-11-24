@@ -4684,11 +4684,112 @@ function escapeMe() {
   };
 }
 
+/**
+ * Makes a floating panel draggable on the document.
+ *
+ * @param {HTMLElement} panel - The container element to move.
+ * @param {HTMLElement} [handle=panel] - Optional drag handle (defaults to the whole panel).
+ * @param {Object} [options] - Optional settings.
+ * @param {boolean} [options.keepInBounds=true] - Prevents dragging outside the screen.
+ * @param {Function} [options.onDragEnd] - Callback receiving { x, y } when dropped.
+ * @returns {Function} Cleanup function to remove event listeners.
+ */
+function makePanelDraggable(panel, handle = panel, options = {}) {
+  const { keepInBounds = true, onDragEnd = null } = options;
+
+  let offsetX = 0;
+  let offsetY = 0;
+  let iframes = [];
+
+  // Ensure the panel uses fixed positioning and won't conflict with right/bottom anchors
+  const computed = window.getComputedStyle(panel);
+  if (computed.position === "static") {
+    panel.style.position = "fixed";
+  }
+
+  handle.style.cursor = "grab";
+  handle.style.userSelect = "none";
+  handle.style.touchAction = "none"; // Prevents mobile/touch scrolling while dragging
+
+  function onPointerDown(e) {
+    // Only trigger on primary click (left mouse button or touch)
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+
+    const rect = panel.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    // Anchor strictly to top/left so resizing doesn't break coordinates
+    panel.style.left = `${rect.left}px`;
+    panel.style.top = `${rect.top}px`;
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+
+    // Disable pointer events on any iframes inside the panel so they don't swallow the drag
+    iframes = Array.from(panel.querySelectorAll("iframe"));
+    iframes.forEach((iframe) => {
+      iframe.dataset.prevPointerEvents = iframe.style.pointerEvents || "";
+      iframe.style.pointerEvents = "none";
+    });
+
+    handle.style.cursor = "grabbing";
+    handle.setPointerCapture(e.pointerId);
+
+    handle.addEventListener("pointermove", onPointerMove);
+    handle.addEventListener("pointerup", onPointerUp);
+    handle.addEventListener("pointercancel", onPointerUp);
+  }
+
+  function onPointerMove(e) {
+    let nextX = e.clientX - offsetX;
+    let nextY = e.clientY - offsetY;
+
+    if (keepInBounds) {
+      const maxX = window.innerWidth - panel.offsetWidth;
+      const maxY = window.innerHeight - panel.offsetHeight;
+      nextX = Math.max(0, Math.min(maxX, nextX));
+      nextY = Math.max(0, Math.min(maxY, nextY));
+    }
+
+    panel.style.left = `${nextX}px`;
+    panel.style.top = `${nextY}px`;
+  }
+
+  function onPointerUp(e) {
+    handle.releasePointerCapture(e.pointerId);
+    handle.removeEventListener("pointermove", onPointerMove);
+    handle.removeEventListener("pointerup", onPointerUp);
+    handle.removeEventListener("pointercancel", onPointerUp);
+
+    handle.style.cursor = "grab";
+
+    // Restore iframe interactivity
+    iframes.forEach((iframe) => {
+      iframe.style.pointerEvents = iframe.dataset.prevPointerEvents;
+      delete iframe.dataset.prevPointerEvents;
+    });
+
+    if (typeof onDragEnd === "function") {
+      onDragEnd({
+        x: parseFloat(panel.style.left),
+        y: parseFloat(panel.style.top),
+      });
+    }
+  }
+
+  handle.addEventListener("pointerdown", onPointerDown);
+
+  // Return a teardown function in case you destroy the panel later
+  return () => {
+    handle.removeEventListener("pointerdown", onPointerDown);
+  };
+}
+
+
 async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLayerMB) {
   const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
   let div = document.getElementById(bubbleId);
   let topPanel = document.querySelector(".top-panel");
-  const URLLink = realm ?? link;
 
   if (snapshot) {
     if (!div) {
@@ -4700,17 +4801,23 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     div.id = bubbleId;
     div.className = bubbleId;
 
-    if (PulseStreamingLive  && URLLink === PulseRealmSettings.externalStreamingLink) {
+    if (PulseStreamingLive  && link === PulseRealmSettings.externalStreamingLink) {
       div.style.opacity = "0.35";
     } else {
       div.style.opacity = "1";
     }
-    // const regfavicon = await getFavicon(realm);
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(URLLink);
+    
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(link);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");
     const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
+    let URLLink = null;
+    if (realm) {
+      URLLink = realm;
+    } else {
+      URLLink = link;
+    }
 
     if (PBROWSERFAVICON_CACHE[URLLink]) {
       PBROWSERFAVICON_CACHE[URLLink] = favicon;
@@ -8304,48 +8411,54 @@ function documentTitle() {
   return document.title;
 }
 
-// function renderHTMLSnapshot(snapshot) {
-//     let div = document.getElementById("PulseBrowser-OS-Snapshot");
-//     if (!div) {
-//         div = document.createElement("div");
-//         div.id = "PulseBrowser-OS-Snapshot";
-//         div.className = "PulseBrowser-OS-Snapshot";
-//     }
+async function MoveEarnerLive() {
+  const myPanel = document.getElementById("earner-panel");
+  const headerBar = document.getElementById("earner-panel");
+  if (EarnHidden) return;
+  // Basic usage (drag via headerBar, stays inside viewport)
+  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    keepInBounds: true,
+    onDragEnd: ({ x, y }) => {
+      console.log("Dropped at:", x, y);
+      // Optional: save position in an extension
+      // chrome.storage?.local.set({ panelPos: { x, y } });
+    },
+  });
+}
 
-//     if (snapshot) {
 
-//         // ---------------------------------------------
-//         // ⭐ REMOVE <body> TAG FROM SNAPSHOT HTML
-//         // ---------------------------------------------
-//         let html = snapshot.html;
+async function MoveAILive() {
+  const myPanel = document.getElementById("earner-helper-panel");
+  const headerBar = document.getElementById("earner-helper-panel");
+  if (OvermindHidden) return;
+  // Basic usage (drag via headerBar, stays inside viewport)
+  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    keepInBounds: true,
+    onDragEnd: ({ x, y }) => {
+      console.log("Dropped at:", x, y);
+      // Optional: save position in an extension
+      // chrome.storage?.local.set({ panelPos: { x, y } });
+    },
+  });
+}
 
-//         // Replace opening <body ...> with Injected-Body wrapper
-//         html = html.replace(/<body[^>]*>/i, '<div class="Injected-Body">');
 
-//         // Replace closing </body> with closing div
-//         html = html.replace(/<\/body>/i, '</div>');
+async function MoveMessengerLive() {
+  const myPanel = document.getElementById("messenger-panel");
+  const headerBar = document.getElementById("messenger-panel");
+  if (MessengerHidden) return;
+  // Basic usage (drag via headerBar, stays inside viewport)
+  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+    keepInBounds: true,
+    onDragEnd: ({ x, y }) => {
+      console.log("Dropped at:", x, y);
+      // Optional: save position in an extension
+      // chrome.storage?.local.set({ panelPos: { x, y } });
+    },
+  });
+}
 
-//         // ---------------------------------------------
-//         // ⭐ Inject into the bubble viewport wrapper
-//         // ---------------------------------------------
-//         div.innerHTML = `
-//             <div class="Snapshot-Viewport">
-//                 ${html}
-//             </div>
-//         `;
 
-//         // Attach bubble to page
-//         document.body.appendChild(div);
-
-//         // Move your left panel down
-//         leftpanel.style.top = "300px";
-
-//     } else {
-//         // Remove bubble
-//         if (div) div.remove();
-
-//         // Reset left panel
-//         leftpanel.style.top = "0";
-//     }
-// }
-
+setTimeout(MoveEarnerLive, 400);
+setTimeout(MoveAILive, 400);
+setTimeout(MoveMessengerLive, 400);
