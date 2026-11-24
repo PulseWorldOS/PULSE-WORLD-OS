@@ -278,7 +278,7 @@ const aiController = createPanelLiveController({
 });
 
 const messengerController = createPanelLiveController({
-  elementId: "messenger-panel",
+  elementId: "messenger-inner-panel",
   storageKey: "panelMessengerPos",
   isHidden: () => MessengerHidden,
   setPosVar: (val) => { panelMessengerPos = val; },
@@ -344,7 +344,6 @@ if (!online) {
     if (CustomizePanelsDragNDrop) {
       DragANDDrop(false);
     } else {
-      ResetAllPanelsLive(false);
       DragANDDrop(true);
     }
     earnerminipanel = document.getElementById("earner-mini-panel");

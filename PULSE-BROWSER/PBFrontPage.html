@@ -173,34 +173,9 @@
       font-weight: bold;
       cursor: pointer;
       margin-bottom: 20px;
-      left: 14px;
+      left: 20px;
       display: flex;
       height: 18px;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(64px);
-      font-size: 0.8rem;
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 11;
-      /* 3. Enable 3D space for child elements & smooth tilt */
-      transform-style: preserve-3d;
-      transform: rotateX(2deg);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-    }
-
-    .earner-mini-rate2-panel {
-      top: 27.2vh;
-      position: fixed;
-      margin: 4px 4px;
-      color: #0FF;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 20px;
-      height: 18px;
-      right: 14px;
-      display: flex;
       justify-content: center;
       align-items: center;
       backdrop-filter: blur(64px);
@@ -216,6 +191,31 @@
     }
 
     .earner-mini-rate3-panel {
+      top: 27.2vh;
+      position: fixed;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 18px;
+      right: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
+      font-size: 0.8rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 11;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    }
+
+    .earner-mini-rate2-panel {
       top: 27vh;
       position: fixed;
       margin: 4px 4px;
@@ -936,7 +936,7 @@
     .PulseEarnerFrame {
       position: fixed;
       top: 40dvh;
-      left: 17dvw;
+      left: 19dvw;
       width: 105px;
       height: 105px;
       object-fit: inherit;
@@ -972,7 +972,6 @@
       border: 0px;
       box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
       z-index: 12;
-      cursor: wait;
       opacity: 0;
       animation: pulseGlow 3.5s ease-in-out infinite;
 
@@ -998,7 +997,6 @@
       border: 0px;
       box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
       z-index: 12;
-      cursor: wait;
       opacity: 0;
       animation: pulseGlow 3.5s ease-in-out infinite;
 
@@ -2532,7 +2530,7 @@
     .PulseClaw {
       position: absolute;
       bottom: -13.9vh;
-      left: 10px;
+      left: 30px;
       opacity: 1;
       width: 80px;
       height: 140px;
@@ -2553,7 +2551,7 @@
     .PulseClaw3 {
       position: absolute;
       bottom: -14vh;
-      right: 10px;
+      right: 50px;
       opacity: 1;
       width: 80px;
       height: 140px;
@@ -2568,29 +2566,33 @@
     class="PulseEarnerFrame"
     src="https://www.pulseworld.net?Impulse=PulseWorldReality"
     allow="accelerometer *; autoplay *; camera *; clipboard-read *; clipboard-write *; display-capture *; encrypted-media *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
+    allowfullscreen
+    allowpaymentrequest
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
     referrerpolicy="no-referrer-when-downgrade"
   ></iframe>
-  <video id="PulseEarner2Frame" class="PulseEarner2Frame" src="PulseStatus2.mp4" loop autoplay muted playsinline aria-label="PulseEarner2Frame"></video>
-  <video id="PulseEarner3Frame" class="PulseEarner3Frame" src="PulseStatus2.mp4" loop autoplay muted playsinline aria-label="PulseEarner3Frame"></video>
-  <!-- <iframe
+  <!-- <video id="PulseEarner2Frame" class="PulseEarner2Frame" src="PulseStatus2.mp4" loop autoplay muted playsinline aria-label="PulseEarner2Frame"></video>
+  <video id="PulseEarner3Frame" class="PulseEarner3Frame" src="PulseStatus2.mp4" loop autoplay muted playsinline aria-label="PulseEarner3Frame"></video> -->
+  <iframe
     id="PulseEarner2Frame"
     class="PulseEarner2Frame"
     src=""
-    allow="accelerometer *; ambient-light-sensor *; autoplay *; battery *; camera *; clipboard-read *; clipboard-write *; display-capture *; document-domain *; encrypted-media *; execution-while-not-rendered *; execution-while-out-of-viewport *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; navigation-override *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
+    allow="accelerometer *; autoplay *; camera *; clipboard-read *; clipboard-write *; display-capture *; encrypted-media *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
     allowfullscreen
     allowpaymentrequest
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
     referrerpolicy="no-referrer-when-downgrade"
   ></iframe>
   <iframe
     id="PulseEarner3Frame"
     class="PulseEarner3Frame"
     src=""
-    allow="accelerometer *; ambient-light-sensor *; autoplay *; battery *; camera *; clipboard-read *; clipboard-write *; display-capture *; document-domain *; encrypted-media *; execution-while-not-rendered *; execution-while-out-of-viewport *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; navigation-override *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
+    allow="accelerometer *; autoplay *; camera *; clipboard-read *; clipboard-write *; display-capture *; encrypted-media *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
     allowfullscreen
     allowpaymentrequest
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
     referrerpolicy="no-referrer-when-downgrade"
-  ></iframe> -->
+  ></iframe>
  <iframe
     id="PulseStreamFrame" class="PulseStreamFrame"
     src=""
