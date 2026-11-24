@@ -179,20 +179,22 @@ function safeSpeak(msg) {
   }
 }
 
-async function DragANDDrop() {
-  const POS = await chrome.storage.local.get(["panelEarnerPos"]);
-  MoveEarnerLive(POS);
+async function DragANDDrop(skip) {
+  const POSA = await chrome.storage.local.get(["panelEarnerPos"]);
   // 1. Load saved position
   const POSB = await chrome.storage.local.get(["panelAIPos"]);
-  MoveAILive(POSB);
   // 1. Load saved position
   const POSC = await chrome.storage.local.get(["panelMessengerPos"]);
-  MoveMessengerLive(POSC);
+  MoveEarnerLive(POSA, skip);
+  MoveAILive(POSB, skip);
+  MoveMessengerLive(POSC, skip);
 }
 
-setTimeout(DragANDDrop, 50);
+setTimeout(() => {
+  DragANDDrop();
+}, 50);
 
-async function MoveEarnerLive(POS) {
+async function MoveEarnerLive(POS, skip) {
   const myPanel = document.getElementById("earner-panel");
   const headerBar = document.getElementById("earner-panel");
   
@@ -213,19 +215,21 @@ async function MoveEarnerLive(POS) {
     myPanel.style.bottom = "auto";
   }
 
-  // 3. Initialize dragging and save on drop
-  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
-    keepInBounds: true,
-    onDragEnd: ({ x, y }) => {
-      panelEarnerPos = { x, y };
-      PulsesafeStorageSet({ panelEarnerPos: { x, y } });
-    },
-  });
+  if (!skip) {
+    // 3. Initialize dragging and save on drop
+    const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+      keepInBounds: true,
+      onDragEnd: ({ x, y }) => {
+        panelEarnerPos = { x, y };
+        PulsesafeStorageSet({ panelEarnerPos: { x, y } });
+      },
+    });
+  }
 
   return destroyDrag;
 }
 
-async function MoveAILive(POS) {
+async function MoveAILive(POS, skip) {
   const myPanel = document.getElementById("earner-helper-panel");
   const headerBar = document.getElementById("earner-helper-panel");
   
@@ -246,19 +250,21 @@ async function MoveAILive(POS) {
     myPanel.style.bottom = "auto";
   }
 
-  // 3. Initialize dragging and save on drop
-  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
-    keepInBounds: true,
-    onDragEnd: ({ x, y }) => {
-      panelAIPos = { x, y };
-      PulsesafeStorageSet({ panelAIPos: { x, y } });
-    },
-  });
+  if (!skip) {
+    // 3. Initialize dragging and save on drop
+    const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+      keepInBounds: true,
+      onDragEnd: ({ x, y }) => {
+        panelAIPos = { x, y };
+        PulsesafeStorageSet({ panelAIPos: { x, y } });
+      },
+    });
+  }
 
   return destroyDrag;
 }
 
-async function MoveMessengerLive(POS) {
+async function MoveMessengerLive(POS, skip) {
   const myPanel = document.getElementById("messenger-panel");
   const headerBar = document.getElementById("messenger-panel");
   
@@ -279,14 +285,16 @@ async function MoveMessengerLive(POS) {
     myPanel.style.bottom = "auto";
   }
 
-  // 3. Initialize dragging and save on drop
-  const destroyDrag = makePanelDraggable(myPanel, headerBar, {
-    keepInBounds: true,
-    onDragEnd: ({ x, y }) => {
-      panelMessengerPos = { x, y };
-      PulsesafeStorageSet({ panelMessengerPos: { x, y } });
-    },
-  });
+  if (!skip) {
+    // 3. Initialize dragging and save on drop
+    const destroyDrag = makePanelDraggable(myPanel, headerBar, {
+      keepInBounds: true,
+      onDragEnd: ({ x, y }) => {
+        panelMessengerPos = { x, y };
+        PulsesafeStorageSet({ panelMessengerPos: { x, y } });
+      },
+    });
+  }
 
   return destroyDrag;
 }
