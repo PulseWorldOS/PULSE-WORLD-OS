@@ -4079,7 +4079,7 @@ async function pbRenderStorageStats2(history) {
   // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
   // ⭐ Conversions (real storage, 1024-based like Chrome's storage quota)
   const localMB = (localUsed / (1024 * 1024)).toFixed(2);
-  const syncMB = (aiSize / (1024 * 1024)).toFixed(3);
+  const syncMB = (aiSize / (1024 * 1024)).toFixed(4);
   const swMB = (swSize / (1024 * 1024)).toFixed(3);
   const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
   const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
