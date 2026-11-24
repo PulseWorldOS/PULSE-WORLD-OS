@@ -1516,10 +1516,10 @@ async function injectHUD() {
     if (isPulseWorld(location.href)) {
       start24HourSoakTest();
     }
-  }, 6200);
+  }, 4200);
   setTimeout(() => {
     DomScanPreview();
-  }, 5800);
+  }, 4800);
 }
 
 function DomScanPreview() {

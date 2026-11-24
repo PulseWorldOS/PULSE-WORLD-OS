@@ -4929,17 +4929,17 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.style.opacity = "1";
     }
     
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(link);
+    const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
+    const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
+    const identityName = document.getElementById("identityName");
+    const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
     let URLLink = null;
     if (realm) {
       URLLink = realm;
     } else {
       URLLink = link;
     }
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(URLLink);
-    const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
-    const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
-    const identityName = document.getElementById("identityName");
-    const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
 
     if (PBROWSERFAVICON_CACHE[URLLink]) {
       PBROWSERFAVICON_CACHE[URLLink] = favicon;
@@ -4991,12 +4991,6 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
   if (div) {
     div.onclick = async () => {
-      let URLLink = null;
-      if (realm) {
-        URLLink = realm;
-      } else {
-        URLLink = link;
-      }
       if (PulseStreamingLive  && URLLink === PulseRealmSettings.externalStreamingLink) {
         pbPreconnect([link]);
         PulseFrame2 = document.getElementById("PulseStreamFrame");
