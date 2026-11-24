@@ -228,7 +228,7 @@
   to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSEvolution.js"
   status = 200
   force  = true
-  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin", Cross-Origin-Opener-Policy   = "unsafe-none"}
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
 
   
 # ⚡ PORT.BINARYOS.NET → PulseOSWorld.js  (import world from "https://port.binaryos.net")
@@ -237,7 +237,7 @@
   to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSWorld.js"
   status = 200
   force  = true
-  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin", Cross-Origin-Opener-Policy   = "unsafe-none"}
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
 
 # ⚡ PORT.SERVICEWORKER.NET → PulseOSKernel.js  (import speed from "https://port.serviceworker.net")
 [[redirects]]
@@ -245,7 +245,7 @@
   to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSSpeed.js"
   status = 200
   force  = true
-  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin", Cross-Origin-Opener-Policy   = "unsafe-none"}
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
 
 # ⚡ PORT.GPUPROCESSING.NET → PulseOSAbilities.js (import abilities from "https://port.gpuprocessing.net")
 [[redirects]]
@@ -253,7 +253,7 @@
   to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSAbilities.js"
   status = 200
   force  = true
-  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin", Cross-Origin-Opener-Policy   = "unsafe-none"}
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
 
 
 # ⚡ PORT.BOOLEANLOGIC.NET → PulseOSAbilities.js (import touch from "https://port.booleanlogic.net")
@@ -262,7 +262,7 @@
   to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSTouch.js"
   status = 200
   force  = true
-  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin", Cross-Origin-Opener-Policy   = "unsafe-none"}
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
 
 
 # ⚡ PORT.ORBITALMAP.NET → PulseOSSenses.js (import senses from "https://port.orbitalmap.net")
@@ -271,4 +271,4 @@
   to     = "https://www.pulseworld.net/PULSE-PORT/PulseOSSenses.js"
   status = 200
   force  = true
-  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin", Cross-Origin-Opener-Policy   = "unsafe-none"}
+  headers = {Access-Control-Allow-Origin = "*", Cross-Origin-Resource-Policy = "cross-origin"}
