@@ -12,6 +12,9 @@ let identityrunonce = false;
 let engineType = "text";
 let displayStyle = false;
 let gpuText = null;
+let panelAIPos = null;
+let panelEarnerPos = null;
+let panelMessengerPos = null;
 let gpuMsg = null;
 let gpuDescription = null;
 let predictionText = "Running Stable";
@@ -8414,50 +8417,107 @@ function documentTitle() {
 async function MoveEarnerLive() {
   const myPanel = document.getElementById("earner-panel");
   const headerBar = document.getElementById("earner-panel");
-  if (EarnHidden) return;
-  // Basic usage (drag via headerBar, stays inside viewport)
+  
+  if (!myPanel || EarnHidden) return;
+
+  // 1. Load saved position
+  const POS = await chrome.storage.local.get(["panelEarnerPos"]);
+  const savedPos = POS?.panelEarnerPos;
+
+  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
+  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+    panelEarnerPos = savedPos;
+
+    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+    myPanel.style.right = "auto";
+    myPanel.style.bottom = "auto";
+  }
+
+  // 3. Initialize dragging and save on drop
   const destroyDrag = makePanelDraggable(myPanel, headerBar, {
     keepInBounds: true,
     onDragEnd: ({ x, y }) => {
-      console.log("Dropped at:", x, y);
-      // Optional: save position in an extension
-      // chrome.storage?.local.set({ panelPos: { x, y } });
+      panelEarnerPos = { x, y };
+      PulsesafeStorageSet({ panelEarnerPos: { x, y } });
     },
   });
-}
 
+  return destroyDrag;
+}
 
 async function MoveAILive() {
   const myPanel = document.getElementById("earner-helper-panel");
   const headerBar = document.getElementById("earner-helper-panel");
-  if (OvermindHidden) return;
-  // Basic usage (drag via headerBar, stays inside viewport)
+  
+  if (!myPanel || OvermindHidden) return;
+
+  // 1. Load saved position
+  const POS = await chrome.storage.local.get(["panelAIPos"]);
+  const savedPos = POS?.panelAIPos;
+
+  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
+  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+    panelAIPos = savedPos;
+
+    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+    myPanel.style.right = "auto";
+    myPanel.style.bottom = "auto";
+  }
+
+  // 3. Initialize dragging and save on drop
   const destroyDrag = makePanelDraggable(myPanel, headerBar, {
     keepInBounds: true,
     onDragEnd: ({ x, y }) => {
-      console.log("Dropped at:", x, y);
-      // Optional: save position in an extension
-      // chrome.storage?.local.set({ panelPos: { x, y } });
+      panelAIPos = { x, y };
+      PulsesafeStorageSet({ panelAIPos: { x, y } });
     },
   });
-}
 
+  return destroyDrag;
+}
 
 async function MoveMessengerLive() {
   const myPanel = document.getElementById("messenger-panel");
   const headerBar = document.getElementById("messenger-panel");
-  if (MessengerHidden) return;
-  // Basic usage (drag via headerBar, stays inside viewport)
+  
+  if (!myPanel || MessengerHidden) return;
+
+  // 1. Load saved position
+  const POS = await chrome.storage.local.get(["panelMessengerPos"]);
+  const savedPos = POS?.panelMessengerPos;
+
+  // 2. Apply saved position if valid (clamped so it stays on-screen if window was resized)
+  if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+    panelMessengerPos = savedPos;
+
+    const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+    myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+    myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+    myPanel.style.right = "auto";
+    myPanel.style.bottom = "auto";
+  }
+
+  // 3. Initialize dragging and save on drop
   const destroyDrag = makePanelDraggable(myPanel, headerBar, {
     keepInBounds: true,
     onDragEnd: ({ x, y }) => {
-      console.log("Dropped at:", x, y);
-      // Optional: save position in an extension
-      // chrome.storage?.local.set({ panelPos: { x, y } });
+      panelMessengerPos = { x, y };
+      PulsesafeStorageSet({ panelMessengerPos: { x, y } });
     },
   });
-}
 
+  return destroyDrag;
+}
 
 setTimeout(MoveEarnerLive, 400);
 setTimeout(MoveAILive, 400);
