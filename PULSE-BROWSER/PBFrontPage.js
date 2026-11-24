@@ -313,9 +313,9 @@ async function DragANDDrop(skip) {
   ]);
 }
 
-setTimeout(() => {
-  DragANDDrop(true);
-}, 50);
+// setTimeout(() => {
+//   DragANDDrop(true);
+// }, 50);
 
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
@@ -339,6 +339,7 @@ if (!online) {
       DragANDDrop(false);
     } else {
       ResetAllPanelsLive(false);
+      DragANDDrop(false);
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
@@ -3517,12 +3518,10 @@ async function CheckEarnState() {
     }, 1000);
     
   } else {
-    setTimeout(() => {
-      PulseFrame.style.opacity = "1";
-      PulseFrameA.style.opacity = "1";
-      PulseFrameB.style.opacity = "1";
-      earnerenginepanel.style.opacity = "0.35";
-    }, 2000);
+    PulseFrame.style.opacity = "1";
+    PulseFrameA.style.opacity = "1";
+    PulseFrameB.style.opacity = "1";
+    earnerenginepanel.style.opacity = "0.35";
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
     pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
@@ -3611,6 +3610,8 @@ async function CheckEarnState() {
     } else {
       EarnHidden = false;
       PulseFrame.style.opacity = "1";
+      PulseFrameA.style.opacity = "1";
+      PulseFrameB.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
       earnerenginepanel.style.opacity = "0.35";
       // ——— Turn OFF (restore original) ———
