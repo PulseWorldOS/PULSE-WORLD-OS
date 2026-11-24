@@ -957,6 +957,51 @@ function currency(amount, displayCurrency = "$") {
   return `${cur}${safe}`;
 }
 
+
+async function gpuWarmExtra() {
+  const elements = document.querySelectorAll("canvas, video");
+  let gpuEnabled = "GPU Driver Error";
+  
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
+    try { el.getContext?.("2d"); } catch (_) {}
+    try { el.play?.().catch(() => {}); } catch (_) {}
+  });
+
+  // Warm WebGPU (if available)
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) {
+        const device = await adapter.requestDevice();
+        if (device) {
+          gpuEnabled = "WebGPU";
+          const queue = device.queue;
+          const buffer = device.createBuffer({
+            size: 4,
+            usage: GPUBufferUsage.COPY_DST
+          });
+          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        }
+      }
+    }
+  } catch (_) {
+    // WebGPU failed — leave gpuEnabled as-is
+  }
+
+  console.log("GPU Warmed!");
+  if (gpuEnabled === "GPU Driver Error") {
+    pbPulseScreen.src = "PulseWorldOS-Older.mp4";
+  }
+  chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+}
+
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
   if (soakTestTimer) {
@@ -4633,50 +4678,6 @@ setInterval(async () => {
     await pbRenderCacheList2();
   } catch (e) { console.warn("[Quick Load] Cache pre-render skipped:", e); }
 })();
-
-async function gpuWarmExtra() {
-  const elements = document.querySelectorAll("canvas, video");
-  let gpuEnabled = "GPU Driver Error";
-  
-  // Warm WebGL + WebGL2 + Canvas2D + Video
-  elements.forEach(el => {
-    try {
-      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
-      if (gl) gpuEnabled = "WebGL";
-    } catch (_) {}
-
-    try { el.getContext?.("2d"); } catch (_) {}
-    try { el.play?.().catch(() => {}); } catch (_) {}
-  });
-
-  // Warm WebGPU (if available)
-  try {
-    if (navigator.gpu) {
-      const adapter = await navigator.gpu.requestAdapter();
-      if (adapter) {
-        const device = await adapter.requestDevice();
-        if (device) {
-          gpuEnabled = "WebGPU";
-          const queue = device.queue;
-          const buffer = device.createBuffer({
-            size: 4,
-            usage: GPUBufferUsage.COPY_DST
-          });
-          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
-        }
-      }
-    }
-  } catch (_) {
-    // WebGPU failed — leave gpuEnabled as-is
-  }
-
-  console.log("GPU Warmed!");
-  if (gpuEnabled === "GPU Driver Error") {
-    pbPulseScreen.src = "PulseWorldOS-Older.mp4";
-  }
-  chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
-  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
-}
 
 setTimeout(async () => {
   pulseRehydrateTabs(WeLocalMemoryLayerMB);

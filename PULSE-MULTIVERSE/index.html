@@ -908,6 +908,46 @@ async function initWebGPUCompute() {
   return gpuContext;
 }
 
+
+async function gpuWarmExtra() {
+  const elements = document.querySelectorAll("canvas, video");
+  let gpuEnabled = "GPU Driver Error";
+  
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
+    try { el.getContext?.("2d"); } catch (_) {}
+    try { el.play?.().catch(() => {}); } catch (_) {}
+  });
+
+  // Warm WebGPU (if available)
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) {
+        const device = await adapter.requestDevice();
+        if (device) {
+          gpuEnabled = "WebGPU";
+          const queue = device.queue;
+          const buffer = device.createBuffer({
+            size: 4,
+            usage: GPUBufferUsage.COPY_DST
+          });
+          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        }
+      }
+    }
+  } catch (_) {
+    // WebGPU failed — leave gpuEnabled as-is
+  }
+
+  console.log("GPU Warmed!");
+}
+
 // 2. Call this instead of your Wasm function for large batches
 async function run256BitJobOnGPU(typedArrayPayload) {
   // [Phase 4] Guard: if GPU was never initialized or failed, return null so caller can fallback
@@ -5739,7 +5779,11 @@ async function scanPulseWorld(device) {
 
   gpu = await measureGpu();
   PulseRealm.PulseGpu = gpu;
-  PulseRealm.PulseWebGPU = PulseRealm.PulseGpu.webgpuAvailable;
+  if (gpuEnabled === "WebGPU") {
+    PulseRealm.PulseWebGPU = true;
+  } else {
+    PulseRealm.PulseWebGPU = false;
+  }
 
   // ------------------------------------------------------------
   // Scoring, bars, efficiency, advantage, etc.

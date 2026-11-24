@@ -1503,9 +1503,10 @@ async function injectHUD() {
   let body = document.getElementById("pb-hud-body");
   updateHUD(body);
   PulseBrowserPreview();
-  setTimeout(() => {
+  setTimeout(async () => {
     body = document.getElementById("pb-hud-body");
-    updateHUD(body);    
+    gpuWarmExtra();
+    updateHUD(body);
     initWebGPUCompute();
   }, sync);
   
