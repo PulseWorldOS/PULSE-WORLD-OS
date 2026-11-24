@@ -3565,6 +3565,8 @@ async function CheckEarnState() {
     if (!EarnHidden) {
       EarnHidden = true;
       PulseFrame.style.opacity = "0";
+      PulseFrameA.style.opacity = "0";
+      PulseFrameB.style.opacity = "0";
       earnerenginepanel.style.opacity = "1";
       // ——— Turn ON (transparent / earning mode) ———
       pbPulseEarn.id = "pbPulseEarning";
