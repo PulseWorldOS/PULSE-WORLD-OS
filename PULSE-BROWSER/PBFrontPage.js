@@ -1757,9 +1757,8 @@ function renderHigherStatusPanel(status, checkingText) {
   const higherAIRAM = (higherAIBytes / (1024 * 1024)).toFixed(2);
   const gpu = status.gpuInfo || {};
   gpuCapabilitySize = gpuCapabilitySize ?? higherAIRAM ?? gpu.vramMB;
-  gpuDescription = gpu.description;
   gpuText = gpu.supported
-    ? `🎮 GPU: ${escapeHTML(gpu.description || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`
+    ? `🎮 GPU: ${escapeHTML(gpuDescription || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB - Semi Detected)`
     : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
 
   let stateText = "";
@@ -1967,9 +1966,8 @@ async function enableHigherAI(modelKey) {
         higherAIEnabled = true;
         const gpu = res.gpuInfo || {};
         if (area) {
-          gpuDescription = gpu.description;
           gpuMsg = gpu.supported
-            ? `GPU detected: ${gpu.description || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB - Semi Detected)`
+            ? `GPU detected: ${gpuDescription || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB - Semi Detected)`
             : `No WebGPU detected — using lightweight model`;
           appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`);
         }
@@ -3026,7 +3024,7 @@ async function GetThisMessengerDone() {
     const identityName = document.getElementById("identityName");
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
     // Example usage:
-    probeUsableVRAM({ maxProbeGB: 12, chunkMB: 256 }).then((result) => {
+    probeUsableVRAM({ maxProbeGB: 8, chunkMB: 256 }).then((result) => {
       console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
       gpuCapabilitySize = result.estimatedGB * (1024);
       gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
