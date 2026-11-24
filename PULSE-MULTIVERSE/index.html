@@ -5782,8 +5782,10 @@ async function scanPulseWorld(device) {
   PulseRealm.PulseGpu = gpu;
   if (gpuEnabled === "WebGPU") {
     PulseRealm.PulseWebGPU = true;
+    PulseRealm.PulseGpu.webgpuAvailable = true;
   } else {
     PulseRealm.PulseWebGPU = false;
+    PulseRealm.PulseGpu.webgpuAvailable = false;
   }
 
   // ------------------------------------------------------------
