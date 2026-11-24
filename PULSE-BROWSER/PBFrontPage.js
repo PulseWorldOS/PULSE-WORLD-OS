@@ -313,9 +313,9 @@ async function DragANDDrop(skip) {
   ]);
 }
 
-// setTimeout(() => {
-//   DragANDDrop(true);
-// }, 50);
+setTimeout(() => {
+  DragANDDrop(true);
+}, 50);
 
 if (!online) {
   titlediv.textContent = "PulseBrowser OS (~Drifting~)";
@@ -339,7 +339,7 @@ if (!online) {
       DragANDDrop(false);
     } else {
       ResetAllPanelsLive(false);
-      DragANDDrop(false);
+      DragANDDrop(true);
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
