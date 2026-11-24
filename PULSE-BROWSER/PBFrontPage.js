@@ -3049,6 +3049,14 @@ async function GetThisMessengerDone() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
     messengerpanel.style.opacity = "1";
+    if (!MyPulseIdentity) {
+      const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
+      MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
+      console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      identityLogin = document.getElementById("identityLogin");
+      if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
+    }
 
     if (MessengerHidden) {
       pbPulseMessenger.id = "pbPulseMessenger";
@@ -3239,36 +3247,43 @@ async function GetThisMessengerDone() {
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
     };
 
+    identityLogin = document.getElementById("identityLogin");
     if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
 
     PulseMessengerMessages.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
       MessengerMode = "Talk";
+      identityLogin.style.opacity = "0";
     };
 
     PulseMessengerWallet.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWallet.webp")`;
       MessengerMode = "Wallet";
+      identityLogin.style.opacity = "0";
     };
 
     PulseMessengerWorlds.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWorlds.webp")`;
       MessengerMode = "Worlds";
+      identityLogin.style.opacity = "0";
     };
 
     HomeMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
       MessengerMode = "Console";
+      identityLogin.style.opacity = "1";
     };
 
     NotifyMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerNotify.webp")`;
       MessengerMode = "Notify";
+      identityLogin.style.opacity = "0";
     };
 
     DiscoverMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDiscover.webp")`;
       MessengerMode = "Discover";
+      identityLogin.style.opacity = "0";
     };
   }
 
@@ -3288,14 +3303,6 @@ async function GetThisMessengerDone() {
       const higherGpuLine = document.getElementById("higherGpuLine");
       higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
     });
-    if (!MyPulseIdentity) {
-      const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
-      MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
-      console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
-      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-      identityLogin = document.getElementById("identityLogin");
-      if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
-    }
     
     if (HigherAuthority) {
       if (HigherAuthorityShown) {
