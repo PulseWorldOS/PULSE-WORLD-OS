@@ -185,7 +185,7 @@ async function DragANDDrop() {
   MoveMessengerLive();
 }
 
-setTimeout(DragANDDrop, 0);
+setTimeout(DragANDDrop, 50);
 
 async function MoveEarnerLive() {
   const myPanel = document.getElementById("earner-panel");
