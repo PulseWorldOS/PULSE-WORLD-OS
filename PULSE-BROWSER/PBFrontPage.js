@@ -5079,21 +5079,41 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     }, 1500);
   }
 
+  let URLLink = null;
+  if (realm) {
+    URLLink = realm;
+  } else {
+    URLLink = link;
+  }
+
   if (div) {
     div.onclick = async () => {
       if (PulseStreamingLive  && URLLink === PulseRealmSettings.externalStreamingLink) {
         pbPreconnect([link]);
         PulseFrame2 = document.getElementById("PulseStreamFrame");
-        destroyIframe(PulseFrame2);
-        PulseStreamingLive = false;
-        topPanel = document.querySelector(".top-panel");
-        const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
-        if (remaining === 0) {
-          topPanel.style.backdropFilter = "blur(24px)";
-          topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+        latestSnapshot(realm, link, PulseSnapIndex, 0);
+        if (!displayStyle) {
+          if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+          PulseFrame2.style.display = "block";
+          displayStyle = true;
+          return;
         } else {
-          console.log(`There are ${remaining} bubbles left.`);
+          if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+          PulseFrame2.style.display = "none";
+          displayStyle = false;
+          return;
         }
+        // PulseFrame2 = document.getElementById("PulseStreamFrame");
+        // destroyIframe(PulseFrame2);
+        // PulseStreamingLive = false;
+        // topPanel = document.querySelector(".top-panel");
+        // const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+        // if (remaining === 0) {
+        //   topPanel.style.backdropFilter = "blur(24px)";
+        //   topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+        // } else {
+        //   console.log(`There are ${remaining} bubbles left.`);
+        // }
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
       } else {
         pbPreconnect([link]);
