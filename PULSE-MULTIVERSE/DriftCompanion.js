@@ -482,17 +482,10 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Skip extension & WebLLM/HuggingFace model CDN URLs so AI downloads never stall in SW fetch cache
-  if (
-    req.url.includes('chrome://extensions') ||
-    req.url.startsWith('chrome-extension://') ||
-    req.url.includes('huggingface.co') ||
-    req.url.includes('hf.co') ||
-    req.url.includes('/mlc-ai/') ||
-    req.url.includes('raw.githubusercontent.com')
-  ) {
-     return;
-  }   
+  // // Skip chrome-extension:// URLs (cannot be cached)
+  if (req.url.includes('chrome://extensions')) {
+     return; // Let the browser handle extension assets normally
+  }  
 
   event.respondWith(handlePulseRequest(req));
 });
