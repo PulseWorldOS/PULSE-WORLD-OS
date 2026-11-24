@@ -4068,7 +4068,7 @@ async function pbRenderStorageStats2(history) {
   } catch (_) { /* if cache inspection fails, show 0 */ }
 
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
-
+  console.log("aiSize",aiSize);
   // [Phase 3] Don't subtract — the model cache is already part of localUsed
   // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
   // ⭐ Conversions (real storage, 1024-based like Chrome's storage quota)
