@@ -191,7 +191,7 @@ async function DragANDDrop(skip) {
 }
 
 setTimeout(() => {
-  DragANDDrop();
+  DragANDDrop(true);
 }, 50);
 
 async function MoveEarnerLive(POS, skip) {
@@ -309,7 +309,7 @@ if (!online) {
   if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
     if (CustomizePanelsDragNDrop) {
-      DragANDDrop();
+      DragANDDrop(false);
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
