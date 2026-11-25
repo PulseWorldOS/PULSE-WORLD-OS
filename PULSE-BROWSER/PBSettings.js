@@ -342,6 +342,7 @@ async function loadExtensionSettingsUI() {
     filesLink: "filesLink",
     bankingLink: "bankingLink",
     goPublicToggle: "goPublicEnabled",
+    goPIPToggle: "goPIPEnabled",
     goEarnerMode: "goEarnerEnabled",
     publicLink: "publicLink",
     programmaticEmail: "programmaticEmail",
@@ -409,6 +410,7 @@ async function saveExtensionSettingsUI() {
     shoppingMode: document.getElementById("shoppingMode").value,
     externalShoppingLink: document.getElementById("externalShoppingLink").value.trim(),
     goPublicEnabled: document.getElementById("goPublicToggle").checked,
+    goPIPEnabled: document.getElementById("goPIPToggle").checked,
     goEarnerEnabled: document.getElementById("goEarnerMode").checked,
     publicLink: document.getElementById("publicLink").value.trim(),
 
@@ -1075,6 +1077,7 @@ if (location.href.includes("PBSettings.html")) {
       "filesLink",
       "bankingLink",
       "goPublicToggle",
+      "goPIPToggle",
       "goEarnerMode",
       "pulseStreamToggle",
       "publicLink",
