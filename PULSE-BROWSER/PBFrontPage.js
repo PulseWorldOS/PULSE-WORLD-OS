@@ -6986,17 +6986,17 @@ async function pulseTeleportKey(event) {
 
   if (key === "`") {
     link = "https://www.pulseworld.net";
-  } else if (key === "b" && event.ctrlKey) {
+  } else if (key === "b") {
     link = PulseRealmSettings.externalBankLink;
-  } else if (key === "m" && event.ctrlKey) {
+  } else if (key === "m") {
     link = PulseRealmSettings.externalEmailLink;
-  } else if (key === "s" && event.ctrlKey) {
+  } else if (key === "s") {
     link = PulseRealmSettings.externalSocialLink;
-  } else if (key === "w" && event.ctrlKey) {
+  } else if (key === "w") {
     link = PulseRealmSettings.externalWorkLink;
-  } else if (key === "t" && event.ctrlKey) {
+  } else if (key === "t") {
     link = PulseRealmSettings.externalStreamingLink;
-  } else if (key === "e" && event.ctrlKey) {
+  } else if (key === "e") {
     link = PulseRealmSettings.externalShoppingLink;
   }
 
