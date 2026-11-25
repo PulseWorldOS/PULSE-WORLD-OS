@@ -1360,6 +1360,95 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     PBUniversalBoost2.warmTab(tab);
   }
 });
+/**
+ * Probes a list of localhost ports via WebSocket to detect if any local
+ * service (e.g., remote desktop, proxy, or local server) is listening.
+ *
+ * @param {number[]} ports - Array of ports to test (e.g., [5900, 7070, 8080])
+ * @param {number} timeoutMs - Max wait time per port in milliseconds
+ * @returns {Promise<{inUse: number[], free: number[], details: object[]}>}
+ */
+async function testLocalWebSockets(ports, timeoutMs = 400) {
+  const probePort = (port) => {
+    return new Promise((resolve) => {
+      const start = performance.now();
+      let settled = false;
+      let ws;
+
+      const finish = (inUse, reason) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        try {
+          if (ws && ws.readyState !== WebSocket.CLOSED) ws.close();
+        } catch (_) {}
+        resolve({
+          port,
+          inUse,
+          reason,
+          latencyMs: Math.round(performance.now() - start),
+        });
+      };
+
+      const timer = setTimeout(() => {
+        // Timeout means a firewall dropped packets or a service accepted TCP
+        // and stalled the WebSocket upgrade handshake (likely in use)
+        finish(true, 'handshake_timeout_or_stalled');
+      }, timeoutMs);
+
+      try {
+        ws = new WebSocket(`ws://127.0.0.1:${port}`);
+
+        ws.onopen = () => {
+          // Full WebSocket handshake succeeded -> definitely in use
+          finish(true, 'ws_open');
+        };
+
+        ws.onerror = () => {
+          const elapsed = performance.now() - start;
+          // Note: Modern browsers intentionally obscure exact TCP errors in onerror,
+          // so a fast failure (<50ms) usually means RST (port closed), while a
+          // slower failure or non-WS HTTP response indicates an active service.
+          finish(false, 'connection_refused_or_blocked');
+        };
+      } catch (err) {
+        // Browsers throw SecurityError if the port is on the restricted list (e.g., 22, 25)
+        finish(false, `blocked_by_browser: ${err.name}`);
+      }
+    });
+  };
+
+  const results = await Promise.all(ports.map(probePort));
+
+  return {
+    inUse: results.filter((r) => r.inUse).map((r) => r.port),
+    free: results.filter((r) => !r.inUse).map((r) => r.port),
+    details: results,
+  };
+}
+
+(async () => {
+  // High-priority ports checked by banking & fraud-detection scripts
+  const targetPorts = [
+    // Remote Desktop & Screen Sharing (AnyDesk, TeamViewer, VNC, RDP, Splashtop)
+    3389, 5500, 5800, 5900, 5901, 5902, 5903, 5938, 6568, 6783, 7070,
+
+    // Local Web Proxies, Interceptors & VPNs (Charles, Fiddler, Burp, Squid, Clash, Shadowsocks)
+    1080, 3128, 7890, 8080, 8081, 8888, 9050, 9090,
+
+    // Browser Remote Debugging & Automation (Chrome DevTools, Selenium, Puppeteer, Playwright)
+    4444, 9222, 9229, 9333, 9515,
+
+    // Local Dev Servers & Common Tunneling Agents (ngrok, local APIs)
+    3000, 4040, 5000, 8000, 8443
+  ];
+
+  const report = await testLocalWebSockets(targetPorts);
+
+  console.log('Active sockets detected:', report.inUse);
+  console.log('Full timing breakdown:', report.details);
+})();
+
 
 // ============================================================================
 //  PBAccelerator.js — PulseBrowser Acceleration Engine (Ultra Edition v10.0)
