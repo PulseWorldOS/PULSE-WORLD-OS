@@ -1294,7 +1294,7 @@
       border-radius: 99px;
       object-fit: inherit;
       filter: drop-shadow(0 0 10px #00aaffaa);
-      animation: pbPulseMessengerFrame2 20s ease-in-out infinite,
+      animation: pbPulseMessengerFrame2 10s ease-in-out infinite,
                 pulseGlow 3.5s ease-in-out infinite;
       perspective: 1200px;
       transform-style: preserve-3d;
@@ -1329,14 +1329,15 @@
 
     @keyframes pbPulseMessengerFrame2 {
       0%   { transform: translate(2px, -555px); }
-      8%   { transform: translate(4px, -551px); }
-      20%  { transform: translate(7px, -555px); }
-      30%  { transform: translate(2px, -552px); }
-      48%  { transform: translate(4px, -555px); }
-      64%  { transform: translate(-2px, -554px); }
-      80%  { transform: translate(3px, -556px); }
-      90% { transform: translate(6px, -553px); }
-      100% { transform: translate(2px, -557px); }
+      8%   { transform: translate(11px, -551px); }
+      20%  { transform: translate(9px, -555px); }
+      30%  { transform: translate(5px, -552px); }
+      45%  { transform: translate(1px, -555px); }
+      54%  { transform: translate(-1px, -551px); }
+      64%  { transform: translate(-4px, -554px); }
+      80%  { transform: translate(-8px, -556px); }
+      90% { transform: translate(-11px, -551px); }
+      100% { transform: translate(-2px, -555px); }
     }
 
     @keyframes bubbleElectrify {
@@ -2597,6 +2598,7 @@
     allow="accelerometer *; autoplay *; camera *; clipboard-read *; clipboard-write *; display-capture *; encrypted-media *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
     allowfullscreen
     allowpaymentrequest
+    sandbox="allow-scripts allow-presentation allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
     referrerpolicy="no-referrer-when-downgrade"
   ></iframe>
   
