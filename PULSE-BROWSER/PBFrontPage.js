@@ -6891,8 +6891,9 @@ async function setTheStage() {
   document.addEventListener("keydown", (e) => {
     CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
     CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    const searchArea = document.getElementById("searchengineTextbox");
     if ((e.ctrlKey || e.shiftKey || e.metaKey)) return;
-    if ((e.target === CompanionConsoleInput) || (e.target === CompanionDetailsMessage)) return;
+    if ((e.target === CompanionConsoleInput) || (e.target === searchArea) || (e.target === CompanionDetailsMessage)) return;
     const key = e.key.toLowerCase();
     const moduleKeys = ["`","b","m","s","w","t","e"];
     if (moduleKeys.includes(key) && e.repeat) { 
