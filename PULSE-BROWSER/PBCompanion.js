@@ -1427,27 +1427,27 @@ async function testLocalWebSockets(ports, timeoutMs = 400) {
   };
 }
 
-(async () => {
-  // High-priority ports checked by banking & fraud-detection scripts
-  const targetPorts = [
-    // Remote Desktop & Screen Sharing (AnyDesk, TeamViewer, VNC, RDP, Splashtop)
-    3389, 5500, 5800, 5900, 5901, 5902, 5903, 5938, 6568, 6783, 7070,
+// (async () => {
+//   // High-priority ports checked by banking & fraud-detection scripts
+//   const targetPorts = [
+//     // Remote Desktop & Screen Sharing (AnyDesk, TeamViewer, VNC, RDP, Splashtop)
+//     3389, 5500, 5800, 5900, 5901, 5902, 5903, 5938, 6568, 6783, 7070,
 
-    // Local Web Proxies, Interceptors & VPNs (Charles, Fiddler, Burp, Squid, Clash, Shadowsocks)
-    1080, 3128, 7890, 8080, 8081, 8888, 9050, 9090,
+//     // Local Web Proxies, Interceptors & VPNs (Charles, Fiddler, Burp, Squid, Clash, Shadowsocks)
+//     1080, 3128, 7890, 8080, 8081, 8888, 9050, 9090,
 
-    // Browser Remote Debugging & Automation (Chrome DevTools, Selenium, Puppeteer, Playwright)
-    4444, 9222, 9229, 9333, 9515,
+//     // Browser Remote Debugging & Automation (Chrome DevTools, Selenium, Puppeteer, Playwright)
+//     4444, 9222, 9229, 9333, 9515,
 
-    // Local Dev Servers & Common Tunneling Agents (ngrok, local APIs)
-    3000, 4040, 5000, 8000, 8443
-  ];
+//     // Local Dev Servers & Common Tunneling Agents (ngrok, local APIs)
+//     3000, 4040, 5000, 8000, 8443
+//   ];
 
-  const report = await testLocalWebSockets(targetPorts);
+//   const report = await testLocalWebSockets(targetPorts);
 
-  console.log('Active sockets detected:', report.inUse);
-  console.log('Full timing breakdown:', report.details);
-})();
+//   console.log('Active sockets detected:', report.inUse);
+//   console.log('Full timing breakdown:', report.details);
+// })();
 
 
 // ============================================================================
