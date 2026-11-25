@@ -8266,6 +8266,7 @@ function CheckBackTab() {
           CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
         }
       });
+      console.log("First Attempt to Grab Variables from PulseWorld: ", PulseRealm);
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
