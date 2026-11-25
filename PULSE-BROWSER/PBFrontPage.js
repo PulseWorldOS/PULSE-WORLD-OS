@@ -7,12 +7,14 @@ let gpuCapabilitySize = 2048;
 let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
+let PulseBankingLive = false;
 let itrunonce = false;
 let thisrunonce = false;
 let MessengerMode = "Console";
 let identityrunonce = false;
 let engineType = "text";
 let displayStyle = false;
+let bankdisplayStyle = false;
 let gpuText = null;
 let panelAIPos = null;
 let panelEarnerPos = null;
@@ -162,6 +164,7 @@ let consoleOvermindCognition = document.getElementById("consoleOvermindCognition
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
 let PulseFrame = document.getElementById("PulseEarnerFrame");
+let PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
 let PulseFrame2 = document.getElementById("PulseStreamFrame");
 let PulseFrameA = document.getElementById("PulseEarner2Frame");
 let PulseFrameB = document.getElementById("PulseEarner3Frame");
@@ -2332,6 +2335,8 @@ async function switchHigherModel(modelKey) {
 document.addEventListener("click", (e) => {
   PulseFrame2 = document.getElementById("PulseStreamFrame");
   if (PulseFrame2) PulseFrame2.style.display = "none";
+  PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+  if (PulseBrowserOSFrame) PulseBrowserOSFrame.style.display = "none";
   displayStyle = false;
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
   if (!btn) return;
@@ -5223,6 +5228,28 @@ async function openNamedTab(name, url) {
         if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
         PulseFrame2.style.display = "none";
         displayStyle = false;
+        return;
+      }
+    }
+  }
+  PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+  if (PulseBrowserOSFrame) {
+    if (PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) {
+      PulseBankingLive = true;
+      let realm = url;
+      realm = realm.replace("https://","");
+      realm = realm.replace("www.","");
+      PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+      latestSnapshot(realm, url, PulseSnapIndex, 0);
+      if (!bankdisplayStyle) {
+        if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
+        PulseBrowserOSFrame.style.display = "block";
+        bankdisplayStyle = true;
+        return;
+      } else {
+        if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
+        PulseBrowserOSFrame.style.display = "none";
+        bankdisplayStyle = false;
         return;
       }
     }
