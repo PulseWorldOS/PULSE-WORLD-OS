@@ -8,6 +8,7 @@ let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
 let PulseAILive = false;
+let PulseAILiveRealm = null;
 let itrunonce = false;
 let thisrunonce = false;
 let MessengerMode = "Console";
@@ -4323,10 +4324,20 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
         // Skip invalid URLs
       }
     }
-    let realm = PulseRealmSettings?.externalStreamingLink;
-    if (typeof realm === "string" && realm.trim()) {
-      realm = realm.replace("https://", "").replace("www.", "");
-      if (PulseStreamingLive) latestSnapshot(realm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    let StreamingRealm = PulseRealmSettings?.externalStreamingLink;
+    if (typeof StreamingRealm === "string" && StreamingRealm.trim()) {
+      StreamingRealm = StreamingRealm.replace("https://", "").replace("www.", "");
+      if (PulseStreamingLive) latestSnapshot(StreamingRealm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    }
+    let BankingRealm = PulseRealmSettings?.externalBankLink;
+    if (typeof BankingRealm === "string" && BankingRealm.trim()) {
+      BankingRealm = BankingRealm.replace("https://", "").replace("www.", "");
+      if (PulseAILive && PulseAILiveRealm === BankingRealm) latestSnapshot(BankingRealm, PulseRealmSettings.externalBankLink, PulseSnapIndex, 0);
+    }
+    let EmailRealm = PulseRealmSettings?.externalEmailLink;
+    if (typeof EmailRealm === "string" && EmailRealm.trim()) {
+      EmailRealm = EmailRealm.replace("https://", "").replace("www.", "");
+      if (PulseAILive && PulseAILiveRealm === EmailRealm) latestSnapshot(EmailRealm, PulseRealmSettings.externalEmailLink, PulseSnapIndex, 0);
     }
 
     pulseTabs = rebuilt;
@@ -5159,6 +5170,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
           destroyIframe(PulseBrowserOSFrame);
           openNamedTab(realm, link);
           PulseAILive = false;
+          PulseAILiveRealm = null;
           topPanel = document.querySelector(".top-panel");
           const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
           if (remaining === 0) {
@@ -5254,6 +5266,7 @@ async function openNamedTab(name, url) {
   if (PulseBrowserOSFrame) {
     if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === url)) {
       PulseAILive = true;
+      PulseAILiveRealm = url;
       let realm = url;
       realm = realm.replace("https://","");
       realm = realm.replace("www.","");
