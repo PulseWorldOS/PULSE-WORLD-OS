@@ -3312,13 +3312,15 @@ async function GetThisMessengerDone() {
     const identityName = document.getElementById("identityName");
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
     // Example usage:
-    probeUsableVRAM({ maxProbeGB: 8, chunkMB: 256 }).then((result) => {
-      console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
-      gpuCapabilitySize = result.estimatedGB * (1024);
-      gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
-      const higherGpuLine = document.getElementById("higherGpuLine");
-      higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
-    });
+    if (gpuCapabilitySize <= 2048) {
+      probeUsableVRAM({ maxProbeGB: 8, chunkMB: 256 }).then((result) => {
+        console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
+        gpuCapabilitySize = result.estimatedGB * (1024);
+        gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
+        const higherGpuLine = document.getElementById("higherGpuLine");
+        higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
+      });
+    }
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
