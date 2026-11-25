@@ -8267,7 +8267,6 @@ function CheckBackTab() {
     if (event.origin !== "https://www.pulseworld.net") {
       return;
     }
-
     if (event.data?.type === "PULSE_REALM_FILLED") {
       // Merge the returned data into your extension's PulseRealm variable
       PulseBrowserRealm = event.data.realm;
