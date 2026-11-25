@@ -1244,7 +1244,7 @@ async function askLocalModelWithLiveWeb(websiteURL) {
       const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
       const summary = await summarizer.summarize(realmSummary);
       appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
-      realmSummary = null;
+      realmSummary = liveData2026;
     }
 
     // 3. Run your prompt
@@ -1254,7 +1254,7 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     }
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
     console.log(finalAnswer);
-  
+    if (realmSummary) realmSummary = null;
 
   } catch (error) {
     console.error("Failed to fetch live data or run the local model:", error);
@@ -2470,8 +2470,8 @@ CompanionConsoleSend.onclick = async () => {
       }
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
     } else if (text.includes("bunker scan")) {
-      askLocalModelWithLiveWeb();
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
+      askLocalModelWithLiveWeb();
     } else {
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
     }
