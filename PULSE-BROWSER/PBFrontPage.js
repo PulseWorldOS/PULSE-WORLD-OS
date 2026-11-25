@@ -3948,40 +3948,16 @@ async function pbRenderCacheList2() {
         <strong><font color="#FF8844">PulseWorld (RAM)</font> [<font color=${percentColor3}>${MyLocalMemoryLayerMB} MB</font>]</strong><br><br>
 
         <div style="display:flex; gap:10px;">
-
           <div style="flex:1;">
-            <strong>Higher AI Brain:</strong><br>
-            • <span style="color:lightgreen">${higherAIDisplay}</span><br>
-
-            <strong>AISync Memory:</strong><br>
-            • <span style="color:lightgreen">${aisyncDisplay}</span><br>
-
             <strong>Local Storage:</strong><br>
-            • <span style="color:lightgreen">${totalDisplay}</span><br>
+            • <span style="color:lightgreen">${PulseRealm.PulseCacheUsed}</span><br>
           </div>
 
           <div style="flex:1;">
-            <strong>Higher AI Mind:</strong><br>
-            • <span style="color:lightgreen">${higherGPUAIDisplay}</span><br>
-
             <strong>System Quota:</strong><br>
-            • <span style="color:lightgreen">${quotaGB} GB</span><br>
-
-            <strong>System Memory:</strong><br>
-            • <span style="color:lightgreen">${swMB} MB</span><br><br>
+            • <span style="color:lightgreen">${10} GB</span><br>
           </div>
         </div>
-
-        <strong>Percent Used:</strong>
-        <span style="color:${percentColor}; font-weight:bold;">
-          ${percent}% (${statusText})
-        </span><br>
-
-        <strong>Projected Fill Time:</strong>
-        <span style="color:${percentColor2}; font-weight:bold;">
-          ${predictionText}
-        </span><br>
-
       </div>
     `;
     //   `<font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
