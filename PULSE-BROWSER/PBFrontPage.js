@@ -160,6 +160,7 @@ const messengerBootVideo = document.getElementById("PulseMessengerVideo");
 const HigherAuthority = document.getElementById("HigherAuthority");
 const ReCogWipe = document.getElementById("MemoryWipe");
 let HigherPanelSwitch = document.getElementById("SwitchPanel");
+let BrowserHeartbeat = document.getElementById("BrowserHeartbeat");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 const aiOverlay = document.getElementById("ai-overlay");
@@ -169,6 +170,7 @@ let PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
 let PulseFrame2 = document.getElementById("PulseStreamFrame");
 let PulseFrameA = document.getElementById("PulseEarner2Frame");
 let PulseFrameB = document.getElementById("PulseEarner3Frame");
+BrowserHeartbeat.muted = false;
 
 function pulsepalSpeak(message) {
   console.log(message);
