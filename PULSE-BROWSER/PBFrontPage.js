@@ -1,5 +1,5 @@
 globalThis.PulseRealm=globalThis;
-const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
+let PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 let lastEarnBatch = null;
 let PulseSnapIndex = 0;
 let MyPulseIdentity = null;
