@@ -245,9 +245,9 @@ if (channel2) {
     try {
       const { kind, payload, ts } = ev.data || {};
       if (kind === "command_prompt") {
-        // const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
-        // const summary = await summarizer.summarize(payload);
-        // appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", summary);
+        const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
+        const summary = await summarizer.summarize(payload);
+        appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", summary);
         handleOvermindResponse2(payload, ts);
       } else if (kind === "command_ack") {
         logger2.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
