@@ -4332,12 +4332,12 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     let BankingRealm = PulseRealmSettings?.externalBankLink;
     if (typeof BankingRealm === "string" && BankingRealm.trim()) {
       BankingRealm = BankingRealm.replace("https://", "").replace("www.", "");
-      if (PulseAILive && PulseAILiveRealm === BankingRealm) latestSnapshot(BankingRealm, PulseRealmSettings.externalBankLink, PulseSnapIndex, 0);
+      if (PulseAILive && BankingRealm.includes(PulseAILiveRealm)) latestSnapshot(BankingRealm, PulseRealmSettings.externalBankLink, PulseSnapIndex, 0);
     }
     let EmailRealm = PulseRealmSettings?.externalEmailLink;
     if (typeof EmailRealm === "string" && EmailRealm.trim()) {
       EmailRealm = EmailRealm.replace("https://", "").replace("www.", "");
-      if (PulseAILive && PulseAILiveRealm === EmailRealm) latestSnapshot(EmailRealm, PulseRealmSettings.externalEmailLink, PulseSnapIndex, 0);
+      if (PulseAILive && EmailRealm.includes(PulseAILiveRealm)) latestSnapshot(EmailRealm, PulseRealmSettings.externalEmailLink, PulseSnapIndex, 0);
     }
 
     pulseTabs = rebuilt;
@@ -5266,10 +5266,10 @@ async function openNamedTab(name, url) {
   if (PulseBrowserOSFrame) {
     if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === url)) {
       PulseAILive = true;
-      PulseAILiveRealm = url;
       let realm = url;
       realm = realm.replace("https://","");
       realm = realm.replace("www.","");
+      PulseAILiveRealm = realm;
       PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
       latestSnapshot(realm, url, PulseSnapIndex, 0);
       if (!bankdisplayStyle) {
