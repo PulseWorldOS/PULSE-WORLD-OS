@@ -200,7 +200,6 @@ export const PulseNetRegistry = __getPulseNetRegistry;
 export const PulsedMergedState = __PulseMergedState;
 export const PulseWorldPortBuild = buildPulseWorldPort;
 export const ProtocolPulsePorts = PulseProtocolPorts;
-export const PulsePorts = PulsePort;
 export const ProtocolSecurityPorts = PulseSecurityPort;
 export const buildPulseIOKeyChainManagers = buildPulseIOKeyChainManager;
 // ------------------------------------------------------------
