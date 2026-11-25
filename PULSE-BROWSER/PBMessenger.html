@@ -1,0 +1,429 @@
+<!DOCTYPE html><html lang="en"><head data-llama-id="0">
+  <meta charset="UTF-8" data-llama-id="1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-llama-id="2">
+  <title data-llama-id="3">PulseMessenger — Aldwyn Fox</title>
+  <script src="https://cdn.tailwindcss.com" data-llama-id="4"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" data-llama-id="5">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" data-llama-id="6">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" data-llama-id="7"></script>
+  <style data-llama-id="8">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    :root {
+      --cyan: #20d9ff;
+      --blue: #168aff;
+      --deep: #020b1a;
+      --panel: rgba(4, 16, 37, .9);
+      --line: rgba(39, 159, 255, .72);
+      --muted: #9dbce1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #e9f5ff;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 50% 46%, rgba(0, 94, 213, .22), transparent 42%),
+        radial-gradient(ellipse at 50% 100%, rgba(0, 144, 255, .13), transparent 55%),
+        #010611;
+      overflow-x: hidden;
+    }
+    .app-shell {
+      width: min(1536px, calc(100% - 28px));
+      margin: 24px auto;
+      min-height: calc(100vh - 48px);
+      position: relative;
+      padding: 14px;
+      border: 1px solid rgba(32, 145, 255, .8);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(9, 27, 61, .98), rgba(1, 7, 19, .99) 42%, rgba(4, 18, 42, .97));
+      box-shadow: 0 0 0 4px rgba(0, 78, 176, .18), 0 0 42px rgba(0, 135, 255, .38), inset 0 0 34px rgba(0, 93, 255, .13);
+      overflow: hidden;
+    }
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(40, 172, 255, .38);
+      border-radius: 23px;
+      pointer-events: none;
+    }
+    .topbar {
+      height: 112px;
+      padding: 10px 22px 13px;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(290px, 1fr) 1.35fr minmax(255px, .8fr);
+      align-items: center;
+      gap: 20px;
+      border-bottom: 1px solid rgba(32, 156, 255, .55);
+      background: linear-gradient(90deg, rgba(0, 18, 48, .85), rgba(2, 11, 28, .3), rgba(0, 18, 48, .85));
+    }
+    .brand-mark {
+      display:flex; align-items:center; gap:14px; min-width:0;
+    }
+    .brand-bubble {
+      width:68px; height:60px; display:grid; place-items:center; flex:none;
+      color:#fff;
+      font-size:31px;
+      border:2px solid #32dfff;
+      border-radius:50%;
+      background: radial-gradient(circle at 45% 38%, #174f9e, #02132f 68%);
+      box-shadow: 0 0 10px #00cfff, inset 0 0 12px #087dff;
+      position:relative;
+    }
+    .brand-bubble::after {
+      content:""; position:absolute; bottom:-5px; left:8px; width:15px; height:15px;
+      background:#061b3a; border-left:2px solid #35dfff; border-bottom:2px solid #35dfff;
+      transform:skew(-20deg) rotate(-30deg);
+    }
+    .brand-title { font-size: clamp(26px, 3vw, 42px); font-weight:900; font-style:italic; letter-spacing:-2px; line-height:1; white-space:nowrap; text-shadow:0 0 14px rgba(36, 179, 255,.5); }
+    .brand-title span { color:#22d7ff; }
+    .brand-sub { color:#56cfff; font-size:10px; letter-spacing:4px; font-weight:700; margin-top:9px; white-space:nowrap; }
+    .top-links { display:flex; justify-content:center; gap:clamp(12px, 2vw, 30px); color:#9edcff; font-size:11px; letter-spacing:2px; font-weight:700; white-space:nowrap; }
+    .top-links span::after { content:""; display:inline-block; width:4px; height:4px; border-radius:50%; background:#ff9a27; margin-left:clamp(10px, 1.5vw, 24px); vertical-align:middle; }
+    .top-links span:last-child::after { display:none; }
+    .top-user { display:flex; justify-content:flex-end; align-items:center; gap:12px; }
+    .icon-button {
+      height:46px; width:46px; flex:none; display:grid; place-items:center; cursor:pointer;
+      border:1px solid rgba(75, 165, 255, .5); border-radius:14px; color:#d8f5ff;
+      background:linear-gradient(150deg,rgba(12,34,72,.9),rgba(2,9,23,.95));
+      box-shadow:inset 0 0 12px rgba(17,104,255,.13);
+    }
+    .icon-button:hover, .quick-action:hover, .bottom-item:hover { border-color:var(--cyan); box-shadow:0 0 16px rgba(0,194,255,.4); }
+    .mini-profile { display:flex; align-items:center; gap:10px; border:1px solid rgba(61,152,255,.65); border-radius:28px; padding:5px 15px 5px 6px; min-width:180px; }
+    .avatar { border-radius:50%; object-fit:cover; border:2px solid #38dfff; box-shadow:0 0 10px rgba(0,171,255,.5); }
+    .mini-profile .avatar { width:46px; height:46px; }
+    .online { color:#35ff67; font-size:12px; }
+    .online i { font-size:12px; margin-right:5px; text-shadow:0 0 8px #21ff57; }
+    .main-grid {
+      padding:16px 8px 0;
+      display:grid;
+      grid-template-columns:minmax(270px, .95fr) minmax(420px, 1.42fr) minmax(300px, .95fr);
+      gap:13px;
+      min-height:690px;
+    }
+    .panel {
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(155deg, rgba(5, 21, 48, .96), rgba(1, 8, 22, .96));
+      box-shadow:0 0 0 2px rgba(15,104,207,.14), 0 0 15px rgba(0,119,255,.19), inset 0 0 20px rgba(0,94,255,.07);
+      position:relative;
+      overflow:hidden;
+    }
+    .panel::before {
+      content:""; height:1px; position:absolute; top:0; left:10%; right:10%;
+      background:linear-gradient(90deg,transparent,#65e5ff,transparent);
+    }
+    .left-panel { padding:15px 13px; display:flex; flex-direction:column; }
+    .tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:11px; }
+    .tab {
+      background:rgba(4,17,39,.92); border:1px solid rgba(52,140,220,.5);
+      border-radius:10px; height:48px; color:#c9e7ff; font-size:13px; cursor:pointer;
+    }
+    .tab.active { background:linear-gradient(135deg,#137cf0,#042a63); color:white; border-color:#45e3ff; box-shadow:0 0 13px rgba(0,177,255,.55); }
+    .searchbox {
+      height:42px; display:flex; align-items:center; gap:11px; padding:0 13px; margin-bottom:7px;
+      border:1px solid rgba(64,144,224,.62); border-radius:11px; background:rgba(1,9,23,.86); color:#a9cce8;
+    }
+    .searchbox input { color:#e3f6ff; background:transparent; border:0; outline:0; width:100%; font-size:12px; }
+    .friend-list { display:flex; flex-direction:column; }
+    .friend {
+      min-height:58px; display:grid; grid-template-columns:48px 1fr 30px 22px; gap:10px; align-items:center;
+      padding:6px 4px; border-bottom:1px solid rgba(73,134,201,.23); cursor:pointer;
+    }
+    .friend:hover { background:rgba(20,106,204,.12); }
+    .friend .avatar { width:46px; height:46px; }
+    .friend-name { color:#f2f8ff; font-size:13px; font-weight:700; }
+    .friend-status { font-size:11px; color:#a9c2df; margin-top:4px; }
+    .status-dot { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px; vertical-align:-1px; box-shadow:0 0 8px currentColor; }
+    .green { background:#25ff58; color:#25ff58; } .red { background:#ff414c; color:#ff414c; } .yellow { background:#ffd43b; color:#ffd43b; }
+    .blue { background:#20caff; color:#20caff; } .gray { background:#8ca8c4; color:#8ca8c4; }
+    .friend-action { color:#b9d8fa; font-size:18px; text-align:center; }
+    .star { color:#ffd43b; font-size:17px; text-align:center; }
+    .add-friend {
+      width:100%; margin-top:auto; height:47px; border:1px solid #31cfff; border-radius:11px;
+      color:#eafaff; text-align:left; padding:0 20px; font-weight:700;
+      background:linear-gradient(100deg,rgba(0,100,225,.72),rgba(3,20,50,.9)); cursor:pointer;
+      box-shadow:inset 0 0 13px rgba(0,188,255,.16);
+    }
+    .add-friend i { color:#57e4ff; margin-right:12px; }
+    .hero-panel {
+      min-height:690px; display:flex; flex-direction:column; justify-content:flex-start; align-items:center;
+      padding:22px 22px 17px; text-align:center; isolation:isolate;
+      background:
+        linear-gradient(180deg,rgba(1,11,29,.1) 0%,rgba(1,9,24,.25) 35%,rgba(2,13,32,.96) 78%),
+        radial-gradient(ellipse at 50% 36%,rgba(15,103,226,.35),transparent 55%),
+        url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85") center 38% / cover;
+    }
+    .hero-panel::after {
+      content:""; position:absolute; inset:0; z-index:-1;
+      background:linear-gradient(180deg,rgba(0,9,25,.13),transparent 30%,rgba(0,6,18,.95) 74%);
+    }
+    .orbit-planet {
+      width:min(58%, 270px); aspect-ratio:1; margin:2px auto 5px; border-radius:50%; position:relative;
+      background:
+        radial-gradient(circle at 37% 33%,rgba(255,255,255,.24),transparent 8%),
+        radial-gradient(circle at 33% 28%,#73d7ff 0%,#136ac4 28%,#031c4c 59%,#020a20 75%);
+      border:2px solid #3ddcff;
+      box-shadow:0 0 10px #19d9ff,0 0 36px rgba(0,138,255,.75),inset -20px -12px 30px rgba(0,0,0,.75);
+      overflow:visible;
+    }
+    .orbit-planet::before {
+      content:""; position:absolute; width:150%; height:36%; left:-25%; top:38%;
+      border:3px solid rgba(77,215,255,.9); border-radius:50%; transform:rotate(-22deg);
+      box-shadow:0 0 11px #21caff; z-index:-1;
+    }
+    .planet-bubble {
+      position:absolute; inset:24%; display:grid; place-items:center; border-radius:50%;
+      color:white; font-size:48px; border:5px solid #24dfff;
+      background:radial-gradient(circle at 45% 35%,#1164c4,#02112f 72%);
+      box-shadow:0 0 25px #08bdff,inset 0 0 16px #008dff;
+    }
+    .planet-bubble::after {
+      content:""; position:absolute; left:7px; bottom:-10px; width:30px; height:30px;
+      background:#03183c; border-left:5px solid #23dcff; border-bottom:5px solid #23dcff;
+      transform:rotate(-28deg) skew(-15deg); border-radius:0 0 0 5px;
+    }
+    .hero-title { margin:0; font-size:clamp(35px,4.4vw,62px); line-height:1.05; font-weight:900; letter-spacing:-3px; font-style:italic; text-shadow:0 4px 0 #163a6f,0 0 22px #149bff; }
+    .hero-title span { color:#28d9ff; }
+    .hero-tagline { color:#4edcff; font-size:clamp(10px,1vw,14px); font-weight:800; letter-spacing:5px; margin-top:9px; }
+    .feature-row { width:100%; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:29px 0 25px; }
+    .feature { color:#55d8ff; font-size:12px; letter-spacing:1px; font-weight:700; }
+    .feature-icon {
+      height:58px; width:58px; margin:0 auto 8px; display:grid; place-items:center; border-radius:50%;
+      border:1px solid #29cfff; font-size:24px; color:#dffbff;
+      background:radial-gradient(circle,#0c4d9c,#02132f 70%);
+      box-shadow:0 0 14px rgba(0,186,255,.5),inset 0 0 12px rgba(19,154,255,.3);
+    }
+    .feature small { display:block; color:#b6d7f7; font-size:9px; letter-spacing:2px; margin-top:4px; }
+    .quote-box {
+      width:78%; margin-top:auto; padding:14px 15px; border:1px solid #49cfff; border-radius:12px;
+      color:#eaf7ff; font-size:14px; letter-spacing:1.5px; line-height:1.6;
+      background:linear-gradient(110deg,rgba(2,15,37,.9),rgba(14,61,112,.82),rgba(2,15,37,.92));
+      box-shadow:0 0 15px rgba(0,130,255,.38);
+    }
+    .right-column { display:flex; flex-direction:column; gap:13px; }
+    .profile-panel { padding:14px; }
+    .profile-main { display:flex; gap:14px; align-items:center; padding:3px 5px 13px; }
+    .profile-main .avatar { width:82px; height:82px; }
+    .profile-info { min-width:0; flex:1; }
+    .profile-info strong { font-size:16px; }
+    .profile-motto { color:#9cc9eb; font-size:12px; margin-top:5px; white-space:nowrap; }
+    .profile-controls { display:flex; gap:9px; margin-top:10px; }
+    .outline-btn { padding:7px 16px; border-radius:18px; border:1px solid #1dbdff; color:#83dcff; background:rgba(0,30,68,.7); font-size:12px; cursor:pointer; }
+    .status-input { height:43px; display:flex; gap:12px; align-items:center; padding:0 13px; border:1px solid rgba(57,132,206,.65); border-radius:22px; background:rgba(0,9,24,.72); color:#9bb9d6; font-size:12px; cursor:pointer; }
+    .status-input i:first-child { color:white; font-size:18px; }
+    .quick-panel { padding:15px 13px; }
+    .section-heading { display:flex; gap:10px; align-items:center; margin:0 4px 12px; font-size:17px; font-weight:700; }
+    .section-heading i { color:#48dbff; text-shadow:0 0 10px #198dff; }
+    .quick-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .quick-action {
+      min-height:87px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+      border:1px solid rgba(49,164,255,.85); border-radius:11px; color:#e5f6ff; font-size:12px; text-align:center;
+      background:linear-gradient(155deg,rgba(8,35,76,.96),rgba(1,10,27,.96)); cursor:pointer;
+      box-shadow:inset 0 0 15px rgba(0,99,227,.11);
+    }
+    .quick-action i { font-size:24px; color:#c7f5ff; text-shadow:0 0 10px #008bff; }
+    .online-panel { padding:13px 14px; flex:1; }
+    .online-heading { display:flex; align-items:center; gap:10px; font-weight:700; font-size:14px; margin-bottom:12px; }
+    .online-heading .status-dot { width:16px; height:16px; margin:0; }
+    .online-avatars { display:flex; align-items:center; gap:8px; margin-bottom:13px; }
+    .online-person { position:relative; }
+    .online-person img { width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid #269dff; }
+    .online-person::after { content:""; position:absolute; width:10px; height:10px; right:0; bottom:1px; border-radius:50%; background:#2dff66; border:1px solid #02112b; box-shadow:0 0 7px #2dff66; }
+    .more-online { border:1px solid #268de3; border-radius:22px; padding:8px 11px; color:#7bddff; font-size:12px; }
+    .connection-banner {
+      display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px;
+      color:#83dcff; font-size:12px; border:1px solid rgba(42,138,219,.68); border-radius:10px;
+      background:linear-gradient(100deg,rgba(0,28,65,.85),rgba(2,14,34,.9));
+    }
+    .connection-banner i { font-size:19px; color:#46dfff; }
+    .bottom-dock {
+      position:relative; display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1.2fr 1fr;
+      gap:9px; padding:14px 18px 7px; margin:13px 8px 0;
+      border-top:1px solid rgba(32,153,255,.57);
+      background:linear-gradient(180deg,rgba(3,15,36,.55),rgba(1,7,17,.9));
+    }
+    .bottom-item {
+      min-height:69px; border:1px solid rgba(61,144,225,.5); border-radius:12px; display:flex;
+      align-items:center; justify-content:center; gap:11px; color:#d9edff; font-size:13px;
+      background:linear-gradient(145deg,rgba(8,25,56,.95),rgba(1,8,22,.97)); cursor:pointer; position:relative;
+    }
+    .bottom-item i { font-size:23px; color:#d9f7ff; }
+    .bottom-item.active { border-color:#3cddff; color:white; background:linear-gradient(145deg,#0b56bb,#031637); box-shadow:0 0 17px rgba(0,153,255,.43),inset 0 0 14px rgba(0,207,255,.13); }
+    .badge-count { position:absolute; top:-7px; right:calc(50% - 44px); border-radius:50%; background:#ff4352; color:white; min-width:22px; height:22px; display:grid; place-items:center; font-size:12px; font-weight:800; box-shadow:0 0 10px #ff354b; }
+    .footer-strip { display:flex; justify-content:space-between; padding:7px 29px 0; color:#4bbbe7; font-size:9px; letter-spacing:2px; text-transform:uppercase; }
+    .toast {
+      position:fixed; bottom:22px; left:50%; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+      background:#071b36; border:1px solid #24d9ff; color:#e9faff; border-radius:12px; padding:12px 18px;
+      box-shadow:0 0 20px rgba(0,161,255,.4); transition:.25s; z-index:99; font-size:13px;
+    }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    @media (max-width:1100px) {
+      .app-shell { width:calc(100% - 18px); margin:9px auto; padding:9px; }
+      .topbar { grid-template-columns:1fr auto; height:auto; min-height:94px; }
+      .top-links { display:none; }
+      .main-grid { grid-template-columns:minmax(250px,.86fr) minmax(350px,1.2fr); }
+      .right-column { grid-column:1 / -1; display:grid; grid-template-columns:repeat(3,1fr); }
+      .online-panel { min-height:210px; }
+      .hero-panel { min-height:640px; }
+    }
+    @media (max-width:720px) {
+      .app-shell { width:100%; margin:0; border-radius:0; padding:8px; min-height:100vh; }
+      .app-shell::before { border-radius:0; inset:3px; }
+      .topbar { padding:10px 7px; grid-template-columns:1fr auto; gap:8px; }
+      .brand-bubble { width:48px; height:45px; font-size:23px; }
+      .brand-title { font-size:25px; letter-spacing:-1.5px; }
+      .brand-sub { font-size:8px; letter-spacing:2px; }
+      .top-user { gap:6px; }
+      .top-user .icon-button { width:38px; height:38px; border-radius:11px; }
+      .mini-profile { min-width:0; padding:3px; border:0; }
+      .mini-profile .avatar { width:38px; height:38px; }
+      .mini-profile > div { display:none; }
+      .main-grid { display:flex; flex-direction:column; padding:10px 2px 0; }
+      .left-panel { order:2; min-height:590px; }
+      .hero-panel { order:1; min-height:590px; padding:24px 15px 17px; }
+      .right-column { order:3; display:flex; }
+      .right-column > section { min-height:auto; }
+      .online-panel { min-height:190px!important; }
+      .orbit-planet { width:200px; }
+      .feature-row { margin:24px 0 20px; }
+      .quote-box { width:94%; }
+      .bottom-dock { grid-template-columns:repeat(3,1fr); margin:10px 0 0; padding:10px 2px; gap:6px; }
+      .bottom-item { min-height:58px; gap:7px; font-size:11px; flex-direction:column; }
+      .bottom-item i { font-size:20px; }
+      .badge-count { right:calc(50% - 22px); }
+      .footer-strip { padding:7px 8px 0; font-size:7px; }
+    }
+    @media (max-width:390px) {
+      .brand-title { font-size:21px; }
+      .brand-bubble { width:41px; height:40px; }
+      .top-user .icon-button:first-child { display:none; }
+      .friend { grid-template-columns:43px 1fr 25px 19px; gap:7px; }
+      .friend .avatar { width:41px; height:41px; }
+      .quick-action { font-size:10px; min-height:78px; }
+      .online-avatars { gap:5px; }
+      .online-person img { width:35px; height:35px; }
+      .more-online { padding:6px 8px; }
+    }
+  </style>
+</head>
+<body data-llama-id="9">
+  <main class="app-shell" data-llama-id="10">
+    <header class="topbar" data-llama-id="11">
+      <div class="brand-mark" data-llama-id="12">
+        <div class="brand-bubble" data-llama-id="13"><i class="fa-solid fa-ellipsis" data-llama-id="14"></i></div>
+        <div data-llama-id="15">
+          <div class="brand-title" data-llama-id="16">Pulse<span data-llama-id="17">Messenger</span></div>
+          <div class="brand-sub" data-llama-id="18">PEOPLE · WORLDS · OPPORTUNITIES</div>
+        </div>
+      </div>
+      <nav class="top-links" aria-label="Main sections" data-llama-id="19">
+        <span data-llama-id="20">CONNECT</span><span data-llama-id="21">CHAT</span><span data-llama-id="22">COLLABORATE</span><span data-llama-id="23">EXPLORE</span><span data-llama-id="24">TOGETHER</span>
+      </nav>
+      <div class="top-user" data-llama-id="25">
+        <button class="icon-button" aria-label="Search" data-llama-id="26"><i class="fa-solid fa-magnifying-glass" data-llama-id="27"></i></button>
+        <button class="icon-button" aria-label="Notifications" data-llama-id="28"><i class="fa-regular fa-bell" data-llama-id="29"></i></button>
+        <div class="mini-profile" data-llama-id="30">
+          <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="Aldwyn Fox avatar" data-llama-id="31">
+          <div data-llama-id="32"><strong data-llama-id="33">Aldwyn Fox</strong><div class="online" data-llama-id="34"><i class="fa-solid fa-circle" data-llama-id="35"></i>Online</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-grid" data-llama-id="36">
+      <aside class="panel left-panel" data-llama-id="37">
+        <div class="tabs" role="tablist" data-llama-id="38">
+          <button class="tab active" data-tab="Friends" data-llama-id="39"><i class="fa-solid fa-user-group" data-llama-id="40"></i> &nbsp;Friends</button>
+          <button class="tab" data-tab="Groups" data-llama-id="41"><i class="fa-solid fa-people-group" data-llama-id="42"></i> &nbsp;Groups</button>
+          <button class="tab" data-tab="Channels" data-llama-id="43"><i class="fa-solid fa-bullhorn" data-llama-id="44"></i> &nbsp;Channels</button>
+        </div>
+        <label class="searchbox" data-llama-id="45">
+          <i class="fa-solid fa-magnifying-glass" data-llama-id="46"></i>
+          <input id="friendSearch" type="search" placeholder="Search friends, groups, or worlds..." aria-label="Search friends" data-llama-id="47">
+        </label>
+        <div class="friend-list" id="friendList" data-llama-id="48">
+          <div class="friend" data-name="Alex Rivera" data-llama-id="49"><img class="avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="50"><div data-llama-id="51"><div class="friend-name" data-llama-id="52">Alex Rivera</div><div class="friend-status" data-llama-id="53"><span class="status-dot green" data-llama-id="54"></span>Online</div></div><i class="friend-action fa-regular fa-message" data-llama-id="55"></i><i class="star fa-solid fa-star" data-llama-id="56"></i></div>
+          <div class="friend" data-name="NovaStar" data-llama-id="57"><img class="avatar" src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="58"><div data-llama-id="59"><div class="friend-name" data-llama-id="60">NovaStar</div><div class="friend-status" data-llama-id="61"><span class="status-dot red" data-llama-id="62"></span>In a Call</div></div><i class="friend-action fa-regular fa-message" data-llama-id="63"></i><i class="star fa-solid fa-star" data-llama-id="64"></i></div>
+          <div class="friend" data-name="CryptoKai" data-llama-id="65"><img class="avatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="66"><div data-llama-id="67"><div class="friend-name" data-llama-id="68">CryptoKai</div><div class="friend-status" data-llama-id="69"><span class="status-dot green" data-llama-id="70"></span>Online</div></div><i class="friend-action fa-regular fa-message" data-llama-id="71"></i><i class="star fa-solid fa-star" data-llama-id="72"></i></div>
+          <div class="friend" data-name="LunaByte" data-llama-id="73"><img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="74"><div data-llama-id="75"><div class="friend-name" data-llama-id="76">LunaByte</div><div class="friend-status" data-llama-id="77"><span class="status-dot yellow" data-llama-id="78"></span>Away</div></div><i class="friend-action fa-regular fa-message" data-llama-id="79"></i><i class="star fa-regular fa-star" data-llama-id="80"></i></div>
+          <div class="friend" data-name="PulseDev" data-llama-id="81"><div class="avatar" style="display:grid;place-items:center;background:radial-gradient(circle,#ffd944,#6b3900);color:#07142a;font-size:25px;font-weight:900" data-llama-id="82">P</div><div data-llama-id="83"><div class="friend-name" data-llama-id="84">PulseDev</div><div class="friend-status" data-llama-id="85"><span class="status-dot green" data-llama-id="86"></span>Online</div></div><i class="friend-action fa-regular fa-message" data-llama-id="87"></i><i class="star fa-regular fa-star" data-llama-id="88"></i></div>
+          <div class="friend" data-name="Explorer88" data-llama-id="89"><img class="avatar" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="90"><div data-llama-id="91"><div class="friend-name" data-llama-id="92">Explorer88</div><div class="friend-status" data-llama-id="93"><span class="status-dot blue" data-llama-id="94"></span>In a World</div></div><i class="friend-action fa-regular fa-message" data-llama-id="95"></i><i class="star fa-solid fa-star" data-llama-id="96"></i></div>
+          <div class="friend" data-name="DreamChaser" data-llama-id="97"><img class="avatar" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="98"><div data-llama-id="99"><div class="friend-name" data-llama-id="100">DreamChaser</div><div class="friend-status" data-llama-id="101"><span class="status-dot gray" data-llama-id="102"></span>Offline</div></div><i class="friend-action fa-regular fa-message" data-llama-id="103"></i><i class="star fa-regular fa-star" data-llama-id="104"></i></div>
+          <div class="friend" data-name="MetaMinds" data-llama-id="105"><img class="avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="" data-llama-id="106"><div data-llama-id="107"><div class="friend-name" data-llama-id="108">MetaMinds</div><div class="friend-status" data-llama-id="109">Last seen 2h ago</div></div><i class="friend-action fa-regular fa-message" data-llama-id="110"></i><i class="star fa-regular fa-star" data-llama-id="111"></i></div>
+        </div>
+        <button class="add-friend" data-toast="Find new people to connect with" data-llama-id="112"><i class="fa-solid fa-user-plus" data-llama-id="113"></i>Add Friend</button>
+      </aside>
+
+      <section class="panel hero-panel" aria-label="PulseMessenger welcome" data-llama-id="114">
+        <div class="orbit-planet" data-llama-id="115"><div class="planet-bubble" data-llama-id="116"><i class="fa-solid fa-ellipsis" data-llama-id="117"></i></div></div>
+        <h1 class="hero-title" data-llama-id="118">Pulse<span data-llama-id="119">Messenger</span></h1>
+        <div class="hero-tagline" data-llama-id="120">REAL PEOPLE. BRIGHTER WORLDS.</div>
+        <div class="feature-row" data-llama-id="121">
+          <div class="feature" data-llama-id="122"><div class="feature-icon" data-llama-id="123"><i class="fa-solid fa-comment-dots" data-llama-id="124"></i></div>CHAT<small data-llama-id="125">ANYTIME</small></div>
+          <div class="feature" data-llama-id="126"><div class="feature-icon" data-llama-id="127"><i class="fa-solid fa-user-group" data-llama-id="128"></i></div>CONNECT<small data-llama-id="129">EVERYWHERE</small></div>
+          <div class="feature" data-llama-id="130"><div class="feature-icon" data-llama-id="131"><i class="fa-solid fa-globe" data-llama-id="132"></i></div>EXPLORE<small data-llama-id="133">NEW WORLDS</small></div>
+          <div class="feature" data-llama-id="134"><div class="feature-icon" data-llama-id="135"><i class="fa-solid fa-handshake" data-llama-id="136"></i></div>BUILD<small data-llama-id="137">TOGETHER</small></div>
+        </div>
+        <div class="quote-box" data-llama-id="138">“Conversations today.<br data-llama-id="139">Greater tomorrows.”</div>
+      </section>
+
+      <aside class="right-column" data-llama-id="140">
+        <section class="panel profile-panel" data-llama-id="141">
+          <div class="profile-main" data-llama-id="142">
+            <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=140&amp;h=140&amp;q=80" alt="Aldwyn Fox" data-llama-id="143">
+            <div class="profile-info" data-llama-id="144">
+              <strong data-llama-id="145">Aldwyn Fox</strong>
+              <div class="profile-motto" data-llama-id="146"><span class="status-dot green" data-llama-id="147"></span>Exploring a brighter tomorrow</div>
+              <div class="profile-controls" data-llama-id="148">
+                <button class="outline-btn" data-toast="Profile settings are ready to personalize" data-llama-id="149">Edit Profile</button>
+                <button class="icon-button" style="width:38px;height:36px;border-radius:12px" aria-label="Profile settings" data-toast="Profile settings" data-llama-id="150"><i class="fa-solid fa-gear" data-llama-id="151"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="status-input" data-toast="Share a thought with your friends" data-llama-id="152"><i class="fa-solid fa-face-smile" data-llama-id="153"></i><span data-llama-id="154">What's on your mind?</span></div>
+        </section>
+
+        <section class="panel quick-panel" data-llama-id="155">
+          <h2 class="section-heading" data-llama-id="156"><i class="fa-solid fa-bolt" data-llama-id="157"></i>Quick Actions</h2>
+          <div class="quick-grid" data-llama-id="158">
+            <button class="quick-action" data-toast="Starting a new chat" data-llama-id="159"><i class="fa-regular fa-comment-dots" data-llama-id="160"></i>New Chat</button>
+            <button class="quick-action" data-toast="Create a space for your crew" data-llama-id="161"><i class="fa-solid fa-people-group" data-llama-id="162"></i>Create Group</button>
+            <button class="quick-action" data-toast="Discover a world to join" data-llama-id="163"><i class="fa-solid fa-ring" data-llama-id="164"></i>Join a World</button>
+            <button class="quick-action" data-toast="Find people you may know" data-llama-id="165"><i class="fa-solid fa-user-plus" data-llama-id="166"></i>Find Friends</button>
+            <button class="quick-action" data-toast="Explore channels and conversations" data-llama-id="167"><i class="fa-regular fa-compass" data-llama-id="168"></i>Explore Channels</button>
+            <button class="quick-action" data-toast="QR scanner is ready" data-llama-id="169"><i class="fa-solid fa-qrcode" data-llama-id="170"></i>Scan QR</button>
+          </div>
+        </section>
+
+        <section class="panel online-panel" data-llama-id="171">
+          <div class="online-heading" data-llama-id="172"><span class="status-dot green" data-llama-id="173"></span>Online Now</div>
+          <div class="online-avatars" data-llama-id="174">
+            <div class="online-person" data-llama-id="175"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=90&amp;h=90&amp;q=80" alt="Alex" data-llama-id="176"></div>
+            <div class="online-person" data-llama-id="177"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=90&amp;h=90&amp;q=80" alt="Kai" data-llama-id="178"></div>
+            <div class="online-person" data-llama-id="179"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&amp;fit=crop&amp;w=90&amp;h=90&amp;q=80" alt="Nova" data-llama-id="180"></div>
+            <div class="online-person" data-llama-id="181"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;w=90&amp;h=90&amp;q=80" alt="Explorer" data-llama-id="182"></div>
+            <div class="online-person" data-llama-id="183"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=90&amp;h=90&amp;q=80" alt="Luna" data-llama-id="184"></div>
+            <div class="online-person" data-llama-id="185"><img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&amp;fit=crop&amp;w=90&amp;h=90&amp;q=80" alt="Friend" data-llama-id="186"></div>
+            <span class="more-online" data-llama-id="187">+12</span>
+          </div>
+          <div class="connection-banner" data-llama-id="188"><i class="fa-solid fa-arrow-trend-up" data-llama-id="189"></i><span data-llama-id="190">Stronger connections. Bigger possibilities.</span><i class="fa-solid fa-arrow-right" data-llama-id="191"></i></div>
+        </section>
+      </aside>
+    </div>
+
+    <nav class="bottom-dock" aria-label="Primary navigation" data-llama-id="192">
+      <button class="bottom-item active" data-toast="You're already home" data-llama-id="193"><i class="fa-solid fa-house" data-llama-id="194"></i><span data-llama-id="195">Home</span></button>
+      <button class="bottom-item" data-toast="Opening your messages" data-llama-id="196"><i class="fa-solid fa-comment-dots" data-llama-id="197"></i><span data-llama-id="198">Messages</span><b class="badge-count" data-llama-id="199">3</b></button>
+      <button class="bottom-item" data-toast="Explore connected worlds" data-llama-id="200"><i class="fa-solid fa-globe" data-llama-id="201"></i><span data-llama-id="202">Worlds</span></button>
+      <button class="bottom-item" data-toast="Discover something new" data-llama-id="203"><i class="fa-regular fa-compass" data-llama-id="204"></i><span data-llama-id="205">Discover</span></button>
+      <button class="bottom-item" data-toast="You're all caught up on alerts" data-llama-id="206"><i class="fa-solid fa-bell" data-llama-id="207"></i><span data-llama-id="208">Notifications</span><b class="badge-count" data-llama-id="209">5</b></button>
+      <button class="bottom-item" data-toast="Your wallet is ready" data-llama-id="210"><i class="fa-solid fa-wallet" data-llama-id="211"></i><span data-llama-id="212">Wallet</span></button>
+    </nav>
+    <div class="footer-strip" data-llama-id="213"><span data-llama-id="214">Pulseworld connected</span><span data-llama-id="215">People · Opportunity · A brighter tomorrow</span></div>
+  </main>
+  <div class="toast" id="toast" role="status" data-llama-id="216"></div>
+  <script src="PBMessenger.js"></script>
+</body></html>
