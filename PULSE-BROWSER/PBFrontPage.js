@@ -3359,6 +3359,10 @@ async function GetThisMessengerDone() {
           HigherPanelSwitch.style.opacity = "1";
           HigherStatusPanel.style.display = "none";
         }
+      } else {
+        pbPulseDetailsEarn.style.pointerEvents = "auto";
+        HigherPanelSwitch.style.opacity = "1";
+        HigherStatusPanel.style.display = "none";
       }
     } else {
        HigherPanelSwitch.style.display = "none";
@@ -3488,7 +3492,8 @@ async function GetThisMessengerDone() {
           // initHigherAIConsoleOnTabStart(true);
         } else {
           HigherAuthorityShown = false;
-          HigherPanelSwitch.style.display = "none"
+          HigherPanelSwitch.style.display = "none"          
+          HigherPanelSwitch.style.opacity = "1";
           pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
           HigherAuthority.textContent = "🌐";
           pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
