@@ -172,7 +172,7 @@ let PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
 let PulseFrame2 = document.getElementById("PulseStreamFrame");
 let PulseFrameA = document.getElementById("PulseEarner2Frame");
 let PulseFrameB = document.getElementById("PulseEarner3Frame");
-BrowserHeartbeat.muted = false;
+if (BrowserHeartbeat) BrowserHeartbeat.muted = false;
 
 function pulsepalSpeak(message) {
   console.log(message);
@@ -332,13 +332,13 @@ setTimeout(() => {
 }, 50);
 
 if (!online) {
-  titlediv.textContent = "PulseBrowser OS (~Drifting~)";
+  if (titlediv) titlediv.textContent = "PulseBrowser OS (~Drifting~)";
   document.title = "PulseBrowser OS [~Drift~]";
   safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
 } else {
-  titlediv.textContent = "PulseBrowser OS";
+  if (titlediv) titlediv.textContent = "PulseBrowser OS";
   earnerminipanel = document.getElementById("earner-mini-panel");
-  if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
+  if (earnerminipanel && (earnerminipanel.textContent === "$0.000" || !earnerminipanel)) document.title = "PulseBrowser OS [Console]";
   setInterval(() => {
     chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
       if (chrome.runtime.lastError) return;
@@ -2441,222 +2441,226 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
   });
 }
 
-document.getElementById("CompanionConsoleInput").addEventListener("keydown", async (event) => {
-  if (event.key === "Enter") {
-    CompanionConsoleSend.click();
-  }
-});
+if (CompanionConsoleInput) {
+  CompanionConsoleInput.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+      CompanionConsoleSend.click();
+    }
+  });
+}
 
-CompanionConsoleSend.onclick = async () => {
-  CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
-  CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
-  const originalText = CompanionConsoleInput.value.trim(); // keeps capitals (code!) for the Higher AI
-  const text = CompanionConsoleInput.value.toLowerCase().trim();
-  if (!text) return;
-  let order = text;
-  CompanionConsoleInput.value = "";
-  if (!HigherAuthorityShown) {
-    // 3. Fire the wrapped prompt
-    if (text.includes("overmind orders")) {
-      order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
-      appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    } else if (text.includes("website request")) {
-      // Finds any URL starting with http:// or https:// until a space or the end of the text
-      const urlRegex = /https?:\/\/[^\s]+/i;
-      const match = text.match(urlRegex);
-      if (match) {
-        const texturl = match[0]; // Extract the matched URL string
-        askLocalModelWithLiveWeb(texturl);
+if (CompanionConsoleSend) {
+  CompanionConsoleSend.onclick = async () => {
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    const originalText = CompanionConsoleInput.value.trim(); // keeps capitals (code!) for the Higher AI
+    const text = CompanionConsoleInput.value.toLowerCase().trim();
+    if (!text) return;
+    let order = text;
+    CompanionConsoleInput.value = "";
+    if (!HigherAuthorityShown) {
+      // 3. Fire the wrapped prompt
+      if (text.includes("overmind orders")) {
+        order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+      } else if (text.includes("website request")) {
+        // Finds any URL starting with http:// or https:// until a space or the end of the text
+        const urlRegex = /https?:\/\/[^\s]+/i;
+        const match = text.match(urlRegex);
+        if (match) {
+          const texturl = match[0]; // Extract the matched URL string
+          askLocalModelWithLiveWeb(texturl);
+        }
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+      } else if (text.includes("bunker scan")) {
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+        askLocalModelWithLiveWeb();
+      } else {
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
       }
-      appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    } else if (text.includes("bunker scan")) {
-      appendCompanionMessage(CompanionDetailsMessage, "user", order);
-      askLocalModelWithLiveWeb();
-    } else {
-      appendCompanionMessage(CompanionDetailsMessage, "user", order);
-    }
-    if (!aiSession && typeof LanguageModel !== "undefined") {
-      try {
-        await initializeExoskeleton();
-      } catch (_) {}
-    }
-    if (!aiSession) {
-      // Seamless fallback to local Qwen/WebLLM when Chrome's experimental Gemini Nano isn't enabled
-      presentFallbackPending = true;
-      presentFallbackOrderText = text;
-      if (!higherAIEnabled) {
-        const selectedKey = document.getElementById("higherModelSelect")?.value || null;
-        const started = await enableHigherAI(selectedKey);
-        if (!started) {
-          presentFallbackPending = false;
+      if (!aiSession && typeof LanguageModel !== "undefined") {
+        try {
+          await initializeExoskeleton();
+        } catch (_) {}
+      }
+      if (!aiSession) {
+        // Seamless fallback to local Qwen/WebLLM when Chrome's experimental Gemini Nano isn't enabled
+        presentFallbackPending = true;
+        presentFallbackOrderText = text;
+        if (!higherAIEnabled) {
+          const selectedKey = document.getElementById("higherModelSelect")?.value || null;
+          const started = await enableHigherAI(selectedKey);
+          if (!started) {
+            presentFallbackPending = false;
+            return;
+          }
+        }
+        if (CompanionDetailsMessage && !document.getElementById("companionThinking")) {
+          const compThink = document.createElement("div");
+          compThink.id = "companionThinking";
+          compThink.style.cssText = "font-size:0.62rem; line-height:1.4; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
+          compThink.textContent = "🧠 AI Overmind is thinking…";
+          CompanionDetailsMessage.appendChild(compThink);
+          CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+        }
+        showHigherThinking("🧠 AI Overmind is thinking…");
+        MyLowerIntellect = originalText;
+        loadOrders();
+        return;
+      }
+      const response = await aiSession.prompt(order);
+      console.log("🧠 AI Overmind: ", response);
+      setTimeout(async () => {
+        appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+        if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
+      }, 300);
+      swSize = await getSWSize();
+      aiSize = await getAISize();
+      higherAISize = await getHigherAISize();
+      loadOrders();
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
-      }
-      if (CompanionDetailsMessage && !document.getElementById("companionThinking")) {
-        const compThink = document.createElement("div");
-        compThink.id = "companionThinking";
-        compThink.style.cssText = "font-size:0.62rem; line-height:1.4; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
-        compThink.textContent = "🧠 AI Overmind is thinking…";
-        CompanionDetailsMessage.appendChild(compThink);
-        CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+        }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+    } else {
+      // Higher Intellect: show what the user typed, then ask the model
+      // [Phase 2] Auto-enable AI if the user tries to chat before enabling (respect dropdown choice)
+      if (!higherAIEnabled) {
+        const selectedKey = document.getElementById("higherModelSelect")?.value || null;
+        appendHigherMessage(consoleOvermindCognition, "user", originalText);
+        appendHigherMessage(consoleOvermindCognition, "🌐 Overmind", "Starting AI for the first time — checking GPU and preparing model…", { persist: false });
+        const started = await enableHigherAI(selectedKey);
+        if (!started) return;
+      } else {
+        appendHigherMessage(consoleOvermindCognition, "user", originalText);
       }
       showHigherThinking("🧠 AI Overmind is thinking…");
       MyLowerIntellect = originalText;
       loadOrders();
-      return;
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+        }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
     }
-    const response = await aiSession.prompt(order);
-    console.log("🧠 AI Overmind: ", response);
-    setTimeout(async () => {
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
-      if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
-    }, 300);
-    swSize = await getSWSize();
-    aiSize = await getAISize();
-    higherAISize = await getHigherAISize();
-    loadOrders();
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
-      if (chrome.runtime.lastError) return;
-      if (!response || !response.ok) {
-        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-        return;
-      }
-      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-      if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
-      // Clean the incoming value (handles both formatted strings and existing numbers)
-      const cleanValue = typeof ALLassumedValue === 'string' 
-        ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
-        : Number(ALLassumedValue);
-      if (cleanValue > 0 && !itrunonce) {
-        itrunonce = true;
-        appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
-      } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
-        lastEarnBatch = response.lastEarnBatch;
-        console.log("Last Earn Batch:", lastEarnBatch);
-        const nowAllTime = new Date().toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true
-        });
-        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
-      }
-      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
-        MyPulseIdentity = response.MyPulseIdentity;
-        PulsesafeStorageSet({ MyPulseIdentity }); 
-        const identityName = document.getElementById("identityName");
-        identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
-        identityrunonce = true;
-      }
-      // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
-      OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-      earnerminipanel.textContent = currency(OurassumedValue);
-      // Calculate elapsed time in days (86,400,000 ms in one day)
-      const msPerDay = 1000 * 60 * 60 * 24;
-      const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
-      // Prevent division by zero or negative values if just started
-      const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "grey";
-      if (dailyRate >= 20) fontcolor = "gold";
-      if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
-      if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-      if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
-      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-      if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
-        PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-        PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
-      }
-      if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
-        PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
-        PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      }
-    });
-  } else {
-    // Higher Intellect: show what the user typed, then ask the model
-    // [Phase 2] Auto-enable AI if the user tries to chat before enabling (respect dropdown choice)
-    if (!higherAIEnabled) {
-      const selectedKey = document.getElementById("higherModelSelect")?.value || null;
-      appendHigherMessage(consoleOvermindCognition, "user", originalText);
-      appendHigherMessage(consoleOvermindCognition, "🌐 Overmind", "Starting AI for the first time — checking GPU and preparing model…", { persist: false });
-      const started = await enableHigherAI(selectedKey);
-      if (!started) return;
-    } else {
-      appendHigherMessage(consoleOvermindCognition, "user", originalText);
-    }
-    showHigherThinking("🧠 AI Overmind is thinking…");
-    MyLowerIntellect = originalText;
-    loadOrders();
-    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
-      if (chrome.runtime.lastError) return;
-      if (!response || !response.ok) {
-        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
-        return;
-      }
-      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
-      if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
-      // Clean the incoming value (handles both formatted strings and existing numbers)
-      const cleanValue = typeof ALLassumedValue === 'string' 
-        ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
-        : Number(ALLassumedValue);
-      if (cleanValue > 0 && !itrunonce) {
-        itrunonce = true;
-        appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
-      } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
-        lastEarnBatch = response.lastEarnBatch;
-        console.log("Last Earn Batch:", lastEarnBatch);
-        const nowAllTime = new Date().toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: true
-        });
-        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
-      }
-      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
-        MyPulseIdentity = response.MyPulseIdentity;
-        PulsesafeStorageSet({ MyPulseIdentity }); 
-        const identityName = document.getElementById("identityName");
-        identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
-        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
-        identityrunonce = true;
-      }
-      // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
-      OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
-      earnerminipanel.textContent = currency(OurassumedValue);
-      // Calculate elapsed time in days (86,400,000 ms in one day)
-      const msPerDay = 1000 * 60 * 60 * 24;
-      const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
-      // Prevent division by zero or negative values if just started
-      const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
-      let fontcolor = "grey";
-      if (dailyRate >= 20) fontcolor = "gold";
-      if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
-      if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
-      if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
-      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
-      if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
-        PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
-        PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
-      }
-      if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
-        PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
-        PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
-      }
-    });
-  }
-  // if (response.includes("{*Website Call:")) {
-  //   const urlRegex = /https?:\/\/([^\s]+)/i;
-  //   const match = response.match(urlRegex);
-  //   if (match && match[1]) {
-  //     const extractedURL = match[1];
-  //     console.log("The extracted URL is: " + extractedURL);
-  //     openNamedTab("PulsePal Tab", extractedURL);
-  //   } else {
-  //     console.log("URL not found in the provided string.");
-  //   } 
-  // }
-};
+    // if (response.includes("{*Website Call:")) {
+    //   const urlRegex = /https?:\/\/([^\s]+)/i;
+    //   const match = response.match(urlRegex);
+    //   if (match && match[1]) {
+    //     const extractedURL = match[1];
+    //     console.log("The extracted URL is: " + extractedURL);
+    //     openNamedTab("PulsePal Tab", extractedURL);
+    //   } else {
+    //     console.log("URL not found in the provided string.");
+    //   } 
+    // }
+  };
+}
 
 async function initializeExoskeleton() {
   aiSession = await LanguageModel.create({
@@ -7357,182 +7361,190 @@ const setupBtn = document.getElementById("setup");
 
 let hoverTimer = null;
 
-aboutBtn.addEventListener("mouseover", () => {
-  const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
+if (aboutBtn) {
+  aboutBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
 
-  // Clear any previous timer
-  if (hoverTimer) clearTimeout(hoverTimer);
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
 
-  // Start 250ms hover timer
-  hoverTimer = setTimeout(() => {
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
 
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-  }, 250);
-});
-
-// Cancel prefetch if mouse leaves early
-aboutBtn.addEventListener("mouseout", () => {
-  if (hoverTimer) clearTimeout(hoverTimer);
-  hoverTimer = null;
-});
-
-// Click logic stays the same
-aboutBtn.addEventListener("click", async () => {
-  const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
-
-  chrome.runtime.sendMessage({
-    type: "PB_HOVER_PREFETCH",
-    href: link
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
   });
 
-  try {
-    fetch(link, { mode: "no-cors" }).catch(() => {});
-  } catch (_) {}
+  // Cancel prefetch if mouse leaves early
+  aboutBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
 
-  pbPreconnect([link]);
-  openNamedTab("PulseBrowserOS", link);
-  await PBUniversalBoost.warmOrigin(link);
-});
-
-// Click logic stays the same
-authorityBtn.addEventListener("click", async () => {
-  openNamedTab("PulseWorldAuthority", authoritylink);
-  await PBUniversalBoost.warmOrigin(authoritylink);
-});
-
-engageBtn.addEventListener("mouseover", () => {
-  const link = "https://www.pulseworld.biz";
-
-  // Clear any previous timer
-  if (hoverTimer) clearTimeout(hoverTimer);
-
-  // Start 250ms hover timer
-  hoverTimer = setTimeout(() => {
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
-
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-  }, 250);
-});
-
-// Cancel prefetch if mouse leaves early
-engageBtn.addEventListener("mouseout", () => {
-  if (hoverTimer) clearTimeout(hoverTimer);
-  hoverTimer = null;
-});
-
-engageBtn.addEventListener("click", async () => {
-    let link = "https://www.pulseworld.biz";
+  // Click logic stays the same
+  aboutBtn.addEventListener("click", async () => {
+    const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
 
     chrome.runtime.sendMessage({
       type: "PB_HOVER_PREFETCH",
       href: link
     });
-    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
 
-    pbPreconnect([link]);
-    openNamedTab("PulseBusiness", link);
-    await PBUniversalBoost.warmOrigin(link);
-});
-
-
-enterBtn.addEventListener("mouseover", () => {
-  const link = "https://www.pulseworld.net";
-
-  // Clear any previous timer
-  if (hoverTimer) clearTimeout(hoverTimer);
-
-  // Start 250ms hover timer
-  hoverTimer = setTimeout(() => {
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
-
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-  }, 250);
-});
-
-// Cancel prefetch if mouse leaves early
-enterBtn.addEventListener("mouseout", () => {
-  if (hoverTimer) clearTimeout(hoverTimer);
-  hoverTimer = null;
-});
-
-enterBtn.addEventListener("click", async () => {
-    let link = "https://www.pulseworld.net";
-
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
-    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-
-    pbPreconnect([link]);
-    openNamedTab("PulseWorld", link);
-    await PBUniversalBoost.warmOrigin(link);
-});
-
-
-setupBtn.addEventListener("mouseover", () => {
-  const link = "https://www.pulseworld.me";
-
-  // Clear any previous timer
-  if (hoverTimer) clearTimeout(hoverTimer);
-
-  // Start 250ms hover timer
-  hoverTimer = setTimeout(() => {
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
-
-    try {
-      fetch(link, { mode: "no-cors" }).catch(() => {});
-    } catch (_) {}
-  }, 250);
-});
-
-// Cancel prefetch if mouse leaves early
-setupBtn.addEventListener("mouseout", () => {
-  if (hoverTimer) clearTimeout(hoverTimer);
-  hoverTimer = null;
-});
-
-setupBtn.addEventListener("click", async () => {
-    let link = "https://www.pulseworld.me";
-
-    chrome.runtime.sendMessage({
-      type: "PB_HOVER_PREFETCH",
-      href: link
-    });
-    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
     try {
       fetch(link, { mode: "no-cors" }).catch(() => {});
     } catch (_) {}
 
     pbPreconnect([link]);
-    openNamedTab("PulseIdentity", link);
+    openNamedTab("PulseBrowserOS", link);
     await PBUniversalBoost.warmOrigin(link);
-});
+  });
+}
+
+if (authorityBtn) {
+  // Click logic stays the same
+  authorityBtn.addEventListener("click", async () => {
+    openNamedTab("PulseWorldAuthority", authoritylink);
+    await PBUniversalBoost.warmOrigin(authoritylink);
+  });
+}
+
+if (engageBtn) {
+  engageBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.biz";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  engageBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  engageBtn.addEventListener("click", async () => {
+      let link = "https://www.pulseworld.biz";
+
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([link]);
+      openNamedTab("PulseBusiness", link);
+      await PBUniversalBoost.warmOrigin(link);
+  });
+}
+
+if (enterBtn) {
+  enterBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.net";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  enterBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  enterBtn.addEventListener("click", async () => {
+      let link = "https://www.pulseworld.net";
+
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([link]);
+      openNamedTab("PulseWorld", link);
+      await PBUniversalBoost.warmOrigin(link);
+  });
+}
+
+if (setupBtn) {
+  setupBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.me";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  setupBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  setupBtn.addEventListener("click", async () => {
+      let link = "https://www.pulseworld.me";
+
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([link]);
+      openNamedTab("PulseIdentity", link);
+      await PBUniversalBoost.warmOrigin(link);
+  });
+}
 
 document.getElementById("moduleEmail").addEventListener("click", async () => {
 
@@ -8045,34 +8057,37 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
   }, 500);
 });
 
+const MemoryWipe = document.getElementById("MemoryWipe");
+if (MemoryWipe) {
+  MemoryWipe.addEventListener("click", async () => {
+    // Ask user if they want to clear caches
+    const confirmClear = confirm(
+      "PulseBrowser OS: Clear your Higher Intellect Files from your Browser?"
+    );
 
-document.getElementById("MemoryWipe").addEventListener("click", async () => {
-  // Ask user if they want to clear caches
-  const confirmClear = confirm(
-    "PulseBrowser OS: Clear your Higher Intellect Files from your Browser?"
-  );
+    if (confirmClear) {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER" });
+    }
 
-  if (confirmClear) {
-    chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER" });
-  }
+    // Re-render after everything
+    setTimeout(async () => {
+      MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+      });
+      await pbRenderCacheList2();
+    }, 500);
 
-  // Re-render after everything
-  setTimeout(async () => {
-    MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
-    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
-      if (chrome.runtime.lastError) return;
-      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
-      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
-    });
-    await pbRenderCacheList2();
-  }, 500);
+    initHigherAIConsoleOnTabStart(true);
+  });
 
-  initHigherAIConsoleOnTabStart(true);
-});
+}
 
 const disablesw = document.getElementById("disable-sw");
 
-document.getElementById("disable-sw").addEventListener("click", async () => {
+disablesw.addEventListener("click", async () => {
   // If a SW exists → turn it OFF
   if (ServiceWorkerOnline) {
     chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
