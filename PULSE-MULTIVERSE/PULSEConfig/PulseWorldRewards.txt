@@ -453,9 +453,9 @@ function updateCurrencyDisplay() {
   logHistory(`Currency switched to ${currencyMode}`);
 }
 
-const currencySwitchBtn = document.getElementById("currencySwitchBtn");
-if (currencySwitchBtn) {
-  currencySwitchBtn.onclick = () => {
+
+if (document.getElementById("currencySwitchBtn")) {
+  document.getElementById("currencySwitchBtn").onclick = () => {
     const modes = ["USD", "EUR", "GBP", "JPY", "PB"];
     currencyMode = modes[(modes.indexOf(currencyMode) + 1) % modes.length];
     updateCurrencyDisplay();
@@ -463,10 +463,10 @@ if (currencySwitchBtn) {
 }
 
 
-const depositAmountInputEl = document.getElementById("depositAmountInput");
-if (depositAmountInputEl) {
-  depositAmountInputEl.addEventListener("input", () => {
-    const val = Math.max(0, Number(depositAmountInputEl.value) || 0);
+
+if (document.getElementById("depositAmountInput")) {
+  document.getElementById("depositAmountInput").addEventListener("input", () => {
+    const val = Math.max(0, Number(document.getElementById("depositAmountInput").value) || 0);
     if (depositMode === "Daily") dailyDeposit = val;
     else if (depositMode === "Custom") customDeposit = val;
     else manualDeposit = val;
