@@ -8227,7 +8227,6 @@ function CheckBackTab() {
 
   // 1. Listen for the filled PulseRealm coming back from pulseworld.net
   window.addEventListener("message", (event) => {
-    console.log("FILL_PULSE_REALM " + event.origin);
     if (event.origin !== "https://www.pulseworld.net") {
       return;
     }

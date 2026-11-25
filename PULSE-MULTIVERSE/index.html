@@ -3714,7 +3714,6 @@ function extractCloneableRealm(sourceObj) {
 }
 
 window.addEventListener("message", (event) => {
-  console.log("FILL_PULSE_REALM " + event.origin);
   // Verify the message came from a Chrome extension
   if (!event.origin.startsWith("chrome-extension://")) {
     return;
