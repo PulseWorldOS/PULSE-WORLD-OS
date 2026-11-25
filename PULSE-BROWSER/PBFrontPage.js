@@ -3783,7 +3783,7 @@ async function pbRenderCacheList2() {
   StorageRunning = true;
   
   const result = await pbRequestCacheList2();
-
+  
   if (!result || (!result.caches)) {
     listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
     StorageRunning = false;
@@ -3812,6 +3812,10 @@ async function pbRenderCacheList2() {
     </div>
     <div id="identityName" class="identityName"></div>
   `;
+  // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
+  const estimate = await navigator.storage.estimate();
+  const localUsed = estimate.usage || 0;
+  const localQuota = estimate.quota || 1;
 
   // ⭐ Memory FIRST
   // ⭐ Load previous storage history
@@ -3906,6 +3910,21 @@ async function pbRenderCacheList2() {
       };
     }
     
+    const percent = ((totalUsed / localQuota) * 100).toFixed(3);
+    // ⭐ Dynamic color zones
+    let percentColor = "lightgreen";
+    let percentColor2 = "lightgreen";
+    let percentColor3 = "lightgreen";
+    if (percent >= 40) percentColor = "gold";
+    if (percent >= 70) percentColor = "orange";
+    if (percent >= 90) percentColor = "red";
+    if (percent >= 40) percentColor2 = "gold";
+    if (percent >= 70) percentColor2 = "orange";
+    if (percent >= 90) percentColor2 = "red";
+    if (MyLocalMemoryLayerMB >= 180) percentColor3 = "gold";
+    if (MyLocalMemoryLayerMB >= 250) percentColor3 = "orange";
+    if (MyLocalMemoryLayerMB >= 350) percentColor3 = "red";
+    
     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
     const failCount = Object.keys(fails).length;
     if (!li) li = document.getElementById("li");
@@ -3922,12 +3941,55 @@ async function pbRenderCacheList2() {
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
       <br>
-      <font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
-      Remember, Architecture is Memory made  <br>
-      Manifest."</i> — <font color="#0FF">Words by John von Neumann (1945)</font></font><br><br>
+    
+      <div style="margin: 8px 20px; padding:8px; border-radius:8px;
+                  background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-      <font size="0.9rem"><i>🔍: "True comfort is choosing what stays, and what <br> fades. Forget what you don't want remembered. <br> It's about *our* data, *our* choices, *our* freedom."</i><br> — <font color="#0FF">Words by Aldwyn Fox (2026)</font></font><br><br>
+        <strong><font color="#FF8844">PulseWorld (RAM)</font> [<font color=${percentColor3}>${MyLocalMemoryLayerMB} MB</font>]</strong><br><br>
+
+        <div style="display:flex; gap:10px;">
+
+          <div style="flex:1;">
+            <strong>Higher AI Brain:</strong><br>
+            • <span style="color:lightgreen">${higherAIDisplay}</span><br>
+
+            <strong>AISync Memory:</strong><br>
+            • <span style="color:lightgreen">${aisyncDisplay}</span><br>
+
+            <strong>Local Storage:</strong><br>
+            • <span style="color:lightgreen">${totalDisplay}</span><br>
+          </div>
+
+          <div style="flex:1;">
+            <strong>Higher AI Mind:</strong><br>
+            • <span style="color:lightgreen">${higherGPUAIDisplay}</span><br>
+
+            <strong>System Quota:</strong><br>
+            • <span style="color:lightgreen">${quotaGB} GB</span><br>
+
+            <strong>System Memory:</strong><br>
+            • <span style="color:lightgreen">${swMB} MB</span><br><br>
+          </div>
+        </div>
+
+        <strong>Percent Used:</strong>
+        <span style="color:${percentColor}; font-weight:bold;">
+          ${percent}% (${statusText})
+        </span><br>
+
+        <strong>Projected Fill Time:</strong>
+        <span style="color:${percentColor2}; font-weight:bold;">
+          ${predictionText}
+        </span><br>
+
+      </div>
     `;
+    //   `<font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
+    //   Remember, Architecture is Memory made  <br>
+    //   Manifest."</i> — <font color="#0FF">Words by John von Neumann (1945)</font></font><br><br>
+
+    //   <font size="0.9rem"><i>🔍: "True comfort is choosing what stays, and what <br> fades. Forget what you don't want remembered. <br> It's about *our* data, *our* choices, *our* freedom."</i><br> — <font color="#0FF">Words by Aldwyn Fox (2026)</font></font><br><br>
+    // `;
 
     listEl.appendChild(li);
     best = true;
