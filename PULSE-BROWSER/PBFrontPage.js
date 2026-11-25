@@ -3479,7 +3479,11 @@ async function GetThisMessengerDone() {
         if (!HigherAuthorityShown) {
           HigherAuthorityShown = true;
           HigherPanelSwitch.style.display = "block"
-          HigherPanelSwitch.style.opacity = "0.3";
+          if (HigherStatusPanel) {
+            HigherPanelSwitch.style.opacity = "0.3";
+          } else {
+            HigherPanelSwitch.style.opacity = "1";
+          }
           pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
           HigherAuthority.textContent = "🧠";
           pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
@@ -3492,8 +3496,7 @@ async function GetThisMessengerDone() {
           // initHigherAIConsoleOnTabStart(true);
         } else {
           HigherAuthorityShown = false;
-          HigherPanelSwitch.style.display = "none"          
-          HigherPanelSwitch.style.opacity = "1";
+          HigherPanelSwitch.style.display = "none"
           pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
           HigherAuthority.textContent = "🌐";
           pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
