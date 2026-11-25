@@ -8223,6 +8223,33 @@ function CheckBackTab() {
     });
   }
 
+  const pulseFrame = document.getElementById("PulseEarnerFrame");
+
+  // 1. Listen for the filled PulseRealm coming back from pulseworld.net
+  window.addEventListener("message", (event) => {
+    if (event.origin !== "https://www.pulseworld.net") {
+      return;
+    }
+
+    if (event.data?.type === "PULSE_REALM_FILLED") {
+      // Merge the returned data into your extension's PulseRealm variable
+      PulseRealm = event.data.realm;
+      console.log("PulseRealm filled by website:", PulseRealm);
+    }
+  });
+
+  // 2. Send the blank PulseRealm once the iframe finishes loading
+  pulseFrame.addEventListener("load", () => {
+    pulseFrame.contentWindow.postMessage(
+      {
+        type: "FILL_PULSE_REALM",
+        realm: PulseRealm
+      },
+      "https://www.pulseworld.net"
+    );
+  });
+
+
   function startPulseLoop() {
     if (intervalId) return; // already running
     const interval = getWarmInterval2();
@@ -8239,7 +8266,6 @@ function CheckBackTab() {
           CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
         }
       });
-      console.log("PulseBrowser OS Attempt to Grab Cache from PulseWorld: " + PulseBrowserRealm.PulseCacheStore);
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();

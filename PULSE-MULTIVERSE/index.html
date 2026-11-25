@@ -3689,6 +3689,54 @@ function pulsePrefixDown(event) {
     console.log("[PulseBrowser] HTTPS prefix clicked.");
 }
 
+// Helper to strip functions, DOM nodes, and circular references (like globalThis)
+function extractCloneableRealm(sourceObj) {
+  const clean = {};
+  for (const [key, value] of Object.entries(sourceObj)) {
+    // Skip self-references or window references
+    if (value === globalThis || value === window || value === sourceObj) continue;
+
+    // Keep only JSON-safe primitives, plain objects, and arrays
+    if (
+      value === null ||
+      ["string", "number", "boolean"].includes(typeof value) ||
+      (typeof value === "object" && !(value instanceof Node))
+    ) {
+      try {
+        structuredClone(value); // Verify browser can clone this property
+        clean[key] = value;
+      } catch {
+        // Skip uncloneable properties (functions, proxies, symbols)
+      }
+    }
+  }
+  return clean;
+}
+
+window.addEventListener("message", (event) => {
+  // Verify the message came from a Chrome extension
+  if (!event.origin.startsWith("chrome-extension://")) {
+    return;
+  }
+
+  if (event.data?.type === "FILL_PULSE_REALM") {
+    // 1. Merge any initial keys sent by the extension into the website's PulseRealm
+    Object.assign(PulseRealm, event.data.realm);
+
+    // 2. Populate or update your website's PulseRealm values here if needed
+    PulseRealm.originUrl = window.location.href;
+    PulseRealm.timestamp = Date.now();
+
+    // 3. Send the safely cloned PulseRealm back to the exact extension that asked
+    event.source.postMessage(
+      {
+        type: "PULSE_REALM_FILLED",
+        realm: extractCloneableRealm(PulseRealm)
+      },
+      event.origin
+    );
+  }
+});
 
 // function handleGo() {
 //   console.log("[PulseBrowser] handleGo() triggered.");
