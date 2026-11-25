@@ -5146,7 +5146,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         if (displayStyle) {
           PulseFrame2 = document.getElementById("PulseStreamFrame");
           destroyIframe(PulseFrame2);
-          openNamedTab(realm, link);
+          openNamedTab(realm, link, true);
           PulseStreamingLive = false;
           topPanel = document.querySelector(".top-panel");
           const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
@@ -5164,10 +5164,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
         latestSnapshot(realm, link, PulseSnapIndex, 0);
         if (bankdisplayStyle) {
           PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-          destroyIframe(PulseBrowserOSFrame);
           openNamedTab(realm, link);
-          PulseAILive = false;
-          PulseAILiveRealm = null;
           topPanel = document.querySelector(".top-panel");
           const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
           if (remaining === 0) {
@@ -5235,10 +5232,10 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
   }
 }
 
-async function openNamedTab(name, url) {
+async function openNamedTab(name, url, skip) {
   PulseRealmSettings = await pbLoadExtensionSettings();
   PulseFrame2 = document.getElementById("PulseStreamFrame");
-  if (PulseFrame2) {
+  if (PulseFrame2 && !skip) {
     if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
       PulseStreamingLive = true;
       let realm = url;
@@ -5260,7 +5257,7 @@ async function openNamedTab(name, url) {
     }
   }
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-  if (PulseBrowserOSFrame) {
+  if (PulseBrowserOSFrame && !skip) {
     if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url)) {
       PulseAILive = true;
       let realm = url;
