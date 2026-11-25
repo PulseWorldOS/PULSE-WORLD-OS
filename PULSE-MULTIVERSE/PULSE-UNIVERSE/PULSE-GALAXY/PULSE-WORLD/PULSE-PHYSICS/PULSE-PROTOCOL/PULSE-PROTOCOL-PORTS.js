@@ -54,7 +54,7 @@ export const PulseProtocolPorts = {
   // ⭐ PRIMARY EXPRESSION MEMBRANE
   signal: PulseSignalPort, // merged‑pulse engine (IMMORTAL v33)
   // ⭐ WORLD‑CYCLE ENGINE
-  pulse: ProtocolPulsePort, // Pulse engine (timing + world cycles)
+  pulse: PulsePort, // Pulse engine (timing + world cycles)
   core: PulseProtocolCore, // Alias for world‑layer root
 
   // ⭐ SECURITY / TRUST
