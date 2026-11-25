@@ -1,4 +1,5 @@
-
+globalThis.PulseRealm=globalThis;
+const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 let lastEarnBatch = null;
 let PulseSnapIndex = 0;
 let MyPulseIdentity = null;
@@ -92,7 +93,6 @@ let searchEngineActivated = "*Google.com";
 let temporaryLinks = [];
 let engineURL = buildSearchURL("google.com");
 let url = engineURL;
-let PulseRealm = {};
 let PulseModuleCount = 0;
 let PulseTempModuleCount = 0;
 let PulseRealmSettings = null;
@@ -8238,6 +8238,7 @@ function CheckBackTab() {
           CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
         }
       });
+      console.log("PulseBrowser OS Attempt to Grab Cache from PulseWorld: ", PulseRealm.PulseCacheStore);
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
