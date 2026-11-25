@@ -208,6 +208,8 @@ async function checkPersistentStorage(skip) {
 
   PulseRealm.PulseCacheStore = usedMB + " MB/" + quotaGB + " GB";
   PulseRealm.PulseCacheUsed = percent + "%";
+  PulseRealm.PulseCacheUsedMB = usedMB;
+  PulseRealm.PulseCacheQuotaGB = quotaGB;
 
   if (skip === true) {
     fetch(`https://${PulseRealm.CurrentHost}`, { cache: "force-cache" });
