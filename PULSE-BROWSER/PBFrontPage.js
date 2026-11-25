@@ -7,7 +7,7 @@ let gpuCapabilitySize = 2048;
 let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
-let PulseBankingLive = false;
+let PulseAILive = false;
 let itrunonce = false;
 let thisrunonce = false;
 let MessengerMode = "Console";
@@ -5234,8 +5234,8 @@ async function openNamedTab(name, url) {
   }
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
   if (PulseBrowserOSFrame) {
-    if (PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) {
-      PulseBankingLive = true;
+    if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === url)) {
+      PulseAILive = true;
       let realm = url;
       realm = realm.replace("https://","");
       realm = realm.replace("www.","");
