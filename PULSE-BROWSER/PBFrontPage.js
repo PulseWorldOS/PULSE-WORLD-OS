@@ -8238,7 +8238,7 @@ function CheckBackTab() {
           CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
         }
       });
-      console.log("PulseBrowser OS Attempt to Grab Cache from PulseWorld: ", PulseRealm.PulseCacheStore);
+      console.log("PulseBrowser OS Attempt to Grab Cache from PulseWorld: " + PulseRealm.PulseCacheStore);
       chrome.runtime.getPlatformInfo();
       updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
       swap();
