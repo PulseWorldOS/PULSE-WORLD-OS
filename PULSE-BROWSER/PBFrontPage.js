@@ -3087,6 +3087,7 @@ async function GetThisMessengerDone() {
       messengerinnerpanel.style.display = "none";
       messengerinnerpanel.style.pointerEvents = "none";
       pbPulseMessenger.style.pointerEvents = "auto";
+      pbPulseMessenger.style.marginTop = "";
       messengerpanel.style.pointerEvents = "none";
       messengerpanel.style.background = "transparent";
       messengerpanel.style.backdropFilter = "none";
@@ -3112,6 +3113,7 @@ async function GetThisMessengerDone() {
       pbPulseMessenger.style.border = "2px solid #000";
       messengerinnerpanel.style.display = "flex";
       messengerinnerpanel.style.pointerEvents = "auto";
+      pbPulseMessenger.style.marginTop = "35px";
       pbPulseMessenger.style.pointerEvents = "auto";
       messengerpanel.style.pointerEvents = "auto";
       messengerpanel.style.background = "";
@@ -3214,6 +3216,7 @@ async function GetThisMessengerDone() {
     pbPulseMessenger.onclick = async () => {
       if (!MessengerHidden) {
         MessengerHidden = true;
+        pbPulseMessenger.style.marginTop = "";
         // ——— Turn ON (transparent / earning mode) ———
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
@@ -3239,6 +3242,7 @@ async function GetThisMessengerDone() {
         }, 0);
       } else {
         MessengerHidden = false;
+        pbPulseMessenger.style.marginTop = "35px";
         if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
