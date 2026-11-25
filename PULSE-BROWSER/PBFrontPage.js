@@ -5069,6 +5069,8 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
     if (PulseStreamingLive  && link === PulseRealmSettings.externalStreamingLink) {
       div.style.opacity = "0.35";
+    } else if (PulseAILive  && ((link === PulseRealmSettings.externalBankLink) || (link === PulseRealmSettings.externalEmailLink))) {
+      div.style.opacity = "0.35";
     } else {
       div.style.opacity = "1";
     }
