@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseBrowser OS Console</title>
+  <link rel="preconnect" href="https://www.pulseworld.net" crossorigin>
+  <link rel="preconnect" href="https://www.pulseworld.me" crossorigin>
+  <link rel="preconnect" href="https://www.pulseworld.biz" crossorigin>
+  <link rel="preconnect" href="https://www.pulseworld.money" crossorigin>
+  <!-- Preload Logo -->
+  <link rel="preload" fetchpriority="high" as="video" href="PulseWorldOS.mp4" type="video/mp4">
+  <link rel="preload" as="image" href="PulseWorldEntrancePulseGPUPulseEarn.png" />
+  <!-- <link rel="preload" as="image" href="PulseWorldSplash512.png" /> -->
+
+  <style>
+    body {
+      margin: 0 auto;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    a {
+      cursor: pointer;
+    }
+
+    .nebula {
+      position: absolute;
+      width: 100%;
+      height: 100%;      
+      background-image: url("PulseWorldEntrancePulseGPUPulseEarn.png");
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.75);
+      transition: opacity 1.5s ease-in-out;
+      animation: drift 45s linear infinite;
+      z-index: -3;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(-4%, -4%) scale(1.1); }
+      50% { transform: translate(4%, 4%) scale(1.15); }
+      100% { transform: translate(-4%, -4%) scale(1.1); }
+    }
+
+    .core {
+      text-align: center;
+      margin: 0 auto;
+      animation: fadeIn 2s ease forwards;
+      opacity: 0;
+      width: 900px;
+      max-width: 95%;
+      margin-left: clamp(140px, 12vw, 240px);
+      margin-right: clamp(140px, 12vw, 240px);
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    
+    .side-panel {
+      position: fixed;
+      margin: 14px 14px;
+      top: 0;
+      bottom: 0;
+      width: clamp(280px, 12vw, 350px);
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    }
+
+    .left-panel {
+      left: 0;
+      top: 300px;
+    }
+
+    .right-panel {
+      right: 0;    
+      padding: 0px 6px;
+    }
+    
+    .top-panel {
+      position: fixed;
+      margin: 14px 14px;
+      top: 0;
+      height: 280px;
+      width: clamp(280px, 12vw, 350px);
+
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(24px);
+
+      background-image: url("PulseOSTabs.png");
+      background-repeat: no-repeat;
+      background-size: 55%;        /* 1/3 the size */
+      background-position: center; /* centered perfectly */
+
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+
+    .hotkey {
+      text-decoration: underline;
+    }
+
+    .PulseBrowser-OS-Snapshot1 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatExplorer 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 10px;
+      left: 10px;
+    }
+
+    .PulseBrowser-OS-Snapshot2 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatMinion 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 30px;
+      left: 100px;
+    }
+
+    .PulseBrowser-OS-Snapshot3 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatHeartbeat 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 10px;
+      left: 190px;
+    }
+
+    .PulseBrowser-OS-Snapshot4 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatDrifter 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 100px;
+      left: 30px;
+    }
+
+    .PulseBrowser-OS-Snapshot5 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloat 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 110px;
+      left: 110px;
+    }
+
+    .PulseBrowser-OS-Snapshot6 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatOrbit 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 110px;
+      left: 190px;
+    }
+
+    .PulseBrowser-OS-Snapshot7 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatMinion 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 180px;
+      left: 30px;
+    }
+
+    .PulseBrowser-OS-Snapshot8 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatDrifter 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 190px;
+      left: 110px;
+    }
+
+    .PulseBrowser-OS-Snapshot9 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: bubbleFloatExplorer 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 195px;
+      left: 190px;
+    }
+
+    .PulseBrowser-OS-Temporary1 {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 35;
+      animation: bubbleFloatExplorer 15s ease-in-out infinite,
+                pulseGlow 3.5s ease-in-out infinite;
+
+      top: 195px;
+      left: 590px;
+    }
+
+    /* ⭐ Viewport layer */
+    .Snapshot-Viewport {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ⭐ Big favicon */
+    .Snapshot-Favicon {
+      border-radius: 40px;
+      width: 75%;      /* adjust size here */
+      height: 75%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px #00aaffaa);
+    }
+
+    .PulseBrowser-OS-Snapshot1.electrify,
+    .PulseBrowser-OS-Snapshot2.electrify,
+    .PulseBrowser-OS-Snapshot3.electrify,
+    .PulseBrowser-OS-Snapshot4.electrify,
+    .PulseBrowser-OS-Snapshot5.electrify,
+    .PulseBrowser-OS-Snapshot6.electrify,
+    .PulseBrowser-OS-Snapshot7.electrify,
+    .PulseBrowser-OS-Snapshot8.electrify,
+    .PulseBrowser-OS-Snapshot9.electrify,
+    .PulseBrowser-OS-Temporary1.electrify {
+      animation: bubbleElectrify 3.2s ease-out;
+      background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000 70%);
+      box-shadow:
+        0 0 4px rgba(0, 150, 255, 0.7),
+        0 0 10px rgba(0, 200, 255, 0.6),
+        inset 0 0 6px rgba(0, 180, 255, 0.8);
+      filter: brightness(1.35) contrast(1.3) saturate(1.7);
+    }
+
+    .top-panel.electrify {
+      box-shadow:
+        0 0 4px rgba(0, 150, 255, 0.7),
+        0 0 10px rgba(0, 200, 255, 0.6),
+        inset 0 0 6px rgba(0, 180, 255, 0.8);
+    }
+
+    .pbWrapper {
+      display: inline-block;
+      width: 240px;
+      height: 240px;
+      border-radius: 30px;
+      box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+    }
+
+    #pbPulseScreen {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
+
+
+    @keyframes bubbleElectrify {
+      0%   { transform: translate(0px, 0px) scale(1); }
+      20%  { transform: translate(6px, -6px) scale(1.05); }
+      40%  { transform: translate(-6px, 6px) scale(0.95); }
+      60%  { transform: translate(8px, 4px) scale(1.07); }
+      80%  { transform: translate(-4px, -8px) scale(0.93); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+
+    @keyframes bubbleFloat {
+      0%   { transform: translate(0px, 0px); }
+      10%  { transform: translate(3px, -2px); }
+      20%  { transform: translate(-2px, 4px); }
+      30%  { transform: translate(4px, 3px); }
+      40%  { transform: translate(-3px, -4px); }
+      50%  { transform: translate(2px, 5px); }
+      60%  { transform: translate(-4px, 2px); }
+      70%  { transform: translate(3px, -3px); }
+      80%  { transform: translate(-2px, 4px); }
+      90%  { transform: translate(4px, -1px); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    @keyframes bubbleFloatDrifter {
+      0%   { transform: translate(0px, 0px); }
+      12%  { transform: translate(2px, -1px); }
+      25%  { transform: translate(-3px, 2px); }
+      38%  { transform: translate(4px, 1px); }
+      52%  { transform: translate(-2px, -3px); }
+      67%  { transform: translate(3px, 3px); }
+      82%  { transform: translate(-1px, 2px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes bubbleFloatExplorer {
+      0%   { transform: translate(0px, 0px); }
+      10%  { transform: translate(4px, -3px); }
+      20%  { transform: translate(-5px, 4px); }
+      35%  { transform: translate(6px, 2px); }
+      50%  { transform: translate(-4px, -5px); }
+      65%  { transform: translate(5px, 3px); }
+      80%  { transform: translate(-3px, 5px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes bubbleFloatMinion {
+      0%   { transform: translate(0px, 0px); }
+      8%   { transform: translate(2px, -3px); }
+      16%  { transform: translate(-1px, 2px); }
+      24%  { transform: translate(3px, 1px); }
+      32%  { transform: translate(-2px, -2px); }
+      48%  { transform: translate(4px, 3px); }
+      64%  { transform: translate(-3px, 1px); }
+      80%  { transform: translate(2px, -4px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes bubbleFloatHeartbeat {
+      0%   { transform: translate(0px, 0px) scale(1); }
+      20%  { transform: translate(2px, -2px) scale(1.03); }
+      40%  { transform: translate(-3px, 3px) scale(0.98); }
+      60%  { transform: translate(4px, 1px) scale(1.04); }
+      80%  { transform: translate(-2px, -3px) scale(0.99); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    @keyframes bubbleFloatOrbit {
+      0%   { transform: translate(0px, 0px); }
+      25%  { transform: translate(4px, 2px); }
+      50%  { transform: translate(0px, 4px); }
+      75%  { transform: translate(-4px, 2px); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    .logo {
+      width: 240px;
+      height: 240px;
+      border-radius: 30px;
+      box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44; }
+      50% { box-shadow: 0 0 70px #00ccffcc, 0 0 120px #00ccff66; }
+      100% { box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44; }
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: bold;
+      margin-top: 25px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px #00aaff;
+      animation: titleReveal 1.8s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes titleReveal {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 1.1rem;
+      opacity: 0;
+      animation: subtitleReveal 2.5s ease forwards;
+      animation-delay: 1.2s;
+      text-shadow: 0 0 8px #00aaff88;
+    }
+
+    @keyframes subtitleReveal {
+      to { opacity: 0.85; }
+    }
+
+    .subsubtitle {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      color: white;
+      box-shadow: 0 0 25px rgba(0, 150, 255, 0.25);
+      animation: subsubtitleReveal 2.5s ease forwards;
+      animation-delay: 1.6s;
+      text-shadow: 0 0 18px #00aaff88;
+    }
+
+    @keyframes subsubtitleReveal {
+      to { opacity: 0.85; }
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .search {
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: grey;
+      color: black;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .pulse-gpu-reset {
+      /* Any GPU-affecting property works */
+      transform: translateZ(0) !important;
+      opacity: 0.9999 !important; /* forces repaint */
+    }
+
+
+    .search:hover {
+      background: #33bbffcc;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+    /* FIXED BUTTON — now an anchor */
+    .text {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      padding: 2px;
+      border-radius: 40px;
+      border: 2px solid black;
+      background-color: red;
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+    .videos {
+      width: 20px;
+      height: 20px;
+      margin-right: 2px;
+      padding: 2px;
+      border-radius: 40px;
+      border: 2px solid black;
+      background-color: black;
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+    .images {
+      width: 20px;
+      height: 20px;
+      margin-right: 2px;
+      padding: 2px;
+      border-radius: 40px;
+      border: 2px solid black;
+      background-color: black;
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+    .navigate {
+      width: 20px;
+      height: 20px;
+      display: none;
+      margin-right: 2px;
+      padding: 2px;
+      border-radius: 40px;
+      border: 2px solid black;
+      background-color: black;
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+    /* FIXED BUTTON — now an anchor */
+    .searchus {
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: grey;
+      color: black;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .searchus:hover {
+      background: #33bbffcc;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+
+    #timerBtn {
+      position: fixed;
+      z-index: 99999999;
+      font-size: 20px;
+      font-weight: 600;
+      padding: 3px 6px;
+      bottom: 1.5dvh;
+      right: 1dvw;
+      border-radius: 6px;
+      border: none;
+      background: rgba(0,0,0,0.0);
+      color: #0ff;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, 
+                  box-shadow 0.12s ease, 
+                  filter 0.12s ease,
+                  backdrop-filter 0.15s ease;
+      backdrop-filter: none;
+    }
+    #driftBtn:hover {
+      transform: scale(1.03);
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .enter {
+      margin-top: 30px;
+      padding: 14px 34px;
+      background: linear-gradient(135deg, #000, #0a0a0a);
+      color: white;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid white;
+      text-decoration: none;
+      display: inline-block;
+
+      /* Glow + reveal */
+      box-shadow:
+        0 0 20px #00aaff88,
+        inset 0 0 12px rgba(255,255,255,0.08);
+      transition: 0.25s ease;
+      animation: buttonReveal 1.8s ease forwards;
+      opacity: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Fade-in */
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    /* Gleam sweep */
+    .enter::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 120%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255,255,255,0.25) 50%,
+        transparent 100%
+      );
+      transform: skewX(-20deg);
+      transition: 0.6s ease;
+    }
+
+    /* Hover: gleam + glow + lift */
+    .enter:hover {
+      background: linear-gradient(135deg, #003300, #005500);
+      box-shadow:
+        0 0 30px #33bbffcc,
+        inset 0 0 18px rgba(255,255,255,0.15);
+      transform: scale(1.06);
+    }
+
+    .enter:hover::before {
+      left: 120%;
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .engage {
+      height: 23px;
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: green;
+      color: white;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .engage:hover {
+      background: #33bbff;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .access {
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: green;
+      color: white;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .access:hover {
+      background: gold;
+      color: black;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .setup {
+      height: 23px;
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: grey;
+      color: white;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      transition: 0.25s ease;
+      animation: buttonReveal 3s ease forwards;
+      opacity: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @keyframes buttonReveal {
+      to { opacity: 1; }
+    }
+
+    .setup:hover {
+      background: gold;
+      color: black;
+      box-shadow: 0 0 30px #33bbffcc;
+      transform: scale(1.05);
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .start {
+      bottom: 1px;
+      right: 10px;
+      margin-top: 8px;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      position: fixed;
+    }
+
+    /* FIXED BUTTON — now an anchor */
+    .about {
+      bottom: 1px;
+      left: 10px;
+      margin-top: 8px;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 20px #00aaff88;
+      position: fixed;
+    }
+
+    .shimmer {
+      position: absolute;
+      width: 400%;
+      border-radius: 40px;
+      height: 400%;
+      background: linear-gradient(120deg, transparent 0%, #00aaff22 50%, transparent 100%);
+      animation: shimmerMove 6s linear infinite;
+      z-index: -2;
+    }
+
+    @keyframes shimmerMove {
+      0% { transform: translateX(-100%) translateY(-100%); }
+      100% { transform: translateX(100%) translateY(100%); }
+    }
+
+    .search-engine-textbox {
+      min-height: 60px;
+      
+      width: 650px;
+      max-width: 95%;
+      background: rgba(10, 10, 10, 0.85);
+      color: #eee;
+
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.4;
+
+      padding: 16px 20px;
+      border-radius: 12px;
+
+      border: 2px solid #333;
+      outline: none;
+      
+      box-shadow: 0 0 18px rgba(0, 150, 255, 0.25);
+      backdrop-filter: blur(4px);
+
+      /* Smooth typing */
+      caret-color: #4af;
+
+      /* Allow typing */
+      white-space: pre-wrap;
+    }
+
+    .search-engine-textbox:focus {
+      border-color: #4af;
+      box-shadow: 0 0 28px rgba(68, 170, 255, 0.45);
+    }
+
+    /* ============================
+      SEARCH AREA
+      ============================ */
+
+    .search-area {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+
+    .navigate:hover,
+    .images:hover,
+    .videos:hover,
+    .text:hover {
+      transform: scale(1.15);
+      background: rgba(0, 150, 255, 0.4);
+      box-shadow: 0 0 18px rgba(0, 150, 255, 0.6);
+    }
+
+    /* ============================
+      MAIN BUTTON GROUPS
+      ============================ */
+
+    .main-links,
+    .business-links,
+    .identity-links {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    /* ============================
+      MODULE CONSOLE
+      ============================ */
+
+    .module-console {
+      margin-top: 25px;
+      padding: 20px;
+      width: 900px;
+      max-width: 95%;
+
+      background: rgba(0, 0, 0, 0.55);
+      border: 2px solid #00aaff55;
+      border-radius: 16px;
+
+      box-shadow: 0 0 25px rgba(0, 150, 255, 0.25);
+      backdrop-filter: blur(6px);
+
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .search-console {
+      margin-top: 25px;
+      width: 650px;
+      height: 140px;
+      max-width: 95%;
+
+     
+      border-radius: 16px;
+
+      
+      backdrop-filter: blur(0px);
+
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .module-setting {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
+    .clear-caches {
+      cursor: pointer;
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
+    }
+    
+    .disable-sw {
+      cursor: pointer;
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
+    .module-setting2 {
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
+    .module-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 16px;
+      text-shadow: 0 0 10px #00aaff;
+    }
+
+    .module-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .module-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: #111;
+      color: #fff;
+      border-radius: 20px;
+      border: 2px solid #00aaff88;
+
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+    .module-btnF {
+      display: flex;
+      padding: 6px 10px;
+      background: #1a1a1d;
+      color: #fff;
+      border-radius: 10px;
+      border: 2px solid #00aaff88;
+
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+      transition: 0.25s ease;
+    }
+
+    .module-btnF:hover {
+      background: #003344;
+      box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
+      transform: scale(1.08);
+    }
+    .module-btn:hover {
+      background: #003344;
+      box-shadow: 0 0 22px rgba(0, 150, 255, 0.6);
+      transform: scale(1.08);
+    }
+    
+    .PulseWorldIcon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .PulseBusinessIcon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .PulseIdentityIcon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .module-icon {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .module-iconF {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .module-label {
+      font-size: 18px;
+    }
+
+    .module-labelF {
+      font-size: 15px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <button id="timerBtn" aria-label="Timer" role="button">10</button>
+  <div class="nebula" id="nebula"></div>
+  <div class="shimmer"></div>
+  
+  <div class="top-panel left-panel" id="top-panel left-panel">
+    <!-- Left panel content -->
+  </div>
+  <div class="side-panel left-panel" id="side-panel left-panel">
+    <div class="cache-panel" id="cache-panel">
+      <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
+        PulseBrowser OS - User Memory
+      </div>
+      <!-- Left panel content -->
+    </div>
+    <div class="disable-sw" id="disable-sw" style="color: whitesmoke">Pause Companion</div>
+    <div class="clear-caches" id="clear-caches" style="color: rosybrown">Restart Memory</div>
+  </div>
+
+  <div class="side-panel right-panel" id="side-panel right-panel">
+    <div style="font-weight:bold; text-align: center; color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:6px;">
+      PulseBrowser OS - User Overlay
+    </div>
+
+    <div id="pb-hud-kernel"></div>
+    <div id="pb-hud-warm"></div>
+    <div id="pb-hud-performance"></div>
+    <div id="pb-hud-accelerator"></div>
+    <div id="pb-hud-navigator"></div>
+    <div id="pb-hud-router"></div>
+    <div id="pb-hud-settings"></div>
+    <div id="pb-hud-experimental"></div>
+    <div id="pb-hud-flags"></div>
+  </div>
+
+  <div class="core">
+    <div class="pbWrapper" id="pbWrapper">
+      <video id="pbPulseScreen" class="pbPulseScreen" src="PulseWorldOS.mp4" autoplay muted playsinline aria-label="pbPulseScreen"></video>
+    </div>
+    <!-- Logo + Title -->
+    <!-- <img class="logo" src="PulseWorldSplash512.png" alt="PulseWorld Logo" /> -->
+
+    <div class="title" id="title">PulseBrowser OS</div>
+    <div class="subtitle" id="subtitle">
+      Unified Internet • Temporal OS • Accelerated Routing • Immortal Runtime • Perpetual Freshness
+    </div>
+    
+    <!-- Search Area -->
+    <div class="search-console">
+      <div class="module-setting2">Warm-Nova</div>
+      <div class="search-area" id="search-area">
+        <div class="search-row">
+          <div id="searchengineTextbox"
+              class="search-engine-textbox"
+              contenteditable="true"
+              role="textbox"
+              aria-label="Search Engine TextBox"></div>
+        </div>
+
+        <div class="search-actions">
+          <!-- Intent Icons -->
+          <a class="navigate" id="navigate">🔗</a>
+          <a class="images" id="images">🖼️</a>
+          <a class="videos" id="videos">🎬</a>
+          <a class="text" id="text">📄</a>
+          <a class="search" id="search">🔍 Pulse Search Engine</a>
+          <a class="searchus" id="searchus">Who We Are? 🧑</a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="about" id="about">About PulseBrowser OS</div>
+    <div class="start" id="start">Origin Consensus: 10/29/1969 10:30:00 PM</div>
+
+    <!-- Main Navigation Buttons -->
+    <div class="main-links">
+      <div class="engage" id="engage">
+        <span class="PulseBusinessIcon" id="PulseBusinessIcon">💼</span> PulseBusiness
+      </div>
+      <div class="enter" id="enter">
+        <span class="PulseWorldIcon" id="PulseWorldIcon">🌐</span> Enter PulseWorld
+      </div>
+      <div class="setup" id="setup">
+        <span class="PulseIdentityIcon" id="PulseIdentityIcon">🧑‍🎨</span> PulseIdentity
+      </div>
+    </div>
+
+    <div id="pbWarmContainer" style="display:none"></div>
+
+    <!-- ⭐ PulseBrowser Modules Console -->
+    <div class="module-console">
+      <div class="module-setting">Warm-Galaxy</div>
+      <div class="module-title">Your PulseBrowser OS Accelerated Modules</div>
+
+      <div class="module-row">
+
+        <a class="module-btn" id="moduleBank">
+          <span class="module-icon" id="moduleBankIcon">🏦</span>
+          <span class="module-label">
+            <span class="hotkey">B</span>anking
+          </span>
+        </a>
+
+        <a class="module-btn" id="moduleEmail">
+          <span class="module-icon" id="moduleEmailIcon">📧</span>
+          <span class="module-label">
+            <span class="hotkey">M</span>ail
+          </span>
+        </a>
+
+        <a class="module-btn" id="moduleSocial">
+          <span class="module-icon" id="moduleSocialIcon">🎭</span>
+          <span class="module-label">
+            <span class="hotkey">S</span>ocial
+          </span>
+        </a>
+
+        <a class="module-btn" id="moduleWork">
+          <span class="module-icon" id="moduleWorkIcon">💼</span>
+          <span class="module-label">
+            <span class="hotkey">W</span>ork
+          </span>
+        </a>
+
+        <a class="module-btn" id="moduleStream">
+          <span class="module-icon" id="moduleStreamIcon">📺</span>
+          <span class="module-label">
+            <span class="hotkey">T</span>V/Movies
+          </span>
+        </a>
+
+        <a class="module-btn" id="moduleShopping">
+          <span class="module-icon" id="moduleShoppingIcon">💳</span>
+          <span class="module-label">
+            <span class="hotkey">E</span>-Comm
+          </span>
+        </a>
+
+        <a class="module-btnF" id="moduleFav1">
+          <span class="module-labelF" id="moduleFav1Link">Realm 1 </span>
+          <span class="module-iconF" id="moduleFav1Icon">⚡</span>
+        </a>
+
+        <a class="module-btnF" id="moduleFav2">
+          <span class="module-labelF" id="moduleFav2Link">Realm 2 </span>
+          <span class="module-iconF" id="moduleFav2Icon">⚡</span>
+        </a>
+
+        <a class="module-btnF" id="moduleFav3">
+          <span class="module-labelF" id="moduleFav3Link">Realm 3 </span>
+          <span class="module-iconF" id="moduleFav3Icon">⚡</span>
+        </a>
+
+        <a class="module-btnF" id="moduleFav4">
+          <span class="module-labelF" id="moduleFav4Link">Realm 4 </span>
+          <span class="module-iconF" id="moduleFav4Icon">⚡</span>
+        </a>
+
+        <a class="module-btnF" id="moduleFav5">
+          <span class="module-labelF" id="moduleFav5Link">Realm 5 </span>
+          <span class="module-iconF" id="moduleFav5Icon">⚡</span>
+        </a>
+
+        <a class="module-btnF" id="moduleFav6">
+          <span class="module-labelF" id="moduleFav6Link">Realm 6 </span>
+          <span class="module-iconF" id="moduleFav6Icon">⚡</span>
+        </a>
+      </div>
+      <div class="subsubtitle" id="subsubtitle">
+        We keep your Worlds Warm and Running — every Realm you set Stays Accelerated, Ready, and Offline‑Capable!
+      </div>
+    </div>
+  </div>
+
+  <script src="PBFrontpage.js"></script>
+  <script src="PBSettings.js"></script>
+  <script src="PBInterceptor.js"></script>
+  <script src="PBRouter.js"></script>
+  <script src="PBDevTools.js"></script>
+  <script src="PBDevOverlay.js"></script>
+
+</body>
+
+</html>
