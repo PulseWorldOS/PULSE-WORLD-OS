@@ -5150,7 +5150,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
           }
         }
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
-      } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === url)) {
+      } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === URLLink) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === URLLink)) {
         pbPreconnect([link]);
         PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
         latestSnapshot(realm, link, PulseSnapIndex, 0);
