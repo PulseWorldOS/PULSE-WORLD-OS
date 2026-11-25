@@ -4334,11 +4334,6 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
       BankingRealm = BankingRealm.replace("https://", "").replace("www.", "");
       if (PulseAILive && BankingRealm.includes(PulseAILiveRealm)) latestSnapshot(BankingRealm, PulseRealmSettings.externalBankLink, PulseSnapIndex, 0);
     }
-    let EmailRealm = PulseRealmSettings?.externalEmailLink;
-    if (typeof EmailRealm === "string" && EmailRealm.trim()) {
-      EmailRealm = EmailRealm.replace("https://", "").replace("www.", "");
-      if (PulseAILive && EmailRealm.includes(PulseAILiveRealm)) latestSnapshot(EmailRealm, PulseRealmSettings.externalEmailLink, PulseSnapIndex, 0);
-    }
 
     pulseTabs = rebuilt;
     PulsesafeStorageSet({ pulseTabs: rebuilt });
@@ -5069,7 +5064,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
 
     if (PulseStreamingLive  && link === PulseRealmSettings.externalStreamingLink) {
       div.style.opacity = "0.35";
-    } else if (PulseAILive  && ((link === PulseRealmSettings.externalBankLink) || (link === PulseRealmSettings.externalEmailLink))) {
+    } else if (PulseAILive  && ((link === PulseRealmSettings.externalBankLink))) {
       div.style.opacity = "0.35";
     } else {
       div.style.opacity = "1";
@@ -5163,7 +5158,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
           }
         }
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
-      } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === URLLink) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === URLLink)) {
+      } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === URLLink)) {
         pbPreconnect([link]);
         PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
         latestSnapshot(realm, link, PulseSnapIndex, 0);
@@ -5266,7 +5261,7 @@ async function openNamedTab(name, url) {
   }
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
   if (PulseBrowserOSFrame) {
-    if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === url)) {
+    if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url)) {
       PulseAILive = true;
       let realm = url;
       realm = realm.replace("https://","");
