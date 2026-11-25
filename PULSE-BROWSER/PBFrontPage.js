@@ -1231,16 +1231,14 @@ async function askLocalModelWithLiveWeb(websiteURL) {
       documentURL = document.documentElement.innerText;
     } else {
       documentURL = websiteURL;
+      // 1. Dynamically fetch current data from an external 2026 API or webpage
+      // (Replace with whatever news feed or data API endpoint you want to use)
+      const webResponse = await fetch(documentURL);
+      let liveData2026 = await webResponse.text(); 
+      console.log("WEBRESPONSE: " + webResponse);
+      console.log("LIVEDATA: " + liveData2026);
+      liveData2026 = liveData2026.slice(0, 7000);
     }
-    // 1. Dynamically fetch current data from an external 2026 API or webpage
-    // (Replace with whatever news feed or data API endpoint you want to use)
-    const webResponse = await fetch(documentURL);
-   
-    
-    let liveData2026 = await webResponse.text(); 
-    console.log("WEBRESPONSE: " + webResponse);
-    console.log("LIVEDATA: " + liveData2026);
-    liveData2026 = liveData2026.slice(0, 7000);
 
     if (realmSummary) {
       const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
@@ -1250,7 +1248,10 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     }
 
     // 3. Run your prompt
-    const finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${realmSummary}. Summarize the latest updates based on the provided text you were just sent.`);
+    let finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${realmSummary}. Summarize the latest updates based on the provided text you were just sent.`);
+    if (!websiteURL) {
+      finalAnswer = await aiSession.prompt(`Use this Document Element of this Page to do a Bunker Scan and Tell me about my System: ${documentURL}.`);
+    }
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
     console.log(finalAnswer);
   
