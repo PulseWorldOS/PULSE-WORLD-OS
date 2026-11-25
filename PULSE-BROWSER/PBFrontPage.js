@@ -8270,8 +8270,8 @@ function CheckBackTab() {
 
     if (event.data?.type === "PULSE_REALM_FILLED") {
       // Merge the returned data into your extension's PulseRealm variable
-      PulseRealm = event.data.realm;
-      console.log("FILL_PULSE_REALM PulseRealm filled by website:", PulseRealm);
+      PulseBrowserRealm = event.data.realm;
+      console.log("FILL_PULSE_REALM PulseBrowserRealm filled by website:", PulseBrowserRealm);
     }
   });
 
