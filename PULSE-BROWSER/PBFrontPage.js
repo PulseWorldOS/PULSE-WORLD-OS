@@ -5150,6 +5150,26 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
           }
         }
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url) || (PulseRealmSettings.externalEmailLink && PulseRealmSettings.externalEmailLink === url)) {
+        PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+        PulseAILive = true;
+        let realm = url;
+        realm = realm.replace("https://","");
+        realm = realm.replace("www.","");
+        PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+        latestSnapshot(realm, url, PulseSnapIndex, 0);
+        if (!bankdisplayStyle) {
+          if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
+          PulseBrowserOSFrame.style.display = "block";
+          bankdisplayStyle = true;
+          return;
+        } else {
+          if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
+          PulseBrowserOSFrame.style.display = "none";
+          bankdisplayStyle = false;
+          return;
+        }
+      }
       } else {
         pbPreconnect([link]);
         openNamedTab(realm, link);
