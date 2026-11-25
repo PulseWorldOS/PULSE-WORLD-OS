@@ -1226,9 +1226,17 @@ function PulsesafeStorageSet(dataObject) {
 
 async function askLocalModelWithLiveWeb(websiteURL) {
   try {
+    let documentURL = null;
+    if (!websiteURL) {
+      documentURL = document.documentElement.innerText;
+    } else {
+      documentURL = websiteURL;
+    }
     // 1. Dynamically fetch current data from an external 2026 API or webpage
     // (Replace with whatever news feed or data API endpoint you want to use)
-    const webResponse = await fetch(websiteURL);
+    const webResponse = await fetch(documentURL);
+   
+    
     let liveData2026 = await webResponse.text(); 
     console.log("WEBRESPONSE: " + webResponse);
     console.log("LIVEDATA: " + liveData2026);
@@ -2459,6 +2467,9 @@ CompanionConsoleSend.onclick = async () => {
         const texturl = match[0]; // Extract the matched URL string
         askLocalModelWithLiveWeb(texturl);
       }
+      appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    } else if (text.includes("bunker scan")) {
+      askLocalModelWithLiveWeb();
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
     } else {
       appendCompanionMessage(CompanionDetailsMessage, "user", order);
