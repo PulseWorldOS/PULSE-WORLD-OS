@@ -241,11 +241,14 @@ function handleOvermindResponse2(payload, ts) {
 
 // Attach listener safely
 if (channel2) {
-  channel2.onmessage = (ev) => {
+  channel2.onmessage = async (ev) => {
     try {
       const { kind, payload, ts } = ev.data || {};
       if (kind === "command_prompt") {
         handleOvermindResponse2(payload, ts);
+        const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
+        const summary = await summarizer.summarize(payload);
+        appendSettingsCompanionMessage(CompanionSettingsDetailsMessage, "🧠 AI Overmind", summary);
       } else if (kind === "command_ack") {
         logger2.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }

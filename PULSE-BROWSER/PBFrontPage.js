@@ -1,5 +1,6 @@
 globalThis.PulseBrowserRealm=globalThis;
 let PulseBrowserRealm = globalThis.PulseBrowserRealm ?? (globalThis.PulseBrowserRealm = {});
+let LastHistory = null;
 let PulseRealm = {};
 let lastEarnBatch = null;
 let PulseSnapIndex = 0;
@@ -448,6 +449,7 @@ if (bootVideo) {
 
 // Utility: load settings
 async function loadOrders() {
+  LastHistory = CompanionDetailsMessage.innerText;
   consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", MyLowerIntellect }, (response) => {
     if (chrome.runtime.lastError) return;
@@ -469,7 +471,8 @@ async function loadOrders() {
       PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
     }
   });
-  OvermindCrossTabSync(OvermindMyOrders);
+  const SendHistory = CompanionDetailsMessage.innerText;
+  if (SendHistory !== LastHistory) OvermindCrossTabSync(SendHistory);
   MyLowerIntellect = null;    
 }
 
