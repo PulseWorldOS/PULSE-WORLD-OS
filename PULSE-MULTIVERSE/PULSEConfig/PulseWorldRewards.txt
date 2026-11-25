@@ -462,13 +462,6 @@ if (currencySwitchBtn) {
   };
 }
 
-/* ============================================================
-   DEPOSIT ENGINE
-============================================================ */
-var depositMode = "Daily";
-var dailyDeposit = 0;
-var customDeposit = 0;
-var manualDeposit = 0;
 
 const depositAmountInputEl = document.getElementById("depositAmountInput");
 if (depositAmountInputEl) {
