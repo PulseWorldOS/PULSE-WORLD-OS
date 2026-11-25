@@ -7031,6 +7031,7 @@ async function runEnvironmentEngine(PulseBand) {
 
   if (engineSessionCount >= engineSessionLimit) {
     PBPanelOpen = false;
+    pulseStatus.style.cursor = "progress";
     pbPanel.style.display = "none";
     engineSessionCount = 0;
     // Stop fast interval
