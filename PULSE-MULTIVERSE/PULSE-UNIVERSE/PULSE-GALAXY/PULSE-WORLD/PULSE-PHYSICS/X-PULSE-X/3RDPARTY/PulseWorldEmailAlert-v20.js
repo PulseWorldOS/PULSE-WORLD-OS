@@ -3245,7 +3245,6 @@ export async function sendCustomAlert(emailType, payload = {}) {
   return _send(emailType, payload);
 }
 
-export default PulseWorldEmailAlert;
 
 function normalizePhone(raw, row, coords = {}) {
   if (!raw) return null;
