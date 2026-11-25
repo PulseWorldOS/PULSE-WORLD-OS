@@ -5158,22 +5158,22 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
           }
         }
         pulseRehydrateTabs(WeLocalMemoryLayerMB);
-      } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === URLLink)) {
-        pbPreconnect([link]);
-        PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-        latestSnapshot(realm, link, PulseSnapIndex, 0);
-        if (bankdisplayStyle) {
-          PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-          openNamedTab(realm, link);
-          topPanel = document.querySelector(".top-panel");
-          const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
-          if (remaining === 0) {
-            topPanel.style.backdropFilter = "blur(24px)";
-            topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
-          } else {
-            console.log(`There are ${remaining} bubbles left.`);
-          }
-        }
+      // } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === URLLink)) {
+      //   pbPreconnect([link]);
+      //   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+      //   latestSnapshot(realm, link, PulseSnapIndex, 0);
+      //   if (bankdisplayStyle) {
+      //     PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+      //     openNamedTab(realm, link);
+      //     topPanel = document.querySelector(".top-panel");
+      //     const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+      //     if (remaining === 0) {
+      //       topPanel.style.backdropFilter = "blur(24px)";
+      //       topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+      //     } else {
+      //       console.log(`There are ${remaining} bubbles left.`);
+      //     }
+      //   }
       } else {
         pbPreconnect([link]);
         openNamedTab(realm, link);
@@ -5256,29 +5256,29 @@ async function openNamedTab(name, url, skip) {
       }
     }
   }
-  PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-  if (PulseBrowserOSFrame && !skip) {
-    if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url)) {
-      PulseAILive = true;
-      let realm = url;
-      realm = realm.replace("https://","");
-      realm = realm.replace("www.","");
-      PulseAILiveRealm = realm;
-      PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-      latestSnapshot(realm, url, PulseSnapIndex, 0);
-      if (!bankdisplayStyle) {
-        if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
-        PulseBrowserOSFrame.style.display = "block";
-        bankdisplayStyle = true;
-        return;
-      } else {
-        if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
-        PulseBrowserOSFrame.style.display = "none";
-        bankdisplayStyle = false;
-        return;
-      }
-    }
-  }
+  // PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+  // if (PulseBrowserOSFrame && !skip) {
+  //   if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url)) {
+  //     PulseAILive = true;
+  //     let realm = url;
+  //     realm = realm.replace("https://","");
+  //     realm = realm.replace("www.","");
+  //     PulseAILiveRealm = realm;
+  //     PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+  //     latestSnapshot(realm, url, PulseSnapIndex, 0);
+  //     if (!bankdisplayStyle) {
+  //       if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
+  //       PulseBrowserOSFrame.style.display = "block";
+  //       bankdisplayStyle = true;
+  //       return;
+  //     } else {
+  //       if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
+  //       PulseBrowserOSFrame.style.display = "none";
+  //       bankdisplayStyle = false;
+  //       return;
+  //     }
+  //   }
+  // }
   showPWLoader();
   const identity = normalizeIdentity(url);
   name = identity;
