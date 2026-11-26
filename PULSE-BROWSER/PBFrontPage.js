@@ -8481,28 +8481,74 @@ function CheckBackTab() {
 
   PulseFrame = document.getElementById("PulseEarnerFrame");
 
-  // 1. Listen for the filled PulseRealm coming back from pulseworld.net
-  window.addEventListener('message', (event) => {
-    if (event.origin !== "https://www.pulseworld.net") {
-      return;
-    }
+  // 1. Define how each hostname maps to a property name on PulseBrowserRealm
+  const REALM_MAP = {
+    "pulseworld.biz": "PulseBusiness",
+    "www.pulseworld.biz": "PulseBusiness",
+    "pulseworld.net": "PulseWorld",
+    "www.pulseworld.net": "PulseWorld",
+    "pulseworld.me": "PulseIdentity",
+    "www.pulseworld.me": "PulseIdentity",
+    "pulseworld.money": "PulseBanking",
+    "www.pulseworld.money": "PulseBanking"
+  };
+
+  // 2. Listen for filled realm data returned from the iframe
+  window.addEventListener("message", (event) => {
     if (event.data?.type === "PULSE_REALM_FILLED") {
-      // Merge the returned data into your extension's PulseRealm variable
-      PulseBrowserRealm = event.data.realm;
-      console.log("FILL_PULSE_REALM PulseBrowserRealm filled by website:", PulseBrowserRealm);
+      let hostname = "";
+      try {
+        hostname = new URL(event.origin).hostname;
+      } catch (e) {
+        console.warn("Invalid origin:", event.origin);
+        return;
+      }
+
+      // Ensure globalThis.PulseBrowserRealm is a clean object
+      if (!globalThis.PulseBrowserRealm || globalThis.PulseBrowserRealm === globalThis) {
+        globalThis.PulseBrowserRealm = {};
+      }
+
+      const realmKey = REALM_MAP[hostname] || hostname.replace(/[^a-zA-Z0-9]/g, "_");
+
+      // Merge the incoming data into the specific realm sub-object
+      globalThis.PulseBrowserRealm[realmKey] = {
+        ...(globalThis.PulseBrowserRealm[realmKey] || {}),
+        ...event.data.realm
+      };
+
+      console.log(
+        `FILL_PULSE_REALM: PulseBrowserRealm.${realmKey} filled by ${hostname}:`,
+        globalThis.PulseBrowserRealm[realmKey]
+      );
     }
   });
 
-  // 2. Send the blank PulseRealm once the iframe finishes loading
-  PulseFrame.addEventListener("load", () => {
-    PulseFrame.contentWindow.postMessage(
-      {
-        type: "FILL_PULSE_REALM",
-        realm: PulseRealm
-      },
-      "https://www.pulseworld.net"
-    );
-  });
+  // 3. Send the matching realm slice once the iframe finishes loading
+  if (PulseFrame) {
+    PulseFrame.addEventListener("load", () => {
+      let frameUrl;
+      try {
+        frameUrl = new URL(PulseFrame.src);
+      } catch (e) {
+        console.warn("Invalid PulseFrame src:", PulseFrame.src);
+        return;
+      }
+
+      const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
+
+      globalThis.PulseBrowserRealm ??= {};
+      const targetRealm = globalThis.PulseBrowserRealm[realmKey] ??= {};
+
+      PulseFrame.contentWindow.postMessage(
+        {
+          type: "FILL_PULSE_REALM",
+          realm: targetRealm
+        },
+        frameUrl.origin
+      );
+    });
+  }
 
 
   function startPulseLoop() {
