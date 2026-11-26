@@ -1023,7 +1023,7 @@ const PBQuantumPrefetch = {
 (async function safeWarmPathStart() {
   const settings = await pbLoadExtensionSettings();
   PulseRealmSettings = settings;
-  OurLocalMemoryLayer = getLocalMemoryLayer();
+  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   // Start immediately if DOM is already interactive or complete
   if (document.readyState !== "loading") {
     startWarmPath();
@@ -1320,38 +1320,38 @@ function loadLastSavedVideo(callback) {
   });
 }
 
-// async function runProtectedCompute(computeTaskFunction) {
-//   try {
-//     // 1. Lock the system right on that invisible line before the execution
-//     if (chrome && chrome.power) {
-//       CompanionDeprivation = true;
-//       chrome.power.requestKeepAwake("system");
-//       console.log("[POWER GOVERNOR] System locked awake for calculation...");
-//     }
+async function runProtectedCompute(computeTaskFunction) {
+  try {
+    // 1. Lock the system right on that invisible line before the execution
+    if (chrome && chrome.power) {
+      CompanionDeprivation = true;
+      chrome.power.requestKeepAwake("system");
+      console.log("[POWER GOVERNOR] System locked awake for calculation...");
+    }
 
-//     // 2. Execute your pure WASM math proof or WebGPU logic
-//     const result = await computeTaskFunction();
-//     return result;
+    // 2. Execute your pure WASM math proof or WebGPU logic
+    const result = await computeTaskFunction();
+    return result;
 
-//   } catch (error) {
-//     console.error("[POWER GOVERNOR] Calculation crashed:", error);
-//     throw error;
-//   } finally {
-//     // 3. ALWAYS release the lock inside a 'finally' block!
-//     // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
-//     // if ((chrome && chrome.power) && !CompanionDeprivation) {
-//     //   chrome.power.releaseKeepAwake();
-//     //   console.log("[POWER GOVERNOR] System lock released cleanly.");
-//     // }
-//   }
-// }
+  } catch (error) {
+    console.error("[POWER GOVERNOR] Calculation crashed:", error);
+    throw error;
+  } finally {
+    // 3. ALWAYS release the lock inside a 'finally' block!
+    // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
+    // if ((chrome && chrome.power) && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    //   console.log("[POWER GOVERNOR] System lock released cleanly.");
+    // }
+  }
+}
 
 async function gpuWarmExtra() {
   const elements = document.querySelectorAll("canvas, video");
   if (gpuEnabled !== "WebGPU") {
     gpuEnabled = "GPU Driver Error";
   }
-  OurLocalMemoryLayer = getLocalMemoryLayer();
+  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   // Warm WebGL + WebGL2 + Canvas2D + Video
   elements.forEach(el => {
     try {
@@ -1423,7 +1423,7 @@ function getAnotherInterval() {
 const interval2 = getAnotherInterval();
 
 setInterval(async () => {
-  OurLocalMemoryLayer = getLocalMemoryLayer();
+  OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   loadOrders();
   earnBatch = document.getElementById("lastEarnBatch");
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
