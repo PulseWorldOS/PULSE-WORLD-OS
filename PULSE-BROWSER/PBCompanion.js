@@ -2301,60 +2301,6 @@ setTimeout(async () => {
 
 startWarmBootLoop();
 
-async function ensureNotificationAccess() {
-  if (!("Notification" in window)) {
-    console.warn("[PulseWorld] Notifications not supported in this browser.");
-    return false;
-  }
-
-  if (Notification.permission === "granted") return true;
-
-  if (Notification.permission === "denied") {
-    console.warn("[PulseWorld] Notifications denied by user.");
-    return false;
-  }
-
-  const result = await Notification.requestPermission();
-  return result === "granted";
-}
-
-let lastPulseNotifyMemory = 0;
-
-async function pulseNotify(title, body) {
-  const COOLDOWN_MS = 60 * 1000; // 1 minute
-  const STORAGE_KEY = "pulse_last_notify_ts";
-  const now = Date.now();
-
-  // Check last notification time (persistent in chrome.storage.local + memory fallback)
-  let lastNotified = lastPulseNotifyMemory;
-  try {
-    const data = await chrome.storage.local.get(STORAGE_KEY);
-    const saved = Number(data?.[STORAGE_KEY] ?? 0);
-    if (saved > lastNotified) lastNotified = saved;
-  } catch (e) {
-    // Fallback to in-memory timestamp if storage is temporarily unavailable
-  }
-
-  // Exit early if less than 1 minute has passed
-  if (now - lastNotified < COOLDOWN_MS) return;
-
-  const ok = await ensureNotificationAccess();
-  if (!ok) return;
-
-  // Update timestamp right before firing to prevent duplicate rapid triggers
-  const fireTime = Date.now();
-  lastPulseNotifyMemory = fireTime;
-  try {
-    await chrome.storage.local.set({ [STORAGE_KEY]: fireTime });
-  } catch (e) {}
-
-  chrome.notifications.create(title, {
-    body,
-    icon: "PulseWorldSplash512.png"
-  });
-}
-
-
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   chrome.contextMenus.create({
@@ -2403,7 +2349,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     contexts: ['all']
   });
   console.log("Extension Installed or Updated");
-  pulseNotify("🌐 PulseBrowser OS","Integrated your Distributed Worker Network.. Your Ready to Go!");
+  
   
   // If you want to handle install and updates differently
   /**
