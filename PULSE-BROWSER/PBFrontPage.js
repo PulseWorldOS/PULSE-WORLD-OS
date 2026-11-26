@@ -149,7 +149,7 @@ const exitinnerpanel = document.getElementById("exit-inner-panel");
 const maximizeBtn = document.getElementById("maximizeBtn");
 const minimizeBtn = document.getElementById("minimizeBtn");
 let identityLogin = document.getElementById("identityLogin");
-let identityPicture = document.getElementById("identityPicture");
+const identityPicture = document.getElementById("identityPicture");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
@@ -3355,6 +3355,7 @@ async function GetThisMessengerDone() {
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       identityLogin = document.getElementById("identityLogin");
       if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
+      if (MyPulseIdentity) identityPicture.src = MyPulseIdentity.aliasPhotoURL ?? "";
     }
     
     if (HigherAuthority) {
