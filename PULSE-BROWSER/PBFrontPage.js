@@ -3663,10 +3663,10 @@ async function CheckEarnState() {
     earnerenginepanel.style.opacity = "0.35";
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
     }, 1000);
-    PulseFrame.style.zIndex = "11";
-    if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
-    PulseFrameA.style.zIndex = "11";
     if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
     PulseFrameB.style.zIndex = "11";
   } else {
@@ -3678,8 +3678,10 @@ async function CheckEarnState() {
   } else {
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
     }, 1000);
-    PulseFrame.style.zIndex = "11";
   }
 
   if (EarnHidden) {
@@ -3710,10 +3712,10 @@ async function CheckEarnState() {
   } else {
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
     }, 1000);
-    PulseFrame.style.zIndex = "11";
-    if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
-    PulseFrameA.style.zIndex = "11";
     if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
     PulseFrameB.style.zIndex = "11";
     earnerenginepanel.style.opacity = "0.35";
