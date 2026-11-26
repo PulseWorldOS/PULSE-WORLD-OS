@@ -4049,10 +4049,12 @@ async function pbRenderCacheList2() {
     // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
     const failCount = Object.keys(fails).length;
     if (!li) li = document.getElementById("li");
-    const u = new URL(lastFailURL);
+    let u = new URL(lastFailURL);
     const RealmURL = getReadableName(u);
     let errorcolor = "lightgreen";
     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
+    PulseFrame = document.getElementById("PulseEarnerFrame");
+    let frameUrl = new URL(PulseFrame.src);
     const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
     const targetRealm = PulseBrowserRealm[realmKey] ??= {};
 
