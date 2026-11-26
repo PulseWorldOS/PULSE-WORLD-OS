@@ -58,6 +58,7 @@ let errorLock = false;
 let MyLocalMemoryLayer = {};
 let MyLocalMemoryLayerMB = 0;
 let WeLocalMemoryLayerMB = 0;
+let TestMemoryLayerMB = 0;
 let LocalMemoryLayerMB = 0;
 let socialMode = "Internal";
 let OvermindOrders = null;
@@ -564,6 +565,7 @@ if (channel) {
       const { kind, payload, ts } = ev.data || {};
       if (kind === "command_prompt") {
         handleOvermindResponse(payload, ts);
+        earnerminirate2panel.textContent = payload;
       } else if (kind === "command_ack") {
         logger.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }

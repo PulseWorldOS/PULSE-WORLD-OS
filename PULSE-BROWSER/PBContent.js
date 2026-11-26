@@ -369,7 +369,7 @@ if (channel) {
 
 
 // Utility: load settings
-async function loadOrders() {
+async function loadOrders(Value) {
   chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS" }, (response) => {
     if (chrome.runtime.lastError) return;
     if (!response || !response.ok) {
@@ -381,6 +381,7 @@ async function loadOrders() {
       PB_LOG4.change("PB_GATHER_ORDERS", OvermindTheirOrders, response.OvermindOrders);
     }
   });
+  if (Value) OvermindTheirOrders = Value;
   OvermindCrossTabSync(OvermindTheirOrders);
 }
 
@@ -1424,7 +1425,6 @@ const interval2 = getAnotherInterval();
 
 setInterval(async () => {
   OurLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
-  loadOrders();
   earnBatch = document.getElementById("lastEarnBatch");
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   valueDiv = document.getElementById("assumedValue");
@@ -1432,6 +1432,7 @@ setInterval(async () => {
   if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
   if (identitySQL && identitySQL.textContent.length > 0) MyPulseIdentity = JSON.parse(identitySQL.textContent);
+  loadOrders(assumedValue);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
