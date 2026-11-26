@@ -3831,7 +3831,7 @@ async function pbRenderCacheList2() {
     <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:-2px;">
       PulseBrowser OS - System Details
     </div>
-    <div id="identityName" class="identityName"></div>
+    <div id="identityName" class="identityName"></div><div id="accountBalance" class="accountBalance"></div>
   `;
   // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
   const estimate = await navigator.storage.estimate();
@@ -3846,7 +3846,9 @@ async function pbRenderCacheList2() {
   let statsHTML = await pbRenderStorageStats2(history);
   predictionText = predictionText + ".";
   listEl.insertAdjacentHTML("beforeend", statsHTML);
-
+  earnerminipanel = document.getElementById("earner-mini-panel");
+  accountBalance = document.getElementById("accountBalance");
+  accountBalance.textContent = earnerminipanel.textContent;
   // ⭐ Sort: current cache first, then by entry count
   caches.sort((a, b) => {
     if (a.name === a.currentCache) return -1;

@@ -1898,14 +1898,31 @@
       position: fixed;
     }
 
-    .identityName {
+    .accountBalance {
+      position: absolute;
+      left: 0;
+      top: 25px;
       margin: 2px auto;
+      color: white;
+      text-align: center;
+      width: 50px;
+      min-width: 45px;
+      border-radius: 40px;
+      padding: 2px 0px;
+      border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px);
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .identityName {
+      margin: 1px auto;
       color: white;
       text-align: center;
       width: 180px;
       min-width: 150px;
       border-radius: 40px;
-      padding: 2px 2px;
+      padding: 1px 1px;
       border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px);
       font-size: 0.7rem;
       font-weight: bold;
@@ -2807,8 +2824,8 @@
       <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:-2px;">
         PulseBrowser OS - System Details
       </div>
-      <div id="identityName" class="identityName"></div>
-      <div id="accountBalance" class="accountBalance"></div>
+      <div id="identityName" class="identityName"></div><div id="accountBalance" class="accountBalance"></div>
+      
       <!-- Left panel content -->
     </div>
     <img src="PulseStop.webp" class="disable-sw" id="disable-sw">
