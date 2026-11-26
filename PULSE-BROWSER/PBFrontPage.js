@@ -1335,7 +1335,7 @@ async function runLocalAI() {
           : Number(ALLassumedValue);
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -1463,7 +1463,7 @@ ${rawPrompt}
         : Number(ALLassumedValue);
       if (cleanValue > 0 && !itrunonce) {
         itrunonce = true;
-        appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
       } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
         lastEarnBatch = response.lastEarnBatch;
         console.log("Last Earn Batch:", lastEarnBatch);
@@ -2398,7 +2398,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       : Number(ALLassumedValue);
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -2534,7 +2534,7 @@ if (CompanionConsoleSend) {
           : Number(ALLassumedValue);
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -2611,7 +2611,7 @@ if (CompanionConsoleSend) {
           : Number(ALLassumedValue);
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -4694,7 +4694,7 @@ setInterval(async () => {
       : Number(ALLassumedValue);
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -4782,7 +4782,7 @@ setInterval(async () => {
       : Number(ALLassumedValue);
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -6590,7 +6590,7 @@ async function updateModuleIcons(settings, browser) {
       : Number(ALLassumedValue);
     if (cleanValue > 0 && !itrunonce) {
       itrunonce = true;
-      appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
     } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
       lastEarnBatch = response.lastEarnBatch;
       console.log("Last Earn Batch:", lastEarnBatch);
@@ -8376,7 +8376,7 @@ function CheckBackTab() {
           : Number(ALLassumedValue);
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -8460,7 +8460,7 @@ function CheckBackTab() {
           : Number(ALLassumedValue);
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);
@@ -8744,7 +8744,7 @@ function CheckBackTab() {
 
         if (cleanValue > 0 && !itrunonce) {
           itrunonce = true;
-          appendEarnerMessage(CompanionMessages, "⚡", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
         } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
           lastEarnBatch = response.lastEarnBatch;
           console.log("Last Earn Batch:", lastEarnBatch);

@@ -3391,9 +3391,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (!WasmSuccess) {
           if (!CompanionDeprivation) {
             CompanionMessage = "Always Learning and Thriving..";
-          } else if (CompanionMessage === "<-- Infusing Earning Adrenaline -->") {
-            CompanionMessage = "Earning Adrenaline Infused & Ready..";
-          } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
+          } else if (CompanionMessage === "<-- Infusing Earning Adrenaline ⚡ -->") {
+            CompanionMessage = "Earning Adrenaline ⚡ Infused & Ready..";
+          } else if (CompanionMessage === "Earning Adrenaline ⚡ Infused & Ready..") {
             CompanionMessage = "Starting up PulseEarner GPU Engine...";
           } else if (CompanionMessage.includes(timeProof)) {
           } else if (CompanionMessage === "Starting up PulseEarner GPU Engine...") {
@@ -3408,14 +3408,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               }
             })();
           } else {
-            CompanionMessage = "<-- Infusing Earning Adrenaline -->";
+            CompanionMessage = "<-- Infusing Earning Adrenaline ⚡ -->";
           }
           CompanionDeprivation = msg.CompanionDeprivation;
         } else {
           if (runWasmTest) {
             CompanionMessage = "<-- Running User-Called WASM Test Job -->";
             runWasmTest = false;
-          } else if (CompanionMessage === "Earning Adrenaline Infused & Ready..") {
+          } else if (CompanionMessage === "Earning Adrenaline ⚡ Infused & Ready..") {
             CompanionMessage = "Starting up PulseEarner GPU Engine...";
           } else if (CompanionMessage === "Starting up PulseEarner GPU Engine...") {
             CompanionMessage = "<-- Running a PulseEarner WASM Test Job -->";
