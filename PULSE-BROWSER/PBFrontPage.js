@@ -5733,11 +5733,11 @@ function destroyIframe(iframe) {
 
 function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
   const snapshotKey = `pulse_snapshot_${realm}`;
-  if (isPulseWorld(link)) {
-    PulseFrameA = document.getElementById("PulseEarner2Frame");
-    PulseFrameA.src = "PulseStatus.mp4";
-    PulseFrameA.opacity = "1";
-  }
+  // if (isPulseWorld(link)) {
+  //   PulseFrameA = document.getElementById("PulseEarner2Frame");
+  //   PulseFrameA.src = "PulseStatus.mp4";
+  //   PulseFrameA.opacity = "1";
+  // }
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
     if (snap) {
