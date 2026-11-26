@@ -458,5 +458,5 @@
     <div class="footer-strip" data-llama-id="213"><span data-llama-id="214">Pulseworld connected</span><span data-llama-id="215">People · Opportunity · A brighter tomorrow</span></div>
   </main>
   <div class="toast" id="toast" role="status" data-llama-id="216"></div>
-  <script src="PBMessenger.js"></script>
+  <script src="./PBMessenger.js"></script>
 </body></html>
