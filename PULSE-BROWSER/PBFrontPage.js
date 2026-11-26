@@ -1256,39 +1256,52 @@ function getCleanPageText() {
 
 async function askLocalModelWithLiveWeb(websiteURL) {
   try {
-    let documentURL = null;
+    let cleanText = "";
+
     if (!websiteURL) {
-      documentURL = getCleanPageText();
+      // Ensure local page text is also sliced to a safe limit
+      cleanText = getCleanPageText().slice(0, 6000);
     } else {
-      documentURL = websiteURL;
-      // 1. Dynamically fetch current data from an external 2026 API or webpage
-      // (Replace with whatever news feed or data API endpoint you want to use)
-      const webResponse = await fetch(documentURL);
-      let liveData2026 = await webResponse.text(); 
-      console.log("WEBRESPONSE: " + webResponse);
-      console.log("LIVEDATA: " + liveData2026);
-      liveData2026 = liveData2026.slice(0, 7000);
-      if (realmSummary) {
-        const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
-        const summary = await summarizer.summarize(realmSummary);
+      const webResponse = await fetch(websiteURL);
+      const rawHtml = await webResponse.text();
+
+      // 1. Strip HTML tags/scripts so you don't waste tokens on markup
+      const doc = new DOMParser().parseFromString(rawHtml, "text/html");
+      doc.querySelectorAll("script, style, nav, footer").forEach(el => el.remove());
+      cleanText = (doc.body.innerText || "").replace(/\s+/g, " ").trim().slice(0, 6000);
+
+      // 2. Summarize safely if needed
+      if (cleanText) {
+        const summarizer = await Summarizer.create({ type: "tldr", format: "markdown" });
+        const summary = await summarizer.summarize(cleanText);
         appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
-        realmSummary = liveData2026;
+        realmSummary = summary; // Store the compact summary, not the raw 7k text
+        summarizer.destroy();
       }
     }
 
-    // 3. Run your prompt
-    let finalAnswer = await aiSession.prompt(`Use this real-time web data to help answer the user's prompt: ${realmSummary}. Summarize the latest updates based on the provided text you were just sent.`);
-    if (!websiteURL) {
-      finalAnswer = await aiSession.prompt(`Use this Document Element of this Page to do a Bunker Scan and Tell me about my System: ${documentURL}.`);
+    // 3. Check remaining session quota or clone a fresh session to avoid history overflow
+    const activeSession = await aiSession.clone(); 
+    let finalAnswer = "";
+
+    if (websiteURL) {
+      finalAnswer = await activeSession.prompt(
+        `Use this real-time web data: ${realmSummary}. Summarize the latest updates based on the provided text.`
+      );
+    } else {
+      finalAnswer = await activeSession.prompt(
+        `Use this Document Element of this Page to do a Bunker Scan and tell me about my System: ${cleanText}`
+      );
     }
+
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
-    console.log(finalAnswer);
-    if (realmSummary && websiteURL) realmSummary = null;
+    activeSession.destroy(); // Free memory after single-turn use
 
   } catch (error) {
     console.error("Failed to fetch live data or run the local model:", error);
   }
 }
+
 
 async function runLocalAI() {
   if (RunningAI) return; // already running
