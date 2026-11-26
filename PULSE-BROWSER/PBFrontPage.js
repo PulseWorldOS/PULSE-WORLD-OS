@@ -5417,29 +5417,12 @@ async function openNamedTab(name, url, skip) {
       }
     }
   }
-  // PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-  // if (PulseBrowserOSFrame && !skip) {
-  //   if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === url)) {
-  //     PulseAILive = true;
-  //     let realm = url;
-  //     realm = realm.replace("https://","");
-  //     realm = realm.replace("www.","");
-  //     PulseAILiveRealm = realm;
-  //     PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-  //     latestSnapshot(realm, url, PulseSnapIndex, 0);
-  //     if (!bankdisplayStyle) {
-  //       if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
-  //       PulseBrowserOSFrame.style.display = "block";
-  //       bankdisplayStyle = true;
-  //       return;
-  //     } else {
-  //       if (!PulseBrowserOSFrame.src.includes(url)) PulseBrowserOSFrame.src = url;
-  //       PulseBrowserOSFrame.style.display = "none";
-  //       bankdisplayStyle = false;
-  //       return;
-  //     }
-  //   }
-  // }
+  PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+  if (PulseBrowserOSFrame) {
+    if ((PulseBrowserOSFrame.src.includes(url))) {
+        PulseBrowserOSFrame.style.display = "block";
+    }
+  }
   showPWLoader();
   const identity = normalizeIdentity(url);
   name = identity;
