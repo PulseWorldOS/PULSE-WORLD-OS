@@ -2403,7 +2403,8 @@ chrome.runtime.onInstalled.addListener(async () => {
     contexts: ['all']
   });
   console.log("Extension Installed or Updated");
-  pulseNotify("🌐 PulseBrowser OS","Integrating our Distributed Worker Network..");
+  pulseNotify("🌐 PulseBrowser OS","Integrated your Distributed Worker Network.. Your Ready to Go!");
+  
   // If you want to handle install and updates differently
   /**
   if(details.reason === "install"){
