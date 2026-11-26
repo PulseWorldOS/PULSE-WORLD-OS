@@ -1266,7 +1266,7 @@ async function createPulseScreen() {
     width: 220px;
     border-radius: 999px;
     box-shadow: 0 0 40px #00aaff88, 0 0 80px #00aaff44;
-    z-index: 999999999;
+    z-index: 9999999999;
   `;
 
   setTimeout(async () => {
@@ -1499,7 +1499,7 @@ async function injectHUD() {
     padding: 12px 16px;
     border:1px solid #0FF;
     border-radius: 40px;
-    z-index: 999999999;
+    z-index: 9999999999;
     pointer-events: none;
     backdrop-filter: blur(4px);
   `;
