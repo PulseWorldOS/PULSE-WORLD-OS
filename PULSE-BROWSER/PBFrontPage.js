@@ -1243,16 +1243,20 @@ function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
 }
 
-function getCleanPageText() {
-  const root = document.body;
-  const clone = root.cloneNode(true);
-  
-  // Remove non-content elements
-  clone.querySelectorAll('nav, footer, aside, script, style, noscript, iframe').forEach(el => el.remove());
-  
-  // Collapse extra whitespace and newlines
-  return clone.innerText.replace(/\s+/g, ' ').trim();
+function getCleanPageText(maxLength = 6000) {
+  const clone = document.body.cloneNode(true);
+
+  // Remove non-content and hidden elements
+  clone.querySelectorAll(
+    'nav, footer, aside, script, style, noscript, iframe, svg, [hidden], [aria-hidden="true"]'
+  ).forEach(el => el.remove());
+
+  // Use textContent directly (faster on detached nodes than innerText)
+  const text = (clone.textContent || '').replace(/\s+/g, ' ').trim();
+
+  return text.slice(0, maxLength);
 }
+
 
 async function askLocalModelWithLiveWeb(websiteURL) {
   try {
