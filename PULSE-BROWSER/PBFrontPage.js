@@ -134,6 +134,7 @@ let topPanel = document.querySelector(".top-panel");
 const timerBtn = document.getElementById("timerBtn");
 const earnerpanel = document.getElementById("earner-panel");
 let earnerminipanel = document.getElementById("earner-mini-panel");
+let accountBalance = document.getElementById("accountBalance");
 let earnerminiratepanel = document.getElementById("earner-mini-rate-panel");
 let earnerminirate2panel = document.getElementById("earner-mini-rate2-panel");
 let earnerminirate3panel = document.getElementById("earner-mini-rate3-panel");
@@ -341,6 +342,7 @@ if (!online) {
   if (titlediv) titlediv.textContent = "PulseBrowser OS";
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel && (earnerminipanel.textContent === "$0.000" || !earnerminipanel)) document.title = "PulseBrowser OS [Console]";
+  accountBalance.textContent = earnerminipanel.textContent;
   setInterval(() => {
     chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
       if (chrome.runtime.lastError) return;
@@ -358,6 +360,7 @@ if (!online) {
     }
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
+    accountBalance.textContent = earnerminipanel.textContent;
   }, 3000);
 }
 const PB_LOG3 = {
@@ -1358,6 +1361,7 @@ async function runLocalAI() {
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -1486,6 +1490,7 @@ ${rawPrompt}
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
       earnerminipanel.textContent = currency(OurassumedValue);
+      accountBalance.textContent = earnerminipanel.textContent;
       // Calculate elapsed time in days (86,400,000 ms in one day)
       const msPerDay = 1000 * 60 * 60 * 24;
       const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -1537,6 +1542,7 @@ function appendEarnerMessage(area, role, text) {
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
   bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
   earnerminipanel.textContent = currency(OurassumedValue);
+  accountBalance.textContent = earnerminipanel.textContent;
   // Calculate elapsed time in days (86,400,000 ms in one day)
   const msPerDay = 1000 * 60 * 60 * 24;
   const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -2421,6 +2427,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -2557,6 +2564,7 @@ if (CompanionConsoleSend) {
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -2634,6 +2642,7 @@ if (CompanionConsoleSend) {
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -4717,6 +4726,7 @@ setInterval(async () => {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -4805,6 +4815,7 @@ setInterval(async () => {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -4844,6 +4855,7 @@ setInterval(async () => {
       if (response && response.ok && response.WeassumedValue) {
         OurassumedValue = response.WeassumedValue;
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -6613,6 +6625,7 @@ async function updateModuleIcons(settings, browser) {
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
     // Calculate elapsed time in days (86,400,000 ms in one day)
     const msPerDay = 1000 * 60 * 60 * 24;
     const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -8248,9 +8261,11 @@ setInterval(async () => {
     titlediv.textContent = "PulseBrowser OS";
     earnerminipanel = document.getElementById("earner-mini-panel");
     if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
+    accountBalance.textContent = earnerminipanel.textContent;
     setInterval(() => {
       earnerminipanel = document.getElementById("earner-mini-panel");
       if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
+      accountBalance.textContent = earnerminipanel.textContent;
     }, 3000);
   }
   CheckBackTab();
@@ -8400,6 +8415,7 @@ function CheckBackTab() {
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -8484,6 +8500,7 @@ function CheckBackTab() {
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
@@ -8767,6 +8784,7 @@ function CheckBackTab() {
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
         // Calculate elapsed time in days (86,400,000 ms in one day)
         const msPerDay = 1000 * 60 * 60 * 24;
         const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
