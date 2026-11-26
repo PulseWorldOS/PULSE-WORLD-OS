@@ -11,7 +11,7 @@ let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
 let PulseEngineLive = true;
-let PulseEngine2Live = true;
+let PulseEngine2Live = false;
 let PulseAILive = false;
 let PulseAILiveRealm = null;
 let itrunonce = false;
@@ -4481,6 +4481,12 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
 
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
+        if (isPulseWorld(tab.url)) {
+          PulseFrameB = document.getElementById("PulseEarner3Frame");
+          PulseFrameB.src = "PulseStatus.mp4";
+          PulseFrameB.opacity = "1";
+          PulseEngine2Live = true;
+        }
 
         rebuilt[identity] = {
           id: tab.id,
