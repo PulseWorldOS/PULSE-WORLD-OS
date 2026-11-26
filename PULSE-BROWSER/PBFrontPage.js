@@ -10,7 +10,7 @@ let gpuCapabilitySize = 2048;
 let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
-let PulseEngineLive = false;
+let PulseEngineLive = true;
 let PulseEngine2Live = false;
 let PulseAILive = false;
 let PulseAILiveRealm = null;
@@ -4449,8 +4449,6 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   document.querySelectorAll('[class^="PulseBrowser-OS-Temporary"]').forEach(el => el.remove());
   let skipcount = 0;
-  PulseEngineLive = false;
-  PulseEngine2Live = false;
   PulseRealmSettings = await pbLoadExtensionSettings();
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
@@ -4480,12 +4478,6 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
 
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
-        if (isPulseWorld(tab.url)) {
-          PulseFrameA = document.getElementById("PulseEarner2Frame");
-          PulseFrameA.src = "PulseStatus.mp4";
-          PulseFrameA.opacity = "1";
-          PulseEngineLive = true;
-        }
 
         rebuilt[identity] = {
           id: tab.id,
