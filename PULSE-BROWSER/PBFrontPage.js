@@ -1239,7 +1239,7 @@ function PulsesafeStorageSet(dataObject) {
 }
 
 function getCleanPageText() {
-  const root = document.querySelector('main, article, [role="main"]') || document.body;
+  const root = document.body;
   const clone = root.cloneNode(true);
   
   // Remove non-content elements
