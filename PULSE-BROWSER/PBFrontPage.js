@@ -4925,13 +4925,14 @@ async function pulseNotify(title, body) {
   const STORAGE_KEY = "pulse_last_notify_ts";
   const now = Date.now();
 
-  // Check last notification time (persistent across reloads + memory fallback)
+  // Check last notification time (persistent in chrome.storage.local + memory fallback)
   let lastNotified = lastPulseNotifyMemory;
   try {
-    const saved = Number(localStorage.getItem(STORAGE_KEY));
+    const data = await chrome.storage.local.get(STORAGE_KEY);
+    const saved = Number(data?.[STORAGE_KEY] ?? 0);
     if (saved > lastNotified) lastNotified = saved;
   } catch (e) {
-    // Ignore storage access errors in restricted contexts
+    // Fallback to in-memory timestamp if storage is temporarily unavailable
   }
 
   // Exit early if less than 1 minute has passed
@@ -4941,9 +4942,10 @@ async function pulseNotify(title, body) {
   if (!ok) return;
 
   // Update timestamp right before firing to prevent duplicate rapid triggers
-  lastPulseNotifyMemory = now;
+  const fireTime = Date.now();
+  lastPulseNotifyMemory = fireTime;
   try {
-    localStorage.setItem(STORAGE_KEY, String(now));
+    await chrome.storage.local.set({ [STORAGE_KEY]: fireTime });
   } catch (e) {}
 
   new Notification(title, {
