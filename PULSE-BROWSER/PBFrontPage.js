@@ -169,6 +169,8 @@ let HigherPanelSwitch = document.getElementById("SwitchPanel");
 let BrowserHeartbeat = document.getElementById("BrowserHeartbeat");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+let consoleMessengerCompanion = document.getElementById("consoleMessengerCompanion");
+let consoleDiscoverCompanion = document.getElementById("consoleDiscoverCompanion");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
 let PulseFrame = document.getElementById("PulseEarnerFrame");
@@ -3302,6 +3304,8 @@ async function GetThisMessengerDone() {
       MessengerMode = "Talk";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "1";
+      consoleDiscoverCompanion.style.opacity = "0";
     };
 
     PulseMessengerWallet.onclick = async () => {
@@ -3309,6 +3313,8 @@ async function GetThisMessengerDone() {
       MessengerMode = "Wallet";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
     };
 
     PulseMessengerWorlds.onclick = async () => {
@@ -3316,6 +3322,8 @@ async function GetThisMessengerDone() {
       MessengerMode = "Worlds";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
     };
 
     HomeMessenger.onclick = async () => {
@@ -3323,6 +3331,8 @@ async function GetThisMessengerDone() {
       MessengerMode = "Console";
       identityLogin.style.opacity = "1";
       identityPicture.style.opacity = "1";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
     };
 
     NotifyMessenger.onclick = async () => {
@@ -3330,6 +3340,8 @@ async function GetThisMessengerDone() {
       MessengerMode = "Notify";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
     };
 
     DiscoverMessenger.onclick = async () => {
@@ -3337,6 +3349,8 @@ async function GetThisMessengerDone() {
       MessengerMode = "Discover";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "1";
     };
   }
 
@@ -3986,12 +4000,12 @@ async function pbRenderCacheList2() {
         <div style="display:flex; gap:10px;">
           <div style="flex:1;">
             <strong>Local Storage:</strong><br>
-            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheUsedMB} MB</span><br>
+            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheUsedMB ?? "Pulling.."} MB</span><br>
           </div>
 
           <div style="flex:1;">
             <strong>System Quota:</strong><br>
-            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheQuotaGB} GB</span><br>
+            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheQuotaGB ?? "Pulling.."} GB</span><br>
           </div>
         </div>
       </div>
