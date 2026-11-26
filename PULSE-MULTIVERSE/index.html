@@ -1895,47 +1895,56 @@ if (isSW) {
   DEFAULT_INDEX = "PulseWorldServiceWorker.txt";
   document.title = "ServiceWorker.Net - The New Internet Kernel";
   setFavicon("./SWFavIcon.ico");
+  pulseNotify("🌐 ServiceWorker.Net","Your New Digital Kernel!");
 }
 else if (isBinaryOS) {
   DEFAULT_INDEX = "PulseWorldBinaryOS.txt";
   document.title = "BinaryOS.Net - The New Internet O.S.";
   setFavicon("./BOFavIcon.ico");
+  pulseNotify("🌐 BinaryOS.Net","Your New Digital Operating System Experience!");
 }
 else if (isGPU) {
   DEFAULT_INDEX = "PulseWorldGPUProcessing.txt";
   document.title = "GPUProcessing.Net - The New Internet Processor";
   setFavicon("./GPFavIcon.ico");
+  pulseNotify("🌐 GPUProcessing.Net","The New Internet Processor!");
 }
 else if (isLogic) {
   DEFAULT_INDEX = "PulseWorldBooleanLogic.txt";
   document.title = "BooleanLogic.Net - The New Internet Logic";
   setFavicon("./BLFavIcon.ico");
+  pulseNotify("🌐 BooleanLogic.Net","The New Internet Logic!");
 }
 else if (isOrb) {
   DEFAULT_INDEX = "PulseWorldOrbital.txt";
   document.title = "OrbitalMap.Net - The New Internet Solutions";
   setFavicon("./OMFavIcon.ico");
+  pulseNotify("🌐 OrbitalMap.Net","The New Internet Solutions!");
 }
 else if (isBiz) {
   DEFAULT_INDEX = "PulseWorldBusiness.txt";
   topmenu.style.top = "20dvh";
   document.title = "PulseWorld.Biz - Digital Business Hub";
   setFavicon("./PWBFavIcon.ico");
+  pulseNotify("🌐 PulseWorld.Biz","Your Digital Business Hub!");
 }
 else if (isSettings) {
   DEFAULT_INDEX = "PulseWorldInventory.txt";
   document.title = "PulseWorld.Me - Digital Identity Settings";
   setFavicon("./PWIFavIcon.ico");
+  pulseNotify("🌐 PulseWorld.Me","Your Digital Identity Settings!");
 }
 else if (isMoney) {
   DEFAULT_INDEX = "PulseWorldBanking.txt";
   document.title = "PulseWorld.Money - Digital Banking Center";
   setFavicon("./PWMFavIcon.ico");
+  pulseNotify("🌐 PulseWorld.Money","Your Digital Banking Center!");
 }
 else {
   DEFAULT_INDEX = "PulseWorldReality.txt";
   document.title = "PulseWorld.Net - Secure Digital Experience";
   setFavicon("./PWFavIcon.ico");
+  pulseNotify("🌐 PulseWorld.Net","Securing your New Digital  Experience!");
 }
 
 
@@ -8899,7 +8908,7 @@ PulseRealm.PickASpeech8 = MergedPickASpeech;
 
 async function runBootSequenceOnce(Rebooted,isMobile) {
     if (!Rebooted || Rebooted === false) {
-    pulseNotify("🌐 PulseWorld.Net","Securing your New Digital Identity!");
+    
     BOOT_PANEL_DURATION = BOOT_DURATION + 1500;
 
     enableBootVideo(isMobile);

@@ -4533,6 +4533,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
   CheckFaviconChanges();
+  emitFullPageContext();
   topPanel = document.querySelector(".top-panel");
   const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
   if (remaining === 0) {
