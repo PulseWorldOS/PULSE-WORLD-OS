@@ -1723,7 +1723,7 @@ function appendHigherMessage(area, role, text, opts = {}) {
   bubble.style.margin = "3px 0";
   bubble.style.color = "#f9f9f9";
   const showTime = `[${new Date().toLocaleString()}]`;
-  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text, opts) + `<br>`;
+  bubble.innerHTML = (role === "user" ? `<br><font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text, opts) + `<br>`;
   // Only persist real conversation turns — never save boot greetings or status banners
   if (opts.persist !== false) {
     PulseCogMemoryAIBuffer.push(bubble.outerHTML);
@@ -3944,7 +3944,7 @@ async function pbRenderCacheList2() {
         <div style="margin-left: -5px;margin-right: 10px; padding:8px; border-radius:8px;
                   background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-        <strong><font color="#FFF">PulseWorld System (Memory)</font></strong><br><br>
+        <strong><font color="#FFF">PulseWorld System (RAM) [<font color=${percentColor3}>${WeLocalMemoryLayerMB} MB</font>]</font></strong><br><br>
 
         <div style="display:flex; gap:10px;">
           <div style="flex:1;">
