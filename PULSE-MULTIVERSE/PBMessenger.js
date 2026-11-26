@@ -41,17 +41,6 @@
       });
     });
 
-    // 1. Define how each hostname maps to a property name on PulseBrowserRealm
-    const REALM_MAP = {
-      "pulseworld.biz": "PulseBusiness",
-      "www.pulseworld.biz": "PulseBusiness",
-      "pulseworld.net": "PulseWorld",
-      "www.pulseworld.net": "PulseWorld",
-      "pulseworld.me": "PulseIdentity",
-      "www.pulseworld.me": "PulseIdentity",
-      "pulseworld.money": "PulseBanking",
-      "www.pulseworld.money": "PulseBanking"
-    };
 
     let frameUrl = new URL(location.href);
     const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
