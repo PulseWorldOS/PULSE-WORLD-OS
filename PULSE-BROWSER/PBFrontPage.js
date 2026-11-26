@@ -4023,7 +4023,11 @@ async function pbRenderCacheList2() {
     const u = new URL(lastFailURL);
     const RealmURL = getReadableName(u);
     let errorcolor = "lightgreen";
+    let memorylayerMB = null;
     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
+    if (WeLocalMemoryLayerMB && MyLocalMemoryLayerMB) {
+      memorylayerMB = WeLocalMemoryLayerMB - MyLocalMemoryLayerMB;
+    }
 
     li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
@@ -4036,7 +4040,7 @@ async function pbRenderCacheList2() {
         <div style="margin-left: -5px;margin-right: 10px; padding:8px; border-radius:8px;
                   background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
 
-        <strong><font color="#FFF">PulseWorld System (RAM) [<font color=${percentColor3}>${WeLocalMemoryLayerMB} MB</font>]</font></strong><br><br>
+        <strong><font color="#FFF">PulseWorld System (RAM) [<font color=${percentColor3}>${memorylayerMB} MB</font>]</font></strong><br><br>
 
         <div style="display:flex; gap:10px;">
           <div style="flex:1;">
