@@ -1249,7 +1249,16 @@ navigator.serviceWorker.addEventListener('message', event => {
     if (earnBatch) earnBatch.innerHTML = lastEarnBatch;
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
+  if (event.data?.type === "PULSE_SHARED_BUFFER") {
+    const sharedView = new Uint8Array(event.data.buffer);
+    console.log("Received shared buffer:", sharedView.byteLength);
+  }
 });
+
+navigator.serviceWorker.ready.then((registration) => {
+  registration.active?.postMessage("PULSE_SHARED_BUFFER_REQUEST");
+});
+
 
 // Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
 async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {

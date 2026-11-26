@@ -3102,6 +3102,7 @@ async function GetThisMessengerDone() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
     MessengerHidden = We.MessengerInvisible ?? true;
     messengerpanel.style.opacity = "1";
+    consoleHomeCompanion.style.opacity = "1";
 
     if (MessengerHidden) {
       pbPulseMessenger.id = "pbPulseMessenger";
@@ -8398,7 +8399,7 @@ function CheckBackTab() {
   PulseFrame = document.getElementById("PulseEarnerFrame");
 
   // 1. Listen for the filled PulseRealm coming back from pulseworld.net
-  window.addEventListener("message", (event) => {
+  window.addEventListener('message', (event) => {
     if (event.origin !== "https://www.pulseworld.net") {
       return;
     }
