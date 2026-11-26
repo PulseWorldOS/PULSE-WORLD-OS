@@ -4057,7 +4057,13 @@ async function pbRenderCacheList2() {
     let frameUrl = new URL(PulseFrame.src);
     const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
     const targetRealm = globalThis.PulseBrowserRealm[realmKey] ??= {};
-    
+    const worldRealm = globalThis.PulseBrowserRealm["PulseWorld"] ??= {};
+    const busRealm = globalThis.PulseBrowserRealm["PulseBusiness"] ??= {};
+    const meRealm = globalThis.PulseBrowserRealm["PulseIdentity"] ??= {};
+    let totalCacheSize = 0;
+    if (targetRealm) totalCacheSize = worldRealm.PulseCacheUsedMB + busRealm.PulseCacheUsedMB + meRealm.PulseCacheUsedMB;
+    let totalCacheQuota = 0;
+    if (targetRealm) totalCacheQuota = worldRealm.PulseCacheQuotaGB + busRealm.PulseCacheQuotaGB + meRealm.PulseCacheQuotaGB;
 
     li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
@@ -4075,12 +4081,12 @@ async function pbRenderCacheList2() {
         <div style="display:flex; gap:10px;">
           <div style="flex:1;">
             <strong>Local Storage:</strong><br>
-            • <span style="color:#0FF">${targetRealm.PulseCacheUsedMB ?? "Pulling.."} MB</span><br>
+            • <span style="color:#0FF">${totalCacheSize ?? "Pulling.."} MB</span><br>
           </div>
 
           <div style="flex:1;">
             <strong>System Quota:</strong><br>
-            • <span style="color:#0FF">${targetRealm.PulseCacheQuotaGB ?? "Pulling.."} GB</span><br>
+            • <span style="color:#0FF">${totalCacheQuota ?? "Pulling.."} GB</span><br>
           </div>
         </div>
       </div>
