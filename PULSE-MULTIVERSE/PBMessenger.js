@@ -1,4 +1,4 @@
-    const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
+
     const toast = document.getElementById('toast');
     let toastTimer;
     function showToast(message) {

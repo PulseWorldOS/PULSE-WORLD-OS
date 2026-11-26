@@ -4918,6 +4918,23 @@ setInterval(async () => {
   await pbRenderCacheList2();
 }, intervalA);
 
+async function ensureNotificationAccess() {
+  if (!("Notification" in window)) {
+    console.warn("[PulseWorld] Notifications not supported in this browser.");
+    return false;
+  }
+
+  if (Notification.permission === "granted") return true;
+
+  if (Notification.permission === "denied") {
+    console.warn("[PulseWorld] Notifications denied by user.");
+    return false;
+  }
+
+  const result = await Notification.requestPermission();
+  return result === "granted";
+}
+
 let lastPulseNotifyMemory = 0;
 
 async function pulseNotify(title, body) {
