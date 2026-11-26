@@ -3682,9 +3682,9 @@ async function CheckEarnState() {
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
-      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
-      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
     }, 1000);
   } else {
@@ -3697,9 +3697,9 @@ async function CheckEarnState() {
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
-      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
-      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
     }, 1000);
   }
@@ -3733,9 +3733,9 @@ async function CheckEarnState() {
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
-      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
-      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
     }, 1000);
     earnerenginepanel.style.opacity = "0.35";
@@ -3833,9 +3833,9 @@ async function CheckEarnState() {
       EarnHidden = false;
       PulseFrame.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
-      if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
-      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
       earnerenginepanel.style.opacity = "0.35";
       // ——— Turn OFF (restore original) ———
@@ -4500,7 +4500,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
 
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
-        
+
         if (isPulseBusiness(tab.url)) {
           setTimeout(() => {
             PulseFrameB = document.getElementById("PulseEarner3Frame");
