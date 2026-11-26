@@ -8115,7 +8115,6 @@ if (MemoryWipe) {
     );
 
     if (confirmClear2) {
-      wipeMemory();
       wipeHigherMemory();
     }
 
