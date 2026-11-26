@@ -3686,7 +3686,7 @@ async function CheckEarnState() {
       PulseFrameA.style.zIndex = "11";
       if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
-    }, 1000);
+    }, 2000);
   } else {
     earnerenginepanel.style.opacity = "1";
   }
@@ -3701,7 +3701,7 @@ async function CheckEarnState() {
       PulseFrameA.style.zIndex = "11";
       if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
-    }, 1000);
+    }, 2000);
   }
 
   if (EarnHidden) {
@@ -3737,7 +3737,7 @@ async function CheckEarnState() {
       PulseFrameA.style.zIndex = "11";
       if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
-    }, 1000);
+    }, 2000);
     earnerenginepanel.style.opacity = "0.35";
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
