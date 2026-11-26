@@ -138,6 +138,7 @@ let earnerminiratepanel = document.getElementById("earner-mini-rate-panel");
 let earnerminirate2panel = document.getElementById("earner-mini-rate2-panel");
 let earnerminirate3panel = document.getElementById("earner-mini-rate3-panel");
 let earnerbankpanel = document.getElementById("earner-mini-bank-panel");
+let earnerbunkerpanel = document.getElementById("earner-mini-bunker-panel");
 let earnerenginepanel = document.getElementById("earner-mini-engine-panel");
 let earnerwalletpanel = document.getElementById("earner-mini-wallet-panel");
 const messengerpanel = document.getElementById("messenger-panel");
@@ -3656,6 +3657,11 @@ async function CheckEarnState() {
   earnerbankpanel.onclick = async () => {
     openNamedTab("PulseBank", pulseBankLink);
     await PBUniversalBoost.warmOrigin(pulseBankLink);
+  };
+
+  earnerbunkerpanel.onclick = async () => {
+    CompanionConsoleInput.value = "Initiate Bunker Scan...";
+    CompanionConsoleSend.click();
   };
 
   PulseFrame = document.getElementById("PulseEarnerFrame");
