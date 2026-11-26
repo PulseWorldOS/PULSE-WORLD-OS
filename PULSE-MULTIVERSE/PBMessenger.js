@@ -41,20 +41,20 @@
       });
     });
     
-    // 1. Define how each hostname maps to a property name on PulseBrowserRealm
-    const REALM_MAP2 = {
-      "pulseworld.biz": "PulseBusiness",
-      "www.pulseworld.biz": "PulseBusiness",
-      "pulseworld.net": "PulseWorld",
-      "www.pulseworld.net": "PulseWorld",
-      "pulseworld.me": "PulseIdentity",
-      "www.pulseworld.me": "PulseIdentity",
-      "pulseworld.money": "PulseBanking",
-      "www.pulseworld.money": "PulseBanking"
-    };
+    // // 1. Define how each hostname maps to a property name on PulseBrowserRealm
+    // const REALM_MAP2 = {
+    //   "pulseworld.biz": "PulseBusiness",
+    //   "www.pulseworld.biz": "PulseBusiness",
+    //   "pulseworld.net": "PulseWorld",
+    //   "www.pulseworld.net": "PulseWorld",
+    //   "pulseworld.me": "PulseIdentity",
+    //   "www.pulseworld.me": "PulseIdentity",
+    //   "pulseworld.money": "PulseBanking",
+    //   "www.pulseworld.money": "PulseBanking"
+    // };
 
-    let frameUrl = new URL(location.href);
-    const realmKey = REALM_MAP2[frameUrl.hostname];
+    // let frameUrl = new URL(location.href);
+    // const realmKey = REALM_MAP2[frameUrl.hostname];
 
-    if (globalThis.PulseBrowserRealm[realmKey].PulseUser && document) document.title = `PulseMessenger — ` + globalThis.PulseBrowserRealm[realmKey].PulseUser.replace("-","~");
+    // if (globalThis.PulseBrowserRealm[realmKey].PulseUser) document.title = `PulseMessenger — ` + globalThis.PulseBrowserRealm[realmKey].PulseUser.replace("-","~");
     
