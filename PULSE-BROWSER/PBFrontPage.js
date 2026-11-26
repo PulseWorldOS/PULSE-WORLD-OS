@@ -34,7 +34,7 @@ let WasmSuccess = false;
 let timeProof = null;
 let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
 let searchEngineActiveLink = null;
-let bootVideoRun = false;
+let bootVideoRun1 = false;
 let CompanionMessage = null;
 let realmSummary = null;
 let higherAIDisplay = null;
@@ -171,6 +171,7 @@ let pulsepaltalk = document.getElementById("pulsepal-talk");
 let PulseFrame = document.getElementById("PulseEarnerFrame");
 let PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
 let PulseFrame2 = document.getElementById("PulseStreamFrame");
+let PulseFrame3 = document.getElementById("PulseStreamFrame2");
 let PulseFrameA = document.getElementById("PulseEarner2Frame");
 let PulseFrameB = document.getElementById("PulseEarner3Frame");
 if (BrowserHeartbeat) BrowserHeartbeat.muted = false;
@@ -404,10 +405,10 @@ const PB_LOG3 = {
 };
 
 async function BootMeNowPlease() {
-  const Boot = await chrome.storage.local.get(["bootVideoRun"]);
-  if (Boot) bootVideoRun = Boot.bootVideoRun ?? false;
+  const Boot = await chrome.storage.local.get(["bootVideoRun1"]);
+  if (Boot) bootVideoRun1 = Boot.bootVideoRun1 ?? false;
 
-  if (!bootVideoRun) {
+  if (!bootVideoRun1) {
     bootVideo.onclick = async () => {
       console.log(
         "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Boot Video SKIPPED by user.",
@@ -431,8 +432,8 @@ async function BootMeNowPlease() {
       // Hide the video membrane
       bootVideo.style.opacity = "0";
       bootVideo.style.display = "none";
-      bootVideoRun = true;
-      await PulsesafeStorageSet({ bootVideoRun });
+      bootVideoRun1 = true;
+      await PulsesafeStorageSet({ bootVideoRun1 });
     }, 5000);
   } else {
     // Hide the video membrane

@@ -2416,8 +2416,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       AdBlockerOn();
     }
   } else if (info.menuItemId === 'resetBootVideo') {
-    const bootVideoRunOnce = false;
-    await safeStorageSet({ bootVideoRunOnce });
+    const bootVideoRun1 = false;
+    await safeStorageSet({ bootVideoRun1 });
   } else if (info.menuItemId === 'runWASMTest') {
     runWasmTest = true;
     (async () => {

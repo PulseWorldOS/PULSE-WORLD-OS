@@ -1089,6 +1089,34 @@
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
+    .PulseStreamFrame2 {
+      object-fit: inherit;
+      position: fixed;
+      bottom: 26dvh;
+      inset-inline: 0;
+      margin-inline: auto;
+      width: 1250px;
+      height: 650px;
+      border-radius: 40px;
+      overflow: hidden;
+      background: #000000aa;
+      backdrop-filter: blur(6px);
+      border: 4px dashed red;
+      box-shadow: 0 0 30px #00aaff88, 0 0 60px #00aaff44;
+      z-index: 12;
+      display: none;
+      cursor: pointer;
+      opacity: 1;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+
+      scrollbar-color: #00eaff #0a0a0a;
+      scrollbar-width: thin;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    }
+
     .PulseBrowser-OS-Temporary2 {
       position: fixed;
       width: 60px;
@@ -2652,7 +2680,7 @@
   <iframe
     id="PulseEarner2Frame"
     class="PulseEarner2Frame"
-    src="https://www.pulseworld.biz?Impulse=PulseWorldBusiness"
+    src=""
     allow="accelerometer *; autoplay *; camera *; clipboard-read *; clipboard-write *; display-capture *; encrypted-media *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
     allowfullscreen
     allowpaymentrequest
@@ -2662,7 +2690,7 @@
   <iframe
     id="PulseEarner3Frame"
     class="PulseEarner3Frame"
-    src="https://www.pulseworld.me?Impulse=PulseWorldReality"
+    src=""
     allow="accelerometer *; autoplay *; camera *; clipboard-read *; clipboard-write *; display-capture *; encrypted-media *; fullscreen *; geolocation *; gyroscope *; magnetometer *; microphone *; midi *; payment *; picture-in-picture *; publickey-credentials-get *; screen-wake-lock *; speaker-selection *; sync-xhr *; usb *; web-share *; xr-spatial-tracking *"
     allowfullscreen
     allowpaymentrequest
@@ -2675,6 +2703,12 @@
     allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
     sandbox="allow-scripts allow-presentation allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
   ></iframe>
+  <!-- <iframe
+    id="PulseStreamFrame2" class="PulseStreamFrame2"
+    src=""
+    allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; microphone; camera; picture-in-picture"
+    sandbox="allow-scripts allow-presentation allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
+  ></iframe> -->
   <iframe
     id="PulseBrowserOSFrame"
     class="PulseBrowserOSFrame"
