@@ -4918,6 +4918,41 @@ setInterval(async () => {
   await pbRenderCacheList2();
 }, intervalA);
 
+let lastPulseNotifyMemory = 0;
+
+async function pulseNotify(title, body) {
+  const COOLDOWN_MS = 60 * 1000; // 1 minute
+  const STORAGE_KEY = "pulse_last_notify_ts";
+  const now = Date.now();
+
+  // Check last notification time (persistent across reloads + memory fallback)
+  let lastNotified = lastPulseNotifyMemory;
+  try {
+    const saved = Number(localStorage.getItem(STORAGE_KEY));
+    if (saved > lastNotified) lastNotified = saved;
+  } catch (e) {
+    // Ignore storage access errors in restricted contexts
+  }
+
+  // Exit early if less than 1 minute has passed
+  if (now - lastNotified < COOLDOWN_MS) return;
+
+  const ok = await ensureNotificationAccess();
+  if (!ok) return;
+
+  // Update timestamp right before firing to prevent duplicate rapid triggers
+  lastPulseNotifyMemory = now;
+  try {
+    localStorage.setItem(STORAGE_KEY, String(now));
+  } catch (e) {}
+
+  new Notification(title, {
+    body,
+    icon: "/_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex"
+  });
+}
+
+
 // [Fix] Render cache + earner value immediately on load — don't wait for first interval tick
 (async () => {
   try {
