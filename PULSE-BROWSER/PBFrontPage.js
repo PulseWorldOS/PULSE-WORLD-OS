@@ -11,7 +11,7 @@ let CustomizePanelsDragNDrop = false;
 let userInteracted = false;
 let PulseStreamingLive = false;
 let PulseEngineLive = true;
-let PulseEngine2Live = false;
+let PulseEngine2Live = true;
 let PulseAILive = false;
 let PulseAILiveRealm = null;
 let itrunonce = false;
@@ -355,7 +355,7 @@ if (!online) {
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel && (earnerminipanel.textContent === "$0.000" || !earnerminipanel)) document.title = "PulseBrowser OS [Console]";
   accountBalance.textContent = earnerminipanel.textContent;
-  earnerminirate2panel.innerHTML = `<- <font color="lightgreen">Merged</font>`;
+
   setInterval(() => {
     chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
       if (chrome.runtime.lastError) return;
