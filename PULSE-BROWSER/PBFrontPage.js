@@ -1278,7 +1278,7 @@ async function askLocalModelWithLiveWeb(websiteURL) {
     }
     appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
     console.log(finalAnswer);
-    if (realmSummary) realmSummary = null;
+    if (realmSummary && websiteURL) realmSummary = null;
 
   } catch (error) {
     console.error("Failed to fetch live data or run the local model:", error);
