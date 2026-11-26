@@ -789,6 +789,18 @@ async function initWebGPUCompute() {
     layout: "auto",
     compute: { module, entryPoint: "main" },
   });
+
+  // Example usage:
+  if (gpuCapabilitySize <= 2048) {
+    probeUsableVRAM({ maxProbeGB: 8, chunkMB: 256 }, adapter).then((result) => {
+      console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
+      gpuCapabilitySize = result.estimatedGB * (1024);
+      gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
+      const higherGpuLine = document.getElementById("higherGpuLine");
+      higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
+    });
+  }
+
   PB_LOG3.info("Pulse GPU Capacity: ", GPUCapacity);
   gpuContext = { device, pipeline };
   PB_LOG3.info("Pulse GPU Compute Context: ", gpuContext);
@@ -2875,14 +2887,11 @@ async function probeUsableVRAM({
   maxProbeGB = 16,
   chunkMB = 256,
   spikeFactor = 3.5,
-} = {}) {
+} = {}, adapter) {
   if (!navigator.gpu) {
     throw new Error("WebGPU is not supported in this browser.");
   }
 
-  const adapter = await navigator.gpu.requestAdapter({
-    powerPreference: "high-performance",
-  });
   if (!adapter) {
     throw new Error("No WebGPU adapter found.");
   }
@@ -3425,16 +3434,7 @@ async function GetThisMessengerDone() {
     const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
     const identityName = document.getElementById("identityName");
     HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
-    // Example usage:
-    if (gpuCapabilitySize <= 2048) {
-      probeUsableVRAM({ maxProbeGB: 8, chunkMB: 256 }).then((result) => {
-        console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
-        gpuCapabilitySize = result.estimatedGB * (1024);
-        gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
-        const higherGpuLine = document.getElementById("higherGpuLine");
-        higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
-      });
-    }
+    
     if (!MyPulseIdentity) {
       const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
       MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
