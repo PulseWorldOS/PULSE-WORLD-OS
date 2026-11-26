@@ -4053,7 +4053,8 @@ async function pbRenderCacheList2() {
     const RealmURL = getReadableName(u);
     let errorcolor = "lightgreen";
     if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
-    
+    const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
+    const targetRealm = PulseBrowserRealm[realmKey] ??= {};
 
     li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
@@ -4071,12 +4072,12 @@ async function pbRenderCacheList2() {
         <div style="display:flex; gap:10px;">
           <div style="flex:1;">
             <strong>Local Storage:</strong><br>
-            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheUsedMB ?? "Pulling.."} MB</span><br>
+            • <span style="color:#0FF">${targetRealm.PulseCacheUsedMB ?? "Pulling.."} MB</span><br>
           </div>
 
           <div style="flex:1;">
             <strong>System Quota:</strong><br>
-            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheQuotaGB ?? "Pulling.."} GB</span><br>
+            • <span style="color:#0FF">${targetRealm.PulseCacheQuotaGB ?? "Pulling.."} GB</span><br>
           </div>
         </div>
       </div>
