@@ -45,5 +45,5 @@
     let frameUrl = new URL(location.href);
     const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
 
-    if (globalThis.PulseBrowserRealm[realmKey].PulseUser) document.title = `PulseMessenger — ` + PulseRealm.PulseUser.replace("-","~");
+    if (globalThis.PulseBrowserRealm[realmKey].PulseUser) document.title = `PulseMessenger — ` + globalThis.PulseBrowserRealm[realmKey].PulseUser.replace("-","~");
     
