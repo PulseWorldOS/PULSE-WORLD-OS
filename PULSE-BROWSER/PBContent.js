@@ -300,7 +300,7 @@ try {
 }
 
 // Safe fallbacks in case globals are undefined in certain contexts
-const logger = typeof PB_LOG4 !== "undefined" ? PB_LOG4 : console;
+const logger2 = typeof PB_LOG4 !== "undefined" ? PB_LOG4 : console;
 const channel = typeof PulseBrowserChannel3 !== "undefined" ? PulseBrowserChannel3 : null;
 const getTimestamp = () => (typeof nowCT !== "undefined" ? nowCT : Date.now());
 
@@ -310,7 +310,7 @@ const getTimestamp = () => (typeof nowCT !== "undefined" ? nowCT : Date.now());
  */
 function OvermindCrossTabSync(payload) {
   if (!channel) {
-    logger.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
+    logger2.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
     return;
   }
 
@@ -321,7 +321,7 @@ function OvermindCrossTabSync(payload) {
       ts: getTimestamp(),
     });
   } catch (err) {
-    logger.error("[AI_Overmind_Sync] Failed to post message:", err);
+    logger2.error("[AI_Overmind_Sync] Failed to post message:", err);
   }
 }
 
@@ -331,7 +331,7 @@ function OvermindCrossTabSync(payload) {
  * @param {number} ts - Timestamp of the original message.
  */
 function handleOvermindResponse(payload, ts) {
-  logger.info("[Sound Off: Command Prompt Received]", { payload, ts });
+  logger2.info("[Sound Off: Command Prompt Received]", { payload, ts });
 
   // Execute command logic based on payload
   if (payload?.action) {
@@ -359,10 +359,10 @@ if (channel) {
       if (kind === "command_prompt") {
         handleOvermindResponse(payload, ts);
       } else if (kind === "command_ack") {
-        logger.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
+        logger2.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }
     } catch (err) {
-      logger.error("[AI_Overmind_Sync] Error processing incoming message:", err);
+      logger2.error("[AI_Overmind_Sync] Error processing incoming message:", err);
     }
   };
 }

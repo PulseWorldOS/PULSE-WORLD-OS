@@ -94,7 +94,7 @@ const PB_LOG7 = {
 
 
 // Safe fallbacks in case globals are undefined in certain contexts
-const logger = typeof PB_LOG7 !== "undefined" ? PB_LOG7 : console;
+const logger4 = typeof PB_LOG7 !== "undefined" ? PB_LOG7 : console;
 const channel = typeof PulseBrowserChannel2 !== "undefined" ? PulseBrowserChannel2 : null;
 const getTimestamp = () => (typeof nowPP !== "undefined" ? nowPP : Date.now());
 
@@ -104,19 +104,19 @@ const getTimestamp = () => (typeof nowPP !== "undefined" ? nowPP : Date.now());
  */
 function OvermindCrossTabSync(payload) {
   if (!channel) {
-    logger.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
+    logger4.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
     return;
   }
 
   try {
-    logger.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    logger4.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
     channel.postMessage({
       kind: "command_prompt",
       payload,
       ts: getTimestamp(),
     });
   } catch (err) {
-    logger.error("[AI_Overmind_Sync] Failed to post message:", err);
+    logger4.error("[AI_Overmind_Sync] Failed to post message:", err);
   }
 }
 
@@ -126,7 +126,7 @@ function OvermindCrossTabSync(payload) {
  * @param {number} ts - Timestamp of the original message.
  */
 function handleOvermindResponse(payload, ts) {
-  logger.info("[Sound Off: Command Prompt Received]", { payload, ts });
+  logger4.info("[Sound Off: Command Prompt Received]", { payload, ts });
 
   // Execute command logic based on payload
   if (payload?.action) {
@@ -154,10 +154,10 @@ if (channel) {
       if (kind === "command_prompt") {
         handleOvermindResponse(payload, ts);
       } else if (kind === "command_ack") {
-        logger.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
+        logger4.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }
     } catch (err) {
-      logger.error("[AI_Overmind_Sync] Error processing incoming message:", err);
+      logger4.error("[AI_Overmind_Sync] Error processing incoming message:", err);
     }
   };
 }
