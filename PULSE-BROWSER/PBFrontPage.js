@@ -4493,12 +4493,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
       StreamingRealm = StreamingRealm.replace("https://", "").replace("www.", "");
       if (PulseStreamingLive) latestSnapshot(StreamingRealm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
     }
-    let BankingRealm = PulseRealmSettings?.externalBankLink;
-    if (typeof BankingRealm === "string" && BankingRealm.trim()) {
-      BankingRealm = BankingRealm.replace("https://", "").replace("www.", "");
-      if (PulseAILive && BankingRealm.includes(PulseAILiveRealm)) latestSnapshot(BankingRealm, PulseRealmSettings.externalBankLink, PulseSnapIndex, 0);
-    }
-
+    
     pulseTabs = rebuilt;
     PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
