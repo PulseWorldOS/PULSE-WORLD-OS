@@ -27,6 +27,8 @@
         radial-gradient(ellipse at 50% 100%, rgba(0, 144, 255, .13), transparent 55%),
         #010611;
       overflow-x: hidden;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
     .app-shell {
       width: min(1536px, calc(100% - 28px));
@@ -40,6 +42,8 @@
         linear-gradient(135deg, rgba(9, 27, 61, .98), rgba(1, 7, 19, .99) 42%, rgba(4, 18, 42, .97));
       box-shadow: 0 0 0 4px rgba(0, 78, 176, .18), 0 0 42px rgba(0, 135, 255, .38), inset 0 0 34px rgba(0, 93, 255, .13);
       overflow: hidden;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
     .app-shell::before {
       content: "";
@@ -59,6 +63,10 @@
       gap: 20px;
       border-bottom: 1px solid rgba(32, 156, 255, .55);
       background: linear-gradient(90deg, rgba(0, 18, 48, .85), rgba(2, 11, 28, .3), rgba(0, 18, 48, .85));
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .brand-mark {
       display:flex; align-items:center; gap:14px; min-width:0;
@@ -72,6 +80,10 @@
       background: radial-gradient(circle at 45% 38%, #174f9e, #02132f 68%);
       box-shadow: 0 0 10px #00cfff, inset 0 0 12px #087dff;
       position:relative;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .brand-bubble::after {
       content:""; position:absolute; bottom:-5px; left:8px; width:15px; height:15px;
@@ -90,6 +102,10 @@
       border:1px solid rgba(75, 165, 255, .5); border-radius:14px; color:#d8f5ff;
       background:linear-gradient(150deg,rgba(12,34,72,.9),rgba(2,9,23,.95));
       box-shadow:inset 0 0 12px rgba(17,104,255,.13);
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .icon-button:hover, .quick-action:hover, .bottom-item:hover { border-color:var(--cyan); box-shadow:0 0 16px rgba(0,194,255,.4); }
     .mini-profile { display:flex; align-items:center; gap:10px; border:1px solid rgba(61,152,255,.65); border-radius:28px; padding:5px 15px 5px 6px; min-width:180px; }
@@ -103,6 +119,10 @@
       grid-template-columns:minmax(270px, .95fr) minmax(420px, 1.42fr) minmax(300px, .95fr);
       gap:13px;
       min-height:690px;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .panel {
       border:1px solid var(--line);
@@ -111,6 +131,10 @@
       box-shadow:0 0 0 2px rgba(15,104,207,.14), 0 0 15px rgba(0,119,255,.19), inset 0 0 20px rgba(0,94,255,.07);
       position:relative;
       overflow:hidden;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .panel::before {
       content:""; height:1px; position:absolute; top:0; left:10%; right:10%;
@@ -126,6 +150,10 @@
     .searchbox {
       height:42px; display:flex; align-items:center; gap:11px; padding:0 13px; margin-bottom:7px;
       border:1px solid rgba(64,144,224,.62); border-radius:11px; background:rgba(1,9,23,.86); color:#a9cce8;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .searchbox input { color:#e3f6ff; background:transparent; border:0; outline:0; width:100%; font-size:12px; }
     .friend-list { display:flex; flex-direction:column; }
@@ -147,6 +175,10 @@
       color:#eafaff; text-align:left; padding:0 20px; font-weight:700;
       background:linear-gradient(100deg,rgba(0,100,225,.72),rgba(3,20,50,.9)); cursor:pointer;
       box-shadow:inset 0 0 13px rgba(0,188,255,.16);
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .add-friend i { color:#57e4ff; margin-right:12px; }
     .hero-panel {
@@ -156,6 +188,10 @@
         linear-gradient(180deg,rgba(1,11,29,.1) 0%,rgba(1,9,24,.25) 35%,rgba(2,13,32,.96) 78%),
         radial-gradient(ellipse at 50% 36%,rgba(15,103,226,.35),transparent 55%),
         url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85") center 38% / cover;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .hero-panel::after {
       content:""; position:absolute; inset:0; z-index:-1;
@@ -169,6 +205,10 @@
       border:2px solid #3ddcff;
       box-shadow:0 0 10px #19d9ff,0 0 36px rgba(0,138,255,.75),inset -20px -12px 30px rgba(0,0,0,.75);
       overflow:visible;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .orbit-planet::before {
       content:""; position:absolute; width:150%; height:36%; left:-25%; top:38%;
@@ -180,6 +220,10 @@
       color:white; font-size:48px; border:5px solid #24dfff;
       background:radial-gradient(circle at 45% 35%,#1164c4,#02112f 72%);
       box-shadow:0 0 25px #08bdff,inset 0 0 16px #008dff;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .planet-bubble::after {
       content:""; position:absolute; left:7px; bottom:-10px; width:30px; height:30px;
@@ -196,6 +240,10 @@
       border:1px solid #29cfff; font-size:24px; color:#dffbff;
       background:radial-gradient(circle,#0c4d9c,#02132f 70%);
       box-shadow:0 0 14px rgba(0,186,255,.5),inset 0 0 12px rgba(19,154,255,.3);
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .feature small { display:block; color:#b6d7f7; font-size:9px; letter-spacing:2px; margin-top:4px; }
     .quote-box {
@@ -203,6 +251,10 @@
       color:#eaf7ff; font-size:14px; letter-spacing:1.5px; line-height:1.6;
       background:linear-gradient(110deg,rgba(2,15,37,.9),rgba(14,61,112,.82),rgba(2,15,37,.92));
       box-shadow:0 0 15px rgba(0,130,255,.38);
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
     .right-column { display:flex; flex-direction:column; gap:13px; }
     .profile-panel { padding:14px; }

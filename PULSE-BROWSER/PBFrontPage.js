@@ -3766,9 +3766,9 @@ async function CheckEarnState() {
       earnerenginepanel.style.opacity = "0.35";
       PulseFrame.style.opacity = "1";
       PulseFrame.style.zIndex = "11";
-      if (earnerminirate2panel.textContent !== "~$0.00/Day") PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
-      if (earnerminirate3panel.textContent !== "~$0.00/Day") PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.opacity = "1";
       PulseFrameB.style.zIndex = "11";
     }
   };
