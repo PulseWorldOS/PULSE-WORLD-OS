@@ -5790,6 +5790,8 @@ chrome.tabs.onRemoved.addListener((tabId) => {
       chrome.storage.local.remove(snapshotKey);
 
       if (PulseSnapshotView === realm) {
+        PulseFrameA.src = "PulseStatus2.mp4";
+        PulseFrameB.src = "PulseStatus2.mp4";
         PulseSnapshotView = null;
         PulseURL = null;
       }
