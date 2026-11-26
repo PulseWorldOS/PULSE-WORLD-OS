@@ -5417,12 +5417,6 @@ async function openNamedTab(name, url, skip) {
       }
     }
   }
-  PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
-  if (PulseBrowserOSFrame) {
-    if ((PulseBrowserOSFrame.src.includes(url))) {
-        PulseBrowserOSFrame.style.display = "block";
-    }
-  }
   showPWLoader();
   const identity = normalizeIdentity(url);
   name = identity;
