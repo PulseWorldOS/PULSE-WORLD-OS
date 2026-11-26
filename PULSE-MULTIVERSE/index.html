@@ -4831,7 +4831,24 @@ if (vaultBtn) {
 
 if (pulsemessengerBtn) {
   pulsemessengerBtn.onclick = async () => {
-    window.location.href = "/PBMessenger.html";
+    
+    if (PulseRealm.__PULSE_CURRENT_PAGE__ === "PulseMessenger") {
+      location.reload();
+      PulseRealm.PickASpeech8(
+        "PulseMessenger Engaged! Integration with Tier 2 will be Tested!",
+        "./_EXPRESSIONS/_PEX/BUILD/PulsePal.webp.pex"
+      );
+      return;
+    }
+
+    loadInternalPage("PulseMessenger");
+    PulseRealm.__PULSE_CURRENT_PAGE__ = "PulseMessenger";
+
+    PulseRealm.PickASpeech8(
+      "Pulse World's PulseMessenger has much to be Addressed and Fascinated by!",
+      "./_EXPRESSIONS/_PEX/BUILD/PulsePal.webp.pex"
+    );
+
   };
 }
 
