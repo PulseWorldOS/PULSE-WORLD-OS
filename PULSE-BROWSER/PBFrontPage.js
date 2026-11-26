@@ -4056,7 +4056,9 @@ async function pbRenderCacheList2() {
     PulseFrame = document.getElementById("PulseEarnerFrame");
     let frameUrl = new URL(PulseFrame.src);
     const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
-    const targetRealm = PulseBrowserRealm[realmKey] ??= {};
+    const targetRealm = globalThis.PulseBrowserRealm[realmKey] ??= {};
+    
+    console.log("Target Realm: ", targetRealm);
 
     li.innerHTML = li.innerHTML + 
       // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
