@@ -5433,7 +5433,7 @@ async function openNamedTab(name, url, skip) {
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   
   try {
-    if (isPulseWorld(url) === "PulseWorld") identityrunonce = false;
+    if (isPulseWorld(url)) identityrunonce = false;
     fetch(url, { mode: "no-cors" }).catch(() => {});
   } catch (_) {
 
