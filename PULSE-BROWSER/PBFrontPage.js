@@ -4472,6 +4472,11 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
           continue; // ⭐ Do NOT increment PulseSnapIndex
         }
 
+        if (isPulseWorld(tab.url)) {
+          PulseFrameA = document.getElementById("PulseEarner2Frame");
+          PulseFrameA.src = "PulseStatus.mp4";
+          PulseFrameA.opacity = "1";
+        }
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
 
