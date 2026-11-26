@@ -54,7 +54,7 @@
     };
 
     let frameUrl = new URL(location.href);
-    const realmKey = REALM_MAP2[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
+    const realmKey = REALM_MAP2[frameUrl.hostname];
 
     if (globalThis.PulseBrowserRealm[realmKey].PulseUser) document.title = `PulseMessenger — ` + globalThis.PulseBrowserRealm[realmKey].PulseUser.replace("-","~");
     
