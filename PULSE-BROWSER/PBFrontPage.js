@@ -8073,6 +8073,8 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
     if (confirmClear2) {
       chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
+      wipeMemory();
+      wipeHigherMemory();
     }
   } else {
     // Now ask about local storage
@@ -8082,6 +8084,8 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
     if (confirmClear2) {
       chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
+      wipeMemory();
+      wipeHigherMemory();
     }
   }
 
