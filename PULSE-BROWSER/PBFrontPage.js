@@ -3170,8 +3170,6 @@ async function GetThisMessengerDone() {
       }, 0);
     };
 
-    identityPicture.src = MyPulseIdentity.aliasPhotoURL ?? "";
-
     maximizeBtn.onclick = async () => {
       PulseBrowserPreview("Please Press ESCAPE to close the Full Screen View!");
       
