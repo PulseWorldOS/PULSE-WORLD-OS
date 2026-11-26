@@ -185,36 +185,8 @@
       border: 2px dashed rgba(255, 255, 255, 0.15);
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 11;
-      /* 3. Enable 3D space for child elements & smooth tilt */
-      transform-style: preserve-3d;
-      transform: rotateX(2deg);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-    }
-
-    .earner-mini-rate3-panel {
-      top: 27.2vh;
-      position: fixed;
-      margin: 4px 4px;
-      color: #0FF;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 20px;
-      height: 18px;
-      right: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(64px);
-      font-size: 0.8rem;
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 11;
-      /* 3. Enable 3D space for child elements & smooth tilt */
-      transform-style: preserve-3d;
-      transform: rotateX(2deg);
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+      z-index: 13;
+      
     }
 
     .earner-mini-rate2-panel {
@@ -227,8 +199,8 @@
       margin-bottom: 20px;
       inset-inline: 0;
       margin-inline: auto;
-      height: 18px;
-      width: clamp(45px, 12vw, 70px);
+      height: 18px;      
+      width: clamp(101px, 12vw, 106px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -237,7 +209,30 @@
       border: 2px dashed rgba(255, 255, 255, 0.15);
       border-radius: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
-      z-index: 11;
+      z-index: 13;
+      
+    }
+    
+    .earner-mini-rate3-panel {
+      top: 27.2vh;
+      position: fixed;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 18px;
+      right: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(64px);
+      font-size: 0.8rem;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+      z-index: 13;
+     
     }
 
     .earner-mini-panel {
@@ -2907,8 +2902,8 @@
     <video id="pbPulseEarn" class="pbPulseEarn" src="PulseEarn.mp4" autoplay muted playsinline aria-label="pbPulseEarn"></video>
     <div class="earner-inner-panel" id="earner-inner-panel">
       <div class="earner-mini-rate-panel" id="earner-mini-rate-panel">~$0.00/Day</div>
-      <div class="earner-mini-rate2-panel" id="earner-mini-rate2-panel">~$0.00/Day</div>
-      <div class="earner-mini-rate3-panel" id="earner-mini-rate3-panel">~$0.00/Day</div>
+      <div class="earner-mini-rate2-panel" id="earner-mini-rate2-panel">PulseMessenger</div>
+      <div class="earner-mini-rate3-panel" id="earner-mini-rate3-panel">PulseBusiness</div>
       <div class="earner-mini-panel" id="earner-mini-panel">$0.00</div>
       <div class="earner-mini-engine-panel" id="earner-mini-engine-panel">🌐</div>
       <div class="earner-mini-bank-panel" id="earner-mini-bank-panel">🏦</div>

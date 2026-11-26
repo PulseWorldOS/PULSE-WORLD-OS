@@ -4498,7 +4498,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
 
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
-        if (isPulseWorld(tab.url)) {
+        if (isPulseBusiness(tab.url)) {
           PulseFrameB = document.getElementById("PulseEarner3Frame");
           PulseFrameB.src = "PulseStatus.mp4";
           PulseFrameB.opacity = "1";
@@ -5845,6 +5845,10 @@ function isPulseWorld(origin) {
       || origin.includes("pulseworld.me")
       || origin.includes("pulseworld.money")
       || origin.includes("pulseworld.biz");
+}
+
+function isPulseBusiness(origin) {
+  return origin.includes("pulseworld.biz");
 }
 
 function IsPartner(origin) {
