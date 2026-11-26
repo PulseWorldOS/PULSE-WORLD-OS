@@ -3684,9 +3684,9 @@ async function CheckEarnState() {
       PulseFrame.style.zIndex = "11";
       if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
     }, 1000);
-    if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
-    PulseFrameB.style.zIndex = "11";
   } else {
     earnerenginepanel.style.opacity = "1";
   }
@@ -3699,6 +3699,8 @@ async function CheckEarnState() {
       PulseFrame.style.zIndex = "11";
       if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
     }, 1000);
   }
 
@@ -3733,9 +3735,9 @@ async function CheckEarnState() {
       PulseFrame.style.zIndex = "11";
       if (earnerminirate2panel.textContent !== "~$0.00/Day" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
     }, 1000);
-    if (earnerminirate3panel.textContent !== "~$0.00/Day" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
-    PulseFrameB.style.zIndex = "11";
     earnerenginepanel.style.opacity = "0.35";
     // ——— Turn OFF (restore original) ———
     pbPulseEarn.id = "pbPulseEarn";
