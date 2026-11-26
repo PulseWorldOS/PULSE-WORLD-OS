@@ -4442,10 +4442,10 @@ function pulseRestoreTabs() {
 async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
   if (document.hidden) return;
   if (document.visibilityState !== "visible") return;
-  PulseRealmSettings = await pbLoadExtensionSettings();
-  let skipcount = 0;
   document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
   document.querySelectorAll('[class^="PulseBrowser-OS-Temporary"]').forEach(el => el.remove());
+  let skipcount = 0;
+  PulseRealmSettings = await pbLoadExtensionSettings();
   chrome.tabs.query({}, tabs => {
     const rebuilt = {};
     
@@ -5733,10 +5733,11 @@ function destroyIframe(iframe) {
 
 function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
   const snapshotKey = `pulse_snapshot_${realm}`;
-  // let TempLink = false;
-  // temporaryLinks.forEach((origin) => {
-  //   if (origin === link) TempLink = true;
-  // });
+  if (isPulseWorld(link)) {
+    PulseFrameA = document.getElementById("PulseEarner2Frame");
+    PulseFrameA.src = "PulseStatus.mp4";
+    PulseFrameA.opacity = "1";
+  }
   chrome.storage.local.get(snapshotKey, (items) => {
     const snap = items[snapshotKey];
     if (snap) {
