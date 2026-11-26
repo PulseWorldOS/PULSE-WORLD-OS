@@ -3061,7 +3061,7 @@ input[type="file"] {
   width: 7.7dvw;
   height: 7.5dvh;
   padding: 0;
-  bottom: 45.8dvh;
+  bottom: 46dvh;
   left: 1.1dvw;
   border-radius: 6px;
   border: 1px solid #0ff;
@@ -3091,7 +3091,7 @@ input[type="file"] {
   width: 7.7dvw;
   height: 7.5dvh;
   padding: 0;
-  bottom: 37.8dvh;
+  bottom: 38dvh;
   left: 1.1dvw;
   border-radius: 6px;
   border: 1px solid #0ff;
@@ -3140,6 +3140,37 @@ input[type="file"] {
   transform: scale(1.03);
 }
 #pulsepalBtn:active {
+  backdrop-filter: blur(2px) brightness(0.85);
+  transform: scale(0.92) translateY(1px);
+  filter: brightness(0.85);
+  box-shadow: 0 0 6px #0ff inset;
+}
+
+#pulsemessengerBtn {
+  position: fixed;
+  z-index: 5;
+  width: 9.2dvw;
+  height: 7.6dvh;
+  padding: 0;
+  bottom: 30.4dvh;
+  left: 1.1dvw;
+  border-radius: 6px;
+  border: 1px solid #0ff;
+  background: rgba(0,0,0,0.0);
+  color: #0ff;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s ease, 
+              box-shadow 0.12s ease, 
+              filter 0.12s ease,
+              backdrop-filter 0.15s ease;
+  backdrop-filter: none;
+}
+#pulsemessengerBtn:hover {
+  transform: scale(1.03);
+}
+#pulsemessengerBtn:active {
   backdrop-filter: blur(2px) brightness(0.85);
   transform: scale(0.92) translateY(1px);
   filter: brightness(0.85);
