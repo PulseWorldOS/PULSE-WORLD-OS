@@ -149,6 +149,7 @@ const exitinnerpanel = document.getElementById("exit-inner-panel");
 const maximizeBtn = document.getElementById("maximizeBtn");
 const minimizeBtn = document.getElementById("minimizeBtn");
 let identityLogin = document.getElementById("identityLogin");
+let identityPicture = document.getElementById("identityPicture");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
@@ -3168,6 +3169,8 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.play();
       }, 0);
     };
+
+    identityPicture.src = MyPulseIdentity.aliasPhotoURL ?? "";
 
     maximizeBtn.onclick = async () => {
       PulseBrowserPreview("Please Press ESCAPE to close the Full Screen View!");
