@@ -149,7 +149,7 @@ const exitinnerpanel = document.getElementById("exit-inner-panel");
 const maximizeBtn = document.getElementById("maximizeBtn");
 const minimizeBtn = document.getElementById("minimizeBtn");
 let identityLogin = document.getElementById("identityLogin");
-const identityPicture = document.getElementById("identityPicture");
+let identityPicture = document.getElementById("identityPicture");
 const earnerhelperpanel = document.getElementById("earner-helper-panel");
 const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
 const messengerinnerpanel = document.getElementById("messenger-inner-panel");
@@ -3288,6 +3288,7 @@ async function GetThisMessengerDone() {
       PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
     };
 
+    identityPicture = document.getElementById("identityPicture");
     identityLogin = document.getElementById("identityLogin");
     if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
 
@@ -3295,36 +3296,42 @@ async function GetThisMessengerDone() {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
       MessengerMode = "Talk";
       identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
     };
 
     PulseMessengerWallet.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWallet.webp")`;
       MessengerMode = "Wallet";
       identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
     };
 
     PulseMessengerWorlds.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWorlds.webp")`;
       MessengerMode = "Worlds";
       identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
     };
 
     HomeMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
       MessengerMode = "Console";
-      identityLogin.style.opacity = "1";
+      identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
     };
 
     NotifyMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerNotify.webp")`;
       MessengerMode = "Notify";
       identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
     };
 
     DiscoverMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDiscover.webp")`;
       MessengerMode = "Discover";
       identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
     };
   }
 
