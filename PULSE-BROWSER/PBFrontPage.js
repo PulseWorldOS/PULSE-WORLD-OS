@@ -4500,6 +4500,7 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
 
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
+        
         if (isPulseBusiness(tab.url)) {
           setTimeout(() => {
             PulseFrameB = document.getElementById("PulseEarner3Frame");
