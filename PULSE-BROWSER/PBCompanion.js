@@ -207,6 +207,7 @@ if (channel) {
       const { kind, payload, ts } = ev.data || {};
       if (kind === "command_prompt") {
         handleOvermindResponse(payload, ts);
+        console.log("Payload: ", payload);
       } else if (kind === "command_ack") {
         logger.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
       }
