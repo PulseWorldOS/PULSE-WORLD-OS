@@ -8073,8 +8073,6 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
     if (confirmClear2) {
       chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
-      wipeMemory();
-      wipeHigherMemory();
     }
   } else {
     // Now ask about local storage
@@ -8084,8 +8082,6 @@ document.getElementById("clear-caches").addEventListener("click", async () => {
 
     if (confirmClear2) {
       chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
-      wipeMemory();
-      wipeHigherMemory();
     }
   }
 
@@ -8111,6 +8107,16 @@ if (MemoryWipe) {
 
     if (confirmClear) {
       chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER" });
+    }
+
+    // Ask user if they want to clear caches
+    const confirmClear2 = confirm(
+      "PulseBrowser OS: Clear your Higher Intellect Memories and Conversations?"
+    );
+
+    if (confirmClear2) {
+      wipeMemory();
+      wipeHigherMemory();
     }
 
     // Re-render after everything
