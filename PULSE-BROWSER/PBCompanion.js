@@ -2350,7 +2350,7 @@ async function pulseNotify(title, body) {
 
   chrome.notifications.create(title, {
     body,
-    icon: "/_EXPRESSIONS/_PEX/BUILD/PulseWorldSplash512.png.pex"
+    icon: "PulseWorldSplash512.png"
   });
 }
 
