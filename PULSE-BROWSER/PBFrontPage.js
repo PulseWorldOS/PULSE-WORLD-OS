@@ -1263,13 +1263,12 @@ async function askLocalModelWithLiveWeb(websiteURL) {
       console.log("WEBRESPONSE: " + webResponse);
       console.log("LIVEDATA: " + liveData2026);
       liveData2026 = liveData2026.slice(0, 7000);
-    }
-
-    if (realmSummary) {
-      const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
-      const summary = await summarizer.summarize(realmSummary);
-      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
-      realmSummary = liveData2026;
+      if (realmSummary) {
+        const summarizer = await Summarizer.create({ type: 'tldr', format: 'markdown' });
+        const summary = await summarizer.summarize(realmSummary);
+        appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
+        realmSummary = liveData2026;
+      }
     }
 
     // 3. Run your prompt
@@ -2615,12 +2614,7 @@ if (CompanionConsoleSend) {
         const started = await enableHigherAI(selectedKey);
         if (!started) return;
       } else {
-        if (originalText.includes("bunker scan")) {
-          appendHigherMessage(consoleOvermindCognition, "user", originalText);
-          askLocalModelWithLiveWeb();
-        } else {
-          appendHigherMessage(consoleOvermindCognition, "user", originalText);
-        }
+        appendHigherMessage(consoleOvermindCognition, "user", originalText);
       }
       showHigherThinking("🧠 AI Overmind is thinking…");
       MyLowerIntellect = originalText;
