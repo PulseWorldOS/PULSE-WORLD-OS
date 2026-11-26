@@ -41,5 +41,5 @@
       });
     });
 
-    if (PulseRealm.PulseUser) document.title = `PulseMessenger — ` + PulseRealm.PulseUser;
+    if (PulseRealm.PulseUser) document.title = `PulseMessenger — ` + PulseRealm.PulseUser.replace("-","~");
     
