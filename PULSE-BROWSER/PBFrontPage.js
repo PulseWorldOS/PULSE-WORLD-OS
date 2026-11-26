@@ -1238,11 +1238,22 @@ function PulsesafeStorageSet(dataObject) {
   PulseorchestratorQueue.enqueue(dataObject);
 }
 
+function getCleanPageText() {
+  const root = document.querySelector('main, article, [role="main"]') || document.body;
+  const clone = root.cloneNode(true);
+  
+  // Remove non-content elements
+  clone.querySelectorAll('nav, footer, aside, script, style, noscript, iframe').forEach(el => el.remove());
+  
+  // Collapse extra whitespace and newlines
+  return clone.innerText.replace(/\s+/g, ' ').trim();
+}
+
 async function askLocalModelWithLiveWeb(websiteURL) {
   try {
     let documentURL = null;
     if (!websiteURL) {
-      documentURL = document.documentElement.innerText;
+      documentURL = getCleanPageText();
     } else {
       documentURL = websiteURL;
       // 1. Dynamically fetch current data from an external 2026 API or webpage
