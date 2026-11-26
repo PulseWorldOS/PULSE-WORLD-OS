@@ -170,6 +170,11 @@ let BrowserHeartbeat = document.getElementById("BrowserHeartbeat");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 let consoleMessengerCompanion = document.getElementById("consoleMessengerCompanion");
+let consoleHomeCompanion = document.getElementById("consoleHomeCompanion");
+let consoleDiscoverHomeCompanion = document.getElementById("consoleDiscoverHomeCompanion");
+let consoleNotifyHomeCompanion = document.getElementById("consoleNotifyHomeCompanion");
+let consoleMessagesCompanion = document.getElementById("consoleMessagesCompanion");
+let consoleNotificationCompanion = document.getElementById("consoleNotificationCompanion");
 let consoleDiscoverCompanion = document.getElementById("consoleDiscoverCompanion");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
@@ -3304,8 +3309,13 @@ async function GetThisMessengerDone() {
       MessengerMode = "Talk";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "1";
       consoleMessengerCompanion.style.opacity = "1";
       consoleDiscoverCompanion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
     };
 
     PulseMessengerWallet.onclick = async () => {
@@ -3313,8 +3323,13 @@ async function GetThisMessengerDone() {
       MessengerMode = "Wallet";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
     };
 
     PulseMessengerWorlds.onclick = async () => {
@@ -3322,8 +3337,13 @@ async function GetThisMessengerDone() {
       MessengerMode = "Worlds";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
     };
 
     HomeMessenger.onclick = async () => {
@@ -3331,8 +3351,13 @@ async function GetThisMessengerDone() {
       MessengerMode = "Console";
       identityLogin.style.opacity = "1";
       identityPicture.style.opacity = "1";
+      consoleMessagesCompanion.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "1";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
     };
 
     NotifyMessenger.onclick = async () => {
@@ -3340,8 +3365,13 @@ async function GetThisMessengerDone() {
       MessengerMode = "Notify";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "1";
+      consoleNotificationCompanion.style.opacity = "1";
     };
 
     DiscoverMessenger.onclick = async () => {
@@ -3349,8 +3379,13 @@ async function GetThisMessengerDone() {
       MessengerMode = "Discover";
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "1";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "1";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
     };
   }
 
