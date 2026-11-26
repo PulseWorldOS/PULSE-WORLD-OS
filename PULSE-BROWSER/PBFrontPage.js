@@ -4499,10 +4499,12 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
         // ⭐ Normal tab → assign bubble
         latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
         if (isPulseBusiness(tab.url)) {
-          PulseFrameB = document.getElementById("PulseEarner3Frame");
-          PulseFrameB.src = "PulseStatus.mp4";
-          PulseFrameB.opacity = "1";
-          PulseEngine2Live = true;
+          setTimeout(() => {
+            PulseFrameB = document.getElementById("PulseEarner3Frame");
+            PulseFrameB.src = "PulseStatus.mp4";
+            PulseFrameB.opacity = "1";
+            PulseEngine2Live = true;
+          }, 2000);
         }
 
         rebuilt[identity] = {
