@@ -2586,7 +2586,12 @@ if (CompanionConsoleSend) {
         const started = await enableHigherAI(selectedKey);
         if (!started) return;
       } else {
-        appendHigherMessage(consoleOvermindCognition, "user", originalText);
+        if (originalText.includes("bunker scan")) {
+          appendHigherMessage(consoleOvermindCognition, "user", originalText);
+          askLocalModelWithLiveWeb();
+        } else {
+          appendHigherMessage(consoleOvermindCognition, "user", originalText);
+        }
       }
       showHigherThinking("🧠 AI Overmind is thinking…");
       MyLowerIntellect = originalText;
@@ -3098,7 +3103,7 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -557px)";
+        pbPulseMessenger.style.transform = "translate(-2px, -555px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -3114,7 +3119,7 @@ async function GetThisMessengerDone() {
       pbPulseMessenger.style.border = "2px solid #000";
       messengerinnerpanel.style.display = "flex";
       messengerinnerpanel.style.pointerEvents = "auto";
-      pbPulseMessenger.style.marginTop = "35px";
+      pbPulseMessenger.style.marginTop = "";
       pbPulseMessenger.style.pointerEvents = "auto";
       messengerpanel.style.pointerEvents = "auto";
       messengerpanel.style.background = "";
@@ -3148,7 +3153,7 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -557px)";
+        pbPulseMessenger.style.transform = "translate(-2px, -555px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -3208,7 +3213,7 @@ async function GetThisMessengerDone() {
         pbPulseMessenger.id = "pbPulseMessenger";
         pbPulseMessenger.className = "pbPulseMessenger";
         pbPulseMessenger.style.opacity = "1";
-        pbPulseMessenger.style.transform = "translate(0px, -557px)";
+        pbPulseMessenger.style.transform = "translate(-2px, -555px)";
         pbPulseMessenger.currentTime = 0;
         pbPulseMessenger.play();
       }, 0);
@@ -3236,14 +3241,14 @@ async function GetThisMessengerDone() {
           pbPulseMessenger.id = "pbPulseMessenger";
           pbPulseMessenger.className = "pbPulseMessenger";
           pbPulseMessenger.style.opacity = "1";
-          pbPulseMessenger.style.transform = "translate(0px, -557px)";
+          pbPulseMessenger.style.transform = "translate(-2px, -555px)";
           if (EarnDetailsHidden) safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
           pbPulseMessenger.currentTime = 0;
           pbPulseMessenger.play();
         }, 0);
       } else {
         MessengerHidden = false;
-        pbPulseMessenger.style.marginTop = "35px";
+        pbPulseMessenger.style.marginTop = "";
         if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
         // ——— Turn OFF (restore original) ———
         pbPulseMessenger.id = "pbPulseMessenger";
