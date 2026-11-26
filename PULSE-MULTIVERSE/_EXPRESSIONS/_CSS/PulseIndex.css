@@ -420,7 +420,7 @@ img {
   height: 16.5dvh;
   padding: 0;
   top: 12dvh;
-  right: 0.7dvw;
+  right: 0.5dvw;
   cursor: progress;
   border-radius: 20px;
   object-fit: cover;
