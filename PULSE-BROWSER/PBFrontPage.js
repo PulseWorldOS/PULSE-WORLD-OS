@@ -5446,10 +5446,15 @@ async function openNamedTab(name, url, skip) {
   const override = true;
   const instanceIndex = getNextInstanceIndex(identity);
   const existingEntry = pulseTabs[identity];
-  if (isPulseWorld(url)) identityrunonce = false;
+  
   MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
   
-  try { fetch(url, { mode: "no-cors" }).catch(() => {}); } catch (_) {}
+  try {
+    if (isPulseWorld(url) === "PulseWorld") identityrunonce = false;
+    fetch(url, { mode: "no-cors" }).catch(() => {});
+  } catch (_) {
+
+  }
 
   // ⭐ If tab already exists → PURE SELECT
   if (existingEntry) {
