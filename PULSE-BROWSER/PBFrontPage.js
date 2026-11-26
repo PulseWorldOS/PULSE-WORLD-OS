@@ -3941,14 +3941,33 @@ async function pbRenderCacheList2() {
       404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
       Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
       <br>
+        <div style="margin-left: -5px;margin-right: 10px; padding:8px; border-radius:8px;
+                  background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
+
+        <strong><font color="#FFF">PulseWorld System (Memory)</font></strong><br><br>
+
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1;">
+            <strong>Local Storage:</strong><br>
+            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheUsedMB} MB</span><br>
+          </div>
+
+          <div style="flex:1;">
+            <strong>System Quota:</strong><br>
+            • <span style="color:#0FF">${PulseBrowserRealm.PulseCacheQuotaGB} GB</span><br>
+          </div>
+        </div>
+      </div>
+      <br>
       <font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
        Remember, Architecture is Memory made  <br>
-       Manifest."</i> — <font color="#0FF">Words by John von Neumann (1945)</font></font><br><br>`;
+       Manifest."</i> — <font color="#0FF">Words by John von Neumann (1945)</font></font><br>
+    `;
 
     listEl.appendChild(li);
     best = true;
   });
-  
+
   const identityName = document.getElementById("identityName");
   if (identityName) {
     identityName.textContent = "🧑 " + (MyPulseIdentity?.name || "Fellow Multiversal Drifter");
@@ -4305,23 +4324,6 @@ async function pbRenderStorageStats2(history) {
       </span><br>
 
     </div>
-    <div style="margin: 8px 20px; padding:8px; border-radius:8px;
-                  background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
-
-        <strong><font color="#FF8844">PulseWorld Realm (RAM)</font> [<font color=${percentColor3}>${WeLocalMemoryLayerMB} MB</font>]</strong><br><br>
-
-        <div style="display:flex; gap:10px;">
-          <div style="flex:1;">
-            <strong>Local Storage:</strong><br>
-            • <span style="color:lightgreen">${PulseBrowserRealm.PulseCacheUsedMB} MB</span><br>
-          </div>
-
-          <div style="flex:1;">
-            <strong>System Quota:</strong><br>
-            • <span style="color:lightgreen">${PulseBrowserRealm.PulseCacheQuotaGB} GB</span><br>
-          </div>
-        </div>
-      </div>
     `;
 }
 
@@ -8117,7 +8119,6 @@ if (MemoryWipe) {
       });
       await pbRenderCacheList2();
     }, 500);
-
     initHigherAIConsoleOnTabStart(true);
   });
 
