@@ -355,6 +355,7 @@ if (!online) {
   earnerminipanel = document.getElementById("earner-mini-panel");
   if (earnerminipanel && (earnerminipanel.textContent === "$0.000" || !earnerminipanel)) document.title = "PulseBrowser OS [Console]";
   accountBalance.textContent = earnerminipanel.textContent;
+  earnerminirate2panel.innerHTML = `<- <font color="lightgreen">Merged</font>`;
   setInterval(() => {
     chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
       if (chrome.runtime.lastError) return;
