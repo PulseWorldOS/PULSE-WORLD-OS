@@ -4958,6 +4958,7 @@ async function pulseNotify(title, body) {
 // [Fix] Render cache + earner value immediately on load — don't wait for first interval tick
 (async () => {
   try {
+    pulseNotify("🌐 PulseBrowser OS","Welcome to the Pulse World Multiverse!");
     // Show earner value from stored session immediately
     chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
       if (chrome.runtime.lastError) return;
