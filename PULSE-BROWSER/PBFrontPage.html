@@ -340,6 +340,23 @@
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
     }
 
+    .edit-inner-panel {
+      position: absolute;
+      top: 75px;
+      right: 24px;
+      margin: 4px 4px;
+      color: #0FF;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+      height: 25px;
+      width: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
+    }
+
     .exit-inner-panel {
       position: absolute;
       top: 16px;
@@ -2784,6 +2801,7 @@
     <video id="pbPulseMessenger" class="pbPulseMessenger" src="PulseMessenger.mp4" autoplay muted playsinline aria-label="pbPulseMessenger"></video>
     <div class="messenger-inner-panel" id="messenger-inner-panel">
       <div class="exit-inner-panel" id="exit-inner-panel"></div>
+      <div class="edit-inner-panel" id="edit-inner-panel"></div>
       <div class="maximizeBtn" id="maximizeBtn"></div>
       <div class="minimizeBtn" id="minimizeBtn"></div>
       <div id="identityLogin" class="identityLogin"></div>

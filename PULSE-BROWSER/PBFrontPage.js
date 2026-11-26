@@ -146,6 +146,7 @@ const messengerpanel = document.getElementById("messenger-panel");
 let messengerminipanel = document.getElementById("messenger-mini-panel");
 const earnerinnerpanel = document.getElementById("earner-inner-panel");
 const exitinnerpanel = document.getElementById("exit-inner-panel");
+const editinnerpanel = document.getElementById("edit-inner-panel");
 const maximizeBtn = document.getElementById("maximizeBtn");
 const minimizeBtn = document.getElementById("minimizeBtn");
 let identityLogin = document.getElementById("identityLogin");
@@ -3204,6 +3205,10 @@ async function GetThisMessengerDone() {
       document.addEventListener("keydown", handleEscape);
     };
 
+    editinnerpanel.onclick = async () => {
+      openNamedTab("PulseIdentity", pulseIdentityLink);
+      await PBUniversalBoost.warmOrigin(pulseIdentityLink);
+    };
 
     exitinnerpanel.onclick = async () => {
       MessengerHidden = true;
@@ -3316,8 +3321,8 @@ async function GetThisMessengerDone() {
     HomeMessenger.onclick = async () => {
       messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
       MessengerMode = "Console";
-      identityLogin.style.opacity = "0";
-      identityPicture.style.opacity = "0";
+      identityLogin.style.opacity = "1";
+      identityPicture.style.opacity = "1";
     };
 
     NotifyMessenger.onclick = async () => {
