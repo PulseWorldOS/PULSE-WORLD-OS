@@ -1455,10 +1455,10 @@ async function runLocalAI() {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -1602,10 +1602,10 @@ ${rawPrompt}
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -2563,10 +2563,10 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -2718,10 +2718,10 @@ if (CompanionConsoleSend) {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -2809,10 +2809,10 @@ if (CompanionConsoleSend) {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -3862,8 +3862,8 @@ async function CheckEarnState() {
     PulseFrame2.style.bottom = "";
     PulseFrame2.style.insetInline = "";
     PulseFrame2.style.marginInline = "";
-    PulseFrame2.style.top = "25px";
-    PulseFrame2.style.left = "125px";
+    PulseFrame2.style.top = "20px";
+    PulseFrame2.style.left = "145px";
     StreamDragANDDrop(false);
   }
   
@@ -3906,7 +3906,7 @@ async function CheckEarnState() {
     earnerinnerpanel.style.display = "none";
     // earnerminipanel.style.height = "30px";
     // earnerminipanel.style.width = "30px";
-    // earnerminipanel.style.top = "125px";
+    // earnerminipanel.style.top = "225px";
     // earnerminipanel.style.left = "710px";
     earnerpanel.style.background = "transparent";
     earnerpanel.style.backdropFilter = "none";
@@ -4019,7 +4019,7 @@ async function CheckEarnState() {
       earnerminipanel.style.boxShadow = "0 0 25px rgba(0, 0, 0, 0.45)";
       // earnerminipanel.style.height = "30px";
       // earnerminipanel.style.width = "30px";
-      // earnerminipanel.style.top = "125px";
+      // earnerminipanel.style.top = "225px";
       // earnerminipanel.style.left = "710px";
       earnerpanel.style.background = "transparent";
       earnerpanel.style.backdropFilter = "none";
@@ -5049,10 +5049,10 @@ setInterval(async () => {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -5156,10 +5156,10 @@ setInterval(async () => {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -7028,10 +7028,10 @@ async function updateModuleIcons(settings, browser) {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -8880,10 +8880,10 @@ function CheckBackTab() {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -8983,10 +8983,10 @@ function CheckBackTab() {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -9286,10 +9286,10 @@ function CheckBackTab() {
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
         PulseFrame2.style.bottom = "";
-        PulseFrame2.style.insetInline = "";
-        PulseFrame2.style.marginInline = "";
-        PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "125px";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "20px";
+        PulseFrame2.style.left = "145px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
