@@ -2826,9 +2826,9 @@ chrome.storage.local.get(["globalStart"], (res) => {
 });
 
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseFaviconSystems"], (res) => {
-  if (res.PulseFaviconSystems) {
-    PBROWSERFAVICON_CACHE = res.PulseFaviconSystems;
+chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
+  if (res.PulseFaviconsUniverse) {
+    PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
     saveCache();
     console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
   }
@@ -2836,7 +2836,7 @@ chrome.storage.local.get(["PulseFaviconSystems"], (res) => {
 
 
 function saveCache() {
-  PulsesafeStorageSet({ PulseFaviconSystems: PBROWSERFAVICON_CACHE });
+  PulsesafeStorageSet({ PulseFaviconsUniverse: PBROWSERFAVICON_CACHE });
 }
 
 async function pbRequestCacheList2() {
@@ -5378,9 +5378,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.style.opacity = "1";
     }
     
-    let favicon = snapshot.regfavicon ?? snapshot.favicon;
-    // if (isPulseWorld(location.origin)) {
-    let PulseBlob = await fetchAndStoreIcon(realm, snapshot.favicon);
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await PBROWSERFAVICON_CACHE[realm];
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");
@@ -5393,7 +5391,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     }
 
     if (PBROWSERFAVICON_CACHE[URLLink]) {
-      PBROWSERFAVICON_CACHE[URLLink] = PulseBlob;
+      PBROWSERFAVICON_CACHE[URLLink] = favicon;
       saveCache();
     }
     const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
@@ -5402,7 +5400,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     div.innerHTML = `
       <div class="Snapshot-Viewport">
         <img class="Snapshot-Favicon"
-              src="${PulseBlob}"
+              src="${favicon}"
               alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
       </div>
     `;
@@ -6241,7 +6239,7 @@ async function compressImageTinyPNGStyle(blob) {
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
-  
+
   // ⭐ 1. Check cache first
   if (PBROWSERFAVICON_CACHE[host]) {
     const cached = PBROWSERFAVICON_CACHE[host];
@@ -8526,9 +8524,9 @@ function CheckBackTab() {
 
   function CheckFaviconChanges() {
     // Load cache from storage at startup
-    chrome.storage.local.get(["PulseFaviconSystems"], (res) => {
-      if (res.PulseFaviconSystems) {
-        PBROWSERFAVICON_CACHE = res.PulseFaviconSystems;
+    chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
+      if (res.PulseFaviconsUniverse) {
+        PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
       }
     });
   }
