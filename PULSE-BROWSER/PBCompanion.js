@@ -39,6 +39,7 @@ let errorLock = false;
 let CompanionDeprivation = false;
 let TakeOfflineSnapshot = false;
 let SaveandCloseStream = false;
+let MinimizeStream = false;
 let HelperHudBoolean = false;
 let __PULSE_CACHE_FILE = null;
 let CompanionMessage = null;
@@ -2377,7 +2378,12 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
   chrome.contextMenus.create({
     id: 'closeStreaming',
-    title: '📺 PulseBrowser OS - Save/Close Stream',
+    title: '📺 PulseBrowser OS - Toggle Stream Mode',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'minStreaming',
+    title: '📺 PulseBrowser OS - Toggle Mini Stream',
     contexts: ['all']
   });
   chrome.contextMenus.create({
@@ -2466,6 +2472,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     TakeOfflineSnapshot = true;
   } else if (info.menuItemId === 'closeStreaming') {
     SaveandCloseStream = true;
+  } else if (info.menuItemId === 'minStreaming') {
+    MinimizeStream = true;
   } else if (info.menuItemId === 'flipAdblocker') {
     PulseRealmSettings = await pbLoadExtensionSettings();
     console.log("AdBlocker: ", PulseRealmSettings.adBlocker);
@@ -4319,7 +4327,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
           if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity, MyPulseBusiness });
+          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity, MyPulseBusiness, MinimizeStream });
         } catch (err) {
           sendResponse({ ok: false, error: err && err.message ? err.message : String(err) });
         }

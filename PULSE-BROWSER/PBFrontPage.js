@@ -1422,7 +1422,14 @@ async function runLocalAI() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }     
+          }
+          if (response.MinimizeStream) {
+            PulseFrame2 = document.getElementById("PulseStreamFrame");
+            PulseFrame2.style.width = "625px";
+            PulseFrame2.style.width = "325px";
+            PulseFrame2.style.top = "25px";
+            PulseFrame2.style.left = "225px";
+          }
           PulsesafeStorageSet({ MyPulseBusiness }); 
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -1558,6 +1565,13 @@ ${rawPrompt}
         if (!MyPulseBusiness) {
           if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
         }     
+        if (response.MinimizeStream) {
+          PulseFrame2 = document.getElementById("PulseStreamFrame");
+          PulseFrame2.style.width = "625px";
+          PulseFrame2.style.width = "325px";
+          PulseFrame2.style.top = "25px";
+          PulseFrame2.style.left = "225px";
+        }
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -2505,6 +2519,13 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
       }     
+      if (response.MinimizeStream) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
       PulsesafeStorageSet({ MyPulseBusiness }); 
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -2647,7 +2668,14 @@ if (CompanionConsoleSend) {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }     
+          }
+          if (response.MinimizeStream) {
+            PulseFrame2 = document.getElementById("PulseStreamFrame");
+            PulseFrame2.style.width = "625px";
+            PulseFrame2.style.width = "325px";
+            PulseFrame2.style.top = "25px";
+            PulseFrame2.style.left = "225px";
+          }
           PulsesafeStorageSet({ MyPulseBusiness }); 
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -2726,7 +2754,14 @@ if (CompanionConsoleSend) {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }     
+          }
+          if (response.MinimizeStream) {
+            PulseFrame2 = document.getElementById("PulseStreamFrame");
+            PulseFrame2.style.width = "625px";
+            PulseFrame2.style.width = "325px";
+            PulseFrame2.style.top = "25px";
+            PulseFrame2.style.left = "225px";
+          }
           PulsesafeStorageSet({ MyPulseBusiness }); 
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -3764,6 +3799,9 @@ async function CheckEarnState() {
   PulseFrameA = document.getElementById("PulseEarner2Frame");
   PulseFrameB = document.getElementById("PulseEarner3Frame");
   earnerenginepanel = document.getElementById("earner-mini-engine-panel");
+  PulseFrame.style.pointerEvents = "none";
+  PulseFrameA.style.pointerEvents = "none";
+  PulseFrameB.style.pointerEvents = "none";
   
   if (PulseFrame.style.opacity === "1") {
     earnerenginepanel.style.opacity = "0.35";
@@ -3934,6 +3972,9 @@ async function CheckEarnState() {
     } else {
       EarnHidden = false;
       PulseFrame.style.opacity = "1";
+      PulseFrame.style.pointerEvents = "auto";
+      PulseFrameA.style.pointerEvents = "auto";      
+      PulseFrameB.style.pointerEvents = "auto";
       PulseFrame.style.zIndex = "11";
       if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
       PulseFrameA.style.zIndex = "11";
@@ -4936,7 +4977,14 @@ setInterval(async () => {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-      }     
+      }
+      if (response.MinimizeStream) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
       PulsesafeStorageSet({ MyPulseBusiness }); 
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -5031,7 +5079,14 @@ setInterval(async () => {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-      }     
+      }
+      if (response.MinimizeStream) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
       PulsesafeStorageSet({ MyPulseBusiness }); 
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -6891,7 +6946,14 @@ async function updateModuleIcons(settings, browser) {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-      }     
+      }
+      if (response.MinimizeStream) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
       PulsesafeStorageSet({ MyPulseBusiness });  
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -8731,7 +8793,14 @@ function CheckBackTab() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }     
+          }
+          if (response.MinimizeStream) {
+            PulseFrame2 = document.getElementById("PulseStreamFrame");
+            PulseFrame2.style.width = "625px";
+            PulseFrame2.style.width = "325px";
+            PulseFrame2.style.top = "25px";
+            PulseFrame2.style.left = "225px";
+          }
           PulsesafeStorageSet({ MyPulseBusiness }); 
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -8822,7 +8891,14 @@ function CheckBackTab() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }     
+          }
+          if (response.MinimizeStream) {
+            PulseFrame2 = document.getElementById("PulseStreamFrame");
+            PulseFrame2.style.width = "625px";
+            PulseFrame2.style.width = "325px";
+            PulseFrame2.style.top = "25px";
+            PulseFrame2.style.left = "225px";
+          }
           PulsesafeStorageSet({ MyPulseBusiness }); 
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
@@ -9113,7 +9189,14 @@ function CheckBackTab() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }     
+          }
+          if (response.MinimizeStream) {
+            PulseFrame2 = document.getElementById("PulseStreamFrame");
+            PulseFrame2.style.width = "625px";
+            PulseFrame2.style.width = "325px";
+            PulseFrame2.style.top = "25px";
+            PulseFrame2.style.left = "225px";
+          }
           PulsesafeStorageSet({ MyPulseBusiness }); 
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
