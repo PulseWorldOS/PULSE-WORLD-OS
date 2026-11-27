@@ -1423,7 +1423,7 @@ async function runLocalAI() {
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
           }
-          if (response.MinimizeStream) {
+          if (response.MinimizeStream && PulseStreamingLive) {
             PulseFrame2 = document.getElementById("PulseStreamFrame");
             PulseFrame2.style.width = "625px";
             PulseFrame2.style.width = "325px";
@@ -1565,7 +1565,7 @@ ${rawPrompt}
         if (!MyPulseBusiness) {
           if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
         }     
-        if (response.MinimizeStream) {
+        if (response.MinimizeStream && PulseStreamingLive) {
           PulseFrame2 = document.getElementById("PulseStreamFrame");
           PulseFrame2.style.width = "625px";
           PulseFrame2.style.width = "325px";
@@ -2519,7 +2519,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
       }     
-      if (response.MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.width = "325px";
@@ -2669,7 +2669,7 @@ if (CompanionConsoleSend) {
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
           }
-          if (response.MinimizeStream) {
+          if (response.MinimizeStream && PulseStreamingLive) {
             PulseFrame2 = document.getElementById("PulseStreamFrame");
             PulseFrame2.style.width = "625px";
             PulseFrame2.style.width = "325px";
@@ -2755,7 +2755,7 @@ if (CompanionConsoleSend) {
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
           }
-          if (response.MinimizeStream) {
+          if (response.MinimizeStream && PulseStreamingLive) {
             PulseFrame2 = document.getElementById("PulseStreamFrame");
             PulseFrame2.style.width = "625px";
             PulseFrame2.style.width = "325px";
@@ -4978,7 +4978,7 @@ setInterval(async () => {
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
       }
-      if (response.MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.width = "325px";
@@ -5080,7 +5080,7 @@ setInterval(async () => {
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
       }
-      if (response.MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.width = "325px";
@@ -6947,7 +6947,7 @@ async function updateModuleIcons(settings, browser) {
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
       }
-      if (response.MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.width = "325px";
@@ -8794,7 +8794,7 @@ function CheckBackTab() {
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
           }
-          if (response.MinimizeStream) {
+          if (response.MinimizeStream && PulseStreamingLive) {
             PulseFrame2 = document.getElementById("PulseStreamFrame");
             PulseFrame2.style.width = "625px";
             PulseFrame2.style.width = "325px";
@@ -8892,7 +8892,7 @@ function CheckBackTab() {
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
           }
-          if (response.MinimizeStream) {
+          if (response.MinimizeStream && PulseStreamingLive) {
             PulseFrame2 = document.getElementById("PulseStreamFrame");
             PulseFrame2.style.width = "625px";
             PulseFrame2.style.width = "325px";
@@ -9190,7 +9190,7 @@ function CheckBackTab() {
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
           }
-          if (response.MinimizeStream) {
+          if (response.MinimizeStream && PulseStreamingLive) {
             PulseFrame2 = document.getElementById("PulseStreamFrame");
             PulseFrame2.style.width = "625px";
             PulseFrame2.style.width = "325px";
