@@ -5378,7 +5378,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.style.opacity = "1";
     }
     
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await PBROWSERFAVICON_CACHE[realm];
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");
