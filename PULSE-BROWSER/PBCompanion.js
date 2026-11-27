@@ -1498,8 +1498,11 @@ async function testLocalWebSockets(ports = null, timeoutMs = 400) {
   return { inUse, free, details };
 }
 
-// Run check
-testLocalWebSockets();
+setTimeout(() => {
+  // Run check
+  testLocalWebSockets();
+}, 10000);
+
 
 
 // ============================================================================
