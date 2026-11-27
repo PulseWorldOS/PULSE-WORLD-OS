@@ -792,6 +792,19 @@ async function openNamedTab(name, url) {
   }, 2000);
 }
 
+
+function emitFullPageContext() {
+  chrome.runtime.sendMessage({
+    type: "PBREALM_UPDATE_FULL",
+    page: "NewTab",
+    url: "impulse://newtab",
+    title: documentTitle(),
+    domainClass: pbDomainClass(location.href),
+    bands: extractWorldBands()
+  });
+}
+
+
 chrome.tabs.onRemoved.addListener((tabId) => {
   let removedSnapshotIndex = null;
 

@@ -4590,7 +4590,6 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     PulsesafeStorageSet({ pulseTabs: rebuilt });
   });
   CheckFaviconChanges();
-  emitFullPageContext();
   topPanel = document.querySelector(".top-panel");
   const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
   if (remaining === 0) {
@@ -5889,7 +5888,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   try {
     backToOriginal();
   } catch (err) {}
-  emitFullPageContext();
+  
   // injectPulseScreenFromMemory();
   // location.reload();
 });
