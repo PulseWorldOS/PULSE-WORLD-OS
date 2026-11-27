@@ -1197,7 +1197,6 @@ async function runProtectedCompute(computeTaskFunction) {
     if (chrome && chrome.power) {
       CompanionDeprivation = true;
       chrome.power.requestKeepAwake("system");
-      console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
 
     // 2. Execute your pure WASM math proof or WebGPU logic
@@ -8455,7 +8454,6 @@ setInterval(async () => {
   online = navigator.onLine;
   let onlineFlag = "Online";
   if (!online) onlineFlag = "Offline";
-  console.log("PulseBrowser OS: [Status] " + onlineFlag);
   if (!online) {
     titlediv.textContent = "PulseBrowser OS (~Drifting~)";
     document.title = "PulseBrowser OS [~Drift~]";

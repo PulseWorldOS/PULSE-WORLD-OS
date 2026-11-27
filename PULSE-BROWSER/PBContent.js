@@ -1174,7 +1174,7 @@ function getLocalMemoryLayer() {
   // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
   const heap = performance.memory;
   OurLocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
-  console.log("Memory Heap Allocated: ", OurLocalMemoryLayerMB);
+
   
   return {
     usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
@@ -1327,7 +1327,6 @@ async function runProtectedCompute(computeTaskFunction) {
     if (chrome && chrome.power) {
       CompanionDeprivation = true;
       chrome.power.requestKeepAwake("system");
-      console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
 
     // 2. Execute your pure WASM math proof or WebGPU logic

@@ -2691,7 +2691,6 @@ async function runProtectedCompute(computeTaskFunction) {
     if (chrome && chrome.power) {
       CompanionDeprivation = true;
       chrome.power.requestKeepAwake("system");
-      console.log("[POWER GOVERNOR] System locked awake for calculation...");
     }
 
     // 2. Execute your pure WASM math proof or WebGPU logic
@@ -3528,7 +3527,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           ? parseFloat(HisassumedValue.replace(/[^0-9.-]+/g, '')) 
           : Number(HisassumedValue);
         HisassumedValue = cleanValue;
-        console.log("Content Tab Value: ", HisassumedValue);
       }
       if (msg.lastEarnBatch) {
         lastEarnBatch = msg.lastEarnBatch;
