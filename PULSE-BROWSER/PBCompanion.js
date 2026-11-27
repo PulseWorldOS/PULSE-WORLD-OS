@@ -1253,6 +1253,7 @@ const PB_HOMES = [
 function IsPartner(origin) {
   return origin.includes("fordfamilyretail")
       || origin.includes("peacesmokeshop")
+      || origin.includes("crocsbar")
       || origin.includes("peace-smokeshop")
       || origin.includes("peacesmoke-shop")
       || origin.includes("chromewebstore")
