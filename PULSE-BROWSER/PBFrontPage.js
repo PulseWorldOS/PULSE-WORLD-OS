@@ -4532,6 +4532,12 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
     const rebuilt = {};
     
     PulseSnapIndex = 1; // 1–5
+    
+    let StreamingRealm = PulseRealmSettings?.externalStreamingLink;
+    if (typeof StreamingRealm === "string" && StreamingRealm.trim()) {
+      StreamingRealm = StreamingRealm.replace("https://", "").replace("www.", "");
+      if (PulseStreamingLive) latestSnapshot(StreamingRealm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    }
 
     for (const tab of tabs) {
       if (!tab.url) continue;
@@ -4578,11 +4584,6 @@ async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
       } catch (e) {
         // Skip invalid URLs
       }
-    }
-    let StreamingRealm = PulseRealmSettings?.externalStreamingLink;
-    if (typeof StreamingRealm === "string" && StreamingRealm.trim()) {
-      StreamingRealm = StreamingRealm.replace("https://", "").replace("www.", "");
-      if (PulseStreamingLive) latestSnapshot(StreamingRealm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
     }
     
     pulseTabs = rebuilt;
@@ -5378,7 +5379,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.style.opacity = "1";
     }
     
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(realm);
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(link);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");

@@ -141,7 +141,7 @@ function resolvePulseWorldTargets_v40() {
   }
 
   function looksLikeWorld(obj) {
-    if (!obj) return false;
+    if (!obj || typeof obj !== "object") return false;
     // Bail out immediately if null, primitive, or a restricted cross-origin proxy
     if (!isSafeLocalObject(obj)) return false;
 
