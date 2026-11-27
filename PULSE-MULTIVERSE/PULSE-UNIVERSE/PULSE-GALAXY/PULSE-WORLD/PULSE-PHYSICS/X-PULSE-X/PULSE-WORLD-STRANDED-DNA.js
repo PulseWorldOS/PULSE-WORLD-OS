@@ -884,9 +884,9 @@ function isStorageLike(obj) {
 function isWorldCandidate_v40(obj) {
   if (!obj || typeof obj !== "object") return false;
 
-  if (obj.__pulseWorld === true) return true;
-  if (obj.__pulseMultiverse === true) return true;
-  if (obj.__pulseRealm === true) return true;
+  // if (obj.__pulseWorld === true) return true;
+  // if (obj.__pulseMultiverse === true) return true;
+  // if (obj.__pulseRealm === true) return true;
 
   if (obj.meta && typeof obj.meta === "object") {
     const t = obj.meta.type;
