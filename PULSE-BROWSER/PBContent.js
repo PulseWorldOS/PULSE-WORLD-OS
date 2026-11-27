@@ -1431,6 +1431,7 @@ setInterval(async () => {
   if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
+  if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
   loadOrders(assumedValue);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
   // ---------------------------------------------------------------------------
@@ -2812,6 +2813,7 @@ async function PulseBrowserDomScan() {
   if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
+  if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
