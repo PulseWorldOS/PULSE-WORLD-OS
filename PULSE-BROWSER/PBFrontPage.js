@@ -2488,7 +2488,7 @@ document.addEventListener("click", (e) => {
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
   if (PulseBrowserOSFrame) PulseBrowserOSFrame.style.display = "none";
   displayStyle = false;
-  if (MinimizeStream) {
+  if (PulseFrame2 && MinimizeStream) {
     // 3. Define the Escape handler and remove it once triggered
     const handleEscape = (e) => {
       if (e.key === "Escape") {
@@ -2496,6 +2496,8 @@ document.addEventListener("click", (e) => {
         PulseFrame2.style.width = "";
         PulseFrame2.style.inset = "";
         PulseFrame2.style.objectFit = "";
+        MinimizeStream = false;
+        PulseStreamingLive = false;
 
         document.removeEventListener("keydown", handleEscape);
       }
