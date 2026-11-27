@@ -150,9 +150,9 @@ function resolvePulseWorldTargets_v40() {
         return true;
       }
 
-      if (obj.__pulseWorld === true) return true;
-      if (obj.__pulseMultiverse === true) return true;
-      if (obj.__pulseRealm === true) return true;
+      // if (obj.__pulseWorld === true) return true;
+      // if (obj.__pulseMultiverse === true) return true;
+      // if (obj.__pulseRealm === true) return true;
 
       if ("worldId" in obj) return true;
       if ("worldContext" in obj) return true;
