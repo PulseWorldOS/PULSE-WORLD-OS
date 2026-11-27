@@ -2481,6 +2481,8 @@ document.addEventListener("click", (e) => {
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
   if (PulseBrowserOSFrame) PulseBrowserOSFrame.style.display = "none";
   displayStyle = false;
+  if (PulseStreamingLive) StreamDragANDDrop(true);
+  if (CustomizePanelsDragNDrop) DragANDDrop(true);
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
   if (!btn) return;
   const code = btn.closest(".pw-code")?.querySelector("pre");
