@@ -174,9 +174,11 @@ let HigherStatusPanel = document.getElementById("higherStatusPanel");
 let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
 let consoleMessengerCompanion = document.getElementById("consoleMessengerCompanion");
 let consoleHomeCompanion = document.getElementById("consoleHomeCompanion");
+let consoleHomeCompanion2 = document.getElementById("consoleHomeCompanion2");
 let consoleDiscoverHomeCompanion = document.getElementById("consoleDiscoverHomeCompanion");
 let consoleNotifyHomeCompanion = document.getElementById("consoleNotifyHomeCompanion");
 let consoleMessagesCompanion = document.getElementById("consoleMessagesCompanion");
+let consoleMessages2Companion = document.getElementById("consoleMessages2Companion");
 let consoleNotificationCompanion = document.getElementById("consoleNotificationCompanion");
 let consoleDiscoverCompanion = document.getElementById("consoleDiscoverCompanion");
 const aiOverlay = document.getElementById("ai-overlay");
@@ -3142,6 +3144,7 @@ async function GetThisMessengerDone() {
     MessengerHidden = We.MessengerInvisible ?? true;
     messengerpanel.style.opacity = "1";
     consoleHomeCompanion.style.opacity = "1";
+    consoleHomeCompanion2.style.opacity = "1";
 
     if (MessengerHidden) {
       pbPulseMessenger.id = "pbPulseMessenger";
@@ -3350,9 +3353,11 @@ async function GetThisMessengerDone() {
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
       consoleMessagesCompanion.style.opacity = "1";
+      consoleMessagesCompanion2.style.opacity = "1";
       consoleMessengerCompanion.style.opacity = "1";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
@@ -3364,9 +3369,11 @@ async function GetThisMessengerDone() {
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
       consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
@@ -3378,9 +3385,11 @@ async function GetThisMessengerDone() {
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
       consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
@@ -3392,9 +3401,11 @@ async function GetThisMessengerDone() {
       identityLogin.style.opacity = "1";
       identityPicture.style.opacity = "1";
       consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "1";
+      consoleHomeCompanion2.style.opacity = "1";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
@@ -3406,9 +3417,11 @@ async function GetThisMessengerDone() {
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
       consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "1";
       consoleNotificationCompanion.style.opacity = "1";
@@ -3420,9 +3433,11 @@ async function GetThisMessengerDone() {
       identityLogin.style.opacity = "0";
       identityPicture.style.opacity = "0";
       consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "1";
       consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "1";
       consoleNotifyHomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
