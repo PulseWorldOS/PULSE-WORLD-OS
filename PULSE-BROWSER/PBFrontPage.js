@@ -1418,7 +1418,7 @@ async function runLocalAI() {
           identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
-          identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1548,7 +1548,7 @@ ${rawPrompt}
         identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
         console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
         identityrunonce = true;
-        identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+        
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2486,7 +2486,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
-      identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2624,7 +2624,7 @@ if (CompanionConsoleSend) {
           identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
-          identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2698,7 +2698,7 @@ if (CompanionConsoleSend) {
           identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
-          identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -4889,7 +4889,7 @@ setInterval(async () => {
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
-      identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -4979,7 +4979,7 @@ setInterval(async () => {
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
-      identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6834,7 +6834,7 @@ async function updateModuleIcons(settings, browser) {
       identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
       console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
       identityrunonce = true;
-      identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+      
     }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -8669,7 +8669,7 @@ function CheckBackTab() {
           identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
-          identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -8755,7 +8755,7 @@ function CheckBackTab() {
           identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
-          identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -9041,7 +9041,7 @@ function CheckBackTab() {
           identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
           console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
           identityrunonce = true;
-          identityNameBiz.textContent = "🧑‍🎨 " + MyPulseBusiness.name ?? "🧑‍🎨 Fellow Multiversal Worker";
+          
         }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
