@@ -5380,7 +5380,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     
     let favicon = snapshot.regfavicon ?? snapshot.favicon;
     // if (isPulseWorld(location.origin)) {
-    let PulseBlob = await fetchAndStoreIcon(realm, favicon);
+    let PulseBlob = await fetchAndStoreIcon(realm, snapshot.favicon);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");
@@ -6241,7 +6241,7 @@ async function compressImageTinyPNGStyle(blob) {
 // ⭐ FETCH → COMPRESS → BASE64 → STORE
 // ---------------------------------------------------------
 async function fetchAndStoreIcon(host, iconUrl) {
-
+  
   // ⭐ 1. Check cache first
   if (PBROWSERFAVICON_CACHE[host]) {
     const cached = PBROWSERFAVICON_CACHE[host];
