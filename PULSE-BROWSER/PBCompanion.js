@@ -1361,41 +1361,42 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     PBUniversalBoost2.warmTab(tab);
   }
 });
+
 /**
  * High-risk local ports that indicate remote viewing, screen sharing,
  * traffic interception (proxies), or exposed debugging interfaces.
  */
 const PRIVACY_RISK_PORTS = {
-  // Remote Desktop & Screen Sharing (Someone can see your screen)
-  3389: 'RDP (Windows Remote Desktop)',
-  5800: 'VNC (HTTP Web Access)',
-  5900: 'VNC (Main Remote Display)',
-  5901: 'VNC (Display :1)',
-  5902: 'VNC (Display :2)',
-  5938: 'TeamViewer',
-  6568: 'AnyDesk',
-  7070: 'AnyDesk / RustDesk',
-  21115: 'RustDesk (NAT Type Test)',
-  21116: 'RustDesk (ID/Heartbeat)',
-  21117: 'RustDesk (Relay)',
+  // Remote Desktop & Screen Sharing (CRITICAL - Someone can see/control your screen)
+  3389: { name: 'RDP (Windows Remote Desktop)', level: 'CRITICAL', category: 'Remote Screen' },
+  5800: { name: 'VNC (HTTP Web Access)', level: 'CRITICAL', category: 'Remote Screen' },
+  5900: { name: 'VNC (Main Remote Display)', level: 'CRITICAL', category: 'Remote Screen' },
+  5901: { name: 'VNC (Display :1)', level: 'CRITICAL', category: 'Remote Screen' },
+  5902: { name: 'VNC (Display :2)', level: 'CRITICAL', category: 'Remote Screen' },
+  5938: { name: 'TeamViewer', level: 'CRITICAL', category: 'Remote Screen' },
+  6568: { name: 'AnyDesk', level: 'CRITICAL', category: 'Remote Screen' },
+  7070: { name: 'AnyDesk / RustDesk', level: 'CRITICAL', category: 'Remote Screen' },
+  21115: { name: 'RustDesk (NAT Type Test)', level: 'CRITICAL', category: 'Remote Screen' },
+  21116: { name: 'RustDesk (ID/Heartbeat)', level: 'CRITICAL', category: 'Remote Screen' },
+  21117: { name: 'RustDesk (Relay)', level: 'CRITICAL', category: 'Remote Screen' },
 
-  // Local Proxies & Traffic Interception (Someone can see your web traffic/details)
-  1080: 'SOCKS4/5 Proxy',
-  3128: 'Squid / HTTP Proxy',
-  8080: 'HTTP Proxy / Alt Web',
-  8118: 'Privoxy (HTTP Proxy)',
-  8888: 'Fiddler / Charles Proxy / Jupyter',
-  9050: 'Tor SOCKS Proxy',
-  9150: 'Tor Browser SOCKS Proxy',
+  // Browser & System Debugging (CRITICAL - Exposes session data, cookies, and DOM)
+  9222: { name: 'Chrome / Edge Remote Debugging', level: 'CRITICAL', category: 'Session Exposure' },
+  9229: { name: 'Node.js Inspector / Debugger', level: 'CRITICAL', category: 'Session Exposure' },
 
-  // Browser & System Debugging (Exposes session data, cookies, and DOM)
-  9222: 'Chrome / Edge Remote Debugging',
-  9229: 'Node.js Inspector / Debugger',
+  // Local Proxies & Traffic Interception (WARNING - Traffic routing/inspection, though sometimes dev tools)
+  1080: { name: 'SOCKS4/5 Proxy', level: 'WARNING', category: 'Traffic Proxy' },
+  3128: { name: 'Squid / HTTP Proxy', level: 'WARNING', category: 'Traffic Proxy' },
+  8080: { name: 'HTTP Proxy / Alt Web', level: 'WARNING', category: 'Traffic Proxy' },
+  8118: { name: 'Privoxy (HTTP Proxy)', level: 'WARNING', category: 'Traffic Proxy' },
+  8888: { name: 'Fiddler / Charles Proxy / Jupyter', level: 'WARNING', category: 'Traffic Proxy' },
+  9050: { name: 'Tor SOCKS Proxy', level: 'WARNING', category: 'Traffic Proxy' },
+  9150: { name: 'Tor Browser SOCKS Proxy', level: 'WARNING', category: 'Traffic Proxy' },
 };
 
 /**
- * Probes localhost ports via WebSocket, strictly filtering to ports that
- * could expose screen activity, network traffic, or session details.
+ * Probes localhost ports via WebSocket, logs worrisome ports clearly,
+ * and returns structured results.
  *
  * @param {number[]} [ports] - Optional array of ports to filter. Defaults to all PRIVACY_RISK_PORTS.
  * @param {number} [timeoutMs=400] - Max wait time per port in milliseconds.
@@ -1404,7 +1405,6 @@ const PRIVACY_RISK_PORTS = {
 async function testLocalWebSockets(ports = null, timeoutMs = 400) {
   const riskPortNumbers = Object.keys(PRIVACY_RISK_PORTS).map(Number);
 
-  // If the caller passes a list of ports, strictly filter to only the risky ones
   const targetPorts = Array.isArray(ports)
     ? ports.filter((p) => riskPortNumbers.includes(p))
     : riskPortNumbers;
@@ -1419,58 +1419,87 @@ async function testLocalWebSockets(ports = null, timeoutMs = 400) {
         if (settled) return;
         settled = true;
         clearTimeout(timer);
-        try {
-          if (ws && ws.readyState !== WebSocket.CLOSED) ws.close();
-        } catch (_) {}
+        if (ws) {
+          try {
+            ws.close();
+          } catch (_) {}
+        }
+
+        const info = PRIVACY_RISK_PORTS[port];
         resolve({
           port,
-          service: PRIVACY_RISK_PORTS[port] || 'Unknown Risk Service',
           inUse,
           reason,
-          latencyMs: Math.round(performance.now() - start),
+          durationMs: Math.round(performance.now() - start),
+          ...info,
         });
       };
 
       const timer = setTimeout(() => {
-        finish(true, 'handshake_timeout_or_stalled');
+        // A timeout on localhost usually means a firewall dropped packets or the service hung
+        finish(false, 'timeout');
       }, timeoutMs);
 
       try {
         ws = new WebSocket(`ws://127.0.0.1:${port}`);
 
-        ws.onopen = () => {
-          finish(true, 'ws_open');
-        };
+        ws.onopen = () => finish(true, 'ws_handshake_open');
 
         ws.onerror = () => {
           const elapsed = performance.now() - start;
-          // Non-WebSocket TCP services (like VNC or SOCKS) often reject the HTTP upgrade
-          // after establishing a TCP socket, taking longer than a closed-port RST (<15ms).
-          if (elapsed > 25 && elapsed < timeoutMs) {
-            finish(true, 'tcp_open_non_ws_rejected');
+          // Fast failure (<50ms) generally means TCP RST (port closed).
+          // Slower failure or non-WS HTTP response indicates an active TCP service.
+          if (elapsed > 50) {
+            finish(true, 'non_ws_service_active');
           } else {
-            finish(false, 'connection_refused_or_blocked');
+            finish(false, 'connection_refused');
           }
         };
       } catch (err) {
-        finish(false, `blocked_by_browser: ${err.name}`);
+        finish(false, 'blocked_or_invalid');
       }
     });
   };
 
   const details = await Promise.all(targetPorts.map(probePort));
+  const inUse = details.filter((d) => d.inUse);
+  const free = details.filter((d) => !d.inUse).map((d) => d.port);
 
-  return {
-    inUse: details.filter((d) => d.inUse),
-    free: details.filter((d) => !d.inUse).map((d) => d.port),
-    details,
-  };
+  // --- Console Output ---
+  if (inUse.length === 0) {
+    console.log('%c[Port Scan] Clean: No worrisome local ports detected.', 'color: #2e7d32; font-weight: bold;');
+  } else {
+    const critical = inUse.filter((d) => d.level === 'CRITICAL');
+    const warnings = inUse.filter((d) => d.level === 'WARNING');
+
+    console.group(`%c[Port Scan] ⚠️ ${inUse.length} Worrisome Port(s) Active`, 'color: #d32f2f; font-weight: bold;');
+
+    if (critical.length > 0) {
+      console.error('🚨 HIGHLY WORRISOME (Active Remote Access or Browser Debugging):');
+      critical.forEach((item) => {
+        console.error(
+          `   • Port ${item.port} [${item.category}]: ${item.name} (${item.reason} in ${item.durationMs}ms)`
+        );
+      });
+    }
+
+    if (warnings.length > 0) {
+      console.warn('⚠️ MODERATELY WORRISOME (Proxies / Traffic Interception - verify if intentional):');
+      warnings.forEach((item) => {
+        console.warn(
+          `   • Port ${item.port} [${item.category}]: ${item.name} (${item.reason} in ${item.durationMs}ms)`
+        );
+      });
+    }
+
+    console.groupEnd();
+  }
+
+  return { inUse, free, details };
 }
 
-// Example usage: Checks all privacy-risk ports automatically
-testLocalWebSockets().then((results) => {
-  console.log('Active exposure risks:', results.inUse);
-});
+// Run check
+testLocalWebSockets();
 
 
 // ============================================================================
