@@ -2488,6 +2488,20 @@ document.addEventListener("click", (e) => {
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
   if (PulseBrowserOSFrame) PulseBrowserOSFrame.style.display = "none";
   displayStyle = false;
+  if (MinimizeStream) {
+    // 3. Define the Escape handler and remove it once triggered
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        PulseFrame2.style.height = "";
+        PulseFrame2.style.width = "";
+        PulseFrame2.style.inset = "";
+        PulseFrame2.style.objectFit = "";
+
+        document.removeEventListener("keydown", handleEscape);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+  }
   if (PulseStreamingLive) StreamDragANDDrop(true);
   if (CustomizePanelsDragNDrop) DragANDDrop(true);
   const btn = e.target.closest && e.target.closest("[data-pw-copy]");
