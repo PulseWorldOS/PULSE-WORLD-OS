@@ -182,6 +182,7 @@ let consoleMessagesCompanion2 = document.getElementById("consoleMessages2Compani
 let consoleNotificationCompanion = document.getElementById("consoleNotificationCompanion");
 let consoleDiscoverCompanion = document.getElementById("consoleDiscoverCompanion");
 let consoleDiscover2Companion = document.getElementById("consoleDiscover2Companion");
+let consoleDiscover3Companion = document.getElementById("consoleDiscover3Companion");
 const aiOverlay = document.getElementById("ai-overlay");
 let pulsepaltalk = document.getElementById("pulsepal-talk");
 let PulseFrame = document.getElementById("PulseEarnerFrame");
@@ -3358,6 +3359,7 @@ async function GetThisMessengerDone() {
       consoleMessengerCompanion.style.opacity = "1";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
@@ -3375,6 +3377,7 @@ async function GetThisMessengerDone() {
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
@@ -3392,6 +3395,7 @@ async function GetThisMessengerDone() {
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
@@ -3409,6 +3413,7 @@ async function GetThisMessengerDone() {
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "1";
       consoleHomeCompanion2.style.opacity = "1";
       consoleDiscoverHomeCompanion.style.opacity = "0";
@@ -3426,6 +3431,7 @@ async function GetThisMessengerDone() {
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "0";
       consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
       consoleHomeCompanion.style.opacity = "0";
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
@@ -3443,6 +3449,7 @@ async function GetThisMessengerDone() {
       consoleMessengerCompanion.style.opacity = "0";
       consoleDiscoverCompanion.style.opacity = "1";
       consoleDiscover2Companion.style.opacity = "1";
+      consoleDiscover3Companion.style.opacity = "1";
       consoleHomeCompanion.style.opacity = "0";
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "1";
