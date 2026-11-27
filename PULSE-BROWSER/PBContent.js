@@ -19,6 +19,7 @@ let lastEarnBatch = null;
 let soakTestTimer = null;
 let gpuContext = null;
 let MyPulseIdentity = null;
+let MyPulseBusiness = null;
 let valueDiv = document.getElementById("assumedValue");
 let earnBatch = document.getElementById("lastEarnBatch");
 let identitySQL = document.getElementById("identitySQL");
