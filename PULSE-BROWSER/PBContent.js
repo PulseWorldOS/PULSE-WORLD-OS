@@ -1435,7 +1435,7 @@ setInterval(async () => {
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
   loadOrders(assumedValue);
-  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
+  chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity, MyPulseBusiness });
   // ---------------------------------------------------------------------------
   // 1. KERNEL HANDSHAKE
   // ---------------------------------------------------------------------------

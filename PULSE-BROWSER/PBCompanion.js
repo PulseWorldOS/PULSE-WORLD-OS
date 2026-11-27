@@ -77,6 +77,7 @@ let PulseBrowserSettings = null;
 let GLOBALSTART = Date.now();
 let totalUsed = 0;
 let MyPulseIdentity = null;
+let MyPulseBusiness = null;
 // Persistent favicon cache stored in chrome.storage.local
 // Local in-memory mirror for speed
 let PBROWSERFAVICON_CACHE = {};
@@ -3533,6 +3534,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       if (msg.MyPulseIdentity) {
         MyPulseIdentity = msg.MyPulseIdentity;
+        if (msg.MyPulseBusiness) {
+          MyPulseBusiness = msg.MyPulseBusiness;
+        }
       }
       sendResponse({ ok: true });
       break;
@@ -4315,7 +4319,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
           if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity });
+          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity, MyPulseBusiness });
         } catch (err) {
           sendResponse({ ok: false, error: err && err.message ? err.message : String(err) });
         }
