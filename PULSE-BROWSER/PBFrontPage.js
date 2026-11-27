@@ -3850,6 +3850,18 @@ async function CheckEarnState() {
   PulseFrame.style.pointerEvents = "none";
   PulseFrameA.style.pointerEvents = "none";
   PulseFrameB.style.pointerEvents = "none";
+
+  if (MinimizeStream) {
+    PulseFrame2 = document.getElementById("PulseStreamFrame");
+    PulseFrame2.style.width = "625px";
+    PulseFrame2.style.height = "325px";
+    PulseFrame2.style.bottom = "";
+    PulseFrame2.style.insetInline = "";
+    PulseFrame2.style.marginInline = "";
+    PulseFrame2.style.top = "25px";
+    PulseFrame2.style.left = "125px";
+    StreamDragANDDrop(false);
+  }
   
   if (PulseFrame.style.opacity === "1") {
     earnerenginepanel.style.opacity = "0.35";
