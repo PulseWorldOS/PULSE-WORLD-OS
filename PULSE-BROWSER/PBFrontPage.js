@@ -1422,16 +1422,16 @@ async function runLocalAI() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }
-          if (response.MinimizeStream && PulseStreamingLive) {
-            PulseFrame2 = document.getElementById("PulseStreamFrame");
-            PulseFrame2.style.width = "625px";
-            PulseFrame2.style.width = "325px";
-            PulseFrame2.style.top = "25px";
-            PulseFrame2.style.left = "225px";
-          }
-          PulsesafeStorageSet({ MyPulseBusiness }); 
-        }
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -1565,14 +1565,14 @@ ${rawPrompt}
         if (!MyPulseBusiness) {
           if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
         }     
-        if (response.MinimizeStream && PulseStreamingLive) {
-          PulseFrame2 = document.getElementById("PulseStreamFrame");
-          PulseFrame2.style.width = "625px";
-          PulseFrame2.style.width = "325px";
-          PulseFrame2.style.top = "25px";
-          PulseFrame2.style.left = "225px";
-        }
         PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2518,7 +2518,9 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-      }     
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
@@ -2526,8 +2528,6 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "225px";
       }
-      PulsesafeStorageSet({ MyPulseBusiness }); 
-    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -2668,16 +2668,16 @@ if (CompanionConsoleSend) {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }
-          if (response.MinimizeStream && PulseStreamingLive) {
-            PulseFrame2 = document.getElementById("PulseStreamFrame");
-            PulseFrame2.style.width = "625px";
-            PulseFrame2.style.width = "325px";
-            PulseFrame2.style.top = "25px";
-            PulseFrame2.style.left = "225px";
-          }
-          PulsesafeStorageSet({ MyPulseBusiness }); 
-        }
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -2754,16 +2754,16 @@ if (CompanionConsoleSend) {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }
-          if (response.MinimizeStream && PulseStreamingLive) {
-            PulseFrame2 = document.getElementById("PulseStreamFrame");
-            PulseFrame2.style.width = "625px";
-            PulseFrame2.style.width = "325px";
-            PulseFrame2.style.top = "25px";
-            PulseFrame2.style.left = "225px";
-          }
-          PulsesafeStorageSet({ MyPulseBusiness }); 
-        }
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
@@ -4977,6 +4977,8 @@ setInterval(async () => {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
       }
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
@@ -4985,8 +4987,6 @@ setInterval(async () => {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "225px";
       }
-      PulsesafeStorageSet({ MyPulseBusiness }); 
-    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -5079,6 +5079,8 @@ setInterval(async () => {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
       }
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
@@ -5087,8 +5089,6 @@ setInterval(async () => {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "225px";
       }
-      PulsesafeStorageSet({ MyPulseBusiness }); 
-    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -6946,6 +6946,8 @@ async function updateModuleIcons(settings, browser) {
       MyPulseBusiness = response.MyPulseBusiness;     
       if (!MyPulseBusiness) {
         if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
       }
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
@@ -6954,8 +6956,6 @@ async function updateModuleIcons(settings, browser) {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "225px";
       }
-      PulsesafeStorageSet({ MyPulseBusiness });  
-    }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
     earnerminipanel.textContent = currency(OurassumedValue);
@@ -8793,16 +8793,16 @@ function CheckBackTab() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }
-          if (response.MinimizeStream && PulseStreamingLive) {
-            PulseFrame2 = document.getElementById("PulseStreamFrame");
-            PulseFrame2.style.width = "625px";
-            PulseFrame2.style.width = "325px";
-            PulseFrame2.style.top = "25px";
-            PulseFrame2.style.left = "225px";
-          }
-          PulsesafeStorageSet({ MyPulseBusiness }); 
-        }
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
@@ -8891,16 +8891,16 @@ function CheckBackTab() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }
-          if (response.MinimizeStream && PulseStreamingLive) {
-            PulseFrame2 = document.getElementById("PulseStreamFrame");
-            PulseFrame2.style.width = "625px";
-            PulseFrame2.style.width = "325px";
-            PulseFrame2.style.top = "25px";
-            PulseFrame2.style.left = "225px";
-          }
-          PulsesafeStorageSet({ MyPulseBusiness }); 
-        }
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         console.log("All Assumed Value:", ALLassumedValue);
@@ -9189,16 +9189,16 @@ function CheckBackTab() {
           MyPulseBusiness = response.MyPulseBusiness;     
           if (!MyPulseBusiness) {
             if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
-          }
-          if (response.MinimizeStream && PulseStreamingLive) {
-            PulseFrame2 = document.getElementById("PulseStreamFrame");
-            PulseFrame2.style.width = "625px";
-            PulseFrame2.style.width = "325px";
-            PulseFrame2.style.top = "25px";
-            PulseFrame2.style.left = "225px";
-          }
-          PulsesafeStorageSet({ MyPulseBusiness }); 
-        }
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.top = "25px";
+        PulseFrame2.style.left = "225px";
+      }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
         earnerminipanel.textContent = currency(OurassumedValue);
