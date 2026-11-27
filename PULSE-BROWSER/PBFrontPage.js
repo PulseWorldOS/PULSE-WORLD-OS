@@ -355,6 +355,7 @@ async function StreamDragANDDrop(skip) {
   await Promise.all([
     MoveStreamerLive(savedPositions, skip),
   ]);
+  if (skip) PulseFrame2.style.cursor = "default";
 }
 // --- Initialization ---
 
@@ -370,6 +371,9 @@ async function DragANDDrop(skip) {
     MoveAILive(savedPositions, skip),
     MoveMessengerLive(savedPositions, skip),
   ]);
+  if (skip) earnerpanel.style.cursor = "default";
+  if (skip) earnerhelperpanel.style.cursor = "default";
+  if (skip) messengerinnerpanel.style.cursor = "default";
 }
 
 setTimeout(() => {
