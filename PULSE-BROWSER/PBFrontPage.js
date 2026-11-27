@@ -3385,8 +3385,6 @@ async function GetThisMessengerDone() {
       // 3. Define the Escape handler and remove it once triggered
       const handleEscape = (e) => {
         if (e.key === "Escape") {
-          let preview = document.getElementById("PulseBrowser-Preview");
-          preview.remove();
           messengerpanel.style.height = originalStyles.height;
           messengerpanel.style.width = originalStyles.width;
           messengerpanel.style.inset = originalStyles.inset;
@@ -8258,6 +8256,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 
         pbPreconnect([internalURL]);
         openNamedTab("PulseStream", internalURL);
+        MinimizeOverride = false;
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
     }
@@ -8281,6 +8280,7 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 
     pbPreconnect([link]);
     openNamedTab("PulseStream", link);
+    MinimizeOverride = false;
     await PBUniversalBoost.warmOrigin(link);
 });
 

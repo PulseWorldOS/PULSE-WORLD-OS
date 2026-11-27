@@ -2444,6 +2444,7 @@ async function AdBlockerOn() {
 }
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  PulseRealmSettings = await pbLoadExtensionSettings();
   if (info.menuItemId === 'openSidePanel') {
     // This will open the panel in all the pages on the current window.
     chrome.sidePanel.setOptions({
@@ -2474,9 +2475,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     SaveandCloseStream = true;
   } else if (info.menuItemId === 'minStreaming') {
     MinimizeStream = true;
-    MinimizeOverride = false;
   } else if (info.menuItemId === 'flipAdblocker') {
-    PulseRealmSettings = await pbLoadExtensionSettings();
     console.log("AdBlocker: ", PulseRealmSettings.adBlocker);
     if (PulseRealmSettings.adBlocker === "internal") {
       AdBlockerOff();
