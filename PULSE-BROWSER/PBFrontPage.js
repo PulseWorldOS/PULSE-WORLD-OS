@@ -321,6 +321,9 @@ const messengerController = createPanelLiveController({
 const MoveEarnerLive = (POS, skip) => earnerController.move(POS, skip);
 const ResetEarnerLive = (clearSaved = true) => earnerController.reset(clearSaved);
 
+const MoveStreamerLive = (POS, skip) => earnerController.move(POS, skip);
+const ResetStreamerLive = (clearSaved = true) => earnerController.reset(clearSaved);
+
 const MoveAILive = (POS, skip) => aiController.move(POS, skip);
 const ResetAILive = (clearSaved = true) => aiController.reset(clearSaved);
 
@@ -335,6 +338,15 @@ async function ResetAllPanelsLive(clearSavedStorage = true) {
   ]);
 }
 
+async function StreamDragANDDrop(skip) {
+  const savedPositions = await chrome.storage.local.get([
+    "PulseStreamFrame",
+  ]);
+
+  await Promise.all([
+    MoveStreamerLive(savedPositions, skip),
+  ]);
+}
 // --- Initialization ---
 
 async function DragANDDrop(skip) {
@@ -1428,9 +1440,13 @@ async function runLocalAI() {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1570,9 +1586,13 @@ ${rawPrompt}
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2524,9 +2544,13 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2674,9 +2698,13 @@ if (CompanionConsoleSend) {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2760,9 +2788,13 @@ if (CompanionConsoleSend) {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -3842,7 +3874,7 @@ async function CheckEarnState() {
     earnerinnerpanel.style.display = "none";
     // earnerminipanel.style.height = "30px";
     // earnerminipanel.style.width = "30px";
-    // earnerminipanel.style.top = "225px";
+    // earnerminipanel.style.top = "125px";
     // earnerminipanel.style.left = "710px";
     earnerpanel.style.background = "transparent";
     earnerpanel.style.backdropFilter = "none";
@@ -3955,7 +3987,7 @@ async function CheckEarnState() {
       earnerminipanel.style.boxShadow = "0 0 25px rgba(0, 0, 0, 0.45)";
       // earnerminipanel.style.height = "30px";
       // earnerminipanel.style.width = "30px";
-      // earnerminipanel.style.top = "225px";
+      // earnerminipanel.style.top = "125px";
       // earnerminipanel.style.left = "710px";
       earnerpanel.style.background = "transparent";
       earnerpanel.style.backdropFilter = "none";
@@ -4983,9 +5015,13 @@ setInterval(async () => {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5085,9 +5121,13 @@ setInterval(async () => {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6952,9 +6992,13 @@ async function updateModuleIcons(settings, browser) {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -8799,9 +8843,13 @@ function CheckBackTab() {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -8897,9 +8945,13 @@ function CheckBackTab() {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -9195,9 +9247,13 @@ function CheckBackTab() {
       if (response.MinimizeStream && PulseStreamingLive) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
-        PulseFrame2.style.width = "325px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.insetInline = "";
+        PulseFrame2.style.marginInline = "";
         PulseFrame2.style.top = "25px";
-        PulseFrame2.style.left = "225px";
+        PulseFrame2.style.left = "125px";
+        StreamDragANDDrop(false);
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
