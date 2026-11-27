@@ -22,6 +22,7 @@ let MyPulseIdentity = null;
 let valueDiv = document.getElementById("assumedValue");
 let earnBatch = document.getElementById("lastEarnBatch");
 let identitySQL = document.getElementById("identitySQL");
+let identitySQLBiz = document.getElementById("identitySQLBiz");
 const CACHE_NAME = "PulseBrowser-Companion";
 // Load saved PulseTabs from extension storage at startup
 let pulseTabs = {};
@@ -1430,8 +1431,9 @@ setInterval(async () => {
   if (valueDiv) tabValue = valueDiv.textContent;
   if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
+  identitySQLBiz = document.getElementById("identitySQLBiz");
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
-  if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+  if (identitySQLBiz && identitySQLBiz.textContent.length > 0 && identitySQLBiz.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQLBiz.textContent);
   loadOrders(assumedValue);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
   // ---------------------------------------------------------------------------
@@ -2412,6 +2414,7 @@ function collectAndWarmAssetsContent() {
   const assets = [];
   valueDiv = document.getElementById("assumedValue");
   identitySQL = document.getElementById("identitySQL");
+  identitySQLBiz = document.getElementById("identitySQLBiz");
   // -------------------------------------------------------
   // 1. Scripts
   // -------------------------------------------------------
@@ -2702,6 +2705,7 @@ async function PulseBrowserDomScan() {
   const clone = document.documentElement.cloneNode(true);
   valueDiv = document.getElementById("assumedValue");
   identitySQL = document.getElementById("identitySQL");
+  identitySQLBiz = document.getElementById("identitySQLBiz");
   // Strip heavy elements
   // ["audio", "source", "object", "embed"].forEach(tag =>
   //   clone.querySelectorAll(tag).forEach(el => el.remove())
@@ -2812,8 +2816,9 @@ async function PulseBrowserDomScan() {
   if (valueDiv) tabValue = valueDiv.textContent;
   if (assumedValue) tabValue += assumedValue;
   identitySQL = document.getElementById("identitySQL");
+  identitySQLBiz = document.getElementById("identitySQLBiz");
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
-  if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+  if (identitySQLBiz && identitySQLBiz.textContent.length > 0 && identitySQLBiz.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQLBiz.textContent);
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
