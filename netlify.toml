@@ -151,6 +151,10 @@
 [build]
   publish = "PULSE-MULTIVERSE"
   functions = "PULSE-SERVER/NETLIFY"
+  # Secondary mirror sites (booleanlogic.net, gpuprocessing.net, orbitalmap.net, serviceworker.net)
+  # set PULSE_DAILY_BUILD_ONLY=true at project level so git pushes skip them (exit 0 = ignore build),
+  # while daily/on-request Netlify Build Hooks (INCOMING_HOOK_TITLE set) or manual Clear-Cache deploys build normally.
+  ignore = "if [ \"$PULSE_DAILY_BUILD_ONLY\" = \"true\" ] && [ -z \"$INCOMING_HOOK_TITLE\" ]; then echo 'Skipping push build (daily-only mirror site)'; exit 0; else exit 1; fi"
 
 # Prewarm function (runs every minute)
 [functions."PULSEWORLDNET-PREWARM"]

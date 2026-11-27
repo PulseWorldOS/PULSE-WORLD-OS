@@ -1,0 +1,57 @@
+name: Daily Secondary Mirror Deploys
+
+on:
+  # Automatic once-a-day sync at 06:00 UTC for the 4 secondary mirror sites
+  schedule:
+    - cron: "0 6 * * *"
+
+  # One-click on-request deploy anytime from GitHub → Actions → Run workflow
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Which secondary mirror(s) to deploy now"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - booleanlogic.net
+          - gpuprocessing.net
+          - orbitalmap.net
+          - serviceworker.net
+
+jobs:
+  trigger-netlify-hooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify Build Hooks
+        env:
+          TARGET: ${{ github.event.inputs.target || 'all' }}
+          HOOK_BOOLEANLOGIC: ${{ secrets.NETLIFY_HOOK_BOOLEANLOGIC }}
+          HOOK_GPUPROCESSING: ${{ secrets.NETLIFY_HOOK_GPUPROCESSING }}
+          HOOK_ORBITALMAP: ${{ secrets.NETLIFY_HOOK_ORBITALMAP }}
+          HOOK_SERVICEWORKER: ${{ secrets.NETLIFY_HOOK_SERVICEWORKER }}
+        run: |
+          set -euo pipefail
+
+          trigger_site() {
+            local site="$1"
+            local hook="$2"
+            if [ "$TARGET" != "all" ] && [ "$TARGET" != "$site" ]; then
+              echo "Skipping $site (target=$TARGET)"
+              return 0
+            fi
+            if [ -z "$hook" ]; then
+              echo "::warning::Secret missing for $site — skipping"
+              return 0
+            fi
+            echo "Triggering Netlify build hook for $site..."
+            curl -fsS -X POST -d '{}' "$hook"
+            echo ""
+            echo "Triggered $site successfully!"
+          }
+
+          trigger_site "booleanlogic.net" "$HOOK_BOOLEANLOGIC"
+          trigger_site "gpuprocessing.net" "$HOOK_GPUPROCESSING"
+          trigger_site "orbitalmap.net" "$HOOK_ORBITALMAP"
+          trigger_site "serviceworker.net" "$HOOK_SERVICEWORKER"
