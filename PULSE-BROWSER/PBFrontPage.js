@@ -1609,7 +1609,11 @@ function appendEarnerMessage(area, role, text) {
     PulseFrame.style.opacity = "1";
     PulseFrame.style.zIndex = "11";
     setTimeout(() => {
-      if (EarnHidden) PulseFrame.style.opacity = "0";
+      if (EarnHidden) {
+        PulseFrame.style.opacity = "0";
+        PulseFrame.style.cursor = "default";
+        PulseFrame.style.pointerEvents = "none";
+      }
     }, 10000);
   }
   bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
@@ -3777,6 +3781,8 @@ async function CheckEarnState() {
 
   if (earnerenginepanel.style.opacity === "1") {
     PulseFrame.style.opacity = "0";
+    PulseFrame.style.cursor = "default";
+    PulseFrame.style.pointerEvents = "none";
   } else {
     setTimeout(() => {
       PulseFrame.style.opacity = "1";
@@ -3864,8 +3870,14 @@ async function CheckEarnState() {
     if (PulseFrame.style.opacity === "1") {
       earnerenginepanel.style.opacity = "1";
       PulseFrame.style.opacity = "0";
+      PulseFrame.style.cursor = "default";
+      PulseFrame.style.pointerEvents = "none";
       PulseFrameA.style.opacity = "0";
+      PulseFrameA.style.cursor = "default";
+      PulseFrameA.style.pointerEvents = "none";
       PulseFrameB.style.opacity = "0";
+      PulseFrameB.style.cursor = "default";
+      PulseFrameB.style.pointerEvents = "none";
     } else {
       earnerenginepanel.style.opacity = "0.35";
       PulseFrame.style.opacity = "1";
@@ -3886,8 +3898,14 @@ async function CheckEarnState() {
     if (!EarnHidden) {
       EarnHidden = true;
       PulseFrame.style.opacity = "0";
+      PulseFrame.style.cursor = "default";
+      PulseFrame.style.pointerEvents = "none";
       PulseFrameA.style.opacity = "0";
+      PulseFrameA.style.cursor = "default";
+      PulseFrameA.style.pointerEvents = "none";
       PulseFrameB.style.opacity = "0";
+      PulseFrameB.style.cursor = "default";
+      PulseFrameB.style.pointerEvents = "none";
       earnerenginepanel.style.opacity = "1";
       // ——— Turn ON (transparent / earning mode) ———
       pbPulseEarn.id = "pbPulseEarning";
