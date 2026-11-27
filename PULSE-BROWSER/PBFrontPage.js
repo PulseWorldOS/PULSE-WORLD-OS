@@ -4,6 +4,7 @@ let LastHistory = null;
 let PulseRealm = {};
 let lastEarnBatch = null;
 let PulseSnapIndex = 0;
+let MinimizeStream = false;
 let MyPulseIdentity = null;
 let MyPulseBusiness = null;
 let StorageRunning = false;
@@ -1445,7 +1446,7 @@ async function runLocalAI() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -1455,6 +1456,7 @@ async function runLocalAI() {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -1591,7 +1593,7 @@ ${rawPrompt}
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -1601,6 +1603,7 @@ ${rawPrompt}
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
       // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
       OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2551,7 +2554,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -2561,6 +2564,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2705,7 +2709,7 @@ if (CompanionConsoleSend) {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -2715,6 +2719,7 @@ if (CompanionConsoleSend) {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -2795,7 +2800,7 @@ if (CompanionConsoleSend) {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -2805,6 +2810,7 @@ if (CompanionConsoleSend) {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5022,7 +5028,7 @@ setInterval(async () => {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -5032,6 +5038,7 @@ setInterval(async () => {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -5128,7 +5135,7 @@ setInterval(async () => {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -5138,6 +5145,7 @@ setInterval(async () => {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -6999,7 +7007,7 @@ async function updateModuleIcons(settings, browser) {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -7009,6 +7017,7 @@ async function updateModuleIcons(settings, browser) {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
     // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
     OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -8850,7 +8859,7 @@ function CheckBackTab() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -8860,6 +8869,7 @@ function CheckBackTab() {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -8952,7 +8962,7 @@ function CheckBackTab() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -8962,6 +8972,7 @@ function CheckBackTab() {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
@@ -9254,7 +9265,7 @@ function CheckBackTab() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -9264,6 +9275,7 @@ function CheckBackTab() {
         PulseFrame2.style.top = "25px";
         PulseFrame2.style.left = "125px";
         StreamDragANDDrop(false);
+        MinimizeStream = true;
       }
         // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
         OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
