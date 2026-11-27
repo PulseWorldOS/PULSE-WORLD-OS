@@ -1433,7 +1433,7 @@ setInterval(async () => {
   identitySQL = document.getElementById("identitySQL");
   identitySQLBiz = document.getElementById("identitySQLBiz");
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
-  if (identitySQLBiz && identitySQLBiz.textContent.length > 0 && identitySQLBiz.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQLBiz.textContent);
+  if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
   loadOrders(assumedValue);
   chrome.runtime.sendMessage({ type: "PBAUTHORITY_REALM", assumedValue: tabValue, lastEarnBatch, MyPulseIdentity });
   // ---------------------------------------------------------------------------
@@ -2818,7 +2818,7 @@ async function PulseBrowserDomScan() {
   identitySQL = document.getElementById("identitySQL");
   identitySQLBiz = document.getElementById("identitySQLBiz");
   if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.net")) MyPulseIdentity = JSON.parse(identitySQL.textContent);
-  if (identitySQLBiz && identitySQLBiz.textContent.length > 0 && identitySQLBiz.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQLBiz.textContent);
+  if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
   if (earnBatch) lastEarnBatch = earnBatch.innerHTML;
   // ⭐ NEW: Tiny HTML summary instead of full DOM
   
