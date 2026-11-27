@@ -792,6 +792,32 @@ async function openNamedTab(name, url) {
   }, 2000);
 }
 
+// ---------------------------------------------------------------------------
+// 7. WORLD-BAND EXTRACTION (PulseWorld OS)
+// ---------------------------------------------------------------------------
+function extractWorldBands(wwwCheck) {
+  const bands = {};
+  let bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold><strong>¢</strong></font>";
+  if (wwwCheck === "WWW") {
+    bandstring = "<font color=lightgreen>EarnBand</font> <font color=gold><strong>¢</strong></font>";
+  } else {
+    bandstring = "PulseBand";
+  }
+  document.querySelectorAll("[data-band]").forEach((el) => {
+    const name = el.getAttribute("data-band");
+    bands[name] = bands[name] || 0;
+    bands[name]++;
+  });
+
+  return bandstring;
+}
+
+function documentTitle() {
+  if (document.title.includes("newtab")) {
+    document.title = "impulse://newtab"
+  }
+  return document.title;
+}
 
 function emitFullPageContext() {
   chrome.runtime.sendMessage({
