@@ -2474,6 +2474,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     SaveandCloseStream = true;
   } else if (info.menuItemId === 'minStreaming') {
     MinimizeStream = true;
+    MinimizeOverride = false;
   } else if (info.menuItemId === 'flipAdblocker') {
     PulseRealmSettings = await pbLoadExtensionSettings();
     console.log("AdBlocker: ", PulseRealmSettings.adBlocker);
