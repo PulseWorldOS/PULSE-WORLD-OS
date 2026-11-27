@@ -892,9 +892,9 @@ function stopSoakTest() {
 }
  
 // Load cache from storage at startup
-chrome.storage.local.get(["PulseFaviconsUniverse"], (res) => {
-  if (res.PulseFaviconsUniverse) {
-    PBROWSERFAVICON_CACHE = res.PulseFaviconsUniverse;
+chrome.storage.local.get(["PulseFaviconSystem"], (res) => {
+  if (res.PulseFaviconSystem) {
+    PBROWSERFAVICON_CACHE = res.PulseFaviconSystem;
   }
 });
 
@@ -2853,5 +2853,5 @@ async function PulseBrowserDomScan() {
 
 
 function saveCache() {
-  safeStorageSet({ PulseFaviconsUniverse: PBROWSERFAVICON_CACHE });
+  safeStorageSet({ PulseFaviconSystem: PBROWSERFAVICON_CACHE });
 }
