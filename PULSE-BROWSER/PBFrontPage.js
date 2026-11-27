@@ -5,6 +5,7 @@ let PulseRealm = {};
 let lastEarnBatch = null;
 let PulseSnapIndex = 0;
 let MinimizeStream = false;
+let MinimizeOverride = false;
 let MyPulseIdentity = null;
 let MyPulseBusiness = null;
 let StorageRunning = false;
@@ -1450,7 +1451,7 @@ async function runLocalAI() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -1597,7 +1598,7 @@ ${rawPrompt}
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -2497,7 +2498,7 @@ document.addEventListener("click", (e) => {
         PulseFrame2.style.inset = "";
         PulseFrame2.style.objectFit = "";
         MinimizeStream = false;
-        PulseStreamingLive = false;
+        MinimizeOverride = true;
 
         document.removeEventListener("keydown", handleEscape);
       }
@@ -2574,7 +2575,7 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -2729,7 +2730,7 @@ if (CompanionConsoleSend) {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -2820,7 +2821,7 @@ if (CompanionConsoleSend) {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -5060,7 +5061,7 @@ setInterval(async () => {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -5167,7 +5168,7 @@ setInterval(async () => {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -7039,7 +7040,7 @@ async function updateModuleIcons(settings, browser) {
         }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -8891,7 +8892,7 @@ function CheckBackTab() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -8994,7 +8995,7 @@ function CheckBackTab() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
@@ -9297,7 +9298,7 @@ function CheckBackTab() {
             }     
         PulsesafeStorageSet({ MyPulseBusiness }); 
       }
-      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream) {
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
         PulseFrame2 = document.getElementById("PulseStreamFrame");
         PulseFrame2.style.width = "625px";
         PulseFrame2.style.height = "325px";
