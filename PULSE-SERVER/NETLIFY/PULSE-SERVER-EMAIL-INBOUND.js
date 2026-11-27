@@ -202,11 +202,29 @@ async function resolveAliasDestination(recipientEmail) {
   };
 }
 
+function pickPulseRecipient(item) {
+  const candidates = [
+    ...(Array.isArray(item.To) ? item.To.map((t) => t?.Address || t) : []),
+    ...(Array.isArray(item.Cc) ? item.Cc.map((c) => c?.Address || c) : []),
+    item.DeliveredTo,
+    item.Recipient
+  ].filter(Boolean);
+
+  for (const addr of candidates) {
+    const clean = extractEmailAddress(addr);
+    const at = clean.indexOf("@");
+    if (at > 0 && resolveAllowedDomain(clean.slice(at + 1)).valid) {
+      return clean;
+    }
+  }
+  return extractEmailAddress(candidates[0] || "");
+}
+
 function normalizeInboundItems(body) {
   // Support Brevo Inbound Parsing webhook format ({ items: [...] })
   if (Array.isArray(body.items)) {
     return body.items.map((item) => ({
-      to: item.To?.[0]?.Address || item.Recipient || "",
+      to: pickPulseRecipient(item),
       from: item.From?.Address || "",
       fromName: item.From?.Name || "",
       subject: item.Subject || "(No Subject)",

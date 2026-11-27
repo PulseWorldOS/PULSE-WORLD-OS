@@ -230,8 +230,15 @@ export async function handler(event) {
 
     // Reply-To defaults to the user's dynamic PulseWorld alias so replies hit Catch-All routing
     // and never expose the user's private email address!
+    // Note: pulseworld.net keeps its GoDaddy/Proofpoint MX for AIOvermind@pulseworld.net, so
+    // non-admin user aliases on pulseworld.net route replies via @pulseworld.me (our Catch-All
+    // identity domain), which resolves the exact same aliasHandle back to the user privately.
     const customReplyTo = parseAddressList(body.replyTo || payload.replyTo)[0] || null;
-    const replyToObj = customReplyTo || { email: fromEmail, name: fromDisplay };
+    const defaultReplyEmail =
+      verifiedDomain === "pulseworld.net" && mode !== "admin"
+        ? `${aliasHandle}@pulseworld.me`
+        : fromEmail;
+    const replyToObj = customReplyTo || { email: defaultReplyEmail, name: fromDisplay };
 
     const finalHtml = buildBrandedHtml({
       mode,
