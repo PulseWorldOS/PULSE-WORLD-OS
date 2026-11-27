@@ -10042,11 +10042,6 @@ if (navigator.gpu) {
   } catch (err) {
     PB_LOG3.event("PulseWorld Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
   }
-
-  SupabaseProtocol = setInterval(async () => {
-    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-    await pulseSupabaseSync();
-  }, 30000);
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -10179,6 +10174,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     passport
   });
+
+  SupabaseProtocol = setInterval(async () => {
+    console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
+    await pulseSupabaseSync();
+  }, 30000);
 });
 
 // document.addEventListener("visibilitychange", () => {
@@ -10255,6 +10255,8 @@ document.addEventListener("PulseDocumentChanged", () => {
         }, 1500);
       }
     }, 4000);
+    const identitySQL = document.getElementById("identitySQL");
+    if (identitySQL) identitySQL.innerHTML = JSON.stringify(PulseIdentityStore.readJSON("PulseIdentity"));
 })();
 </script>
 
