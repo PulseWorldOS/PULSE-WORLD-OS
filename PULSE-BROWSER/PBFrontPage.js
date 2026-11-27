@@ -177,6 +177,7 @@ let consoleHomeCompanion = document.getElementById("consoleHomeCompanion");
 let consoleHomeCompanion2 = document.getElementById("consoleHomeCompanion2");
 let consoleDiscoverHomeCompanion = document.getElementById("consoleDiscoverHomeCompanion");
 let consoleNotifyHomeCompanion = document.getElementById("consoleNotifyHomeCompanion");
+let consoleNotify2HomeCompanion = document.getElementById("consoleNotify2HomeCompanion");
 let consoleMessagesCompanion = document.getElementById("consoleMessagesCompanion");
 let consoleMessagesCompanion2 = document.getElementById("consoleMessages2Companion");
 let consoleNotificationCompanion = document.getElementById("consoleNotificationCompanion");
@@ -3364,6 +3365,7 @@ async function GetThisMessengerDone() {
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
     };
 
@@ -3382,6 +3384,7 @@ async function GetThisMessengerDone() {
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
     };
 
@@ -3400,6 +3403,7 @@ async function GetThisMessengerDone() {
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
     };
 
@@ -3418,6 +3422,7 @@ async function GetThisMessengerDone() {
       consoleHomeCompanion2.style.opacity = "1";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
     };
 
@@ -3436,6 +3441,7 @@ async function GetThisMessengerDone() {
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "0";
       consoleNotifyHomeCompanion.style.opacity = "1";
+      consoleNotify2HomeCompanion.style.opacity = "1";
       consoleNotificationCompanion.style.opacity = "1";
     };
 
@@ -3454,6 +3460,7 @@ async function GetThisMessengerDone() {
       consoleHomeCompanion2.style.opacity = "0";
       consoleDiscoverHomeCompanion.style.opacity = "1";
       consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
       consoleNotificationCompanion.style.opacity = "0";
     };
   }

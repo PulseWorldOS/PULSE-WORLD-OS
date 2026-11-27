@@ -2548,8 +2548,33 @@
     .consoleNotifyHomeCompanion {
       position: absolute;
       top: 0;
-      left: 25px;
-      height: 395px;
+      left: 16px;
+      height: 405px;
+      width: 242px;
+      margin-bottom: 35px;
+      z-index: 99999999999;
+      box-sizing: border-box;
+      opacity: 0;
+      margin-top: 55px;
+      pointer-events: none;
+      min-height: 0;
+      max-height: none;
+      overflow-y: auto;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: radial-gradient(circle at top, rgba(0, 255, 200, 0.06), rgba(0, 0, 0, 0.95));
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+      text-align: left;
+      line-height: 1.4;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .consoleNotify2HomeCompanion {
+      position: absolute;
+      top: 0;
+      right: 16px;
+      height: 405px;
       width: 242px;
       margin-bottom: 35px;
       z-index: 99999999999;
@@ -2650,7 +2675,7 @@
       position: absolute;
       top: 200px;
       right: 15px;
-      height: 200px;
+      height: 240px;
       width: 233px;
       margin-bottom: 35px;
       z-index: 99999999999;
@@ -3041,6 +3066,7 @@
       <div id="NotifyMessenger" class="NotifyMessenger"></div>
       <div id="consoleDiscoverHomeCompanion" class="consoleDiscoverHomeCompanion"></div>
       <div id="consoleNotifyHomeCompanion" class="consoleNotifyHomeCompanion"></div>
+      <div id="consoleNotify2HomeCompanion" class="consoleNotify2HomeCompanion"></div>
       <div id="consoleHomeCompanion" class="consoleHomeCompanion"></div>
       <div id="consoleHomeCompanion2" class="consoleHomeCompanion2"></div>
       <div id="consoleNotificationCompanion" class="consoleNotificationCompanion"></div>
