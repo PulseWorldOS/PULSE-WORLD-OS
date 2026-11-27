@@ -5753,6 +5753,7 @@ async function openNamedTab(name, url, skip) {
   PulseFrame2 = document.getElementById("PulseStreamFrame");
   if (PulseFrame2 && !skip) {
     if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
+      MinimizeOverride = false;
       PulseStreamingLive = true;
       let realm = url;
       realm = realm.replace("https://","");
@@ -8256,7 +8257,6 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 
         pbPreconnect([internalURL]);
         openNamedTab("PulseStream", internalURL);
-        MinimizeOverride = false;
         await PBUniversalBoost.warmOrigin(internalURL);
         return;
     }
@@ -8280,7 +8280,6 @@ document.getElementById("moduleStream").addEventListener("click", async () => {
 
     pbPreconnect([link]);
     openNamedTab("PulseStream", link);
-    MinimizeOverride = false;
     await PBUniversalBoost.warmOrigin(link);
 });
 
