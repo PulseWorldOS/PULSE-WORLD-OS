@@ -65,6 +65,7 @@ let socialMode = "Internal";
 let OvermindOrders = null;
 let OvermindMyOrders = null;
 let EarnHidden = false;
+let StreamHidden = false;
 let RunningAI = false;
 let EarnDetailsHidden = false;
 let MessengerHidden = false;
@@ -302,6 +303,13 @@ const earnerController = createPanelLiveController({
   setPosVar: (val) => { panelEarnerPos = val; },
 });
 
+const streamController = createPanelLiveController({
+  elementId: "PulseStreamFrame",
+  storageKey: "panelStreamPos",
+  isHidden: () => StreamHidden,
+  setPosVar: (val) => { panelStreamPos = val; },
+});
+
 const aiController = createPanelLiveController({
   elementId: "earner-helper-panel",
   storageKey: "panelAIPos",
@@ -321,8 +329,8 @@ const messengerController = createPanelLiveController({
 const MoveEarnerLive = (POS, skip) => earnerController.move(POS, skip);
 const ResetEarnerLive = (clearSaved = true) => earnerController.reset(clearSaved);
 
-const MoveStreamerLive = (POS, skip) => earnerController.move(POS, skip);
-const ResetStreamerLive = (clearSaved = true) => earnerController.reset(clearSaved);
+const MoveStreamerLive = (POS, skip) => streamController.move(POS, skip);
+const ResetStreamerLive = (clearSaved = true) => streamController.reset(clearSaved);
 
 const MoveAILive = (POS, skip) => aiController.move(POS, skip);
 const ResetAILive = (clearSaved = true) => aiController.reset(clearSaved);
