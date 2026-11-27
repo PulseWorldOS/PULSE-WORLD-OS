@@ -4345,6 +4345,8 @@ PulseRealm.sendPulseSMS = async function(payload = {}) {
   return res.json();
 };
 
+PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__ = false;
+
 async function pulseSupabaseSync(options = {}) {
   const force = Boolean(options?.force);
   if (!force && PulseRealm.__PULSE_SUPABASE_SYNC_SUSPENDED__) return null;
@@ -9805,7 +9807,6 @@ function interceptNavigation(url) {
 
 (async function PulseLife() {
   console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
-  await pulseSupabaseSync();
   await start24HourSoakTest();
   setTimeout(() => {
     requestAnimationFrame(() => {
