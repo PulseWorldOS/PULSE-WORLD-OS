@@ -1457,8 +1457,8 @@ async function runLocalAI() {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -1604,8 +1604,8 @@ ${rawPrompt}
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -2484,7 +2484,7 @@ async function switchHigherModel(modelKey) {
 // Copy button inside code blocks (works for saved history too)
 document.addEventListener("click", (e) => {
   PulseFrame2 = document.getElementById("PulseStreamFrame");
-  if (PulseFrame2) PulseFrame2.style.display = "none";
+  if (PulseFrame2 && !MinimizeStream) PulseFrame2.style.display = "none";
   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
   if (PulseBrowserOSFrame) PulseBrowserOSFrame.style.display = "none";
   displayStyle = false;
@@ -2565,8 +2565,8 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -2720,8 +2720,8 @@ if (CompanionConsoleSend) {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -2811,8 +2811,8 @@ if (CompanionConsoleSend) {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -5051,8 +5051,8 @@ setInterval(async () => {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -5158,8 +5158,8 @@ setInterval(async () => {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -7030,8 +7030,8 @@ async function updateModuleIcons(settings, browser) {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -8882,8 +8882,8 @@ function CheckBackTab() {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -8985,8 +8985,8 @@ function CheckBackTab() {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
@@ -9288,8 +9288,8 @@ function CheckBackTab() {
         PulseFrame2.style.bottom = "";
         PulseFrame2.style.justifySelf = "start"; 
         PulseFrame2.style.alignSelf = "start";
-        PulseFrame2.style.top = "20px";
-        PulseFrame2.style.left = "145px";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
         StreamDragANDDrop(false);
         MinimizeStream = true;
       }
