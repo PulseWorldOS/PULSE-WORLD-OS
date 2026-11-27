@@ -3985,7 +3985,7 @@ async function pbRenderCacheList2() {
       PulseBrowser OS - System Details
     </div>
     <div id="identityName" class="identityName"></div><div id="accountBalance" class="accountBalance"></div>
-    <div id="identityNameBiz" class="identityNameBiz"></div><div id="accountBalanceBiz" class="accountBalanceBiz"></div>
+    
   `;
   // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
   const estimate = await navigator.storage.estimate();
