@@ -4334,7 +4334,7 @@ async function pbRenderStorageStats2(history) {
   } catch (_) { /* if cache inspection fails, show 0 */ }
 
   const percent = ((totalUsed / localQuota) * 100).toFixed(3);
-  console.log("aiSize",aiSize);
+
   // [Phase 3] Don't subtract — the model cache is already part of localUsed
   // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
   // ⭐ Conversions (real storage, 1024-based like Chrome's storage quota)
@@ -5378,7 +5378,9 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
       div.style.opacity = "1";
     }
     
-    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(link);
+    let favicon = snapshot.regfavicon ?? snapshot.favicon;
+    // if (isPulseWorld(location.origin)) {
+    let PulseBlob = await fetchAndStoreIcon(realm, favicon);
     const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
     const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
     const identityName = document.getElementById("identityName");
@@ -5391,7 +5393,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     }
 
     if (PBROWSERFAVICON_CACHE[URLLink]) {
-      PBROWSERFAVICON_CACHE[URLLink] = favicon;
+      PBROWSERFAVICON_CACHE[URLLink] = PulseBlob;
       saveCache();
     }
     const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
@@ -5400,7 +5402,7 @@ async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLay
     div.innerHTML = `
       <div class="Snapshot-Viewport">
         <img class="Snapshot-Favicon"
-              src="${favicon}"
+              src="${PulseBlob}"
               alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
       </div>
     `;

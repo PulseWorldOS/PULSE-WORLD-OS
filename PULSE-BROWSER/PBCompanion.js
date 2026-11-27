@@ -3712,7 +3712,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         LocalMemoryLayerMB = Number(msg.MyLocalMemoryLayer.usedHeapMB.replace(" MB", "").trim());
         LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
         if (WeLocalMemoryLayerMB) {
-          PB_LOG2.info("PBCHECK_MEMORY: TAB->SYSTEM ", WeLocalMemoryLayer);
+          
           LocalMemoryLayerMB = Number(LocalMemoryLayerMB) + Number(WeLocalMemoryLayerMB);
           LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
           sendResponse({ ok: true, LocalMemoryLayerMB, WeLocalMemoryLayerMB });
