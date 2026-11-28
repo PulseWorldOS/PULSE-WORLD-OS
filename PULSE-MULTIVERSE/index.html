@@ -3517,22 +3517,6 @@ async function loadInternalPage(name) {
         TabDomProjection = savedHtml;
       }
       if (TabDomProjection && !TabDomProjectionBoolean && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(TabDomProjection, "text/html");
-        // Target any <div> with "-panel" in its class or id
-        const panels = doc.querySelectorAll('div[class*="side-panel"], div[id*="side-panel"]');
-        panels.forEach(panel => {
-          // Ensure positioning allows offset adjustments if not already set in CSS
-          if (!panel.style.position) {
-            panel.style.position = "relative";
-          }
-          // Move inward by 300px on both sides
-          panel.style.left = "300px";
-          panel.style.right = "300px";
-          
-        });
-        // Serialize back to HTML if needed
-        TabDomProjection = doc.body.innerHTML;
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
       }
