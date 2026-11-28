@@ -3328,7 +3328,7 @@ async function renderActiveSockets(details) {
   }
 
   // Usage:
-  const Readable = formatPortScanText(scanData);
+  const Readable = formatPortScanText(details);
   securityinnerpanel.style.whiteSpace = "pre-wrap";
   securityinnerpanel.style.fontFamily = "monospace"; // Optional: keeps columns aligned
   securityinnerpanel.textContent = Readable;  
