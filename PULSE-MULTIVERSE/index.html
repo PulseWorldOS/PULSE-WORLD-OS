@@ -3460,6 +3460,17 @@ function removeAllButtons() {
   const buttons = document.querySelectorAll(selector);
 
   buttons.forEach((el) => {
+    const label = (
+      el.textContent ||
+      el.getAttribute("aria-label") ||
+      el.getAttribute("title") ||
+      ""
+    ).toLowerCase();
+
+    if (label.includes("cache")) {
+      return;
+    }
+
     // Create an invisible marker right where the button sits
     const placeholder = document.createComment("removed-button-placeholder");
     el.parentNode.insertBefore(placeholder, el);
@@ -3468,6 +3479,7 @@ function removeAllButtons() {
     removedButtonsStore.push({ element: el, placeholder });
     el.remove();
   });
+
 
   // Save current display state and hide pulseStatus properly
   if (typeof pulseStatus !== "undefined" && pulseStatus) {
