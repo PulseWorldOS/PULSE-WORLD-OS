@@ -3452,6 +3452,8 @@ function removeAllButtons() {
   document
     .querySelectorAll('button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]')
     .forEach((el) => el.remove());
+  pulseStatus.style.display = "0";
+  
 }
 
 
