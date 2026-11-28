@@ -3288,35 +3288,35 @@ async function GetThisMessengerDone() {
   stage.appendChild(leftPanelBorder);
   document.body.appendChild(stage);
 }
+
 function formatPortScanText(scanResult) {
-  const lines = [];
+  const activePorts = Array.isArray(scanResult?.inUse) ? scanResult.inUse : [];
 
-  // 1. Summary Header
-  lines.push(`PORT SCAN SUMMARY`);
-  lines.push(`Active: ${scanResult.inUse.length} | Free: ${scanResult.free.length}`);
-  lines.push(`----------------------------------------`);
-
-  // 2. Active Ports Section
-  if (scanResult.inUse.length > 0) {
-    lines.push(`[!] IN USE:`);
-    scanResult.inUse.forEach(item => {
-      lines.push(`  • Port ${item.port} (${item.name}) - ${item.level} [${item.reason}, ${item.durationMs}ms]`);
-    });
-  } else {
-    lines.push(`[✓] No active warning/critical ports detected.`);
+  if (activePorts.length === 0) {
+    return "[✓] No active remote or security-issue ports detected.";
   }
 
-  lines.push(``); // Blank line
+  const lines = [
+    "ACTIVE SECURITY / REMOTE PORTS",
+    `Detected: ${activePorts.length}`,
+    "----------------------------------------",
+  ];
 
-  // 3. Detailed Breakdown
-  lines.push(`ALL SCANNED PORTS:`);
-  scanResult.details.forEach(item => {
-    const status = item.inUse ? "IN USE" : "FREE  ";
-    lines.push(`  ${status} | ${String(item.port).padEnd(5)} | ${item.name} (${item.durationMs}ms)`);
+  activePorts.forEach((item) => {
+    const category = item.category ? ` [${item.category}]` : "";
+    const level = item.level ? ` - ${item.level}` : "";
+    const details = [item.reason, item.durationMs ? `${item.durationMs}ms` : null]
+      .filter(Boolean)
+      .join(", ");
+
+    lines.push(
+      `  • Port ${item.port} (${item.name})${category}${level}${details ? ` (${details})` : ""}`
+    );
   });
 
   return lines.join("\n");
 }
+
 
 async function renderActiveSockets(details) {
   securityinnerpanel = document.getElementById("security-inner-panel");
