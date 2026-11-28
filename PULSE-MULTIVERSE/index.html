@@ -3492,6 +3492,9 @@ function restoreAllButtons() {
   if (removedButtonsStore.length === 0) return;
 
   removedButtonsStore.forEach(({ element, placeholder }) => {
+    if (placeholder.includes("cache") || placeholder.includes("storage")) {
+      return;
+    }
     // Put the button right back where the marker is, then delete the marker
     if (placeholder.parentNode) {
       placeholder.parentNode.insertBefore(element, placeholder);
