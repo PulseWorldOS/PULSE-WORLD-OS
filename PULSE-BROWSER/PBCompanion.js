@@ -3546,6 +3546,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           MyPulseBusiness = msg.MyPulseBusiness;
         }
       }
+      if (msg.MyPulseBusiness) {
+        MyPulseBusiness = msg.MyPulseBusiness;
+      }
       sendResponse({ ok: true });
       break;
 
