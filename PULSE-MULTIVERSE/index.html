@@ -3888,7 +3888,7 @@ window.addEventListener("message", (event) => {
   if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
     TabDomProjectionBoolean = true;
     TabDomProjection = event.data.realm;
-    console.log("PULSE_PROJECTION_DISPLAY: " + TabDomProjection);
+    console.log("PULSE_PROJECTION_DISPLAY: 2" + TabDomProjection);
     localStorage.setItem("TabDomProjection", TabDomProjection);
   }
 
@@ -3920,7 +3920,7 @@ window.addEventListener("message", (event) => {
   
     if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
       TabDomProjection = event.data.realm;
-      console.log("PULSE_PROJECTION_DISPLAY: " + TabDomProjection);
+      console.log("PULSE_PROJECTION_DISPLAY: 1" + TabDomProjection);
       localStorage.setItem("TabDomProjection", TabDomProjection);
     }
   }
