@@ -3524,19 +3524,19 @@ async function loadInternalPage(name) {
       // 2. Read it back and assign it to viz (note the capital HTML)
       const savedHtml = localStorage.getItem("TabDomProjection");
       if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
+        removeAllButtons();
         TabDomProjection = savedHtml;
       }
       if (TabDomProjection && !TabDomProjectionBoolean && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
         html = TabDomProjection;
-        removeAllButtons();
         TabDomProjectionBoolean = true;
         setInterval(() => {
           // 2. Read it back and assign it to viz (note the capital HTML)
           const savedHtml = localStorage.getItem("TabDomProjection");
           if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
+            removeAllButtons();
             TabDomProjection = savedHtml;
             html = TabDomProjection
-            removeAllButtons();
             TabDomProjectionBoolean = true;
             if (viewport.innerHTML !== html) viewport.innerHTML = html;
           }
@@ -5396,8 +5396,8 @@ adminCodeInput.addEventListener("keydown", unlockEnterAdmin);
 // ⭐ ADMIN UNLOCK — ZERO LISTENERS
 if (adminUnlock && adminCodeInput) {
   adminUnlock.onclick = () => {
-    viewport.innerHTML = TabDomProjection;
     unlockAdmin();
+    viewport.innerHTML = TabDomProjection;
   };
 }
 
