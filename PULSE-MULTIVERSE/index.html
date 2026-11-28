@@ -3512,8 +3512,9 @@ async function loadInternalPage(name) {
     if (viewport) {
       // 2. Read it back and assign it to viz (note the capital HTML)
       const savedHtml = localStorage.getItem("TabDomProjection");
-      if (savedHtml !== null) {
+      if (savedHtml !== null && !TabDomProjectionBoolean) {
         TabDomProjection = savedHtml;
+        TabDomProjectionBoolean = true;
       }
       if (PulseRealm.CurrentHost.includes("pulseworld.net") && TabDomProjection) html = TabDomProjection;
       viewport.style.opacity = "1";
@@ -3833,8 +3834,8 @@ window.addEventListener("message", (event) => {
     );
   
     if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
-      TabDomProjectionBoolean = true;
       TabDomProjection = event.data.realm;
+      TabDomProjectionBoolean = true;
       console.log("PULSE_PROJECTION_DISPLAY: " + TabDomProjection);
       localStorage.setItem("TabDomProjection", TabDomProjection);
     }
