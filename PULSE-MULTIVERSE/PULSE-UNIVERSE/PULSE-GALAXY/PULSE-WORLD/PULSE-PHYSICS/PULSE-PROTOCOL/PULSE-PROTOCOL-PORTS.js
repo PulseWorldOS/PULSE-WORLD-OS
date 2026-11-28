@@ -17,7 +17,7 @@ import { PulseSecurityPort, buildPulseIOKeyChainManager } from "./PULSE-PROTOCOL
 import { PulseProtocolAddons } from "./PULSE-PROTOCOL-ADDONS.js";
 import { PulseProtocolCore } from "./PULSE-PROTOCOL-CORE.js";
 import { PulseWorldAuthority } from "./PULSE-PROTOCOL-AUTHORITY.js";
-import { ProtocolPulsePort, PulsePort } from "./PULSE-PROTOCOL-PULSE.js";
+import { PulsePort } from "./PULSE-PROTOCOL-PULSE.js";
 
 const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 
@@ -48,7 +48,143 @@ console.log("%c⟙ PULSE WORLD PROTOCOL v30.0 — [PulsePortsBridge] Pulse Proto
   "color:#90CAF9; font-weight:bold; font-family:monospace;"
 );
 
+export const ProtocolPulsePort = {
+  import(id, pulseFlag = false) {
+    return PulsePort(id, pulseFlag);
+  },
 
+  export(id, value, meta = {}) {
+    return PulsePort(id, value, meta);
+  },
+
+  subimport(id, subpath) {
+    if (!id || !subpath) return null;
+    return PulsePort(id, String(subpath));
+  },
+
+  organism() {
+    return PulsePort("ORGANISM");
+  },
+
+  scanFileExports(filePath) {
+    return scanExportedFunctionsFromFile(filePath);
+  },
+
+  registerFileNamespace(namespaceName, filePath, moduleObj) {
+    if (!namespaceName || !filePath || !moduleObj) return null;
+
+    const funcs = scanExportedFunctionsFromFile(filePath);
+    const registry = {};
+
+    for (const f of funcs) {
+      const fn = moduleObj[f.name];
+      if (typeof fn === "function") {
+        registry[f.name] = fn;
+      }
+    }
+
+    return registry;
+  },
+
+  // Expose resolver for debugging / tooling
+  resolveFilePath(filePath) {
+    if (!PATH) return filePath;
+    return resolveEvolutionFilePath(filePath);
+  },
+
+  // ⭐ IMMORTAL v33.0 — EVOLUTION‑AWARE ONE-LINE FILE EXPRESSION
+  async expressFile(namespaceName, filePath) {
+    if (!namespaceName || !filePath) return null;
+    if (!PATH) {
+      PulseRealm.PulseWarn(
+        "signal",
+        "[PulsePort] Pulse Protocol Route Expression Not Ready for ExpressFile:",
+        filePath
+      );
+      return null;
+    }
+
+    const resolvedPath = resolveEvolutionFilePath(filePath);
+
+    try {
+      const resolved = PATH.resolve(resolvedPath);
+      if (!PATH.exists(resolved)) {
+        PulseRealm.PulseWarn(
+          "signal",
+          "[PulsePort] Pulse Protocol Route ExpressFile Missing:",
+          resolved
+        );
+        return null;
+      }
+
+      const moduleObj = await import(resolved);
+      const registry = {};
+
+      // ⭐ FIX: Accept objects AND functions
+      for (const key of Object.keys(moduleObj)) {
+        const value = moduleObj[key];
+
+        // Accept:
+        // ✔ functions
+        // ✔ objects (your email templates)
+        // Ignore:
+        // ✖ undefined
+        // ✖ null
+        if (value !== undefined && value !== null) {
+          registry[key] = value;
+        }
+      }
+
+      PulsePort(namespaceName, registry, { tier: "world" });
+
+      PulseRealm.PulseLog(
+        "signal",
+        `[PulsePort] Pulse Protocol Route Expressed Namespace "${namespaceName}" from `,
+        resolvedPath
+      );
+
+      try {
+        if (
+          PulseWorldTrustCore &&
+          typeof PulseWorldTrustCore.snapshotTrustCore === "function"
+        ) {
+          void PulseWorldTrustCore.snapshotTrustCore();
+        }
+      } catch {}
+
+      return registry;
+    } catch (err) {
+      PulseRealm.PulseError(
+        "signal",
+        "[PulsePort] Pulse Protocol Route ExpressFile Failed:",
+        err
+      );
+      return null;
+    }
+  },
+
+  async autoInit() {
+    try {
+      PulseRealm.PulseLog(
+  "signal","[PulsePort] Pulse Protocol Route Initializaing...");
+
+      if (!PATH) {
+        PulseRealm.PulseWarn(
+  "signal","[PulsePort] Pulse Protocol Routh Not Attached; Skipping EmailTemplates Initialization!");
+        return;
+      }
+
+      const defaultFile =
+        `https://${PulseRealm.CurrentHost}/PULSE-UNIVERSE/PULSE-GALAXY/PULSE-WORLD/PULSE-PHYSICS/X-PULSE-X/3RDPARTY/PulseWorldEmailTemplate-v30.js`;
+
+      PulseRealm.EmailTemplates = emailTemplates;
+      await this.expressFile("emailTemplates", defaultFile);
+    } catch (err) {
+      PulseRealm.PulseError(
+  "signal","[PulsePort] Pulse Protocol Route Initialization Failed:", err);
+    }
+  }
+};
 
 export const PulseProtocolPorts = {
   // ⭐ PRIMARY EXPRESSION MEMBRANE
