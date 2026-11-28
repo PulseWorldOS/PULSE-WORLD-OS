@@ -3730,9 +3730,8 @@ async function loadInternalPage(name) {
       if (TabDomProjection && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
         url.hash = `#PulseWorldAlternateReality?UserID=${PulseRealm.PulseIdentity.id}&ProjectionAllowed=true`;
       }
-
-
       history.replaceState(null, "", url.toString());
+      
     } catch (e) {
       console.warn("Unable to update hash via history.replaceState:", e);
     }
