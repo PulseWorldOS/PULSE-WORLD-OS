@@ -3289,15 +3289,15 @@ async function GetThisMessengerDone() {
   document.body.appendChild(stage);
 }
 
-async function renderActiveSockets(divId) {
+async function renderActiveSockets(divId, details) {
   const container = document.getElementById(divId);
   if (!container) return;
 
   container.textContent = 'Scanning...';
 
-  const activeSockets = await getActiveLocalSockets();
+  if (!details) details = await getActiveLocalSockets();
 
-  if (activeSockets.length === 0) {
+  if (details.length === 0) {
     container.textContent = 'No active sockets detected.';
     return;
   }
@@ -3305,7 +3305,7 @@ async function renderActiveSockets(divId) {
   // Formats as:
   // 5900: VNC
   // 8080: HTTP Proxy
-  container.innerText = activeSockets
+  container.innerText = details
     .map((s) => `${s.port}: ${s.name}`)
     .join('\n');
 }
@@ -3314,9 +3314,8 @@ let socketsRunOnce = false;
 
  async function CheckforSecurityState(details) {
   if (socketsRunOnce) return;
-  console.log(details);
   securityinnerpanel = document.getElementById("security-inner-panel");
-  renderActiveSockets("security-inner-panel");
+  renderActiveSockets(securityinnerpanel, details);
   socketsRunOnce = true;
  }
 
