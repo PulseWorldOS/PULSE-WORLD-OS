@@ -3288,29 +3288,60 @@ async function GetThisMessengerDone() {
   stage.appendChild(leftPanelBorder);
   document.body.appendChild(stage);
 }
+function formatPortScanText(scanResult) {
+  const lines = [];
+
+  // 1. Summary Header
+  lines.push(`PORT SCAN SUMMARY`);
+  lines.push(`Active: ${scanResult.inUse.length} | Free: ${scanResult.free.length}`);
+  lines.push(`----------------------------------------`);
+
+  // 2. Active Ports Section
+  if (scanResult.inUse.length > 0) {
+    lines.push(`[!] IN USE:`);
+    scanResult.inUse.forEach(item => {
+      lines.push(`  • Port ${item.port} (${item.name}) - ${item.level} [${item.reason}, ${item.durationMs}ms]`);
+    });
+  } else {
+    lines.push(`[✓] No active warning/critical ports detected.`);
+  }
+
+  lines.push(``); // Blank line
+
+  // 3. Detailed Breakdown
+  lines.push(`ALL SCANNED PORTS:`);
+  scanResult.details.forEach(item => {
+    const status = item.inUse ? "IN USE" : "FREE  ";
+    lines.push(`  ${status} | ${String(item.port).padEnd(5)} | ${item.name} (${item.durationMs}ms)`);
+  });
+
+  return lines.join("\n");
+}
 
 async function renderActiveSockets(details) {
   securityinnerpanel = document.getElementById("security-inner-panel");
   securityinnerpanel.textContent = 'Scanning...';
-
-  
 
   if (details.length === 0) {
     securityinnerpanel.textContent = 'No active sockets detected.';
     return;
   }
 
-  // Formats as:
-  // 5900: VNC
-  // 8080: HTTP Proxy
-  securityinnerpanel.innerText = details
-    .map((s) => `${s.port}: ${s.name}`)
-    .join('\n');
+  // Usage:
+  const Readable = formatPortScanText(scanData);
+  securityinnerpanel.style.whiteSpace = "pre-wrap";
+  securityinnerpanel.style.fontFamily = "monospace"; // Optional: keeps columns aligned
+  securityinnerpanel.textContent = Readable;  
 }
 
 
+let socketsRunOnce = false;
+
  async function CheckforSecurityState(details) {
+  if (socketsRunOnce && !details) return;
+  
   renderActiveSockets(details);
+  socketsRunOnce = true;
  }
 
   async function CheckforMessagesState() {
