@@ -8826,12 +8826,18 @@ function CheckBackTab() {
         },
         frameUrl.origin
       );
+
+      // Clone DOM safely
+      const clone = document.documentElement.cloneNode(true);
+      ["script", "audio", "object", "embed", "iframe"].forEach(tag =>
+        clone.querySelectorAll(tag).forEach(el => el.remove())
+      );
       
       // 4. Send the safely cloned domain slice back to the exact extension that asked
       PulseFrame.contentWindow.postMessage(
         {
           type: "PULSE_PROJECTION_DISPLAY",
-          realm: document.documentElement.innerHTML
+          realm: clone.innerHTML
         },
         frameUrl.origin
       );
