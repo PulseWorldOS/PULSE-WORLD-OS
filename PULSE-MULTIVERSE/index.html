@@ -9653,7 +9653,6 @@ ${rawPrompt}
 [PULSE PAL RESPONSE]:`;
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(wrappedPrompt);
-    console.log("Pulse Pal:", response);
     // if (aiLogBox) aiLogBox.appendChild(response);
     pulsepalSpeak("Pulse Pal: " + response);
     RunningAI = false;
