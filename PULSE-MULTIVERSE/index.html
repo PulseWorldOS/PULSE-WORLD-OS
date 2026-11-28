@@ -3728,8 +3728,8 @@ async function loadInternalPage(name) {
       url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
       loadPulseIdentityContinual();
       if (TabDomProjection && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
-        document.title = "PulseWorld: PulseBrowser OS Simulating..."
-        url.hash = url.hash + `?UserID=${PulseRealm.PulseIdentity.id}&MultiversalPerspective=true`;
+        document.title = "PulseWorld: PulseBrowser OS Simulating...";
+        url.hash = `#PulseWorldAlternateReality?UserID=${PulseRealm.PulseIdentity.id}&MultiversalPerspective=true`;
       }
       history.replaceState(null, "", url.toString());
 
