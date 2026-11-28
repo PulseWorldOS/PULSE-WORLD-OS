@@ -3793,6 +3793,7 @@ window.addEventListener("message", (event) => {
   if (!event.origin.startsWith("chrome-extension://")) {
     return;
   }
+  
   if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
     TabDomProjectionBoolean = true;
     TabDomProjection = event.data.realm;
