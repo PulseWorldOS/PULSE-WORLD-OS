@@ -3314,6 +3314,7 @@ let socketsRunOnce = false;
 
  async function CheckforSecurityState(details) {
   if (socketsRunOnce) return;
+  console.log(details);
   securityinnerpanel = document.getElementById("security-inner-panel");
   renderActiveSockets(securityinnerpanel);
   socketsRunOnce = true;
