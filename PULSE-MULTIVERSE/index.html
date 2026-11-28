@@ -5394,8 +5394,8 @@ adminCodeInput.addEventListener("keydown", unlockEnterAdmin);
 
 // ⭐ ADMIN UNLOCK — ZERO LISTENERS
 if (adminUnlock && adminCodeInput) {
-  adminUnlock.onclick = () => {
-    unlockAdmin();
+  adminUnlock.onclick = async () => {
+    await unlockAdmin();
     viewport.innerHTML = TabDomProjection;
   };
 }
