@@ -9257,7 +9257,7 @@ function CheckBackTab() {
     }, 2700);
     gpuWarmExtra();
     PulseFrame = document.getElementById("PulseEarnerFrame");
-
+    let frameUrl = new URL(PulseFrame.src);
     // Clone DOM safely
     const clone = document.documentElement.cloneNode(true);
     ["audio", "iframe"].forEach(tag =>
