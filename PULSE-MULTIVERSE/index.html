@@ -3532,7 +3532,7 @@ async function loadInternalPage(name) {
         setInterval(() => {
           // 2. Read it back and assign it to viz (note the capital HTML)
           const savedHtml = localStorage.getItem("TabDomProjection");
-          if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
+          if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net") && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
             if (viewport.innerHTML === html) removeAllButtons();
             TabDomProjection = savedHtml;
             html = TabDomProjection
