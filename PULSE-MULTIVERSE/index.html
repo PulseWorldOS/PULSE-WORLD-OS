@@ -3492,16 +3492,6 @@ function restoreAllButtons() {
   if (removedButtonsStore.length === 0) return;
 
   removedButtonsStore.forEach(({ element, placeholder }) => {
-    const label = (
-      element.textContent ||
-      element.getAttribute("aria-label") ||
-      element.getAttribute("title") ||
-      ""
-    ).toLowerCase();
-
-    if (label.includes("cache") || label.includes("storage")) {
-      return;
-    }
     // Put the button right back where the marker is, then delete the marker
     if (placeholder.parentNode) {
       placeholder.parentNode.insertBefore(element, placeholder);
