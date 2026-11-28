@@ -3835,7 +3835,6 @@ window.addEventListener("message", (event) => {
   
     if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
       TabDomProjection = event.data.realm;
-      TabDomProjectionBoolean = true;
       console.log("PULSE_PROJECTION_DISPLAY: " + TabDomProjection);
       localStorage.setItem("TabDomProjection", TabDomProjection);
     }
