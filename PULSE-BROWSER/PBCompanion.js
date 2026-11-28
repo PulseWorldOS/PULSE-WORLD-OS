@@ -3221,7 +3221,7 @@ async function runLocalAI() {
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-    let rawPrompt = `You are Overmind AI specifically setup for Active Security! Please go over these active websockets and explain them to the user, we are currently in (${PulseRealm.CurrentHost}): ` + ActiveWebSockets;
+    let rawPrompt = `You are Overmind AI specifically setup for Active Security! Please go over these active websockets and explain them to the user, we are currently in (www.PulseWorld.net): ` + ActiveWebSockets;
     
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(rawPrompt);
