@@ -3467,7 +3467,7 @@ function removeAllButtons() {
       ""
     ).toLowerCase();
 
-    if (label.includes("cache")) {
+    if (label.includes("cache") || label.includes("storage")) {
       return;
     }
 
