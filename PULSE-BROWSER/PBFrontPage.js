@@ -8843,8 +8843,8 @@ function CheckBackTab() {
         frameUrl.origin
       );
     });
-  }
 
+  }
 
   function startPulseLoop() {
     if (intervalId) return; // already running
