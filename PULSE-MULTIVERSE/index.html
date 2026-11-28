@@ -112,6 +112,7 @@ function detectPWA() {
   }
 }
 let TabDomProjection = null;
+let TabDomProjectionOnce = false;
 let TabDomProjectionBoolean = false;
 let timerX = 0;
 const DEFAULT_PHOTO = "./_EXPRESSIONS/_PEX/BUILD/FrustratedLogo.webp.pex";
@@ -3512,7 +3513,7 @@ async function loadInternalPage(name) {
     if (viewport) {
       // 2. Read it back and assign it to viz (note the capital HTML)
       const savedHtml = localStorage.getItem("TabDomProjection");
-      if (savedHtml !== null && !TabDomProjectionBoolean && PulseRealm.CurrentHost.includes("pulseworld.net")) {
+      if (savedHtml !== null && !TabDomProjectionBoolean && PulseRealm.CurrentHost.includes("binaryos.net")) {
         TabDomProjection = savedHtml;
         TabDomProjectionBoolean = true;
       }
