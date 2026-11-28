@@ -8845,48 +8845,6 @@ function CheckBackTab() {
     });
   }
 
-  async function detectUserIdInLatestHistory(userid) {
-    try {
-      // Return false immediately if no target userid was provided
-      if (!userid || String(userid).trim() === '') {
-        return false;
-      }
-
-      const targetId = String(userid).trim();
-
-      // 1. Always fetch the 5 most recent history entries directly from Chrome
-      const historyItems = await chrome.history.search({
-        text: '',          // Empty string matches all URLs
-        maxResults: 5,     // Check the last 5 visits
-        startTime: 0       // Search across all time to guarantee results
-      });
-
-      if (!historyItems || historyItems.length === 0) {
-        return false;
-      }
-
-      // 2. Return true if ANY of the last 5 URLs has a "userid" query parameter matching your exact userid
-      return historyItems.some(item => {
-        if (!item.url) return false;
-        try {
-          const params = new URL(item.url).searchParams;
-          for (const [key, value] of params.entries()) {
-            if (key.toLowerCase() === 'userid' && value.trim() === targetId) {
-              return true;
-            }
-          }
-          return false;
-        } catch {
-          return false; // Safely skip non-standard URLs
-        }
-      });
-
-    } catch (error) {
-      console.error('Error detecting UserID in history:', error);
-      return false;
-    }
-  }
-
 
   function startPulseLoop() {
     if (intervalId) return; // already running
@@ -8895,12 +8853,6 @@ function CheckBackTab() {
     clearInterval(intervalId2);
     intervalId2 = null;
     intervalId = setInterval(async () => {
-      // Example Usage:
-      if (MyPulseIdentity) {
-        detectUserIdInLatestHistory(MyPulseIdentity.id).then(isMyUserId => {
-          console.log('Matched my UserID in last 5 history items:', isMyUserId); // true or false
-        });
-      }
       PulseFrame = document.getElementById("PulseEarnerFrame");
       let frameUrl = new URL(PulseFrame.src);
       const clone = document.documentElement.cloneNode(true);
@@ -9020,11 +8972,6 @@ function CheckBackTab() {
     clearInterval(intervalId);
     intervalId = null;
     intervalId2 = setInterval(async () => {
-      if (MyPulseIdentity) {
-        detectUserIdInLatestHistory(MyPulseIdentity.id).then(isMyUserId => {
-          console.log('Matched my UserID in last 5 history items:', isMyUserId); // true or false
-        });
-      }
       PulseFrame = document.getElementById("PulseEarnerFrame");
       let frameUrl = new URL(PulseFrame.src);
       const clone = document.documentElement.cloneNode(true);
