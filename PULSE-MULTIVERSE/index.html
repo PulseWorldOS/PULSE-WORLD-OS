@@ -3726,9 +3726,9 @@ async function loadInternalPage(name) {
     try {
       const url = new URL(window.location.href);
       url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
-      loadPulseIdentityContinual();
+      if (!PulseRealm.PulseIdentity) loadPulseIdentityContinual();
       if (TabDomProjection && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
-        url.hash = `#PulseWorldAlternateReality?UserID=${PulseRealm.PulseIdentity.id}`;
+        url.hash = `#PulseWorldAlternateReality?UserID=${PulseRealm.PulseIdentity.id}&ProjectionAllowed=true`;
       }
 
 
