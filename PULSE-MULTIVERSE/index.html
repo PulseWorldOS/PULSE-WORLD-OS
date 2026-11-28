@@ -321,7 +321,7 @@ checkPersistentStorage(true);
     <button id="vaultBtn" aria-label="Pulse Vault" role="button">Pulse Vault</button>
     <button id="inventoryBtn" aria-label="Pulse Inventory" role="button">Pulse Inventory</button>
     <button id="scannerBtn" aria-label="Pulse Scanner" role="button">Pulse Scanner</button>
-    <button id="ghostBtn" aria-label="Pulse Ghost Protocol" role="button">Ghost Protocol</button>pulsemessengerBtn
+    <button id="ghostBtn" aria-label="Pulse Ghost Protocol" role="button">Ghost Protocol</button>
     <button id="pulsepalBtn" aria-label="PulsePal Settings" role="button">PulsePal</button>
     <button id="pulsemessengerBtn" aria-label="PulseMessenger System" role="button">PulseMessenger</button>
     <button id="pulsemeshBtn" aria-label="PulseMesh System" role="button">PulseMesh</button>
@@ -3513,11 +3513,13 @@ async function loadInternalPage(name) {
     if (viewport) {
       // 2. Read it back and assign it to viz (note the capital HTML)
       const savedHtml = localStorage.getItem("TabDomProjection");
-      if (savedHtml !== null && !TabDomProjectionBoolean && PulseRealm.CurrentHost.includes("binaryos.net")) {
+      if (savedHtml !== null && PulseRealm.CurrentHost.includes("binaryos.net")) {
         TabDomProjection = savedHtml;
+      }
+      if (TabDomProjection && !TabDomProjectionBoolean) {
+        html = TabDomProjection;
         TabDomProjectionBoolean = true;
       }
-      if (PulseRealm.CurrentHost.includes("pulseworld.net") && TabDomProjection) html = TabDomProjection;
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
       viewport.innerHTML = html;
