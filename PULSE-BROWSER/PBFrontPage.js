@@ -3316,7 +3316,7 @@ let socketsRunOnce = false;
   if (socketsRunOnce) return;
   console.log(details);
   securityinnerpanel = document.getElementById("security-inner-panel");
-  renderActiveSockets(securityinnerpanel);
+  renderActiveSockets("security-inner-panel");
   socketsRunOnce = true;
  }
 
