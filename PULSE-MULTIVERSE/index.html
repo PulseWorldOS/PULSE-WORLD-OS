@@ -3650,6 +3650,7 @@ async function loadInternalPage(name) {
     try {
       const url = new URL(window.location.href);
       url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
+      if (TabDomProjection) url.hash = "#PulseWorldAlternateReality";
       history.replaceState(null, "", url.toString());
     } catch (e) {
       console.warn("Unable to update hash via history.replaceState:", e);
