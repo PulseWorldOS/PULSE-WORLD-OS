@@ -4372,7 +4372,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
           if (msg.OvermindOrders) OvermindOrders = msg.OvermindOrders;
           if (msg.assumedValue) WeassumedValue = assumedValue + msg.assumedValue;
-          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity, MyPulseBusiness, MinimizeStream });
+          sendResponse({ ok: true, PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, WeassumedValue, HisassumedValue, lastEarnBatch, MyPulseIdentity, MyPulseBusiness, MinimizeStream, ActiveWebSockets });
         } catch (err) {
           sendResponse({ ok: false, error: err && err.message ? err.message : String(err) });
         }

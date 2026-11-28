@@ -585,10 +585,10 @@
     .security-panel {
       position: fixed;
       margin: 14px 14px;
-      bottom: 1vh;
-      left: 320px;
-      height: 100px;
-      width: 230px;
+      bottom: 0;
+      left: 300px;
+      height: 120px;
+      width: 160px;
       display: flex;
       opacity: 1;
       pointer-events: auto;
@@ -668,14 +668,6 @@
       align-items: center;
       overflow: hidden;
       
-      /* 1. Multi-layered background: lighting overlay + your console image */
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(0, 234, 255, 0.18) 0%, transparent 60%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.45) 100%),
-        url("PulseMessengerConsole.webp");
-      background-size: cover;
-      background-position: center;
-
       /* 2. Physical 3D Bezel & Recessed Screen Depth */
       border: 1px solid rgba(0, 234, 255, 0.35);
       box-shadow:

@@ -173,6 +173,7 @@ const bootVideo = document.getElementById("pbBootEntrance");
 const messengerBootVideo = document.getElementById("PulseMessengerVideo");
 const HigherAuthority = document.getElementById("HigherAuthority");
 const ReCogWipe = document.getElementById("MemoryWipe");
+let securityinnerpanel = document.getElementById("security-inner-panel");
 let HigherPanelSwitch = document.getElementById("SwitchPanel");
 let BrowserHeartbeat = document.getElementById("BrowserHeartbeat");
 let HigherStatusPanel = document.getElementById("higherStatusPanel");
@@ -1417,6 +1418,7 @@ async function runLocalAI() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
+        if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         // Clean the incoming value (handles both formatted strings and existing numbers)
@@ -1564,7 +1566,8 @@ ${rawPrompt}
         PB_LOG3.info("PBAI_SESSION unavailable or error", response);
         return;
       }
-      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+      if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
       if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
       // Clean the incoming value (handles both formatted strings and existing numbers)
       const cleanValue = typeof ALLassumedValue === 'string' 
@@ -2541,7 +2544,8 @@ async function appendCompanionMessage(area, role, text, opts = {}) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     // Clean the incoming value (handles both formatted strings and existing numbers)
     const cleanValue = typeof ALLassumedValue === 'string' 
@@ -2696,6 +2700,7 @@ if (CompanionConsoleSend) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
+        if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         // Clean the incoming value (handles both formatted strings and existing numbers)
@@ -2787,6 +2792,7 @@ if (CompanionConsoleSend) {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
+        if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         // Clean the incoming value (handles both formatted strings and existing numbers)
@@ -3282,6 +3288,12 @@ async function GetThisMessengerDone() {
   stage.appendChild(leftPanelBorder);
   document.body.appendChild(stage);
 }
+
+ async function CheckforSecurityState(details) {
+  const Readable = JSON.stringify(details, null, 2);
+  securityinnerpanel = document.getElementById("security-inner-panel");
+  securityinnerpanel.innerHTML = Readable;
+ }
 
   async function CheckforMessagesState() {
     const We = await chrome.storage.local.get(["MessengerInvisible"]);
@@ -5025,7 +5037,8 @@ setInterval(async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     // Clean the incoming value (handles both formatted strings and existing numbers)
     const cleanValue = typeof ALLassumedValue === 'string' 
@@ -5132,7 +5145,8 @@ setInterval(async () => {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     // Clean the incoming value (handles both formatted strings and existing numbers)
     const cleanValue = typeof ALLassumedValue === 'string' 
@@ -7005,7 +7019,8 @@ async function updateModuleIcons(settings, browser) {
       PB_LOG3.info("PBAI_SESSION unavailable or error", response);
       return;
     }
-    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
     if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
     // Clean the incoming value (handles both formatted strings and existing numbers)
     const cleanValue = typeof ALLassumedValue === 'string' 
@@ -8887,6 +8902,7 @@ function CheckBackTab() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
+        if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         // Clean the incoming value (handles both formatted strings and existing numbers)
@@ -9004,6 +9020,7 @@ function CheckBackTab() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
+        if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         // Clean the incoming value (handles both formatted strings and existing numbers)
@@ -9322,6 +9339,7 @@ function CheckBackTab() {
           PB_LOG3.info("PBAI_SESSION unavailable or error", response);
           return;
         }
+        if (response.ActiveWebSockets) CheckforSecurityState(response.ActiveWebSockets);
         if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
         if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
         // Clean the incoming value (handles both formatted strings and existing numbers)
