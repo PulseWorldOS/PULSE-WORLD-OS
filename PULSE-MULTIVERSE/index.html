@@ -3650,7 +3650,7 @@ async function loadInternalPage(name) {
     try {
       const url = new URL(window.location.href);
       url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
-      if (TabDomProjection) {
+      if (TabDomProjection && PulseRealm.__PULSE_CURRENT_PAGE__.includes("Admin")) {
         url.hash = "#PulseWorldAlternateReality";
 
         const parser = new DOMParser();
