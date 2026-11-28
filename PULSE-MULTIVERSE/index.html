@@ -3525,6 +3525,7 @@ async function loadInternalPage(name) {
           if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
             TabDomProjection = savedHtml;
             html = TabDomProjection
+            pulseConsoleOpen();
             if (viewport.innerHTML !== html) viewport.innerHTML = html;
           }
         }, 15000);
