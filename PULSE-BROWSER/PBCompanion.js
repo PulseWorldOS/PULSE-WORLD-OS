@@ -16,6 +16,8 @@ import {
   buildOvermindMessages,
 } from "./PBHigherModels.js";
 
+let RunningAI = false;
+let ActiveWebSockets = null;
 let CustomizePanelsDragNDrop = false;
 let lastEarnBatch = null;
 let online = navigator.onLine;
@@ -1501,9 +1503,10 @@ async function testLocalWebSockets(ports = null, timeoutMs = 400) {
   return { inUse, free, details };
 }
 
-setTimeout(() => {
+setTimeout(async () => {
   // Run check
-  testLocalWebSockets();
+  ActiveWebSockets = await testLocalWebSockets();
+  console.log(ActiveWebSockets);
 }, 10000);
 
 
@@ -3196,6 +3199,46 @@ function safeSpeak(msg) {
   errorLock = false;
 }
 
+async function runLocalAI() {
+  if (RunningAI) return; // already running
+  if (typeof LanguageModel === 'undefined') {
+    console.error("Pulse Pal (Gemini Nano) is not supported in this browser version.");
+    return;
+  }
+  RunningAI = true;
+  
+  let LastMessage = null;
+
+  const status = await LanguageModel.availability();
+  
+  if (status === 'unavailable') {
+    console.error("Pulse Pal (Gemini Nano) cannot run on this device hardware.");
+    return;
+  }
+
+  
+  try {
+    if (!aiSession) {
+      // 1. Initialize the session using the modern nested outputs architecture
+      await initializeExoskeleton();
+    }
+
+    // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+    let rawPrompt = `Please go over these active websockets and explain them to the user, we are currently in (${PulseRealm.CurrentHost}): ` + ActiveWebSockets;
+    
+    // 3. Fire the wrapped prompt
+    const response = await aiSession.prompt(rawPrompt);
+    // if (aiLogBox) aiLogBox.appendChild(response);
+    pulsepalSpeak("Pulse Pal: " + response);
+    RunningAI = false;
+
+  } catch (error) {
+    console.error("Failed to initialize Pulse Pal (Gemini Nano) session:", error);
+    RunningAI = false;
+  }
+}
+
+setTimeout(runLocalAI, 50);
 setTimeout(initWebGPUCompute, 50);
 
 // In a Service Worker or Background Script
