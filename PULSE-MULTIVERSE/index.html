@@ -3449,13 +3449,53 @@ async function routeToInternal(routeName) {
   loadInternalPage(routeName);
 }
 
+let removedButtonsStore = [];
+let previousPulseStatusDisplay = "";
+
 function removeAllButtons() {
-  document
-    .querySelectorAll('button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]')
-    .forEach((el) => el.remove());
-  pulseStatus.style.display = "0";
-  
+  // Prevent overwriting the backup if removeAllButtons() is called twice in a row
+  if (removedButtonsStore.length > 0) return;
+
+  const selector = 'button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]';
+  const buttons = document.querySelectorAll(selector);
+
+  buttons.forEach((el) => {
+    // Create an invisible marker right where the button sits
+    const placeholder = document.createComment("removed-button-placeholder");
+    el.parentNode.insertBefore(placeholder, el);
+
+    // Save both the element and its marker, then remove the button
+    removedButtonsStore.push({ element: el, placeholder });
+    el.remove();
+  });
+
+  // Save current display state and hide pulseStatus properly
+  if (typeof pulseStatus !== "undefined" && pulseStatus) {
+    previousPulseStatusDisplay = pulseStatus.style.display;
+    pulseStatus.style.display = "none"; // Note: "0" is not a valid CSS display value
+  }
 }
+
+function restoreAllButtons() {
+  if (removedButtonsStore.length === 0) return;
+
+  removedButtonsStore.forEach(({ element, placeholder }) => {
+    // Put the button right back where the marker is, then delete the marker
+    if (placeholder.parentNode) {
+      placeholder.parentNode.insertBefore(element, placeholder);
+      placeholder.remove();
+    }
+  });
+
+  // Clear the store so it's ready for the next toggle
+  removedButtonsStore = [];
+
+  // Restore pulseStatus display
+  if (typeof pulseStatus !== "undefined" && pulseStatus) {
+    pulseStatus.style.display = previousPulseStatusDisplay;
+  }
+}
+
 
 
 async function loadInternalPage(name) {
@@ -3532,6 +3572,7 @@ async function loadInternalPage(name) {
       const savedHtml = localStorage.getItem("TabDomProjection");
       if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
         TabDomProjection = savedHtml;
+        restoreAllButtons();
       }
       if (TabDomProjection && !TabDomProjectionBoolean && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
         removeAllButtons();
