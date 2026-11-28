@@ -5715,12 +5715,13 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       if (link.startsWith("chrome://") && !link.includes("extension")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
       const os2fallback = chrome.runtime.getURL("PulseOSBubble.png");
       let bestfavicon = osfallback;
+      let yupfavicon = await fetchAndStoreIcon("pulseworld.net", osfallback);
 
       // ⭐ No inline JS — CSP-safe
       div.innerHTML = `
         <div class="Snapshot-Viewport">
           <img class="Snapshot-Favicon2"
-               src="${bestfavicon}"
+               src="${yupfavicon}"
                alt="favicon">
         </div>
       `;
