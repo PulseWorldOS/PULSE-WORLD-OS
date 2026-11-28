@@ -3532,14 +3532,14 @@ async function loadInternalPage(name) {
       if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
         TabDomProjection = savedHtml;
       }
-      if (TabDomProjection && !TabDomProjectionBoolean && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
+      if (TabDomProjection && !TabDomProjectionBoolean && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
         removeAllButtons();
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
         setInterval(() => {
           // 2. Read it back and assign it to viz (note the capital HTML)
           const savedHtml = localStorage.getItem("TabDomProjection");
-          if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net") && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
+          if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net") && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
             removeAllButtons();
             TabDomProjection = savedHtml;
             html = TabDomProjection
