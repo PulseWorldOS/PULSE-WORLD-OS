@@ -2412,7 +2412,7 @@ let pwWarnings = [];
 let pwErrors = [];
 /* FULL DEVTOOLS HIJACK — %c + %s + GROUPS + COLLAPSIBLE OBJECTS + DELTA + ORIGIN + TASKS TAB */
 (async function(){
-  if (PulseRealm.CurrentHost.includes("pulseworld.net")) {
+  if (!isInIframe()) {
     const s = document.createElement("style");
     s.textContent = `
 
