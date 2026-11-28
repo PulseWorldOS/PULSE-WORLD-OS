@@ -9,7 +9,6 @@ let runWasmTest = false;
 let timeProof = "";
 let WasmSuccess = false;
 let soakTestTimer = null;
-let TabDomProjection = null;
 
 // ============================================================
 // ⭐ REALM + BUILD TIME
@@ -364,16 +363,6 @@ self.addEventListener('message', event => {
       event.source.postMessage({
         type: 'PULSE_DEVICE_ACK',
         status: 'ACTIVE'
-      });
-    }
-  }
-
-  if (msg === 'PULSE_PROJECTION_DISPLAY') {
-    TabDomProjection = options;
-    if (event.source) {
-      event.source.postMessage({
-        type: 'PULSE_PROJECTION_DISPLAY',
-        newValue: TabDomProjection,
       });
     }
   }
