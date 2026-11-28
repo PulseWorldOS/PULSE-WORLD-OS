@@ -3662,10 +3662,10 @@ async function loadInternalPage(name) {
             style.borderLeftColor
           ];
 
-          if (borders.includes("rgb(0, 255, 255)")) {
-            btn.remove();
-            return; // Stop processing this button since it was removed
-          }
+          // if (borders.includes("rgb(0, 255, 255)")) {
+          //   btn.remove();
+          //   return; // Stop processing this button since it was removed
+          // }
 
           // Check which side of the screen the button is on
           const rect = btn.getBoundingClientRect();
