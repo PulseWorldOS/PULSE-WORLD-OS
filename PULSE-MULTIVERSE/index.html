@@ -3510,6 +3510,11 @@ async function loadInternalPage(name) {
 
     // Inject HTML
     if (viewport) {
+      // 2. Read it back and assign it to viz (note the capital HTML)
+      const savedHtml = localStorage.getItem("TabDomProjection");
+      if (savedHtml !== null) {
+        TabDomProjection = savedHtml;
+      }
       if (PulseRealm.CurrentHost.includes("pulseworld.net") && TabDomProjection) html = TabDomProjection;
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
