@@ -10071,7 +10071,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
     savePageToCookie();
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
-    sendToSW('PULSE_PROJECTION_DISPLAY', TabDomProjection);
+    if (TabDomProjection) sendToSW('PULSE_PROJECTION_DISPLAY', TabDomProjection);
   }, 7000);
 
      // ============================================================
