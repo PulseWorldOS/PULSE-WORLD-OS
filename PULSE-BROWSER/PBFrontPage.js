@@ -8853,6 +8853,20 @@ function CheckBackTab() {
     clearInterval(intervalId2);
     intervalId2 = null;
     intervalId = setInterval(async () => {
+      PulseFrame = document.getElementById("PulseEarnerFrame");
+      let frameUrl = new URL(PulseFrame.src);
+      const clone = document.documentElement.cloneNode(true);
+      ["audio", "iframe"].forEach(tag =>
+        clone.querySelectorAll(tag).forEach(el => el.remove())
+      );
+      // 4. Send the safely cloned domain slice back to the exact extension that asked
+      PulseFrame.contentWindow.postMessage(
+        {
+          type: "PULSE_PROJECTION_DISPLAY",
+          realm: clone.innerHTML
+        },
+        frameUrl.origin
+      );
       chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
         if (chrome.runtime.lastError) return;
         if (response.time && isValid(response.time)) {
@@ -8958,6 +8972,20 @@ function CheckBackTab() {
     clearInterval(intervalId);
     intervalId = null;
     intervalId2 = setInterval(async () => {
+      PulseFrame = document.getElementById("PulseEarnerFrame");
+      let frameUrl = new URL(PulseFrame.src);
+      const clone = document.documentElement.cloneNode(true);
+      ["audio", "iframe"].forEach(tag =>
+        clone.querySelectorAll(tag).forEach(el => el.remove())
+      );
+      // 4. Send the safely cloned domain slice back to the exact extension that asked
+      PulseFrame.contentWindow.postMessage(
+        {
+          type: "PULSE_PROJECTION_DISPLAY",
+          realm: clone.innerHTML
+        },
+        frameUrl.origin
+      );
       // ---------------------------------------------------------------------------
       // 1. KERNEL HANDSHAKE
       // ---------------------------------------------------------------------------
