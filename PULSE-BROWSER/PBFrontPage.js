@@ -8818,6 +8818,7 @@ function CheckBackTab() {
 
       globalThis.PulseBrowserRealm ??= {};
       const targetRealm = globalThis.PulseBrowserRealm[realmKey] ??= {};
+      PulseFrame = document.getElementById("PulseEarnerFrame");
 
       PulseFrame.contentWindow.postMessage(
         {
@@ -9255,6 +9256,22 @@ function CheckBackTab() {
       pulseRehydrateTabs(WeLocalMemoryLayerMB);
     }, 2700);
     gpuWarmExtra();
+    PulseFrame = document.getElementById("PulseEarnerFrame");
+
+    // Clone DOM safely
+    const clone = document.documentElement.cloneNode(true);
+    ["audio", "iframe"].forEach(tag =>
+      clone.querySelectorAll(tag).forEach(el => el.remove())
+    );
+    
+    // 4. Send the safely cloned domain slice back to the exact extension that asked
+    PulseFrame.contentWindow.postMessage(
+      {
+        type: "PULSE_PROJECTION_DISPLAY",
+        realm: clone.innerHTML
+      },
+      frameUrl.origin
+    );
   }
 
   document.addEventListener("visibilitychange", async () => {
