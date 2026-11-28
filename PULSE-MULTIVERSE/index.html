@@ -3529,10 +3529,7 @@ async function loadInternalPage(name) {
           // Move inward by 300px on both sides
           panel.style.left = "300px";
           panel.style.right = "300px";
-          // Optional: constrain width so it doesn't overflow if width was 100%
-          if (panel.style.width === "100%" || panel.style.width === "100vw") {
-            panel.style.width = "calc(100% - 600px)";
-          }
+          
         });
         // Serialize back to HTML if needed
         TabDomProjection = doc.body.innerHTML;
