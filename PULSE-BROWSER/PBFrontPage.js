@@ -3289,10 +3289,34 @@ async function GetThisMessengerDone() {
   document.body.appendChild(stage);
 }
 
+async function renderActiveSockets(divId) {
+  const container = document.getElementById(divId);
+  if (!container) return;
+
+  container.textContent = 'Scanning...';
+
+  const activeSockets = await getActiveLocalSockets();
+
+  if (activeSockets.length === 0) {
+    container.textContent = 'No active sockets detected.';
+    return;
+  }
+
+  // Formats as:
+  // 5900: VNC
+  // 8080: HTTP Proxy
+  container.innerText = activeSockets
+    .map((s) => `${s.port}: ${s.name}`)
+    .join('\n');
+}
+
+let socketsRunOnce = false;
+
  async function CheckforSecurityState(details) {
-  const Readable = JSON.stringify(details, null, 2);
+  if (socketsRunOnce) return;
   securityinnerpanel = document.getElementById("security-inner-panel");
-  securityinnerpanel.innerHTML = Readable;
+  renderActiveSockets(securityinnerpanel);
+  socketsRunOnce = true;
  }
 
   async function CheckforMessagesState() {
