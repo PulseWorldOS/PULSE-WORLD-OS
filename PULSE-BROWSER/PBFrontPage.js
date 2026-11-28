@@ -3340,9 +3340,12 @@ let socketsRunOnce = false;
 
  async function CheckforSecurityState(details) {
   if (socketsRunOnce && !details) return;
-  
   renderActiveSockets(details);
   socketsRunOnce = true;
+  setTimeout(() => {
+    securityinnerpanel = document.getElementById("security-inner-panel");
+    securityinnerpanel.style.display = "none";
+  }, 10000);
  }
 
   async function CheckforMessagesState() {

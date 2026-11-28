@@ -3223,7 +3223,6 @@ async function runLocalAI() {
       await initializeExoskeleton();
       ActiveWebSockets = await testLocalWebSockets();
       ActiveWebSocketsReadable = JSON.stringify(ActiveWebSockets, null, 2);
-      console.log(JSON.stringify(ActiveWebSockets, null, 2));
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
