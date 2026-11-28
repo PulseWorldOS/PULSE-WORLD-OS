@@ -1255,11 +1255,7 @@ navigator.serviceWorker.addEventListener('message', event => {
     if (earnBatch) earnBatch.innerHTML = lastEarnBatch;
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
   }
-  if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
-    TabDomProjectionBoolean = true;
-    TabDomProjection = event.data.newValue;
-
-  }
+ 
   if (event.data?.type === "PULSE_SHARED_BUFFER") {
     const sharedView = new Uint8Array(event.data.buffer);
     console.log("Received shared buffer:", sharedView.byteLength);
@@ -3798,6 +3794,7 @@ window.addEventListener("message", (event) => {
     return;
   }
   if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
+    TabDomProjectionBoolean = true;
     TabDomProjection = event.data.realm;
   }
 
@@ -10071,7 +10068,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     pulseSpeakForCurrentPage(PulseRealm.__PULSE_CURRENT_PAGE__);
     savePageToCookie();
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
-    if (TabDomProjection) sendToSW('PULSE_PROJECTION_DISPLAY', TabDomProjection);
   }, 7000);
 
      // ============================================================
