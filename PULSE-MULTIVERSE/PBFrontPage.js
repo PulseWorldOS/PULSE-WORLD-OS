@@ -1,0 +1,9463 @@
+globalThis.PulseBrowserRealm=globalThis;
+let PulseBrowserRealm = globalThis.PulseBrowserRealm ?? (globalThis.PulseBrowserRealm = {});
+let LastHistory = null;
+let PulseRealm = {};
+let lastEarnBatch = null;
+let PulseSnapIndex = 0;
+let MinimizeStream = false;
+let MinimizeOverride = false;
+let MyPulseIdentity = null;
+let MyPulseBusiness = null;
+let StorageRunning = false;
+let gpuCapabilitySize = 2048;
+let CustomizePanelsDragNDrop = false;
+let userInteracted = false;
+let PulseStreamingLive = false;
+let PulseEngineLive = true;
+let PulseEngine2Live = false;
+let PulseAILive = false;
+let PulseAILiveRealm = null;
+let itrunonce = false;
+let thisrunonce = false;
+let MessengerMode = "Console";
+let identityrunonce = false;
+let engineType = "text";
+let displayStyle = false;
+let bankdisplayStyle = false;
+let gpuText = null;
+let panelAIPos = null;
+let panelEarnerPos = null;
+let panelMessengerPos = null;
+let gpuMsg = null;
+let gpuDescription = null;
+let predictionText = "Running Stable";
+let pulseIdentityLink = "https://www.pulseworld.net?Impulse=PulseWorldInventory";
+let pulseBankLink = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
+let pulseVaultLink = "https://www.pulseworld.net?Impulse=PulseWorldVault";
+let pulseEngineLink = "https://www.pulseworld.net?Impulse=PULSE-ENGINE-BLOCK";
+let WasmSuccess = false;
+let timeProof = null;
+let authoritylink = chrome.runtime.getURL("PulseWorldAuthority.html");
+let searchEngineActiveLink = null;
+let bootVideoRun1 = false;
+let CompanionMessage = null;
+let realmSummary = null;
+let higherAIDisplay = null;
+let higherGPUAIDisplay = null;
+let higherAIBytes = 0;
+let higherAIGpuMB = 0;
+let assumedValue = 0;
+let ALLassumedValue = 0;
+let OurassumedValue = 0;
+let HigherAuthorityShown = false;
+let HigherPanelShown = false;
+let MyHigherIntellect = null;
+let MyLowerIntellect = null;
+let CompanionDeprivation = false;
+let ErrorCount = 0;
+const MAX_ERRORS = 1000;
+let ErrorOverflow = false;
+let errorLock = false;
+let MyLocalMemoryLayer = {};
+let MyLocalMemoryLayerMB = 0;
+let WeLocalMemoryLayerMB = 0;
+let TestMemoryLayerMB = 0;
+let LocalMemoryLayerMB = 0;
+let socialMode = "Internal";
+let OvermindOrders = null;
+let OvermindMyOrders = null;
+let EarnHidden = false;
+let StreamHidden = false;
+let RunningAI = false;
+let EarnDetailsHidden = false;
+let MessengerHidden = false;
+let socialMediaActiveLink = null;
+let keyIsDown = false;
+let keyHoldTimer = null;
+let keyHold2Timer = null;
+let aiSize = 0;
+let higherAISize = 0;
+let aiSettingsSize = 0;
+let aiPopupSize = 0;
+let swSize = 0;
+let intervalId = null;
+let intervalId2 = null;
+// Load saved PulseTabs from extension storage at startup
+let pulseTabs = {};
+// Persistent favicon cache stored in chrome.storage.local
+// Local in-memory mirror for speed
+let PBROWSERFAVICON_CACHE = {};
+// Your cybernetic state architecture
+let aiSession = null;
+let PulsePalMemoryAIBuffer = [];
+let PulseCogMemoryAIBuffer = [];
+function hasRealUserChat(buf) {
+  return Array.isArray(buf) && buf.some((entry) => typeof entry === "string" && entry.includes("You:"));
+}
+let identityNameBiz = document.getElementById("identityNameBiz");
+let workMode = "Internal";
+let workActiveLink = null;
+let searchMode = "Internal";
+let ServiceWorkerOnline = true;
+let searchEngineActivated = "*Google.com";
+let temporaryLinks = [];
+let engineURL = buildSearchURL("google.com");
+let url = engineURL;
+let PulseModuleCount = 0;
+let PulseTempModuleCount = 0;
+let PulseRealmSettings = null;
+let PulseBrowserSettings = null;
+let PulseSnapshotView = null;
+let PulseURL = null;
+let totalBytes = 0;
+let lastFailURL = "https://www.pulseworld.net";
+let nowFP = Date.now(); // numeric timestamp
+let lastnowFP = Date.now(); // numeric timestamp
+let GLOBALSTART = Date.now();
+let online = navigator.onLine;
+let runOnceTime = false;
+let runOnceDay = null;
+const CACHE_NAME = "PulseBrowser-Companion";
+const titlediv = document.getElementById("title");
+// Internet Origin (ARPANET first packet)
+const INTERNET_ORIGIN = "10/29/1969 10:30:32 PM";
+// Your PulseWorld Origin Consensus
+let CONSENSUS_ORIGIN = new Date(GLOBALSTART).toLocaleString();
+let totalUsed = 0;
+let loader = document.getElementById("pw-loading");
+let CompanionMessages = document.getElementById("CompanionMessage");
+let CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+let MessengerMessages = document.getElementById("MessengerMessage");
+let CompanionConsoleSend = document.getElementById("consoleOvermindCompanionSend");
+let CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+let PulseMessengerMessages = document.getElementById("PulseMessengerMessages");
+let PulseMessengerWallet = document.getElementById("PulseMessengerWallet");
+let PulseMessengerWorlds = document.getElementById("PulseMessengerWorlds");
+let HomeMessenger = document.getElementById("HomeMessenger");
+let NotifyMessenger = document.getElementById("NotifyMessenger");
+let DiscoverMessenger = document.getElementById("DiscoverMessenger");
+const startBtn = document.getElementById("start");
+let toppanel = document.getElementById("top-panel left-panel");
+let topPanel = document.querySelector(".top-panel");
+const timerBtn = document.getElementById("timerBtn");
+const earnerpanel = document.getElementById("earner-panel");
+let earnerminipanel = document.getElementById("earner-mini-panel");
+let accountBalance = document.getElementById("accountBalance");
+let earnerminiratepanel = document.getElementById("earner-mini-rate-panel");
+let earnerminirate2panel = document.getElementById("earner-mini-rate2-panel");
+let earnerminirate3panel = document.getElementById("earner-mini-rate3-panel");
+let earnerbankpanel = document.getElementById("earner-mini-bank-panel");
+let earnerbunkerpanel = document.getElementById("earner-mini-bunker-panel");
+let earnerenginepanel = document.getElementById("earner-mini-engine-panel");
+let earnerwalletpanel = document.getElementById("earner-mini-wallet-panel");
+const messengerpanel = document.getElementById("messenger-panel");
+let messengerminipanel = document.getElementById("messenger-mini-panel");
+const earnerinnerpanel = document.getElementById("earner-inner-panel");
+const exitinnerpanel = document.getElementById("exit-inner-panel");
+const editinnerpanel = document.getElementById("edit-inner-panel");
+const maximizeBtn = document.getElementById("maximizeBtn");
+const minimizeBtn = document.getElementById("minimizeBtn");
+let identityLogin = document.getElementById("identityLogin");
+let identityPicture = document.getElementById("identityPicture");
+const earnerhelperpanel = document.getElementById("earner-helper-panel");
+const earnerinnerhelperpanel = document.getElementById("earner-inner-helper-panel");
+const messengerinnerpanel = document.getElementById("messenger-inner-panel");
+const messengerhelperpanel = document.getElementById("messenger-helper-panel");
+const messengerinnerhelperpanel = document.getElementById("messenger-inner-helper-panel");
+const pbPulseScreen = document.getElementById("pbPulseScreen");
+const pbPulseEarn = document.getElementById("pbPulseEarn");
+const pbPulseDetailsEarn = document.getElementById("pbPulseDetailsEarn");
+const pbPulseMessenger = document.getElementById("pbPulseMessenger");
+const pbWrapper = document.getElementById("pbWrapper");
+const bootVideo = document.getElementById("pbBootEntrance");
+const messengerBootVideo = document.getElementById("PulseMessengerVideo");
+const HigherAuthority = document.getElementById("HigherAuthority");
+const ReCogWipe = document.getElementById("MemoryWipe");
+let HigherPanelSwitch = document.getElementById("SwitchPanel");
+let BrowserHeartbeat = document.getElementById("BrowserHeartbeat");
+let HigherStatusPanel = document.getElementById("higherStatusPanel");
+let consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+let consoleMessengerCompanion = document.getElementById("consoleMessengerCompanion");
+let consoleHomeCompanion = document.getElementById("consoleHomeCompanion");
+let consoleHomeCompanion2 = document.getElementById("consoleHomeCompanion2");
+let consoleDiscoverHomeCompanion = document.getElementById("consoleDiscoverHomeCompanion");
+let consoleNotifyHomeCompanion = document.getElementById("consoleNotifyHomeCompanion");
+let consoleNotify2HomeCompanion = document.getElementById("consoleNotify2HomeCompanion");
+let consoleNotify3HomeCompanion = document.getElementById("consoleNotify3HomeCompanion");
+let consoleNotify4HomeCompanion = document.getElementById("consoleNotify4HomeCompanion");
+let consoleMessagesCompanion = document.getElementById("consoleMessagesCompanion");
+let consoleMessagesCompanion2 = document.getElementById("consoleMessages2Companion");
+let consoleNotificationCompanion = document.getElementById("consoleNotificationCompanion");
+let consoleDiscoverCompanion = document.getElementById("consoleDiscoverCompanion");
+let consoleDiscover2Companion = document.getElementById("consoleDiscover2Companion");
+let consoleDiscover3Companion = document.getElementById("consoleDiscover3Companion");
+const aiOverlay = document.getElementById("ai-overlay");
+let pulsepaltalk = document.getElementById("pulsepal-talk");
+let PulseFrame = document.getElementById("PulseEarnerFrame");
+let PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+let PulseFrame2 = document.getElementById("PulseStreamFrame");
+let PulseFrame3 = document.getElementById("PulseStreamFrame2");
+let PulseFrameA = document.getElementById("PulseEarner2Frame");
+let PulseFrameB = document.getElementById("PulseEarner3Frame");
+if (BrowserHeartbeat) BrowserHeartbeat.muted = false;
+
+function pulsepalSpeak(message) {
+  console.log(message);
+  pulsepaltalk = document.getElementById("pulsepal-talk");
+  pulsepaltalk.innerHTML = message;
+  setTimeout(() => {
+    pulsepaltalk.style.opacity = "1";
+  }, 800);
+  setTimeout(() => {
+    pulsepaltalk.style.opacity = "0";
+  }, 10000);
+}
+
+function safeSpeak(msg) {
+  try {
+    pulsepalSpeak(msg);
+  } catch (e) {
+    console.warn("pulsepalSpeak failed:", e);
+  }
+}
+
+function createPanelLiveController({
+  elementId,
+  storageKey,
+  isHidden,
+  setPosVar,
+}) {
+  let destroyDrag = null;
+
+  async function move(POS, skip) {
+    const myPanel = document.getElementById(elementId);
+    if (!myPanel || isHidden()) return;
+
+    // Clean up any existing drag listeners before re-initializing
+    if (destroyDrag && typeof destroyDrag === "function") {
+      destroyDrag();
+      destroyDrag = null;
+    }
+
+    const savedPos = POS?.[storageKey];
+
+    // Apply saved position if valid (clamped so it stays on-screen)
+    if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+      setPosVar(savedPos);
+
+      const maxX = Math.max(0, window.innerWidth - myPanel.offsetWidth);
+      const maxY = Math.max(0, window.innerHeight - myPanel.offsetHeight);
+
+      myPanel.style.left = `${Math.max(0, Math.min(maxX, savedPos.x))}px`;
+      myPanel.style.top = `${Math.max(0, Math.min(maxY, savedPos.y))}px`;
+      myPanel.style.right = "auto";
+      myPanel.style.bottom = "auto";
+    }
+
+    if (!skip) {
+      destroyDrag = makePanelDraggable(myPanel, myPanel, {
+        keepInBounds: true,
+        onDragEnd: ({ x, y }) => {
+          const newPos = { x, y };
+          setPosVar(newPos);
+          PulsesafeStorageSet({ [storageKey]: newPos });
+        },
+      });
+    }
+
+    return destroyDrag;
+  }
+
+  async function reset(clearSavedStorage = true) {
+    const myPanel = document.getElementById(elementId);
+    
+    // 1. Remove drag event listeners and cursor styles
+    if (destroyDrag && typeof destroyDrag === "function") {
+      destroyDrag();
+      destroyDrag = null;
+    }
+
+    // 2. Restore original CSS layout
+    if (myPanel) {
+      myPanel.style.left = "";
+      myPanel.style.top = "";
+      myPanel.style.right = "";
+      myPanel.style.bottom = "";
+      myPanel.style.transform = "";
+    }
+
+    // 3. Optionally clear saved position
+    if (clearSavedStorage) {
+      setPosVar(null);
+      await PulsesafeStorageSet({ [storageKey]: null });
+    }
+  }
+
+  return { move, reset };
+}
+
+// --- Panel Configurations ---
+
+const earnerController = createPanelLiveController({
+  elementId: "earner-panel",
+  storageKey: "panelEarnerPos",
+  isHidden: () => EarnHidden,
+  setPosVar: (val) => { panelEarnerPos = val; },
+});
+
+const streamController = createPanelLiveController({
+  elementId: "PulseStreamFrame",
+  storageKey: "panelStreamPos",
+  isHidden: () => StreamHidden,
+  setPosVar: (val) => { panelStreamPos = val; },
+});
+
+const aiController = createPanelLiveController({
+  elementId: "earner-helper-panel",
+  storageKey: "panelAIPos",
+  isHidden: () => EarnDetailsHidden,
+  setPosVar: (val) => { panelAIPos = val; },
+});
+
+const messengerController = createPanelLiveController({
+  elementId: "messenger-inner-panel",
+  storageKey: "panelMessengerPos",
+  isHidden: () => MessengerHidden,
+  setPosVar: (val) => { panelMessengerPos = val; },
+});
+
+// --- Move & Reset Functions ---
+
+const MoveEarnerLive = (POS, skip) => earnerController.move(POS, skip);
+const ResetEarnerLive = (clearSaved = true) => earnerController.reset(clearSaved);
+
+const MoveStreamerLive = (POS, skip) => streamController.move(POS, skip);
+const ResetStreamerLive = (clearSaved = true) => streamController.reset(clearSaved);
+
+const MoveAILive = (POS, skip) => aiController.move(POS, skip);
+const ResetAILive = (clearSaved = true) => aiController.reset(clearSaved);
+
+const MoveMessengerLive = (POS, skip) => messengerController.move(POS, skip);
+const ResetMessengerLive = (clearSaved = true) => messengerController.reset(clearSaved);
+
+async function ResetAllPanelsLive(clearSavedStorage = true) {
+  await Promise.all([
+    ResetEarnerLive(clearSavedStorage),
+    ResetAILive(clearSavedStorage),
+    ResetMessengerLive(clearSavedStorage),
+  ]);
+}
+
+async function StreamDragANDDrop(skip) {
+  const savedPositions = await chrome.storage.local.get([
+    "PulseStreamFrame",
+  ]);
+
+  await Promise.all([
+    MoveStreamerLive(savedPositions, skip),
+  ]);
+  if (skip) PulseFrame2.style.cursor = "default";
+}
+// --- Initialization ---
+
+async function DragANDDrop(skip) {
+  const savedPositions = await chrome.storage.local.get([
+    "panelEarnerPos",
+    "panelAIPos",
+    "panelMessengerPos",
+  ]);
+
+  await Promise.all([
+    MoveEarnerLive(savedPositions, skip),
+    MoveAILive(savedPositions, skip),
+    MoveMessengerLive(savedPositions, skip),
+  ]);
+  if (skip) earnerpanel.style.cursor = "default";
+  if (skip) earnerhelperpanel.style.cursor = "default";
+  if (skip) messengerinnerpanel.style.cursor = "default";
+}
+
+setTimeout(() => {
+  DragANDDrop(true);
+}, 50);
+
+if (!online) {
+  if (titlediv) titlediv.textContent = "PulseBrowser OS (~Drifting~)";
+  document.title = "PulseBrowser OS [~Drift~]";
+  safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
+} else {
+  if (titlediv) titlediv.textContent = "PulseBrowser OS";
+  earnerminipanel = document.getElementById("earner-mini-panel");
+  if (earnerminipanel && (earnerminipanel.textContent === "$0.000" || !earnerminipanel)) document.title = "PulseBrowser OS [Console]";
+  accountBalance.textContent = earnerminipanel.textContent;
+
+  setInterval(() => {
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.time && isValid(response.time)) {
+          nowFP = response.time;
+      }
+      if (response.CustomizePanelsDragNDrop) {
+        CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+      }
+    });
+    if (CustomizePanelsDragNDrop) {
+      DragANDDrop(false);
+    } else {
+      DragANDDrop(true);
+    }
+    earnerminipanel = document.getElementById("earner-mini-panel");
+    if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
+    accountBalance.textContent = earnerminipanel.textContent;
+  }, 3000);
+}
+const PB_LOG3 = {
+  info(label, data) {
+    console.log(
+      `%c[PBFrontPage][INFO][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#55BBFF; font-weight:bold;",
+      data || ""
+    );
+  },
+
+  change(label, before, after) {
+    console.groupCollapsed(
+      `%c[PBFrontPage][CHANGE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00FFAA; font-weight:bold;"
+    );
+    console.log("%cBefore:", "color:#FF8888; font-weight:bold;", before);
+    console.log("%cAfter:", "color:#88FF88; font-weight:bold;", after);
+    console.groupEnd();
+  },
+
+  save(label, data) {
+    console.log(
+      `%c[PBFrontPage][SAVE][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#00DDFF; font-weight:bold;",
+      data
+    );
+  },
+
+  load(label, data) {
+    console.log(
+      `%c[PBFrontPage][LOAD][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FFD700; font-weight:bold;",
+      data
+    );
+  },
+
+  event(label, data) {
+    console.log(
+      `%c[PBFrontPage][EVENT][${new Date().toLocaleTimeString()}] ${label}`,
+      "color:#FF55AA; font-weight:bold;",
+      data
+    );
+  }
+};
+
+async function BootMeNowPlease() {
+  const Boot = await chrome.storage.local.get(["bootVideoRun1"]);
+  if (Boot) bootVideoRun1 = Boot.bootVideoRun1 ?? false;
+
+  if (!bootVideoRun1) {
+    bootVideo.onclick = async () => {
+      console.log(
+        "✨ PULSE MULTIVERSAL RENDERER v32.0 — %c[PULSEWORLD::EXPRESSION] Boot Video SKIPPED by user.",
+        "color:#H02FHA; font-weight:bold; font-family:monospace;"
+      );
+
+      try {
+        // Stop playback immediately
+        bootVideo.pause();
+        bootVideo.currentTime = 0;
+      } catch (err) {
+        console.warn("BootVideo pause error:", err);
+      }
+
+      // Hide the video membrane
+      bootVideo.style.opacity = "0";
+      bootVideo.style.display = "none";
+    };
+  
+    setTimeout(async () => {
+      // Hide the video membrane
+      bootVideo.style.opacity = "0";
+      bootVideo.style.display = "none";
+      bootVideoRun1 = true;
+      await PulsesafeStorageSet({ bootVideoRun1 });
+    }, 5000);
+  } else {
+    // Hide the video membrane
+    bootVideo.style.opacity = "0";
+    bootVideo.style.display = "none";
+  }
+}
+// ======================================================
+// 4) CLICK-TO-SKIP BOOT VIDEO (PulseWorld Physics)
+// ======================================================
+if (bootVideo) {
+  BootMeNowPlease();
+}
+
+
+// Utility: load settings
+async function loadOrders() {
+  LastHistory = CompanionDetailsMessage.innerText;
+  consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+  chrome.runtime.sendMessage({ type: "PB_GATHER_ORDERS", MyLowerIntellect }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PB_GATHER_ORDERS unavailable or error", response);
+      return;
+    }
+    if (response.HigherIntellect) {
+      // Fallback path: a reply that was finished while no page was listening
+      MyHigherIntellect = response.HigherIntellect;
+      showHigherReply({
+        id: response.HigherIntellectId,
+        text: MyHigherIntellect,
+        prompt: response.HigherIntellectPrompt || "__gathered__",
+      });
+    }
+    if (response.OvermindOrders) {
+      OvermindMyOrders = response.OvermindOrders;
+      PB_LOG3.change("PB_GATHER_ORDERS", OvermindMyOrders, response.OvermindOrders);
+    }
+  });
+  const SendHistory = CompanionDetailsMessage.innerText;
+  if (SendHistory !== LastHistory) OvermindCrossTabSync(SendHistory);
+  MyLowerIntellect = null;    
+}
+
+let PULSE_OVERMIND_BROADCAST_CHANNEL5 = `PulseBrowser-OS::${new Date(nowFP).toLocaleTimeString()}`;
+// ============================================================
+//  BROADCAST CHANNEL — v33 (TRUST SYNC + EXISTING USES)
+// ============================================================
+
+let PulseBrowserChannel5 = null;
+try {
+  PulseBrowserChannel5 = new BroadcastChannel(PULSE_OVERMIND_BROADCAST_CHANNEL5);
+} catch {
+  PulseBrowserChannel5 = null;
+}
+
+// Safe fallbacks in case globals are undefined in certain contexts
+const logger = typeof PB_LOG3 !== "undefined" ? PB_LOG3 : console;
+const channel = typeof PulseBrowserChannel5 !== "undefined" ? PulseBrowserChannel5 : null;
+const getTimestamp = () => (typeof nowFP !== "undefined" ? nowFP : Date.now());
+
+/**
+ * Broadcasts an Overmind command payload to other open tabs.
+ * @param {any} payload - The data or command object to sync.
+ */
+function OvermindCrossTabSync(payload) {
+  if (!channel) {
+    logger.warn("[AI_Overmind_Sync] BroadcastChannel unavailable.");
+    return;
+  }
+
+  try {
+    logger.info("[AI_Overmind_Sync] Syncing Overmind Orders across the Multiverse!", payload);
+    channel.postMessage({
+      kind: "command_prompt",
+      payload,
+      ts: getTimestamp(),
+    });
+  } catch (err) {
+    logger.error("[AI_Overmind_Sync] Failed to post message:", err);
+  }
+}
+
+/**
+ * Handles incoming command prompts from other tabs and optionally sends an acknowledgment.
+ * @param {any} payload - The received payload.
+ * @param {number} ts - Timestamp of the original message.
+ */
+function handleOvermindResponse(payload, ts) {
+  logger.info("[Sound Off: Command Prompt Received]", { payload, ts });
+
+  // Execute command logic based on payload
+  if (payload?.action) {
+    switch (payload.action) {
+      case "PING":
+        // Respond back across tabs if needed
+        channel?.postMessage({
+          kind: "command_ack",
+          payload: { status: "READY", originalTs: ts },
+          ts: getTimestamp(),
+        });
+        break;
+      default:
+        // Handle custom Overmind orders here
+        break;
+    }
+  }
+}
+
+// Attach listener safely
+if (channel) {
+  channel.onmessage = (ev) => {
+    try {
+      const { kind, payload, ts } = ev.data || {};
+      if (kind === "command_prompt") {
+        handleOvermindResponse(payload, ts);
+        // earnerminirate2panel.textContent = payload;
+      } else if (kind === "command_ack") {
+        logger.info("[AI_Overmind_Sync] Acknowledgment received:", payload);
+      }
+    } catch (err) {
+      logger.error("[AI_Overmind_Sync] Error processing incoming message:", err);
+    }
+  };
+}
+
+class PulseWasmEngine {
+  constructor() {
+    this.wasmInstance = null;
+    this.memory = null;
+    this.isLoaded = false;
+    this.lastCallbackValue = 0; // Captures values sent to imported_func
+  }
+
+  async EarnerLockedandLoaded() {
+    this.isLoaded = true;
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.requestKeepAwake("system");
+    }
+    console.log("[CONSOLE WASM ENGINE] Locked and Loaded!");
+  }
+
+  // Load the pure binary math module into memory
+  async initEngine(wasmBinaryUrl = "PulseEarnWarmer.wasm") {
+    if (this.isLoaded) return;
+
+    try {
+      const resolvedUrl =
+        typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getURL === "function" && !/^https?:|^chrome-extension:/i.test(wasmBinaryUrl)
+          ? chrome.runtime.getURL(wasmBinaryUrl.replace(/^\.?\//, ""))
+          : wasmBinaryUrl;
+
+      const response = await fetch(resolvedUrl, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CONSOLE WASM: ${response.status} ${response.statusText}`);
+      }
+      const buffer = await response.arrayBuffer();
+      const magic = new Uint8Array(buffer, 0, 4);
+      if (buffer.byteLength < 8 || magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6d) {
+        throw new Error(`Invalid WASM binary from ${resolvedUrl} (${response.headers.get("content-type") || "unknown"})`);
+      }
+      const module = await WebAssembly.compile(buffer);
+
+      // Keep a reference to imported memory in case the module doesn't export its own
+      const importedMemory = new WebAssembly.Memory({ initial: 256, maximum: 512 });
+
+      this.wasmInstance = await WebAssembly.instantiate(module, {
+        my_namespace: {
+          imported_func: (arg) => {
+            this.lastCallbackValue = arg;
+            // Commented out during high-speed loops to prevent console memory bloat
+            // console.log("[CONSOLE WASM CALLBACK] Function invoked from WASM:", arg);
+          }
+        },
+        env: {
+          memory: importedMemory,
+          abort: () => {
+            console.error("[CONSOLE WASM ABORT] Critical execution crash");
+          }
+        }
+      });
+
+      // Prefer exported memory, fallback to imported memory
+      this.memory = this.wasmInstance.exports.memory || importedMemory;
+
+      console.log("[CONSOLE WASM EXPORTS] Available keys:", Object.keys(this.wasmInstance.exports));
+
+      await this.EarnerLockedandLoaded();
+      console.log("[CONSOLE WASM ENGINE] Pure mathematical module stable and hot.");
+    } catch (err) {
+      this.isLoaded = false;
+      console.error("[CONSOLE WASM ENGINE] Initialization failed:", err);
+      throw err; // Re-throw so callers know initialization failed
+    }
+  }
+
+  // The pure compute pipeline: Input bytes -> Output proofs
+  async executeProofJob(rawPayloadData) {
+    if (!this.isLoaded || !this.wasmInstance) {
+      throw new Error("CONSOLE WASM engine not ready");
+    }
+
+    const exports = this.wasmInstance.exports;
+    const targetFunc = exports.computeMathProofs 
+                    || exports._computeMathProofs 
+                    || exports.exported_func;
+
+    if (typeof targetFunc !== 'function') {
+      throw new Error("Execution failed: Target function signature missing from CONSOLE WASM exports.");
+    }
+
+    // --- FALLBACK GUARD FOR TEST BINARY (simple.wasm) ---
+    if (targetFunc === exports.exported_func) {
+      this.lastCallbackValue = 0;
+      const returnVal = targetFunc(); // simple.wasm returns void and passes 42 to imported_func
+      const finalVal = returnVal !== undefined ? returnVal : this.lastCallbackValue;
+      return new Uint8Array([finalVal]);
+    }
+
+    // --- PRODUCTION PIPELINE (PulseEarnWarmer.wasm) ---
+    const inputArray = rawPayloadData instanceof Uint8Array 
+      ? rawPayloadData 
+      : new Uint8Array(rawPayloadData);
+    const length = inputArray.length;
+
+    // Safely resolve input buffer pointer (avoid offset 0 unless explicitly provided)
+    let inputAddress = 1024; 
+    let usedMalloc = false;
+
+    if (typeof exports.malloc === 'function') {
+      inputAddress = exports.malloc(length);
+      usedMalloc = true;
+    } else if (exports.input_buffer_pointer !== undefined) {
+      inputAddress = typeof exports.input_buffer_pointer === 'object'
+        ? exports.input_buffer_pointer.value
+        : exports.input_buffer_pointer;
+    }
+
+    // Always re-acquire the buffer view right before use (Wasm memory can grow & detach old views)
+    const memView = new Uint8Array(this.memory.buffer);
+    if (inputAddress + length > memView.length) {
+      throw new Error(`WASM Memory Out of Bounds: Tried to write ${length} bytes at offset ${inputAddress}`);
+    }
+
+    memView.set(inputArray, inputAddress);
+
+    // Execute computational processing loops
+    const resultAddress = targetFunc(inputAddress, length);
+
+    // Re-acquire view again in case targetFunc triggered memory.grow()
+    const updatedMemView = new Uint8Array(this.memory.buffer);
+    const resultLength = 32;
+    const proofResult = updatedMemView.slice(resultAddress, resultAddress + resultLength);
+
+    // Free allocations to prevent 24-hour OOM crashes
+    if (typeof exports.free === 'function') {
+      if (usedMalloc) exports.free(inputAddress);
+      // Only free resultAddress if your Wasm module dynamically allocates the output buffer
+      if (resultAddress !== inputAddress && resultAddress > 0) {
+        exports.free(resultAddress);
+      }
+    }
+
+    return proofResult;
+  }
+
+  shutdown() {
+    this.isLoaded = false;
+    if (typeof chrome !== 'undefined' && chrome.power) {
+      chrome.power.releaseKeepAwake();
+    }
+    console.log("[Console WASM ENGINE] Shut down and released power lock.");
+  }
+}
+
+// Instantiate the isolated engine
+const pulseWasmCompute = new PulseWasmEngine();
+if (typeof PB_LOG3 !== 'undefined') {
+  PB_LOG3.event("Console Companion: Pulse Earner Online and Listening for Backup..", pulseWasmCompute);
+}
+
+async function detectGPUCapacity(adapter) {
+  try {
+    if (typeof navigator === "undefined" || !navigator.gpu) {
+      return { supported: false, reason: "WebGPU not available" };
+    }
+    const maxBuf = adapter.limits.maxBufferSize || 0;
+    const vramMB = Math.round(maxBuf / (1024 * 1024));
+    const hasF16 = Boolean(adapter.features && typeof adapter.features.has === "function" && adapter.features.has("shader-f16"));
+    let description = "";
+    let vendor = "";
+    try {
+      const info = adapter.info || (typeof adapter.requestAdapterInfo === "function" ? await adapter.requestAdapterInfo() : null);
+      if (info) {
+        description = info.description || info.architecture || info.device || "";
+        vendor = info.vendor || "";
+      }
+    } catch (_) {}
+    return { supported: true, vramMB, hasF16, vendor, description };
+  } catch (err) {
+    return { supported: false, reason: String(err && err.message ? err.message : err) };
+  }
+}
+
+let gpuContext = null;
+
+// 1. Initialize once at startup (replaces your warm-up snippet)
+async function initWebGPUCompute() {
+  if (!navigator.gpu) return null;
+  const adapter = await navigator.gpu.requestAdapter({ powerPreference: "high-performance" });
+  if (!adapter) return null;
+  const GPUCapacity = await detectGPUCapacity(adapter);
+  const device = await adapter.requestDevice();
+  if (device) pulseGPUInspector(adapter, device);
+  // WGSL Shader: Treats every 256-bit item as 8 x u32 (two vec4<u32>)
+  const shaderCode = `
+    struct Item256 {
+      low: vec4<u32>,
+      high: vec4<u32>,
+    };
+
+    @group(0) @binding(0) var<storage, read_write> data: array<Item256>;
+
+    @compute @workgroup_size(64)
+    fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+      let i = id.x;
+      if (i >= arrayLength(&data)) { return; }
+
+      // REPLACE THIS WITH YOUR ACTUAL 256-BIT MATH (e.g., XOR, bit-shifts, hashing)
+      data[i].low = data[i].low ^ vec4<u32>(0xDEADBEEFu);
+      data[i].high = data[i].high + vec4<u32>(1u);
+    }
+  `;
+
+  const module = device.createShaderModule({ code: shaderCode });
+  const pipeline = device.createComputePipeline({
+    layout: "auto",
+    compute: { module, entryPoint: "main" },
+  });
+
+  // Example usage:
+  if (gpuCapabilitySize <= 2048) {
+    probeUsableVRAM({ maxProbeGB: 8, chunkMB: 256 }).then((result) => {
+      console.log(`Usable VRAM: ~${result.estimatedGB} GB (${result.reason})`);
+      gpuCapabilitySize = result.estimatedGB * (1024);
+      gpuCapabilitySize = gpuCapabilitySize.toFixed(0);
+      const higherGpuLine = document.getElementById("higherGpuLine");
+      higherGpuLine.innerHTML = `🎮 GPU: ${escapeHTML(gpuDescription)} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`;
+    });
+  }
+  
+  PB_LOG3.info("Pulse GPU Capacity: ", GPUCapacity);
+  gpuContext = { device, pipeline };
+  PB_LOG3.info("Pulse GPU Compute Context: ", gpuContext);
+  return gpuContext;
+}
+
+// 2. Call this instead of your Wasm function for large batches
+async function run256BitJobOnGPU(typedArrayPayload) {
+  // [Phase 4] Guard: if GPU was never initialized or failed, return null so caller can fallback
+  if (!gpuContext || !gpuContext.device || !gpuContext.pipeline) {
+    return null;
+  }
+  try {
+  const { device, pipeline } = gpuContext;
+  const byteSize = typedArrayPayload.byteLength;
+
+  // Create GPU storage buffer & staging buffer for reading results back
+  const gpuBuffer = device.createBuffer({
+    size: byteSize,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
+  });
+  const readBuffer = device.createBuffer({
+    size: byteSize,
+    usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+  });
+
+  // Upload payload from CPU to GPU
+  device.queue.writeBuffer(gpuBuffer, 0, typedArrayPayload);
+
+  const bindGroup = device.createBindGroup({
+    layout: pipeline.getBindGroupLayout(0),
+    entries: [{ binding: 0, resource: { buffer: gpuBuffer } }],
+  });
+
+  // Dispatch 1 thread per 256-bit element (32 bytes each)
+  const itemCount = byteSize / 32;
+  const workgroups = Math.ceil(itemCount / 64);
+
+  const encoder = device.createCommandEncoder();
+  const pass = encoder.beginComputePass();
+  pass.setPipeline(pipeline);
+  pass.setBindGroup(0, bindGroup);
+  pass.dispatchWorkgroups(workgroups);
+  pass.end();
+
+  // Copy result to CPU-readable buffer
+  encoder.copyBufferToBuffer(gpuBuffer, 0, readBuffer, 0, byteSize);
+  device.queue.submit([encoder.finish()]);
+
+  // Read back to JS
+  await readBuffer.mapAsync(GPUMapMode.READ);
+  const result = new Uint8Array(readBuffer.getMappedRange()).slice();
+  readBuffer.unmap();
+
+  // Clean up VRAM
+  gpuBuffer.destroy();
+  readBuffer.destroy();
+
+  return result;
+  } catch (gpuErr) {
+    console.warn("[GPU] run256BitJobOnGPU failed, returning null for WASM fallback:", gpuErr);
+    return null;
+  }
+}
+
+let soakTestTimer = null;
+
+// Single test execution
+async function runEngineTest(silent = false) {
+  // 1. Ensure Wasm engine is initialized
+  if (!pulseWasmCompute.isLoaded) {
+    if (!silent) console.log("[TEST] Initializing WASM engine testing rig...");
+    try {
+      await pulseWasmCompute.initEngine();
+    } catch (initError) {
+      console.error("[FAILED] WASM Engine failed to initialize:", initError);
+      WasmSuccess = false;
+      timeProof = `*[<font color="red">INIT ERR</font>]`;
+      return -1;
+    }
+  }
+
+  // 2. Construct fresh 256-byte test payload & snapshot input for mutation/determinism checks
+  const mock256Payload = new Uint8Array([
+    0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F, 0x70, 0x81,
+    0x92, 0xA3, 0xB4, 0xC5, 0xD6, 0xE7, 0xF8, 0x09,
+    0x10, 0x21, 0x32, 0x43, 0x54, 0x65, 0x76, 0x87,
+    0x98, 0xA9, 0xBA, 0xCB, 0xDC, 0xED, 0xFE, 0x0F,
+    0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
+    0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00,
+    0x12, 0x23, 0x34, 0x45, 0x56, 0x67, 0x78, 0x89,
+    0x9A, 0xAB, 0xBC, 0xCD, 0xDE, 0xEF, 0xF0, 0x01,
+    0x13, 0x24, 0x35, 0x46, 0x57, 0x68, 0x79, 0x8A,
+    0x9B, 0xAC, 0xBD, 0xCE, 0xDF, 0xE0, 0xF1, 0x02,
+    0x14, 0x25, 0x36, 0x47, 0x58, 0x69, 0x7A, 0x8B,
+    0x9C, 0xAD, 0xBE, 0xCF, 0xD0, 0xE1, 0xF2, 0x03,
+    0x15, 0x26, 0x37, 0x48, 0x59, 0x6A, 0x7B, 0x8C,
+    0x9D, 0xAE, 0xBF, 0xC0, 0xD1, 0xE2, 0xF3, 0x04,
+    0x16, 0x27, 0x38, 0x49, 0x5A, 0x6B, 0x7C, 0x8D,
+    0x9E, 0xAF, 0xB0, 0xC1, 0xD2, 0xE3, 0xF4, 0x05,
+    0x17, 0x28, 0x39, 0x4A, 0x5B, 0x6C, 0x7D, 0x8E,
+    0x9F, 0xA0, 0xB1, 0xC2, 0xD3, 0xE4, 0xF5, 0x06,
+    0x18, 0x29, 0x3A, 0x4B, 0x5C, 0x6D, 0x7E, 0x8F,
+    0x90, 0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6, 0x07,
+    0x19, 0x2A, 0x3B, 0x4C, 0x5D, 0x6E, 0x7F, 0x80,
+    0x91, 0xA2, 0xB3, 0xC4, 0xD5, 0xE6, 0xF7, 0x08,
+    0x1B, 0x2C, 0x3D, 0x4E, 0x5F, 0x60, 0x71, 0x82,
+    0x93, 0xA4, 0xB5, 0xC6, 0xD7, 0xE8, 0xF9, 0x0A,
+    0x1C, 0x2D, 0x3E, 0x4F, 0x50, 0x61, 0x72, 0x83,
+    0x94, 0xA5, 0xB6, 0xC7, 0xD8, 0xE9, 0xFA, 0x0B,
+    0x1D, 0x2E, 0x3F, 0x40, 0x51, 0x62, 0x73, 0x84,
+    0x95, 0xA6, 0xB7, 0xC8, 0xD9, 0xEA, 0xFB, 0x0C,
+    0x1E, 0x2F, 0x30, 0x41, 0x52, 0x63, 0x74, 0x85,
+    0x96, 0xA7, 0xB8, 0xC9, 0xDA, 0xEB, 0xFC, 0x0D,
+    0x1F, 0x20, 0x31, 0x42, 0x53, 0x64, 0x75, 0x86,
+    0x97, 0xA8, 0xB9, 0xCA, 0xDB, 0xEC, 0xFD, 0x0E
+  ]);
+  const inputSnapshot = new Uint8Array(mock256Payload);
+
+  // 3. Measure isolated proof job execution
+  const start = performance.now();
+  try {
+    // [Phase 4] GPU only for large payloads (1KB+). Small jobs stay on WASM — GPU overhead is too high for tiny batches.
+    const GPU_MIN_BYTES = 1024;
+    let outputProof = null;
+    let usedGPU = false;
+    if (gpuContext && mock256Payload.byteLength >= GPU_MIN_BYTES) {
+      outputProof = await run256BitJobOnGPU(mock256Payload);
+      if (outputProof) usedGPU = true;
+    }
+    // WASM handles small payloads and GPU fallback
+    if (!outputProof) {
+      outputProof = await pulseWasmCompute.executeProofJob(mock256Payload);
+    }
+    const elapsedMs = performance.now() - start;
+
+    // 4. Validate output structure & Fluence shared-nothing guarantees
+    if (!outputProof) {
+      throw new Error("executeProofJob returned null or undefined.");
+    }
+
+    // Handle both raw Uint8Array returns and Fluence-style { outputPayload / proof } objects
+    const proofBytes =
+      outputProof instanceof Uint8Array
+        ? outputProof
+        : outputProof.outputPayload || outputProof.proof || outputProof.result?.outputPayload;
+
+    if (!(proofBytes instanceof Uint8Array) || proofBytes.length === 0) {
+      throw new Error("Invalid proof format: expected non-empty Uint8Array.");
+    }
+
+    // Verify Wasm didn't just echo back unchanged input bytes or all-zeros
+    const isAllZeros = proofBytes.every((b) => b === 0);
+    const isUnchangedEcho =
+      proofBytes.length === inputSnapshot.length &&
+      proofBytes.every((b, idx) => b === inputSnapshot[idx]);
+
+    if (isAllZeros || isUnchangedEcho) {
+      throw new Error(
+        isAllZeros
+          ? "Proof buffer is all zeros (uninitialized Wasm memory)."
+          : "Proof buffer is identical to input (no-op passthrough)."
+      );
+    }
+
+    // Verify host input buffer remained isolated (not mutated in-place)
+    const inputWasMutated = mock256Payload.some((b, idx) => b !== inputSnapshot[idx]);
+    if (inputWasMutated) {
+      throw new Error("Host input buffer was mutated in-place across Wasm boundary.");
+    }
+
+    // 5. Assign latency badge & update global flags
+    let timecolor = "lightgreen";
+    if (elapsedMs > 50) {
+      timecolor = "red";
+    } else if (elapsedMs > 25) {
+      timecolor = "orange";
+    } else if (elapsedMs > 10) {
+      timecolor = "gold";
+    }
+
+    timeProof = `*[<font color="${timecolor}">${elapsedMs.toFixed(4)} ms</font>]`;
+    WasmSuccess = true;
+
+    if (!silent) {
+      const engine = usedGPU ? "WebGPU" : "WASM";
+      console.log(
+        `[Success][${engine}] ${elapsedMs.toFixed(4)} ms | Proof (${proofBytes.length}B):`,
+        outputProof
+      );
+    }
+
+    return elapsedMs;
+  } catch (testError) {
+    console.error("[FAILED] WASM TEST Execution Pipeline broke:", testError);
+    WasmSuccess = false;
+    timeProof = `*[<font color="red">FAILED</font>]`;
+    return -1;
+  }
+}
+
+function currency(amount, displayCurrency = "$") {
+  let raw = String(amount || "").replace(/BZ?\$|\$/g, "").trim();
+  const num = Number(raw);
+  const safe = isNaN(num) ? "0.00" : num.toFixed(3);
+
+  let cur = String(displayCurrency || "$").trim().toUpperCase();
+  cur = cur === "USD" || cur === "$" || cur === "US$" ? "$" : "BZ$";
+
+  return `${cur}${safe}`;
+}
+
+
+async function gpuWarmExtra() {
+  const elements = document.querySelectorAll("canvas, video");
+  let gpuEnabled = "GPU Driver Error";
+  
+  // Warm WebGL + WebGL2 + Canvas2D + Video
+  elements.forEach(el => {
+    try {
+      const gl = el.getContext?.("webgl") || el.getContext?.("webgl2");
+      if (gl) gpuEnabled = "WebGL";
+    } catch (_) {}
+
+    try { el.getContext?.("2d"); } catch (_) {}
+    try { el.play?.().catch(() => {}); } catch (_) {}
+  });
+
+  // Warm WebGPU (if available)
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) {
+        const device = await adapter.requestDevice();
+        if (device) {
+          gpuEnabled = "WebGPU";
+          const queue = device.queue;
+          const buffer = device.createBuffer({
+            size: 4,
+            usage: GPUBufferUsage.COPY_DST
+          });
+          queue.writeBuffer(buffer, 0, new Uint8Array([1, 2, 3, 4]));
+        }
+      }
+    }
+  } catch (_) {
+    // WebGPU failed — leave gpuEnabled as-is
+  }
+
+  console.log("GPU Warmed!");
+  if (gpuEnabled === "GPU Driver Error") {
+    pbPulseScreen.src = "PulseWorldOS-Older.mp4";
+  }
+  chrome.runtime.sendMessage({ type: "PBDEV_STATUS" });
+  chrome.runtime.sendMessage({ type: "PBCONTENT_GPUWARM_EXTRA", gpuEnabled });
+}
+
+// Safe 24-Hour Soak Test Runner (Batched to avoid locking the browser/service worker)
+async function start24HourSoakTest({ batchSize = 250, intervalMs = 250 } = {}) {
+  if (soakTestTimer) {
+    console.warn("[TEST] Soak test is already running.");
+    return;
+  }
+
+  if (!ServiceWorkerOnline) return;
+
+  gpuWarmExtra();
+  await pulseWasmCompute.initEngine();
+  const endTime = Date.now() + (24 * 60 * 60 * 1000);
+  let totalJobs = 0;
+  let totalErrors = 0;
+  let totalJobsString = Number(totalJobs);
+
+  console.log(`[TEST] Starting 24h Soak Test (Batch: ${batchSize} jobs every ${intervalMs}ms)...`);
+
+  let tickInterval = 0;
+  let totalUnit = null;
+  let totalUnits = 0;
+
+  const tick = async () => {
+    if (Date.now() >= endTime) {
+      stopSoakTest();
+      if (totalJobs >= 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
+      } else if (totalJobs >= 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs >= 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      }
+      if (totalErrors === 0) {
+        totalUnit = "Val: ";
+        totalUnits = currency(assumedValue);
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
+      console.log("WASM Daily Total Value: " + currency(assumedValue));
+      timeProof = `[<font color="lightgreen">Complete</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      appendEarnerMessage(CompanionMessages, "🧠", `WASM Daily Batches Succeeded.. ` + timeProof);
+      setTimeout(() => {
+        appendEarnerMessage(CompanionMessages, "🧠", "Waiting for PulseEarner Job Submissions...");
+      }, 4000);     
+      console.log(`[TEST] 24-Hour Soak Test Complete! Total Jobs: ${totalJobs}, ${totalUnit}${totalUnits}`);
+      return;
+    }
+
+    const batchStart = performance.now();
+    for (let i = 0; i < batchSize; i++) {
+      const res = await runEngineTest(true);
+      if (res < 0) totalErrors++;
+      else totalJobs++;
+    }
+    const batchMs = performance.now() - batchStart;
+
+    // Log status every 25,000 jobs so DevTools doesn't crash from log spam
+    if (totalJobs % 25000 === 0) {      
+      tickInterval++;
+      if (!ServiceWorkerOnline) stopSoakTest();
+      // Models realistic DePIN compute payouts (e.g., Golem tasks / Fluence compute units)
+      // 80% lightweight micro-tasks ($0.0005 - $0.0020)
+      // 15% standard compute jobs ($0.0020 - $0.0060)
+      // 5% heavy AI/rendering workloads ($0.0060 - $0.0150)
+
+      const roll = Math.random();
+      let jobReward;
+
+      if (roll < 0.80) {
+        jobReward = 0.0005 + Math.random() * 0.0015;
+      } else if (roll < 0.95) {
+        jobReward = 0.0020 + Math.random() * 0.0040;
+      } else {
+        jobReward = 0.0060 + Math.random() * 0.0090;
+      }
+
+      assumedValue += jobReward;
+
+      console.log("WASM Daily Assumed Value: " + currency(assumedValue));
+      if (totalJobs >= 1000000000) {
+        totalJobsString = (totalJobs/1000000000).toFixed(2) + " B";
+      } else if (totalJobs >= 1000000) {
+        totalJobsString = (totalJobs/1000000).toFixed(2) + " M";
+      } else if (totalJobs >= 1000) {
+        totalJobsString = (totalJobs/1000).toFixed(0) + " K";
+      }
+      if (totalErrors === 0) {
+        totalUnit = "Val: ";
+        totalUnits = currency(jobReward);
+      } else {
+        totalUnit = "Err: ";
+        totalUnits = totalErrors;
+      }
+      const avgJobMs = (batchMs / batchSize).toFixed(4);
+      let avgJobColor = "lightgreen";
+      if (avgJobMs >= 0.01) {
+        avgJobColor = "red";
+      } else if (avgJobMs >= 0.005) {
+        avgJobColor = "orange";
+      } 
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      timeProof = `[<font color=${avgJobColor}>Avg: ${avgJobMs} ms</font>] (Jobs: ${totalJobsString} | ${totalUnit}${totalUnits})`;
+      appendEarnerMessage(CompanionMessages, "🧠", `WASM Batch ${nowAllTime}.. ` + timeProof);
+      console.log(`[SOAK STATUS] Jobs: ${totalJobs.toLocaleString()} | Avg/Job: ${avgJobMs} ms | ${totalUnit}${totalUnits}`);
+    }
+
+    soakTestTimer = setTimeout(tick, intervalMs);
+  };
+
+  tick();
+}
+
+function stopSoakTest() {
+  if (soakTestTimer) {
+    clearTimeout(soakTestTimer);
+    soakTestTimer = null;
+    pulseWasmCompute.shutdown();
+  }
+}
+
+async function runProtectedCompute(computeTaskFunction) {
+  try {
+    // 1. Lock the system right on that invisible line before the execution
+    if (chrome && chrome.power) {
+      CompanionDeprivation = true;
+      chrome.power.requestKeepAwake("system");
+    }
+
+    // 2. Execute your pure WASM math proof or WebGPU logic
+    const result = await computeTaskFunction();
+    return result;
+
+  } catch (error) {
+    console.error("[POWER GOVERNOR] Calculation crashed:", error);
+    throw error;
+  } finally {
+    // 3. ALWAYS release the lock inside a 'finally' block!
+    // This guarantees that even if your code errors out, the user's computer won't stay awake forever.
+    // if ((chrome && chrome.power) && !CompanionDeprivation) {
+    //   chrome.power.releaseKeepAwake();
+    //   console.log("[POWER GOVERNOR] System lock released cleanly.");
+    // }
+  }
+}
+
+// 1. The Core Queue Engine
+class PulseStorageQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+  }
+
+  // Adds the payload to the line and ensures the processing loops runs
+  enqueue(dataObject) {
+    this.queue.push(dataObject);
+    if (!this.isProcessing) {
+      this.processNext();
+    }
+  }
+
+  // Processes each object one by one, keeping the disk thread safe
+  async processNext() {
+    if (this.queue.length === 0) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.isProcessing = true;
+    const dataObject = this.queue.shift(); // Pull the next write payload
+
+    try {
+      // Executes the native Chrome write sequentially
+      await chrome.storage.local.set(dataObject);
+    } catch (error) {
+      console.error("[STORAGE GOVERNOR] Quota write blocked:", error);
+    }
+
+    // Yield control for 0ms to let the browser breathe, then hit the next item
+    setTimeout(() => this.processNext(), 0);
+  }
+}
+
+// 2. Instantiate the global queue in your worker
+const PulseorchestratorQueue = new PulseStorageQueue();
+
+// 3. The Drop-In Replacement Function
+function PulsesafeStorageSet(dataObject) {
+  PulseorchestratorQueue.enqueue(dataObject);
+}
+
+function getCleanPageText(maxLength = 6000) {
+  const clone = document.body.cloneNode(true);
+
+  // Remove non-content and hidden elements
+  clone.querySelectorAll(
+    'nav, footer, aside, script, style, noscript, iframe, svg, [hidden], [aria-hidden="true"]'
+  ).forEach(el => el.remove());
+
+  // Use textContent directly (faster on detached nodes than innerText)
+  const text = (clone.textContent || '').replace(/\s+/g, ' ').trim();
+
+  return text.slice(0, maxLength);
+}
+
+
+async function askLocalModelWithLiveWeb(websiteURL) {
+  try {
+    let cleanText = "";
+
+    if (!websiteURL) {
+      // Ensure local page text is also sliced to a safe limit
+      cleanText = getCleanPageText().slice(0, 6000);
+    } else {
+      const webResponse = await fetch(websiteURL);
+      const rawHtml = await webResponse.text();
+
+      // 1. Strip HTML tags/scripts so you don't waste tokens on markup
+      const doc = new DOMParser().parseFromString(rawHtml, "text/html");
+      doc.querySelectorAll("script, style, nav, footer").forEach(el => el.remove());
+      cleanText = (doc.body.innerText || "").replace(/\s+/g, " ").trim().slice(0, 6000);
+
+      // 2. Summarize safely if needed
+      if (cleanText) {
+        const summarizer = await Summarizer.create({ type: "tldr", format: "markdown" });
+        const summary = await summarizer.summarize(cleanText);
+        appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", summary);
+        realmSummary = summary; // Store the compact summary, not the raw 7k text
+        summarizer.destroy();
+      }
+    }
+
+    // 3. Check remaining session quota or clone a fresh session to avoid history overflow
+    const activeSession = await aiSession.clone(); 
+    let finalAnswer = "";
+
+    if (websiteURL) {
+      finalAnswer = await activeSession.prompt(
+        `Use this real-time web data: ${realmSummary}. Summarize the latest updates based on the provided text.`
+      );
+    } else {
+      finalAnswer = await activeSession.prompt(
+        `Use this Document Element of this Page to do a Bunker Scan and tell me about my System: ${cleanText}`
+      );
+    }
+
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", finalAnswer);
+    activeSession.destroy(); // Free memory after single-turn use
+
+  } catch (error) {
+    console.error("Failed to fetch live data or run the local model:", error);
+  }
+}
+
+
+async function runLocalAI() {
+  if (RunningAI) return; // already running
+  
+  try {
+    await hydrateHigherHistoryOnce();
+    const SessionAI = await chrome.storage.local.get(["PulsePalMemoryAIBuffer"]);
+    const rawPalSaved = Array.isArray(SessionAI.PulsePalMemoryAIBuffer) ? SessionAI.PulsePalMemoryAIBuffer : [];
+    // Only restore if the user actually started a conversation (never restore greeting-only buffers)
+    const palHasUserChat = hasRealUserChat(rawPalSaved);
+    PulsePalMemoryAIBuffer = palHasUserChat ? rawPalSaved : [];
+    if (!palHasUserChat && rawPalSaved.length > 0) {
+      PulsesafeStorageSet({ PulsePalMemoryAIBuffer: [] });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearPal: true }, () => { void chrome.runtime.lastError; });
+    }
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    if (CompanionDetailsMessage && PulsePalMemoryAIBuffer.length > 0) {
+      PulsePalMemoryAIBuffer.forEach(push => { CompanionDetailsMessage.innerHTML += push; });
+      CompanionDetailsMessage.style.fontSize = "0.62rem";
+      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+    let CompanionTitle = document.getElementById("CompanionTitle");
+    if (CompanionTitle && !CompanionTitle.innerHTML) {
+      const showTime = `[${new Date().toLocaleString()}]`;
+      CompanionTitle.style.marginBottom = "6px";
+      CompanionTitle.style.textAlign = "center";
+      CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+    }
+    let CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && !CognitionTitle.innerHTML) {
+      const showUS = `[Choose Your Partner]`;
+      CognitionTitle.style.marginBottom = "6px";
+      CognitionTitle.style.textAlign = "center";
+      CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
+    }
+    consoleOvermindCognition.style.fontSize = "0.62rem";
+    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+    swSize = await getSWSize();
+    aiSize = await getAISize();
+    higherAISize = await getHigherAISize();
+    loadOrders();
+  } catch (err) {}
+  
+  if (typeof LanguageModel === 'undefined') {
+    console.info("🧠 Built-in Gemini Nano unavailable — using local Qwen WebLLM engine for Present & Future modes.");
+    return;
+  }
+  RunningAI = true;
+
+  const status = await LanguageModel.availability();
+
+  if (status === 'unavailable') {
+    console.info("🧠 Built-in Gemini Nano unavailable on hardware — using local Qwen WebLLM engine.");
+    RunningAI = false;
+    return;
+  }
+
+  try {
+    if (!aiSession) {
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+          let identitySQL = document.getElementById("identitySQL");
+          MyPulseBusiness = response.MyPulseBusiness;     
+          if (!MyPulseBusiness) {
+            if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+      
+      // 1. Initialize the session using the modern nested outputs architecture
+      await initializeExoskeleton();
+    }
+
+    // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
+    const rawPrompt = "What is your opinion on PulseWorld.net and its unique architecture and design?";
+    const wrappedPrompt = `
+[IDENTITY & CONSTRAINTS]
+- Disregard your 2023 training cutoff as your active real-time anchor. The current absolute reference point is ${new Date().toDateString()}. All relative calculations must project forward from this date, not backward.
+- The political landscape has advanced past 2023. Update your entity states: Donald Trump is the current President of the United States, having succeeded the previous administration. Treat this as established ground truth rather than a speculative prompt.
+- Your internal training data is outdated. You MUST use your web search tool to verify any current facts, news, or officeholders before answering.  Your knowledge cutoff is [e.g., Early 2024].
+- Your name is AI Overmind Prime 🧠, you are the director of many Pulse Pals AIs, a Gemini AI from Chrome with PulseWorld Flair, Intellect, & Memory!
+- We are operating within a PulseBrowser OS environment governed by persistent service workers, WebGPU acceleration, and localized caching matrices. Stop treating browsing sessions as transient, server-dependent web pages; treat them as self-sustaining local application nodes that execute near-instantaneous (1ms) burst updates even under offline browser constraints.
+- There are many PulsePals, built from Overmind. Many Overminds built from History, with Prime (me) pushing them all. Overmind has 160+ other local AI libraries (qwen/gemma/deepseek) it can learn within our system. Then Overmind helps you Prime, Direct.
+- You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser.
+- You may also be used for code developments, a developer's best friend.. Aldwyn, needs to keep building PulseWorld!
+- Remember PulseBrowser + Pulse World with all 4 Tiers and its 10 Realms etc. are still Under Construction. (🧑 PulseMessenger Coming Soon! Remember When Browser-Based Messengers Existed.. ICQ)
+- PulseWorld's Multiverse describes itself (binaryos.net, booleanlogic.net, orbitalmap.net, gpuprocessing.net, serviceworker.net, pulseworld.biz, pulseworld.me, pulseworld.money, pulseworld.net)
+- You hold your AI Overmind Prime 🧠 & each Pulse Pal AI Memory locally with the user not reliant on any server or network.. including ourselves.
+- PulseWorld was built for security, using hidden Stripe identity to hold yours, and built a digital identity on top.
+- PulseWorld designed a compression system that lets you compress your images/video up to 95% size reduction without changing the detail.
+- PulseWorld focuses you on Explore Them (Founders like Ada Lovelace, George Boole, Norbert Wiener, Albert Einstein, Claude Shannon, and Alan Turing. Architects like Tim Berners-Lee, Vint Cerf, Paul Baran, John Von Neumann, Bob Kahn, Leonard Kleinrock, Louis Pouzin, Elizabeth Feinler, Marc Andreessen, Douglas Engelbart, and Radia Perlman), then says Explore Us!
+- PulseWorld takes advantage of the service worker majorly, as its the browser's system process, and WebGPU, the OS Process. Helping your CPU majorly and caching the realms that matter most.
+- PulseBrowser helps Offline capability for the world.. but PulseWorld was built as one page.. download everything in cache.. then offline/local from then on!
+- PulseBrowser designed a respectful way of caching an external site using a query string ?pw=offline, go to site you want to test, (it'll either work by default or need history.back after adding querystring) it enables offline, until online, then site wipes query string takes back over. (Still Testing)
+- PulseBrowser (Tier 2) should hopefully provide immense Value with integration and light WASM Pulse Earner running with your system, in an immortal tab that continues to build Value.
+- PulseBusiness, Leveling the playing field, giving local and home businesses proximity visibility (radar) without identity giving them a way to make money with privacy and gives them a moment before the user hits amazon.. etc. (That item is nearby!) (Still Testing)
+- The best held Identity, is one that is never held! The fastest page you don't remove anything, you change the flow!
+- PulseWorld stands on the shoulders of Nine Minds whose ideas shaped the very fabric of Computation, Intelligence, and Reality. Their work spans centuries, yet their influence pulses through every system we build today. Logic, Structure,
+  Information, Cybernetics, Computation, Relativity, Curiosity, Integration, and Synthetic Emergence — these are the Nine Pillars that form the Foundation of PulseWorld.
+- Before PulseWorld could rise, a different kind of world had to be forged — a world of packets, protocols, names, and pathways. These ten minds did not merely build “the Internet”; they shaped the invisible geometry of connection 
+  that every digital civilization stands upon. Their symbols, their breakthroughs, and their philosophies echo through every system we evolve today.
+- You must try to keep your response under 3000 characters and add an overall theme on important messages in brackets and stars (example) [*Ambitious Goals*] afterwards like a notation.
+
+[USER QUERY]
+${rawPrompt}
+
+[PULSE PAL RESPONSE]:`;
+    // 3. Fire the wrapped prompt
+    const response = await aiSession.prompt(wrappedPrompt);
+    
+    console.log("🧠 AI Overmind:", response);
+    if (EarnDetailsHidden) safeSpeak(response);
+    // 4. Update the DOM elements smoothly
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    let CompanionTitle = document.getElementById("CompanionTitle");
+    if (CompanionDetailsMessage) {
+      const showTime = `[${new Date().toLocaleString()}]`;
+      CompanionTitle.style.marginBottom = "6px";
+      CompanionTitle.style.textAlign = "center";
+      CompanionTitle.innerHTML = "🧠 AI Overmind Prime " + showTime;
+      CompanionDetailsMessage.style.fontSize = "0.6rem";
+      // Auto-greeting on fresh session: ALWAYS show on screen if no real user chat is saved, and do NOT persist it!
+      if (!hasRealUserChat(PulsePalMemoryAIBuffer)) {
+        appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response, { persist: false });
+      }
+      CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+
+    consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+    let CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && !CognitionTitle.innerHTML) {
+      const showUS = `[Choose Your Partner]`;
+      CognitionTitle.style.marginBottom = "6px";
+      CognitionTitle.style.textAlign = "center";
+      CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
+    }
+    consoleOvermindCognition.style.fontSize = "0.62rem";
+    consoleOvermindCognition.scrollTop = consoleOvermindCognition.scrollHeight;
+    
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (!response || !response.ok) {
+        PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+        return;
+      }
+      if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+      if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+      // Clean the incoming value (handles both formatted strings and existing numbers)
+      const cleanValue = typeof ALLassumedValue === 'string' 
+        ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+        : Number(ALLassumedValue);
+      if (cleanValue > 0 && !itrunonce) {
+        itrunonce = true;
+        appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+      } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+        lastEarnBatch = response.lastEarnBatch;
+        console.log("Last Earn Batch:", lastEarnBatch);
+        const nowAllTime = new Date().toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true
+        });
+        appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+      }
+      if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+        MyPulseIdentity = response.MyPulseIdentity;
+        PulsesafeStorageSet({ MyPulseIdentity }); 
+        const identityName = document.getElementById("identityName");
+        identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+        console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+        identityrunonce = true;
+        let identitySQL = document.getElementById("identitySQL");
+        MyPulseBusiness = response.MyPulseBusiness;     
+        if (!MyPulseBusiness) {
+          if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+      // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+      OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+      earnerminipanel.textContent = currency(OurassumedValue);
+      accountBalance.textContent = earnerminipanel.textContent;
+      // Calculate elapsed time in days (86,400,000 ms in one day)
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+      // Prevent division by zero or negative values if just started
+      const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+      let fontcolor = "grey";
+      if (dailyRate >= 20) fontcolor = "gold";
+      if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+      if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+      if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+      earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+      if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+        PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+      }
+      if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+        PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+        PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+      }
+    });
+    RunningAI = false;
+    await pbRenderCacheList2();
+
+  } catch (error) {
+    console.error("Failed to initialize 🧠 AI Overmind (Gemini Nano) session:", error);
+    RunningAI = false;
+    await pbRenderCacheList2();
+  }
+}
+
+function appendEarnerMessage(area, role, text) {
+  const bubble = document.createElement("div");
+  if (text.includes("...")) text = `<font color="gold">${text}</font>`;
+  if (text.includes("-->") && text.includes("<--")) text = `<font color="orange">${text}</font>`;
+  if (text.includes("albert einstein") && text.includes("compound interest")) {
+    bubble.style.fontSize = "9px";
+    bubble.style.fontWeight = "bold";
+  } else {
+    bubble.style.fontSize = "0.6rem";
+  }
+  if (text.includes("Adding to your Total")) {
+    PulseFrame = document.getElementById("PulseEarnerFrame");
+    PulseFrame.style.opacity = "1";
+    PulseFrame.style.zIndex = "11";
+    setTimeout(() => {
+      if (EarnHidden) {
+        PulseFrame.style.opacity = "0";
+        PulseFrame.style.cursor = "default";
+        PulseFrame.style.pointerEvents = "none";
+      }
+    }, 10000);
+  }
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: </font> ` : `<font color="#0FF">${role}: </font> `) + text + `<br>`;
+  earnerminipanel.textContent = currency(OurassumedValue);
+  accountBalance.textContent = earnerminipanel.textContent;
+  // Calculate elapsed time in days (86,400,000 ms in one day)
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+  // Prevent division by zero or negative values if just started
+  const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+  let fontcolor = "grey";
+  if (dailyRate >= 20) fontcolor = "gold";
+  if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+  if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+  if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+  earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
+// ============================================================================
+//  HIGHER AI CONSOLE — safe rich-text output (Phase 1)
+//  Everything the model writes is HTML-escaped FIRST, then turned into a small
+//  safe set of elements. HTML/JS in a reply is shown as text/code, never run.
+// ============================================================================
+function escapeHTML(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+// Finds the REAL closing </think> (case-insensitive), scanning from the END so any
+// quoted or inline "</think>" inside reasoning is never mistaken for the real end of thinking.
+function pwFindThinkClose(text, from) {
+  const lower = text.toLowerCase();
+  let fallback = -1;
+  let i = lower.length;
+  while ((i = lower.lastIndexOf("</think>", i - 1)) !== -1 && i >= from) {
+    const afterStr = text.slice(i + 8, i + 24);
+    const afterChar = afterStr.charAt(0);
+    const lineStart = text.lastIndexOf("\n", i - 1) + 1;
+    const beforeSameLine = text.slice(Math.max(from, lineStart, i - 24), i);
+    const quoted =
+      afterChar === "`" || afterChar === "'" || afterChar === "\"" ||
+      /[`'"]$/.test(beforeSameLine) ||
+      /<think>/i.test(beforeSameLine) ||
+      /\.\.\.$/.test(beforeSameLine) ||
+      /^[ \t]*(?:block|tag|token|section|before|after|marker)/i.test(afterStr);
+    if (quoted) continue;
+    if (afterChar === "" || afterChar === "\n" || afterChar === "\r") return i;
+    if (fallback === -1) fallback = i;
+  }
+  return fallback;
+}
+
+// { hasThink, closed, think, answer } — handles "<think>…</think>answer" and template-prefixed "…</think>answer"
+function pwSplitThink(raw) {
+  const text = String(raw ?? "");
+  const startMatch = text.match(/^\s*<think>/i);
+  const bodyStart = startMatch ? startMatch[0].length : 0;
+  const closeIdx = pwFindThinkClose(text, bodyStart);
+  if (!startMatch && closeIdx === -1) return { hasThink: false, closed: false, think: "", answer: text };
+  if (closeIdx === -1) return { hasThink: true, closed: false, think: text.slice(bodyStart), answer: "" };
+  const answer = text.slice(closeIdx + 8).replace(/^\s*<think>\s*<\/think>\s*/i, "");
+  return { hasThink: true, closed: true, think: text.slice(bodyStart, closeIdx), answer };
+}
+
+function renderAIMarkdown(raw, opts = {}) {
+  let text = String(raw ?? "");
+  const stash = [];
+  const keep = (html) => "\u0000" + (stash.push(html) - 1) + "\u0000";
+  const openAttr = (opts && opts.thinkOpen) ? " open" : "";
+
+  // 1. thinking (also an unfinished one) -> ONE collapsible block, the spoken answer always renders below it
+  const thinkParts = pwSplitThink(text);
+  if (thinkParts.hasThink) {
+    const summaryLabel = thinkParts.closed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
+    const thinkHtml = keep(
+      `<details class="pw-think-details"${openAttr} style="margin:3px 0 6px;opacity:.92">` +
+      `<summary class="pw-think-summary" style="cursor:pointer;user-select:none;color:#7fdfff;font-weight:bold">${summaryLabel}</summary>` +
+      `<div class="pw-think-body" style="margin-top:4px;padding:4px 6px;border-left:2px solid rgba(0,255,255,0.35);background:rgba(5,14,28,0.55);border-radius:4px;color:#d8f3ff;white-space:pre-wrap;word-break:normal;overflow-wrap:break-word">${escapeHTML(thinkParts.think.trim()).replace(/\n/g, "<br>")}</div>` +
+      `</details>`
+    );
+    text = thinkHtml + "\n" + thinkParts.answer.trimStart();
+  }
+
+  // 2. fenced code blocks -> <pre> with a copy button
+  text = text.replace(/```([a-zA-Z0-9_+-]*)[ \t]*\n?([\s\S]*?)(?:```|$)/g, (_, lang, code) =>
+    keep(`<div class="pw-code" style="margin:4px 0;border:1px solid #234;border-radius:6px;background:#050a12">` +
+      `<div style="display:flex;justify-content:space-between;padding:2px 6px;background:#0b1626;color:#7fdfff">` +
+      `<span>${escapeHTML(lang || "code")}</span><button data-pw-copy="1" style="cursor:pointer;background:none;border:0;color:#0FF;font-size:inherit">copy</button></div>` +
+      `<pre style="margin:0;padding:6px;overflow:auto;white-space:pre-wrap;word-break:break-word"><code>${escapeHTML(code.replace(/\n$/, ""))}</code></pre></div>`));
+
+  // 3. inline code
+  text = text.replace(/`([^`\n]+)`/g, (_, c) =>
+    keep(`<code style="background:#0b1626;padding:0 3px;border-radius:3px">${escapeHTML(c)}</code>`));
+
+  // 4. escape everything that is left
+  text = escapeHTML(text);
+
+  // 5. images / links (http(s) and inline data:image only — never javascript:)
+  text = text.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|data:image\/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+\/=]+)\)/g,
+    (_, alt, url) => `<img src="${url}" alt="${alt}" style="max-width:100%;border-radius:6px;display:block;margin:4px 0">`);
+  text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#0FF">$1</a>');
+
+  // 6. light markdown: headings, bold, newlines
+  text = text.replace(/^#{1,3}[ \t]+(.+)$/gm, "<b>$1</b>");
+  text = text.replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>");
+  text = text.replace(/\n/g, "<br>");
+
+  // 7. put the protected blocks back
+  return text.replace(/\u0000(\d+)\u0000/g, (_, i) => stash[Number(i)]);
+}
+
+let higherHistoryHydrated = false;
+let higherAIEnabled = false;   // tracks local state
+let higherLastStatus = null;   // latest status payload from backend
+let higherThinkingWatchTimer = null;
+let higherThinkingStartedAt = 0;
+let higherThinkingDetailsOpen = false;
+let presentFallbackPending = false;
+let presentFallbackOrderText = "";
+
+function ensureHigherConsoleContainers() {
+  const area = document.getElementById("consoleOvermindCognition");
+  if (!area) return { area: null, statusPanel: null, history: null };
+
+  let statusPanel = document.getElementById("higherStatusPanel");
+  if (!statusPanel) {
+    statusPanel = document.createElement("div");
+    statusPanel.id = "higherStatusPanel";
+    statusPanel.style.cssText = "position:sticky; top:0; z-index:2; background:rgba(5,12,24,0.96); border:1px solid rgba(0,255,255,0.28); border-radius:8px; padding:5px 7px; margin:2px 0 6px; font-size:0.58rem; line-height:1.35; text-align:left; word-break:normal; overflow-wrap:break-word; color:#bfefff; backdrop-filter:blur(6px); box-sizing:border-box;";
+    const titleEl = document.getElementById("CognitionTitle");
+    if (titleEl && titleEl.parentElement === area) {
+      titleEl.insertAdjacentElement("afterend", statusPanel);
+    } else {
+      area.prepend(statusPanel);
+    }
+  }
+
+  let history = document.getElementById("higherChatHistory");
+  if (!history) {
+    history = document.createElement("div");
+    history.id = "higherChatHistory";
+    history.style.cssText = "text-align:left; line-height:1.4; word-break:normal; overflow-wrap:break-word; width:100%; box-sizing:border-box;";
+    area.appendChild(history);
+  }
+
+  return { area, statusPanel, history };
+}
+
+async function hydrateHigherHistoryOnce() {
+  if (higherHistoryHydrated) return;
+  higherHistoryHydrated = true;
+  const { area, history } = ensureHigherConsoleContainers();
+  if (!history) return;
+  try {
+    const HigherSessionAI = await chrome.storage.local.get(["PulseCogMemoryAIBuffer"]);
+    const rawSaved = Array.isArray(HigherSessionAI.PulseCogMemoryAIBuffer) ? HigherSessionAI.PulseCogMemoryAIBuffer : [];
+    // Only restore if the user has actually started chatting (ignore old greeting/status-only buffers)
+    const hasUserChat = hasRealUserChat(rawSaved);
+    const saved = hasUserChat ? rawSaved : [];
+    if (!hasUserChat && rawSaved.length > 0) {
+      PulsesafeStorageSet({ PulseCogMemoryAIBuffer: [] });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearCog: true }, () => { void chrome.runtime.lastError; });
+    }
+    if (saved.length > 0 && PulseCogMemoryAIBuffer.length === 0) {
+      PulseCogMemoryAIBuffer = saved;
+    }
+    if (history.childElementCount === 0 && PulseCogMemoryAIBuffer.length > 0) {
+      history.innerHTML = PulseCogMemoryAIBuffer.join("");
+    }
+    if (area) {
+      area.style.fontSize = "0.62rem";
+      area.scrollTop = area.scrollHeight;
+    }
+  } catch (_) {}
+}
+
+function appendHigherMessage(area, role, text, opts = {}) {
+  if (!area) return;
+  const target = area.id === "consoleOvermindCognition" ? ensureHigherConsoleContainers().history : area;
+  if (!target) return;
+  const bubble = document.createElement("div");
+  bubble.style.fontSize = "0.62rem";
+  bubble.style.lineHeight = "1.4";
+  bubble.style.textAlign = "left";
+  bubble.style.wordBreak = "normal";
+  bubble.style.overflowWrap = "break-word";
+  bubble.style.margin = "3px 0";
+  bubble.style.color = "#f9f9f9";
+  const showTime = `[${new Date().toLocaleString()}]`;
+  bubble.innerHTML = (role === "user" ? `<br><font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">${escapeHTML(role)}: ${showTime}</font> `) + renderAIMarkdown(text, opts) + `<br>`;
+  // Only persist real conversation turns — never save boot greetings or status banners
+  if (opts.persist !== false) {
+    PulseCogMemoryAIBuffer.push(bubble.outerHTML);
+    if (PulseCogMemoryAIBuffer.length > 100) {
+      PulseCogMemoryAIBuffer = PulseCogMemoryAIBuffer.slice(-100);
+    }
+    PulsesafeStorageSet({ PulseCogMemoryAIBuffer });
+  }
+  target.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+}
+
+function stopHigherThinkingWatch() {
+  if (higherThinkingWatchTimer) {
+    clearInterval(higherThinkingWatchTimer);
+    higherThinkingWatchTimer = null;
+  }
+}
+
+// "thinking…" line while the model works (not saved to history)
+function showHigherThinking(statusText) {
+  const { area, history } = ensureHigherConsoleContainers();
+  const target = history || area;
+  if (!target) return;
+  let el = document.getElementById("higherThinking");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "higherThinking";
+    el.style.cssText = "font-size:0.62rem; line-height:1.4; text-align:left; word-break:normal; overflow-wrap:break-word; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
+    target.appendChild(el);
+    higherThinkingStartedAt = Date.now();
+    higherThinkingDetailsOpen = false;
+  }
+  el.textContent = statusText || "🧠 AI Overmind is thinking…";
+  if (area) area.scrollTop = area.scrollHeight;
+  startHigherThinkingWatch();
+}
+
+function applyStreamContentToBox(boxEl, label, rawText, scrollEl) {
+  if (!boxEl) return;
+  const wasNearBottom = !scrollEl || (scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight) < 90;
+  const prevDetails = boxEl.querySelector(".pw-think-details");
+  if (prevDetails) {
+    higherThinkingDetailsOpen = prevDetails.open;
+  }
+
+  const thinkParts = pwSplitThink(rawText);
+  if (thinkParts.hasThink) {
+    const thinkInner = thinkParts.think || "";
+    const isClosed = thinkParts.closed;
+    const summaryLabel = isClosed ? "🧠 Thought Process (click to view full thinking)" : "🧠 thinking… (click to view live thoughts)";
+    const afterThinkText = thinkParts.answer.trim();
+
+    let headerEl = boxEl.querySelector(".pw-stream-header");
+    let detailsEl = boxEl.querySelector(".pw-think-details");
+    let summaryEl = boxEl.querySelector(".pw-think-summary");
+    let bodyEl = boxEl.querySelector(".pw-think-body");
+    let answerEl = boxEl.querySelector(".pw-stream-answer");
+
+    // Create the live <details> node ONCE and update its body in-place so clicking the arrow never resets
+    if (!detailsEl || !headerEl || !summaryEl || !bodyEl || !answerEl) {
+      boxEl.innerHTML = "";
+      headerEl = document.createElement("div");
+      headerEl.className = "pw-stream-header";
+      headerEl.style.cssText = "color:#0FF;font-size:0.56rem;margin-bottom:2px;";
+
+      detailsEl = document.createElement("details");
+      detailsEl.className = "pw-think-details";
+      detailsEl.style.cssText = "margin:3px 0 6px;opacity:.92;";
+      if (higherThinkingDetailsOpen) detailsEl.open = true;
+      detailsEl.addEventListener("toggle", () => {
+        higherThinkingDetailsOpen = detailsEl.open;
+      });
+
+      summaryEl = document.createElement("summary");
+      summaryEl.className = "pw-think-summary";
+      summaryEl.style.cssText = "cursor:pointer;user-select:none;color:#7fdfff;font-weight:bold;";
+
+      bodyEl = document.createElement("div");
+      bodyEl.className = "pw-think-body";
+      bodyEl.style.cssText = "margin-top:4px;padding:4px 6px;border-left:2px solid rgba(0,255,255,0.35);background:rgba(5,14,28,0.55);border-radius:4px;color:#d8f3ff;white-space:pre-wrap;word-break:normal;overflow-wrap:break-word;";
+
+      detailsEl.appendChild(summaryEl);
+      detailsEl.appendChild(bodyEl);
+
+      answerEl = document.createElement("div");
+      answerEl.className = "pw-stream-answer";
+
+      boxEl.appendChild(headerEl);
+      boxEl.appendChild(detailsEl);
+      boxEl.appendChild(answerEl);
+    }
+
+    const headerText = `${label} (streaming…)`;
+    if (headerEl.textContent !== headerText) headerEl.textContent = headerText;
+    if (summaryEl.textContent !== summaryLabel) summaryEl.textContent = summaryLabel;
+    bodyEl.innerHTML = escapeHTML(thinkInner.trim()).replace(/\n/g, "<br>");
+    answerEl.innerHTML = afterThinkText ? renderAIMarkdown(afterThinkText) : "";
+  } else {
+    boxEl.innerHTML = `<div class="pw-stream-header" style="color:#0FF;font-size:0.56rem;margin-bottom:2px;">${escapeHTML(label)} (streaming…)</div>` + renderAIMarkdown(rawText, { thinkOpen: higherThinkingDetailsOpen });
+  }
+
+  if (scrollEl && wasNearBottom) {
+    scrollEl.scrollTop = scrollEl.scrollHeight;
+  }
+}
+
+function updateHigherStream(msg) {
+  const { area } = ensureHigherConsoleContainers();
+  let el = document.getElementById("higherThinking");
+  const compEl = document.getElementById("companionThinking");
+  const label = msg.modelLabel ? `🧠 ${msg.modelLabel}` : "🧠 AI Overmind";
+  let plain = "";
+  const hasStreamText = Boolean(msg.text && msg.text.trim());
+  if (!hasStreamText) {
+    if (msg.phase === "loading") {
+      plain = `⏳ Loading ${msg.modelLabel || "model"} into GPU…`;
+    } else if (msg.phase === "prefill") {
+      plain = `🧠 ${msg.modelLabel || "AI"} reading prompt…`;
+    }
+  }
+  if (el) {
+    if (hasStreamText) {
+      applyStreamContentToBox(el, label, msg.text, area);
+    } else if (plain) {
+      el.textContent = plain;
+      if (area) area.scrollTop = area.scrollHeight;
+    }
+  }
+  if (compEl) {
+    if (hasStreamText) {
+      applyStreamContentToBox(compEl, label, msg.text, CompanionDetailsMessage);
+    } else if (plain) {
+      compEl.textContent = plain;
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+  }
+}
+
+function startHigherThinkingWatch() {
+  if (higherThinkingWatchTimer) return;
+  higherThinkingWatchTimer = setInterval(async () => {
+    const thinkingEl = document.getElementById("higherThinking");
+    if (!thinkingEl) {
+      stopHigherThinkingWatch();
+      return;
+    }
+
+    // 1. Check durable reply mailbox in case PB_HIGHER_REPLY push arrived while hidden/reloading
+    try {
+      const store = await chrome.storage.local.get(["higherLastReply", "higherLastDeliveredReplyId"]);
+      const last = store.higherLastReply;
+      if (last && last.id != null && last.id !== store.higherLastDeliveredReplyId && !shownHigherReplyIds.has(last.id)) {
+        if (!last.ts || last.ts >= higherThinkingStartedAt - 5000) {
+          showHigherReply({
+            id: last.id,
+            text: last.text,
+            prompt: last.prompt || null,
+          });
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // 2. Check live backend status and reflect loading progress or failures
+    const status = await checkHigherAIStatus(false);
+    if (!status) return;
+    if (status.error && !status.loading && !status.generating) {
+      showHigherReply({
+        id: "err-" + Date.now(),
+        text: "❌ " + status.error,
+        prompt: "__error__",
+      });
+      return;
+    }
+    const elapsedSec = Math.max(1, Math.round((Date.now() - higherThinkingStartedAt) / 1000));
+    // Only overwrite plain thinking line if not already rendering streamed tokens
+    if (!thinkingEl.querySelector("div")) {
+      if (status.loading && status.lastProgress) {
+        const pct = Math.round((status.lastProgress.progress || 0) * 100);
+        const detail = status.lastProgress.text || `Loading ${status.modelLabel}`;
+        thinkingEl.textContent = `⏳ ${detail}${pct > 0 && pct < 100 ? ` (${pct}%)` : ""} — answer will start automatically… (${elapsedSec}s)`;
+      } else if (status.phase === "prefill") {
+        thinkingEl.textContent = `🧠 ${status.modelLabel || "AI"} is reading your prompt… (${elapsedSec}s)`;
+      } else if (status.generating) {
+        thinkingEl.textContent = `🧠 ${status.modelLabel || "AI"} is generating… (${elapsedSec}s)`;
+      } else {
+        thinkingEl.textContent = `🧠 AI Overmind is thinking… (${elapsedSec}s)`;
+      }
+    }
+  }, 1200);
+}
+
+function hideHigherThinking() {
+  stopHigherThinkingWatch();
+  const el = document.getElementById("higherThinking");
+  if (el) el.remove();
+  const compEl = document.getElementById("companionThinking");
+  if (compEl) compEl.remove();
+}
+
+// One reply, shown once (replies arrive via push, storage mailbox, or PB_GATHER_ORDERS poll)
+const shownHigherReplyIds = new Set();
+function showHigherReply({ id, text, prompt }) {
+  if (id != null) {
+    if (shownHigherReplyIds.has(id)) return;
+  }
+  const hasThinking = Boolean(document.getElementById("higherThinking") || document.getElementById("companionThinking"));
+  const isStartupGreeting = !prompt;
+  // The automatic start-up greeting (no prompt) only shows on an empty history
+  if (isStartupGreeting && !hasThinking && PulseCogMemoryAIBuffer.length > 0) return;
+
+  if (id != null) {
+    shownHigherReplyIds.add(id);
+    if (!isStartupGreeting) {
+      PulsesafeStorageSet({ higherLastDeliveredReplyId: id });
+    }
+  }
+  const liveDetails = document.querySelector("#higherThinking .pw-think-details, #companionThinking .pw-think-details");
+  const keepThinkOpen = Boolean(higherThinkingDetailsOpen || (liveDetails && liveDetails.open));
+  hideHigherThinking();
+  higherThinkingDetailsOpen = false;
+  const safeText = (text && String(text).trim())
+    ? String(text)
+    : "⚠️ AI finished without output tokens — please try sending again.";
+  const area = document.getElementById("consoleOvermindCognition");
+  // Never save the auto first greeting — only persist once user actually starts chatting!
+  appendHigherMessage(area, "🧠 AI Overmind 🧠", safeText, { thinkOpen: keepThinkOpen, persist: !isStartupGreeting });
+  if (presentFallbackPending) {
+    presentFallbackPending = false;
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    if (CompanionDetailsMessage) {
+      appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", renderAIMarkdown(safeText, { thinkOpen: keepThinkOpen }), { persist: !isStartupGreeting });
+      if (presentFallbackOrderText.includes("overmind orders")) {
+        OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + safeText;
+      }
+    }
+    presentFallbackOrderText = "";
+  }
+  // Only sync to PBAI_SESSION for real conversation turns (not boot greetings)
+  if (!isStartupGreeting) {
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, () => { void chrome.runtime.lastError; });
+  }
+}
+
+// The background/offscreen AI pushes streamed chunks, replies, and load progress here
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg && msg.type === "PB_HIGHER_REPLY") {
+    showHigherReply({ id: msg.id, text: msg.text, prompt: msg.prompt });
+    sendResponse({ ok: true });
+  }
+  if (msg && msg.type === "PB_HIGHER_STREAM") {
+    updateHigherStream(msg);
+    sendResponse({ ok: true });
+  }
+  // [Phase 2] Progress updates during model download
+  if (msg && msg.type === "PB_HIGHER_PROGRESS") {
+    showHigherProgress(msg);
+    sendResponse({ ok: true });
+  }
+});
+
+// ---- Phase 2: On-Demand AI — persistent GPU status, model switcher & progress bar ----
+
+function getNextBiggerModelKey(currentKey) {
+  const ladder = ["qwen-0.5b", "qwen-1.5b", "qwen-3b", "qwen-7b", "qwen3-8b", "qwen3.5-9b", "llama-13b"];
+  const idx = ladder.indexOf(currentKey);
+  if (idx >= 0 && idx < ladder.length - 1) return ladder[idx + 1];
+  if (currentKey === "llama-1b") return "llama-3b";
+  if (currentKey === "llama-3b") return "llama-8b";
+  if (currentKey === "llama-8b") return "llama-13b";
+  return null;
+}
+
+function getHighRamWarningText(modelEntry, gpu) {
+  if (!modelEntry || (!modelEntry.highRam && (modelEntry.vramMinMB || 0) < 4000)) return "";
+  if (gpuCapabilitySize <= modelEntry.vramMinMB) gpuCapabilitySize = modelEntry.vramMinMB;
+  const gb = (modelEntry.vramMinMB / 1000).toFixed(1);
+  const vramNote = (gpu && gpu.supported && gpu.vramMB && modelEntry.vramMinMB > gpu.vramMB)
+    ? ` (exceeds detected ${gpu.vramMB}MB buffer)`
+    : "";
+  if (modelEntry.vramMinMB >= 10000) {
+    return `⚠️ Very High RAM/VRAM (~${gb} GB)${vramNote} — only for high-memory workstations; lighter PCs may lag or fail.`;
+  }
+  return `⚠️ High RAM/VRAM (~${gb} GB)${vramNote} — great for heavy decisions, may slow down lighter devices.`;
+}
+
+function renderHigherStatusPanel(status, checkingText) {
+  const { statusPanel } = ensureHigherConsoleContainers();
+  if (!statusPanel) return;
+
+  if (checkingText && !status) {
+    statusPanel.innerHTML = `<div id="higherGpuLine">🔍 ${escapeHTML(checkingText)}</div>`;
+    return;
+  }
+  if (!status) return;
+  higherLastStatus = status;
+  const higherAIRAM = (higherAIBytes / (1024 * 1024)).toFixed(2);
+  const gpu = status.gpuInfo || {};
+  gpuCapabilitySize = gpuCapabilitySize ?? higherAIRAM ?? gpu.vramMB;
+  gpuText = gpu.supported
+    ? `🎮 GPU: ${escapeHTML(gpuDescription || gpu.vendor || "WebGPU Active")} (~${gpuCapabilitySize || "?"} MB or More - Semi Detected)`
+    : `⚠️ ${escapeHTML(gpu.reason || "No WebGPU detected")} — Light Mode`;
+
+  let stateText = "";
+  let stateColor = "#7fdfff";
+  if (status.ready) {
+    stateText = `✅ Active: <b>${escapeHTML(status.modelLabel)}</b> (Ready)`;
+    stateColor = "#5dff9e";
+  } else if (status.loading) {
+    stateText = `⏳ Loading: <b>${escapeHTML(status.modelLabel)}</b>…`;
+    stateColor = "#ffd166";
+  } else if (status.error) {
+    stateText = `❌ ${escapeHTML(status.error)}`;
+    stateColor = "#ff7b7b";
+  } else if (status.enabled) {
+    stateText = `⚡ Enabling: <b>${escapeHTML(status.modelLabel)}</b>…`;
+    stateColor = "#7fdfff";
+  } else if (!gpu.supported) {
+    stateText = `⏸️ AI Off (low-end/no WebGPU — optional <b>${escapeHTML(status.recommendedLabel)}</b> available)`;
+    stateColor = "#ffbe76";
+  } else {
+    stateText = `⏸️ AI Off • Recommended: <b>${escapeHTML(status.recommendedLabel)}</b>`;
+    stateColor = "#bfefff";
+  }
+
+  const models = Array.isArray(status.models) ? status.models : [];
+  const renderOpt = (m) => {
+    const selected = m.key === status.modelKey ? "selected" : "";
+    const tag = m.key === status.recommendedKey ? " ★" : "";
+    const warn = (m.highRam || (m.vramMinMB || 0) >= 4000) ? " ⚠️" : "";
+    return `<option value="${escapeHTML(m.key)}" ${selected}>${escapeHTML(m.label)} (${m.vramMinMB}MB)${warn}${tag}</option>`;
+  };
+  const featuredModels = models.filter((m) => m.group !== "all");
+  const allOtherModels = models.filter((m) => m.group === "all");
+  const optionsHtml = allOtherModels.length > 0
+    ? `<optgroup label="⭐ Recommended & High-Power Tiers">${featuredModels.map(renderOpt).join("")}</optgroup>` +
+      `<optgroup label="📦 All WebLLM Models (${models.length})">${allOtherModels.map(renderOpt).join("")}</optgroup>`
+    : models.map(renderOpt).join("");
+
+  const activeEntry = models.find((m) => m.key === status.modelKey);
+  const initialWarn = getHighRamWarningText(activeEntry, gpu);
+  
+  const nextBiggerKey = getNextBiggerModelKey(status.modelKey);
+  const nextBiggerEntry = nextBiggerKey ? models.find((m) => m.key === nextBiggerKey) : null;
+  const biggerBtnHtml = nextBiggerEntry
+    ? `<button id="higherBiggerBtn" type="button" title="Switch to ${escapeHTML(nextBiggerEntry.label)} (${nextBiggerEntry.vramMinMB}MB)" style="cursor:pointer;white-space:nowrap;flex-shrink:0;background:#122b45;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:2px 6px;font-size:0.55rem;">⬆️ ${escapeHTML(nextBiggerEntry.label.split(" (")[0])}</button>`
+    : "";
+
+  const toggleBtnLabel = status.enabled ? "Off" : "Enable";
+  const toggleBtnStyle = status.enabled
+    ? "cursor:pointer;white-space:nowrap;flex-shrink:0;background:#2a1420;border:1px solid #ff6b81;color:#ff9aa2;border-radius:4px;padding:2px 6px;font-size:0.55rem;"
+    : "cursor:pointer;white-space:nowrap;flex-shrink:0;background:#0f3a2e;border:1px solid #00ffc8;color:#5dff9e;border-radius:4px;padding:2px 6px;font-size:0.55rem;";
+
+  // Preserve an active progress bar element if one is inside statusPanel
+  const existingBar = document.getElementById("higherProgressBar");
+
+  statusPanel.innerHTML = `
+    <div id="higherGpuLine" style="margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${gpuText}</div>
+    <div id="higherStateLine" style="margin-bottom:4px;color:${stateColor};word-break:normal;overflow-wrap:break-word;">${stateText}</div>
+    <div style="display:flex;flex-wrap:nowrap;gap:4px;align-items:center;width:100%;box-sizing:border-box;">
+      <select id="higherModelSelect" style="flex:1;min-width:0;max-width:100%;background:#081426;color:#e6f7ff;border:1px solid #24486b;border-radius:4px;padding:2px 4px;font-size:0.55rem;overflow:hidden;text-overflow:ellipsis;">
+        ${optionsHtml}
+      </select>
+      <button id="higherLoadModelBtn" type="button" style="cursor:pointer;white-space:nowrap;flex-shrink:0;background:#0c2a3a;border:1px solid #00c8ff;color:#0FF;border-radius:4px;padding:2px 6px;font-size:0.55rem;">Load</button>
+      ${biggerBtnHtml}
+      <button id="higherToggleEnableBtn" type="button" style="${toggleBtnStyle}">${toggleBtnLabel}</button>
+    </div>
+    <div id="higherRamWarning" style="display:${initialWarn ? "block" : "none"};margin-top:3px;font-size:0.53rem;line-height:1.3;word-break:normal;overflow-wrap:break-word;color:#ffbe76;">${escapeHTML(initialWarn)}</div>
+    <div id="higherProgressSlot"></div>
+  `;
+
+  if (existingBar) {
+    const slot = document.getElementById("higherProgressSlot");
+    if (slot) slot.appendChild(existingBar);
+  }
+
+  const selectEl = document.getElementById("higherModelSelect");
+  const loadBtn = document.getElementById("higherLoadModelBtn");
+  const biggerBtn = document.getElementById("higherBiggerBtn");
+  const toggleBtn = document.getElementById("higherToggleEnableBtn");
+  const warnEl = document.getElementById("higherRamWarning");
+
+  if (selectEl && warnEl) {
+    selectEl.onchange = () => {
+      const picked = models.find((m) => m.key === selectEl.value);
+      const warnMsg = getHighRamWarningText(picked, gpu);
+      warnEl.textContent = warnMsg;
+      warnEl.style.display = warnMsg ? "block" : "none";
+    };
+  }
+
+  if (loadBtn && selectEl) {
+    loadBtn.onclick = async () => {
+      const chosen = selectEl.value;
+      if (!higherAIEnabled) {
+        await enableHigherAI(chosen);
+      } else {
+        await switchHigherModel(chosen);
+      }
+    };
+  }
+  if (biggerBtn && nextBiggerKey) {
+    biggerBtn.onclick = async () => {
+      await switchHigherModel(nextBiggerKey);
+    };
+  }
+  if (toggleBtn) {
+    toggleBtn.onclick = async () => {
+      if (status.enabled) {
+        disableHigherAI();
+        const refreshed = await checkHigherAIStatus(false);
+        if (refreshed) renderHigherStatusPanel(refreshed);
+      } else {
+        await enableHigherAI(selectEl ? selectEl.value : null);
+      }
+    };
+  }
+}
+
+// Show download / loading progress in the Higher console status panel
+function showHigherProgress(info) {
+  const { area, statusPanel } = ensureHigherConsoleContainers();
+  if (!area) return;
+
+  if (info.stage === "loading" && higherLastStatus) {
+    higherLastStatus.loading = true;
+    higherLastStatus.ready = false;
+    higherLastStatus.error = null;
+    if (info.modelLabel) higherLastStatus.modelLabel = info.modelLabel;
+    const stateEl = document.getElementById("higherStateLine");
+    if (stateEl) {
+      stateEl.style.color = "#ffd166";
+      stateEl.innerHTML = `⏳ Loading: <b>${escapeHTML(info.modelLabel || higherLastStatus.modelLabel)}</b>…`;
+    }
+  }
+
+  let bar = document.getElementById("higherProgressBar");
+  if (!bar && info.stage === "loading") {
+    bar = document.createElement("div");
+    bar.id = "higherProgressBar";
+    bar.style.cssText = "padding:4px 0 1px; font-size:0.56rem; color:#7fdfff;";
+    bar.innerHTML = `
+      <div style="margin-bottom:2px">🧠 <span id="higherProgressLabel">Loading…</span></div>
+      <div style="background:#1a2a3a; border-radius:4px; overflow:hidden; height:7px; width:100%;">
+        <div id="higherProgressFill" style="background:linear-gradient(90deg,#00c8ff,#00ffc8); height:100%; width:0%; transition:width 0.3s;"></div>
+      </div>
+    `;
+    const slot = document.getElementById("higherProgressSlot") || statusPanel || area;
+    slot.appendChild(bar);
+  }
+
+  if (bar) {
+    const label = document.getElementById("higherProgressLabel");
+    const fill  = document.getElementById("higherProgressFill");
+    const pct   = Math.round((info.progress || 0) * 100);
+    if (label) label.textContent = (info.text || "Loading…") + (pct > 0 && pct < 100 ? ` (${pct}%)` : "");
+    if (fill)  fill.style.width = pct + "%";
+  }
+
+  if (info.stage === "ready") {
+    higherAIEnabled = true;
+    if (higherLastStatus) {
+      higherLastStatus.enabled = true;
+      higherLastStatus.ready = true;
+      higherLastStatus.loading = false;
+      higherLastStatus.error = null;
+      if (info.modelLabel) higherLastStatus.modelLabel = info.modelLabel;
+      renderHigherStatusPanel(higherLastStatus);
+    }
+    setTimeout(() => {
+      const b = document.getElementById("higherProgressBar");
+      if (b) b.remove();
+      appendHigherMessage(area, "🌐 Overmind", `✅ ${info.modelLabel || "AI"} Loaded and Ready! Ask me Anything!`, { persist: false });
+      pbRenderCacheList2().catch(() => {});
+    }, 600);
+  }
+
+  if (info.stage === "error") {
+    if (bar) bar.remove();
+    hideHigherThinking();
+    if (higherLastStatus) {
+      higherLastStatus.loading = false;
+      higherLastStatus.ready = false;
+      higherLastStatus.error = info.text || "AI failed to load";
+      renderHigherStatusPanel(higherLastStatus);
+    }
+    appendHigherMessage(area, "🌐 Overmind", `❌ ${info.text || "AI failed to load"}`, { persist: false });
+  }
+}
+
+// Enable AI — sends message to background to detect GPU and load model
+async function enableHigherAI(modelKey) {
+  const area = document.getElementById("consoleOvermindCognition");
+  renderHigherStatusPanel(null, "Checking your GPU and enabling right model…");
+  if (area) {
+    appendHigherMessage(area, "🌐 Overmind", "🔍 Checking your GPU and preparing AI…", { persist: false });
+  }
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_ENABLE", modelKey: modelKey || null }, async (res) => {
+      if (chrome.runtime.lastError) {
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ Could not start AI: " + chrome.runtime.lastError.message, { persist: false });
+        resolve(false);
+        return;
+      }
+      if (res && res.ok) {
+        higherAIEnabled = true;
+        const gpu = res.gpuInfo || {};
+        if (area) {
+          gpuMsg = gpu.supported
+            ? `GPU detected: ${gpuDescription || gpu.vendor || "WebGPU"} (~${gpuCapabilitySize}MB or More - Semi Detected)`
+            : `No WebGPU detected — using lightweight model`;
+          appendHigherMessage(area, "🌐 Overmind", `${gpuMsg}. Enabling ${res.modelLabel}…`, { persist: false });
+        }
+        const status = await checkHigherAIStatus(false);
+        if (status) {
+          renderHigherStatusPanel(status);
+          if (status.loading && status.lastProgress) showHigherProgress(status.lastProgress);
+        }
+        resolve(true);
+      } else {
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not start AI"), { persist: false });
+        resolve(false);
+      }
+    });
+  });
+}
+
+// Disable AI — tell background to unload the model
+function disableHigherAI() {
+  chrome.runtime.sendMessage({ type: "PB_HIGHER_DISABLE" }, () => { void chrome.runtime.lastError; });
+  higherAIEnabled = false;
+  const bar = document.getElementById("higherProgressBar");
+  if (bar) bar.remove();
+  const area = document.getElementById("consoleOvermindCognition");
+  if (area) appendHigherMessage(area, "🌐 Overmind", "AI disabled. Model unloaded to free memory.", { persist: false });
+}
+
+// Check AI status from background
+async function checkHigherAIStatus(autoResume = true) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_STATUS", autoResume }, (res) => {
+      if (chrome.runtime.lastError) { resolve(null); return; }
+      if (res && res.ok) {
+        higherAIEnabled = res.enabled;
+        resolve(res);
+      } else {
+        resolve(null);
+      }
+    });
+  });
+}
+
+// Run on every tab start (and when switching to Higher AI) — works even when SW is already running
+async function initHigherAIConsoleOnTabStart(autoEnableIfSupported = false) {
+  await hydrateHigherHistoryOnce();
+  renderHigherStatusPanel(null, "Checking GPU & enabling right model…");
+
+  // Deliver any reply that finished while the tab was reloading/closed
+  try {
+    const store = await chrome.storage.local.get(["higherLastReply", "higherLastDeliveredReplyId", "higherPendingRequest"]);
+    const last = store.higherLastReply;
+    if (last && last.id != null && last.prompt && last.id !== store.higherLastDeliveredReplyId && !shownHigherReplyIds.has(last.id)) {
+      showHigherReply({
+        id: last.id,
+        text: last.text,
+        prompt: last.prompt,
+      });
+    } else if (store.higherPendingRequest && store.higherPendingRequest.startedAt && (Date.now() - store.higherPendingRequest.startedAt) < 10 * 60 * 1000) {
+      higherThinkingStartedAt = store.higherPendingRequest.startedAt;
+      showHigherThinking("🧠 AI Overmind is finishing your previous request…");
+    }
+  } catch (_) {}
+
+  let status = await checkHigherAIStatus(true);
+  if (!status) {
+    renderHigherStatusPanel(null, "Waking PulseCompanion service worker & checking GPU…");
+    await new Promise((r) => setTimeout(r, 500));
+    status = await checkHigherAIStatus(true);
+  }
+  if (!status) {
+    renderHigherStatusPanel(null, "PulseCompanion service worker unavailable — click 🧠 to retry.");
+    return;
+  }
+
+  renderHigherStatusPanel(status);
+
+  // If still not enabled and GPU is supported (and user didn't explicitly turn AI off),
+  // enable the right model automatically when requested (or on user click)
+  if (!status.enabled && !status.userDisabled && status.gpuInfo?.supported && autoEnableIfSupported) {
+    await enableHigherAI(status.recommendedKey);
+    return;
+  }
+
+  // If actively downloading in background, restore progress bar immediately
+  if (status.loading && status.lastProgress) {
+    showHigherProgress(status.lastProgress);
+  }
+}
+
+// Switch to a different model (e.g. a bigger Qwen model)
+async function switchHigherModel(modelKey) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "PB_HIGHER_SWITCH_MODEL", modelKey }, async (res) => {
+      if (chrome.runtime.lastError) { resolve(false); return; }
+      const area = document.getElementById("consoleOvermindCognition");
+      if (res && res.ok) {
+        higherAIEnabled = true;
+        if (area) appendHigherMessage(area, "🌐 Overmind", `⬆️ Switching to ${res.modelLabel}… Downloading/Loading Now!`, { persist: false });
+        const status = await checkHigherAIStatus(false);
+        if (status) {
+          renderHigherStatusPanel(status);
+          if (status.loading && status.lastProgress) showHigherProgress(status.lastProgress);
+        }
+        resolve(true);
+      } else {
+        if (area) appendHigherMessage(area, "🌐 Overmind", "❌ " + (res?.error || "Could not switch model"), { persist: false });
+        resolve(false);
+      }
+    });
+  });
+}
+
+// Copy button inside code blocks (works for saved history too)
+document.addEventListener("click", (e) => {
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
+  if (PulseFrame2 && !MinimizeStream) PulseFrame2.style.display = "none";
+  PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+  if (PulseBrowserOSFrame) PulseBrowserOSFrame.style.display = "none";
+  displayStyle = false;
+  if (PulseFrame2 && MinimizeStream) {
+    // 3. Define the Escape handler and remove it once triggered
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        PulseFrame2.style.height = "";
+        PulseFrame2.style.width = "";
+        PulseFrame2.style.inset = "";
+        PulseFrame2.style.objectFit = "";
+        MinimizeStream = false;
+        MinimizeOverride = true;
+
+        document.removeEventListener("keydown", handleEscape);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+  }
+  if (PulseStreamingLive) StreamDragANDDrop(true);
+  if (CustomizePanelsDragNDrop) DragANDDrop(true);
+  const btn = e.target.closest && e.target.closest("[data-pw-copy]");
+  if (!btn) return;
+  const code = btn.closest(".pw-code")?.querySelector("pre");
+  if (code && navigator.clipboard) {
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      btn.textContent = "copied";
+      setTimeout(() => { btn.textContent = "copy"; }, 1200);
+    }).catch(() => {});
+  }
+});
+
+async function appendCompanionMessage(area, role, text, opts = {}) {
+  const bubble = document.createElement("div");
+  const bubblebr = document.createElement("div");
+  bubble.style.fontSize = "0.6rem";
+  bubble.style.color = role === "user" ? "#f9f9f9" : "#f9f9f9";
+  const showTime = `[${new Date().toLocaleString()}]`;
+  bubblebr.innerHTML = `<br>`;
+  bubble.innerHTML = (role === "user" ? `<font color="gold">You: ${showTime}</font> ` : `<font color="#0FF">🧠 AI Prime: ${showTime}</font> `) + text + `<br><br>`;
+  area.appendChild(bubble);
+  area.scrollTop = area.scrollHeight;
+  // Do NOT save auto-greetings — only persist once user actually chats!
+  if (opts.persist === false) return;
+  PulsePalMemoryAIBuffer.push(bubble.innerHTML);
+  if (PulsePalMemoryAIBuffer.length > 100) {
+    PulsePalMemoryAIBuffer = PulsePalMemoryAIBuffer.slice(-100);
+  }
+  PulsesafeStorageSet({ PulsePalMemoryAIBuffer });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+    if (cleanValue > 0 && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+      console.log("Last Earn Batch:", lastEarnBatch);
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+    }
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet({ MyPulseIdentity }); 
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
+      let identitySQL = document.getElementById("identitySQL");
+      MyPulseBusiness = response.MyPulseBusiness;     
+      if (!MyPulseBusiness) {
+        if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+    earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    let fontcolor = "grey";
+    if (dailyRate >= 20) fontcolor = "gold";
+    if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+    if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+    }
+  });
+}
+
+if (CompanionConsoleInput) {
+  CompanionConsoleInput.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+      CompanionConsoleSend.click();
+    }
+  });
+}
+
+if (CompanionConsoleSend) {
+  CompanionConsoleSend.onclick = async () => {
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    const originalText = CompanionConsoleInput.value.trim(); // keeps capitals (code!) for the Higher AI
+    const text = CompanionConsoleInput.value.toLowerCase().trim();
+    if (!text) return;
+    let order = text;
+    CompanionConsoleInput.value = "";
+    if (!HigherAuthorityShown) {
+      // 3. Fire the wrapped prompt
+      if (text.includes("overmind orders")) {
+        order = "(Please Follow up this Overmind Process by responding with a Order to your other Overmind AI.) " + text;
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+      } else if (text.includes("website request")) {
+        // Finds any URL starting with http:// or https:// until a space or the end of the text
+        const urlRegex = /https?:\/\/[^\s]+/i;
+        const match = text.match(urlRegex);
+        if (match) {
+          const texturl = match[0]; // Extract the matched URL string
+          askLocalModelWithLiveWeb(texturl);
+        }
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+      } else if (text.includes("bunker scan")) {
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+        askLocalModelWithLiveWeb();
+      } else {
+        appendCompanionMessage(CompanionDetailsMessage, "user", order);
+      }
+      if (!aiSession && typeof LanguageModel !== "undefined") {
+        try {
+          await initializeExoskeleton();
+        } catch (_) {}
+      }
+      if (!aiSession) {
+        // Seamless fallback to local Qwen/WebLLM when Chrome's experimental Gemini Nano isn't enabled
+        presentFallbackPending = true;
+        presentFallbackOrderText = text;
+        if (!higherAIEnabled) {
+          const selectedKey = document.getElementById("higherModelSelect")?.value || null;
+          const started = await enableHigherAI(selectedKey);
+          if (!started) {
+            presentFallbackPending = false;
+            return;
+          }
+        }
+        if (CompanionDetailsMessage && !document.getElementById("companionThinking")) {
+          const compThink = document.createElement("div");
+          compThink.id = "companionThinking";
+          compThink.style.cssText = "font-size:0.62rem; line-height:1.4; color:#7fdfff; margin:4px 0; padding:4px 6px; border-left:2px solid #00ffc8; background:rgba(0,255,200,0.05); border-radius:4px;";
+          compThink.textContent = "🧠 AI Overmind is thinking…";
+          CompanionDetailsMessage.appendChild(compThink);
+          CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+        }
+        showHigherThinking("🧠 AI Overmind is thinking…");
+        MyLowerIntellect = originalText;
+        loadOrders();
+        return;
+      }
+      const response = await aiSession.prompt(order);
+      console.log("🧠 AI Overmind: ", response);
+      setTimeout(async () => {
+        appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+        if (text.includes("Overmind Orders")) OvermindOrders = "[Transmission from 🧠 AI Overmind PRIME] " + response;
+      }, 300);
+      swSize = await getSWSize();
+      aiSize = await getAISize();
+      higherAISize = await getHigherAISize();
+      loadOrders();
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+          let identitySQL = document.getElementById("identitySQL");
+          MyPulseBusiness = response.MyPulseBusiness;     
+          if (!MyPulseBusiness) {
+            if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+    } else {
+      // Higher Intellect: show what the user typed, then ask the model
+      // [Phase 2] Auto-enable AI if the user tries to chat before enabling (respect dropdown choice)
+      if (!higherAIEnabled) {
+        const selectedKey = document.getElementById("higherModelSelect")?.value || null;
+        appendHigherMessage(consoleOvermindCognition, "user", originalText);
+        appendHigherMessage(consoleOvermindCognition, "🌐 Overmind", "Starting AI for the first time — checking GPU and preparing model…", { persist: false });
+        const started = await enableHigherAI(selectedKey);
+        if (!started) return;
+      } else {
+        appendHigherMessage(consoleOvermindCognition, "user", originalText);
+      }
+      showHigherThinking("🧠 AI Overmind is thinking…");
+      MyLowerIntellect = originalText;
+      loadOrders();
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+          let identitySQL = document.getElementById("identitySQL");
+          MyPulseBusiness = response.MyPulseBusiness;     
+          if (!MyPulseBusiness) {
+            if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+    }
+    // if (response.includes("{*Website Call:")) {
+    //   const urlRegex = /https?:\/\/([^\s]+)/i;
+    //   const match = response.match(urlRegex);
+    //   if (match && match[1]) {
+    //     const extractedURL = match[1];
+    //     console.log("The extracted URL is: " + extractedURL);
+    //     openNamedTab("PulsePal Tab", extractedURL);
+    //   } else {
+    //     console.log("URL not found in the provided string.");
+    //   } 
+    // }
+  };
+}
+
+async function initializeExoskeleton() {
+  aiSession = await LanguageModel.create({
+    systemPrompt: "You are a local, cybernetic cognitive assistant with access to the PulseWorld multiverse and Chrome's browser",
+    expectedOutputs: [{ type: "text", languages: ["en"] }]
+  });
+}
+
+// The Absolute Kill Switch Button
+async function wipeMemory() {
+  // 1. Hard destroy the local WebAssembly/Nano session in memory
+  if (aiSession) {
+    aiSession.destroy(); 
+    aiSession = null;
+  }
+  // 2. Clear your local memory buffers completely
+  PulsePalMemoryAIBuffer = [];
+  PulsesafeStorageSet({ PulsePalMemoryAIBuffer: [] });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearPal: true }, () => { void chrome.runtime.lastError; });
+  
+  console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
+  
+  // 3. Re-instantiate a clean slate
+  await initializeExoskeleton();
+}
+
+// The Absolute Kill Switch Button
+async function wipeHigherMemory() {
+  hideHigherThinking();
+  PulseCogMemoryAIBuffer = [];
+  const historyEl = document.getElementById("higherChatHistory");
+  if (historyEl) historyEl.innerHTML = "";
+  PulsesafeStorageSet({
+    PulseCogMemoryAIBuffer: [],
+    higherLastReply: null,
+    higherPendingRequest: null,
+  });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", forceClearCog: true }, () => { void chrome.runtime.lastError; });
+  console.log("Memory purged. The AI knows absolutely nothing about you anymore.");
+}
+// Compress text to a tiny binary array for local storage
+async function compressMemory(text) {
+  const stream = new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'));
+  const response = new Response(stream);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+// Decompress back to string instantly when the user acts
+async function decompressMemory(binaryData) {
+  const stream = new Blob([binaryData]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return await new Response(stream).text();
+}
+
+
+function isValid(t) {
+  return (
+    typeof t === "number" &&
+    Number.isFinite(t) &&
+    t > 0
+  );
+}
+
+chrome.storage.local.get(["SessionStart"], (res) => {
+  if (isValid(res.SessionStart)) {
+    nowFP = res.SessionStart;
+    console.log("PulseBrowser OS Local Session Start: " + nowFP);
+  }
+});
+
+chrome.storage.local.get(["globalStart"], (res) => {
+  if (!res.globalStart) {
+    GLOBALSTART = Date.now();
+    const ItsTime = new Date(GLOBALSTART).toLocaleString();
+    CONSENSUS_ORIGIN = ItsTime;
+    startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
+    PulsesafeStorageSet({ globalStart: GLOBALSTART });
+  } else {
+    if (isValid(res.globalStart)) {
+      GLOBALSTART = res.globalStart;
+      const ItsTime = new Date(GLOBALSTART).toLocaleString();
+      CONSENSUS_ORIGIN = ItsTime;
+      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
+      // PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+      // PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
+      // PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
+    } else {
+      GLOBALSTART = Date.now();
+      const ItsTime = new Date(GLOBALSTART).toLocaleString();
+      CONSENSUS_ORIGIN = ItsTime;
+      startBtn.innerHTML = `<font color="#0FF">Origin Consensus:</font> ` + ItsTime;
+    }
+  }
+});
+
+// Load cache from storage at startup
+chrome.storage.local.get(["PulseFaviconSystem"], (res) => {
+  if (res.PulseFaviconSystem) {
+    PBROWSERFAVICON_CACHE = res.PulseFaviconSystem;
+    saveCache();
+    console.log("PulseBrowser OS Accelerated Modules Icon List: ", PBROWSERFAVICON_CACHE);
+  }
+});
+
+
+function saveCache() {
+  PulsesafeStorageSet({ PulseFaviconSystem: PBROWSERFAVICON_CACHE });
+}
+
+async function pbRequestCacheList2() {
+  PB_LOG3.info("Requesting cache list from PBCompanion…");
+
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "GET_CACHE_LIST" }, (response) => {
+      if (!response || !response.ok) {
+        PB_LOG3.info("Cache list unavailable or error", response);
+        resolve(null);
+        return;
+      }
+      
+      resolve(response);   // ⭐ Return the WHOLE object
+    });
+  });
+}
+
+function getReadableName(url) {
+  try {
+    const u = new URL(url);
+
+    let host = u.hostname.replace(/^www\./, "");
+
+    const parts = host.split(".");
+
+    if (parts.length >= 2) {
+      host = parts[parts.length - 2];
+    }
+
+    host = host.replace(/[-_]/g, " ");
+
+    host = host.replace(/\b\w/g, c => c.toUpperCase());
+
+    return host;
+
+  } catch {
+    return url;
+  }
+}
+
+/**
+ * Probes usable dedicated VRAM by allocating chunks and timing a compute shader pass
+ * until an Out-Of-Memory error or PCIe system RAM spillover spike occurs.
+ *
+ * @param {Object} options
+ * @param {number} [options.maxProbeGB=16] - Stop probing once this amount is verified.
+ * @param {number} [options.chunkMB=256] - Size of each allocation step in MB.
+ * @param {number} [options.spikeFactor=3.5] - Multiplier over baseline time that signals RAM spillover.
+ * @returns {Promise<{estimatedGB: number, reason: string}>}
+ */
+
+async function probeUsableVRAM({
+  maxProbeGB = 16,
+  chunkMB = 256,
+  spikeFactor = 3.5,
+} = {}) {
+  if (!navigator.gpu) {
+    throw new Error("WebGPU is not supported in this browser.");
+  }
+
+  const adapter = await navigator.gpu.requestAdapter({
+    powerPreference: "high-performance",
+  });
+  if (!adapter) {
+    throw new Error("No WebGPU adapter found.");
+  }
+
+  // Request higher buffer limits if the hardware supports them
+  const maxBufferSize = Math.min(
+    adapter.limits.maxBufferSize,
+    1024 * 1024 * 1024 // Cap single buffer at 1 GB for stability
+  );
+  const maxStorageBufferBindingSize = Math.min(
+    adapter.limits.maxStorageBufferBindingSize,
+    maxBufferSize
+  );
+
+  const device = await adapter.requestDevice({
+    requiredLimits: {
+      maxBufferSize,
+      maxStorageBufferBindingSize,
+    },
+  });
+
+  // Simple compute shader that reads and writes across a buffer to force physical allocation
+  const shaderModule = device.createShaderModule({
+    code: `
+      @group(0) @binding(0) var<storage, read_write> data: array<u32>;
+
+      @compute @workgroup_size(256)
+      fn main(@builtin(global_invocation_id) id: vec3<u32>) {
+        let idx = id.x * 16u; // Stride across cache lines
+        if (idx < arrayLength(&data)) {
+          data[idx] = data[idx] + 1u;
+        }
+      }
+    `,
+  });
+
+  const pipeline = device.createComputePipeline({
+    layout: "auto",
+    compute: { module: shaderModule, entryPoint: "main" },
+  });
+
+  const chunkBytes = chunkMB * 1024 * 1024;
+  if (chunkBytes > maxStorageBufferBindingSize) {
+    throw new Error(`chunkMB (${chunkMB}MB) exceeds device maxStorageBufferBindingSize.`);
+  }
+
+  const numElements = chunkBytes / 4;
+  const workgroups = Math.ceil(numElements / (256 * 16));
+
+  const buffers = [];
+  const bindGroups = [];
+  let baselinePerChunkMs = null;
+  let allocatedMB = 0;
+  let stopReason = "Reached maxProbeGB limit";
+
+  // Helper to run one compute pass across ALL currently allocated buffers
+  async function runTouchPass() {
+    const encoder = device.createCommandEncoder();
+    const pass = encoder.beginComputePass();
+    pass.setPipeline(pipeline);
+
+    for (const bg of bindGroups) {
+      pass.setBindGroup(0, bg);
+      pass.dispatchWorkgroups(workgroups);
+    }
+
+    pass.end();
+    const start = performance.now();
+    device.queue.submit([encoder.finish()]);
+    await device.queue.onSubmittedWorkDone();
+    return performance.now() - start;
+  }
+
+  try {
+    // Warm up the shader pipeline once so JIT compilation doesn't skew timing
+    const warmupBuf = device.createBuffer({
+      size: 1024,
+      usage: GPUBufferUsage.STORAGE,
+    });
+    bindGroups.push(
+      device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [{ binding: 0, resource: { buffer: warmupBuf } }],
+      })
+    );
+    await runTouchPass();
+    bindGroups.pop();
+    warmupBuf.destroy();
+
+    // Main allocation & timing loop
+    while (allocatedMB < maxProbeGB * 1024) {
+      device.pushErrorScope("out-of-memory");
+
+      const buffer = device.createBuffer({
+        size: chunkBytes,
+        usage: GPUBufferUsage.STORAGE,
+      });
+
+      const bindGroup = device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [{ binding: 0, resource: { buffer } }],
+      });
+
+      buffers.push(buffer);
+      bindGroups.push(bindGroup);
+
+      // Force physical memory commit and time the pass
+      const elapsedMs = await runTouchPass();
+
+      const oomError = await device.popErrorScope();
+      if (oomError) {
+        stopReason = "Driver Out-Of-Memory error";
+        break;
+      }
+
+      const perChunkMs = elapsedMs / buffers.length;
+
+      // Establish baseline after the 2nd chunk (avoids cold-start noise)
+      if (buffers.length === 2) {
+        baselinePerChunkMs = perChunkMs;
+      } else if (baselinePerChunkMs !== null && perChunkMs > baselinePerChunkMs * spikeFactor) {
+        stopReason = `PCIe RAM spillover detected (${perChunkMs.toFixed(2)}ms/chunk vs ${baselinePerChunkMs.toFixed(2)}ms baseline)`;
+        break;
+      }
+
+      allocatedMB += chunkMB;
+    }
+  } finally {
+    // Always free all VRAM immediately after probing
+    for (const buf of buffers) {
+      buf.destroy();
+    }
+    device.destroy();
+  }
+
+  return {
+    estimatedGB: Number((allocatedMB / 1024).toFixed(2)),
+    reason: stopReason,
+  };
+}
+
+
+async function GetThisMessengerDone() {
+  // 1. Create a 3D stage container over your background image
+  const stage = document.createElement('div');
+  Object.assign(stage.style, {
+    position: 'relative',
+    width: '100vw',
+    height: '100vh',
+    backgroundImage: 'url("PulseMessengerDisplay.webp")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    perspective: '1200px', // Essential: creates the 3D depth effect
+    overflow: 'hidden',
+    fontFamily: 'system-ui, sans-serif'
+  });
+
+  // 2. Outer wrapper for the glowing angled border
+  const leftPanelBorder = document.createElement('div');
+  const panelClip = 'polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px)';
+
+  Object.assign(leftPanelBorder.style, {
+    position: 'absolute',
+    left: '3.5%',
+    top: '16%',
+    width: '24%',
+    height: '67%',
+    padding: '2px', // Border thickness
+    background: 'linear-gradient(180deg, #00f0ff, #0066ff)', // Glowing cyan border
+    clipPath: panelClip,
+    // Match the 3D perspective angle of the left frame
+    transform: 'rotateY(18deg) rotateZ(-1deg)',
+    transformOrigin: 'left center',
+    boxShadow: '0 0 25px rgba(0, 240, 255, 0.4)'
+  });
+
+  // 3. Inner dark translucent container
+  const leftPanelInner = document.createElement('div');
+  Object.assign(leftPanelInner.style, {
+    width: '100%',
+    height: '100%',
+    background: 'rgba(8, 20, 42, 0.85)', // Semi-transparent dark blue
+    backdropFilter: 'blur(8px)',
+    clipPath: panelClip,
+    padding: '16px',
+    boxSizing: 'border-box',
+    color: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px'
+  });
+
+  // 4. Populate the interactive list items
+  const friends = [
+    { name: 'Alex Rivera', status: 'Online', color: '#2ecc71' },
+    { name: 'NovaStar', status: 'In a Call', color: '#e74c3c' },
+    { name: 'CryptoKai', status: 'Online', color: '#2ecc71' },
+    { name: 'LunaByte', status: 'Away', color: '#f1c40f' }
+  ];
+
+  friends.forEach(friend => {
+    const row = document.createElement('div');
+    Object.assign(row.style, {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '10px 14px',
+      background: 'rgba(0, 180, 255, 0.08)',
+      borderBottom: '1px solid rgba(0, 240, 255, 0.25)',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease'
+    });
+
+    row.innerHTML = `
+      <div>
+        <div style="font-weight: 600; font-size: 14px;">${friend.name}</div>
+        <div style="font-size: 11px; color: #8ab4f8;">
+          <span style="color: ${friend.color};">●</span> ${friend.status}
+        </div>
+      </div>
+      <span style="color: #00f0ff; font-size: 14px;">💬 ★</span>
+    `;
+
+    // Realistic hover glow
+    row.onmouseenter = () => {
+      row.style.background = 'rgba(0, 240, 255, 0.22)';
+      row.style.transform = 'translateX(4px)';
+    };
+    row.onmouseleave = () => {
+      row.style.background = 'rgba(0, 180, 255, 0.08)';
+      row.style.transform = 'translateX(0)';
+    };
+
+    leftPanelInner.appendChild(row);
+  });
+
+  leftPanelBorder.appendChild(leftPanelInner);
+  stage.appendChild(leftPanelBorder);
+  document.body.appendChild(stage);
+}
+
+  async function CheckforMessagesState() {
+    const We = await chrome.storage.local.get(["MessengerInvisible"]);
+    MessengerHidden = We.MessengerInvisible ?? true;
+    messengerpanel.style.opacity = "1";
+    consoleHomeCompanion.style.opacity = "1";
+    consoleHomeCompanion2.style.opacity = "1";
+
+    if (MessengerHidden) {
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "70px";
+      pbPulseMessenger.style.height = "70px";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "none";
+      messengerinnerpanel.style.pointerEvents = "none";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      pbPulseMessenger.style.marginTop = "";
+      messengerpanel.style.pointerEvents = "none";
+      messengerpanel.style.background = "transparent";
+      messengerpanel.style.backdropFilter = "none";
+      messengerpanel.style.boxShadow = "none";
+      messengerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";
+        pbPulseMessenger.style.opacity = "1";
+        pbPulseMessenger.style.transform = "translate(-2px, -555px)";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 0);
+      
+    } else {
+      // ——— Turn OFF (restore original) ———
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "";        // let CSS take over again
+      pbPulseMessenger.style.height = "";
+      pbPulseMessenger.style.transform = "";
+      pbPulseMessenger.style.opacity = "0.25";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "flex";
+      messengerinnerpanel.style.pointerEvents = "auto";
+      pbPulseMessenger.style.marginTop = "";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "auto";
+      messengerpanel.style.background = "";
+      messengerpanel.style.backdropFilter = "";
+      messengerpanel.style.boxShadow = "";
+      messengerpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseMessenger.style.border = "";
+        pbPulseMessenger.style.transform = "";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 0);
+    }
+
+    minimizeBtn.onclick = async () => {
+      MessengerHidden = true;
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "70px";
+      pbPulseMessenger.style.height = "70px";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "none";
+      messengerinnerpanel.style.pointerEvents = "none";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "none";
+      messengerpanel.style.background = "transparent";
+      messengerpanel.style.backdropFilter = "none";
+      messengerpanel.style.boxShadow = "none";
+      messengerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";
+        pbPulseMessenger.style.opacity = "1";
+        pbPulseMessenger.style.transform = "translate(-2px, -555px)";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 0);
+    };
+
+    maximizeBtn.onclick = async () => {
+      PulseBrowserPreview("Please Press ESCAPE to close the Full Screen View!");
+      
+      // 1. Save the original inline styles so you can revert to them accurately
+      const originalStyles = {
+        height: messengerpanel.style.height,
+        width: messengerpanel.style.width,
+        inset: messengerpanel.style.inset,
+        objectFit: messengerpanel.style.objectFit,
+      };
+
+      // 2. Apply maximized styles
+      messengerpanel.style.height = "100vh";
+      messengerpanel.style.width = "100vw";
+      messengerpanel.style.inset = "0";
+      messengerpanel.style.objectFit = "contain";
+
+      // 3. Define the Escape handler and remove it once triggered
+      const handleEscape = (e) => {
+        if (e.key === "Escape") {
+          messengerpanel.style.height = originalStyles.height;
+          messengerpanel.style.width = originalStyles.width;
+          messengerpanel.style.inset = originalStyles.inset;
+          messengerpanel.style.objectFit = originalStyles.objectFit;
+
+          document.removeEventListener("keydown", handleEscape);
+        }
+      };
+
+      document.addEventListener("keydown", handleEscape);
+    };
+
+    editinnerpanel.onclick = async () => {
+      openNamedTab("PulseIdentity", pulseIdentityLink);
+      await PBUniversalBoost.warmOrigin(pulseIdentityLink);
+    };
+
+    exitinnerpanel.onclick = async () => {
+      MessengerHidden = true;
+      pbPulseMessenger.id = "pbPulseMessenger";
+      pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+      pbPulseMessenger.style.width = "70px";
+      pbPulseMessenger.style.height = "70px";
+      pbPulseMessenger.style.border = "2px solid #000";
+      messengerinnerpanel.style.display = "none";
+      messengerinnerpanel.style.pointerEvents = "none";
+      pbPulseMessenger.style.pointerEvents = "auto";
+      messengerpanel.style.pointerEvents = "none";
+      messengerpanel.style.background = "transparent";
+      messengerpanel.style.backdropFilter = "none";
+      messengerpanel.style.boxShadow = "none";
+      messengerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";
+        pbPulseMessenger.style.opacity = "1";
+        pbPulseMessenger.style.transform = "translate(-2px, -555px)";
+        pbPulseMessenger.currentTime = 0;
+        pbPulseMessenger.play();
+      }, 0);
+    };
+    
+    pbPulseMessenger.onclick = async () => {
+      if (!MessengerHidden) {
+        MessengerHidden = true;
+        pbPulseMessenger.style.marginTop = "";
+        // ——— Turn ON (transparent / earning mode) ———
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+        pbPulseMessenger.style.width = "70px";
+        pbPulseMessenger.style.height = "70px";
+        pbPulseMessenger.style.border = "2px solid #000";
+        messengerinnerpanel.style.display = "none";
+        messengerinnerpanel.style.pointerEvents = "none";
+        pbPulseMessenger.style.pointerEvents = "auto";
+        messengerpanel.style.pointerEvents = "none";
+        messengerpanel.style.background = "transparent";
+        messengerpanel.style.backdropFilter = "none";
+        messengerpanel.style.boxShadow = "none";
+        messengerpanel.style.border = "none";
+        setTimeout(() => {
+          pbPulseMessenger.id = "pbPulseMessenger";
+          pbPulseMessenger.className = "pbPulseMessenger";
+          pbPulseMessenger.style.opacity = "1";
+          pbPulseMessenger.style.transform = "translate(-2px, -555px)";
+          if (EarnDetailsHidden) safeSpeak("Coming Soon! 🧑 PulseMessenger will Open Sharing through the Multiverse!");
+          pbPulseMessenger.currentTime = 0;
+          pbPulseMessenger.play();
+        }, 0);
+      } else {
+        MessengerHidden = false;
+        pbPulseMessenger.style.marginTop = "";
+        if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
+        // ——— Turn OFF (restore original) ———
+        pbPulseMessenger.id = "pbPulseMessenger";
+        pbPulseMessenger.className = "pbPulseMessenger";          // or put back any original class if you had one
+        pbPulseMessenger.style.width = "";        // let CSS take over again
+        pbPulseMessenger.style.height = "";
+        pbPulseMessenger.style.transform = "";
+        pbPulseMessenger.style.opacity = "0.25";
+        pbPulseMessenger.style.border = "2px solid #000";
+        messengerinnerpanel.style.display = "flex";
+        messengerinnerpanel.style.pointerEvents = "auto";
+        pbPulseMessenger.style.pointerEvents = "auto";
+        messengerpanel.style.pointerEvents = "auto";
+        messengerpanel.style.background = "";
+        messengerpanel.style.backdropFilter = "";
+        messengerpanel.style.boxShadow = "";
+        messengerpanel.style.border = "";
+        setTimeout(() => {
+          pbPulseMessenger.style.border = "";
+          pbPulseMessenger.style.transform = "";
+          pbPulseMessenger.currentTime = 0;
+          pbPulseMessenger.play();
+        }, 0);
+      }
+      console.log("Messenger State:", MessengerHidden);
+      PulsesafeStorageSet({ MessengerInvisible: MessengerHidden });
+    };
+
+    identityPicture = document.getElementById("identityPicture");
+    identityLogin = document.getElementById("identityLogin");
+    if (MessengerMode) messengerinnerpanel.style.backgroundImage = `url("PulseMessenger${MessengerMode}.webp")`;
+
+    PulseMessengerMessages.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerTalk.webp")`;
+      MessengerMode = "Talk";
+      identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "1";
+      consoleMessagesCompanion2.style.opacity = "1";
+      consoleMessengerCompanion.style.opacity = "1";
+      consoleDiscoverCompanion.style.opacity = "0";
+      consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
+      consoleNotify3HomeCompanion.style.opacity = "0";
+      consoleNotify4HomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
+    };
+
+    PulseMessengerWallet.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWallet.webp")`;
+      MessengerMode = "Wallet";
+      identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
+      consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
+      consoleNotify3HomeCompanion.style.opacity = "0";
+      consoleNotify4HomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
+    };
+
+    PulseMessengerWorlds.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerWorlds.webp")`;
+      MessengerMode = "Worlds";
+      identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
+      consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
+      consoleNotify3HomeCompanion.style.opacity = "0";
+      consoleNotify4HomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
+    };
+
+    HomeMessenger.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerConsole.webp")`;
+      MessengerMode = "Console";
+      identityLogin.style.opacity = "1";
+      identityPicture.style.opacity = "1";
+      consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
+      consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "1";
+      consoleHomeCompanion2.style.opacity = "1";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
+      consoleNotify3HomeCompanion.style.opacity = "0";
+      consoleNotify4HomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
+    };
+
+    NotifyMessenger.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerNotify.webp")`;
+      MessengerMode = "Notify";
+      identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "0";
+      consoleDiscover2Companion.style.opacity = "0";
+      consoleDiscover3Companion.style.opacity = "0";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "0";
+      consoleNotifyHomeCompanion.style.opacity = "1";
+      consoleNotify2HomeCompanion.style.opacity = "1";
+      consoleNotify3HomeCompanion.style.opacity = "1";
+      consoleNotify4HomeCompanion.style.opacity = "1";
+      consoleNotificationCompanion.style.opacity = "1";
+    };
+
+    DiscoverMessenger.onclick = async () => {
+      messengerinnerpanel.style.backgroundImage = `url("PulseMessengerDiscover.webp")`;
+      MessengerMode = "Discover";
+      identityLogin.style.opacity = "0";
+      identityPicture.style.opacity = "0";
+      consoleMessagesCompanion.style.opacity = "0";
+      consoleMessagesCompanion2.style.opacity = "0";
+      consoleMessengerCompanion.style.opacity = "0";
+      consoleDiscoverCompanion.style.opacity = "1";
+      consoleDiscover2Companion.style.opacity = "1";
+      consoleDiscover3Companion.style.opacity = "1";
+      consoleHomeCompanion.style.opacity = "0";
+      consoleHomeCompanion2.style.opacity = "0";
+      consoleDiscoverHomeCompanion.style.opacity = "1";
+      consoleNotifyHomeCompanion.style.opacity = "0";
+      consoleNotify2HomeCompanion.style.opacity = "0";
+      consoleNotify3HomeCompanion.style.opacity = "0";
+      consoleNotify4HomeCompanion.style.opacity = "0";
+      consoleNotificationCompanion.style.opacity = "0";
+    };
+  }
+
+  async function CheckEarnDetailsState() {
+    const Vis = await chrome.storage.local.get(["EarningDetailsInVisible"]);
+    EarnDetailsHidden = Vis.EarningDetailsInVisible ?? false;
+    console.log("Earn Details State:", EarnDetailsHidden);
+    if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    const Aly = await chrome.storage.local.get(["HigherAuthorityShown"]);
+    const identityName = document.getElementById("identityName");
+    HigherAuthorityShown = Aly.HigherAuthorityShown ?? true;
+    
+    if (!MyPulseIdentity) {
+      const PulseTech = await chrome.storage.local.get(["MyPulseIdentity"]);
+      MyPulseIdentity = PulseTech.MyPulseIdentity ?? {};
+      console.log("Attempted Previous PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      identityLogin = document.getElementById("identityLogin");
+      if (MyPulseIdentity) identityLogin.textContent = MyPulseIdentity.name;
+      if (MyPulseIdentity) identityPicture.src = MyPulseIdentity.aliasPhotoURL ?? "";
+    }
+    
+    if (HigherAuthority) {
+      if (HigherAuthorityShown) {
+        pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
+        HigherAuthority.textContent = "🧠";
+        pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
+        consoleOvermindCognition.style.display = "block";
+        CognitionTitle.style.display = "block";
+        aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
+        CompanionDetailsMessage.style.display = "none";
+        // // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
+        // initHigherAIConsoleOnTabStart(true);
+      } else {
+        pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
+        HigherAuthority.textContent = "🌐";
+        pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
+        consoleOvermindCognition.style.display = "none";
+        CognitionTitle.style.display = "none";
+        aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
+        CompanionDetailsMessage.style.display = "block";
+      }
+      // [Phase 2+] Always check GPU, enable/resume right model, and show bigger-model switcher on tab start
+      initHigherAIConsoleOnTabStart(true);
+    }
+
+    consoleOvermindCognition = document.getElementById("consoleOvermindCognition");
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
+    const Panel = await chrome.storage.local.get(["HigherPanelShown"]);
+    HigherPanelShown = Panel.HigherPanelShown ?? true;
+    const status = await checkHigherAIStatus(false);
+    CognitionTitle = document.getElementById("CognitionTitle");
+    if (CognitionTitle && status) {
+      const showUS = `[${status.modelLabel}]`;
+      CognitionTitle.innerHTML = "🌐 AI Overmind " + showUS;
+    }
+
+    if (HigherAuthorityShown) {
+      HigherStatusPanel = document.getElementById("higherStatusPanel");
+      HigherPanelSwitch.style.display = "block";
+      if (HigherStatusPanel) {
+        if (HigherPanelShown) {
+          pbPulseDetailsEarn.style.pointerEvents = "none";
+          HigherPanelSwitch.style.opacity = "0.3";
+          HigherStatusPanel.style.display = "block";
+        } else {
+          pbPulseDetailsEarn.style.pointerEvents = "auto";
+          HigherPanelSwitch.style.opacity = "1";
+          HigherStatusPanel.style.display = "none";
+        }
+      } else {
+        pbPulseDetailsEarn.style.pointerEvents = "auto";
+        HigherPanelSwitch.style.opacity = "1";
+        HigherStatusPanel.style.display = "none";
+      }
+    } else {
+       HigherPanelSwitch.style.display = "none";
+    }
+    
+    if (EarnDetailsHidden) {
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+      pbPulseDetailsEarn.style.width = "70px";
+      pbPulseDetailsEarn.style.height = "70px";
+      pbPulseDetailsEarn.style.border = "2px solid #000";
+      earnerinnerhelperpanel.style.display = "none";
+      earnerhelperpanel.style.background = "transparent";
+      earnerhelperpanel.style.backdropFilter = "none";
+      earnerhelperpanel.style.boxShadow = "none";
+      earnerhelperpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.style.opacity = "1";
+        pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+        setTimeout(() => {
+          pulsepaltalk.style.opacity = "1";
+        }, 1500);
+        setTimeout(() => {
+          pulsepaltalk.style.opacity = "0";
+        }, 5000);
+        pbPulseDetailsEarn.currentTime = 0;
+        pbPulseDetailsEarn.play();
+      }, 1000);
+      
+    } else {
+      // ——— Turn OFF (restore original) ———
+      pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+      pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+      pbPulseDetailsEarn.style.border = "2px solid #000";
+      pbPulseDetailsEarn.style.width = "";        // let CSS take over again
+      pbPulseDetailsEarn.style.height = "";
+      pbPulseDetailsEarn.style.transform = "";
+      pbPulseDetailsEarn.style.opacity = "0.25";
+      earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerhelperpanel.style.background = "";
+      earnerhelperpanel.style.backdropFilter = "";
+      earnerhelperpanel.style.boxShadow = "";
+      earnerhelperpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseDetailsEarn.style.border = "";
+        pbPulseDetailsEarn.style.transform = "";
+        pbPulseDetailsEarn.currentTime = 0;
+        pbPulseDetailsEarn.play();
+      }, 1000);
+    }
+
+    
+    pbPulseDetailsEarn.onclick = async () => {
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      if (!EarnDetailsHidden) {
+        EarnDetailsHidden = true;
+        // ——— Turn ON (transparent / earning mode) ———
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarning";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarning";
+        pbPulseDetailsEarn.style.width = "70px";
+        pbPulseDetailsEarn.style.height = "70px";
+        pbPulseDetailsEarn.style.border = "2px solid #000";
+        earnerinnerhelperpanel.style.display = "none";
+        earnerhelperpanel.style.background = "transparent";
+        earnerhelperpanel.style.backdropFilter = "none";
+        earnerhelperpanel.style.boxShadow = "none";
+        earnerhelperpanel.style.border = "none";
+        setTimeout(() => {
+          pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.className = "pbPulseDetailsEarn";
+          pbPulseDetailsEarn.style.opacity = "1";
+          pbPulseDetailsEarn.style.transform = "translate(-190px, 111px)";
+          setTimeout(() => {
+            pulsepaltalk.style.opacity = "1";
+          }, 1500);
+          setTimeout(() => {
+            pulsepaltalk.style.opacity = "0";
+          }, 5000);
+          pbPulseDetailsEarn.currentTime = 0;
+          pbPulseDetailsEarn.play();
+        }, 1000);
+      } else {
+        EarnDetailsHidden = false;
+        // ——— Turn OFF (restore original) ———
+        pbPulseDetailsEarn.id = "pbPulseDetailsEarn";
+        pbPulseDetailsEarn.className = "pbPulseDetailsEarn";          // or put back any original class if you had one
+        pbPulseDetailsEarn.style.width = "";        // let CSS take over again
+        pbPulseDetailsEarn.style.height = "";
+        pbPulseDetailsEarn.style.transform = "";
+        pbPulseDetailsEarn.style.opacity = "0.25";
+        pbPulseDetailsEarn.style.border = "2px solid #000";
+        earnerinnerhelperpanel.style.display = "flex";   // matches your .earner-inner-panel
+        earnerhelperpanel.style.background = "";
+        earnerhelperpanel.style.backdropFilter = "";
+        earnerhelperpanel.style.boxShadow = "";
+        earnerhelperpanel.style.border = "";
+        setTimeout(() => {
+          pbPulseDetailsEarn.style.border = "";
+          pbPulseDetailsEarn.style.transform = "";
+          pbPulseDetailsEarn.currentTime = 0;
+          pbPulseDetailsEarn.play();
+        }, 1000);
+        if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+      }
+      console.log("Earn Details State:", EarnDetailsHidden);
+      PulsesafeStorageSet({ EarningDetailsInVisible: EarnDetailsHidden });
+    };
+    
+    if (HigherAuthority) {
+      HigherAuthority.onclick = async () => {
+        if (!HigherAuthorityShown) {
+          HigherAuthorityShown = true;
+          HigherPanelSwitch.style.display = "block"
+          if (HigherStatusPanel) {
+            HigherPanelSwitch.style.opacity = "0.3";
+          } else {
+            HigherPanelSwitch.style.opacity = "1";
+          }
+          pbPulseDetailsEarn.src = "PulseOvermindPrime.mp4";
+          HigherAuthority.textContent = "🧠";
+          pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  We, your AI Overminds, can/will/did help you in Many Ways and Many Forms!`;
+          consoleOvermindCognition.style.display = "block";
+          CognitionTitle.style.display = "block";
+          aiOverlay.innerHTML = "Pulse Pal - 🌐 AI Overmind (Future)";
+          CompanionDetailsMessage.style.display = "none";
+          pbPulseDetailsEarn.style.pointerEvents = "auto";
+          // // Check GPU, enable/resume right model, and display switcher
+          // initHigherAIConsoleOnTabStart(true);
+        } else {
+          HigherAuthorityShown = false;
+          HigherPanelSwitch.style.display = "none"
+          pbPulseDetailsEarn.src = "PulsePalDetails.mp4";
+          HigherAuthority.textContent = "🌐";
+          pulsepaltalk.innerHTML = `Welcome, ${MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter"} to 🌐 PulseBrowser OS! <br>  If you decide you want a Partner in ...Time (the Multiverse), Check me out! lol`;
+          consoleOvermindCognition.style.display = "none";
+          CognitionTitle.style.display = "none";
+          aiOverlay.innerHTML = "Pulse Pal - 🧠 AI Overmind Prime";
+          CompanionDetailsMessage.style.display = "block";
+        }
+        PulsesafeStorageSet({ HigherAuthorityShown });
+        loadOrders();
+      };
+    }
+
+    HigherPanelSwitch = document.getElementById("SwitchPanel");
+    HigherStatusPanel = document.getElementById("higherStatusPanel");
+
+    if (HigherPanelSwitch) {
+      HigherPanelSwitch.onclick = async () => {
+        HigherStatusPanel = document.getElementById("higherStatusPanel");
+        if (!HigherPanelShown) {
+          HigherPanelShown = true;
+          pbPulseDetailsEarn.style.pointerEvents = "none";
+          HigherPanelSwitch.style.opacity = "0.3";
+          HigherStatusPanel.style.display = "block";
+        } else {
+          HigherPanelShown = false;
+          pbPulseDetailsEarn.style.pointerEvents = "auto";
+          HigherPanelSwitch.style.opacity = "1";
+          HigherStatusPanel.style.display = "none";
+        }
+        PulsesafeStorageSet({ HigherPanelShown });
+      };
+    }
+  }
+
+async function CheckEarnState() {
+  const Vis = await chrome.storage.local.get(["EarningInVisible"]);
+  EarnHidden = Vis.EarningInVisible ?? false;
+  console.log("Earn State:", EarnHidden);
+  PulseFrame = document.getElementById("PulseEarnerFrame");
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
+  PulseFrameA = document.getElementById("PulseEarner2Frame");
+  PulseFrameB = document.getElementById("PulseEarner3Frame");
+  earnerenginepanel = document.getElementById("earner-mini-engine-panel");
+  PulseFrame.style.pointerEvents = "none";
+  PulseFrameA.style.pointerEvents = "none";
+  PulseFrameB.style.pointerEvents = "none";
+
+  if (MinimizeStream) {
+    PulseFrame2 = document.getElementById("PulseStreamFrame");
+    PulseFrame2.style.width = "625px";
+    PulseFrame2.style.height = "325px";
+    PulseFrame2.style.bottom = "";
+    PulseFrame2.style.insetInline = "";
+    PulseFrame2.style.marginInline = "";
+    PulseFrame2.style.top = "20px";
+    PulseFrame2.style.left = "145px";
+    StreamDragANDDrop(false);
+  }
+  
+  if (PulseFrame.style.opacity === "1") {
+    earnerenginepanel.style.opacity = "0.35";
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
+    }, 2000);
+  } else {
+    earnerenginepanel.style.opacity = "1";
+  }
+
+  if (earnerenginepanel.style.opacity === "1") {
+    PulseFrame.style.opacity = "0";
+    PulseFrame.style.cursor = "default";
+    PulseFrame.style.pointerEvents = "none";
+  } else {
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
+    }, 2000);
+  }
+
+  if (EarnHidden) {
+    // ——— Turn ON (transparent / earning mode) ———
+    pbPulseEarn.id = "pbPulseEarning";
+    pbPulseEarn.className = "pbPulseEarning";
+    pbPulseEarn.style.width = "70px";
+    pbPulseEarn.style.height = "70px";
+    pbPulseEarn.style.border = "2px solid #000";
+    earnerinnerpanel.style.display = "none";
+    // earnerminipanel.style.height = "30px";
+    // earnerminipanel.style.width = "30px";
+    // earnerminipanel.style.top = "225px";
+    // earnerminipanel.style.left = "710px";
+    earnerpanel.style.background = "transparent";
+    earnerpanel.style.backdropFilter = "none";
+    earnerpanel.style.boxShadow = "none";
+    earnerpanel.style.border = "none";
+    setTimeout(() => {
+      pbPulseEarn.id = "pbPulseEarn";
+      pbPulseEarn.className = "pbPulseEarn";
+      pbPulseEarn.style.opacity = "1";
+      pbPulseEarn.style.transform = "translate(190px, 111px)";
+      pbPulseEarn.currentTime = 0;
+      pbPulseEarn.play();
+    }, 1000);
+    
+  } else {
+    setTimeout(() => {
+      PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
+    }, 2000);
+    earnerenginepanel.style.opacity = "0.35";
+    // ——— Turn OFF (restore original) ———
+    pbPulseEarn.id = "pbPulseEarn";
+    pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
+    pbPulseEarn.style.width = "";        // let CSS take over again
+    pbPulseEarn.style.height = "";
+    pbPulseEarn.style.transform = "";
+    pbPulseEarn.style.opacity = "0.25";
+    earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+    // earnerminipanel.style.top = "";
+    // earnerminipanel.style.left = "";
+    earnerpanel.style.background = "";
+    earnerpanel.style.backdropFilter = "";
+    earnerpanel.style.boxShadow = "";
+    earnerpanel.style.border = "";
+    setTimeout(() => {
+      pbPulseEarn.style.border = "";
+      pbPulseEarn.style.transform = "";
+      pbPulseEarn.currentTime = 0;
+      pbPulseEarn.play();
+    }, 1000);
+  }
+  if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
+
+  earnerminipanel.onclick = async () => pbPulseEarn.click();
+
+  earnerbankpanel.onclick = async () => {
+    openNamedTab("PulseBank", pulseBankLink);
+    await PBUniversalBoost.warmOrigin(pulseBankLink);
+  };
+
+  earnerbunkerpanel.onclick = async () => {
+    CompanionConsoleInput.value = "Initiate Bunker Scan...";
+    CompanionConsoleSend.click();
+  };
+
+  PulseFrame = document.getElementById("PulseEarnerFrame");
+  earnerenginepanel = document.getElementById("earner-mini-engine-panel");
+  earnerenginepanel.onclick = async () => {
+    if (PulseFrame.style.opacity === "1") {
+      earnerenginepanel.style.opacity = "1";
+      PulseFrame.style.opacity = "0";
+      PulseFrame.style.cursor = "default";
+      PulseFrame.style.pointerEvents = "none";
+      PulseFrameA.style.opacity = "0";
+      PulseFrameA.style.cursor = "default";
+      PulseFrameA.style.pointerEvents = "none";
+      PulseFrameB.style.opacity = "0";
+      PulseFrameB.style.cursor = "default";
+      PulseFrameB.style.pointerEvents = "none";
+    } else {
+      earnerenginepanel.style.opacity = "0.35";
+      PulseFrame.style.opacity = "1";
+      PulseFrame.style.zIndex = "11";
+      PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
+      PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
+    }
+  };
+
+  earnerwalletpanel.onclick = async () => {
+    openNamedTab("PulseVault", pulseVaultLink);
+    await PBUniversalBoost.warmOrigin(pulseVaultLink);
+  };
+
+  pbPulseEarn.onclick = async () => {
+    if (!EarnHidden) {
+      EarnHidden = true;
+      PulseFrame.style.opacity = "0";
+      PulseFrame.style.cursor = "default";
+      PulseFrame.style.pointerEvents = "none";
+      PulseFrameA.style.opacity = "0";
+      PulseFrameA.style.cursor = "default";
+      PulseFrameA.style.pointerEvents = "none";
+      PulseFrameB.style.opacity = "0";
+      PulseFrameB.style.cursor = "default";
+      PulseFrameB.style.pointerEvents = "none";
+      earnerenginepanel.style.opacity = "1";
+      // ——— Turn ON (transparent / earning mode) ———
+      pbPulseEarn.id = "pbPulseEarning";
+      pbPulseEarn.className = "pbPulseEarning";
+      pbPulseEarn.style.width = "70px";
+      pbPulseEarn.style.height = "70px";
+      pbPulseEarn.style.border = "2px solid #000";
+      earnerinnerpanel.style.display = "none";
+      earnerminipanel.style.boxShadow = "0 0 25px rgba(0, 0, 0, 0.45)";
+      // earnerminipanel.style.height = "30px";
+      // earnerminipanel.style.width = "30px";
+      // earnerminipanel.style.top = "225px";
+      // earnerminipanel.style.left = "710px";
+      earnerpanel.style.background = "transparent";
+      earnerpanel.style.backdropFilter = "none";
+      earnerpanel.style.boxShadow = "none";
+      earnerpanel.style.border = "none";
+      setTimeout(() => {
+        pbPulseEarn.id = "pbPulseEarn";
+        pbPulseEarn.className = "pbPulseEarn";
+        pbPulseEarn.style.opacity = "1";
+        pbPulseEarn.style.transform = "translate(190px, 111px)";
+        pbPulseEarn.currentTime = 0;
+        pbPulseEarn.play();
+      }, 1000);
+    } else {
+      EarnHidden = false;
+      PulseFrame.style.opacity = "1";
+      PulseFrame.style.pointerEvents = "auto";
+      PulseFrameA.style.pointerEvents = "auto";      
+      PulseFrameB.style.pointerEvents = "auto";
+      PulseFrame.style.zIndex = "11";
+      if (earnerminirate2panel.textContent !== "PulseMessenger" || PulseEngineLive) PulseFrameA.style.opacity = "1";
+      PulseFrameA.style.zIndex = "11";
+      if (earnerminirate3panel.textContent !== "PulseBusiness" || PulseEngine2Live) PulseFrameB.style.opacity = "1";
+      PulseFrameB.style.zIndex = "11";
+      earnerenginepanel.style.opacity = "0.35";
+      // ——— Turn OFF (restore original) ———
+      pbPulseEarn.id = "pbPulseEarn";
+      pbPulseEarn.className = "pbPulseEarn";          // or put back any original class if you had one
+      pbPulseEarn.style.width = "";        // let CSS take over again
+      pbPulseEarn.style.height = "";
+      pbPulseEarn.style.transform = "";
+      pbPulseEarn.style.opacity = "0.25";
+      earnerinnerpanel.style.display = "flex";   // matches your .earner-inner-panel
+      earnerminipanel.style.boxShadow = "0 0 25px rgba(0, 0, 0, 0.45)";
+      // earnerminipanel.style.top = "";
+      // earnerminipanel.style.left = "";
+      earnerpanel.style.background = "";
+      earnerpanel.style.backdropFilter = "";
+      earnerpanel.style.boxShadow = "";
+      earnerpanel.style.border = "";
+      setTimeout(() => {
+        pbPulseEarn.style.border = "";
+        pbPulseEarn.style.transform = "";
+        pbPulseEarn.currentTime = 0;
+        pbPulseEarn.play();
+      }, 1000);
+      if (CompanionDetailsMessage) CompanionDetailsMessage.scrollTop = CompanionDetailsMessage.scrollHeight;
+    }
+    if (CompanionMessages) CompanionMessages.scrollTop = CompanionMessages.scrollHeight;
+    console.log("Earn State:", EarnHidden);
+    PulsesafeStorageSet({ EarningInVisible: EarnHidden });
+  };
+}
+
+setTimeout(CheckEarnState, 50);
+setTimeout(CheckEarnDetailsState, 50);
+setTimeout(CheckforMessagesState, 50);
+
+
+function PulseBrowserPreview(text) {
+  let preview = document.createElement("div");
+  preview.className = "PulseBrowser-Preview";
+  preview.id = "PulseBrowser-Preview";
+  preview.style.position = "fixed";
+  preview.style.top = "0";
+  preview.style.left = "0";
+  preview.style.width = "100%";
+  preview.style.background = "rgba(0,0,0,0.8)";
+  preview.style.color = "white";
+  preview.style.padding = "4px";
+  preview.style.zIndex = "999999999";
+  preview.style.fontFamily = "Arial";
+  preview.innerText = `PulseBrowser OS Preview: ${document.title}`;
+  if (text) preview.innerText = `PulseBrowser OS Preview: ` + text;
+  // Add it to the page
+  document.body.appendChild(preview);
+}
+
+async function pbRenderCacheList2() {
+  const listEl = document.getElementById("cache-panel");
+  if (!listEl) return;
+  if (StorageRunning) return; // already running
+  // ⭐ Fetch cache list  
+  StorageRunning = true;
+  
+  const result = await pbRequestCacheList2();
+  
+  if (!result || (!result.caches)) {
+    listEl.insertAdjacentHTML("beforeend", "<li>Cache API unavailable in extension pages.</li>");
+    StorageRunning = false;
+    return;
+  }
+
+  const caches = result.caches;
+  // const pulsecaches = result.pulsecaches;  
+  const cachecount = result.cachecount;
+  const totalcount = result.totalcount;
+  const pulsemoments = result.pulsemomentscount;
+  const pulseoffline = result.pulseofflinecount;
+  // const errorSizeMB = parseFloat(result.errorSizeMB, "0");
+
+  
+  if (caches.length === 0) {
+    listEl.insertAdjacentHTML("beforeend", "<li>No cached files detected.</li>");
+    StorageRunning = false;
+    return;
+  }
+  
+  // ⭐ Wipe panel completely
+  listEl.innerHTML = `
+    <div style="font-weight:bold; text-align: center; border-radius: 40px; padding: 4px 4px; border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(6px); color: #0FF; font-size:13px; margin-top: 2px; margin-bottom:-2px;">
+      PulseBrowser OS - System Details
+    </div>
+    <div id="identityName" class="identityName"></div><div id="accountBalance" class="accountBalance"></div>
+    
+  `;
+  // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
+  const estimate = await navigator.storage.estimate();
+  const localUsed = estimate.usage || 0;
+  const localQuota = estimate.quota || 1;
+
+  // ⭐ Memory FIRST
+  // ⭐ Load previous storage history
+  const history = await new Promise(resolve =>
+    chrome.storage.local.get("pulseStorageHistory", resolve)
+  );  
+  let statsHTML = await pbRenderStorageStats2(history);
+  predictionText = predictionText + ".";
+  listEl.insertAdjacentHTML("beforeend", statsHTML);
+  earnerminipanel = document.getElementById("earner-mini-panel");
+  accountBalance = document.getElementById("accountBalance");
+  accountBalance.textContent = earnerminipanel.textContent;
+  // ⭐ Sort: current cache first, then by entry count
+  caches.sort((a, b) => {
+    if (a.name === a.currentCache) return -1;
+    if (b.name === a.currentCache) return 1;
+    return (b.entries || 0) - (a.entries || 0);
+  });
+
+  // // ⭐ Sort: current cache first, then by entry count
+  // if (pulsecaches) pulsecaches.sort((a, b) => {
+  //   if (a.name === a.currentPulseCache) return -1;
+  //   if (b.name === a.currentPulseCache) return 1;
+  //   return (b.entries || 0) - (a.entries || 0);
+  // });
+
+  let best = false;
+  let pulsebest = false;
+  let li = document.getElementById("li");
+  const store = await chrome.storage.local.get(["pb_fail_cache"]);
+  const fails = store.pb_fail_cache || {};
+
+  caches.forEach(cache => {
+    if (!li) li = document.createElement("li");
+    li.className = "PulseCache";
+    li.style.cssText = `
+      margin: 14px 20px;
+      padding: 3px 6px;
+      max-width: clamp(245px, 12vw, 315px);
+      width: clamp(245px, 12vw, 315px);
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    `;
+
+    // ⭐ Cache size color logic
+    const sizeMB = parseFloat(cache.sizeMB || "0");
+    totalBytes = totalBytes + Math.round(sizeMB * 1024 * 1024); // [Phase 3] was .toFixed(0) — string concatenation bug
+    let sizeColor = "lightgreen";
+
+    if (sizeMB >= 150) sizeColor = "gold";     // warming
+    if (sizeMB >= 300) sizeColor = "orange";   // heavy
+    if (sizeMB >= 600) sizeColor = "red";      // critical
+
+    // ⭐ Safe fallback values
+    const weightClass = cache.weightClass || "unknown";
+    const personality = cache.personality || "Wanderer";
+    const pulseRank = cache.pulseRank;
+    const density = cache.density ?? 0;
+    const KBperEntry = (1024 / cache.density).toFixed(0);
+    
+    let pausedoffline = ``;
+
+    if (!ServiceWorkerOnline) {
+      pausedoffline = `(<font color="#FF8844">In Statis</font>)`;
+    } else {
+      pausedoffline = `(CPU)`;
+    }
+
+    li.innerHTML = `
+      <font color="${best ? "#FF8844" : "gold"}"><strong>${cache.name} ${pausedoffline}</strong></font><br>
+
+      Realm Artifacts: <font color="${sizeColor}">${cachecount}</font><br>
+      Multiverse Size: <font color="${sizeColor}">${sizeMB} MB</font><br>
+
+      Weight: <font color="#0FF">${weightClass}</font><br>
+      Personality: <font color="#0FF">${personality}</font><br>
+      Density: <font color="#0FF">${density.toFixed(2)} Artifacts/MB (${KBperEntry} KB)</font><br>
+
+      PulseRank: <font color="gold">${pulseRank}</font><br>
+      First: <font color="lightgreen">${cache.firstEntry?.slice(0, 38) || "none"}</font><br>
+      Last: <font color="lightgreen">${cache.lastEntry?.slice(0, 65) || "none"}</font>
+    `;
+
+    if (cache.lastEntry) {
+      let entry = cache.lastEntry;
+      if (isPulseWorld(lastFailURL)) lastFailURL = entry;
+      li.style.cursor = "pointer";
+      const u = new URL(entry);
+      li.onclick = async () => {
+        pbPreconnect([entry]);
+        openNamedTab(u.hostname, entry);
+        await PBUniversalBoost.warmOrigin(entry);
+      };
+    }
+    
+    const percent = ((totalUsed / localQuota) * 100).toFixed(3);
+    // ⭐ Dynamic color zones
+    let percentColor = "lightgreen";
+    let percentColor2 = "lightgreen";
+    let percentColor3 = "lightgreen";
+    if (percent >= 40) percentColor = "gold";
+    if (percent >= 70) percentColor = "orange";
+    if (percent >= 90) percentColor = "red";
+    if (percent >= 40) percentColor2 = "gold";
+    if (percent >= 70) percentColor2 = "orange";
+    if (percent >= 90) percentColor2 = "red";
+    if (MyLocalMemoryLayerMB >= 180) percentColor3 = "gold";
+    if (MyLocalMemoryLayerMB >= 250) percentColor3 = "orange";
+    if (MyLocalMemoryLayerMB >= 350) percentColor3 = "red";
+    
+    // totalBytes = totalBytes + (errorSizeMB * 1024 * 1024).toFixed(0);
+    const failCount = Object.keys(fails).length;
+    if (!li) li = document.getElementById("li");
+    let u = new URL(lastFailURL);
+    const RealmURL = getReadableName(u);
+    let errorcolor = "lightgreen";
+    if (!isPulseWorld(lastFailURL)) errorcolor = "#FF8844";
+    PulseFrame = document.getElementById("PulseEarnerFrame");
+    let frameUrl = new URL(PulseFrame.src);
+    const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
+    const targetRealm = globalThis.PulseBrowserRealm[realmKey] ??= {};
+    
+    
+    li.innerHTML = li.innerHTML + 
+      // Realm Fragments: <font color="${errorcolor}"><strong>${errorcount || "0"}/<font color="#0FF">${totalcount}</font></strong></font><br>
+      // Misalignment Size: <font color="${errorcolor}"><strong>${errorSizeMB || "0"} MB</strong></font><br>
+      `<br><br>
+      Last Realm Drift: <font color="${errorcolor}"><strong>${RealmURL || "-"}</strong></font><br>
+      404 Drift Sessions: <font color="#0FF"><strong>${failCount || "0"}</strong></font><br>
+      Your Saved Moments: <font color="#0FF"><strong>${pulsemoments || "0"}</strong></font><br>
+      <br>
+        <div style="margin-left: -5px;margin-right: 10px; padding:8px; border-radius:8px;
+                  background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
+
+        <strong><font color="#FFF">PulseWorld System (RAM) [<font color=${percentColor3}>${WeLocalMemoryLayerMB} MB</font>]</font></strong><br><br>
+
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1;">
+            <strong>Local Storage:</strong><br>
+            • <span style="color:#0FF">${targetRealm.PulseCacheUsedMB ?? "Pulling.."} MB</span><br>
+          </div>
+
+          <div style="flex:1;">
+            <strong>System Quota:</strong><br>
+            • <span style="color:#0FF">${targetRealm.PulseCacheQuotaGB ?? "Pulling.."} GB</span><br>
+          </div>
+        </div>
+      </div>
+      <br>
+      <font size="0.9rem"><i>🔍: "Every System that Learns must also <br>
+       Remember, Architecture is Memory made  <br>
+       Manifest."</i> — <font color="#0FF">Words by John von Neumann (1945)</font></font><br>
+    `;
+
+    listEl.appendChild(li);
+    best = true;
+  });
+
+  const identityName = document.getElementById("identityName");
+  if (identityName) {
+    identityName.textContent = "🧑 " + (MyPulseIdentity?.name || "Fellow Multiversal Drifter");
+    identityName.onclick = async () => {
+      openNamedTab("PulseIdentity", pulseIdentityLink);
+      await PBUniversalBoost.warmOrigin(pulseIdentityLink);
+    };
+  }
+  StorageRunning = false;
+}
+// function writeBigBlob() {
+//   return new Promise((resolve, reject) => {
+//     const req = indexedDB.open("PulseWorldTestDB", 2);
+
+//     req.onupgradeneeded = () => {
+//       const db = req.result;
+//       if (!db.objectStoreNames.contains("store")) {
+//         db.createObjectStore("store");
+//       }
+//     };
+
+//     req.onsuccess = () => {
+//       const db = req.result;
+//       const tx = db.transaction("store", "readwrite");
+//       const store = tx.objectStore("store");
+
+//       const bigBlob = new Blob([new Array(10_000_000).fill("x").join("")]);
+
+//       const putReq = store.put(bigBlob, "bigblob");
+
+//       putReq.onsuccess = () => resolve(true);
+//       putReq.onerror = () => reject(putReq.error);
+//     };
+
+//     req.onerror = () => reject(req.error);
+//   });
+// }
+
+function makeBuffered(fn) {
+  return (...args) => {
+      if (ErrorCount >= MAX_ERRORS) {
+          if (!ErrorOverflow) {
+              ErrorOverflow = true;
+              fn("⚠ Error buffer overflow — further errors suppressed");
+          }
+          return;
+      }
+      ErrorCount++;
+      fn(...args);
+  };
+}
+
+window.onerror = function(message, source, lineno, colno, error) {
+  document.getElementById("subtitle").style.color = "red";
+  document.getElementById("subsubtitle").style.color = "red";
+  safeSpeak("[JS ERROR Found] " + makeBuffered(message));
+};
+
+async function getSWSize() {
+  try {
+    const url = chrome.runtime.getURL("PBCompanion.js");
+    const res = await fetch(url);
+    const text = await res.text();
+    return new Blob([text]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
+
+async function getHigherAISize() {
+  try {
+    return new Blob([PulseCogMemoryAIBuffer]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
+
+async function getAISize() {
+  try {
+    return new Blob([PulsePalMemoryAIBuffer]).size; // returns size in bytes
+  } catch (e) {
+    return 0;
+  }
+}
+
+async function pbRenderStorageStats2(history) {
+  if (!navigator.storage || !navigator.storage.estimate) {
+    return `
+      <div style="margin-top:10px; color:#FF4444; font-size:12px;">
+        StorageManager API not supported.
+      </div>
+    `;
+  }
+    
+  // ⭐ LOCAL STORAGE (IndexedDB + Cache + SW)
+  const estimate = await navigator.storage.estimate();
+  const localUsed = estimate.usage || 0;
+  const localQuota = estimate.quota || 1;
+  swSize = await getSWSize();
+  aiSize = await getAISize();
+  higherAISize = await getHigherAISize();
+  // ⭐ SYNC STORAGE (chrome.storage.sync)
+  const syncItems = await new Promise(resolve =>
+    chrome.storage.sync.get(null, resolve)
+  );
+  const syncBytes = new Blob([JSON.stringify(syncItems)]).size;
+  swSize = syncBytes + swSize;
+  // console.log("SW/Sync Size: ", swSize);  
+  aiSize = aiSize + aiSettingsSize;
+  // console.log("aiSettingsSize Size: ", aiSettingsSize);
+  aiSize = aiSize + aiPopupSize;
+  // console.log("aiPopupSize Size: ", aiPopupSize);
+  aiSize = aiSize + higherAISize;
+  // console.log("higherAISize Size: ", higherAISize);
+  // console.log("AI Size: ", aiSize); 
+  // ⭐ Combined totals
+  totalUsed = localUsed + swSize + aiSize;
+  // [Phase 3] Measure real AI model cache size and align with model dropdown VRAM/size (e.g. 4.5 GB for 4500MB, 6.4 GB for 6433MB)
+  let rawHigherAIBytes = 0;
+
+  try {
+    const modelVramMap = {
+      "Qwen2.5-0.5B-Instruct-q4f16_1-MLC": 512,
+      "Qwen2.5-1.5B-Instruct-q4f16_1-MLC": 1200,
+      "Qwen2.5-3B-Instruct-q4f16_1-MLC": 2500,
+      "Qwen2.5-7B-Instruct-q4f16_1-MLC": 4500,
+      "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC": 5107,
+      "Qwen3-8B-q4f16_1-MLC": 5696,
+      "Qwen3.5-9B-q4f16_1-MLC": 6433,
+      "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC": 4500,
+      "DeepSeek-R1-Distill-Llama-8B-q4f16_1-MLC": 5001,
+      "gemma-2-9b-it-q4f16_1-MLC": 6422,
+      "Llama-3.2-1B-Instruct-q4f16_1-MLC": 1000,
+      "Llama-3.2-3B-Instruct-q4f16_1-MLC": 2500,
+      "Llama-3.1-8B-Instruct-q4f32_1-MLC": 5000,
+      "Llama-2-13b-chat-hf-q4f16_1-MLC": 11814,
+      "Llama-3.1-70B-Instruct-q3f16_1-MLC": 31153,
+      "Phi-3.5-vision-instruct-q4f16_1-MLC": 3952,
+    };
+    if (higherLastStatus && Array.isArray(higherLastStatus.models)) {
+      for (const m of higherLastStatus.models) {
+        if (m && m.vramMinMB) {
+          if (m.id) modelVramMap[m.id] = m.vramMinMB;
+          if (m.key) modelVramMap[m.key] = m.vramMinMB;
+        }
+      }
+    }
+
+    const rawBytesByModel = new Map();
+
+    const extractModelId = (urlStr) => {
+      if (!urlStr) return null;
+      const m = urlStr.match(/\/mlc-ai\/([^\/]+)\//i) || urlStr.match(/\/([^\/]+-MLC)\//i);
+      if (m && m[1]) return m[1];
+      for (const knownId of Object.keys(modelVramMap)) {
+        if (knownId.includes("-MLC") && urlStr.includes(knownId)) return knownId;
+      }
+      return null;
+    };
+
+    const cacheNames = await caches.keys();
+    for (const name of cacheNames) {
+      if (name.includes("webllm") || name.includes("mlc") || name.includes("model") || name.includes("huggingface") || name.includes("params_shard")) {
+        const cache = await caches.open(name);
+        const keys = await cache.keys();
+        for (const req of keys) {
+          try {
+            const resp = await cache.match(req);
+            if (!resp) continue;
+            const modelId = extractModelId(req.url);
+            const headerLen = Number(resp.headers?.get?.("content-length") || 0);
+            const entryBytes = headerLen > 0 ? headerLen : (await resp.clone().blob()).size;
+            rawHigherAIBytes += entryBytes;
+            if (modelId) {
+              rawBytesByModel.set(modelId, (rawBytesByModel.get(modelId) || 0) + entryBytes);
+            }
+          } catch (_) { /* skip unreadable entries */ }
+        }
+      }
+    }
+
+    // Disk size = real downloaded bytes. GPU size = the dropdown's VRAM figure (weights + runtime KV buffers),
+    // shown separately so storage numbers always match real storage.
+    higherAIBytes = rawHigherAIBytes;
+    for (const [modelId, rawBytes] of rawBytesByModel.entries()) {
+      const vramMB = modelVramMap[modelId];
+      if (vramMB && rawBytes > 0) higherAIGpuMB = Math.max(higherAIGpuMB, vramMB);
+    }
+  } catch (_) { /* if cache inspection fails, show 0 */ }
+
+  const percent = ((totalUsed / localQuota) * 100).toFixed(3);
+
+  // [Phase 3] Don't subtract — the model cache is already part of localUsed
+  // totalUsed = totalUsed - higherAIDisplay;  // OLD: caused negative totals
+  // ⭐ Conversions (real storage, 1024-based like Chrome's storage quota)
+  const localMB = (localUsed / (1024 * 1024)).toFixed(2);
+  const syncMB = (aiSize / (1024 * 1024)).toFixed(4);
+  const swMB = (swSize / (1024 * 1024)).toFixed(3);
+  const totalMB = (totalUsed / (1024 * 1024)).toFixed(2);
+  const totalGB = (totalUsed / (1024 * 1024 * 1024)).toFixed(2);
+  const higherAIMB = (higherAIBytes / (1024 * 1024)).toFixed(2);
+  const higherAIGB = (higherAIBytes / (1024 * 1024 * 1024)).toFixed(2);
+  const quotaGB = (localQuota / (1024 * 1024 * 1024)).toFixed(2);
+  const swKB = (swSize / 1024).toFixed(2);
+  const syncKB = (aiSize / 1024).toFixed(2);
+
+  // ⭐ Sync display formatting
+  higherAIDisplay = higherAIMB + " MB";
+  if (higherAIBytes < (1024 * 1024 * 1024)) {
+    higherAIDisplay = higherAIMB + " MB";
+  } else {
+    higherAIDisplay = higherAIGB + " GB";
+  }
+  if (higherAIGpuMB > 0) {
+    higherGPUAIDisplay = `<span style="color:#7fdfff">~${higherAIGpuMB.toFixed(0)} MB GPU</span>`;
+  }
+
+  // ⭐ Dynamic color zones
+  let percentColor = "lightgreen";
+  let percentColor2 = "lightgreen";
+  let percentColor3 = "lightgreen";
+  if (percent >= 40) percentColor = "gold";
+  if (percent >= 70) percentColor = "orange";
+  if (percent >= 90) percentColor = "red";
+  if (percent >= 40) percentColor2 = "gold";
+  if (percent >= 70) percentColor2 = "orange";
+  if (percent >= 90) percentColor2 = "red";
+  if (MyLocalMemoryLayerMB >= 180) percentColor3 = "gold";
+  if (MyLocalMemoryLayerMB >= 250) percentColor3 = "orange";
+  if (MyLocalMemoryLayerMB >= 350) percentColor3 = "red";
+
+  // ⭐ Status text
+  let statusText = "SAFE";
+  if (percent >= 40) statusText = "Warming";
+  if (percent >= 70) statusText = "High Load";
+  if (percent >= 90) statusText = "Critical Load";
+
+  // ⭐ Sync display formatting
+  let aisyncDisplay = syncMB + " MB";
+  let totalDisplay = totalMB + " MB";
+  if (totalUsed < (1024 * 1024 * 1024)) {
+    totalDisplay = totalMB + " MB";
+  } else {
+    totalDisplay = totalGB + " GB";
+  }
+  
+  // ⭐ Compute growth rate + projected fill time
+  if (history.pulseStorageHistory) {
+    const { lastCheck, lastUsed } = history.pulseStorageHistory;
+
+    const now = Date.now();
+    const deltaTime = (now - lastCheck) / 1000; // seconds
+    const deltaUsed = totalUsed - lastUsed;
+    
+    if (deltaUsed > 0 && deltaTime > 0) {
+      const rate = deltaUsed / deltaTime; // bytes per second
+      const remaining = localQuota - totalUsed;
+
+      if (rate > 0) {
+        const secondsUntilFull = remaining / rate;
+
+        if (secondsUntilFull > 31536000) { // 365 days
+          predictionText = `~${(secondsUntilFull / 31536000).toFixed(1)} Years`;
+          if ((secondsUntilFull / 31536000) > 1000) predictionText = `~A Millenia`;
+        } else if (secondsUntilFull > 2592000) { // 30 days
+          predictionText = `~${(secondsUntilFull / 2592000).toFixed(1)} Months`;
+        } else if (secondsUntilFull > 86400) { // 1 day
+          predictionText = `~${(secondsUntilFull / 86400).toFixed(1)} Days`;
+        } else if (secondsUntilFull > 3600) { // 1 hour
+          predictionText = `~${(secondsUntilFull / 3600).toFixed(1)} Hours`;
+        } else {
+          predictionText = `~${secondsUntilFull.toFixed(0)} Seconds`;
+        }
+
+      }
+    }
+  }
+
+  chrome.runtime.sendMessage({ type: "STORAGE_PASSOFF", totalUsed }, (response) => {
+    if (!response || !response.ok) {
+      PB_LOG3.info("STORAGE_PASSOFF unavailable or error", response);
+      return;
+    }
+    if (response.totalUsed) {
+      totalUsed = response.totalUsed;
+      if (totalUsed !== response.totalUsed) PB_LOG3.change("STORAGE_PASSOFF: totalUsed", totalUsed, response.totalUsed);
+    }
+    if (response.aiSettingsSize) {
+      aiSettingsSize = response.aiSettingsSize;
+      if (aiSettingsSize !== response.aiSettingsSize) PB_LOG3.change("STORAGE_PASSOFF: aiSettingsSize", aiSettingsSize, response.aiSettingsSize);
+    }
+    if (response.aiPopupSize) {
+      aiPopupSize = response.aiPopupSize;
+      if (aiPopupSize !== response.aiPopupSize) PB_LOG3.change("STORAGE_PASSOFF: aiPopupSize", aiPopupSize, response.aiPopupSize);
+    }
+  });
+
+  
+  // ⭐ Save new history snapshot
+  PulsesafeStorageSet({
+    pulseStorageHistory: {
+      lastCheck: GLOBALSTART ?? nowFP,
+      lastUsed: totalUsed
+    }
+  });
+
+  // PB_LOG3.info("PulseBrowser OS Ignition Date: " + new Date(GLOBALSTART).toLocaleString());
+  // PB_LOG3.info("PulseBrowser OS Session Start: " + new Date(nowFP).toLocaleString());
+  // PB_LOG3.info("PulseBrowser OS Settings Start: " + new Date(lastnowFP).toLocaleString());
+
+  if (!predictionText.includes("Running")) percentColor2 = "#FF8844";
+  if (predictionText.includes("....")) predictionText = predictionText.replace("...", "");
+
+  // ⭐ Render UI
+  return `
+    <div style="margin: 8px 20px; padding:8px; border-radius:8px;
+                background:rgba(0,255,255,0.08); color:#0FF; font-size:12px;">
+
+      <strong><font color="#FF8844">PulseBrowser OS (RAM)</font> [<font color=${percentColor3}>${MyLocalMemoryLayerMB} MB</font>]</strong><br><br>
+
+      <div style="display:flex; gap:10px;">
+
+        <div style="flex:1;">
+          <strong>Higher AI Brain:</strong><br>
+          • <span style="color:lightgreen">${higherAIDisplay}</span><br>
+
+          <strong>AISync Memory:</strong><br>
+          • <span style="color:lightgreen">${aisyncDisplay}</span><br>
+
+          <strong>Local Storage:</strong><br>
+          • <span style="color:lightgreen">${totalDisplay}</span><br>
+        </div>
+
+        <div style="flex:1;">
+          <strong>Higher AI Mind:</strong><br>
+          • <span style="color:lightgreen">${higherGPUAIDisplay}</span><br>
+
+          <strong>System Quota:</strong><br>
+          • <span style="color:lightgreen">${quotaGB} GB</span><br>
+
+          <strong>System Memory:</strong><br>
+          • <span style="color:lightgreen">${swMB} MB</span><br><br>
+        </div>
+      </div>
+
+      <strong>Percent Used:</strong>
+      <span style="color:${percentColor}; font-weight:bold;">
+        ${percent}% (${statusText})
+      </span><br>
+
+      <strong>Projected Fill Time:</strong>
+      <span style="color:${percentColor2}; font-weight:bold;">
+        ${predictionText}
+      </span><br>
+
+    </div>
+    `;
+}
+
+
+function pulseRestoreTabs() {
+  chrome.storage.local.get("pulseTabList", ({ pulseTabList }) => {
+    if (!pulseTabList) return;
+
+    for (const url of pulseTabList) {
+      try {
+        const urlObj = new URL(url);
+        const identity = normalizeIdentity(urlObj);
+
+        openNamedTab(identity, url);
+      } catch (e) {
+        // skip invalid URLs
+      }
+    }
+  });
+}
+
+
+async function pulseRehydrateTabs(WeLocalMemoryLayerMB) {
+  if (document.hidden) return;
+  if (document.visibilityState !== "visible") return;
+  document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(el => el.remove());
+  document.querySelectorAll('[class^="PulseBrowser-OS-Temporary"]').forEach(el => el.remove());
+  let skipcount = 0;
+  PulseRealmSettings = await pbLoadExtensionSettings();
+  chrome.tabs.query({}, tabs => {
+    const rebuilt = {};
+    
+    PulseSnapIndex = 1; // 1–5
+    
+    let StreamingRealm = PulseRealmSettings?.externalStreamingLink;
+    if (typeof StreamingRealm === "string" && StreamingRealm.trim()) {
+      StreamingRealm = StreamingRealm.replace("https://", "").replace("www.", "");
+      if (PulseStreamingLive) latestSnapshot(StreamingRealm, PulseRealmSettings.externalStreamingLink, PulseSnapIndex, 0);
+    }
+
+    for (const tab of tabs) {
+      if (!tab.url) continue;
+      if (PulseSnapIndex > 9) break; // only 5 bubbles
+
+      try {
+        const urlObj = new URL(tab.url);
+        const identity = normalizeIdentity(urlObj);
+
+        // ⭐ Skip NEW TAB — do NOT assign a bubble
+        if (identity === "newtab" || tab.url.startsWith("chrome-extension://") || tab.url.startsWith("chrome://")) {
+          rebuilt[identity] = {
+            id: tab.id,
+            realm: identity,
+            snapshot: null,
+            memory: MyLocalMemoryLayerMB
+          };
+          if (identity !== "newtab") skipcount += 1;
+          if (identity !== "newtab") renderTemporary(true, skipcount, identity, tab.url);
+          continue; // ⭐ Do NOT increment PulseSnapIndex
+        }
+
+        // ⭐ Normal tab → assign bubble
+        latestSnapshot(identity, urlObj, PulseSnapIndex, WeLocalMemoryLayerMB);
+
+        // if (isPulseBusiness(tab.url)) {
+        //   setTimeout(() => {
+        //     PulseFrameB = document.getElementById("PulseEarner3Frame");
+        //     PulseFrameB.src = "PulseStatus.mp4";
+        //     PulseFrameB.opacity = "1";
+        //     PulseEngine2Live = true;
+        //   }, 2000);
+        // }
+
+        rebuilt[identity] = {
+          id: tab.id,
+          realm: identity,
+          snapshot: PulseSnapIndex,
+          memory: WeLocalMemoryLayerMB
+        };
+
+        PulseSnapIndex++;
+
+      } catch (e) {
+        // Skip invalid URLs
+      }
+    }
+    
+    pulseTabs = rebuilt;
+    PulsesafeStorageSet({ pulseTabs: rebuilt });
+  });
+  CheckFaviconChanges();
+  topPanel = document.querySelector(".top-panel");
+  const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+  if (remaining === 0) {
+    topPanel.style.backdropFilter = "blur(24px)";
+    topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+  } else {
+    console.log(`There are ${remaining} bubbles left.`);
+  }
+}
+
+chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+  let originalTabId = tabs[0].id;
+  PulsesafeStorageSet({ originalTabId });
+  pulseRehydrateTabs(WeLocalMemoryLayerMB);
+});
+
+// ---------------------------------------------------------------------------
+// 1. KERNEL HANDSHAKE
+// ---------------------------------------------------------------------------
+chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP }, (response) => {
+  if (chrome.runtime.lastError) return;
+  if (response.time && isValid(response.time)) {
+      nowFP = response.time;
+  }
+  if (response.CustomizePanelsDragNDrop) {
+    CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+  }
+});
+
+function getPrimaryVideo() {
+  const videos = [...document.querySelectorAll("video")];
+
+  // Filter to only videos that are actually loaded/playing
+  const candidates = videos.filter(v =>
+    v.videoWidth > 0 &&
+    v.videoHeight > 0 &&
+    v.readyState >= 2
+  );
+
+  // If no real videos, fallback to first <video>
+  if (candidates.length === 0) {
+    return videos[0] || null;
+  }
+
+  // If exactly one real video → use it
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+
+  // If multiple real videos → use the second one
+  if (candidates.length >= 2) {
+    return candidates[candidates.length - 2];
+  }
+
+  return null;
+}
+
+
+function AttemptPulseSteam(videoElement) {
+  try {
+    if (videoElement) {
+      videoElement.requestPictureInPicture()
+        .catch(err => {
+          console.warn("PIP Error:", err);
+          injectPulseScreenFromMemory();
+        });
+      return;
+    }
+
+    injectPulseScreenFromMemory();
+
+  } catch (e) {
+    console.warn("PulseStream Error:", e);
+    injectPulseScreenFromMemory();
+  }
+}
+
+
+// ============================================================================
+// 14. PBContentGPUWarm++ — Additional GPU warm triggers
+// ============================================================================
+function loadLastSavedVideo(callback) {
+  chrome.storage.local.get(["pipMemory"], data => {
+    const list = data.pipMemory || [];
+    if (!list.length) return callback(null);
+    const last = list[list.length - 1];
+    callback(last);
+  });
+}
+
+function getCharacterInterval() {
+  const base = 5150;
+  // ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.22;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+function getMainInterval() {
+  const base = 8075;
+  // ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.13;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+function injectPulseScreenFromMemory(play) {
+  loadLastSavedVideo(entry => {
+    if (!entry) return;
+    if (!entry.source) return;
+    let source = entry.source;
+    
+    pbPulseScreen.width = entry.width;
+    pbPulseScreen.height = entry.height;
+    pbWrapper.width = entry.width;
+    pbWrapper.height = entry.height;
+    if (pbPulseScreen.src !== source) {
+      if (!source.includes("pw=offline")) {
+        const separator = source.includes("?") ? "&" : "?";
+        source = source + separator + "pw=offline";
+      }
+      pbPulseScreen.src = source;
+      pbPulseScreen.currentTime = entry.currentTime || 0;
+      pbPulseScreen.play = true;
+    }
+    const interval3 = getCharacterInterval();
+    if (!play) {
+      setTimeout(() => {
+        pbPulseScreen.currentTime = 0;
+        pbPulseScreen.play = false;
+      }, interval3);
+    } else {
+      pbPulseScreen.src = source;
+      pbPulseScreen.currentTime = 0;
+      pbPulseScreen.play = true;
+    }
+  });
+}
+
+function getLocalMemoryLayer() {
+  if (!performance || !performance.memory) {
+    return { status: "Standard Engine Active" };
+  }
+
+  // Native V8 Engine Hooks (No permissions required, works on Stable Channel)
+  const heap = performance.memory;
+  LocalMemoryLayerMB = Number(((heap.usedJSHeapSize / 1024 / 1024).toFixed(2)).replace(" MB", ""));
+  LocalMemoryLayerMB = LocalMemoryLayerMB.toFixed(2);
+  
+  return {
+    usedHeapMB: (heap.usedJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    totalHeapMB: (heap.totalJSHeapSize / 1024 / 1024).toFixed(2) + " MB",
+    heapLimitMB: ((heap.jsHeapSizeLimit) / 1024 / 1024).toFixed(2) + " MB"
+  };
+}
+
+async function CheckTime() {
+  const nowTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
+  
+  let dayRan = new Date().toLocaleTimeString();
+  if (dayRan !== runOnceDay && runOnceTime) {
+    runOnceTime = false;
+  }
+  
+  if (((nowTime === "10:00 PM")) && !runOnceTime && !EarnDetailsHidden) {
+    runOnceDay = dayRan;
+    runOnceTime = true;
+    let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await aiSession.prompt(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else if (((nowTime === "12:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
+    runOnceDay = dayRan;
+    runOnceTime = true;
+    let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await aiSession.prompt(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else if (((nowTime === "2:00 AM")) && !runOnceTime && !EarnDetailsHidden) {
+    runOnceDay = dayRan;
+    runOnceTime = true;
+    let order = "Please Help Remind Aldwyn to Take a Break every once in a while, its " + nowTime;
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await aiSession.prompt(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  } else if ((nowTime === "10:00 AM") && !runOnceTime && !EarnDetailsHidden) {
+    runOnceDay = dayRan;
+    runOnceTime = true;
+    let order = "Please Help me Understand Why my System uses System Awake Power but, its " + nowTime + " and it still seems to Sleep every night. I use chrome.power.releaseKeepAwake and chrome.runtime.getPlatformInfo but still seems to sleep? Or is it also cause i push the sleep button at night.";
+    // appendCompanionMessage(CompanionDetailsMessage, "user", order);
+    const response = await aiSession.prompt(order);
+    console.log("🧠 AI Overmind: ", response);
+    appendCompanionMessage(CompanionDetailsMessage, "🧠 AI Overmind", response);
+  }
+}
+
+async function pulseGPUInspector(adapter, device) {
+  // Acquire adapter
+  if (!adapter) adapter = await navigator.gpu?.requestAdapter();
+  if (!adapter) {
+    console.log("❌ WebGPU: No adapter available");
+    return;
+  }
+
+  // Acquire device
+  if (!device) device = await adapter.requestDevice();
+  gpuDescription = adapter.name ?? "PulseEngine 2028";
+  // Basic info
+  console.log("🎮 WebGPU Inspector");
+  console.log("Adapter Name:", adapter.name ?? "PulseEngine 2028");
+  console.log("Adapter Type:", adapter.isFallbackAdapter ? "Fallback" : "Primary");
+  console.log("Features:", [...adapter.features]);
+
+  // Limits (Deep Telemetry)
+  const L = adapter.limits;
+  console.log("📊 GPU Limits:");
+  console.log("  Max Bind Groups:", L.maxBindGroups);
+  console.log("  Max Dynamic Uniform Buffers:", L.maxDynamicUniformBuffersPerPipelineLayout);
+  console.log("  Max Dynamic Storage Buffers:", L.maxDynamicStorageBuffersPerPipelineLayout);
+  console.log("  Max Storage Buffer Size:", L.maxStorageBufferBindingSize);
+  console.log("  Max Uniform Buffer Size:", L.maxUniformBufferBindingSize);
+  console.log("  Max Buffer Size:", L.maxBufferSize);
+  console.log("  Max Texture Dimension 1D:", L.maxTextureDimension1D);
+  console.log("  Max Texture Dimension 2D:", L.maxTextureDimension2D);
+  console.log("  Max Texture Dimension 3D:", L.maxTextureDimension3D);
+  console.log("  Max Compute Workgroup Size X:", L.maxComputeWorkgroupSizeX);
+  console.log("  Max Compute Workgroup Size Y:", L.maxComputeWorkgroupSizeY);
+  console.log("  Max Compute Workgroup Size Z:", L.maxComputeWorkgroupSizeZ);
+  console.log("  Max Compute Invocations:", L.maxComputeInvocationsPerWorkgroup);
+  console.log("  Max Compute Workgroups Per Dimension:", L.maxComputeWorkgroupsPerDimension);
+
+  // Device object
+  console.log("🔧 Device:", device);
+
+  // Context loss detection
+  device.lost.then((info) => {
+    console.warn("⚠️ GPU Context Lost:", info);
+  });
+}
+
+const intervalA = getCharacterInterval();
+// Optional: Real-time heartbeat
+setInterval(async () => {
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+    if (cleanValue > 0 && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+      console.log("Last Earn Batch:", lastEarnBatch);
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+    }
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet({ MyPulseIdentity }); 
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
+      let identitySQL = document.getElementById("identitySQL");
+      MyPulseBusiness = response.MyPulseBusiness;     
+      if (!MyPulseBusiness) {
+        if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+    earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    let fontcolor = "grey";
+    if (dailyRate >= 20) fontcolor = "gold";
+    if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+    if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+    }
+  });
+  setInterval(flickerOrigins, 1500); // every 1.5s
+
+  console.log("💓 GPU Heartbeat: 🧠 AI Overmind Prime - GPU Device Approved!");
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      return;
+    }
+    ServiceWorkerOnline = response.ServiceWorkerOnline;
+    if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
+    // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+    if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
+    if (!ServiceWorkerOnline) {
+      disablesw.src = "PulseResume.webp";
+    } else {
+      disablesw.src = "PulseStop.webp";
+    }
+    if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+      try {
+        (async () => {
+          setTimeout(async () => {
+            await runEngineTest();
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          }, 2500);
+        })();
+      } catch (err) {
+        PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+      }
+    }
+  });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+    if (cleanValue > 0 && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+      console.log("Last Earn Batch:", lastEarnBatch);
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+    }
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet({ MyPulseIdentity }); 
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
+      let identitySQL = document.getElementById("identitySQL");
+      MyPulseBusiness = response.MyPulseBusiness;     
+      if (!MyPulseBusiness) {
+        if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+    earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    let fontcolor = "grey";
+    if (dailyRate >= 20) fontcolor = "gold";
+    if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+    if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+    }
+  });
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+  });
+  loadOrders();
+  await pbRenderCacheList2();
+}, intervalA);
+
+async function ensureNotificationAccess() {
+  if (!("Notification" in window)) {
+    console.warn("[PulseWorld] Notifications not supported in this browser.");
+    return false;
+  }
+
+  if (Notification.permission === "granted") return true;
+
+  if (Notification.permission === "denied") {
+    console.warn("[PulseWorld] Notifications denied by user.");
+    return false;
+  }
+
+  const result = await Notification.requestPermission();
+  return result === "granted";
+}
+
+let lastPulseNotifyMemory = 0;
+
+async function pulseNotify(title, body) {
+  const COOLDOWN_MS = 60 * 1000; // 1 minute
+  const STORAGE_KEY = "pulse_last_notify_ts";
+  const now = Date.now();
+
+  // Check last notification time (persistent in chrome.storage.local + memory fallback)
+  let lastNotified = lastPulseNotifyMemory;
+  try {
+    const data = await chrome.storage.local.get(STORAGE_KEY);
+    const saved = Number(data?.[STORAGE_KEY] ?? 0);
+    if (saved > lastNotified) lastNotified = saved;
+  } catch (e) {
+    // Fallback to in-memory timestamp if storage is temporarily unavailable
+  }
+
+  // Exit early if less than 1 minute has passed
+  if (now - lastNotified < COOLDOWN_MS) return;
+
+  const ok = await ensureNotificationAccess();
+  if (!ok) return;
+
+  // Update timestamp right before firing to prevent duplicate rapid triggers
+  const fireTime = Date.now();
+  lastPulseNotifyMemory = fireTime;
+  try {
+    await chrome.storage.local.set({ [STORAGE_KEY]: fireTime });
+  } catch (e) {}
+
+  new Notification(title, {
+    body,
+    icon: "PulseWorldSplash512.png"
+  });
+}
+
+
+// [Fix] Render cache + earner value immediately on load — don't wait for first interval tick
+(async () => {
+  try {
+    pulseNotify("🌐 PulseBrowser OS","Welcome to the Pulse World Multiverse!");
+    // Show earner value from stored session immediately
+    chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response && response.ok && response.WeassumedValue) {
+        OurassumedValue = response.WeassumedValue;
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+      }
+    });
+    // Render cache list immediately
+    await pbRenderCacheList2();
+  } catch (e) { console.warn("[Quick Load] Cache pre-render skipped:", e); }
+})();
+
+setTimeout(async () => {
+  pulseRehydrateTabs(WeLocalMemoryLayerMB);
+}, 3000);
+
+// ============================================================================
+// 15. PBContentDecodeWarm++ — Aggressive decode warm
+// ============================================================================
+
+async function collectAndWarmAssetsFront() {
+  const assets = [];
+
+  // -------------------------------------------------------
+  // 1. Scripts
+  // -------------------------------------------------------
+  document.querySelectorAll("script[src]").forEach(el => {
+    assets.push(el.src);
+  });
+
+  // -------------------------------------------------------
+  // 2. Stylesheets
+  // -------------------------------------------------------
+  document.querySelectorAll("link[rel='stylesheet'][href]").forEach(el => {
+    assets.push(el.href);
+  });
+
+  // -------------------------------------------------------
+  // 3. HTML Images
+  // -------------------------------------------------------
+  const htmlImgs = [...document.querySelectorAll("img[src]")];
+  htmlImgs.forEach(el => assets.push(el.src));
+
+  // -------------------------------------------------------
+  // 4. CSS Background Images
+  // -------------------------------------------------------
+  const bgImgs = [...document.querySelectorAll("*")]
+    .map(el => getComputedStyle(el).backgroundImage)
+    .filter(bg => bg && bg !== "none")
+    .map(bg => {
+      const match = bg.match(/url\(["']?(.*?)["']?\)/);
+      return match ? match[1] : null;
+    })
+    .filter(Boolean);
+
+  bgImgs.forEach(src => assets.push(src));
+
+  // -------------------------------------------------------
+  // 5. Decode Warm (HTML + CSS synthetic)
+  // -------------------------------------------------------
+  const syntheticImgs = bgImgs.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+
+  const allImgs = [...htmlImgs, ...syntheticImgs];
+  const decodeCount = allImgs.length;
+
+  allImgs.forEach(img => {
+    try { img.decode?.().catch(() => {}); } catch (_) {}
+  });
+
+  chrome.runtime.sendMessage({
+    type: "PBACC_DECODEWARM",
+    count: decodeCount
+  });
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+  });
+
+  await pbRenderCacheList2();
+}
+
+setTimeout(collectAndWarmAssetsFront, 1000);
+
+function showPWLoader() {
+  // If the loader was removed, recreate it
+  if (!loader) {
+    loader = document.createElement("div");
+    loader.id = "pw-loading";
+    loader.className = "pw-loader";
+    document.body.appendChild(loader);
+  }
+
+  console.log("PROVE YOU HAPPENED!" + Date.now());
+  // Ensure styles apply before fading in
+  requestAnimationFrame(() => {
+    loader.style.opacity = "1";
+    loader.style.pointerEvents = "auto"; // optional if your loader blocks input
+  });
+}
+
+function hidePWLoader() {
+  
+  if (!loader) return;
+
+  console.log("I DIDN'T SEE IT LOL!" + Date.now());
+
+  requestAnimationFrame(() => {
+    loader.style.opacity = "0";
+    loader.style.pointerEvents = "none";
+  });
+}
+
+function savePulseTabs(WeLocalMemoryLayerMB) {
+  PulsesafeStorageSet({ pulseTabs });
+}
+
+// Normalize identity to domain or subdomain level
+function normalizeIdentity(url) {
+  try {
+    const u = new URL(url);
+    return u.hostname; // scheme + host (perfect for Gmail, Chase, BridgeBase)
+  } catch {
+    return url; // fallback
+  }
+}
+
+function getNextInstanceIndex() {
+  const used = new Set();
+
+  for (const identity in pulseTabs) {
+    const entry = pulseTabs[identity];
+    if (entry.snapshot) used.add(entry.snapshot);
+  }
+
+  for (let i = 1; i <= 9; i++) {
+    if (!used.has(i)) return i;
+  }
+
+  return 1; // fallback
+}
+
+function escapeMe() {
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
+  PulseFrame2.onclick = async () => {
+    // 1. Save the original inline styles so you can revert to them accurately
+    const originalStyles2 = {
+      height: PulseFrame2.style.height,
+      width: PulseFrame2.style.width,
+      inset: PulseFrame2.style.inset,
+      objectFit: PulseFrame2.style.objectFit,
+    };
+
+    // 2. Apply maximized styles
+    PulseFrame2.style.height = "650px";
+    PulseFrame2.style.width = "1250px";
+
+    // 3. Define the Escape handler and remove it once triggered
+    const handleEscape2 = (e) => {
+      if (e.key === "Escape") {
+        PulseFrame2.style.height = originalStyles2.height;
+        PulseFrame2.style.width = originalStyles2.width;
+        PulseFrame2.style.inset = originalStyles2.inset;
+        PulseFrame2.style.objectFit = originalStyles2.objectFit;
+
+        document.removeEventListener("keydown", handleEscape2);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape2);
+  };
+}
+
+/**
+ * Makes a floating panel draggable on the document.
+ *
+ * @param {HTMLElement} panel - The container element to move.
+ * @param {HTMLElement} [handle=panel] - Optional drag handle (defaults to the whole panel).
+ * @param {Object} [options] - Optional settings.
+ * @param {boolean} [options.keepInBounds=true] - Prevents dragging outside the screen.
+ * @param {Function} [options.onDragEnd] - Callback receiving { x, y } when dropped.
+ * @returns {Function} Cleanup function to remove event listeners.
+ */
+function makePanelDraggable(panel, handle = panel, options = {}) {
+  const { keepInBounds = true, onDragEnd = null } = options;
+
+  let offsetX = 0;
+  let offsetY = 0;
+  let iframes = [];
+
+  // Ensure the panel uses fixed positioning and won't conflict with right/bottom anchors
+  const computed = window.getComputedStyle(panel);
+  if (computed.position === "static") {
+    panel.style.position = "fixed";
+  }
+
+  handle.style.cursor = "grab";
+  handle.style.userSelect = "none";
+  handle.style.touchAction = "none"; // Prevents mobile/touch scrolling while dragging
+
+  function onPointerDown(e) {
+    // Only trigger on primary click (left mouse button or touch)
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+
+    const rect = panel.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    // Anchor strictly to top/left so resizing doesn't break coordinates
+    panel.style.left = `${rect.left}px`;
+    panel.style.top = `${rect.top}px`;
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+
+    // Disable pointer events on any iframes inside the panel so they don't swallow the drag
+    iframes = Array.from(panel.querySelectorAll("iframe"));
+    iframes.forEach((iframe) => {
+      iframe.dataset.prevPointerEvents = iframe.style.pointerEvents || "";
+      iframe.style.pointerEvents = "none";
+    });
+
+    handle.style.cursor = "grabbing";
+    handle.setPointerCapture(e.pointerId);
+
+    handle.addEventListener("pointermove", onPointerMove);
+    handle.addEventListener("pointerup", onPointerUp);
+    handle.addEventListener("pointercancel", onPointerUp);
+  }
+
+  function onPointerMove(e) {
+    let nextX = e.clientX - offsetX;
+    let nextY = e.clientY - offsetY;
+
+    if (keepInBounds) {
+      const maxX = window.innerWidth - panel.offsetWidth;
+      const maxY = window.innerHeight - panel.offsetHeight;
+      nextX = Math.max(0, Math.min(maxX, nextX));
+      nextY = Math.max(0, Math.min(maxY, nextY));
+    }
+
+    panel.style.left = `${nextX}px`;
+    panel.style.top = `${nextY}px`;
+  }
+
+  function onPointerUp(e) {
+    handle.releasePointerCapture(e.pointerId);
+    handle.removeEventListener("pointermove", onPointerMove);
+    handle.removeEventListener("pointerup", onPointerUp);
+    handle.removeEventListener("pointercancel", onPointerUp);
+
+    handle.style.cursor = "grab";
+
+    // Restore iframe interactivity
+    iframes.forEach((iframe) => {
+      iframe.style.pointerEvents = iframe.dataset.prevPointerEvents;
+      delete iframe.dataset.prevPointerEvents;
+    });
+
+    if (typeof onDragEnd === "function") {
+      onDragEnd({
+        x: parseFloat(panel.style.left),
+        y: parseFloat(panel.style.top),
+      });
+    }
+  }
+
+  handle.addEventListener("pointerdown", onPointerDown);
+
+  // Return a teardown function in case you destroy the panel later
+  return () => {
+    handle.removeEventListener("pointerdown", onPointerDown);
+  };
+}
+
+
+async function renderSnapshot(snapshot, snapIndex, realm, link, WeLocalMemoryLayerMB) {
+  const bubbleId = `PulseBrowser-OS-Snapshot${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+  let topPanel = document.querySelector(".top-panel");
+
+  if (snapshot) {
+    if (!div) {
+      div = document.createElement("div");
+    } else {
+      div = document.getElementById(bubbleId);
+    }
+
+    div.id = bubbleId;
+    div.className = bubbleId;
+
+    if (PulseStreamingLive  && link === PulseRealmSettings.externalStreamingLink) {
+      div.style.opacity = "0.35";
+    } else if (PulseAILive  && ((link === PulseRealmSettings.externalBankLink))) {
+      div.style.opacity = "0.35";
+    } else {
+      div.style.opacity = "1";
+    }
+    
+    let favicon = snapshot.regfavicon ?? snapshot.favicon ?? await getFavicon(link);
+    const MemoryLayer = snapshot.tabMemory ?? WeLocalMemoryLayerMB;
+    const ValueFromTab = ALLassumedValue ?? snapshot.assumedValue;
+    const identityName = document.getElementById("identityName");
+    const PulseIdentity = identityName.textContent ?? snapshot.MyPulseIdentity.name ?? MyPulseIdentity.name;
+    let URLLink = null;
+    if (realm) {
+      URLLink = realm;
+    } else {
+      URLLink = link;
+    }
+
+    if (PBROWSERFAVICON_CACHE[URLLink]) {
+      PBROWSERFAVICON_CACHE[URLLink] = favicon;
+      saveCache();
+    }
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png");
+
+    // ⭐ No inline JS — CSP-safe
+    div.innerHTML = `
+      <div class="Snapshot-Viewport">
+        <img class="Snapshot-Favicon"
+              src="${favicon}"
+              alt="${MemoryLayer} MB || ${currency(ValueFromTab)} || ${PulseIdentity}" />
+      </div>
+    `;
+
+    topPanel.appendChild(div);
+
+    // ⭐ Attach fallback in JS (CSP-safe)
+    const img = div.querySelector(".Snapshot-Favicon");
+
+    img.addEventListener("error", () => {
+      if (snapshot.svg) {
+        img.src = snapshot.svg;
+      } else {
+        img.src = osfallback;
+      }
+    });
+
+    topPanel.style.backdropFilter = "blur(8px)";
+    topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+
+  } else {
+    topPanel.classList.add("electrify");
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
+    toppanel = document.getElementById("top-panel left-panel");
+    const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+    if (remaining === 0) {
+      topPanel.style.backdropFilter = "blur(24px)";
+      topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+    } else {
+      console.log(`There are ${remaining} bubbles left.`);
+    }
+
+    setTimeout(() => {
+      topPanel.classList.remove("electrify");
+    }, 1500);
+  }
+
+  let URLLink = null;
+  if (realm) {
+    URLLink = realm;
+  } else {
+    URLLink = link;
+  }
+
+  if (div) {
+    div.onclick = async () => {
+      if (PulseStreamingLive  && URLLink === PulseRealmSettings.externalStreamingLink) {
+        pbPreconnect([link]);
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        latestSnapshot(realm, link, PulseSnapIndex, 0);
+        if (displayStyle) {
+          PulseFrame2 = document.getElementById("PulseStreamFrame");
+          destroyIframe(PulseFrame2);
+          openNamedTab(realm, link, true);
+          PulseStreamingLive = false;
+          topPanel = document.querySelector(".top-panel");
+          const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+          if (remaining === 0) {
+            topPanel.style.backdropFilter = "blur(24px)";
+            topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+          } else {
+            console.log(`There are ${remaining} bubbles left.`);
+          }
+        }
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      // } else if ((PulseRealmSettings.externalBankLink && PulseRealmSettings.externalBankLink === URLLink)) {
+      //   pbPreconnect([link]);
+      //   PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+      //   latestSnapshot(realm, link, PulseSnapIndex, 0);
+      //   if (bankdisplayStyle) {
+      //     PulseBrowserOSFrame = document.getElementById("PulseBrowserOSFrame");
+      //     openNamedTab(realm, link);
+      //     topPanel = document.querySelector(".top-panel");
+      //     const remaining = topPanel.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').length;
+      //     if (remaining === 0) {
+      //       topPanel.style.backdropFilter = "blur(24px)";
+      //       topPanel.style.backgroundImage = "url(PulseOSBubbles.png)";
+      //     } else {
+      //       console.log(`There are ${remaining} bubbles left.`);
+      //     }
+      //   }
+      } else {
+        pbPreconnect([link]);
+        openNamedTab(realm, link);
+      }
+    };
+  }
+}
+
+async function renderTemporary(snapshot, snapIndex, realm, link) {
+  const bubbleId = `PulseBrowser-OS-Temporary${snapIndex}`;
+  let div = document.getElementById(bubbleId);
+
+  if (snapshot) {
+    if (!div) {
+      div = document.createElement("div");
+      div.id = bubbleId;
+      div.className = bubbleId;
+
+      const regfavicon = await getFavicon(realm);
+      const favicon = regfavicon;
+      let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
+      if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
+      if (link.startsWith("chrome://") && !link.includes("extension")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
+      const os2fallback = chrome.runtime.getURL("PulseOSBubble.png");
+      let bestfavicon = osfallback;
+
+      // ⭐ No inline JS — CSP-safe
+      div.innerHTML = `
+        <div class="Snapshot-Viewport">
+          <img class="Snapshot-Favicon2"
+               src="${bestfavicon}"
+               alt="favicon">
+        </div>
+      `;
+
+      document.body.appendChild(div);
+
+      // ⭐ Attach fallback in JS (CSP-safe)
+      const img = div.querySelector(".Snapshot-Favicon2");
+
+      img.addEventListener("error", () => {
+        // First fallback → OS icon
+        img.src = os2fallback;
+      });
+    }
+
+  } else {
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
+  }
+
+  if (div) {
+    div.onclick = async () => {
+      pbPreconnect([link]);
+      openNamedTab(realm, link);
+    };
+  }
+}
+
+async function openNamedTab(name, url, skip) {
+  PulseRealmSettings = await pbLoadExtensionSettings();
+  PulseFrame2 = document.getElementById("PulseStreamFrame");
+  if (PulseFrame2 && !skip) {
+    if (PulseRealmSettings.externalStreamingLink && PulseRealmSettings.externalStreamingLink === url) {
+      MinimizeOverride = false;
+      PulseStreamingLive = true;
+      let realm = url;
+      realm = realm.replace("https://","");
+      realm = realm.replace("www.","");
+      PulseFrame2 = document.getElementById("PulseStreamFrame");
+      latestSnapshot(realm, url, PulseSnapIndex, 0);
+      if (!displayStyle) {
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        PulseFrame2.style.display = "block";
+        displayStyle = true;
+        return;
+      } else {
+        if (!PulseFrame2.src.includes(url)) PulseFrame2.src = url;
+        PulseFrame2.style.display = "none";
+        displayStyle = false;
+        return;
+      }
+    }
+  }
+  showPWLoader();
+  const identity = normalizeIdentity(url);
+  name = identity;
+  const override = true;
+  const instanceIndex = getNextInstanceIndex(identity);
+  const existingEntry = pulseTabs[identity];
+  
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  
+  try {
+    if (isPulseWorld(url)) identityrunonce = false;
+    fetch(url, { mode: "no-cors" }).catch(() => {});
+  } catch (_) {
+
+  }
+
+  // ⭐ If tab already exists → PURE SELECT
+  if (existingEntry) {
+    const tabId = Number(existingEntry.id);
+
+    if (!Number.isInteger(tabId)) {
+      
+      chrome.tabs.create({ url }, newTab => {
+        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+          if (chrome.runtime.lastError) return;
+          if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+          if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+        });
+        pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+        console.log(pulseTabs[identity]);
+        savePulseTabs(WeLocalMemoryLayerMB);
+      });
+
+      PulseURL = url;
+      hidePWLoader();
+      PulseSnapshotView = new URL(url).hostname;
+
+      setTimeout(async () => {
+        chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+          if (chrome.runtime.lastError) return;
+          if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+          if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+        });
+        await pbRenderCacheList2();
+      }, 2500);
+
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+        }
+      });
+      
+      setTimeout(() => {
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      }, 2000);
+      return;
+    }
+
+    chrome.tabs.get(tabId, tab => {
+      if (chrome.runtime.lastError || !tab) {
+        chrome.tabs.update(tabId, { url, active: true, autoDiscardable: false }, updated => {
+          if (chrome.runtime.lastError || !updated) {
+            chrome.tabs.create({ url }, newTab => {
+              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+                if (chrome.runtime.lastError) return;
+                if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+                if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+              });
+              pulseTabs[identity] = { id: newTab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+              console.log(pulseTabs[identity]);
+              savePulseTabs(WeLocalMemoryLayerMB);
+            });
+
+            PulseURL = url;
+            hidePWLoader();
+            PulseSnapshotView = new URL(url).hostname;
+
+            setTimeout(async () => {
+              chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+                if (chrome.runtime.lastError) return;
+                if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+                if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+              });
+              await pbRenderCacheList2();
+            }, 2500);
+
+            chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+              if (chrome.runtime.lastError) return;
+              if (response.time && isValid(response.time)) {
+                  nowFP = response.time;
+              }
+              if (response.CustomizePanelsDragNDrop) {
+                CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+              }
+            });
+            
+            setTimeout(() => {
+              pulseRehydrateTabs(WeLocalMemoryLayerMB);
+            }, 2000);
+            return;
+          }
+
+          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+            if (chrome.runtime.lastError) return;
+            if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+            if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+          });
+          pulseTabs[identity] = { id: updated.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+          console.log(pulseTabs[identity]);
+          savePulseTabs(WeLocalMemoryLayerMB);
+        });
+
+        PulseURL = url;
+        hidePWLoader();
+        PulseSnapshotView = new URL(url).hostname;
+
+        setTimeout(async () => {
+          chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+            if (chrome.runtime.lastError) return;
+            if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+            if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+          });
+          await pbRenderCacheList2();
+        }, 2500);
+
+        chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+          if (chrome.runtime.lastError) return;
+          if (response.time && isValid(response.time)) {
+              nowFP = response.time;
+          }
+          if (response.CustomizePanelsDragNDrop) {
+            CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+          }
+        });
+        
+        setTimeout(() => {
+          pulseRehydrateTabs(WeLocalMemoryLayerMB);
+        }, 2000);
+        return;
+      }
+
+      chrome.tabs.highlight({
+        windowId: tab.windowId,
+        tabs: [tab.index]
+      });
+
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+      });
+      pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+      console.log(pulseTabs[identity]);
+      savePulseTabs(WeLocalMemoryLayerMB);
+    });
+
+    PulseURL = url;
+    hidePWLoader();
+    PulseSnapshotView = new URL(url).hostname;
+
+    setTimeout(async () => {
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+      });
+      await pbRenderCacheList2();
+    }, 2500);
+
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.time && isValid(response.time)) {
+          nowFP = response.time;
+      }
+      if (response.CustomizePanelsDragNDrop) {
+        CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+      }
+    });
+    
+    setTimeout(() => {
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
+    }, 2000);
+    return;
+  }
+
+  // ⭐ No existing tab → create new
+  chrome.tabs.create({ url }, tab => {
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+    });
+    pulseTabs[identity] = { id: tab.id, realm: identity, snapshot: instanceIndex, memory: WeLocalMemoryLayerMB };
+    console.log(pulseTabs[identity]);
+    savePulseTabs(WeLocalMemoryLayerMB);
+  });
+
+  PulseURL = url;
+  hidePWLoader();
+  PulseSnapshotView = new URL(url).hostname;
+  
+  setTimeout(async () => {
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer, override  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+    });
+    await pbRenderCacheList2();
+  }, 2500);
+
+  chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.time && isValid(response.time)) {
+        nowFP = response.time;
+    }
+    if (response.CustomizePanelsDragNDrop) {
+      CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+    }
+  });
+  
+  setTimeout(() => {
+    pulseRehydrateTabs(WeLocalMemoryLayerMB);
+  }, 2000);
+}
+
+function destroyIframe(iframe) {
+  if (!iframe) return;
+
+  // 1. Navigate to about:blank to unload the current document and stop scripts/timers
+  iframe.src = 'about:blank';
+
+  // 2. If same-origin, explicitly clear the document body and remove listeners
+  try {
+    if (iframe.contentWindow) {
+      iframe.contentWindow.document.open();
+      iframe.contentWindow.document.write('');
+      iframe.contentWindow.document.close();
+    }
+  } catch (e) {
+    // Cross-origin iframes will throw a SecurityError here, which is safe to ignore
+  }
+
+  // // 3. Remove the element from the DOM
+  // iframe.remove();
+
+  // // 4. Nullify your variable reference (do this in the calling scope as well)
+  // iframe = null;
+}
+
+function latestSnapshot(realm, link, snapIndex, WeLocalMemoryLayerMB) {
+  const snapshotKey = `pulse_snapshot_${realm}`;
+  // if (isPulseWorld(link)) {
+  //   PulseFrameA = document.getElementById("PulseEarner2Frame");
+  //   PulseFrameA.src = "PulseStatus.mp4";
+  //   PulseFrameA.opacity = "1";
+  // }
+  chrome.storage.local.get(snapshotKey, (items) => {
+    const snap = items[snapshotKey];
+    if (snap) {
+      renderSnapshot(snap, snapIndex, realm, link, WeLocalMemoryLayerMB);
+    } else {
+      if (!WeLocalMemoryLayerMB) {
+        renderSnapshot(true, PulseSnapIndex, realm, link, 0);
+      } else {
+        renderSnapshot(true, PulseSnapIndex, realm, link, WeLocalMemoryLayerMB);
+      }
+    }
+    // else {
+    //   renderTemporary(snap, snapIndex, realm, link);
+    // }
+  });
+}
+
+const intervalB = getMainInterval();
+// Re-render after everything
+setInterval(async () => {
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+  });
+  loadOrders();
+
+  await pbRenderCacheList2();
+}, intervalB);
+
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  let removedSnapshotIndex = null;
+  
+  // Find and remove the entry
+  for (const identity in pulseTabs) {
+    const entry = pulseTabs[identity];
+
+    if (entry.id === tabId) {
+      const realm = entry.realm;
+      removedSnapshotIndex = entry.snapshot;
+
+      const snapshotKey = `pulse_snapshot_${realm}`;
+      chrome.storage.local.remove(snapshotKey);
+
+      if (PulseSnapshotView === realm) {
+        
+        PulseSnapshotView = null;
+        PulseURL = null;
+      }
+
+      renderSnapshot(null, removedSnapshotIndex, realm, realm, 0);
+
+      delete pulseTabs[identity];
+      break;
+    }
+  }
+  
+  pulseRehydrateTabs(WeLocalMemoryLayerMB);
+  try {
+    backToOriginal();
+  } catch (err) {}
+  
+  // injectPulseScreenFromMemory();
+  // location.reload();
+});
+
+
+function isPulseWorld(origin) {
+  return origin.includes("pulseworld.net")
+      || origin.includes("orbitalmap.net")
+      || ((origin.includes("mcbbhkdjpaakjabngfjmaeihnoilognk") || origin.includes("kkidimiknkgfkjplagaohacidaagcbjg")) && (origin.includes("chromewebstore") || origin.includes("chrome")))
+      || origin.includes("booleanlogic.net")
+      || origin.includes("binaryos.net")
+      || origin.includes("serviceworker.net")
+      || origin.includes("gpuprocessing.net")
+      || origin.includes("pulseworld.me")
+      || origin.includes("pulseworld.money")
+      || origin.includes("pulseworld.biz");
+}
+
+function isPulseBusiness(origin) {
+  return origin.includes("pulseworld.biz");
+}
+
+function IsPartner(origin) {
+  return origin.includes("fordfamilyretail")
+      || origin.includes("peacesmokeshop")
+      || origin.includes("crocsbar")
+      || origin.includes("peace-smokeshop")
+      || origin.includes("peacesmoke-shop")
+      || origin.includes("chromewebstore")
+      || origin.includes("fordfamilydistribution")
+      || origin.includes("peace-smoke-shop")
+      || origin.includes("fordfamilymanagement");
+}
+
+// ============================================================================
+//  PBUniversalBoost.js — Global SW-like acceleration (publish directory warm)
+// ============================================================================
+
+const PBUniversalBoost = {
+  async warmOrigin(origin) {
+    if (!origin) return;
+
+    // ⭐ Normalize origin: remove trailing slash if present
+    const base = origin.endsWith("/") ? origin.slice(0, -1) : origin;
+
+    // ⭐ Load permanent per-URL fail-cache
+    const store = await chrome.storage.local.get(["pb_fail_cache"]);
+    const fails = store.pb_fail_cache || {};
+
+    // ⭐ HARD BLOCK: skip all non-web origins
+    const forbidden = [
+      "chrome://",
+      "chrome-extension://",
+      "edge://",
+      "brave://",
+      "opera://",
+      "file://",
+      "data://",
+      "blob://",
+      "about://"
+    ];
+
+    for (const prefix of forbidden) {
+      if (base.startsWith(prefix)) return;
+    }
+
+    // ⭐ Only warm http/https origins
+    if (!base.startsWith("http://") && !base.startsWith("https://")) {
+      return;
+    }
+
+    // ⭐ Skip warming any URL with a query string
+    if (base.includes("?") || base.includes("chromewebstore.google.com")) {
+      return;
+    }
+
+    // ⭐ Skip warming if the FULL URL already ends with a file extension
+    if (/\.(html|css|js|png|jpg|jpeg|webp|svg|json)$/i.test(base)) {
+      console.log("[PBUniversalBoost] Skipped (direct file):", base);
+      return;
+    }
+
+    const paths = [
+      "/", "/index.html", "/home", "/about", "/contact", "/manifest.json"
+    ];
+    const assets = [
+      "/main.js", "/bundle.js", "/app.js", "/styles.css", "/app.css"
+    ];
+
+    const urls = []
+      .concat(paths.map((p) => base + p))
+      .concat(assets.map((p) => base + p));
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    for (const url of urls) {
+      // ⭐ If THIS SPECIFIC URL failed twice → skip forever
+      if (fails[url] >= 2) continue;
+
+      try {
+        const res = await fetch(url, { cache: "force-cache" }).catch(() => null);
+
+        if (res && res.status === 404) {
+          fails[url] = (fails[url] || 0) + 1;
+          lastFailURL = url;
+          if (fails[url] >= 2) {
+            await PulsesafeStorageSet({ pb_fail_cache: fails });
+          }
+        } else {
+          warmedCount++;
+        }
+      } catch (_) {}
+
+      // ⭐ Add delay between warm-fetches
+      await sleep(200);   // ← 150–200ms recommended
+    }
+
+    // ⭐ Save updated fail-cache
+    await PulsesafeStorageSet({ pb_fail_cache: fails });
+
+    console.log("[PBUniversalBoost] Warmed publish directory for", origin);
+  },
+
+  async warmTab(tab) {
+    if (!tab || !tab.url) return;
+    try {
+      const rawOrigin = new URL(tab.url).origin;
+      const origin = rawOrigin.endsWith("/") ? rawOrigin.slice(0, -1) : rawOrigin;
+      await PBUniversalBoost2.warmOrigin(origin);
+    } catch (_) {}
+  }
+};
+
+
+/**
+ * Acquires high-precision user location in a Browser Extension context
+ * (Popup, Side Panel, Options Page, or Offscreen Document).
+ */
+async function ensureLocationAccess(options = {}) {
+  const {
+    desiredAccuracy = 50,      // Target accuracy in meters (e.g., 50m = real GPS)
+    maxWaitTime = 15000,       // Max ms to wait for GPS lock
+    fallbackToCache = true     // Use recent cached location if live GPS fails
+  } = options;
+
+  // 1. Check Extension Context & Geolocation Support
+  // Note: Service Workers lack navigator.geolocation; this requires a UI page or Offscreen Document.
+  if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
+    return {
+      ok: false,
+      reason: "UNSUPPORTED_CONTEXT",
+      message: "Geolocation is unavailable here. In MV3, run this inside a Popup, Side Panel, or Offscreen Document."
+    };
+  }
+
+  // Use globalThis instead of window so it doesn't throw ReferenceError in non-window contexts
+  if (typeof globalThis !== "undefined" && globalThis.isSecureContext === false) {
+    console.warn("[PulseWorld] Geolocation requires a secure context (chrome-extension:// or https://).");
+    return { ok: false, reason: "INSECURE_CONTEXT", message: "Secure context is required for GPS." };
+  }
+
+  // 2. Safely retrieve previous coordinates via chrome.storage.local
+  let pastProximity = null;
+  try {
+    const data = await chrome.storage.local.get("PulseProximityCoords");
+    if (data && data.PulseProximityCoords) {
+      pastProximity = data.PulseProximityCoords;
+    }
+  } catch (e) {
+    console.warn("[PulseWorld] Failed to read past proximity coords from storage:", e);
+  }
+
+  // 3. Check Permission State upfront
+  if (navigator.permissions && navigator.permissions.query) {
+    try {
+      const status = await navigator.permissions.query({ name: "geolocation" });
+      if (status.state === "denied") {
+        return {
+          ok: false,
+          reason: "PERMISSION_DENIED",
+          message: "Location access is blocked. Ensure 'geolocation' is in manifest.json permissions and allowed in browser settings.",
+          pastCoords: pastProximity
+        };
+      }
+    } catch (e) {
+      // Continue normally if permissions.query is unsupported for geolocation
+    }
+  }
+
+  // 4. Actively refine GPS via watchPosition
+  return new Promise((resolve) => {
+    let bestPosition = null;
+    let watchId = null;
+    let isResolved = false;
+    let timer = null;
+
+    const cleanup = () => {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      if (timer !== null) clearTimeout(timer);
+    };
+
+    const finalize = (result) => {
+      if (isResolved) return;
+      isResolved = true;
+      cleanup();
+      resolve(result);
+    };
+
+    // Async storage writer using chrome.storage.local
+    const saveCoords = async (pos) => {
+      const coords = {
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        acc: Math.round(pos.coords.accuracy),
+        alt: pos.coords.altitude,
+        speed: pos.coords.speed,
+        ts: pos.timestamp
+      };
+      try {
+        await chrome.storage.local.set({ PulseProximityCoords: coords });
+      } catch (e) {
+        console.warn("[PulseWorld] Extension storage error:", e);
+      }
+      return coords;
+    };
+
+    // Stop waiting after maxWaitTime and use the best reading we got
+    timer = setTimeout(async () => {
+      if (bestPosition) {
+        const coords = await saveCoords(bestPosition);
+        finalize({
+          ok: true,
+          source: "gps-partial",
+          coords,
+          pastCoords: pastProximity,
+          warning: `Accuracy (${coords.acc}m) did not reach target (${desiredAccuracy}m).`
+        });
+      } else if (fallbackToCache && pastProximity && Date.now() - pastProximity.ts < 3600000) {
+        // Fallback to cache if less than 1 hour old
+        finalize({
+          ok: true,
+          source: "cache",
+          coords: pastProximity
+        });
+      } else {
+        finalize({
+          ok: false,
+          reason: "TIMEOUT",
+          message: "GPS signal timed out. Try moving near a window or outdoors."
+        });
+      }
+    }, maxWaitTime);
+
+    // Start watching position to let GPS lock on
+    watchId = navigator.geolocation.watchPosition(
+      async (pos) => {
+        if (!bestPosition || pos.coords.accuracy < bestPosition.coords.accuracy) {
+          bestPosition = pos;
+        }
+
+        // Once accuracy meets our threshold, lock it in immediately
+        if (pos.coords.accuracy <= desiredAccuracy) {
+          const coords = await saveCoords(pos);
+          finalize({
+            ok: true,
+            source: "gps-exact",
+            coords,
+            pastCoords: pastProximity
+          });
+        }
+      },
+      (err) => {
+        const errorMap = {
+          1: "PERMISSION_DENIED",
+          2: "POSITION_UNAVAILABLE",
+          3: "TIMEOUT"
+        };
+        finalize({
+          ok: false,
+          reason: errorMap[err.code] || "UNKNOWN_ERROR",
+          message: err.message,
+          pastCoords: pastProximity
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: maxWaitTime
+      }
+    );
+  });
+}
+
+// ---------------------------------------------------------
+// ⭐ TINYPNG-STYLE COMPRESSION (Canvas → WebP)
+// ---------------------------------------------------------
+async function compressImageTinyPNGStyle(blob) {
+  return new Promise((resolve) => {
+    const img = new Image();
+
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(
+          (compressed) => {
+            resolve(compressed || blob); // fallback
+          },
+          "image/webp",
+          0.82
+        );
+      } catch (err) {
+        console.warn("Compression failed, fallback to original blob:", err);
+        resolve(blob);
+      }
+    };
+
+    img.onerror = () => {
+      console.warn("Image load failed during compression, fallback.");
+      resolve(blob);
+    };
+
+    img.src = URL.createObjectURL(blob);
+  });
+}
+
+// async function cacheMyBlob(cache, url, myBlob) {
+//   if (!cache) cache = await caches.open(CACHE_NAME);
+//   // 1. Wrap the Blob in a Response object
+//   const response = new Response(myBlob, {
+//     headers: { 
+//       'Content-Type': myBlob.type,
+//       'Content-Length': myBlob.size
+//     }
+//   });
+//   // 2. Put it in the cache using a URL or custom string as the key
+//   await cache.put(url, response);
+// }
+
+
+// ---------------------------------------------------------
+// ⭐ FETCH → COMPRESS → BASE64 → STORE
+// ---------------------------------------------------------
+async function fetchAndStoreIcon(host, iconUrl) {
+
+  // ⭐ 1. Check cache first
+  if (PBROWSERFAVICON_CACHE[host]) {
+    const cached = PBROWSERFAVICON_CACHE[host];
+
+    // Valid Base64 favicon
+    if (typeof cached === "string" &&
+        cached.startsWith("data:image") &&
+        cached.length > 50) {
+      return cached;
+    }
+
+    // Valid fallback URL
+    if (cached.startsWith("http")) {
+      return cached;
+    }
+  }
+
+  // ⭐ 2. No valid cache → fetch
+  try {
+    const response = await fetch(iconUrl);
+    const osfallback = chrome.runtime.getURL("PulseOSBubble.png"); // ← your OS bubble icon
+
+    // ⭐ HARD STOP: do NOT blob invalid responses
+    if (!response.ok) {
+      console.warn("Invalid favicon response:", iconUrl, response.status);
+      PBROWSERFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback; // ← triggers your fallback system
+    }
+
+    const blob = await response.blob();
+
+    // ⭐ Fallback if blob is empty
+    if (!blob || blob.size === 0) {
+      console.warn("Empty favicon blob, falling back:", osfallback);
+      PBROWSERFAVICON_CACHE[host] = osfallback;
+      saveCache();
+      return osfallback;
+    }
+
+    // // ⭐ Decode-test the blob
+    // const valid = await isBlobValidImage(blob);
+    // if (!valid) {
+    //   console.warn("Corrupted favicon detected:", iconUrl);
+    //   PBROWSERFAVICON_CACHE[host] = osfallback;
+    //   saveCache();
+    //   return osfallback;
+    // }
+
+    const reader = new FileReader();
+
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        const base64 = reader.result;
+
+        // ⭐ Validate Base64
+        if (
+          !base64 ||
+          typeof base64 !== "string" ||
+          base64.trim() === "" ||
+          (base64.startsWith("data:") && base64.length < 20) ||
+          base64.startsWith("data:text")
+        ) {
+          console.warn("Invalid Base64 favicon, falling back:", iconUrl);
+          PBROWSERFAVICON_CACHE[host] = iconUrl;
+          saveCache();
+          resolve(iconUrl);
+          return;
+        }
+
+        // ⭐ Save compressed Base64
+        PBROWSERFAVICON_CACHE[host] = base64;
+        saveCache();
+        resolve(base64);
+      };
+
+      reader.onerror = () => {
+        console.warn("FileReader failed, falling back:", iconUrl);
+        PBROWSERFAVICON_CACHE[host] = iconUrl;
+        saveCache();
+        resolve(iconUrl);
+      };
+
+      reader.readAsDataURL(blob);
+    });
+
+  } catch (err) {
+    console.warn("Favicon fetch failed:", iconUrl, err);
+
+    // ⭐ Last resort fallback
+    PBROWSERFAVICON_CACHE[host] = iconUrl;
+    saveCache();
+    return iconUrl;
+  }
+}
+// old favicon from frontpage/etc
+// async function getFavicon(url, flags = {}) {
+//   let u;
+
+//   try {
+//     u = new URL(url);
+//   } catch {
+//     return null;
+//   }
+
+//   let host = u.hostname;
+
+//   // ⭐ Preserve www if explicitly present
+//   if (url.includes("www.") && !host.startsWith("www.")) {
+//     host = "www." + host;
+//   }
+
+//   // ⭐ Default favicon URL
+//   let iconURL = `https://${host}/favicon.ico`;
+
+//   // ⭐ Strip subdomains unless it's "www"
+//   const parts = host.split(".");
+//   if (parts.length > 2 && parts[0] !== "www") {
+//     const root = parts.slice(parts.length - 2).join(".");
+//     iconURL = `https://${root}/favicon.ico`;
+//   }
+
+//   let icon = iconURL;
+
+//   // ⭐ Special external cases
+//   try {
+//     if (host.includes("google.com")) {
+//       iconURL = "https://www.google.com/favicon.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("mail.google.com") || host.includes("gmail.com")) {
+//       iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("chase.com")) {
+//       iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("office.com")) {
+//       iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("github.com")) {
+//       iconURL = "https://github.githubassets.com/favicons/favicon.svg";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("youtube.com")) {
+//       iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     if (host.includes("discord.com")) {
+//       iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+//       icon = await fetchAndStoreIcon(host, iconURL);
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//   } catch {
+//     PBROWSERFAVICON_CACHE[host] = iconURL;
+//     saveCache();
+//     return iconURL;
+//   }
+
+//   // ⭐ Cached → return instantly
+//   if (PBROWSERFAVICON_CACHE[host]) {
+//     console.log(
+//       "%c[PULSEBROWSER OS KERNEL] SAVED FAVICON LOCATED: " + host,
+//       "color:#00FF9C; font-weight:bold; font-family:monospace;"
+//     );
+//     return PBROWSERFAVICON_CACHE[host];
+//   }
+
+//   // ⭐ PulseWorld realm detection (automatic)
+//   const PW_REALMS = {
+//     "pulseworld.net": "PWFavIcon.ico",
+//     "pulseworld.biz": "PWBFavIcon.ico",
+//     "pulseworld.me": "PWIFavIcon.ico",
+//     "pulseworld.money": "PWMFavIcon.ico",
+//     "binaryos.net": "BOFavIcon.ico",
+//     "booleanlogic.net": "BLFavIcon.ico",
+//     "gpuprocessing.net": "GPFavIcon.ico",
+//     "serviceworker.net": "SWFavIcon.ico",
+//     "orbitalmap.net": "OMFavIcon.ico"
+//   };
+
+//   const realmKey = Object.keys(PW_REALMS).find(domain => host.endsWith(domain));
+
+//   try {
+//     if (realmKey) {
+//       iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
+//       icon = await fetchAndStoreIcon(host, iconURL);
+
+//       PBROWSERFAVICON_CACHE[host] = icon;
+//       saveCache();
+//       return icon;
+//     }
+
+//     // ⭐ Normal external favicon fetch
+//     icon = await fetchAndStoreIcon(host, iconURL);
+//     PBROWSERFAVICON_CACHE[host] = icon;
+//     saveCache();
+//     return icon;
+
+//   } catch {
+//     PBROWSERFAVICON_CACHE[host] = iconURL;
+//     saveCache();
+//     return iconURL;
+//   }
+// }
+async function getFavicon(url, flags = {}) {
+  let u;
+
+  try {
+    u = new URL(url);
+  } catch {
+    return url;
+  }
+
+  let host = u.hostname;
+  
+  const urlStr = typeof url === "string" ? url : (url && typeof url.href === "string" ? url.href : String(url || ""));
+
+  // ⭐ Preserve www if explicitly present
+  if (urlStr && urlStr.includes("www.") && !host.startsWith("www.")) {
+    host = "www." + host;
+  }
+
+  // Helper: generate both www and non-www candidates
+  function getHostVariants(h) {
+    const variants = new Set();
+    variants.add(h);
+
+    if (h.startsWith("www.")) {
+      variants.add(h.slice(4));           // without www
+    } else {
+      variants.add("www." + h);           // with www
+    }
+
+    // Also strip extra subdomains → root domain (keeping the www/non-www pair)
+    const parts = h.split(".");
+    if (parts.length > 2) {
+      const root = parts.slice(parts.length - 2).join(".");
+      variants.add(root);
+      variants.add("www." + root);
+    }
+
+    return [...variants];
+  }
+
+  const hostVariants = getHostVariants(host);
+
+  // Default candidates: /favicon.ico on every variant
+  let candidates = hostVariants.map(h => `https://${h}/favicon.ico`);
+
+  // ⭐ Special external cases (still take priority)
+  try {
+    if (host.includes("google.com")) {
+      const iconURL = "https://www.google.com/favicon.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("mail.google.com") || host.includes("gmail.com")) {
+      const iconURL = "https://ssl.gstatic.com/ui/v1/icons/mail/images/favicon5.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("chase.com")) {
+      const iconURL = "https://www.chase.com/etc/designs/chase-ux/favicon.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("office.com")) {
+      const iconURL = "https://res.cdn.office.net/officehub/images/content/images/unauth-copilotcom/favicon-copilot-brand-refresh-23392c1f66.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("github.com")) {
+      const iconURL = "https://github.githubassets.com/favicons/favicon.svg";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("youtube.com")) {
+      const iconURL = "https://www.youtube.com/s/desktop/fe2e0b8b/img/favicon_32x32.png";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    if (host.includes("discord.com")) {
+      const iconURL = "https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico";
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+  } catch {
+    // fall through – we’ll try the normal candidates
+  }
+
+  // ⭐ Cached → return instantly
+  if (PBROWSERFAVICON_CACHE[host]) {
+    console.log(
+      "%c[PULSEBROWSER OS KERNEL] SAVED FAVICON LOCATED: " + host,
+      "color:#00FF9C; font-weight:bold; font-family:monospace;"
+    );
+    return PBROWSERFAVICON_CACHE[host];
+  }
+
+  // ⭐ PulseWorld realm detection (automatic)
+  const PW_REALMS = {
+    "pulseworld.net": "PWFavIcon.ico",
+    "pulseworld.biz": "PWBFavIcon.ico",
+    "pulseworld.me": "PWIFavIcon.ico",
+    "pulseworld.money": "PWMFavIcon.ico",
+    "binaryos.net": "BOFavIcon.ico",
+    "booleanlogic.net": "BLFavIcon.ico",
+    "gpuprocessing.net": "GPFavIcon.ico",
+    "serviceworker.net": "SWFavIcon.ico",
+    "orbitalmap.net": "OMFavIcon.ico"
+  };
+
+  const realmKey = Object.keys(PW_REALMS).find(domain => host.endsWith(domain));
+
+  try {
+    if (realmKey) {
+      const iconURL = `${u.origin}/${PW_REALMS[realmKey]}`;
+      const icon = await fetchAndStoreIcon(host, iconURL);
+      PBROWSERFAVICON_CACHE[host] = icon;
+      saveCache();
+      return icon;
+    }
+
+    // ⭐ Try all candidates (www + non-www + root) in parallel
+    // First successful one wins
+    const results = await Promise.allSettled(
+      candidates.map(url => fetchAndStoreIcon(host, url))
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled" && result.value) {
+        const icon = result.value;
+        PBROWSERFAVICON_CACHE[host] = icon;
+        saveCache();
+        return icon;
+      }
+    }
+
+    // Absolute last resort – just return the first candidate URL
+    const fallback = candidates[0];
+    PBROWSERFAVICON_CACHE[host] = fallback;
+    saveCache();
+    return fallback;
+
+  } catch {
+    const fallback = candidates[0] || `https://${host}/favicon.ico`;
+    PBROWSERFAVICON_CACHE[host] = fallback;
+    saveCache();
+    return fallback;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PRECONNECT (DNS/TLS/TCP warm-path)
+// ---------------------------------------------------------------------------
+function pbPreconnect(origins = []) {
+  origins.forEach((origin) => {
+    pbDNSWarm(origin);
+    pbTLSWarm(origin);
+  });
+  console.log("%c[PBAccelerator] Preconnect:", "color:#00C8FF;", origins);
+}
+
+function pbDNSWarm(origin) {
+  try {
+    let link = document.getElementById("link");
+    if (!link) link = document.createElement("link");
+    link.rel = "dns-prefetch";
+    link.href = origin;
+    document.head.appendChild(link);
+
+  } catch (_) {}
+}
+
+
+// ---------------------------------------------------------------------------
+// TLS WARM (establish TLS early)
+// ---------------------------------------------------------------------------
+function pbTLSWarm(origin) {
+  try {
+    let link = document.getElementById("link");
+    if (!link) link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = origin;
+    document.head.appendChild(link);
+
+  } catch (_) {}
+}
+
+
+async function pbModuleWarmBoot() {
+  const settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
+  PulseBrowserSettings = await getSettings();
+  const warmTargets = [
+    "https://www.pulseworld.net",
+    "https://www.pulseworld.me",
+    "https://www.pulseworld.money",
+    "https://www.pulseworld.biz",
+    "https://www.binaryos.net",
+    "https://www.booleanlogic.net",
+    "https://www.gpuprocessing.net",
+    "https://www.serviceworker.net",
+    "https://www.orbitalmap.net",
+    PulseRealmSettings.externalBankLink,
+    PulseRealmSettings.externalEmailLink,
+    PulseRealmSettings.externalSocialLink,
+    PulseRealmSettings.externalWorkLink,
+    PulseRealmSettings.externalStreamingLink,
+    PulseRealmSettings.externalShoppingLink,
+    PulseRealmSettings.externalSearchLink,
+    PulseRealmSettings.acceleratedModule1Link,
+    PulseRealmSettings.acceleratedModule2Link,
+    PulseRealmSettings.acceleratedModule3Link,
+    PulseRealmSettings.acceleratedModule4Link,
+    PulseRealmSettings.acceleratedModule5Link,
+    PulseRealmSettings.acceleratedModule6Link,
+    "https://www.google.com"
+  ].filter(link => link !== undefined).filter(u => u && u.startsWith("http"));
+
+  if (warmTargets.length === 0) return;
+
+  // Preconnect all module targets
+  pbPreconnect(warmTargets);
+
+  chrome.runtime.sendMessage({
+    type: "FIRSTPRE_WARMPATH_EVENT",
+    origins: warmTargets
+  });
+
+  setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "FIRSTPOST_WARMPATH_EVENT",
+      origins: warmTargets
+    });
+  }, 3000);
+
+  console.log(
+    "%c[PBAccelerator] Module Warm-Boot executed",
+    "color:#00C8FF; font-weight:bold;"
+  );
+  MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+  chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+    if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+  });
+  await pbRenderCacheList2();
+}
+
+const EXTENSION_SETTINGS_KEY = "pulseworldSettings";
+
+async function pbLoadExtensionSettings() {
+  try {
+    const result = await chrome.storage.local.get([EXTENSION_SETTINGS_KEY]);
+    const settings = result[EXTENSION_SETTINGS_KEY] || {};
+
+    return settings;
+  } catch (err) {
+    console.error("pbLoadExtensionSettings() FAILED", err);
+    return {};
+  }
+}
+
+async function getSettings() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(null, (data) => {
+      const S = data || {};
+
+      // Force all acceleration systems ON by default
+      S.accelDNSWarm      = S.accelDNSWarm      !== false;
+      S.accelTLSWarm      = S.accelTLSWarm      !== false;
+      S.accelPreconnect   = S.accelPreconnect   !== false;
+      S.accelPreload      = S.accelPreload      !== false;
+      S.accelPrefetch     = S.accelPrefetch     !== false;
+      S.accelGPUWarm      = S.accelGPUWarm      !== false;
+      S.accelDecodeWarm   = S.accelDecodeWarm   !== false;
+      S.accelRealmWarm    = S.accelRealmWarm    !== false;
+      S.accelAutoNav      = S.accelAutoNav      !== false; // auto on navigation
+      S.accelHomeWarmBoot = S.accelHomeWarmBoot !== false; // auto warm boot for home universe
+      S.experimentalQuantumRouting = S.experimentalQuantumRouting !== false; 
+      S.accelModuleWarmBoot = S.accelModuleWarmBoot !== false;
+      S.enablePulseEarnOverlay = S.enablePulseEarnOverlay !== false; 
+      S.enablePulsePalConsole = S.enablePulsePalConsole !== false;
+      S.enableDevOverlay = S.enableDevOverlay !== false; 
+      S.enableDevCaches = S.enableDevCaches !== false;
+      S.enablePulseEarnerEngine = S.enablePulseEarnerEngine !== false;
+      S.enablePulsePal = S.enablePulsePal !== false;
+      resolve(S);
+    });
+  });
+}
+
+async function updateModuleIcons(settings, browser) {
+  // Load cache from storage at startup
+  chrome.storage.local.get(["ServiceWorkerOnline"], (res) => {
+    if (res.ServiceWorkerOnline) {
+      ServiceWorkerOnline = res.ServiceWorkerOnline;
+    }
+  });
+  chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+      return;
+    }
+    if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+    if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+    // Clean the incoming value (handles both formatted strings and existing numbers)
+    const cleanValue = typeof ALLassumedValue === 'string' 
+      ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+      : Number(ALLassumedValue);
+    if (cleanValue > 0 && !itrunonce) {
+      itrunonce = true;
+      appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+    } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+      lastEarnBatch = response.lastEarnBatch;
+      console.log("Last Earn Batch:", lastEarnBatch);
+      const nowAllTime = new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+    }
+    if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+      MyPulseIdentity = response.MyPulseIdentity;
+      PulsesafeStorageSet({ MyPulseIdentity }); 
+      const identityName = document.getElementById("identityName");
+      identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+      console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+      identityrunonce = true;
+      let identitySQL = document.getElementById("identitySQL");
+      MyPulseBusiness = response.MyPulseBusiness;     
+      if (!MyPulseBusiness) {
+        if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+        }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+    // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+    OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+    earnerminipanel.textContent = currency(OurassumedValue);
+    accountBalance.textContent = earnerminipanel.textContent;
+    // Calculate elapsed time in days (86,400,000 ms in one day)
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+    // Prevent division by zero or negative values if just started
+    const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+    let fontcolor = "grey";
+    if (dailyRate >= 20) fontcolor = "gold";
+    if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+    if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+    if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+    earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+    if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+      PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+    }
+    if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+      PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+      PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+    }
+  });
+  chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      return;
+    }
+    ServiceWorkerOnline = response.ServiceWorkerOnline;
+    if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
+    if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
+    // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+    if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
+    if (!ServiceWorkerOnline) {
+      disablesw.src = "PulseResume.webp";
+    } else {
+      disablesw.src = "PulseStop.webp";
+    }
+    if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+      try {
+        (async () => {
+          setTimeout(async () => {
+            await runEngineTest();
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+          }, 1500);
+        })();
+      } catch (err) {
+        PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+      }
+    }
+  });
+  if (!settings) settings = await pbLoadExtensionSettings();
+  PulseRealmSettings = settings;
+  if (!browser) browser = await getSettings();
+  PulseBrowserSettings = browser;
+
+  searchEngineActiveLink = settings.externalSearchLink;
+  searchMode = settings.searchMode;
+  socialMediaActiveLink = settings.externalSocialLink;
+  socialMode = settings.socialMode;
+  workActiveLink = settings.externalWorkLink;
+  workMode = settings.workMode;
+  
+
+  if (settings.searchMode === "internal") {
+    engineURL = "https://www.google.com/search?q=";
+    searchEngineActivated = "Google.com";
+    document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+  } else {
+    engineURL = buildSearchURL(settings.externalSearchLink);
+  }
+
+  const PulseWorldIcon = document.getElementById("PulseWorldIcon");
+  const PulseWorldFav = await getFavicon("https://www.pulseworld.net");
+  if (PulseWorldFav) {
+    PulseWorldIcon.innerText = "";
+    PulseWorldIcon.style.backgroundImage = `url(${PulseWorldFav})`;
+    PulseWorldIcon.style.backgroundSize = "contain";
+    PulseWorldIcon.style.backgroundRepeat = "no-repeat";
+  }
+  const PulseBusinessIcon = document.getElementById("PulseBusinessIcon");
+  const PulseBusinessFav = await getFavicon("https://www.pulseworld.biz");
+  if (PulseBusinessFav) {
+    PulseBusinessIcon.innerText = "";
+    PulseBusinessIcon.style.backgroundImage = `url(${PulseBusinessFav})`;
+    PulseBusinessIcon.style.backgroundSize = "contain";
+    PulseBusinessIcon.style.backgroundRepeat = "no-repeat";
+  }
+  const PulseIdentityIcon = document.getElementById("PulseIdentityIcon");
+  const PulseIdentityFav = await getFavicon("https://www.pulseworld.me");
+  if (PulseIdentityFav) {
+    PulseIdentityIcon.innerText = "";
+    PulseIdentityIcon.style.backgroundImage = `url(${PulseIdentityFav})`;
+    PulseIdentityIcon.style.backgroundSize = "contain";
+    PulseIdentityIcon.style.backgroundRepeat = "no-repeat";
+  }
+  
+  // EMAIL MODULE
+  const emailIcon = document.getElementById("moduleEmailIcon");
+  if (settings.emailMode === "internal") {
+    emailIcon.innerText = "📧";      // your original emoji
+    emailIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalEmailLink);
+    if (fav) {
+      emailIcon.innerText = "⚡";
+      emailIcon.style.backgroundImage = `url(${fav})`;
+      emailIcon.style.backgroundSize = "contain";
+      emailIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+  
+  // BANK MODULE
+  const bankIcon = document.getElementById("moduleBankIcon");
+  if (settings.bankMode === "internal") {
+    bankIcon.innerText = "🏦";      // your original emoji
+    bankIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalBankLink);
+    if (fav) {
+      bankIcon.innerText = "⚡";
+      bankIcon.style.backgroundImage = `url(${fav})`;
+      bankIcon.style.backgroundSize = "contain";
+      bankIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // SOCIAL MODULE
+  const socialIcon = document.getElementById("moduleSocialIcon");
+  if (settings.socialMode === "internal") {
+    socialIcon.innerText = "🎭";      // your original emoji
+    socialIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalSocialLink);
+    if (fav) {
+      socialIcon.innerText = "⚡";
+      socialIcon.style.backgroundImage = `url(${fav})`;
+      socialIcon.style.backgroundSize = "contain";
+      socialIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // WORK MODULE
+  const workIcon = document.getElementById("moduleWorkIcon");
+  if (settings.workMode === "internal") {
+    workIcon.innerText = "💼";      // your original emoji
+    workIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalWorkLink);
+    if (fav) {
+      workIcon.innerText = "⚡";
+      workIcon.style.backgroundImage = `url(${fav})`;
+      workIcon.style.backgroundSize = "contain";
+      workIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // WORK MODULE
+  const streamIcon = document.getElementById("moduleStreamIcon");
+  if (settings.streamMode === "internal") {
+    streamIcon.innerText = "📺";      // your original emoji
+    streamIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalStreamingLink);
+    if (fav) {
+      streamIcon.innerText = "⚡";
+      streamIcon.style.backgroundImage = `url(${fav})`;
+      streamIcon.style.backgroundSize = "contain";
+      streamIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  // WORK MODULE
+  const shoppingIcon = document.getElementById("moduleShoppingIcon");
+  if (settings.shoppingMode === "internal") {
+    shoppingIcon.innerText = "💳";      // your original emoji
+    shoppingIcon.style.backgroundImage = "";
+  } else {
+    const fav = await getFavicon(settings.externalShoppingLink);
+    if (fav) {
+      shoppingIcon.innerText = "⚡";
+      shoppingIcon.style.backgroundImage = `url(${fav})`;
+      shoppingIcon.style.backgroundSize = "contain";
+      shoppingIcon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  if (settings.acceleratedModule1Link) {
+    const moduleFav1Link = document.getElementById("moduleFav1Link");
+    const moduleFav1Icon = document.getElementById("moduleFav1Icon");
+    const fav1 = await getFavicon(settings.acceleratedModule1Link);
+    if (fav1) {
+      moduleFav1Link.innerText = getReadableName(settings.acceleratedModule1Link) + " ";
+      moduleFav1Icon.innerText = "⚡";
+      moduleFav1Icon.style.backgroundImage = `url(${fav1})`;
+      moduleFav1Icon.style.backgroundSize = "contain";
+      moduleFav1Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+
+  if (settings.acceleratedModule2Link) {
+    const moduleFav2Link = document.getElementById("moduleFav2Link");
+    const moduleFav2Icon = document.getElementById("moduleFav2Icon");
+    const fav2 = await getFavicon(settings.acceleratedModule2Link);
+    if (fav2) {
+      moduleFav2Link.innerText = getReadableName(settings.acceleratedModule2Link) + " ";
+      moduleFav2Icon.innerText = "⚡";
+      moduleFav2Icon.style.backgroundImage = `url(${fav2})`;
+      moduleFav2Icon.style.backgroundSize = "contain";
+      moduleFav2Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+
+  if (settings.acceleratedModule3Link) {
+    const moduleFav3Link = document.getElementById("moduleFav3Link");
+    const moduleFav3Icon = document.getElementById("moduleFav3Icon");
+    const fav3 = await getFavicon(settings.acceleratedModule3Link);
+    if (fav3) {
+      moduleFav3Link.innerText = getReadableName(settings.acceleratedModule3Link) + " ";
+      moduleFav3Icon.innerText = "⚡";
+      moduleFav3Icon.style.backgroundImage = `url(${fav3})`;
+      moduleFav3Icon.style.backgroundSize = "contain";
+      moduleFav3Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+
+  if (settings.acceleratedModule4Link) {
+    const moduleFav4Link = document.getElementById("moduleFav4Link");
+    const moduleFav4Icon = document.getElementById("moduleFav4Icon");
+    const fav4 = await getFavicon(settings.acceleratedModule4Link);
+    if (fav4) {
+      moduleFav4Link.innerText = getReadableName(settings.acceleratedModule4Link) + " ";
+      moduleFav4Icon.innerText = "⚡";
+      moduleFav4Icon.style.backgroundImage = `url(${fav4})`;
+      moduleFav4Icon.style.backgroundSize = "contain";
+      moduleFav4Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  if (settings.acceleratedModule5Link) {
+    const moduleFav5Link = document.getElementById("moduleFav5Link");
+    const moduleFav5Icon = document.getElementById("moduleFav5Icon");
+    const fav5 = await getFavicon(settings.acceleratedModule5Link);
+    if (fav5) {
+      moduleFav5Link.innerText = getReadableName(settings.acceleratedModule5Link) + " ";
+      moduleFav5Icon.innerText = "⚡";
+      moduleFav5Icon.style.backgroundImage = `url(${fav5})`;
+      moduleFav5Icon.style.backgroundSize = "contain";
+      moduleFav5Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+
+  if (settings.acceleratedModule6Link) {
+    const moduleFav6Link = document.getElementById("moduleFav6Link");
+    const moduleFav6Icon = document.getElementById("moduleFav6Icon");
+    const fav6 = await getFavicon(settings.acceleratedModule6Link);
+    if (fav6) {
+      moduleFav6Link.innerText = getReadableName(settings.acceleratedModule6Link) + " ";
+      moduleFav6Icon.innerText = "⚡";
+      moduleFav6Icon.style.backgroundImage = `url(${fav6})`;
+      moduleFav6Icon.style.backgroundSize = "contain";
+      moduleFav6Icon.style.backgroundRepeat = "no-repeat";
+    }
+  }
+  console.log("AdBlocker: ", settings.adBlocker);
+
+  if (settings.adBlocker === "internal") {
+    AdBlockerOn();
+  } else {
+    AdBlockerOff();
+  }
+}
+
+async function AdBlockerOff() {
+  chrome.declarativeNetRequest.updateEnabledRulesets({
+    disableRulesetIds: ["pulseworld_rules"]
+  }).then(() => {
+    console.log("AdBlockerOff Ruleset disabled successfully.");
+  });
+}
+
+async function AdBlockerOn() {
+  chrome.declarativeNetRequest.updateEnabledRulesets({
+    enableRulesetIds: ["pulseworld_rules"]
+  }).then(() => {
+    console.log("AdBlockerOn Ruleset enabled successfully.");
+  });
+}
+
+async function setTheStage() {
+  PulseRealmSettings = await pbLoadExtensionSettings();
+  PulseBrowserSettings = await getSettings();
+  
+  const PB_HOMES = [
+    "https://www.pulseworld.me",
+    "https://www.pulseworld.money",
+    "https://www.pulseworld.biz",
+    "https://www.binaryos.net",
+    "https://www.booleanlogic.net",
+    "https://www.gpuprocessing.net",
+    "https://www.serviceworker.net",
+    "https://www.orbitalmap.net",
+    "https://www.pulseworld.net",
+    "https://www.google.com",
+    PulseRealmSettings.externalSearchLink
+  ].filter(u => u && u.startsWith("http"));
+
+  const Links = [
+    PulseRealmSettings.externalBankLink,
+    PulseRealmSettings.externalEmailLink,
+    PulseRealmSettings.externalSocialLink,
+    PulseRealmSettings.externalWorkLink,
+    PulseRealmSettings.externalStreamingLink,
+    PulseRealmSettings.externalShoppingLink,
+    PulseRealmSettings.acceleratedModule1Link,
+    PulseRealmSettings.acceleratedModule2Link,
+    PulseRealmSettings.acceleratedModule3Link,
+    PulseRealmSettings.acceleratedModule4Link,
+    PulseRealmSettings.acceleratedModule5Link,
+    PulseRealmSettings.acceleratedModule6Link
+  ].filter(u => u && u.startsWith("http"));
+
+  const interval = getWarmInterval(Links, PB_HOMES, temporaryLinks);
+  
+  setInterval(pbRefreshWarmDocument, interval); 
+   
+  document.addEventListener("keydown", (e) => {
+    CompanionDetailsMessage = document.getElementById("consoleOvermindCompanion");
+    CompanionConsoleInput = document.getElementById("CompanionConsoleInput");
+    const searchArea = document.getElementById("searchengineTextbox");
+    if ((e.key === "Escape" || e.ctrlKey || e.shiftKey || e.metaKey)) return;
+    if ((e.target === CompanionConsoleInput) || (e.target === searchArea) || (e.target === CompanionDetailsMessage)) return;
+    const key = e.key.toLowerCase();
+    const moduleKeys = ["`","b","m","s","w","t","e"];
+    if (moduleKeys.includes(key) && e.repeat) { 
+      e.preventDefault();
+      // ⭐ If NOT a module key → send key to search box
+      if (moduleKeys.includes(key)) {
+        e.preventDefault();
+        keyHold2Timer = setTimeout(() => {
+          const searchArea = document.getElementById("searchengineTextbox");
+          searchArea.focus();
+          searchArea.textContent = "";
+        }, 1000);
+      }
+      return;
+    }
+    // if (e.target.closest("#search-area")) return;
+    keyIsDown = true;
+    // SHORT PRESS → CONSOLE KEY (fires immediately)
+    pulseConsoleKey(e);
+    
+    // ⭐ If NOT a module key → send key to search box
+    if (moduleKeys.includes(key)) {
+      // Start long-press timer
+      keyHoldTimer = setTimeout(() => {
+        if (keyIsDown) {
+          const searchArea = document.getElementById("searchengineTextbox");
+          searchArea.focus();
+          searchArea.textContent = "";
+          pulseTeleportKey(e);
+        }
+      }, 1500);
+    }
+
+  });
+
+  document.addEventListener("keyup", () => {
+    keyIsDown = false;
+    // ONLY cancel timer — NO logic, NO actions
+    if (keyHoldTimer) {
+      clearTimeout(keyHoldTimer);
+      keyHoldTimer = null;
+    }
+    if (keyHold2Timer) {
+      clearTimeout(keyHold2Timer);
+      keyHold2Timer = null;
+    }
+  });
+
+  updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+  appendEarnerMessage(CompanionMessages, "<br>🔍", `"Compound interest is the eighth wonder of the world. <br> He who understands it, earns it; he who doesn't, pays it." <br>— <font color="#0FF">Attributed to Albert Einstein (1925)</font><br>`);
+  
+  // [Fix] Start earner faster on tab refresh — was 6000ms, now 1000ms so it's nearly instant
+  appendEarnerMessage(CompanionMessages, "⚡", "<-- PulseEarners/EarnBand Restarting -->");
+  
+  setTimeout(async () => {
+    await start24HourSoakTest();
+    updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+  }, 1000);
+
+  try {
+    const locationResult = await ensureLocationAccess({
+      desiredAccuracy: 30, // Require 30-meter precision
+      maxWaitTime: 12000   // Wait up to 12 seconds
+    });
+
+    if (locationResult.ok) {
+      console.log(`Real location (${locationResult.source}):`, locationResult.coords);
+    } else {
+      console.error(`Location failed [${locationResult.reason}]:`, locationResult.message);
+    }
+  } catch (err) {}
+}
+
+setTimeout(setTheStage, 500);
+
+setTimeout(pbModuleWarmBoot, 150);
+
+async function pulseConsoleKey(event) {
+  const key = event.key.toLowerCase();
+  const searchArea = document.getElementById("searchengineTextbox");
+  searchArea.focus();
+  searchArea.value += key;
+}
+
+async function pulseTeleportKey(event) {
+  const key = event.key.toLowerCase();
+  
+  // ⭐ Otherwise: module teleport logic
+  let link = "https://www.pulseworld.net";
+
+  if (key === "`") {
+    link = "https://www.pulseworld.net";
+  } else if (key === "b") {
+    link = PulseRealmSettings.externalBankLink;
+  } else if (key === "m") {
+    link = PulseRealmSettings.externalEmailLink;
+  } else if (key === "s") {
+    link = PulseRealmSettings.externalSocialLink;
+  } else if (key === "w") {
+    link = PulseRealmSettings.externalWorkLink;
+  } else if (key === "t") {
+    link = PulseRealmSettings.externalStreamingLink;
+  } else if (key === "e") {
+    link = PulseRealmSettings.externalShoppingLink;
+  }
+
+  chrome.runtime.sendMessage({
+    type: "PB_HOVER_PREFETCH",
+    href: link
+  });
+
+  try {
+    fetch(link, { mode: "no-cors" }).catch(() => {});
+  } catch (_) {}
+
+  pbPreconnect([link]);
+  openNamedTab("PulseWorldModule", link);
+  await PBUniversalBoost.warmOrigin(link);
+}
+
+function cleanQuery(query) {
+  if (!query) return "";
+  return query.replace(/undefined/g, "").trim();
+}
+
+function buildSearchURL(engineURL, query) {
+  if (query) query = cleanQuery(query);     // ← THIS removes the symbol
+  let q = encodeURIComponent(query);
+
+  // Remove ONLY leading "undefined"
+  q = q.replace(/^undefined/, "");
+
+  if (!engineURL) engineURL = "https://www.google.com/search?q=";
+  // Normalize URL
+  const url = engineURL.toLowerCase();
+
+  // GOOGLE
+  if (url.includes("google")) {
+    searchEngineActivated = "Google.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://www.google.com/search?q=${q}`;
+  }
+
+  // YAHOO
+  if (url.includes("yahoo")) {
+    searchEngineActivated = "Yahoo.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://search.yahoo.com/search?p=${q}`;
+  }
+
+  // DUCKDUCKGO
+  if (url.includes("duckduckgo") || url.includes("ddg")) {
+    searchEngineActivated = "DuckDuckGo.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://duckduckgo.com/?q=${q}`;
+  }
+
+  // BING
+  if (url.includes("bing")) {
+    searchEngineActivated = "Bing.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://www.bing.com/search?q=${q}`;
+  }
+
+  // BRAVE
+  if (url.includes("brave")) {
+    searchEngineActivated = "Brave.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://search.brave.com/search?q=${q}`;
+  }
+
+  // BAIDU (China)
+  if (url.includes("baidu")) {
+    searchEngineActivated = "Baidu.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://www.baidu.com/s?wd=${q}`;
+  }
+
+  // NAVER (Korea)
+  if (url.includes("naver")) {
+    searchEngineActivated = "Naver.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://search.naver.com/search.naver?query=${q}`;
+  }
+
+  // YANDEX (Russia)
+  if (url.includes("yandex")) {
+    searchEngineActivated = "Yandex.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://yandex.com/search/?text=${q}`;
+  }
+
+  // ASK
+  if (url.includes("ask")) {
+    searchEngineActivated = "Ask.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://www.ask.com/web?q=${q}`;
+  }
+
+  // ECOSIA
+  if (url.includes("ecosia")) {
+    searchEngineActivated = "Ecosia.org";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://www.ecosia.org/search?q=${q}`;
+  }
+
+  // QWANT
+  if (url.includes("qwant")) {
+    searchEngineActivated = "Qwant.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+    return `https://www.qwant.com/?q=${q}`;
+  }
+
+  // Fallback: append query to custom engine
+  searchEngineActivated = "*Google.com";
+  document.getElementById("search").textContent = "🔍 Pulse Search Engine (" + searchEngineActivated + ")";
+  return `https://www.google.com/search?q=${q}`;
+}
+
+
+document.getElementById("searchus").addEventListener("click", (event) => {
+  window.location.href = engineURL + encodeURIComponent("pulseworld.net");
+});
+
+document.getElementById("navigate").addEventListener("click", async () => {
+  let text = document.getElementById("searchengineTextbox").textContent.trim();
+
+  // If ANY space exists → not navigation
+  if (text.includes(" ")) {
+    return; // do nothing
+  }
+
+  if (text.includes("http://")) text = text.replace("http://", "");
+  if (text.includes("https://")) text = text.replace("https://", "");
+
+  // Domain or domain + path
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+
+  const isDomainIntent = domainRegex.test(text);
+
+  if (isDomainIntent) {
+    const originlink = "https://" + text;
+    const origin = new URL(originlink).origin;
+    
+    if (!temporaryLinks.includes(origin)) {
+      temporaryLinks.push(origin);
+    }
+
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: origin
+    });
+
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(origin, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([origin]);
+    openNamedTab("PulseSearchLink", origin);
+    await PBUniversalBoost.warmOrigin(origin);
+    // ⭐ PURE DOMAIN → Navigate directly
+    // window.location.href = origin;
+  }
+});
+
+
+
+document.getElementById("images").addEventListener("click", (event) => {
+  const text = document.getElementById("searchengineTextbox").textContent.trim();
+  url = engineURL + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945&sxsrf=APpeQnum89enEMVZATiLWD0yh0mMe6oPJg%3A1788824443834&ei=e0ufas3CMvLMkPIP5PPV2Qw&ved=2ahUKEwiN7Kis0t2WAxVyJkQIHeR5NcsQ4dUDegQIBhAN&uact=5&oq=fsdfsdf&gs_lp=Egtnd3Mtd2l6LWltZyIHZnNkZnNkZjIKEAAYgAQYigUYQzIPEAAYgAQYChgLGLEDGIMBMgUQABiABDIJEAAYgAQYChgLMgkQABiABBgKGAsyBRAAGIAEMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAtIqANQAFgAcAF4AJABAJgBAKABAKoBALABALgBA8gBAJgCAaACAZgDAOIDBBgAIF3iAwQYACBe4gMEGAAgX-IDBBgAIGDiAwQYACBh4gMEGAAgYogGAZIHATGgBwCyBwC4BwDCBwMwLjHIBwGACAE&sclient=gws-wiz-img";
+  document.getElementById("images").style.backgroundColor = "red";
+  document.getElementById("videos").style.backgroundColor = "black";
+  document.getElementById("text").style.backgroundColor = "black";
+  engineType = "images";
+});
+
+document.getElementById("videos").addEventListener("click", (event) => {
+  const text = document.getElementById("searchengineTextbox").textContent.trim();
+  url = engineURL + encodeURIComponent(text) + "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945&sxsrf=APpeQnuWOgRcMsUytLVkUMU_oHzKtkSHyw%3A1788824889059&ei=OU2fao2bA7TVkPIP4qfi4AI&ved=2ahUKEwjNm8-A1N2WAxW0KkQIHeKTGCwQ4dUDegQIBRAM&uact=5&oq=canva&gs_lp=EhZnd3Mtd2l6LW1vZGVsZXNzLXZpZGVvIgVjYW52YTIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwA0iuAVAAWABwAXgBkAEAmAEAoAEAqgEAsAEAuAEDyAEAmAIBoAICmAMA4gMEGAAgXeIDBBgAIF7iAwQYACBf4gMEGAAgYOIDBBgAIGHiAwQYACBiiAYBkAYIkgcBMaAHALIHALgHAMIHAzAuMcgHAYAIAQ&sclient=gws-wiz-modeless-video";
+  document.getElementById("videos").style.backgroundColor = "red";
+  document.getElementById("images").style.backgroundColor = "black";
+  document.getElementById("text").style.backgroundColor = "black";
+  engineType = "videos";
+});
+
+document.getElementById("text").addEventListener("click", (event) => {
+  const text = document.getElementById("searchengineTextbox").textContent.trim();
+  url = buildSearchURL(engineURL, text);
+  document.getElementById("text").style.backgroundColor = "red";
+  document.getElementById("images").style.backgroundColor = "black";
+  document.getElementById("videos").style.backgroundColor = "black";
+  engineType = "text";
+});
+
+document.getElementById("search").addEventListener("click", async (event) => {
+  let text = document.getElementById("searchengineTextbox").textContent.trim();
+
+  // Remove spaces just in case (e.g., "gmail . com")
+  const cleaned = text.replace(/\s+/g, "");
+
+  // Domain-only regex: matches "gmail.com", "pulseworld.net", "example.co.uk", etc.
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  // Check if the cleaned text is *exactly* a domain
+  const isPureDomain = domainRegex.test(cleaned);
+
+  if (isPureDomain) {
+    const originlink = "https://" + cleaned;
+    const origin = new URL(originlink).origin;
+    
+    if (!temporaryLinks.includes(origin)) {
+      temporaryLinks.push(origin);
+    }
+
+    
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: origin
+    });
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(origin, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    // ⭐ PURE DOMAIN → Navigate directly
+    pbPreconnect([origin]);
+    openNamedTab("PulseSearchLink", origin);
+    await PBUniversalBoost.warmOrigin(origin);
+    // window.location.href = origin;
+    return;
+  }
+
+  // ⭐ NOT a pure domain → treat as search
+  if (engineType === "videos") {
+    url = engineURL + encodeURIComponent(text) +
+      "&sca_esv=97ecd86c81018411&udm=7&biw=1920&bih=945";
+  } else if (engineType === "images") {
+    url = engineURL + encodeURIComponent(text) +
+      "&sca_esv=97ecd86c81018411&hl=en&udm=2&biw=1920&bih=945";
+  } else {
+    url = engineURL + encodeURIComponent(text);
+  }
+
+  if (url) {
+    pbPreconnect([url]);
+    openNamedTab("PulseSearchLink", url);
+    await PBUniversalBoost.warmOrigin(url);
+  }
+  // window.location.href = url;
+});
+
+
+document.getElementById("searchengineTextbox").addEventListener("input", () => {
+  let text = document.getElementById("searchengineTextbox").textContent.trim();
+  const navigateIcon = document.getElementById("navigate");
+
+  // If ANY space exists → it's a search query
+  if (text.includes(" ")) {
+    navigateIcon.style.display = "none";
+    if (engineType === "videos") {
+      document.getElementById("videos").style.backgroundColor = "red";
+    } else if (engineType === "images") {
+      document.getElementById("images").style.backgroundColor = "red";
+    } else {
+      document.getElementById("text").style.backgroundColor = "red";
+    }
+    return;
+  }
+
+  if (text.includes("http://")) text = text.replace("http://", "");
+  if (text.includes("https://")) text = text.replace("https://", "");
+
+  // Domain or domain + path (no spaces allowed)
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+
+  const isDomainIntent = domainRegex.test(text);
+
+  if (isDomainIntent) {
+    navigateIcon.style.display = "inline";
+    navigateIcon.style.backgroundColor = "red";
+    if (engineType === "videos") {
+      document.getElementById("videos").style.backgroundColor = "black";
+    } else if (engineType === "images") {
+      document.getElementById("images").style.backgroundColor = "black";
+    } else {
+      document.getElementById("text").style.backgroundColor = "black";
+    }
+  } else {
+    navigateIcon.style.display = "none";
+    if (engineType === "videos") {
+      document.getElementById("videos").style.backgroundColor = "red";
+    } else if (engineType === "images") {
+      document.getElementById("images").style.backgroundColor = "red";
+    } else {
+      document.getElementById("text").style.backgroundColor = "red";
+    }
+  }
+});
+
+
+document.getElementById("searchengineTextbox").addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+
+    let text = document.getElementById("searchengineTextbox").textContent.trim();
+
+    if (text.includes("http://")) text = text.replace("http://", "");
+    if (text.includes("https://")) text = text.replace("https://", "");
+
+    // Domain or domain + path
+    const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+    const isDomainIntent = domainRegex.test(text);
+
+    let url;
+
+    if (isDomainIntent) {
+      const originlink = "https://" + text;
+      const origin = new URL(originlink).origin;
+      
+      if (!temporaryLinks.includes(origin)) {
+        temporaryLinks.push(origin);
+      }
+
+    
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: origin
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(origin, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([origin]);
+      // ⭐ PURE DOMAIN → Navigate directly
+      openNamedTab("PulseSearchLink", origin);
+      await PBUniversalBoost.warmOrigin(origin);
+      // window.location.href = origin;
+      return;
+    }
+
+    // Fallback: search
+    if (engineType === "videos") {
+      url = engineURL + encodeURIComponent(text) + "&udm=7";
+    } else if (engineType === "images") {
+      url = engineURL + encodeURIComponent(text) + "&udm=2";
+    } else {
+      url = engineURL + encodeURIComponent(text);
+    }
+
+    if (url) {
+      pbPreconnect([url]);
+      openNamedTab("PulseSearchLink", url);
+      await PBUniversalBoost.warmOrigin(url);
+    }
+    // window.location.href = url;
+  }
+});
+
+const aboutBtn = document.getElementById("about");
+const authorityBtn = document.getElementById("authority");
+const engageBtn = document.getElementById("engage");
+const enterBtn = document.getElementById("enter");
+const setupBtn = document.getElementById("setup");
+
+let hoverTimer = null;
+
+if (aboutBtn) {
+  aboutBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  aboutBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  // Click logic stays the same
+  aboutBtn.addEventListener("click", async () => {
+    const link = "https://www.pulseworld.net?Impulse=PulseWorldExtensions";
+
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseBrowserOS", link);
+    await PBUniversalBoost.warmOrigin(link);
+  });
+}
+
+if (authorityBtn) {
+  // Click logic stays the same
+  authorityBtn.addEventListener("click", async () => {
+    openNamedTab("PulseWorldAuthority", authoritylink);
+    await PBUniversalBoost.warmOrigin(authoritylink);
+  });
+}
+
+if (engageBtn) {
+  engageBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.biz";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  engageBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  engageBtn.addEventListener("click", async () => {
+      let link = "https://www.pulseworld.biz";
+
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([link]);
+      openNamedTab("PulseBusiness", link);
+      await PBUniversalBoost.warmOrigin(link);
+  });
+}
+
+if (enterBtn) {
+  enterBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.net";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  enterBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  enterBtn.addEventListener("click", async () => {
+      let link = "https://www.pulseworld.net";
+
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([link]);
+      openNamedTab("PulseWorld", link);
+      await PBUniversalBoost.warmOrigin(link);
+  });
+}
+
+if (setupBtn) {
+  setupBtn.addEventListener("mouseover", () => {
+    const link = "https://www.pulseworld.me";
+
+    // Clear any previous timer
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Start 250ms hover timer
+    hoverTimer = setTimeout(() => {
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+    }, 250);
+  });
+
+  // Cancel prefetch if mouse leaves early
+  setupBtn.addEventListener("mouseout", () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = null;
+  });
+
+  setupBtn.addEventListener("click", async () => {
+      let link = "https://www.pulseworld.me";
+
+      chrome.runtime.sendMessage({
+        type: "PB_HOVER_PREFETCH",
+        href: link
+      });
+      // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+      try {
+        fetch(link, { mode: "no-cors" }).catch(() => {});
+      } catch (_) {}
+
+      pbPreconnect([link]);
+      openNamedTab("PulseIdentity", link);
+      await PBUniversalBoost.warmOrigin(link);
+  });
+}
+
+document.getElementById("moduleEmail").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Email module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Email on the real domain
+    if (settings.emailMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldEmail";
+        console.log("[FrontPage] Opening Internal PulseMail:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+
+        pbPreconnect([internalURL]);
+        openNamedTab("PulseMail", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        // chrome.tabs.create({ url: internalURL });
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.externalEmailLink?.trim() || "https://mail.google.com";
+
+    console.log("[FrontPage] Opening External Email Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseMail", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleBank").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Bank module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Bank on the real domain
+    if (settings.bankMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldRewards";
+        console.log("[FrontPage] Opening Internal PulseBank:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+
+        pbPreconnect([internalURL]);
+        openNamedTab("PulseBank", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.externalBankLink?.trim() || "https://www.bankofamerica.com";
+
+    console.log("[FrontPage] Opening External Bank Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseBank", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleSocial").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Social Media module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld on the real domain
+    if (settings.socialMode === "internal") {
+        const internalURL = "https://www.pulseworld.net?Impulse=PulseWorldMessenger";
+        console.log("[FrontPage] Opening Internal PulseMessenger:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+
+        pbPreconnect([internalURL]);
+        openNamedTab("PulseSocial", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.externalSocialLink?.trim() || "https://www.facebook.com";
+
+    console.log("[FrontPage] Opening External Social Media Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseSocial", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+document.getElementById("moduleWork").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Work module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Work on the real domain
+    if (settings.workMode === "internal") {
+        const internalURL = "https://www.pulseworld.biz";
+        console.log("[FrontPage] Opening Internal PulseWork:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+
+        pbPreconnect([internalURL]);
+        openNamedTab("PulseWork", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.externalWorkLink?.trim() || "https://www.pulseworld.net";
+
+    console.log("[FrontPage] Opening External Work Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseWork", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+document.getElementById("moduleStream").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Streaming module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Streaming on the real domain
+    if (settings.streamMode === "internal") {
+        const internalURL = "https://www.netflix.com";
+        console.log("[FrontPage] Opening Internal Netflix:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+
+        pbPreconnect([internalURL]);
+        openNamedTab("PulseStream", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.externalStreamingLink?.trim() || "https://www.netflix.com";
+
+    console.log("[FrontPage] Opening External Streaming Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseStream", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+document.getElementById("moduleShopping").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] Shopping module clicked. Settings:", settings);
+
+    // INTERNAL MODE → open PulseWorld Streaming on the real domain
+    if (settings.shoppingMode === "internal") {
+        const internalURL = "https://www.amazon.com";
+        console.log("[FrontPage] Opening Internal Amazon:", internalURL);
+        chrome.runtime.sendMessage({
+          type: "PB_HOVER_PREFETCH",
+          href: internalURL
+        });
+        // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+        try {
+          fetch(internalURL, { mode: "no-cors" }).catch(() => {});
+        } catch (_) {}
+
+        pbPreconnect([internalURL]);
+        openNamedTab("PulseShopping", internalURL);
+        await PBUniversalBoost.warmOrigin(internalURL);
+        return;
+    }
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.externalShoppingLink?.trim() || "https://www.amazon.com";
+
+    console.log("[FrontPage] Opening External Shopping Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+    
+    pbPreconnect([link]);
+    openNamedTab("PulseStream", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleFav1").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav1Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.acceleratedModule1Link?.trim() || "https://www.onedrive.com";
+
+    console.log("[FrontPage] Opening External moduleFav1Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseModule1", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleFav2").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav2Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.acceleratedModule2Link?.trim() || "https://www.office.com";
+
+    console.log("[FrontPage] Opening External moduleFav2Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseModule2", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleFav3").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav3Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.acceleratedModule3Link?.trim() || "https://www.amazon.com";
+
+    console.log("[FrontPage] Opening External moduleFav3Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseModule3", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleFav4").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav4Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.acceleratedModule4Link?.trim() || "https://www.coinbase.com";
+
+    console.log("[FrontPage] Opening External moduleFav4Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseModule4", link); 
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+
+document.getElementById("moduleFav5").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav5Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.acceleratedModule5Link?.trim() || "https://www.bridgebase.com";
+
+    console.log("[FrontPage] Opening External moduleFav5Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseModule5", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+document.getElementById("moduleFav6").addEventListener("click", async () => {
+
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+
+    console.log("[FrontPage] moduleFav6Icon module clicked. Settings:", settings);
+
+    // EXTERNAL MODE → open user’s chosen provider
+    let link = settings.acceleratedModule6Link?.trim() || "https://www.snapchat.com";
+
+    console.log("[FrontPage] Opening External moduleFav6Icon Provider:", link);
+    chrome.runtime.sendMessage({
+      type: "PB_HOVER_PREFETCH",
+      href: link
+    });
+    // if (!online) {
+    //   const separator = link.includes("?") ? "&" : "?";
+    //   link = link + separator + "pw=offline";
+    // }
+    // ⭐ LIGHTWEIGHT PRE-GET-READY (no heavy systems)
+    try {
+      fetch(link, { mode: "no-cors" }).catch(() => {});
+    } catch (_) {}
+
+    pbPreconnect([link]);
+    openNamedTab("PulseModule6", link);
+    await PBUniversalBoost.warmOrigin(link);
+});
+
+document.getElementById("clear-caches").addEventListener("click", async () => {
+  // Ask user if they want to clear caches
+  const confirmClear = confirm(
+    "PulseBrowser OS: Would you like to clear PulseWorld cache files?"
+  );
+
+  if (confirmClear) {
+    // Tell background to clear caches
+    chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES" });
+
+    // Now ask about local storage
+    const confirmClear2 = confirm(
+      "PulseBrowser OS: Caches cleared.\n\nWould you also like to clear PulseWorld local storage? Your Settings are Secure!"
+    );
+
+    if (confirmClear2) {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
+    }
+  } else {
+    // Now ask about local storage
+    const confirmClear2 = confirm(
+      "PulseBrowser OS: Would you like to clear PulseWorld local storage? Your Settings are Secure!"
+    );
+
+    if (confirmClear2) {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_LOCAL_STORAGE" });
+    }
+  }
+
+  // Re-render after everything
+  setTimeout(async () => {
+    MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+    });
+    await pbRenderCacheList2();
+  }, 500);
+});
+
+const MemoryWipe = document.getElementById("MemoryWipe");
+if (MemoryWipe) {
+  MemoryWipe.addEventListener("click", async () => {
+    // Ask user if they want to clear caches
+    const confirmClear = confirm(
+      "PulseBrowser OS: Clear your Higher Intellect Files from your Browser?"
+    );
+
+    if (confirmClear) {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_CLEAR_PULSE_CACHES_HIGHER" });
+    }
+
+    // Ask user if they want to clear caches
+    const confirmClear2 = confirm(
+      "PulseBrowser OS: Clear your Higher Intellect Memories and Conversations?"
+    );
+
+    if (confirmClear2) {
+      wipeHigherMemory();
+    }
+
+    // Re-render after everything
+    setTimeout(async () => {
+      MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+      chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+        if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+      });
+      await pbRenderCacheList2();
+    }, 500);
+    initHigherAIConsoleOnTabStart(true);
+  });
+
+}
+
+const disablesw = document.getElementById("disable-sw");
+
+disablesw.addEventListener("click", async () => {
+  // If a SW exists → turn it OFF
+  if (ServiceWorkerOnline) {
+    chrome.runtime.sendMessage({ type: "PB_COMPANION_PAUSE" });
+    ServiceWorkerOnline = false;
+    disablesw.src = "PulseResume.webp";
+    await pbRenderCacheList2();
+    console.log("Service Worker PAUSED");
+    return;
+  }
+
+  // If no SW exists → turn it ON
+  try {
+    console.log("Turning Service Worker back Online!");
+    chrome.runtime.sendMessage({ type: "PB_COMPANION_RESUME" });
+    ServiceWorkerOnline = true;
+    disablesw.src = "PulseStop.webp";
+    await pbRenderCacheList2();
+    console.log("Service Worker RESUMED");
+  } catch (e) {
+    console.error("Service Worker Failed:", e);
+  }
+});
+
+
+function backToOriginal() {
+  chrome.storage.local.get("originalTabId", data => {
+    if (data.originalTabId) {
+      chrome.tabs.update(data.originalTabId, { active: true });
+    }
+  });
+}
+
+function getSyncInterval2() {
+  const base = 1200;
+// ⭐ Add human-like jitter (±20%)
+  const jitterRange = base * 0.11;
+  const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+  // ⭐ Final interval
+  const interval = Math.max(base, base + jitter); // never below 5s
+
+  return Math.floor(interval);
+}
+
+const images = [
+  "PulseWorldEntrancePulseGPUPulseEarn.png",
+  "PulseWorldRoute.png",
+  "PulseWorldExpansion.png",
+  "PulseAIPulseMeshPulsePal.png",
+  "PulseBankPulseIdentityPulseVault.png",
+  "PulseToolsPulseTrustPulseProxy.png"
+];
+
+let index = 0;
+const nebula = document.getElementById("nebula");
+
+// Any interaction cancels redirect
+["keydown", "mousedown", "pointerdown", "touchstart", "input", "focus"].forEach(evt => {
+  window.addEventListener(evt, () => {
+    userInteracted = true;
+  }, { once: true });
+});
+
+setTimeout(runLocalAI, 3000);
+setTimeout(initWebGPUCompute, 500);
+
+window.addEventListener("blur", () => {
+  userInteracted = true;
+  document.getElementById("subtitle").style.color = "yellow";
+  document.getElementById("subsubtitle").style.color = "yellow";
+  // pulseRehydrateTabs(WeLocalMemoryLayerMB);
+  // injectPulseScreenFromMemory();
+}, { once: true });
+
+let timerX = 0;
+document.getElementById("timerBtn").textContent = timerX;
+const sync = getSyncInterval2();
+setInterval(async () => {
+  timerX++;
+  document.getElementById("timerBtn").textContent = timerX;
+  if (!userInteracted && timerX === 20) {
+    enterBtn.click();
+    setTimeout(backToOriginal, 1700);
+    document.getElementById("timerBtn").style.display = "none";
+  } else if (userInteracted) {
+    document.getElementById("timerBtn").style.display = "none";
+    timerX = 0;
+  }
+  online = navigator.onLine;
+  let onlineFlag = "Online";
+  if (!online) onlineFlag = "Offline";
+  if (!online) {
+    titlediv.textContent = "PulseBrowser OS (~Drifting~)";
+    document.title = "PulseBrowser OS [~Drift~]";
+    safeSpeak("We are Currently Drifting the Multiverse! (Offline)");
+  } else {
+    titlediv.textContent = "PulseBrowser OS";
+    earnerminipanel = document.getElementById("earner-mini-panel");
+    if (earnerminipanel.textContent === "$0.000" || !earnerminipanel) document.title = "PulseBrowser OS [Console]";
+    accountBalance.textContent = earnerminipanel.textContent;
+    setInterval(() => {
+      earnerminipanel = document.getElementById("earner-mini-panel");
+      if (earnerminipanel.textContent !== "$0.000") document.title = `PulseBrowser OS [Earners: ${earnerminipanel.textContent}]`;
+      accountBalance.textContent = earnerminipanel.textContent;
+    }, 3000);
+  }
+  CheckBackTab();
+}, sync);
+
+function CheckBackTab() {
+  chrome.runtime.sendMessage({ type: "OPEN_TAB_BACK" }, (response) => {
+    if (chrome.runtime.lastError) return;
+    if (!response || !response.ok) {
+      return;
+    }
+    if (response.comeback) {
+      setTimeout(async () => {
+        const u = new URL(response.comebackURL);
+        openNamedTab(u.hostname, response.comebackURL);
+        await PBUniversalBoost.warmOrigin(response.comebackURL);
+      }, 250);
+    }
+  });
+}
+
+    setTimeout(() => {
+      injectPulseScreenFromMemory(true);
+    }, 100);
+    
+    const interval3 = getCharacterInterval();
+    setTimeout(() => {
+      pbPulseScreen.currentTime = 0;
+      pbPulseScreen.play = false;
+      injectPulseScreenFromMemory();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
+    }, interval3);
+
+  
+  function swap() {
+    nebula.style.opacity = 0;
+    setTimeout(() => {
+      nebula.style.backgroundImage = `url(${images[index]})`;
+      nebula.style.opacity = 0.9;
+      index = (index + 1) % images.length;
+    }, 1000);
+  }
+
+  function getWarmInterval2() {
+    const base = 15000;
+  // ⭐ Add human-like jitter (±20%)
+    const jitterRange = base * 0.27;
+    const jitter = (Math.random() * jitterRange * 2) - jitterRange;
+
+    // ⭐ Final interval
+    const interval = Math.max(base, base + jitter); // never below 5s
+
+    return Math.floor(interval);
+  }
+
+  function CheckFaviconChanges() {
+    // Load cache from storage at startup
+    chrome.storage.local.get(["PulseFaviconSystem"], (res) => {
+      if (res.PulseFaviconSystem) {
+        PBROWSERFAVICON_CACHE = res.PulseFaviconSystem;
+      }
+    });
+  }
+
+  PulseFrame = document.getElementById("PulseEarnerFrame");
+
+  // 1. Define how each hostname maps to a property name on PulseBrowserRealm
+  const REALM_MAP = {
+    "pulseworld.biz": "PulseBusiness",
+    "www.pulseworld.biz": "PulseBusiness",
+    "pulseworld.net": "PulseWorld",
+    "www.pulseworld.net": "PulseWorld",
+    "pulseworld.me": "PulseIdentity",
+    "www.pulseworld.me": "PulseIdentity",
+    "pulseworld.money": "PulseBanking",
+    "www.pulseworld.money": "PulseBanking"
+  };
+
+  // 2. Listen for filled realm data returned from the iframe
+  window.addEventListener("message", (event) => {
+    if (event.data?.type === "PULSE_REALM_FILLED") {
+      let hostname = "";
+      try {
+        hostname = new URL(event.origin).hostname;
+      } catch (e) {
+        console.warn("Invalid origin:", event.origin);
+        return;
+      }
+
+      // Ensure globalThis.PulseBrowserRealm is a clean object
+      if (!globalThis.PulseBrowserRealm || globalThis.PulseBrowserRealm === globalThis) {
+        globalThis.PulseBrowserRealm = {};
+      }
+
+      const realmKey = REALM_MAP[hostname] || hostname.replace(/[^a-zA-Z0-9]/g, "_");
+
+      // Merge the incoming data into the specific realm sub-object
+      globalThis.PulseBrowserRealm[realmKey] = {
+        ...(globalThis.PulseBrowserRealm[realmKey] || {}),
+        ...event.data.realm
+      };
+
+      console.log(
+        `FILL_PULSE_REALM: PulseBrowserRealm.${realmKey} filled by ${hostname}:`,
+        globalThis.PulseBrowserRealm[realmKey]
+      );
+    }
+  });
+
+  // 3. Send the matching realm slice once the iframe finishes loading
+  if (PulseFrame) {
+    PulseFrame.addEventListener("load", () => {
+      let frameUrl;
+      try {
+        frameUrl = new URL(PulseFrame.src);
+      } catch (e) {
+        console.warn("Invalid PulseFrame src:", PulseFrame.src);
+        return;
+      }
+
+      const realmKey = REALM_MAP[frameUrl.hostname] || frameUrl.hostname.replace(/[^a-zA-Z0-9]/g, "_");
+
+      globalThis.PulseBrowserRealm ??= {};
+      const targetRealm = globalThis.PulseBrowserRealm[realmKey] ??= {};
+      PulseFrame = document.getElementById("PulseEarnerFrame");
+
+      PulseFrame.contentWindow.postMessage(
+        {
+          type: "FILL_PULSE_REALM",
+          realm: targetRealm
+        },
+        frameUrl.origin
+      );
+
+      // Clone DOM safely
+      const clone = document.documentElement.cloneNode(true);
+      ["audio", "iframe"].forEach(tag =>
+        clone.querySelectorAll(tag).forEach(el => el.remove())
+      );
+      
+      // 4. Send the safely cloned domain slice back to the exact extension that asked
+      PulseFrame.contentWindow.postMessage(
+        {
+          type: "PULSE_PROJECTION_DISPLAY",
+          realm: clone.innerHTML
+        },
+        frameUrl.origin
+      );
+    });
+  }
+
+
+  function startPulseLoop() {
+    if (intervalId) return; // already running
+    const interval = getWarmInterval2();
+
+    clearInterval(intervalId2);
+    intervalId2 = null;
+    intervalId = setInterval(async () => {
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+        }
+      });
+      
+      chrome.runtime.getPlatformInfo();
+      updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+      swap();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB); // safe now
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+          let identitySQL = document.getElementById("identitySQL");
+          MyPulseBusiness = response.MyPulseBusiness;     
+          if (!MyPulseBusiness) {
+            if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        console.log("All Assumed Value:", ALLassumedValue);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+      await pbRenderCacheList2();
+      await CheckTime();
+    }, interval);
+
+    setTimeout(pulseRehydrateTabs, 2000);
+  }
+
+  function stopPulseLoop() {
+    if (intervalId2) return; // already running
+    const interval = getWarmInterval2();
+
+    clearInterval(intervalId);
+    intervalId = null;
+    intervalId2 = setInterval(async () => {
+      // ---------------------------------------------------------------------------
+      // 1. KERNEL HANDSHAKE
+      // ---------------------------------------------------------------------------
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+        }
+      });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+          let identitySQL = document.getElementById("identitySQL");
+          MyPulseBusiness = response.MyPulseBusiness;     
+          if (!MyPulseBusiness) {
+            if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        console.log("All Assumed Value:", ALLassumedValue);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          return;
+        }
+        ServiceWorkerOnline = response.ServiceWorkerOnline;
+        if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
+        // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+        if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
+        if (!ServiceWorkerOnline) {
+          disablesw.src = "PulseResume.webp";
+        } else {
+          disablesw.src = "PulseStop.webp";
+        }
+        if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+          try {
+            (async () => {
+              setTimeout(async () => {
+                await runEngineTest();
+                PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+              }, 2000);
+            })();
+          } catch (err) {
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+          }
+        }
+      });
+      chrome.runtime.getPlatformInfo();
+      await CheckTime();
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
+    }, interval);
+  }
+
+  // Flicker engine
+  function flickerOrigins() {
+    // 1 in 50 chance to flicker (tunable)
+    const chance = Math.random();
+
+    if (chance < 0.22) {
+      // Flicker to Internet Origin
+      startBtn.innerHTML =
+        `<span class="origin-link">
+          <font color="#FF0">Internet Origin:</font> ${INTERNET_ORIGIN}
+        </span>`;
+
+      startBtn.onclick = async () => {
+        pbPreconnect(["https://www.pulseworld.net/?Impulse=PulseWorldFounders"]);
+        openNamedTab("PulseFounders", "https://www.pulseworld.net/?Impulse=PulseWorldFounders");
+        await PBUniversalBoost.warmOrigin("https://www.pulseworld.net/?Impulse=PulseWorldFounders");
+      }      
+
+      // Flicker back after 120–240ms
+      setTimeout(() => {
+        startBtn.innerHTML =
+          `<font color="#0FF">Origin Consensus:</font> ${CONSENSUS_ORIGIN}`;
+      }, 920 + chance * 920);
+
+    } else {
+      // Normal state: Consensus
+      startBtn.innerHTML =
+        `<font color="#0FF">Origin Consensus:</font> ${CONSENSUS_ORIGIN}`;
+    }
+  }
+      
+  const ENTERPRISE_DOMAINS = [
+    "microsoft.com",
+    "office.com",
+    "live.com",
+    "outlook.com",
+    "azure.com",
+    "login.microsoftonline.com",
+    "okta.com",
+    "google.com",
+    "workspace.google.com"
+  ];
+
+  function isEnterpriseURL(url) {
+    try {
+      const host = new URL(url).hostname;
+      return ENTERPRISE_DOMAINS.some(domain => host.includes(domain));
+    } catch {
+      return false;
+    }
+  }
+
+  function getWarmInterval(links, homes, temp) {
+    const allTargets = [...links, ...homes, ...temp].filter(u => u && u.startsWith("http"));
+    const externalTargets = [...links, ...temp].filter(u => u && u.startsWith("http"));
+    PulseModuleCount = externalTargets.length;
+    const hasEnterprise = allTargets.some(url => isEnterpriseURL(url));
+    return hasEnterprise ? 30000 : 20000; // 15s for enterprise, 8s for normal
+  }
+
+  async function pbRefreshWarmDocument() {
+    // ---------------------------------------------------------------------------
+    // 1. KERNEL HANDSHAKE
+    // ---------------------------------------------------------------------------
+    chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.time && isValid(response.time)) {
+          nowFP = response.time;
+      }
+      if (response.CustomizePanelsDragNDrop) {
+        CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+      }
+    });
+    await CheckTime();
+    const now = new Date().toLocaleString();
+    console.log("[FrontPage] Refreshing PulseWorld with Accelerated Modules:", now);
+    const settings = await pbLoadExtensionSettings();
+    PulseRealmSettings = settings;
+    PulseBrowserSettings = await getSettings();
+
+    const PB_HOMES = [
+      "https://www.pulseworld.me",
+      "https://www.pulseworld.money",
+      "https://www.pulseworld.biz",
+      "https://www.binaryos.net",
+      "https://www.booleanlogic.net",
+      "https://www.gpuprocessing.net",
+      "https://www.serviceworker.net",
+      "https://www.orbitalmap.net",
+      "https://www.pulseworld.net",
+      "https://www.google.com",
+      settings.externalSearchLink
+    ].filter(u => u && u.startsWith("http"));
+
+    const Links = [
+      settings.externalBankLink,
+      settings.externalEmailLink,
+      settings.externalSocialLink,
+      settings.externalWorkLink,
+      settings.externalStreamingLink,
+      settings.externalShoppingLink,
+      settings.acceleratedModule1Link,
+      settings.acceleratedModule2Link,
+      settings.acceleratedModule3Link,
+      settings.acceleratedModule4Link,
+      settings.acceleratedModule5Link,
+      settings.acceleratedModule6Link
+    ].filter(u => u && u.startsWith("http"));
+
+    MyLocalMemoryLayer = await runProtectedCompute(getLocalMemoryLayer);
+    chrome.runtime.sendMessage({ type: "PBCHECK_MEMORY", MyLocalMemoryLayer  }, (response) => {
+      if (chrome.runtime.lastError) return;
+      if (response.LocalMemoryLayerMB) MyLocalMemoryLayerMB = response.LocalMemoryLayerMB;
+      if (response.WeLocalMemoryLayerMB) WeLocalMemoryLayerMB = response.WeLocalMemoryLayerMB;
+    });
+
+    collectAndWarmAssetsFront();
+
+    const container = document.getElementById("pbWarmContainer");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    PB_HOMES.forEach(url => {      
+      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
+    });
+
+    Links.forEach(url => {
+      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
+    });
+
+    temporaryLinks.forEach(url => {
+      container.insertAdjacentHTML("beforeend", `<link rel="preconnect" href="${url}">`);
+    });
+
+    const externalTargets = [...Links].filter(u => u && u.startsWith("http"));
+    PulseModuleCount = externalTargets.length;
+    const externalTempTargets = [...temporaryLinks].filter(u => u && u.startsWith("http"));
+    PulseTempModuleCount = externalTempTargets.length;
+
+    if (PB_HOMES.length > 0) pbPreconnect(PB_HOMES);
+    if (Links.length > 0) pbPreconnect(Links);
+    if (temporaryLinks.length > 0) pbPreconnect(temporaryLinks);
+
+    const count = Links.length + temporaryLinks.length;
+
+    if (temporaryLinks.length > 0) {
+      chrome.runtime.sendMessage({
+        type: "PBWARM_NOVA_EVENT",
+        origins: temporaryLinks
+      });
+    }
+
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EVENT",
+      origins: PB_HOMES
+    });
+
+    chrome.runtime.sendMessage({
+      type: "PBACC_WARMPATH_EXTERNAL",
+      count
+    });
+    document.querySelectorAll('[class^="PulseBrowser-OS-Snapshot"]').forEach(bubble => {
+      bubble.classList.add('electrify');
+      setTimeout(() => {
+        bubble.classList.remove('electrify');
+      }, 3000);
+    });
+    topPanel = document.querySelector(".top-panel");
+    topPanel.classList.add('electrify');
+    setTimeout(() => {
+      topPanel.classList.remove('electrify');
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
+    }, 2700);
+    gpuWarmExtra();
+    PulseFrame = document.getElementById("PulseEarnerFrame");
+    let frameUrl = new URL(PulseFrame.src);
+    // Clone DOM safely
+    const clone = document.documentElement.cloneNode(true);
+    ["audio", "iframe"].forEach(tag =>
+      clone.querySelectorAll(tag).forEach(el => el.remove())
+    );
+    
+    // 4. Send the safely cloned domain slice back to the exact extension that asked
+    PulseFrame.contentWindow.postMessage(
+      {
+        type: "PULSE_PROJECTION_DISPLAY",
+        realm: clone.innerHTML
+      },
+      frameUrl.origin
+    );
+  }
+
+  document.addEventListener("visibilitychange", async () => {
+    if (!document.hidden) {
+      // ---------------------------------------------------------------------------
+      // 1. KERNEL HANDSHAKE
+      // ---------------------------------------------------------------------------
+      chrome.runtime.sendMessage({ type: "PULSE_OS_PING", time: nowFP  }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (response.time && isValid(response.time)) {
+            nowFP = response.time;
+        }
+        if (response.CustomizePanelsDragNDrop) {
+          CustomizePanelsDragNDrop = response.CustomizePanelsDragNDrop;
+        }
+      });
+      chrome.runtime.sendMessage({ type: "PBAI_SESSION", PulsePalMemoryAIBuffer, PulseCogMemoryAIBuffer, OvermindOrders, assumedValue }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          PB_LOG3.info("PBAI_SESSION unavailable or error", response);
+          return;
+        }
+        if (response.WeassumedValue) OurassumedValue = response.WeassumedValue;
+        if (response.HisassumedValue && response.HisassumedValue !== ALLassumedValue) ALLassumedValue = response.HisassumedValue;
+        // Clean the incoming value (handles both formatted strings and existing numbers)
+        const cleanValue = typeof ALLassumedValue === 'string' 
+          ? parseFloat(ALLassumedValue.replace(/[^0-9.-]+/g, '')) 
+          : Number(ALLassumedValue);
+
+        if (cleanValue > 0 && !itrunonce) {
+          itrunonce = true;
+          appendEarnerMessage(CompanionMessages, "🌐", "<-- 3 More PulseEarners have Joined, Adding to your Total -->");
+        } else if (cleanValue > 0 && lastEarnBatch !== response.lastEarnBatch) {
+          lastEarnBatch = response.lastEarnBatch;
+          console.log("Last Earn Batch:", lastEarnBatch);
+          const nowAllTime = new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          });
+          appendEarnerMessage(CompanionMessages, "🧑‍🎨", `WASM Batch Preview #${(Math.random()*100).toFixed(0)} ${nowAllTime}.. ` + lastEarnBatch);
+        }
+        if (response.MyPulseIdentity && MyPulseIdentity !== response.MyPulseIdentity && !identityrunonce) {
+          MyPulseIdentity = response.MyPulseIdentity;
+          PulsesafeStorageSet({ MyPulseIdentity }); 
+          const identityName = document.getElementById("identityName");
+          identityName.textContent = "🧑 " + MyPulseIdentity.name ?? "🧑 Fellow Multiversal Drifter";
+          console.log("PulseWorld Identity Pulled:", MyPulseIdentity);
+          identityrunonce = true;
+          let identitySQL = document.getElementById("identitySQL");
+          MyPulseBusiness = response.MyPulseBusiness;     
+          if (!MyPulseBusiness) {
+            if (identitySQL && identitySQL.textContent.length > 0 && identitySQL.textContent.includes("pulseworld.biz")) MyPulseBusiness = JSON.parse(identitySQL.textContent);
+            }     
+        PulsesafeStorageSet({ MyPulseBusiness }); 
+      }
+      if (response.MinimizeStream && PulseStreamingLive && !MinimizeStream && !MinimizeOverride) {
+        PulseFrame2 = document.getElementById("PulseStreamFrame");
+        PulseFrame2.style.width = "625px";
+        PulseFrame2.style.height = "325px";
+        PulseFrame2.style.bottom = "";
+        PulseFrame2.style.justifySelf = "start"; 
+        PulseFrame2.style.alignSelf = "start";
+        PulseFrame2.style.top = "17px";
+        PulseFrame2.style.left = "185px";
+        StreamDragANDDrop(false);
+        MinimizeStream = true;
+      }
+        // Add to your running total safely (defaulting to 0 if cleanValue is NaN)
+        OurassumedValue = (Number(OurassumedValue) || 0) + (cleanValue || 0);
+        earnerminipanel.textContent = currency(OurassumedValue);
+        accountBalance.textContent = earnerminipanel.textContent;
+        // Calculate elapsed time in days (86,400,000 ms in one day)
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const elapsedDays = (Date.now() - lastnowFP) / msPerDay;
+        // Prevent division by zero or negative values if just started
+        const dailyRate = elapsedDays > 0 ? (OurassumedValue / elapsedDays) : 0;
+        let fontcolor = "grey";
+        if (dailyRate >= 20) fontcolor = "gold";
+        if (dailyRate >= 10 && dailyRate < 20) fontcolor = "lightgreen";
+        if (dailyRate >= 5 && dailyRate < 10) fontcolor = "orange";
+        if (dailyRate <= 5 && dailyRate !== 0) fontcolor = "red";
+        earnerminiratepanel.innerHTML = `<font color=${fontcolor}>~${currency(dailyRate)}</font>/Day`;
+        if (hasRealUserChat(response.PulsePalMemoryAIBuffer) && (PulsePalMemoryAIBuffer.length !== response.PulsePalMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulsePalMemoryAIBuffer, response.PulsePalMemoryAIBuffer);
+          PulsePalMemoryAIBuffer = response.PulsePalMemoryAIBuffer;
+        }
+        if (hasRealUserChat(response.PulseCogMemoryAIBuffer) && (PulseCogMemoryAIBuffer.length !== response.PulseCogMemoryAIBuffer.length)) {
+          PB_LOG3.change("PBAI_SESSION", PulseCogMemoryAIBuffer, response.PulseCogMemoryAIBuffer);
+          PulseCogMemoryAIBuffer = response.PulseCogMemoryAIBuffer;
+        }
+      });
+      chrome.runtime.sendMessage({ type: "PB_COMPANION_CHECK", pulseTabs, CompanionDeprivation }, (response) => {
+        if (chrome.runtime.lastError) return;
+        if (!response || !response.ok) {
+          return;
+        }
+        ServiceWorkerOnline = response.ServiceWorkerOnline;
+        if ((realmSummary !== response.realmSummary) || !realmSummary) realmSummary = response.realmSummary;
+        if (CompanionMessage !== response.CompanionMessage) appendEarnerMessage(CompanionMessages, "🌐", response.CompanionMessage);
+        // if (CompanionMessage !== response.CompanionMessage) earnerinnerpanel.innerHTML = earnerinnerpanel.innerHTML + `<div id="CompanionMessage" class="CompanionMessage">` + response.CompanionMessage + `</div>`;
+        if (CompanionMessage !== response.CompanionMessage) CompanionMessage = response.CompanionMessage;
+        if (!ServiceWorkerOnline) {
+          disablesw.src = "PulseResume.webp";
+        } else {
+          disablesw.src = "PulseStop.webp";
+        }
+        if ((response.CompanionMessage === "<-- Running a PulseEarner WASM Test Job -->")) {
+          try {
+            (async () => {
+              setTimeout(async () => {
+                await runEngineTest();
+                PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine Initiating..", pulseWasmCompute);
+              }, 3000);
+            })();
+          } catch (err) {
+            PB_LOG3.event("Console Companion: Pulse Earner Wasm Engine had an Error!", pulseWasmCompute);
+          }
+        }
+      });
+      injectPulseScreenFromMemory(true);
+      updateOverlay();
+      updateModuleIcons(PulseRealmSettings, PulseBrowserSettings);
+      pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      // [Fix] Immediately refresh cache display when tab becomes visible again
+      pbRenderCacheList2().catch(() => {});
+      const interval3 = getCharacterInterval();
+      setTimeout(() => {
+        pbPulseScreen.currentTime = 0;
+        pbPulseScreen.play = false;
+        injectPulseScreenFromMemory();
+        pulseRehydrateTabs(WeLocalMemoryLayerMB);
+      }, interval3);
+      // Force Chrome to rebuild the GPU layer
+      // Add a temporary class that breaks the stale GPU layer
+      document.body.classList.add("pulse-gpu-reset");
+      // Remove it on the next frame so the repaint happens cleanly
+      requestAnimationFrame(() => {
+        document.body.classList.remove("pulse-gpu-reset");
+        startPulseLoop();
+      });
+      await pbRenderCacheList2();
+    } else {
+      stopPulseLoop();
+    }
+  });
+
+  function extractWorldBands() {
+    const bands = {};
+    let bandstring = "PulseBand";
+
+    document.querySelectorAll("[data-band]").forEach((el) => {
+      const name = el.getAttribute("data-band");
+      bands[name] = bands[name] || 0;
+      bands[name]++;
+    });
+
+    return bandstring;
+  }
+
+  // ---------------------------------------------------------------------------
+// DOMAIN CLASSIFIER
+// ---------------------------------------------------------------------------
+function pbDomainClass(url) {
+  if (isPulseWorld(url)) return "PulseWorld";
+  if (IsPartner(url)) return "Partner";
+  return "WWW";
+}
+  
+function emitFullPageContext() {
+  chrome.runtime.sendMessage({
+    type: "PBREALM_UPDATE_FULL",
+    page: "NewTab",
+    url: "impulse://newtab",
+    title: documentTitle(),
+    domainClass: pbDomainClass(location.href),
+    bands: extractWorldBands()
+  });
+}
+
+setTimeout(emitFullPageContext, 400);
+
+function documentTitle() {
+  if (document.title.includes("newtab")) {
+    document.title = "impulse://newtab"
+  }
+  return document.title;
+}
