@@ -3797,7 +3797,7 @@ window.addEventListener("message", (event) => {
   if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
     TabDomProjectionBoolean = true;
     TabDomProjection = event.data.realm;
-    console.log("PULSE_PROJECTION_DISPLAY: ", TabDomProjection);
+    console.log("PULSE_PROJECTION_DISPLAY: " + TabDomProjection);
   }
 
   if (event.data?.type === "FILL_PULSE_REALM") {
