@@ -585,7 +585,7 @@ checkPersistentStorage(true);
 //     location.href = `?Impulse=${realm}`;
 //   }
 // })();
-
+let ButtonsNeedRestored = false;
 let gpuEnabled = "GPU Driver Error";
 
 if (isInIframe()) {
@@ -3580,13 +3580,17 @@ async function loadInternalPage(name) {
 
     // Inject HTML
     if (viewport) {
-      restoreAllButtons();
       const savedHtml = localStorage.getItem("TabDomProjection");
       if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
         TabDomProjection = savedHtml;
       }
+      if (ButtonsNeedRestored) {
+        restoreAllButtons();
+        ButtonsNeedRestored = false;
+      }
       if (TabDomProjection && !TabDomProjectionBoolean && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
         removeAllButtons();
+        ButtonsNeedRestored = true;
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
         setInterval(() => {
@@ -3594,12 +3598,13 @@ async function loadInternalPage(name) {
           const savedHtml = localStorage.getItem("TabDomProjection");
           if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net") && (PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain") || PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldChallenge"))) {
             removeAllButtons();
+            ButtonsNeedRestored = true;
             TabDomProjection = savedHtml;
             html = TabDomProjection
             TabDomProjectionBoolean = true;
             if (viewport.innerHTML !== html) viewport.innerHTML = html;
           }
-        }, 20000);
+        }, 16000);
       }
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
