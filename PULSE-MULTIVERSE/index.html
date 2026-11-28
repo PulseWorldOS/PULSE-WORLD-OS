@@ -3510,7 +3510,7 @@ async function loadInternalPage(name) {
 
     // Inject HTML
     if (viewport) {
-      if (TabDomProjection) html = TabDomProjection;
+      if (PulseRealm.CurrentHost.includes("pulseworld.net") && TabDomProjection) html = TabDomProjection;
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
       viewport.innerHTML = html;
