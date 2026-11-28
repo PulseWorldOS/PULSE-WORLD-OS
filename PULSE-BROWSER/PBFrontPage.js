@@ -8829,7 +8829,7 @@ function CheckBackTab() {
 
       // Clone DOM safely
       const clone = document.documentElement.cloneNode(true);
-      ["script", "audio", "object", "embed", "iframe"].forEach(tag =>
+      ["audio", "iframe"].forEach(tag =>
         clone.querySelectorAll(tag).forEach(el => el.remove())
       );
       
