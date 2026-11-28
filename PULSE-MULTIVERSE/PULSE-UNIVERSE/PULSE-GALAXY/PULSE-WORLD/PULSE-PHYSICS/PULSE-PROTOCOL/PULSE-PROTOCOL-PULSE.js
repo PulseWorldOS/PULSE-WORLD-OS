@@ -452,7 +452,7 @@ try {
 // ============================================================================
 //  FILE SCANNER (PURE)
 // ============================================================================
-function scanExportedFunctionsFromFile(filePath) {
+export function scanExportedFunctionsFromFile(filePath) {
   if (!PATH) return [];
 
   const resolved = PATH.resolve(filePath);

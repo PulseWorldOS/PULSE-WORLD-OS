@@ -17,7 +17,7 @@ import { PulseSecurityPort, buildPulseIOKeyChainManager } from "./PULSE-PROTOCOL
 import { PulseProtocolAddons } from "./PULSE-PROTOCOL-ADDONS.js";
 import { PulseProtocolCore } from "./PULSE-PROTOCOL-CORE.js";
 import { PulseWorldAuthority } from "./PULSE-PROTOCOL-AUTHORITY.js";
-import { PulsePort } from "./PULSE-PROTOCOL-PULSE.js";
+import { PulsePort, scanExportedFunctionsFromFile, resolveEvolutionFilePath } from "./PULSE-PROTOCOL-PULSE.js";
 
 const PulseRealm = globalThis.PulseRealm ?? (globalThis.PulseRealm = {});
 
