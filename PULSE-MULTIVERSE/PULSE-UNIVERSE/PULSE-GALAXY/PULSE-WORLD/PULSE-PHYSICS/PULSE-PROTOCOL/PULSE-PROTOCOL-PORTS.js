@@ -17,6 +17,7 @@ import { PulseSecurityPort, buildPulseIOKeyChainManager } from "./PULSE-PROTOCOL
 import { PulseProtocolAddons } from "./PULSE-PROTOCOL-ADDONS.js";
 import { PulseProtocolCore } from "./PULSE-PROTOCOL-CORE.js";
 import { PulseWorldAuthority } from "./PULSE-PROTOCOL-AUTHORITY.js";
+import {fs, path as PATH} from "../../PULSE-WORLD-PATH.js";
 import { emailTemplates } from "../X-PULSE-X/3RDPARTY/PulseWorldEmailTemplate-v30.js";
 import { PulsePort, scanExportedFunctionsFromFile, resolveEvolutionFilePath } from "./PULSE-PROTOCOL-PULSE.js";
 
