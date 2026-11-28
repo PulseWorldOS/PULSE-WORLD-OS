@@ -3526,7 +3526,7 @@ async function loadInternalPage(name) {
             TabDomProjection = savedHtml;
             if (TabDomProjection) viewport.innerHTML = TabDomProjection;
           }
-        }, 3000);
+        }, 10000);
       }
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
