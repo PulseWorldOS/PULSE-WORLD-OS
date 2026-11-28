@@ -2400,6 +2400,7 @@ let isTouchMobile = false;
     pulseworkerBtn.style.display = "none";
     pulse404Btn.style.display = "none";
     chromebgmobile.style.display = "block";
+    await PulseWasmEngine.shutdown();
   }
 
   PulseRealm.PulseTouchMobile = isTouchMobile;
