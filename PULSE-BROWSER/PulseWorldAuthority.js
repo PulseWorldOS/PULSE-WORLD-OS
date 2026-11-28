@@ -324,7 +324,7 @@ function isPulseWorld(origin) {
 const PulseFrame = document.getElementById("PulseFrame");
 
 if (isPulseWorld(PulseFrame.src)) {
-  history.replaceState({}, "", "https://www.pulseworld.net/#PulseWorldAuthority");
+  history.replaceState({}, "", "https://www.pulseworld.pulse/#PulseWorldAuthority");
   document.addEventListener("click", e => {
     const vid = e.target.closest("video");
     if (!vid) return;
