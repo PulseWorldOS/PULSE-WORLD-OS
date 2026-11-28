@@ -3226,7 +3226,7 @@ async function runLocalAI() {
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(rawPrompt);
     // if (aiLogBox) aiLogBox.appendChild(response);
-    pulsepalSpeak("Pulse Pal: " + response);
+    console.log("AI Security Pulse Pal: " + response);
     RunningAI = false;
 
   } catch (error) {
