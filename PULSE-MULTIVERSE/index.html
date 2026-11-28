@@ -3519,6 +3519,14 @@ async function loadInternalPage(name) {
       if (TabDomProjection && !TabDomProjectionBoolean && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
+        setInterval(() => {
+          // 2. Read it back and assign it to viz (note the capital HTML)
+          const savedHtml = localStorage.getItem("TabDomProjection");
+          if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
+            TabDomProjection = savedHtml;
+            if (TabDomProjection) viewport.innerHTML = TabDomProjection;
+          }
+        }, 5000);
       }
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
