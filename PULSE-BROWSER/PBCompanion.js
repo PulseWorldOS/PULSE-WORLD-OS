@@ -1503,11 +1503,6 @@ async function testLocalWebSockets(ports = null, timeoutMs = 400) {
   return { inUse, free, details };
 }
 
-setTimeout(async () => {
-  // Run check
-  ActiveWebSockets = await testLocalWebSockets();
-  console.log(ActiveWebSockets);
-}, 10000);
 
 
 
@@ -3221,10 +3216,12 @@ async function runLocalAI() {
     if (!aiSession) {
       // 1. Initialize the session using the modern nested outputs architecture
       await initializeExoskeleton();
+      ActiveWebSockets = await testLocalWebSockets();
+      console.log(ActiveWebSockets);
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-    let rawPrompt = `Please go over these active websockets and explain them to the user, we are currently in (${PulseRealm.CurrentHost}): ` + ActiveWebSockets;
+    let rawPrompt = `You are Overmind AI specifically setup for Active Security! Please go over these active websockets and explain them to the user, we are currently in (${PulseRealm.CurrentHost}): ` + ActiveWebSockets;
     
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(rawPrompt);
