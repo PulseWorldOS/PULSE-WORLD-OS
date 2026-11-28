@@ -3825,7 +3825,12 @@ window.addEventListener("message", (event) => {
       },
       event.origin
     );
-
+  
+    if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
+      TabDomProjectionBoolean = true;
+      TabDomProjection = event.data.realm;
+      console.log("PULSE_PROJECTION_DISPLAY: " + TabDomProjection);
+    }
   }
 });
 
