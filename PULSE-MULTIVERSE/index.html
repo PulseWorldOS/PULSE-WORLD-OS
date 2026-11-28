@@ -3527,6 +3527,7 @@ async function loadInternalPage(name) {
         TabDomProjection = savedHtml;
       }
       if (TabDomProjection && !TabDomProjectionBoolean && PulseRealm.__PULSE_CURRENT_PAGE__.includes("PulseWorldDomain")) {
+        removeAllButtons();
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
         setInterval(() => {
