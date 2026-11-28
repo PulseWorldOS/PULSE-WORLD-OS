@@ -2346,6 +2346,7 @@ function startWarmBootLoop() {
 
 setInterval(async () => {
   chrome.runtime.getPlatformInfo();
+  ActiveWebSockets = await testLocalWebSockets();
   console.log("[PULSEWORLD::SYNC] Syncing with Supabase SQL");
   await pulseSupabaseSync();
   OvermindCrossTabSync(OvermindOrders);
