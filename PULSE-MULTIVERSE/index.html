@@ -3650,7 +3650,24 @@ async function loadInternalPage(name) {
     try {
       const url = new URL(window.location.href);
       url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
-      if (TabDomProjection) url.hash = "#PulseWorldAlternateReality";
+      if (TabDomProjection) {
+        url.hash = "#PulseWorldAlternateReality";
+
+        document.querySelectorAll("button").forEach((btn) => {
+          const style = getComputedStyle(btn);
+          const borders = [
+            style.borderTopColor,
+            style.borderRightColor,
+            style.borderBottomColor,
+            style.borderLeftColor
+          ];
+
+          if (borders.includes("rgb(0, 255, 255)")) {
+            btn.remove();
+          }
+        });
+      }
+
       history.replaceState(null, "", url.toString());
     } catch (e) {
       console.warn("Unable to update hash via history.replaceState:", e);
