@@ -3522,7 +3522,7 @@ async function loadInternalPage(name) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(TabDomProjection, "text/html");
         // Target any <div> with "-panel" in its class or id
-        const panels = doc.querySelectorAll('div[class*="-panel"], div[id*="-panel"]');
+        const panels = doc.querySelectorAll('div[class*="side-panel"], div[id*="side-panel"]');
         panels.forEach(panel => {
           // Ensure positioning allows offset adjustments if not already set in CSS
           if (!panel.style.position) {
