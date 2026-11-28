@@ -3523,8 +3523,20 @@ async function loadInternalPage(name) {
         const doc = parser.parseFromString(TabDomProjection, "text/html");
         // Target any <div> with "-panel" in its class or id
         const panels = doc.querySelectorAll('div[class*="-panel"], div[id*="-panel"]');
-        panels.forEach(panel => panel.remove());
-        // Reassign the cleaned HTML string
+        panels.forEach(panel => {
+          // Ensure positioning allows offset adjustments if not already set in CSS
+          if (!panel.style.position) {
+            panel.style.position = "relative";
+          }
+          // Move inward by 300px on both sides
+          panel.style.left = "300px";
+          panel.style.right = "300px";
+          // Optional: constrain width so it doesn't overflow if width was 100%
+          if (panel.style.width === "100%" || panel.style.width === "100vw") {
+            panel.style.width = "calc(100% - 600px)";
+          }
+        });
+        // Serialize back to HTML if needed
         TabDomProjection = doc.body.innerHTML;
       }
       viewport.style.opacity = "1";
