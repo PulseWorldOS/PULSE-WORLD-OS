@@ -3519,6 +3519,12 @@ async function loadInternalPage(name) {
         
     let html = await res.text();
 
+    // After you set PulseRealm.__PULSE_CURRENT_PAGE__
+    PulseRealm.PulseWorldCurrentPage = fileToLoad;
+    PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad
+      .replace(CONFIG_FOLDER, "")
+      .replace(".txt", "");
+
     // Inject HTML
     if (viewport) {
       // 2. Read it back and assign it to viz (note the capital HTML)
@@ -3550,11 +3556,6 @@ async function loadInternalPage(name) {
       }
     }
 
-    // After you set PulseRealm.__PULSE_CURRENT_PAGE__
-    PulseRealm.PulseWorldCurrentPage = fileToLoad;
-    PulseRealm.__PULSE_CURRENT_PAGE__ = fileToLoad
-      .replace(CONFIG_FOLDER, "")
-      .replace(".txt", "");
     internalSelect.value = PulseRealm.__PULSE_CURRENT_PAGE__;
    
     // ⭐ If page includes "admin"
