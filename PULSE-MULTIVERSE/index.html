@@ -3524,13 +3524,14 @@ async function loadInternalPage(name) {
           const savedHtml = localStorage.getItem("TabDomProjection");
           if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
             TabDomProjection = savedHtml;
-            if (TabDomProjection !== html) html = TabDomProjection;
+            html = TabDomProjection
+            if (viewport.innerHTML !== html) viewport.innerHTML = html;
           }
         }, 10000);
       }
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
-      viewport.innerHTML = html;
+      if (viewport.innerHTML !== html) viewport.innerHTML = html;
       if (PulseRealm.__PULSE_LAST_PAGE__ != name) {
         viewport.scrollTo(0, 0);
       }
