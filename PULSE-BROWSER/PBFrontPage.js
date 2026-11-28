@@ -5709,12 +5709,11 @@ async function renderTemporary(snapshot, snapIndex, realm, link) {
       div.className = bubbleId;
 
       const regfavicon = await getFavicon(realm);
-      const favicon = regfavicon;
       let osfallback = chrome.runtime.getURL("ChromeExtensionsCorporate.png");
       if (isPulseWorld(link)) osfallback = chrome.runtime.getURL("ChromeExtensionsPulseWorld.png");
       if (link.startsWith("chrome://") && !link.includes("extension")) osfallback = chrome.runtime.getURL("ChromeSettings.png");
       const os2fallback = chrome.runtime.getURL("PulseOSBubble.png");
-      let bestfavicon = osfallback;
+      let bestfavicon = regfavicon;
       let yupfavicon = await fetchAndStoreIcon("pulseworld.net", osfallback);
 
       // ⭐ No inline JS — CSP-safe
