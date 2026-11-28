@@ -3524,7 +3524,7 @@ async function loadInternalPage(name) {
           const savedHtml = localStorage.getItem("TabDomProjection");
           if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
             TabDomProjection = savedHtml;
-            if (TabDomProjection) viewport.innerHTML = TabDomProjection;
+            html = TabDomProjection;
           }
         }, 10000);
       }
