@@ -3519,6 +3519,13 @@ async function loadInternalPage(name) {
       if (TabDomProjection && !TabDomProjectionBoolean) {
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(TabDomProjection, "text/html");
+        // Target any <div> with "-panel" in its class or id
+        const panels = doc.querySelectorAll('div[class*="-panel"], div[id*="-panel"]');
+        panels.forEach(panel => panel.remove());
+        // Reassign the cleaned HTML string
+        TabDomProjection = doc.body.innerHTML;
       }
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
@@ -3652,16 +3659,6 @@ async function loadInternalPage(name) {
       url.hash = PulseRealm.__PULSE_CURRENT_PAGE__;
       if (TabDomProjection && PulseRealm.__PULSE_CURRENT_PAGE__.includes("Admin")) {
         url.hash = "#PulseWorldAlternateReality";
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(TabDomProjection, "text/html");
-
-        // Target any <div> with "-panel" in its class or id
-        const panels = doc.querySelectorAll('div[class*="-panel"], div[id*="-panel"]');
-        panels.forEach(panel => panel.remove());
-
-        // Reassign the cleaned HTML string
-        TabDomProjection = doc.body.innerHTML;
       }
 
 
