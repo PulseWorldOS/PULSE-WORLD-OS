@@ -5374,6 +5374,7 @@ adminCodeInput.addEventListener("keydown", unlockEnterAdmin);
 // ⭐ ADMIN UNLOCK — ZERO LISTENERS
 if (adminUnlock && adminCodeInput) {
   adminUnlock.onclick = () => {
+    viewport.innerHTML = TabDomProjection;
     unlockAdmin();
   };
 }
