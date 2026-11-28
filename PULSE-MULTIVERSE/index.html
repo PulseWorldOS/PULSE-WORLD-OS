@@ -3447,6 +3447,14 @@ async function routeToInternal(routeName) {
   PulseRealm.__PULSE_CURRENT_PAGE__ = cleanTarget;
   loadInternalPage(routeName);
 }
+
+function removeAllButtons() {
+  document
+    .querySelectorAll('button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]')
+    .forEach((el) => el.remove());
+}
+
+
 async function loadInternalPage(name) {
   showPWLoader();
   if (name.includes("tp-pulse-layers") || name.includes("tp-layer-benefits") || name.includes("PulseWorldReality1")) {
@@ -3525,7 +3533,7 @@ async function loadInternalPage(name) {
           if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
             TabDomProjection = savedHtml;
             html = TabDomProjection
-            pulseConsoleOpen();
+            removeAllButtons();
             if (viewport.innerHTML !== html) viewport.innerHTML = html;
           }
         }, 15000);
