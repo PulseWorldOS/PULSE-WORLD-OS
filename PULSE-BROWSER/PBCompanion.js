@@ -18,6 +18,7 @@ import {
 
 let RunningAI = false;
 let ActiveWebSockets = null;
+let ActiveWebSocketsReadable = null;
 let CustomizePanelsDragNDrop = false;
 let lastEarnBatch = null;
 let online = navigator.onLine;
@@ -3217,11 +3218,12 @@ async function runLocalAI() {
       // 1. Initialize the session using the modern nested outputs architecture
       await initializeExoskeleton();
       ActiveWebSockets = await testLocalWebSockets();
-      console.log(ActiveWebSockets);
+      ActiveWebSocketsReadable = JSON.stringify(ActiveWebSockets, null, 2);
+      console.log(JSON.stringify(ActiveWebSockets, null, 2));
     }
 
     // 2. Wrap the prompt to strictly enforce identity and character limits at execution time
-    let rawPrompt = `You are Overmind AI specifically setup for Active Security! Please go over these active websockets and explain them to the user, we are currently in (www.PulseWorld.net): ` + ActiveWebSockets;
+    let rawPrompt = `You are Overmind AI specifically setup for Active Security! Please go over these active websockets and explain them to the user, we are currently in (www.PulseWorld.net): ` + ActiveWebSocketsReadable;
     
     // 3. Fire the wrapped prompt
     const response = await aiSession.prompt(rawPrompt);
