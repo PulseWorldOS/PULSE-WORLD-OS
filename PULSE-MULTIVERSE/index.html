@@ -3516,7 +3516,7 @@ async function loadInternalPage(name) {
       if (savedHtml !== null && PulseRealm.CurrentHost.includes("pulseworld.net")) {
         TabDomProjection = savedHtml;
       }
-      if (TabDomProjection && !TabDomProjectionBoolean) {
+      if (TabDomProjection && !TabDomProjectionBoolean && PulseRealm.__PULSE_CURRENT_PAGE__.includes("Admin")) {
         html = TabDomProjection;
         TabDomProjectionBoolean = true;
         const parser = new DOMParser();
