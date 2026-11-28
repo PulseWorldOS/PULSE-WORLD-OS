@@ -3291,6 +3291,7 @@ async function GetThisMessengerDone() {
 
 function formatPortScanText(scanResult) {
   const activePorts = Array.isArray(scanResult?.inUse) ? scanResult.inUse : [];
+  if (!activePorts) return;
 
   if (activePorts.length === 0) {
     return "[✓] No active remote or security-issue ports detected.";
