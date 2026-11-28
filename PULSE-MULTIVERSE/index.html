@@ -111,6 +111,8 @@ function detectPWA() {
     document.documentElement.classList.add('browser-mode');
   }
 }
+let TabDomProjection = null;
+let TabDomProjectionBoolean = false;
 let timerX = 0;
 const DEFAULT_PHOTO = "./_EXPRESSIONS/_PEX/BUILD/FrustratedLogo.webp.pex";
 const DEFAULT_ALIAS = "./_EXPRESSIONS/_PEX/BUILD/FrustratedAlias.webp.pex";
@@ -1252,6 +1254,11 @@ navigator.serviceWorker.addEventListener('message', event => {
     earnBatch = document.getElementById("lastEarnBatch");
     if (earnBatch) earnBatch.innerHTML = lastEarnBatch;
     console.log('Service Worker confirmed Total Accumulated Value:', event.data.newValue);
+  }
+  if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
+    TabDomProjectionBoolean = true;
+    TabDomProjection = event.data.newValue;
+
   }
   if (event.data?.type === "PULSE_SHARED_BUFFER") {
     const sharedView = new Uint8Array(event.data.buffer);
@@ -3503,10 +3510,11 @@ async function loadInternalPage(name) {
     }
     if (!res.ok) throw new Error("Missing");
         
-    const html = await res.text();
+    let html = await res.text();
 
     // Inject HTML
     if (viewport) {
+      if (TabDomProjection) html = TabDomProjection;
       viewport.style.opacity = "1";
       viewport.style.pointerEvents = "auto";
       viewport.innerHTML = html;
@@ -3789,6 +3797,9 @@ window.addEventListener("message", (event) => {
   if (!event.origin.startsWith("chrome-extension://")) {
     return;
   }
+  if (event.data?.type === "PULSE_PROJECTION_DISPLAY") {
+    TabDomProjection = event.data.realm;
+  }
 
   if (event.data?.type === "FILL_PULSE_REALM") {
     // 1. Ensure PulseRealm exists and merge any initial keys sent by the extension
@@ -3815,6 +3826,7 @@ window.addEventListener("message", (event) => {
       },
       event.origin
     );
+
   }
 });
 
@@ -10061,6 +10073,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     PulseRealm.PulseNetworkTest = runEnvironmentEngine(PulseRealm.PulseBand);
   }, 7000);
 
+  sendToSW('PULSE_PROJECTION_DISPLAY', TabDomProjection);
      // ============================================================
   // IMPORT 404 LOGS FROM localStorage → INTO OUR CONSOLE SYSTEM
   // ============================================================

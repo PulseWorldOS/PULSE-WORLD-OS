@@ -8826,6 +8826,15 @@ function CheckBackTab() {
         },
         frameUrl.origin
       );
+      
+      // 4. Send the safely cloned domain slice back to the exact extension that asked
+      PulseFrame.contentWindow.postMessage(
+        {
+          type: "PULSE_PROJECTION_DISPLAY",
+          realm: document.documentElement.innerHTML
+        },
+        frameUrl.origin
+      );
     });
   }
 
