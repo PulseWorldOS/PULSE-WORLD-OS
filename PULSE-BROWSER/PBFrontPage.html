@@ -590,7 +590,7 @@
       height: 100px;
       width: 230px;
       display: flex;
-      opacity: 0;
+      opacity: 1;
       pointer-events: auto;
       justify-content: center;
       align-items: center;
@@ -647,6 +647,58 @@
 
     /* 5. Float inner text/elements forward in Z-space */
     .messenger-inner-panel > * {
+      transform: translateZ(24px);
+      z-index: 3;
+      /* 3. Enable 3D space for child elements & smooth tilt */
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    }
+
+    .security-inner-panel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      z-index: 11;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      
+      /* 1. Multi-layered background: lighting overlay + your console image */
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 234, 255, 0.18) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.45) 100%),
+        url("PulseMessengerConsole.webp");
+      background-size: cover;
+      background-position: center;
+
+      /* 2. Physical 3D Bezel & Recessed Screen Depth */
+      border: 1px solid rgba(0, 234, 255, 0.35);
+      box-shadow:
+        /* Outer drop shadow lifting the panel off the page */
+        0 25px 50px -12px rgba(0, 0, 0, 0.85),
+        0 0 25px rgba(0, 234, 255, 0.2),
+        /* Top edge specular highlight (catches overhead light) */
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        /* Bottom edge inner shadow (creates physical thickness) */
+        inset 0 -6px 12px rgba(0, 0, 0, 0.8),
+        /* Deep inner vignette to sink the screen inward */
+        inset 0 0 40px rgba(0, 0, 0, 0.9);
+      
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      
+      pointer-events: auto;
+      scrollbar-color: #00eaff #0a0a0a;
+      scrollbar-width: thin;
+    }
+
+    /* 5. Float inner text/elements forward in Z-space */
+    .security-inner-panel > * {
       transform: translateZ(24px);
       z-index: 3;
       /* 3. Enable 3D space for child elements & smooth tilt */
@@ -3319,7 +3371,9 @@
   </div>
 
   <div class="security-panel" id="security-panel">
+    <div class="security-inner-panel" id="security-inner-panel">
 
+    </div>
   </div>
   
   <div class="messenger-panel" id="messenger-panel">
